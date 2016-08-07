@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.math4.userguide.rng;
+package org.apache.commons.rng.userguide;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   $ java -jar examples.jar \
  *     report/dh_ \
  *     4 \
- *     org.apache.commons.math4.userguide.rng.GeneratorsList \
+ *     org.apache.commons.rng.userguide.GeneratorsList \
  *     /usr/bin/dieharder -a -g 200 -Y 1 -k 2
  *  </code></pre>
  * </p>

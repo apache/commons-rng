@@ -21,20 +21,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-math4-examples</artifactId>
-  <version>4.0-SNAPSHOT</version>  
-  <name>Commons Math User Guide</name>
-  <inceptionYear>2003</inceptionYear>
+  <artifactId>commons-rng-examples</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Commons Rng User Guide</name>
+  <inceptionYear>2016</inceptionYear>
   <description>Examples</description>
-  <url>http://commons.apache.org/math/</url>
+  <url>http://commons.apache.org/rng/</url>
   <issueManagement>
     <system>jira</system>
-    <url>http://issues.apache.org/jira/browse/MATH</url>
+    <url>http://issues.apache.org/jira/browse/RNG</url>
   </issueManagement>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/math/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/math/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/math/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/rng/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/rng/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/rng/trunk</url>
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -94,34 +94,8 @@
   <dependencies>
       <dependency>
           <groupId>org.apache.commons</groupId>
-          <artifactId>commons-math4</artifactId>
-          <classifier>tools</classifier>
-          <version>4.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-math4</artifactId>
-          <version>4.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-          <groupId>com.xeiam.xchart</groupId>
-          <artifactId>xchart</artifactId>
-          <version>2.3.0</version>
-      </dependency>
-      <dependency>
-          <groupId>org.piccolo2d</groupId>
-          <artifactId>piccolo2d-core</artifactId>
-          <version>3.0</version>
-      </dependency>
-      <dependency>
-          <groupId>org.piccolo2d</groupId>
-          <artifactId>piccolo2d-extras</artifactId>
-          <version>3.0</version>
-      </dependency>      
-      <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-          <version>3.1</version>
+          <artifactId>commons-rng</artifactId>
+          <version>0.1-SNAPSHOT</version>
       </dependency>
   </dependencies>
 </project>
