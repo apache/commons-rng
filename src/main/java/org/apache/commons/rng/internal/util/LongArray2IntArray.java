@@ -19,7 +19,7 @@ package org.apache.commons.rng.internal.util;
 /**
  * Creates an {@code int[]} from a {@code long[]}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class LongArray2IntArray implements SeedConverter<long[], int[]> {
     /** {@inheritDoc} */

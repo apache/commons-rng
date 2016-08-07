@@ -21,7 +21,7 @@ import org.apache.commons.rng.RandomSource;
 /**
  * Indicates that the state of the instance can be saved and restored.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface StateSettable {
     /**

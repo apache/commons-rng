@@ -82,7 +82,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * DAMAGE.</strong></td></tr>
  * </table>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class MersenneTwister extends IntProvider {
     /** Mask 32 most significant bits. */

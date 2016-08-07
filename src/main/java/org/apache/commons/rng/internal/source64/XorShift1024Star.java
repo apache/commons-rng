@@ -26,7 +26,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">
  * Original source code</a>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class XorShift1024Star extends LongProvider {
     /** Size of the state vector. */

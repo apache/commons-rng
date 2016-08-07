@@ -31,7 +31,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  *  </ul>
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class TwoCmres extends LongProvider {
     /** Error message. */

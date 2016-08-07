@@ -22,7 +22,7 @@ package org.apache.commons.rng.internal.util;
  * @param <IN> Input seed type.
  * @param <OUT> Output seed type.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface SeedConverter<IN, OUT> {
     /**

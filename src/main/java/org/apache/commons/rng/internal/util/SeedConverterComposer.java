@@ -23,7 +23,7 @@ package org.apache.commons.rng.internal.util;
  * @param <TRANS> Transitional seed type.
  * @param <OUT> Output seed type.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, OUT> {
     /** First conversion. */

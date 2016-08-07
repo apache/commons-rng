@@ -19,7 +19,7 @@ package org.apache.commons.rng.internal.util;
 /**
  * Converts a {@code Long} to an {@code Integer}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class Long2Int implements SeedConverter<Long, Integer> {
     /** {@inheritDoc} */

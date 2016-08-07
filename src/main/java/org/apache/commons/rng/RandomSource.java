@@ -136,7 +136,7 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
  * instance left off).
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 public enum RandomSource {
     /**

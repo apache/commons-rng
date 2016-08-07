@@ -38,7 +38,7 @@ import org.apache.commons.rng.internal.source64.SplitMix64;
  * There is <i>no guarantee</i> that sequences will not overlap.
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class SeedFactory {
     /** Generator with a long period. */

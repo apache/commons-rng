@@ -23,7 +23,7 @@ package org.apache.commons.rng.internal.util;
  *
  * @param <SEED> Seed type.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
     /** {@inheritDoc} */

@@ -20,7 +20,7 @@ package org.apache.commons.rng.internal.source32;
 /**
  * Source of randomness that generate values of type {@code int}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface RandomIntSource {
     /**

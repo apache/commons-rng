@@ -20,7 +20,7 @@ package org.apache.commons.rng.internal.source64;
 /**
  * Source of randomness that generate values of type {@code long}.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface RandomLongSource {
     /**

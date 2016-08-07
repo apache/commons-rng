@@ -35,7 +35,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  *
  * @see <a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
  *
- * @since 4.0
+ * @since 1.0
  */
 public abstract class AbstractWell extends IntProvider {
     /** Current index in the bytes pool. */

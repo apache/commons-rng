@@ -20,7 +20,7 @@ package org.apache.commons.rng;
  * Applies to generators of random number sequences that follow a uniform
  * distribution.
  *
- * @since 4.0
+ * @since 1.0
  */
 public interface UniformRandomProvider {
     /**

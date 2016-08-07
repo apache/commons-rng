@@ -23,7 +23,7 @@ import org.apache.commons.rng.internal.source64.SplitMix64;
  * create an {@code int[]} with the requested number of random
  * values.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class LongMixInt implements SeedConverter<Long, int[]> {
     /** Size of the output array. */

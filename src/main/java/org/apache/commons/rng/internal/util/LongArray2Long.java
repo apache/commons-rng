@@ -19,7 +19,7 @@ package org.apache.commons.rng.internal.util;
 /**
  * Creates a single value by "xor" of all the values in the input array.
  *
- * @since 4.0
+ * @since 1.0
  */
 public class LongArray2Long implements SeedConverter<long[], Long> {
     /** {@inheritDoc} */

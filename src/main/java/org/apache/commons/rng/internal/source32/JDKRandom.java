@@ -37,7 +37,7 @@ import java.io.ByteArrayInputStream;
  * the serialization of the {@link Random} instance.
  * </p>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class JDKRandom extends IntProvider {
     /** Delegate.  Cannot be "final" (to allow serialization). */

@@ -30,7 +30,7 @@ package org.apache.commons.rng.internal.source32;
  * </p>
  *
  * @see <a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
- * @since 4.0
+ * @since 1.0
  */
 public class Well44497b extends AbstractWell {
     /** Number of bits in the pool. */

@@ -38,7 +38,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * @see <a href="http://burtleburtle.net/bob/rand/isaacafa.html">
  * ISAAC: a fast cryptographic pseudo-random number generator</a>
  *
- * @since 4.0
+ * @since 1.0
  */
 public class ISAACRandom extends IntProvider {
     /** Log of size of rsl[] and mem[] */
