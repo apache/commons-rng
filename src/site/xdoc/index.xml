@@ -27,7 +27,7 @@
 
     <section name="Commons Rng: Random numbers generators" href="summary">
       <p>
-        Commons Rng provides implementations of pseud-random numbers generators.
+        Commons Rng provides implementations of pseudo-random numbers generators.
       </p>
     </section>
 
