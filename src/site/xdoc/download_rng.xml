@@ -95,7 +95,7 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons Rng 0.1 (requires Java 1.5+)">
+    <section name="Apache Commons Rng 0.1 (requires Java 1.6+)">
       <subsection name="Binaries">
         <table>
           <tr>

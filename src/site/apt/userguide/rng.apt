@@ -229,7 +229,7 @@
 
 5. Dependencies
 
-  Commons Rng requires JDK 1.5+ and has no runtime dependencies.
+  Commons Rng requires JDK 1.6+ and has no runtime dependencies.
 
 6. License
 
