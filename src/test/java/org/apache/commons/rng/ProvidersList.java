@@ -32,11 +32,11 @@ import java.util.Collections;
  */
 public class ProvidersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<Data[]> LIST = new ArrayList<>();
+    private static final List<Data[]> LIST = new ArrayList<Data[]>();
     /** List of 32-bits based RNGs. */
-    private static final List<Data[]> LIST32 = new ArrayList<>();
+    private static final List<Data[]> LIST32 = new ArrayList<Data[]>();
     /** List of 64-bits based RNGs. */
-    private static final List<Data[]> LIST64 = new ArrayList<>();
+    private static final List<Data[]> LIST64 = new ArrayList<Data[]>();
 
     static {
         try {
@@ -67,7 +67,7 @@ public class ProvidersList {
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of generators: " + e);
             e.printStackTrace(System.err);
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 

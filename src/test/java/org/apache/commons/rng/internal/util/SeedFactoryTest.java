@@ -27,7 +27,7 @@ import org.junit.Test;
 public class SeedFactoryTest {
     @Test
     public void testCreateLong() {
-        final Map<Long, Integer> values = new HashMap<>();
+        final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         final int n = 100000;
         for (int i = 0; i < n; i++) {
@@ -46,7 +46,7 @@ public class SeedFactoryTest {
 
     @Test
     public void testCreateLongArray() {
-        final Map<Long, Integer> values = new HashMap<>();
+        final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         final int n = 100000;
         final long[] array = SeedFactory.createLongArray(n);
@@ -66,7 +66,7 @@ public class SeedFactoryTest {
 
     @Test
     public void testCreateIntArray() {
-        final Map<Long, Integer> values = new HashMap<>();
+        final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         for (int i = 0; i < 50000; i++) {
             final int[] a = SeedFactory.createIntArray(2);
