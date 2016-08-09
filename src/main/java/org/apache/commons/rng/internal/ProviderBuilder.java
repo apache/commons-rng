@@ -80,13 +80,17 @@ public class ProviderBuilder {
     /** Seed converter. */
     private static final IntArray2LongArray INT_ARRAY_TO_LONG_ARRAY = new IntArray2LongArray();
     /** Map to convert "Integer" seeds. */
-    private static final Map<Class<?>, SeedConverter<Integer,?>> CONV_INT = new HashMap<>();
+    private static final Map<Class<?>, SeedConverter<Integer,?>> CONV_INT =
+        new HashMap<Class<?>, SeedConverter<Integer,?>>();
     /** Map to convert "int[]" seeds. */
-    private static final Map<Class<?>, SeedConverter<int[],?>> CONV_INT_ARRAY = new HashMap<>();
+    private static final Map<Class<?>, SeedConverter<int[],?>> CONV_INT_ARRAY =
+        new HashMap<Class<?>, SeedConverter<int[],?>>();
     /** Map to convert "Long" seeds. */
-    private static final Map<Class<?>, SeedConverter<Long,?>> CONV_LONG = new HashMap<>();
+    private static final Map<Class<?>, SeedConverter<Long,?>> CONV_LONG =
+        new HashMap<Class<?>, SeedConverter<Long,?>>();
     /** Map to convert "long[]" seeds. */
-    private static final Map<Class<?>, SeedConverter<long[],?>> CONV_LONG_ARRAY = new HashMap<>();
+    private static final Map<Class<?>, SeedConverter<long[],?>> CONV_LONG_ARRAY =
+        new HashMap<Class<?>, SeedConverter<long[],?>>();
 
     static {
         // Input seed type is "Long".
@@ -141,7 +145,7 @@ public class ProviderBuilder {
 
         // Build a single array with all the arguments to be passed
         // (in the right order) to the constructor.
-        final List<Object> all = new ArrayList<>();
+        final List<Object> all = new ArrayList<Object>();
         all.add(nativeSeed);
         if (args != null) {
             all.addAll(Arrays.asList(args));
@@ -230,10 +234,7 @@ public class ProviderBuilder {
                                                 Object[] args) {
         try {
             return (UniformRandomProvider) rng.newInstance(args);
-        } catch (InvocationTargetException |
-                 InstantiationException |
-                 IllegalArgumentException |
-                 IllegalAccessException e) {
+        } catch (Exception e) {
             throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
         }
     }

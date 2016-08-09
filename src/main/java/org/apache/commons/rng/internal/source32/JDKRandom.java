@@ -87,7 +87,10 @@ public class JDKRandom extends IntProvider {
             final ObjectInputStream ois = new ObjectInputStream(bis);
 
             delegate = (Random) ois.readObject();
-        } catch (ClassNotFoundException|IOException e) {
+        } catch (ClassNotFoundException e) {
+            // Workaround checked exception.
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             // Workaround checked exception.
             throw new RuntimeException(e);
         }
