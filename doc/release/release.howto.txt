@@ -24,9 +24,9 @@ The files "settings-security.xml" and "settings.xml" are minimal examples
 of files used by maven to pick up authentication credentials needed to
 connect to remote servers and to cryptographically sign the artifacts.
 
-Since [rng] has switched to git as its version control system, release preparation
-can be done easily on the release manager local host in a branch. As branches deletion
-is now forbidden at Apache, we will use a specific release branch for every version.
+Release preparation is done on the release manager local host in a branch.
+As branches deletion is now forbidden at Apache, we will use a specific
+release branch for every version.
 The branch will be simply named X.Y-release, with X.Y being the version number.
 The branch will be used to store the release specific parts (i.e. the pom changes with
 the version number, the release date in the site and so on). Everything else and in
@@ -112,15 +112,17 @@ branch since the creation of the release branch, there are two cases:
   if all these changes must be included in the X.Y-release
   merge master branch or version branch into X.Y-release branch:
 
-  $ git merge master
-  or, if the version branch is called RNG_3_X
-  $ git merge RNG_3_X
+    $ git merge master
+
+  or, if the version branch is called RNG_1_X
+
+    $ git merge RNG_1_X
 
   (4b)
   if only part of these changes must be included in the X.Y-release,
   cherry-pick the required commits into X.Y-release branch:
 
-  $ git cherry-pick commit-SHA
+    $ git cherry-pick commit-SHA
 
 (5)
 Update the release specific files, checking you are really working on the
@@ -178,7 +180,8 @@ Check you did not forget any file:
   $ git status
 
 Commit the changes:
-  $ git commit -m "creating release candidate"
+
+  $ git commit -m "Creating release candidate."
 
 
 (8)
@@ -191,7 +194,7 @@ Then, assuming the first candidate, the suffix will be "RC1" (this should
 be the  same as in the "<properties>" in the "pom.xml"), and the command
 will be:
 
-  $ git tag -s -m "Creating Apache Commons Rng v1.0 RC1 tag." RNG_3_4_RC1
+  $ git tag -s -m "Creating Apache Commons Rng v1.0 RC1 tag." RNG_1_0_RC1
 
 If you have several GPG keys, you may prefer to use "-u keyId" to select a specific
 key for signing the tag instead of "-s" which select automatically one key
@@ -199,21 +202,18 @@ from the configured e-mail address.
 
 Check the tag GPG signature:
 
-  $ git tag -v RNG_3_4_RC1
+  $ git tag -v RNG_1_0_RC1
 
 You will get something like:
 
   object cf4a9d70c9ac24dd7196995390171150e4e56451
   type commit
-  tag RNG_3_4_RC1
-  tagger Luc Maisonobe <luc@apache.org> 1418934614 +0100
+  tag RNG_1_0_RC1
+  tagger YourName <YourApacheEmail> 1418934614 +0100
 
   Creating Apache Commons Rng v1.0 RC1 tag.
-  gpg: Signature made Thu Dec 18 21:30:14 2014 CET using RSA key ID 02E9F65B
-  gpg: Good signature from "Luc Maisonobe (CODE SIGNING KEY) <luc@apache.org>"
-  gpg:                 aka "Luc Maisonobe <Luc.Maisonobe@c-s.fr>"
-  gpg:                 aka "Luc Maisonobe <Luc.Maisonobe@free.fr>"
-  gpg:                 aka "Luc Maisonobe <luc@orekit.org>"
+
+followed by GPG output lines
 
 Remember the commit ID listed in the object line (here cf4a9d70c9ac24dd7196995390171150e4e56451),
 as it is the most stable reference for traceability.
@@ -227,7 +227,7 @@ Switch to a new directory out of your regular workspace, and retrieve
 the official tag from the Apache repository:
 
   $ cd /tmp
-  $ git clone https://git-wip-us.apache.org/repos/asf/commons-rng.git --branch RNG_3_4_RC1
+  $ git clone https://git-wip-us.apache.org/repos/asf/commons-rng.git --branch RNG_1_0_RC1
 
 In the command above, the --branch option accepts both branch names and tags names,
 so we specify directly the tag here. Git will warn that the resulting workspace
@@ -315,13 +315,16 @@ edit README.html with released version number
 (13)
 As the web site staging area is shared among all commons components and therefore
 can be published before vote ends, it is not recommended to use the standard staging
-area for the release candidate. So you will just archive the transfer the site it on
-your apache personal area for review. Here is how to do this using lftp to initiate
-the sftp transfer (lftp supports a mirror command for recursive transfers, don't
-forget the -R flag for uploading instead of downloading the site). If you
+area for the release candidate. So you will just archive the site and transfer it
+to your apache personal area for review.  Here is how to do this using lftp to
+initiate the sftp transfer (lftp supports a mirror command for recursive transfers,
+don't forget the -R flag for uploading instead of downloading the site). If you
 haven't setup your login on home.apache.org you will need to go to
-https://id.apache.org/, login and copy the contents of your ~/.ssh/id_rsa.pub
-file to "SSH Key (authorized_keys line)". Then run these commands:
+  https://id.apache.org/
+login and copy the contents of your
+  ~/.ssh/id_rsa.pub
+file to "SSH Key (authorized_keys line)".
+Then run these commands:
 
   $ mvn site
   $ cd target
@@ -340,7 +343,7 @@ a starting point, replacing the URLs with the appropriate ones:
 This is a [VOTE] for releasing Apache Commons Rng 1.0 from release candidate 1.
 
 Tag name:
-  RNG_3_4_RC1 (signature can be checked from git using 'git tag -v')
+  RNG_1_0_RC1 (signature can be checked from git using 'git tag -v')
 
 Tag URL:
   <https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=cf4a9d70c9ac24dd7196995390171150e4e56451>
@@ -424,13 +427,14 @@ Release (a.k.a. "promote") the artifacts on the Nexus server, as shown here:
 
 
 (19)
-Publish the web site. This is done by first committing the web site to the staging area, and then
-by publishing the staging area (which is shared among all commons components.
+Publish the web site. This is done by first committing the web site to the
+staging area, and then by publishing the staging area (which is shared among
+all commons components).
 
 In order to commit the web site to the staging area, look at the subversion
 workspace that was automatically checked out during the 'mvn site' command in
 folder site-content. Note that svn commits in the site-content directory are
-immediately synced with the live site and so your changes shoule show up in a
+immediately synced with the live site and so your changes should show up in a
 few minutes once you commit the new site. You can also check out the site
 directly by yourself elsewhere:
 
@@ -447,7 +451,7 @@ Check for possibly new files:
 and "svn add" them if necessary.
 
 Commit the new contents of the web site:
- $ svn commit -m "updating site after official release of version 1.0"
+ $ svn commit -m "Version 1.0 was released: Updating site."
 
 Beware the commit command may be very long (several hours ...).
 
@@ -469,7 +473,7 @@ correct.
 (21)
 Put the official final tag to point at the same commit as the last release candidate tag:
 
-  $ git tag -s -m "RC1 becomes the 1.0 official version." RNG_3_4 cf4a9d70c9ac24dd7196995390171150e4e56451
+  $ git tag -s -m "RC1 becomes the 1.0 official version." RNG_1_0 cf4a9d70c9ac24dd7196995390171150e4e56451
   $ git push --tags
 
 
@@ -501,6 +505,11 @@ Switch back to master and merge the X.Y-release branch
 
 
 (24)
+Update the report database:
+  https://reporter.apache.org/addrelease.html?commons
+
+
+(25)
 Allow for the web site mirrors to be updated (possibly several hours); then
 send (from your apache account) a release announcement to the following ML:
   announce@apache.org
