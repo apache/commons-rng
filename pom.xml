@@ -574,7 +574,7 @@
                     <argument>-rf</argument>
                     <argument>json</argument>
                     <argument>-rff</argument>
-                    <argument>target/jmh-result.json</argument>
+                    <argument>target/jmh-result.${benchmark}.json</argument>
                     <argument>${benchmark}</argument>
                   </arguments>
                 </configuration>
