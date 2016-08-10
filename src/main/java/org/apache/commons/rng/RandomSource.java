@@ -233,8 +233,8 @@ public enum RandomSource {
      * of the implementation.
      *
      * @param seed Seed value.
-     * @return {@code true} if the seed can be passed to the builder
-     * for this RNG type.
+     * @return {@code true} if the type of {@code seed} is the native
+     * type for this RNG source.
      */
     public boolean isNativeSeed(Object seed) {
         return internalIdentifier.isNativeSeed(seed);
