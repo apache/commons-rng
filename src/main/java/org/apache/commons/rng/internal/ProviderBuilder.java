@@ -234,7 +234,11 @@ public class ProviderBuilder {
                                                 Object[] args) {
         try {
             return (UniformRandomProvider) rng.newInstance(args);
-        } catch (Exception e) {
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
+        } catch (IllegalAccessException e) {
             throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
         }
     }
