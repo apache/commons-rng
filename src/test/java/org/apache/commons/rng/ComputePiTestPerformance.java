@@ -60,7 +60,6 @@ public class ComputePiTestPerformance extends AbstractTestPerformance {
         }
 
         final double pi = 4 * numPointsInCircle / (double) numPoints;
-        System.out.println("pi=" + pi);
         return pi;
     }
 }
