@@ -13,6 +13,7 @@ target
 *.ipr
 *.iws
 .idea
+.DS_Store
 *~
 /.externalToolBuilders/
 /maven-eclipse.xml
