@@ -6,7 +6,8 @@ In order to run one of the applications (a class that must contain a
 "main" method), you would type (in a shell console) a command similar
 to the following:
  $ mvn -q exec:java \
-   -Dexec.mainClass=org.apache.commons.rng.RandomStressTester
+   -Dexec.mainClass=org.apache.commons.rng.userguide.RandomStressTester \
+   -Dexec.args="[args]"
 
 Alternatively, a "standalone" JAR can be created with the following
 command:
