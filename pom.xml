@@ -322,6 +322,8 @@
             <exclude>.git/**</exclude>
             <exclude>.checkstyle</exclude>
             <exclude>.ekstazi/**</exclude>
+            <exclude>src/site/resources/txt/userguide/stress/dh/**</exclude>
+            <exclude>src/site/resources/txt/userguide/stress/tu/**</exclude>
 
           </excludes>
         </configuration>
