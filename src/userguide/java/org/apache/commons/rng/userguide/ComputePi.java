@@ -38,8 +38,6 @@ public class ComputePi extends MonteCarloIntegration {
     private static final int DIMENSION = 2;
 
     /**
-     * Simulation constructor.
-     *
      * @param source RNG algorithm.
      */
     public ComputePi(RandomSource source) {
@@ -50,9 +48,7 @@ public class ComputePi extends MonteCarloIntegration {
      * Arguments:
      * <ul>
      *  <li>
-     *   Error on the approximation: computation will stop when the
-     *   absolute difference between successive approximations is lower
-     *   than the given value.
+     *   Number of random 2-dimensional points to generate.
      *  </li>
      *  <li>
      *   {@link RandomSource Random source identifier}.
