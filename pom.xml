@@ -63,6 +63,9 @@
   </developers>
 
   <contributors>
+    <contributor>
+      <name>Artem Barger</name>
+    </contributor>
   </contributors>
 
   <dependencies>
