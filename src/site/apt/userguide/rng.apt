@@ -21,8 +21,203 @@
 
 1. Usage overview
 
-  The <<<rng>>> package contains the random number generation functionality.
-  Please refer to the {{{../apidocs/index.html}Javadoc}} for details.
+  <<<Commons Rng>>> provides generators of random sequences of numbers.
+  Please refer to the {{{../apidocs/index.html}Javadoc}} for details on
+  the API illustrated by the following examples.
+
+
+  * The public API is defined in package <<<org.apache.commons.rng>>>.
+
++--------------------------+
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.RandomSource;
++--------------------------+
+
+
+  * Random number generator objects are instantiated through factory
+    methods defined in <<<RandomSource>>>, an <<<enum>>> that declares
+    {{{../apidocs/org/apache/commons/rng/RandomSource.html#enum.constant.detail}all the available implementations}}.
+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
++--------------------------+
+
+
+  * A generator will a return randomly selected element from a range
+    of possible values of some Java (primitive) type.
+
++--------------------------+
+boolean isOn = rng.nextBoolean(); // "true" or "false".
++--------------------------+
++--------------------------+
+int n = rng.nextInt(); // Integer.MAX_VALUE <= n <= Integer.MAX_VALUE.
+int m = rng.nextInt(max); // 0 <= m < max.
++--------------------------+
++--------------------------+
+long n =  rng.nextLong(); // Long.MAX_VALUE <= n <= Long.MAX_VALUE.
+long m = rng.nextLong(max); // 0 <= m < max.
++--------------------------+
++--------------------------+
+float x = rng.nextFloat(); // 0 <= x < 1
++--------------------------+
++--------------------------+
+double x = rng.nextDouble(); // 0 <= x < 1
++--------------------------+
+
+
+  * A generator will fill a given <<<byte>>> array with random values.
+
++--------------------------+
+bytes[] a = new bytes[47];
+// The elements of "a" are replaced with random values from the interval [-128, 127].
+rng.nextBytes(a);
++--------------------------+
++--------------------------+
+bytes[] a = new bytes[47];
+// Only elements between index 15 (included) and 32 (excluded) are replaced with random values.
+rng.nextBytes(a, 15, 32);
++--------------------------+
+
+
+  * In order to generate reproducible sequences, generators must be instantiated with a user-defined seed.
+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 5776);
++--------------------------+
+
+    If no seed is passed, a random seed is generated implicitly.
+
+    Convenience methods are provided for explicitly generating random seeds of the various types.
+
++--------------------------+
+int seed = RandomSource.createInt();
++--------------------------+
++--------------------------+
+long seed = RandomSource.createLong();
++--------------------------+
++--------------------------+
+int[] seed = RandomSource.createIntArray(128); // Length of returned array is 128.
++--------------------------+
++--------------------------+
+long[] seed = RandomSource.createLongArray(128); // Length of returned array is 128.
++--------------------------+
+
+
+  * Any of the following types cant be passed to the <<<create>>> method as the "seed" argument:
+
+    ** <<<int>>> or <<<Integer>>>
+
+    ** <<<long>>> or <<<Long>>>
+
+    ** <<<int[]>>>
+
+    ** <<<long[]>>>
+
+    []
+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, 5776);
++--------------------------+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new int[] { 6, 7, 7, 5, 6, 1, 0, 2 });
++--------------------------+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new long[] { 0x638a3fd83bc0e851L, 0x9730fd12c75ae247L });
++--------------------------+
+
+    Note however that upon initialization the underlying generation algorithm
+
+    ** may not use all the information contents of the seed,
+
+    ** may use a procedure (using the given seed as input) for further filling its internal state
+       (in order to avoid a too uniform initial state).
+
+    []
+
+    In both cases, the behaviour is not standard but should not change between releases of the library
+    (bugs notwithstanding).
+
+    Each RNG implementation has a single "native" seed; when the seed argument passed
+    to the <<<create>>> method is not of the native type, it is automatically converted.
+    The conversion preserves the information contents but is otherwise not specified (i.e.
+    different releases of the library may use different conversion procedures).
+    Hence, if reproducibility of the generated sequences across successive releases of the
+    library is necessary, users should ensure that they use native seeds.
+
++--------------------------+
+long seed = 9246234616L;
+if (!RandomSource.TWO_CMRES.isNativeSeed(seed)) {
+    throw new IllegalArgumentException("Seed is not native");
+}
++--------------------------+
+
+    For each available implementation, the native seed type is specified in the
+    {{{../apidocs/org/apache/commons/rng/RandomSource.html#enum.constant.detail}Javadoc}}.
+
+
+  * Whenever a random source implementation is parameterized, the custom arguments
+    are passed after the seed.
+
++--------------------------+
+int seed = 96912062;
+int first = 7; // Subcycle identifier.
+int second = 4; // Subcycle identifier.
+UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, seed, first, second);
++--------------------------+
+
+    In the above example, valid "subcycle identifiers" are in the range 0, ... ,
+    {{{../apidocs/org/apache/commons/rng/RandomSource.html#numberOfCmresGenerators--}numberOfCmresGenerators() - 1}}.
+
+
+  * The current state of a generator can be
+    {{{../apidocs/org/apache/commons/rng/RandomSource.html#saveState-org.apache.commons.rng.UniformRandomProvider-}saved}}
+    and
+    {{{../apidocs/org/apache/commons/rng/RandomSource.html#restoreState-org.apache.commons.rng.UniformRandomProvider-org.apache.commons.rng.RandomSource.State-}restored}}
+    later on.
+
++--------------------------+
+UniformRandomProvider rng = RandomSource.create(RandomSource.WELL_512_A);
+RandomSource.State state = RandomSource.saveState(rng);
+double x = rng.nextDouble();
+RandomSource.restoreState(rng, state);
+double y = rng.nextDouble(); // x == y.
++--------------------------+
+
+
+  * The <<<UniformRandomProvider>>> objects returned from the <<<create>>> methods are
+    not serializable.
+
+    However, users can easily set up a custom serialization scheme if the random source
+    is known at both ends of the communication channel.
+    This would be useful namely to save the state to persistent storage, and restore it
+    such that generation will continue from the same sequence.
+
++--------------------------+
+RandomSource source = RandomSource.MT_64; // Known source identifier.
+
+UniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG instance.
+
+// Save and serialize state.
+RandomSource.State stateOrig = RandomSource.saveState(rngOrig);
+ByteArrayOutputStream bos = new ByteArrayOutputStream();
+ObjectOutputStream oos = new ObjectOutputStream(bos);
+oos.writeObject(stateOrig);
+
+// Deserialize state.
+ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+ObjectInputStream ois = new ObjectInputStream(bis);
+RandomSource.State stateNew = (RandomSource.State) ois.readObject();
+
+UniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance.
+
+// Restore original state on the new instance.
+RandomSource.restoreState(rngNew, stateNew);
++--------------------------+
+
+    Serialization of unknown random sources is not supported.
+
+
+  []
 
 
 2. Library layout
