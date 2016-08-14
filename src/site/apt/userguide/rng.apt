@@ -222,6 +222,81 @@ RandomSource.restoreState(rngNew, stateNew);
 
 2. Library layout
 
+  The library's public API consists of classes and interfaces defined in package
+  <<<org.apache.commons.rng>>>.
+
+  * <<<UniformRandomProvider>>>: provides access to a sequence of random values
+    uniformly distributed within some range.
+
+  * <<<RandomSource>>>: determines which algorithm to use for generating the
+    sequence of random values.
+
+  * <<<RandomSource.State>>>: enables the save and restore functionality of
+    the state of <<<UniformRandomProvider>>> instances created through the
+    <<<RandomSource>>> factory methods.
+
+  []
+
+  The <<<org.apache.commons.rng.internal>>> package and packages below it
+  contain classes for supporting the above API.
+  None of those classes should be used directly in applications.
+
+  The rest of this section briefly describes the internal classes.
+  More information is available in the
+  {{{../apidocs/org/apache/commons/rng/internal/index.html}Javadoc}}.
+
+  * <<<ProviderBuilder>>>: contains methods for instantiating the concrete
+    RNG implementations based on the source identifier; it also takes care
+    of calling the appropriate classes for seed type conversion.
+
+  * <<<BaseProvider>>>: base class for all concrete RNG implementations;
+    it contains higher level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
+    common to all implementations; it defines the implementation of the
+    <<<Random.State>>> public interface.
+
+  * <<<StateSettable>>>: interface to be implemented by concrete random sources.
+
+  * <<<org.apache.commons.rng.internal.util>>>
+
+    ** <<<NumberFactory>>>: contains utilities for interpreting and combining
+       the output (<<<int>>> or <<<long>>>) of the underlying source of
+       randomness into the requested output, i.e. one the Java primitive
+       types supported by <<<UniformRandomProvider>>>.
+
+    ** <<<SeedFactory>>>: contains factory methods for generating random seeds.
+
+    ** <<<SeedConverter>>>: interface for classes that transform between
+       supported seed types.
+
+    ** Various classes that implements <<<SeedConverter>>> in order to transform
+       from caller's seed to "native" seed.
+
+    []
+
+  * <<<org.apache.commons.rng.internal.source32>>>
+
+    ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
+       32 bits chunks (a.k.a Java <<<int>>>).
+
+    ** <<<IntProvider>>>: base class for concrete classes that implement <<<RandomIntSource>>>.
+
+    ** Concrete RNG algorithms that are subclasses of <<<IntProvider>>>.
+
+    []
+
+  * <<<org.apache.commons.rng.internal.source64>>>
+
+    ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
+       64 bits chunks (a.k.a Java <<<long>>>).
+
+    ** <<<LongProvider>>>: base class for concrete classes that implement <<<RandomLongSource>>>.
+
+    ** Concrete RNG algorithms that are subclasses of <<<LongProvider>>>.
+
+    []
+
+  []
+
 
 3. Performance
 
