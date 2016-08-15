@@ -50,18 +50,18 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
 boolean isOn = rng.nextBoolean(); // "true" or "false".
 +--------------------------+
 +--------------------------+
-int n = rng.nextInt(); // Integer.MAX_VALUE <= n <= Integer.MAX_VALUE.
+int n = rng.nextInt(); // Integer.MIN_VALUE <= n <= Integer.MAX_VALUE.
 int m = rng.nextInt(max); // 0 <= m < max.
 +--------------------------+
 +--------------------------+
-long n =  rng.nextLong(); // Long.MAX_VALUE <= n <= Long.MAX_VALUE.
+long n =  rng.nextLong(); // Long.MIN_VALUE <= n <= Long.MAX_VALUE.
 long m = rng.nextLong(max); // 0 <= m < max.
 +--------------------------+
 +--------------------------+
-float x = rng.nextFloat(); // 0 <= x < 1
+float x = rng.nextFloat(); // 0 <= x < 1.
 +--------------------------+
 +--------------------------+
-double x = rng.nextDouble(); // 0 <= x < 1
+double x = rng.nextDouble(); // 0 <= x < 1.
 +--------------------------+
 
 
@@ -125,7 +125,7 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new int[] { 
 UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new long[] { 0x638a3fd83bc0e851L, 0x9730fd12c75ae247L });
 +--------------------------+
 
-    Note however that upon initialization the underlying generation algorithm
+    Note however that, upon initialization, the underlying generation algorithm
 
     ** may not use all the information contents of the seed,
 
@@ -141,6 +141,7 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new long[] {
     to the <<<create>>> method is not of the native type, it is automatically converted.
     The conversion preserves the information contents but is otherwise not specified (i.e.
     different releases of the library may use different conversion procedures).
+
     Hence, if reproducibility of the generated sequences across successive releases of the
     library is necessary, users should ensure that they use native seeds.
 
@@ -190,7 +191,7 @@ double y = rng.nextDouble(); // x == y.
     However, users can easily set up a custom serialization scheme if the random source
     is known at both ends of the communication channel.
     This would be useful namely to save the state to persistent storage, and restore it
-    such that generation will continue from the same sequence.
+    such that the sequence will continue from where it left off.
 
 +--------------------------+
 RandomSource source = RandomSource.MT_64; // Known source identifier.
@@ -208,13 +209,11 @@ ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 ObjectInputStream ois = new ObjectInputStream(bis);
 RandomSource.State stateNew = (RandomSource.State) ois.readObject();
 
-UniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance.
+UniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
 
 // Restore original state on the new instance.
 RandomSource.restoreState(rngNew, stateNew);
 +--------------------------+
-
-    Serialization of unknown random sources is not supported.
 
 
   []
