@@ -241,8 +241,7 @@ RandomSource.restoreState(rngNew, stateNew);
   None of those classes should be used directly in applications.
 
   The rest of this section briefly describes the internal classes.
-  More information is available in the
-  {{{../apidocs/org/apache/commons/rng/internal/index.html}Javadoc}}.
+  More information is available in the {{{../apidocs/index.html}Javadoc}}.
 
   * <<<ProviderBuilder>>>: contains methods for instantiating the concrete
     RNG implementations based on the source identifier; it also takes care
