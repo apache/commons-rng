@@ -97,6 +97,9 @@
     <commons.componentid>rng</commons.componentid>
     <!-- This value must reflect the current name of the base package. -->
     <commons.osgi.symbolicName>org.apache.commons.rng</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng</commons.osgi.export>
+    <commons.osgi.private>org.apache.commons.rng.internal</commons.osgi.private>
     <!-- do not use snapshot suffix here -->
     <commons.release.version>0.1</commons.release.version>
     <commons.release.desc>(requires Java 1.5+)</commons.release.desc>
