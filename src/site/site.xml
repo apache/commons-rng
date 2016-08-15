@@ -18,7 +18,7 @@
 <project name="Rng">
   <bannerRight>
     <name>Commons Rng</name>
-    <src>/images/commons_rng.png</src>
+    <src>/images/commons_rng.small.png</src>
     <href>/index.html</href>
   </bannerRight>
 
