@@ -43,7 +43,7 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
 +--------------------------+
 
 
-  * A generator will a return randomly selected element from a range
+  * A generator will return a randomly selected element from a range
     of possible values of some Java (primitive) type.
 
 +--------------------------+
@@ -103,7 +103,7 @@ long[] seed = RandomSource.createLongArray(128); // Length of returned array is 
 +--------------------------+
 
 
-  * Any of the following types cant be passed to the <<<create>>> method as the "seed" argument:
+  * Any of the following types can be passed to the <<<create>>> method as the "seed" argument:
 
     ** <<<int>>> or <<<Integer>>>
 
@@ -231,8 +231,8 @@ RandomSource.restoreState(rngNew, stateNew);
     sequence of random values.
 
   * <<<RandomSource.State>>>: enables the save and restore functionality of
-    the state of <<<UniformRandomProvider>>> instances created through the
-    <<<RandomSource>>> factory methods.
+    the state of a <<<UniformRandomProvider>>> instance created through one
+    of the <<<RandomSource>>> factory methods.
 
   []
 
@@ -248,7 +248,7 @@ RandomSource.restoreState(rngNew, stateNew);
     of calling the appropriate classes for seed type conversion.
 
   * <<<BaseProvider>>>: base class for all concrete RNG implementations;
-    it contains higher level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
+    it contains higher-level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
     common to all implementations; it defines the implementation of the
     <<<Random.State>>> public interface.
 
@@ -258,7 +258,7 @@ RandomSource.restoreState(rngNew, stateNew);
 
     ** <<<NumberFactory>>>: contains utilities for interpreting and combining
        the output (<<<int>>> or <<<long>>>) of the underlying source of
-       randomness into the requested output, i.e. one the Java primitive
+       randomness into the requested output, i.e. one of the Java primitive
        types supported by <<<UniformRandomProvider>>>.
 
     ** <<<SeedFactory>>>: contains factory methods for generating random seeds.
@@ -266,7 +266,7 @@ RandomSource.restoreState(rngNew, stateNew);
     ** <<<SeedConverter>>>: interface for classes that transform between
        supported seed types.
 
-    ** Various classes that implements <<<SeedConverter>>> in order to transform
+    ** Various classes that implement <<<SeedConverter>>> in order to transform
        from caller's seed to "native" seed.
 
     []
@@ -274,7 +274,7 @@ RandomSource.restoreState(rngNew, stateNew);
   * <<<org.apache.commons.rng.internal.source32>>>
 
     ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
-       32 bits chunks (a.k.a Java <<<int>>>).
+       32-bits chunks (a.k.a Java <<<int>>>).
 
     ** <<<IntProvider>>>: base class for concrete classes that implement <<<RandomIntSource>>>.
 
@@ -285,7 +285,7 @@ RandomSource.restoreState(rngNew, stateNew);
   * <<<org.apache.commons.rng.internal.source64>>>
 
     ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
-       64 bits chunks (a.k.a Java <<<long>>>).
+       64-bits chunks (a.k.a Java <<<long>>>).
 
     ** <<<LongProvider>>>: base class for concrete classes that implement <<<RandomLongSource>>>.
 
