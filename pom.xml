@@ -302,6 +302,7 @@
           <configuration>
             <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <configLocation>checkstyle.xml</configLocation>
+            <headerLocation>license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
             <failOnViolation>false</failOnViolation>
           </configuration>
