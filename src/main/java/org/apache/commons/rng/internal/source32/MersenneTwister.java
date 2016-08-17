@@ -89,11 +89,11 @@ public class MersenneTwister extends IntProvider {
     private static final long INT_MASK_LONG = 0xffffffffL;
     /** Most significant w-r bits. */
     private static final long UPPER_MASK_LONG = 0x80000000L;
-    /** Least significant r bits */
+    /** Least significant r bits. */
     private static final long LOWER_MASK_LONG = 0x7fffffffL;
     /** Most significant w-r bits. */
     private static final int UPPER_MASK = 0x80000000;
-    /** Least significant r bits */
+    /** Least significant r bits. */
     private static final int LOWER_MASK = 0x7fffffff;
     /** Size of the bytes pool. */
     private static final int N = 624;

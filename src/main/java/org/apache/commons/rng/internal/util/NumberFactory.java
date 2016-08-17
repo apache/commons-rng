@@ -23,19 +23,19 @@ import java.util.Arrays;
  * or one {@code long} value, or a sequence of bytes.
  */
 public final class NumberFactory {
-    /** See {@link #makeDouble(long)} */
+    /** See {@link #makeDouble(long)}. */
     private static final long DOUBLE_HIGH_BITS = 0x3ffL << 52;
-    /** See {@link #makeFloat(int)} */
+    /** See {@link #makeFloat(int)}. */
     private static final float FLOAT_MULTIPLIER = 0x1.0p-23f;
-    /** See {@link #makeDouble(int, int)} */
+    /** See {@link #makeDouble(int, int)}. */
     private static final double DOUBLE_MULTIPLIER = 0x1.0p-52d;
     /** Lowest byte mask. */
     private static final long LONG_LOWEST_BYTE_MASK = 0xffL;
-    /** Number of bytes in a {@code long} */
+    /** Number of bytes in a {@code long}. */
     private static final int LONG_SIZE = 8;
     /** Lowest byte mask. */
     private static final int INT_LOWEST_BYTE_MASK = 0xff;
-    /** Number of bytes in a {@code int} */
+    /** Number of bytes in a {@code int}. */
     private static final int INT_SIZE = 4;
 
     /**

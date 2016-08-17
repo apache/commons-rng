@@ -301,6 +301,7 @@ public enum RandomSource {
      *   When the native seed type is an array and the {@code seed} is
      *   {@code null}, the size of the generated array will be 128.
      *  </li>
+     * </ul>
      * </p>
      *
      * @param source RNG type.

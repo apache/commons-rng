@@ -41,27 +41,27 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * @since 1.0
  */
 public class ISAACRandom extends IntProvider {
-    /** Log of size of rsl[] and mem[] */
+    /** Log of size of rsl[] and mem[]. */
     private static final int SIZE_L = 8;
-    /** Size of rsl[] and mem[] */
+    /** Size of rsl[] and mem[]. */
     private static final int SIZE = 1 << SIZE_L;
-    /** Half-size of rsl[] and mem[] */
+    /** Half-size of rsl[] and mem[]. */
     private static final int H_SIZE = SIZE >> 1;
-    /** For pseudo-random lookup */
+    /** For pseudo-random lookup. */
     private static final int MASK = SIZE - 1 << 2;
-    /** The golden ratio */
+    /** The golden ratio. */
     private static final int GLD_RATIO = 0x9e3779b9;
-    /** The results given to the user */
+    /** The results given to the user. */
     private final int[] rsl = new int[SIZE];
-    /** The internal state */
+    /** The internal state. */
     private final int[] mem = new int[SIZE];
-    /** Count through the results in rsl[] */
+    /** Count through the results in rsl[]. */
     private int count;
-    /** Accumulator */
+    /** Accumulator. */
     private int isaacA;
-    /** The last result */
+    /** The last result. */
     private int isaacB;
-    /** Counter, guarantees cycle is at least 2^40 */
+    /** Counter, guarantees cycle is at least 2^40. */
     private int isaacC;
     /** Service variable. */
     private final int[] arr = new int[8];

@@ -44,7 +44,7 @@ public abstract class AbstractWell extends IntProvider {
     protected final int[] v;
 
     /**
-     * Creates a new random number generator using an int array seed.
+     * Creates an instance with the given {@code seed}.
      *
      * @param k Number of bits in the pool (not necessarily a multiple of 32).
      * @param seed Initial seed.
@@ -79,7 +79,7 @@ public abstract class AbstractWell extends IntProvider {
     }
 
     /**
-     * Reinitialize the generator as if just built with the given int array seed.
+     * Initializes the generator with the given {@code seed}.
      *
      * <p>The state of the generator is exactly the same as a new generator built
      * with the same seed.</p>
