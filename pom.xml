@@ -302,6 +302,8 @@
                 <configuration>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <configLocation>checkstyle.xml</configLocation>
+                    <logViolationsToConsole>false</logViolationsToConsole>
+                    <failOnViolation>false</failOnViolation>
                 </configuration>
             </plugin>
         </plugins>
