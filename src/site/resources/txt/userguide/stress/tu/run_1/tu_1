@@ -1,5 +1,5 @@
 # 
-# RNG: org.apache.commons.math4.rng.internal.source32.JDKRandom
+# RNG: org.apache.commons.rng.internal.source32.JDKRandom
 # 
 # Java: 1.8.0_66
 # Runtime: 1.8.0_66-b17
@@ -46,7 +46,7 @@ p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:59.81
+CPU time used                    :  00:02:13.43
 
 Generator state:
 N/A
@@ -81,11 +81,11 @@ Test Results for Delta =   1.0000
 
 Number of degrees of freedom          : 16711680
 Value of the statistic                : 1.67e+7
-p-value of test                       :  4.2e-3
+p-value of test                       :    0.36
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:39.36
+CPU time used                    :  00:02:31.45
 
 Generator state:
 N/A
@@ -137,7 +137,7 @@ Total number of cells containing j balls
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:04:56.37
+CPU time used                    :  00:05:20.01
 
 Generator state:
 N/A
@@ -175,21 +175,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         :     1335
-p-value of test                       :    0.78
+Observed number of collisions         :     1358
+p-value of test                       :    0.56
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131940795334455
-  j =  1                              :        599997330
-  j =  2                              :             1335
+  j =  0                              :  131940795334478
+  j =  1                              :        599997284
+  j =  2                              :             1358
   j =  3                              :                0
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:04:20.59
+CPU time used                    :  00:05:10.45
 
 Generator state:
 N/A
@@ -241,7 +241,7 @@ Total number of cells containing j balls
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:31.36
+CPU time used                    :  00:08:02.09
 
 Generator state:
 N/A
@@ -279,21 +279,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         :     1405
-p-value of test                       :    0.14
+Observed number of collisions         :     1347
+p-value of test                       :    0.67
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131940795334525
-  j =  1                              :        599997190
-  j =  2                              :             1405
+  j =  0                              :  131940795334467
+  j =  1                              :        599997306
+  j =  2                              :             1347
   j =  3                              :                0
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:30.79
+CPU time used                    :  00:09:48.31
 
 Generator state:
 N/A
@@ -345,7 +345,7 @@ Total number of cells containing j balls
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:37.50
+CPU time used                    :  00:06:32.65
 
 Generator state:
 N/A
@@ -383,21 +383,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         :     1337
-p-value of test                       :    0.76
+Observed number of collisions         :     1304
+p-value of test                       :    0.95
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131940795334457
-  j =  1                              :        599997326
-  j =  2                              :             1337
+  j =  0                              :  131940795334424
+  j =  1                              :        599997392
+  j =  2                              :             1304
   j =  3                              :                0
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:29.25
+CPU time used                    :  00:09:18.34
 
 Generator state:
 N/A
@@ -435,21 +435,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         : 348341381
+Observed number of collisions         : 348341382
 p-value of test                       :   eps      *****
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131941143674501
-  j =  1                              :              379
-  j =  2                              :        154975099
-  j =  3                              :         96683141
+  j =  0                              :  131941143674502
+  j =  1                              :              378
+  j =  2                              :        154975098
+  j =  3                              :         96683142
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:04:32.00
+CPU time used                    :  00:06:07.28
 
 Generator state:
 N/A
@@ -487,21 +487,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         :     1341
-p-value of test                       :    0.73
+Observed number of collisions         :     1359
+p-value of test                       :    0.55
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131940795334461
-  j =  1                              :        599997318
-  j =  2                              :             1341
+  j =  0                              :  131940795334479
+  j =  1                              :        599997282
+  j =  2                              :             1359
   j =  3                              :                0
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:24.46
+CPU time used                    :  00:09:14.67
 
 Generator state:
 N/A
@@ -539,21 +539,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         : 348341180
+Observed number of collisions         : 348341177
 p-value of test                       :   eps      *****
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131941143674300
-  j =  1                              :              580
-  j =  2                              :        154975300
-  j =  3                              :         96682940
+  j =  0                              :  131941143674297
+  j =  1                              :              583
+  j =  2                              :        154975303
+  j =  3                              :         96682937
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:05:25.94
+CPU time used                    :  00:06:12.59
 
 Generator state:
 N/A
@@ -591,21 +591,21 @@ Results of CollisionOver test:
 
 POISSON approximation                 :
 Expected number of collisions = N*Mu  :     1364.24
-Observed number of collisions         :     1376
-p-value of test                       :    0.38
+Observed number of collisions         :     1398
+p-value of test                       :    0.18
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :  131940795334496
-  j =  1                              :        599997248
-  j =  2                              :             1376
+  j =  0                              :  131940795334518
+  j =  1                              :        599997204
+  j =  2                              :             1398
   j =  3                              :                0
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:07:52.76
+CPU time used                    :  00:09:33.03
 
 Generator state:
 N/A
@@ -629,12 +629,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    5421.01
-Total observed number                 : 11932277
+Total observed number                 : 11933154
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:04:24.28
+CPU time used                    :  00:05:30.56
 
 Generator state:
 N/A
@@ -658,12 +658,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    4336.81
-Total observed number                 : 201409327
+Total observed number                 : 201413089
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:55.26
+CPU time used                    :  00:02:29.26
 
 Generator state:
 N/A
@@ -687,12 +687,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    7318.36
-Total observed number                 : 4281972
+Total observed number                 : 4281267
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:03:15.55
+CPU time used                    :  00:04:15.57
 
 Generator state:
 N/A
@@ -716,12 +716,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    4336.81
-Total observed number                 : 396234610
+Total observed number                 : 396239267
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:05.72
+CPU time used                    :  00:02:48.63
 
 Generator state:
 N/A
@@ -745,12 +745,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    4336.81
-Total observed number                 : 313496568
+Total observed number                 : 313503824
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:22.26
+CPU time used                    :  00:03:14.61
 
 Generator state:
 N/A
@@ -774,12 +774,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    7318.36
-Total observed number                 : 85304229
+Total observed number                 : 85301574
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:03:57.89
+CPU time used                    :  00:05:21.39
 
 Generator state:
 N/A
@@ -803,12 +803,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    7318.36
-Total observed number                 :  745503
+Total observed number                 :  742603
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:03:56.14
+CPU time used                    :  00:05:22.97
 
 Generator state:
 N/A
@@ -832,12 +832,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    7318.36
-Total observed number                 : 595349080
+Total observed number                 : 595353060
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:04:03.40
+CPU time used                    :  00:05:35.73
 
 Generator state:
 N/A
@@ -861,12 +861,12 @@ smarsa_BirthdaySpacings test:
 
 ----------------------------------------------------
 Total expected number = N*Lambda      :    7318.36
-Total observed number                 : 5165123
+Total observed number                 : 5160723
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:05:30.52
+CPU time used                    :  00:07:39.86
 
 Generator state:
 N/A
@@ -898,10 +898,10 @@ p-value of test                       :   eps      *****
 A2 test based on the spacings between the
    successive jump times of process Y_n(t):
 
-A2 test on the values of A2 (m-NP)    :  672.27
-p-value of test                       :4.1e-294    *****
+A2 test on the values of A2 (m-NP)    :  684.21
+p-value of test                       :2.7e-299    *****
 
-Test on the Nm values of W_{n,i}(mNP1):  699.85
+Test on the Nm values of W_{n,i}(mNP1):  716.57
 p-value of test                       :   eps      *****
 
 Test on the jump times of Y
@@ -912,7 +912,7 @@ Number of jumps of Y                  :       0
 p-value of test                       : 1 - eps1    *****
 
 -----------------------------------------------
-CPU time used                    :  00:03:21.27
+CPU time used                    :  00:03:43.18
 
 Generator state:
 N/A
@@ -947,7 +947,7 @@ A2 test based on the spacings between the
 A2 test on the values of A2 (m-NP)    :  714.74
 p-value of test                       :   eps      *****
 
-Test on the Nm values of W_{n,i}(mNP1):14871.66
+Test on the Nm values of W_{n,i}(mNP1):15422.36
 p-value of test                       :   eps      *****
 
 Test on the jump times of Y
@@ -958,7 +958,7 @@ Number of jumps of Y                  :       0
 p-value of test                       : 1 - eps1    *****
 
 -----------------------------------------------
-CPU time used                    :  00:14:24.21
+CPU time used                    :  00:21:20.54
 
 Generator state:
 N/A
@@ -993,7 +993,7 @@ A2 test based on the spacings between the
 A2 test on the values of A2 (m-NP)    :  357.37
 p-value of test                       :3.2e-157    *****
 
-Test on the Nm values of W_{n,i}(mNP1): 7943.61
+Test on the Nm values of W_{n,i}(mNP1): 8314.32
 p-value of test                       :   eps      *****
 
 Test on the jump times of Y
@@ -1004,7 +1004,7 @@ Number of jumps of Y                  :       0
 p-value of test                       : 1 - eps1    *****
 
 -----------------------------------------------
-CPU time used                    :  00:27:14.61
+CPU time used                    :  00:36:51.40
 
 Generator state:
 N/A
@@ -1062,7 +1062,7 @@ Stat. AD after spacings (mNP2-S)      : 8.93e+6
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:03:03.62
+CPU time used                    :  00:04:06.06
 
 Generator state:
 N/A
@@ -1082,11 +1082,11 @@ sknuth_SimpPoker test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    7
-Chi-square statistic                  : 4476.86
+Chi-square statistic                  : 7658.20
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:17.82
+CPU time used                    :  00:01:45.45
 
 Generator state:
 N/A
@@ -1106,11 +1106,11 @@ sknuth_SimpPoker test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    7
-Chi-square statistic                  :    6.89
-p-value of test                       :    0.44
+Chi-square statistic                  :    7.48
+p-value of test                       :    0.38
 
 -----------------------------------------------
-CPU time used                    :  00:01:29.34
+CPU time used                    :  00:02:00.90
 
 Generator state:
 N/A
@@ -1130,11 +1130,11 @@ sknuth_SimpPoker test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   18
-Chi-square statistic                  :32196.55
+Chi-square statistic                  :28619.70
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:17.05
+CPU time used                    :  00:01:38.90
 
 Generator state:
 N/A
@@ -1154,11 +1154,11 @@ sknuth_SimpPoker test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   18
-Chi-square statistic                  :   15.15
-p-value of test                       :    0.65
+Chi-square statistic                  :   13.78
+p-value of test                       :    0.74
 
 -----------------------------------------------
-CPU time used                    :  00:01:27.01
+CPU time used                    :  00:01:55.89
 
 Generator state:
 N/A
@@ -1178,11 +1178,11 @@ sknuth_CouponCollector test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   54
-Chi-square statistic                  : 2.23e+5
+Chi-square statistic                  : 2.45e+5
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:38.42
+CPU time used                    :  00:02:07.62
 
 Generator state:
 N/A
@@ -1202,11 +1202,11 @@ sknuth_CouponCollector test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   54
-Chi-square statistic                  : 4075.22
+Chi-square statistic                  : 3209.35
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:46.06
+CPU time used                    :  00:02:27.54
 
 Generator state:
 N/A
@@ -1226,11 +1226,11 @@ sknuth_CouponCollector test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   54
-Chi-square statistic                  :   56.22
-p-value of test                       :    0.39
+Chi-square statistic                  :   45.15
+p-value of test                       :    0.80
 
 -----------------------------------------------
-CPU time used                    :  00:01:41.81
+CPU time used                    :  00:02:24.57
 
 Generator state:
 N/A
@@ -1250,11 +1250,11 @@ sknuth_CouponCollector test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   54
-Chi-square statistic                  :   29.80
-p-value of test                       :    0.9970
+Chi-square statistic                  :   41.45
+p-value of test                       :    0.89
 
 -----------------------------------------------
-CPU time used                    :  00:01:46.23
+CPU time used                    :  00:02:23.29
 
 Generator state:
 N/A
@@ -1274,11 +1274,11 @@ sknuth_Gap test:
 
 -----------------------------------------------
 Number of degrees of freedom          :  232
-Chi-square statistic                  : 2.01e+5
+Chi-square statistic                  : 2.07e+5
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:06.05
+CPU time used                    :  00:02:42.57
 
 Generator state:
 N/A
@@ -1298,11 +1298,11 @@ sknuth_Gap test:
 
 -----------------------------------------------
 Number of degrees of freedom          :  434
-Chi-square statistic                  :  442.43
-p-value of test                       :    0.38
+Chi-square statistic                  :  438.28
+p-value of test                       :    0.43
 
 -----------------------------------------------
-CPU time used                    :  00:03:03.40
+CPU time used                    :  00:03:55.45
 
 Generator state:
 N/A
@@ -1322,11 +1322,11 @@ sknuth_Gap test:
 
 -----------------------------------------------
 Number of degrees of freedom          : 1437
-Chi-square statistic                  : 2.11e+6
+Chi-square statistic                  : 1.90e+6
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:03:16.50
+CPU time used                    :  00:04:05.95
 
 Generator state:
 N/A
@@ -1346,11 +1346,11 @@ sknuth_Gap test:
 
 -----------------------------------------------
 Number of degrees of freedom          : 7046
-Chi-square statistic                  : 7191.96
-p-value of test                       :    0.11
+Chi-square statistic                  : 7145.76
+p-value of test                       :    0.20
 
 -----------------------------------------------
-CPU time used                    :  00:03:10.00
+CPU time used                    :  00:04:08.86
 
 Generator state:
 N/A
@@ -1370,22 +1370,22 @@ sknuth_Run test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    : 2.84e-7
-p-value of test                       : 1 -  2.8e-7    *****
+Kolmogorov-Smirnov+ statistic = D+    :    0.35
+p-value of test                       :    0.24
 
-Kolmogorov-Smirnov- statistic = D-    :    1.00
-p-value of test                       : 4.2e-15    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.52
+p-value of test                       :    0.04
 
-Anderson-Darling statistic = A2       :   66.57
-p-value of test                       : 1.5e-30    *****
+Anderson-Darling statistic = A2       :    1.62
+p-value of test                       :    0.15
 
 Test on the sum of all N observations
 Number of degrees of freedom          :   30
-Chi-square statistic                  :  199.09
-p-value of test                       : 7.3e-27    *****
+Chi-square statistic                  :   30.93
+p-value of test                       :    0.42
 
 -----------------------------------------------
-CPU time used                    :  00:01:43.97
+CPU time used                    :  00:02:04.29
 
 Generator state:
 N/A
@@ -1405,22 +1405,22 @@ sknuth_Run test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.21
-p-value of test                       :    0.35
+Kolmogorov-Smirnov+ statistic = D+    :    0.29
+p-value of test                       :    0.15
 
-Kolmogorov-Smirnov- statistic = D-    :    0.13
-p-value of test                       :    0.66
+Kolmogorov-Smirnov- statistic = D-    :    0.16
+p-value of test                       :    0.56
 
-Anderson-Darling statistic = A2       :    0.57
-p-value of test                       :    0.67
+Anderson-Darling statistic = A2       :    1.03
+p-value of test                       :    0.34
 
 Test on the sum of all N observations
 Number of degrees of freedom          :   60
-Chi-square statistic                  :   51.69
-p-value of test                       :    0.77
+Chi-square statistic                  :   58.71
+p-value of test                       :    0.52
 
 -----------------------------------------------
-CPU time used                    :  00:04:02.50
+CPU time used                    :  00:05:01.86
 
 Generator state:
 N/A
@@ -1454,12 +1454,12 @@ smultin_Multinomial test:
 Test Results for Delta =   1.0000
 
 Number of degrees of freedom          :    5
-Value of the statistic                :  256.62
+Value of the statistic                :  284.89
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:13.67
+CPU time used                    :  00:01:31.71
 
 Generator state:
 N/A
@@ -1493,12 +1493,12 @@ smultin_Multinomial test:
 Test Results for Delta =   1.0000
 
 Number of degrees of freedom          :  119
-Value of the statistic                :29156.14
+Value of the statistic                :24849.56
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:07.14
+CPU time used                    :  00:02:37.63
 
 Generator state:
 N/A
@@ -1532,12 +1532,12 @@ smultin_Multinomial test:
 Test Results for Delta =   1.0000
 
 Number of degrees of freedom          : 5039
-Value of the statistic                : 1.82e+6
+Value of the statistic                : 1.85e+6
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:30.29
+CPU time used                    :  00:01:58.96
 
 Generator state:
 N/A
@@ -1571,12 +1571,12 @@ smultin_Multinomial test:
 Test Results for Delta =   1.0000
 
 Number of degrees of freedom          : 3628799
-Value of the statistic                : 5.82e+6
+Value of the statistic                : 5.81e+6
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:58.15
+CPU time used                    :  00:03:58.51
 
 Generator state:
 N/A
@@ -1611,22 +1611,22 @@ Test Results for Collisions
 For the total number of collisions, we use
       the Poisson approximation:
 Expected number of collisions = N*Mu  :    45879.47
-Observed number of collisions         : 305341510
+Observed number of collisions         : 305479766
 p-value of test                       :   eps      *****
 
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :    1743471165510
-  j =  1                              :          9476333
-  j =  2                              :         13916426
-  j =  3                              :         11242897
-  j =  4                              :         14934640
-  j =  5                              :         35016751
+  j =  0                              :    1743471303766
+  j =  1                              :          9453178
+  j =  2                              :         13767676
+  j =  3                              :         11175892
+  j =  4                              :         15001281
+  j =  5                              :         35020793
 
 -----------------------------------------------
-CPU time used                    :  00:03:36.95
+CPU time used                    :  00:04:37.50
 
 Generator state:
 N/A
@@ -1661,22 +1661,22 @@ Test Results for Collisions
 For the total number of collisions, we use
       the Poisson approximation:
 Expected number of collisions = N*Mu  :    45879.47
-Observed number of collisions         :    34728
+Observed number of collisions         :    34523
 p-value of test                       : 1 - eps1    *****
 
 
 -----------------------------
 Total number of cells containing j balls
 
-  j =  0                              :    1743165858728
-  j =  1                              :        399930544
-  j =  2                              :            34728
-  j =  3                              :                0
+  j =  0                              :    1743165858523
+  j =  1                              :        399930955
+  j =  2                              :            34521
+  j =  3                              :                1
   j =  4                              :                0
   j =  5                              :                0
 
 -----------------------------------------------
-CPU time used                    :  00:04:28.63
+CPU time used                    :  00:05:44.34
 
 Generator state:
 N/A
@@ -1700,36 +1700,36 @@ sknuth_MaxOft test:
 -----------------------------------------------
 Test results for chi2 with 99999 degrees of freedom:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.14
-p-value of test                       :    0.20
+Kolmogorov-Smirnov+ statistic = D+    :    0.29
+p-value of test                       :  7.1e-4    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.11
-p-value of test                       :    0.36
+Kolmogorov-Smirnov- statistic = D-    : 1.71e-4
+p-value of test                       :    0.9998    *****
 
-Anderson-Darling statistic = A2       :    0.99
-p-value of test                       :    0.36
+Anderson-Darling statistic = A2       :    6.44
+p-value of test                       :  6.3e-4    *****
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 3999960
-Chi-square statistic                  : 4.00e+6
-p-value of test                       :    0.51
+Chi-square statistic                  : 3.99e+6
+p-value of test                       :    0.9999    *****
 
 
 -----------------------------------------------
 Test results for Anderson-Darling:
 
-Kolmogorov-Smirnov+ statistic = D+    :   0.019
-p-value of test                       :    0.96
+Kolmogorov-Smirnov+ statistic = D+    : 6.14e-6
+p-value of test                       : 1 -  6.1e-6    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.81
-p-value of test                       : 4.2e-29    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.98
+p-value of test                       : 1.0e-65    *****
 
-Anderson-Darling statistic = A2       :   57.56
-p-value of test                       : 1.3e-26    *****
+Anderson-Darling statistic = A2       :  202.19
+p-value of test                       : 1.1e-89    *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:03:17.37
+CPU time used                    :  00:04:09.79
 
 Generator state:
 N/A
@@ -1753,36 +1753,36 @@ sknuth_MaxOft test:
 -----------------------------------------------
 Test results for chi2 with 99999 degrees of freedom:
 
-Kolmogorov-Smirnov+ statistic = D+    : 9.06e-4
-p-value of test                       :    0.9991    *****
+Kolmogorov-Smirnov+ statistic = D+    : 3.63e-5
+p-value of test                       : 1 -  3.6e-5    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.60
-p-value of test                       : 4.8e-11    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.57
+p-value of test                       : 4.1e-10    *****
 
-Anderson-Darling statistic = A2       :   29.84
-p-value of test                       : 2.0e-14    *****
+Anderson-Darling statistic = A2       :   33.00
+p-value of test                       : 7.9e-16    *****
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 2999970
 Chi-square statistic                  : 3.02e+6
-p-value of test                       : 2.9e-15    *****
+p-value of test                       : 9.0e-18    *****
 
 
 -----------------------------------------------
 Test results for Anderson-Darling:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.93
-p-value of test                       : 5.9e-36    *****
+Kolmogorov-Smirnov+ statistic = D+    :    0.83
+p-value of test                       : 9.0e-24    *****
 
-Kolmogorov-Smirnov- statistic = D-    :   0.046
-p-value of test                       :    0.85
+Kolmogorov-Smirnov- statistic = D-    :   0.089
+p-value of test                       :    0.59
 
-Anderson-Darling statistic = A2       :   56.41
-p-value of test                       : 4.1e-26    *****
+Anderson-Darling statistic = A2       :   34.04
+p-value of test                       : 2.8e-16    *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:03:00.54
+CPU time used                    :  00:03:55.86
 
 Generator state:
 N/A
@@ -1806,36 +1806,36 @@ sknuth_MaxOft test:
 -----------------------------------------------
 Test results for chi2 with 99999 degrees of freedom:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.13
-p-value of test                       :    0.48
+Kolmogorov-Smirnov+ statistic = D+    :    0.23
+p-value of test                       :    0.10
 
-Kolmogorov-Smirnov- statistic = D-    :    0.18
-p-value of test                       :    0.23
+Kolmogorov-Smirnov- statistic = D-    :   0.051
+p-value of test                       :    0.87
 
-Anderson-Darling statistic = A2       :    0.83
-p-value of test                       :    0.46
+Anderson-Darling statistic = A2       :    1.22
+p-value of test                       :    0.26
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 1999980
 Chi-square statistic                  : 2.00e+6
-p-value of test                       :    0.43
+p-value of test                       :    0.88
 
 
 -----------------------------------------------
 Test results for Anderson-Darling:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.37
-p-value of test                       :  3.4e-3
+Kolmogorov-Smirnov+ statistic = D+    :    0.59
+p-value of test                       :  1.7e-7    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.42
-p-value of test                       :  4.4e-4    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.23
+p-value of test                       :    0.11
 
-Anderson-Darling statistic = A2       :    5.14
-p-value of test                       :  2.5e-3
+Anderson-Darling statistic = A2       :    7.80
+p-value of test                       :  1.5e-4    *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:24.46
+CPU time used                    :  00:03:06.70
 
 Generator state:
 N/A
@@ -1859,36 +1859,36 @@ sknuth_MaxOft test:
 -----------------------------------------------
 Test results for chi2 with 99999 degrees of freedom:
 
-Kolmogorov-Smirnov+ statistic = D+    : 2.35e-4
-p-value of test                       :    0.9998    *****
+Kolmogorov-Smirnov+ statistic = D+    : 2.56e-4
+p-value of test                       :    0.9997    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.45
-p-value of test                       :  1.9e-4    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.84
+p-value of test                       : 2.2e-16    *****
 
-Anderson-Darling statistic = A2       :    9.23
-p-value of test                       :  3.3e-5    *****
+Anderson-Darling statistic = A2       :   55.16
+p-value of test                       : 1.5e-25    *****
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 1999980
-Chi-square statistic                  : 2.01e+6
-p-value of test                       :  2.1e-6    *****
+Chi-square statistic                  : 2.02e+6
+p-value of test                       : 2.6e-26    *****
 
 
 -----------------------------------------------
 Test results for Anderson-Darling:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.99
-p-value of test                       : 1.8e-40    *****
+Kolmogorov-Smirnov+ statistic = D+    :    1.00
+p-value of test                       : 4.4e-57    *****
 
-Kolmogorov-Smirnov- statistic = D-    : 5.24e-3
-p-value of test                       :    0.9942
+Kolmogorov-Smirnov- statistic = D-    : 7.17e-4
+p-value of test                       :    0.9993    *****
 
-Anderson-Darling statistic = A2       :   77.07
-p-value of test                       : 3.8e-35    *****
+Anderson-Darling statistic = A2       :  113.76
+p-value of test                       : 3.6e-51    *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:50.30
+CPU time used                    :  00:03:37.98
 
 Generator state:
 N/A
@@ -1908,17 +1908,17 @@ svaria_SampleProd test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.47
-p-value of test                       :  5.9e-9    *****
+Kolmogorov-Smirnov+ statistic = D+    :    0.31
+p-value of test                       :  2.7e-4    *****
 
-Kolmogorov-Smirnov- statistic = D-    :    0.39
-p-value of test                       :  2.1e-6    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.45
+p-value of test                       :  2.8e-8    *****
 
-Anderson-Darling statistic = A2       :   12.59
-p-value of test                       :  9.4e-7    *****
+Anderson-Darling statistic = A2       :   11.34
+p-value of test                       :  3.4e-6    *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:24.79
+CPU time used                    :  00:03:07.72
 
 Generator state:
 N/A
@@ -1938,17 +1938,17 @@ svaria_SampleProd test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    1.00
-p-value of test                       :2.9e-106    *****
+Kolmogorov-Smirnov+ statistic = D+    :    0.98
+p-value of test                       : 3.9e-34    *****
 
-Kolmogorov-Smirnov- statistic = D-    : 2.52e-6
-p-value of test                       : 1 -  2.5e-6    *****
+Kolmogorov-Smirnov- statistic = D-    :   0.013
+p-value of test                       :    0.98
 
-Anderson-Darling statistic = A2       :  225.84
-p-value of test                       :5.4e-100    *****
+Anderson-Darling statistic = A2       :   60.29
+p-value of test                       : 8.2e-28    *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:43.35
+CPU time used                    :  00:02:13.59
 
 Generator state:
 N/A
@@ -1968,17 +1968,17 @@ svaria_SampleProd test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.99
-p-value of test                       : 6.6e-46    *****
+Kolmogorov-Smirnov+ statistic = D+    :    1.00
+p-value of test                       : 1.8e-47    *****
 
-Kolmogorov-Smirnov- statistic = D-    : 1.99e-3
-p-value of test                       :    0.9979
+Kolmogorov-Smirnov- statistic = D-    : 2.65e-3
+p-value of test                       :    0.9972
 
-Anderson-Darling statistic = A2       :   91.82
-p-value of test                       : 1.3e-41    *****
+Anderson-Darling statistic = A2       :   90.09
+p-value of test                       : 7.7e-41    *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:14.85
+CPU time used                    :  00:02:49.59
 
 Generator state:
 N/A
@@ -1998,17 +1998,17 @@ svaria_SampleMean test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    : 3.87e-4
-p-value of test                       :  2.5e-3
+Kolmogorov-Smirnov+ statistic = D+    : 2.43e-4
+p-value of test                       :    0.09
 
-Kolmogorov-Smirnov- statistic = D-    : 4.10e-4
-p-value of test                       :  1.2e-3
+Kolmogorov-Smirnov- statistic = D-    : 1.75e-4
+p-value of test                       :    0.29
 
-Anderson-Darling statistic = A2       :    6.23
-p-value of test                       :  7.8e-4    *****
+Anderson-Darling statistic = A2       :    1.59
+p-value of test                       :    0.16
 
 -----------------------------------------------
-CPU time used                    :  00:00:34.56
+CPU time used                    :  00:00:41.75
 
 Generator state:
 N/A
@@ -2028,17 +2028,17 @@ svaria_SampleMean test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    : 7.49e-5
+Kolmogorov-Smirnov+ statistic = D+    : 2.16e-4
+p-value of test                       :    0.15
+
+Kolmogorov-Smirnov- statistic = D-    : 7.47e-5
 p-value of test                       :    0.80
 
-Kolmogorov-Smirnov- statistic = D-    : 8.53e-5
-p-value of test                       :    0.75
-
-Anderson-Darling statistic = A2       :    0.25
-p-value of test                       :    0.97
+Anderson-Darling statistic = A2       :    0.61
+p-value of test                       :    0.64
 
 -----------------------------------------------
-CPU time used                    :  00:00:33.70
+CPU time used                    :  00:00:43.90
 
 Generator state:
 N/A
@@ -2057,11 +2057,11 @@ svaria_SampleCorr test:
 
 
 -----------------------------------------------
-Normal statistic                      : 1.86e-3
-p-value of test                       :    0.50
+Normal statistic                      :   -0.12
+p-value of test                       :    0.55
 
 -----------------------------------------------
-CPU time used                    :  00:00:33.54
+CPU time used                    :  00:00:45.23
 
 Generator state:
 N/A
@@ -2080,11 +2080,11 @@ svaria_SampleCorr test:
 
 
 -----------------------------------------------
-Normal statistic                      :  -0.038
-p-value of test                       :    0.52
+Normal statistic                      :   0.055
+p-value of test                       :    0.48
 
 -----------------------------------------------
-CPU time used                    :  00:00:33.52
+CPU time used                    :  00:00:44.77
 
 Generator state:
 N/A
@@ -2109,11 +2109,11 @@ svaria_AppearanceSpacings test:
 
 
 -----------------------------------------------
-Normal statistic                      :  116.34
+Normal statistic                      :   87.26
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:55.71
+CPU time used                    :  00:02:28.38
 
 Generator state:
 N/A
@@ -2138,11 +2138,11 @@ svaria_AppearanceSpacings test:
 
 
 -----------------------------------------------
-Normal statistic                      :   -1.87
-p-value of test                       :    0.97
+Normal statistic                      :   -0.40
+p-value of test                       :    0.65
 
 -----------------------------------------------
-CPU time used                    :  00:01:56.45
+CPU time used                    :  00:02:32.11
 
 Generator state:
 N/A
@@ -2162,11 +2162,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   67
-Chi-square statistic                  :42542.13
+Chi-square statistic                  :29355.34
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:19.62
+CPU time used                    :  00:01:43.52
 
 Generator state:
 N/A
@@ -2186,11 +2186,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   67
-Chi-square statistic                  :  101.15
-p-value of test                       :  4.5e-3
+Chi-square statistic                  :   53.12
+p-value of test                       :    0.89
 
 -----------------------------------------------
-CPU time used                    :  00:01:36.22
+CPU time used                    :  00:02:12.27
 
 Generator state:
 N/A
@@ -2210,11 +2210,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   67
-Chi-square statistic                  :   65.19
-p-value of test                       :    0.54
+Chi-square statistic                  :   58.53
+p-value of test                       :    0.76
 
 -----------------------------------------------
-CPU time used                    :  00:01:37.25
+CPU time used                    :  00:02:11.68
 
 Generator state:
 N/A
@@ -2234,11 +2234,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   37
-Chi-square statistic                  :23743.56
+Chi-square statistic                  :17154.47
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:23.84
+CPU time used                    :  00:01:43.16
 
 Generator state:
 N/A
@@ -2258,11 +2258,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   37
-Chi-square statistic                  :  211.07
+Chi-square statistic                  :  295.11
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:34.86
+CPU time used                    :  00:02:10.88
 
 Generator state:
 N/A
@@ -2282,11 +2282,11 @@ svaria_WeightDistrib test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   37
-Chi-square statistic                  :   58.68
-p-value of test                       :    0.01
+Chi-square statistic                  :   40.71
+p-value of test                       :    0.31
 
 -----------------------------------------------
-CPU time used                    :  00:01:43.95
+CPU time used                    :  00:02:11.66
 
 Generator state:
 N/A
@@ -2306,11 +2306,11 @@ svaria_SumCollector test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   29
-Chi-square statistic                  :13232.94
+Chi-square statistic                  :29227.97
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:50.78
+CPU time used                    :  00:03:24.34
 
 Generator state:
 N/A
@@ -2330,22 +2330,22 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :   0.016
-p-value of test                       :    0.98
+Kolmogorov-Smirnov+ statistic = D+    :   0.097
+p-value of test                       :    0.78
 
-Kolmogorov-Smirnov- statistic = D-    :    0.67
-p-value of test                       :  3.2e-5    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.48
+p-value of test                       :  5.8e-3
 
-Anderson-Darling statistic = A2       :   11.96
-p-value of test                       :  1.8e-6    *****
+Anderson-Darling statistic = A2       :    3.13
+p-value of test                       :    0.02
 
 Test on the sum of all N observations
 Number of degrees of freedom          :   40
-Chi-square statistic                  :   89.07
-p-value of test                       :  1.3e-5    *****
+Chi-square statistic                  :   52.69
+p-value of test                       :    0.09
 
 -----------------------------------------------
-CPU time used                    :  00:01:26.68
+CPU time used                    :  00:01:53.25
 
 Generator state:
 N/A
@@ -2365,22 +2365,22 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.27
-p-value of test                       :    0.21
+Kolmogorov-Smirnov+ statistic = D+    :    0.13
+p-value of test                       :    0.65
 
-Kolmogorov-Smirnov- statistic = D-    :    0.12
-p-value of test                       :    0.68
+Kolmogorov-Smirnov- statistic = D-    :    0.18
+p-value of test                       :    0.46
 
-Anderson-Darling statistic = A2       :    0.95
-p-value of test                       :    0.38
+Anderson-Darling statistic = A2       :    0.41
+p-value of test                       :    0.84
 
 Test on the sum of all N observations
 Number of degrees of freedom          :   40
-Chi-square statistic                  :   29.50
-p-value of test                       :    0.89
+Chi-square statistic                  :   41.31
+p-value of test                       :    0.41
 
 -----------------------------------------------
-CPU time used                    :  00:01:25.47
+CPU time used                    :  00:01:53.52
 
 Generator state:
 N/A
@@ -2400,11 +2400,11 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    3
-Chi-square statistic                  :    1.69
-p-value of test                       :    0.64
+Chi-square statistic                  :    3.35
+p-value of test                       :    0.34
 
 -----------------------------------------------
-CPU time used                    :  00:02:11.01
+CPU time used                    :  00:03:08.25
 
 Generator state:
 N/A
@@ -2424,11 +2424,11 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    3
-Chi-square statistic                  :    0.63
-p-value of test                       :    0.89
+Chi-square statistic                  :    1.82
+p-value of test                       :    0.61
 
 -----------------------------------------------
-CPU time used                    :  00:02:11.25
+CPU time used                    :  00:03:06.06
 
 Generator state:
 N/A
@@ -2448,11 +2448,11 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    2
-Chi-square statistic                  :    1.72
-p-value of test                       :    0.42
+Chi-square statistic                  :    0.23
+p-value of test                       :    0.89
 
 -----------------------------------------------
-CPU time used                    :  00:01:32.53
+CPU time used                    :  00:02:09.97
 
 Generator state:
 N/A
@@ -2472,11 +2472,11 @@ smarsa_MatrixRank test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    2
-Chi-square statistic                  :    0.92
-p-value of test                       :    0.63
+Chi-square statistic                  :    2.14
+p-value of test                       :    0.34
 
 -----------------------------------------------
-CPU time used                    :  00:01:17.71
+CPU time used                    :  00:01:46.25
 
 Generator state:
 N/A
@@ -2496,22 +2496,22 @@ smarsa_Savir2 test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.34
-p-value of test                       :    0.07
+Kolmogorov-Smirnov+ statistic = D+    :    0.10
+p-value of test                       :    0.76
 
-Kolmogorov-Smirnov- statistic = D-    :   0.056
-p-value of test                       :    0.91
+Kolmogorov-Smirnov- statistic = D-    :    0.24
+p-value of test                       :    0.26
 
-Anderson-Darling statistic = A2       :    1.64
-p-value of test                       :    0.15
+Anderson-Darling statistic = A2       :    0.60
+p-value of test                       :    0.64
 
 Test on the sum of all N observations
 Number of degrees of freedom          :  130
-Chi-square statistic                  :  104.50
-p-value of test                       :    0.95
+Chi-square statistic                  :  139.59
+p-value of test                       :    0.27
 
 -----------------------------------------------
-CPU time used                    :  00:00:57.22
+CPU time used                    :  00:01:16.15
 
 Generator state:
 N/A
@@ -2532,24 +2532,24 @@ smarsa_GCD test:
 -----------------------------------------------
 Test results for GCD values:
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.29
-p-value of test                       :    0.16
+Kolmogorov-Smirnov+ statistic = D+    :    0.28
+p-value of test                       :    0.18
 
-Kolmogorov-Smirnov- statistic = D-    :    0.34
-p-value of test                       :    0.08
+Kolmogorov-Smirnov- statistic = D-    :    0.24
+p-value of test                       :    0.28
 
-Anderson-Darling statistic = A2       :    1.38
-p-value of test                       :    0.21
+Anderson-Darling statistic = A2       :    1.17
+p-value of test                       :    0.28
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 17430
-Chi-square statistic                  :17474.88
-p-value of test                       :    0.40
+Chi-square statistic                  :17422.18
+p-value of test                       :    0.52
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:52.06
+CPU time used                    :  00:02:02.13
 
 Generator state:
 N/A
@@ -2572,7 +2572,7 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :   36
-ChiSquare statistic                   :  883.35
+ChiSquare statistic                   :  831.40
 p-value of test                       :   eps      *****
 
 
@@ -2580,7 +2580,7 @@ p-value of test                       :   eps      *****
 Test on the values of the Statistic M
 
 Number of degrees of freedom          :   35
-ChiSquare statistic                   :  619.01
+ChiSquare statistic                   :  567.52
 p-value of test                       :   eps      *****
 
 
@@ -2588,7 +2588,7 @@ p-value of test                       :   eps      *****
 Test on the values of the Statistic J
 
 Number of degrees of freedom          :   25
-ChiSquare statistic                   :  434.44
+ChiSquare statistic                   :  454.89
 p-value of test                       :   eps      *****
 
 
@@ -2596,7 +2596,7 @@ p-value of test                       :   eps      *****
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :   24
-ChiSquare statistic                   :  618.93
+ChiSquare statistic                   :  431.20
 p-value of test                       :   eps      *****
 
 
@@ -2604,12 +2604,12 @@ p-value of test                       :   eps      *****
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :   17
-ChiSquare statistic                   :  563.57
+ChiSquare statistic                   :  355.92
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:47.14
+CPU time used                    :  00:01:02.97
 
 Generator state:
 N/A
@@ -2632,44 +2632,44 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :   36
-ChiSquare statistic                   :   22.53
-p-value of test                       :    0.96
+ChiSquare statistic                   :   31.44
+p-value of test                       :    0.69
 
 
 -----------------------------------------------
 Test on the values of the Statistic M
 
 Number of degrees of freedom          :   35
-ChiSquare statistic                   :   34.66
-p-value of test                       :    0.48
+ChiSquare statistic                   :   43.70
+p-value of test                       :    0.15
 
 
 -----------------------------------------------
 Test on the values of the Statistic J
 
 Number of degrees of freedom          :   25
-ChiSquare statistic                   :   33.31
-p-value of test                       :    0.12
+ChiSquare statistic                   :   15.72
+p-value of test                       :    0.92
 
 
 -----------------------------------------------
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :   24
-ChiSquare statistic                   :   33.14
-p-value of test                       :    0.10
+ChiSquare statistic                   :   27.97
+p-value of test                       :    0.26
 
 
 -----------------------------------------------
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :   17
-ChiSquare statistic                   :   11.27
-p-value of test                       :    0.84
+ChiSquare statistic                   :   12.59
+p-value of test                       :    0.76
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:48.07
+CPU time used                    :  00:01:03.50
 
 Generator state:
 N/A
@@ -2692,44 +2692,44 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :  146
-ChiSquare statistic                   :  194.70
-p-value of test                       :  4.4e-3
+ChiSquare statistic                   :  161.87
+p-value of test                       :    0.17
 
 
 -----------------------------------------------
 Test on the values of the Statistic M
 
 Number of degrees of freedom          :  146
-ChiSquare statistic                   :  226.66
-p-value of test                       :  2.1e-5    *****
+ChiSquare statistic                   :  194.21
+p-value of test                       :  4.7e-3
 
 
 -----------------------------------------------
 Test on the values of the Statistic J
 
 Number of degrees of freedom          :  500
-ChiSquare statistic                   :  433.65
-p-value of test                       :    0.99
+ChiSquare statistic                   :  491.25
+p-value of test                       :    0.60
 
 
 -----------------------------------------------
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :  136
-ChiSquare statistic                   :  146.19
-p-value of test                       :    0.26
+ChiSquare statistic                   :  131.03
+p-value of test                       :    0.60
 
 
 -----------------------------------------------
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :   74
-ChiSquare statistic                   :   64.81
-p-value of test                       :    0.77
+ChiSquare statistic                   :   79.35
+p-value of test                       :    0.31
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:54.98
+CPU time used                    :  00:01:20.52
 
 Generator state:
 N/A
@@ -2752,8 +2752,8 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :  146
-ChiSquare statistic                   :  166.74
-p-value of test                       :    0.12
+ChiSquare statistic                   :  135.55
+p-value of test                       :    0.72
 
 
 -----------------------------------------------
@@ -2768,28 +2768,28 @@ p-value of test                       :    0.36
 Test on the values of the Statistic J
 
 Number of degrees of freedom          :  500
-ChiSquare statistic                   :  499.15
-p-value of test                       :    0.50
+ChiSquare statistic                   :  440.14
+p-value of test                       :    0.97
 
 
 -----------------------------------------------
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :  136
-ChiSquare statistic                   :  129.07
-p-value of test                       :    0.65
+ChiSquare statistic                   :  103.30
+p-value of test                       :    0.98
 
 
 -----------------------------------------------
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :   74
-ChiSquare statistic                   :   73.84
-p-value of test                       :    0.48
+ChiSquare statistic                   :   75.08
+p-value of test                       :    0.44
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:56.82
+CPU time used                    :  00:01:20.72
 
 Generator state:
 N/A
@@ -2812,44 +2812,44 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :  384
-ChiSquare statistic                   :  345.13
-p-value of test                       :    0.92
+ChiSquare statistic                   :  387.23
+p-value of test                       :    0.44
 
 
 -----------------------------------------------
 Test on the values of the Statistic M
 
 Number of degrees of freedom          :  384
-ChiSquare statistic                   :  395.32
-p-value of test                       :    0.33
+ChiSquare statistic                   :  406.13
+p-value of test                       :    0.21
 
 
 -----------------------------------------------
 Test on the values of the Statistic J
 
 Number of degrees of freedom          : 5000
-ChiSquare statistic                   : 4950.98
-p-value of test                       :    0.69
+ChiSquare statistic                   : 5052.96
+p-value of test                       :    0.30
 
 
 -----------------------------------------------
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :  378
-ChiSquare statistic                   :  383.38
-p-value of test                       :    0.41
+ChiSquare statistic                   :  347.14
+p-value of test                       :    0.87
 
 
 -----------------------------------------------
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :  200
-ChiSquare statistic                   :  222.52
+ChiSquare statistic                   :  222.22
 p-value of test                       :    0.13
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:48.27
+CPU time used                    :  00:01:06.88
 
 Generator state:
 N/A
@@ -2872,44 +2872,44 @@ swalk_RandomWalk1 test:
 Test on the values of the Statistic H
 
 Number of degrees of freedom          :  384
-ChiSquare statistic                   :  377.34
-p-value of test                       :    0.59
+ChiSquare statistic                   :  397.60
+p-value of test                       :    0.31
 
 
 -----------------------------------------------
 Test on the values of the Statistic M
 
 Number of degrees of freedom          :  384
-ChiSquare statistic                   :  395.69
-p-value of test                       :    0.33
+ChiSquare statistic                   :  309.29
+p-value of test                       :    0.9979
 
 
 -----------------------------------------------
 Test on the values of the Statistic J
 
 Number of degrees of freedom          : 5000
-ChiSquare statistic                   : 4789.59
-p-value of test                       :    0.98
+ChiSquare statistic                   : 4940.81
+p-value of test                       :    0.72
 
 
 -----------------------------------------------
 Test on the values of the Statistic R
 
 Number of degrees of freedom          :  378
-ChiSquare statistic                   :  363.77
-p-value of test                       :    0.69
+ChiSquare statistic                   :  337.26
+p-value of test                       :    0.93
 
 
 -----------------------------------------------
 Test on the values of the Statistic C
 
 Number of degrees of freedom          :  200
-ChiSquare statistic                   :  182.86
-p-value of test                       :    0.80
+ChiSquare statistic                   :  189.69
+p-value of test                       :    0.69
 
 
 -----------------------------------------------
-CPU time used                    :  00:00:47.23
+CPU time used                    :  00:01:07.13
 
 Generator state:
 N/A
@@ -2930,18 +2930,18 @@ scomp_LinearComp test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   12
-Chi2 statistic for size of jumps      :   18.22
-p-value of test                       :    0.11
+Chi2 statistic for size of jumps      :    5.31
+p-value of test                       :    0.95
 
 
 -----------------------------------------------
-Normal statistic for number of jumps  :   -0.64
-p-value of test                       :    0.74
+Normal statistic for number of jumps  :   -0.92
+p-value of test                       :    0.82
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:23.44
+CPU time used                    :  00:03:03.50
 
 Generator state:
 N/A
@@ -2962,18 +2962,18 @@ scomp_LinearComp test:
 
 -----------------------------------------------
 Number of degrees of freedom          :   12
-Chi2 statistic for size of jumps      :    4.23
-p-value of test                       :    0.98
+Chi2 statistic for size of jumps      :   12.16
+p-value of test                       :    0.43
 
 
 -----------------------------------------------
-Normal statistic for number of jumps  : -1.49e-3
-p-value of test                       :    0.50
+Normal statistic for number of jumps  :    2.92
+p-value of test                       :  1.7e-3
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:02:24.35
+CPU time used                    :  00:03:05.20
 
 Generator state:
 N/A
@@ -2993,24 +2993,24 @@ scomp_LempelZiv test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :   0.093
-p-value of test                       :    0.79
+Kolmogorov-Smirnov+ statistic = D+    :    0.21
+p-value of test                       :    0.35
 
-Kolmogorov-Smirnov- statistic = D-    :    0.15
-p-value of test                       :    0.59
+Kolmogorov-Smirnov- statistic = D-    :    0.18
+p-value of test                       :    0.48
 
-Anderson-Darling statistic = A2       :    0.25
-p-value of test                       :    0.97
+Anderson-Darling statistic = A2       :    0.53
+p-value of test                       :    0.71
 
 Tests on the sum of all N observations
-Standardized normal statistic         :    0.25
-p-value of test                       :    0.40
+Standardized normal statistic         : -5.43e-3
+p-value of test                       :    0.50
 
-Sample variance                       :    0.90
-p-value of test                       :    0.52
+Sample variance                       :    0.42
+p-value of test                       :    0.93
 
 -----------------------------------------------
-CPU time used                    :  00:00:57.87
+CPU time used                    :  00:01:02.18
 
 Generator state:
 N/A
@@ -3030,24 +3030,24 @@ scomp_LempelZiv test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.15
-p-value of test                       :    0.57
+Kolmogorov-Smirnov+ statistic = D+    :    0.17
+p-value of test                       :    0.51
 
-Kolmogorov-Smirnov- statistic = D-    :    0.25
-p-value of test                       :    0.25
+Kolmogorov-Smirnov- statistic = D-    :    0.19
+p-value of test                       :    0.42
 
-Anderson-Darling statistic = A2       :    0.87
-p-value of test                       :    0.43
+Anderson-Darling statistic = A2       :    0.52
+p-value of test                       :    0.72
 
 Tests on the sum of all N observations
-Standardized normal statistic         :    0.58
-p-value of test                       :    0.28
+Standardized normal statistic         :   -0.25
+p-value of test                       :    0.60
 
-Sample variance                       :    1.45
-p-value of test                       :    0.16
+Sample variance                       :    1.27
+p-value of test                       :    0.25
 
 -----------------------------------------------
-CPU time used                    :  00:01:02.31
+CPU time used                    :  00:01:30.72
 
 Generator state:
 N/A
@@ -3067,17 +3067,17 @@ sspectral_Fourier3 test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :   0.032
-p-value of test                       :  2.2e-4    *****
+Kolmogorov-Smirnov+ statistic = D+    :   0.045
+p-value of test                       :  5.1e-8    *****
 
-Kolmogorov-Smirnov- statistic = D-    :   0.016
-p-value of test                       :    0.11
+Kolmogorov-Smirnov- statistic = D-    :   0.044
+p-value of test                       :  9.1e-8    *****
 
-Anderson-Darling statistic = A2       :    6.74
-p-value of test                       :  4.5e-4    *****
+Anderson-Darling statistic = A2       :   32.26
+p-value of test                       : 1.7e-15    *****
 
 -----------------------------------------------
-CPU time used                    :  00:00:47.23
+CPU time used                    :  00:00:57.61
 
 Generator state:
 N/A
@@ -3097,17 +3097,17 @@ sspectral_Fourier3 test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    : 4.86e-3
-p-value of test                       :    0.82
+Kolmogorov-Smirnov+ statistic = D+    : 9.92e-3
+p-value of test                       :    0.44
 
-Kolmogorov-Smirnov- statistic = D-    :   0.011
-p-value of test                       :    0.37
+Kolmogorov-Smirnov- statistic = D-    : 7.53e-3
+p-value of test                       :    0.63
 
-Anderson-Darling statistic = A2       :    0.31
-p-value of test                       :    0.93
+Anderson-Darling statistic = A2       :    0.58
+p-value of test                       :    0.67
 
 -----------------------------------------------
-CPU time used                    :  00:00:46.19
+CPU time used                    :  00:00:56.15
 
 Generator state:
 N/A
@@ -3127,17 +3127,17 @@ sstring_LongestHeadRun test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    8
-Chi-square statistic                  : 4943.38
+Chi-square statistic                  : 1279.06
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-Global longest run of 1               :   26.00
+Global longest run of 1               :   23.00
 p-value of test                       : 1 - eps1    *****
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:35.59
+CPU time used                    :  00:01:54.93
 
 Generator state:
 N/A
@@ -3157,17 +3157,17 @@ sstring_LongestHeadRun test:
 
 -----------------------------------------------
 Number of degrees of freedom          :    8
-Chi-square statistic                  :   12.51
-p-value of test                       :    0.13
+Chi-square statistic                  :   10.22
+p-value of test                       :    0.25
 
 -----------------------------------------------
-Global longest run of 1               :   35.00
-p-value of test                       :    0.14
+Global longest run of 1               :   32.00
+p-value of test                       :    0.50
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:40.70
+CPU time used                    :  00:01:57.25
 
 Generator state:
 N/A
@@ -3187,22 +3187,22 @@ sstring_PeriodsInStrings test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.95
-p-value of test                       : 1.3e-13    *****
+Kolmogorov-Smirnov+ statistic = D+    :   0.012
+p-value of test                       :    0.99
 
-Kolmogorov-Smirnov- statistic = D-    : 6.32e-5
-p-value of test                       : 1 -  6.3e-5    *****
+Kolmogorov-Smirnov- statistic = D-    :    0.52
+p-value of test                       :  2.5e-3
 
-Anderson-Darling statistic = A2       :   38.61
-p-value of test                       : 2.7e-18    *****
+Anderson-Darling statistic = A2       :    3.07
+p-value of test                       :    0.03
 
 Test on the sum of all N observations
 Number of degrees of freedom          :  200
-Chi-square statistic                  :   70.73
-p-value of test                       : 1 - eps1    *****
+Chi-square statistic                  :  247.00
+p-value of test                       :    0.01
 
 -----------------------------------------------
-CPU time used                    :  00:02:45.29
+CPU time used                    :  00:03:27.93
 
 Generator state:
 N/A
@@ -3222,22 +3222,22 @@ sstring_PeriodsInStrings test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.29
-p-value of test                       :    0.15
+Kolmogorov-Smirnov+ statistic = D+    :    0.12
+p-value of test                       :    0.68
 
-Kolmogorov-Smirnov- statistic = D-    :   0.086
-p-value of test                       :    0.82
+Kolmogorov-Smirnov- statistic = D-    :    0.24
+p-value of test                       :    0.26
 
-Anderson-Darling statistic = A2       :    0.98
-p-value of test                       :    0.36
+Anderson-Darling statistic = A2       :    0.82
+p-value of test                       :    0.47
 
 Test on the sum of all N observations
 Number of degrees of freedom          :  200
-Chi-square statistic                  :  179.20
-p-value of test                       :    0.85
+Chi-square statistic                  :  211.46
+p-value of test                       :    0.28
 
 -----------------------------------------------
-CPU time used                    :  00:02:44.37
+CPU time used                    :  00:03:32.90
 
 Generator state:
 N/A
@@ -3257,22 +3257,22 @@ sstring_HammingWeight2 test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.60
-p-value of test                       :  2.6e-4    *****
+Kolmogorov-Smirnov+ statistic = D+    : 1.17e-5
+p-value of test                       : 1 -  1.2e-5    *****
 
-Kolmogorov-Smirnov- statistic = D-    :   0.025
-p-value of test                       :    0.97
+Kolmogorov-Smirnov- statistic = D-    :    1.00
+p-value of test                       : 4.6e-25    *****
 
-Anderson-Darling statistic = A2       :    7.12
-p-value of test                       :  3.2e-4    *****
+Anderson-Darling statistic = A2       :   64.86
+p-value of test                       : 8.3e-30    *****
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 10000
-Chi-square statistic                  : 9518.02
-p-value of test                       :    0.9997    *****
+Chi-square statistic                  :11645.57
+p-value of test                       : 1.0e-28    *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:07.69
+CPU time used                    :  00:01:17.93
 
 Generator state:
 N/A
@@ -3292,22 +3292,22 @@ sstring_HammingWeight2 test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    : 7.40e-3
-p-value of test                       :    0.9921
+Kolmogorov-Smirnov+ statistic = D+    :   0.046
+p-value of test                       :    0.93
 
-Kolmogorov-Smirnov- statistic = D-    :    0.48
-p-value of test                       :  5.5e-3
+Kolmogorov-Smirnov- statistic = D-    :    0.34
+p-value of test                       :    0.08
 
-Anderson-Darling statistic = A2       :    4.56
-p-value of test                       :  4.9e-3
+Anderson-Darling statistic = A2       :    1.87
+p-value of test                       :    0.11
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 10000
-Chi-square statistic                  :10407.91
-p-value of test                       :  2.2e-3
+Chi-square statistic                  :10246.61
+p-value of test                       :    0.04
 
 -----------------------------------------------
-CPU time used                    :  00:01:10.32
+CPU time used                    :  00:01:20.45
 
 Generator state:
 N/A
@@ -3327,11 +3327,11 @@ sstring_HammingCorr test:
 
 
 -----------------------------------------------
-Normal statistic                      :   -0.37
-p-value of test                       :    0.65
+Normal statistic                      :    0.76
+p-value of test                       :    0.22
 
 -----------------------------------------------
-CPU time used                    :  00:01:20.22
+CPU time used                    :  00:01:33.56
 
 Generator state:
 N/A
@@ -3351,11 +3351,11 @@ sstring_HammingCorr test:
 
 
 -----------------------------------------------
-Normal statistic                      :   -1.05
-p-value of test                       :    0.85
+Normal statistic                      :   -0.56
+p-value of test                       :    0.71
 
 -----------------------------------------------
-CPU time used                    :  00:01:17.12
+CPU time used                    :  00:01:29.09
 
 Generator state:
 N/A
@@ -3375,11 +3375,11 @@ sstring_HammingCorr test:
 
 
 -----------------------------------------------
-Normal statistic                      :   -0.52
-p-value of test                       :    0.70
+Normal statistic                      :   -1.54
+p-value of test                       :    0.94
 
 -----------------------------------------------
-CPU time used                    :  00:05:06.31
+CPU time used                    :  00:05:49.83
 
 Generator state:
 N/A
@@ -3412,11 +3412,11 @@ p-value of test                       :3.2e-157    *****
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 4890
-Chi-square statistic                  :70626.35
+Chi-square statistic                  :63983.55
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:09.32
+CPU time used                    :  00:02:31.93
 
 Generator state:
 N/A
@@ -3438,22 +3438,22 @@ sstring_HammingIndep test:
 Counters with expected numbers >= 10
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.12
-p-value of test                       :    0.68
+Kolmogorov-Smirnov+ statistic = D+    :   0.096
+p-value of test                       :    0.78
 
-Kolmogorov-Smirnov- statistic = D-    :    0.17
-p-value of test                       :    0.50
+Kolmogorov-Smirnov- statistic = D-    :    0.30
+p-value of test                       :    0.13
 
-Anderson-Darling statistic = A2       :    0.44
-p-value of test                       :    0.80
+Anderson-Darling statistic = A2       :    1.29
+p-value of test                       :    0.24
 
 Test on the sum of all N observations
 Number of degrees of freedom          : 4890
-Chi-square statistic                  : 4881.37
-p-value of test                       :    0.53
+Chi-square statistic                  : 4993.47
+p-value of test                       :    0.15
 
 -----------------------------------------------
-CPU time used                    :  00:02:13.45
+CPU time used                    :  00:02:36.86
 
 Generator state:
 N/A
@@ -3475,11 +3475,11 @@ sstring_HammingIndep test:
 Counters with expected numbers >= 10
 -----------------------------------------------
 Number of degrees of freedom          : 4117
-Chi-square statistic                  :35758.91
+Chi-square statistic                  :34196.98
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:36.92
+CPU time used                    :  00:01:52.02
 
 Generator state:
 N/A
@@ -3501,11 +3501,11 @@ sstring_HammingIndep test:
 Counters with expected numbers >= 10
 -----------------------------------------------
 Number of degrees of freedom          : 4117
-Chi-square statistic                  : 4071.97
-p-value of test                       :    0.69
+Chi-square statistic                  : 4350.61
+p-value of test                       :  5.6e-3
 
 -----------------------------------------------
-CPU time used                    :  00:01:41.54
+CPU time used                    :  00:01:55.86
 
 Generator state:
 N/A
@@ -3527,11 +3527,11 @@ sstring_HammingIndep test:
 Counters with expected numbers >= 10
 -----------------------------------------------
 Number of degrees of freedom          : 11825
-Chi-square statistic                  : 4.45e+5
+Chi-square statistic                  : 4.62e+5
 p-value of test                       :   eps      *****
 
 -----------------------------------------------
-CPU time used                    :  00:01:48.33
+CPU time used                    :  00:02:03.02
 
 Generator state:
 N/A
@@ -3553,11 +3553,11 @@ sstring_HammingIndep test:
 Counters with expected numbers >= 10
 -----------------------------------------------
 Number of degrees of freedom          : 11825
-Chi-square statistic                  :11859.05
-p-value of test                       :    0.41
+Chi-square statistic                  :11584.47
+p-value of test                       :    0.94
 
 -----------------------------------------------
-CPU time used                    :  00:01:49.34
+CPU time used                    :  00:02:09.09
 
 Generator state:
 N/A
@@ -3579,20 +3579,20 @@ sstring_Run test:
 Total number of 1 runs:  2000000000
 
 Number of degrees of freedom          :   54
-Chi2 statistic for number of runs     : 8531.55
+Chi2 statistic for number of runs     : 4344.22
 p-value of test                       :   eps      *****
 
 
 -----------------------------------------------
-Total number of bits:  7999997250
+Total number of bits:  7999998579
 
-Normal statistic for number of bits   :  -0.022
-p-value of test                       :    0.51
+Normal statistic for number of bits   :  -0.011
+p-value of test                       :    0.50
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:17.56
+CPU time used                    :  00:01:35.63
 
 Generator state:
 N/A
@@ -3611,23 +3611,23 @@ sstring_Run test:
 
 
 -----------------------------------------------
-Total number of 1 runs:  2000000001
+Total number of 1 runs:  2000000000
 
 Number of degrees of freedom          :   54
-Chi2 statistic for number of runs     :   47.77
-p-value of test                       :    0.71
+Chi2 statistic for number of runs     :   41.13
+p-value of test                       :    0.90
 
 
 -----------------------------------------------
-Total number of bits:  8000096154
+Total number of bits:  8000090142
 
-Normal statistic for number of bits   :    0.76
-p-value of test                       :    0.22
+Normal statistic for number of bits   :    0.71
+p-value of test                       :    0.24
 
 
 
 -----------------------------------------------
-CPU time used                    :  00:01:20.13
+CPU time used                    :  00:01:37.68
 
 Generator state:
 N/A
@@ -3647,24 +3647,24 @@ sstring_AutoCor test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.46
-p-value of test                       :  9.3e-3
+Kolmogorov-Smirnov+ statistic = D+    :    0.44
+p-value of test                       :    0.01
 
-Kolmogorov-Smirnov- statistic = D-    :    0.43
-p-value of test                       :    0.02
+Kolmogorov-Smirnov- statistic = D-    :    0.46
+p-value of test                       :    0.01
 
-Anderson-Darling statistic = A2       :    3.13
+Anderson-Darling statistic = A2       :    3.23
 p-value of test                       :    0.02
 
 Tests on the sum of all N observations
-Standardized normal statistic         :  -0.043
-p-value of test                       :    0.52
+Standardized normal statistic         :  -0.031
+p-value of test                       :    0.51
 
-Sample variance                       : 8.55e-3
-p-value of test                       : 1 -  8.0e-9    *****
+Sample variance                       : 6.74e-3
+p-value of test                       : 1 -  2.7e-9    *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:41.40
+CPU time used                    :  00:03:24.18
 
 Generator state:
 N/A
@@ -3684,24 +3684,24 @@ sstring_AutoCor test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.67
-p-value of test                       :  3.5e-5    *****
+Kolmogorov-Smirnov+ statistic = D+    :    0.27
+p-value of test                       :    0.20
 
-Kolmogorov-Smirnov- statistic = D-    :    0.29
-p-value of test                       :    0.15
+Kolmogorov-Smirnov- statistic = D-    :    0.71
+p-value of test                       :  6.8e-6    *****
 
-Anderson-Darling statistic = A2       :    4.98
-p-value of test                       :  3.1e-3
+Anderson-Darling statistic = A2       :    5.83
+p-value of test                       :  1.3e-3
 
 Tests on the sum of all N observations
-Standardized normal statistic         :   -1.53
-p-value of test                       :    0.94
+Standardized normal statistic         :    1.85
+p-value of test                       :    0.03
 
-Sample variance                       : 1.90e-3
-p-value of test                       : 1 - 9.3e-12    *****
+Sample variance                       : 5.12e-4
+p-value of test                       : 1 - 2.6e-14    *****
 
 -----------------------------------------------
-CPU time used                    :  00:02:13.20
+CPU time used                    :  00:03:11.95
 
 Generator state:
 N/A
@@ -3721,24 +3721,24 @@ sstring_AutoCor test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.15
-p-value of test                       :    0.57
+Kolmogorov-Smirnov+ statistic = D+    :    0.35
+p-value of test                       :    0.07
 
-Kolmogorov-Smirnov- statistic = D-    :    0.25
-p-value of test                       :    0.26
+Kolmogorov-Smirnov- statistic = D-    :   0.033
+p-value of test                       :    0.96
 
-Anderson-Darling statistic = A2       :    0.66
-p-value of test                       :    0.59
+Anderson-Darling statistic = A2       :    2.28
+p-value of test                       :    0.07
 
 Tests on the sum of all N observations
-Standardized normal statistic         :    0.45
-p-value of test                       :    0.33
+Standardized normal statistic         :   -1.98
+p-value of test                       :    0.98
 
-Sample variance                       :    0.51
-p-value of test                       :    0.87
+Sample variance                       :    0.63
+p-value of test                       :    0.77
 
 -----------------------------------------------
-CPU time used                    :  00:02:28.81
+CPU time used                    :  00:03:28.40
 
 Generator state:
 N/A
@@ -3758,24 +3758,24 @@ sstring_AutoCor test:
 
 -----------------------------------------------
 
-Kolmogorov-Smirnov+ statistic = D+    :    0.19
-p-value of test                       :    0.44
+Kolmogorov-Smirnov+ statistic = D+    :   0.052
+p-value of test                       :    0.92
 
-Kolmogorov-Smirnov- statistic = D-    :   0.044
-p-value of test                       :    0.93
+Kolmogorov-Smirnov- statistic = D-    :    0.21
+p-value of test                       :    0.35
 
-Anderson-Darling statistic = A2       :    0.45
-p-value of test                       :    0.79
+Anderson-Darling statistic = A2       :    0.43
+p-value of test                       :    0.82
 
 Tests on the sum of all N observations
-Standardized normal statistic         :   -0.80
-p-value of test                       :    0.79
+Standardized normal statistic         :    0.73
+p-value of test                       :    0.23
 
-Sample variance                       :    0.88
-p-value of test                       :    0.55
+Sample variance                       :    0.97
+p-value of test                       :    0.46
 
 -----------------------------------------------
-CPU time used                    :  00:02:11.90
+CPU time used                    :  00:03:12.81
 
 Generator state:
 N/A
@@ -3788,7 +3788,7 @@ N/A
  Version:          TestU01 1.2.3
  Generator:        stdin
  Number of statistics:  155
- Total CPU time:   04:48:24.38
+ Total CPU time:   06:21:08.93
  The following tests gave p-values outside [0.001, 0.9990]:
  (eps  means a value < 1.0e-300):
  (eps1 means a value < 1.0e-15):
@@ -3811,7 +3811,7 @@ N/A
  20  BirthdaySpacings, t = 16         eps  
  21  BirthdaySpacings, t = 16         eps  
  22  ClosePairs NP, t = 3             eps  
- 22  ClosePairs mNP, t = 3         4.1e-294
+ 22  ClosePairs mNP, t = 3         2.7e-299
  22  ClosePairs mNP1, t = 3           eps  
  22  ClosePairs mNP2, t = 3           eps  
  22  ClosePairs NJumps, t = 3       1 - eps1
@@ -3835,39 +3835,36 @@ N/A
  31  CouponCollector, r = 10          eps  
  34  Gap, r = 0                       eps  
  36  Gap, r = 0                       eps  
- 38  Run, r = 0                     7.3e-27
  40  Permutation, t = 3               eps  
  41  Permutation, t = 5               eps  
  42  Permutation, t = 7               eps  
  43  Permutation, t = 10              eps  
  44  CollisionPermut, r = 0           eps  
  45  CollisionPermut, r = 10        1 - eps1
- 46  MaxOft AD, t = 8               1.3e-26
- 47  MaxOft, t = 16                 2.9e-15
- 47  MaxOft AD, t = 16              4.1e-26
- 49  MaxOft, t = 32                  2.1e-6
- 49  MaxOft AD, t = 32              3.8e-35
- 50  SampleProd, t = 8               9.4e-7
- 51  SampleProd, t = 16            5.4e-100
- 52  SampleProd, t = 24             1.3e-41
- 53  SampleMean, r = 0               7.8e-4
+ 46  MaxOft, t = 8                   0.9999 
+ 46  MaxOft AD, t = 8               1.1e-89
+ 47  MaxOft, t = 16                 9.0e-18
+ 47  MaxOft AD, t = 16              2.8e-16
+ 48  MaxOft AD, t = 24               1.5e-4
+ 49  MaxOft, t = 32                 2.6e-26
+ 49  MaxOft AD, t = 32              3.6e-51
+ 50  SampleProd, t = 8               3.4e-6
+ 51  SampleProd, t = 16             8.2e-28
+ 52  SampleProd, t = 24             7.7e-41
  57  AppearanceSpacings, r = 0        eps  
  59  WeightDistrib, r = 0             eps  
  62  WeightDistrib, r = 0             eps  
  63  WeightDistrib, r = 10            eps  
  65  SumCollector                     eps  
- 66  MatrixRank, L=30, r=0           1.3e-5
  74  RandomWalk1 H (L=50, r=0)        eps  
  74  RandomWalk1 M (L=50, r=0)        eps  
  74  RandomWalk1 J (L=50, r=0)        eps  
  74  RandomWalk1 R (L=50, r=0)        eps  
  74  RandomWalk1 C (L=50, r=0)        eps  
- 76  RandomWalk1 M (L=1000, r=0)     2.1e-5
- 84  Fourier3, r = 0                 4.5e-4
+ 84  Fourier3, r = 0                1.7e-15
  86  LongestHeadRun, r = 0            eps  
  86  LongestHeadRun, r = 0          1 - eps1
- 88  PeriodsInStrings, r = 0        1 - eps1
- 90  HammingWeight2, r = 0           0.9997 
+ 90  HammingWeight2, r = 0          1.0e-28
  95  HammingIndep, L=30, r=0          eps  
  97  HammingIndep, L=300, r=0         eps  
  99  HammingIndep, L=1200, r=0        eps  
@@ -3878,5 +3875,5 @@ N/A
 
 
 # 
-# Test duration: 1421.7311415373501 minutes
+# Test duration: 1816.9251598792666 minutes
 # 
