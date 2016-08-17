@@ -300,7 +300,7 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${rng.checkstyle.version}</version>
           <configuration>
-            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+            <includeTestSourceDirectory>false</includeTestSourceDirectory>
             <configLocation>checkstyle.xml</configLocation>
             <headerLocation>license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
