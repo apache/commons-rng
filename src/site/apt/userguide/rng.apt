@@ -284,7 +284,7 @@ RandomSource.restoreState(rngNew, stateNew);
 
   * <<<org.apache.commons.rng.internal.source64>>>
 
-    ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
+    ** <<<RandomLongSource>>>: describes an algorithm that generates randomness in
        64-bits chunks (a.k.a Java <<<long>>>).
 
     ** <<<LongProvider>>>: base class for concrete classes that implement <<<RandomLongSource>>>.
