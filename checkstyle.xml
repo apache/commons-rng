@@ -38,7 +38,7 @@
 
     <!-- Must have class / interface header comments -->
     <module name="JavadocType"/>
-        
+
      <!-- Require method javadocs, allow undeclared RTE -->
     <module name="JavadocMethod">
       <property name="allowUndeclaredRTE" value="true"/>
@@ -48,7 +48,7 @@
 
     <!-- Require field javadoc -->
     <module name="JavadocVariable"/>
-        
+
     <!-- No public fields -->
     <module name="VisibilityModifier">
        <property name="protectedAllowed" value="true"/>
@@ -56,7 +56,7 @@
 
     <!-- Require hash code override when equals is -->
     <module name="EqualsHashCode"/>
-    
+
     <!-- Disallow unnecessary instantiation of Boolean, String -->
     <module name="IllegalInstantiation">
       <property name="classes" value="java.lang.Boolean, java.lang.String"/>
@@ -64,7 +64,7 @@
 
     <!-- Required for SuppressionCommentFilter below -->
     <module name="FileContentsHolder"/>
- 
+
     <!--  Import should be explicit, really needed and only from pure java packages -->
     <module name="AvoidStarImport" />
     <module name="UnusedImports" />
@@ -85,14 +85,14 @@
         <property name="ignoreConstructorParameter" value="true" />
         <property name="ignoreSetter" value="true" />
     </module>
-    
+
     <!-- No trailing whitespace -->
     <module name="Regexp">
       <property name="format" value="[ \t]+$"/>
       <property name="illegalPattern" value="true"/>
       <property name="message" value="Trailing whitespace"/>
     </module>
-    
+
     <!-- No System.out.println() statements -->
     <module name="Regexp">
       <!-- no sysouts -->
@@ -122,7 +122,7 @@
 
     <!-- Don't use = or != for string comparisons -->
     <module name="StringLiteralEquality" />
- 
+
    <!-- Don't declare multiple variables in the same statement -->
     <module name="MultipleVariableDeclarations" />
 
@@ -149,7 +149,7 @@
 
   <!-- Require files to end with newline characters -->
   <module name="NewlineAtEndOfFile"/>
-  
+
   <!-- Require package javadoc -->
   <module name="JavadocPackage"/>
 
