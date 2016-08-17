@@ -69,7 +69,7 @@ public class Well44497a extends AbstractWell {
         final int z1 = (v0 ^ (v0 << 24)) ^ (vM1 ^ (vM1 >>> 30));
         final int z2 = (vM2 ^ (vM2 << 10)) ^ (vM3 << 26);
         final int z3 = z1 ^ z2;
-        final int z2Prime  = ((z2 << 9) ^ (z2 >>> 23)) & 0xfbffffff;
+        final int z2Prime = ((z2 << 9) ^ (z2 >>> 23)) & 0xfbffffff;
         final int z2Second = ((z2 & 0x00020000) != 0) ? (z2Prime ^ 0xb729fcec) : z2Prime;
         final int z4 = z0 ^ (z1 ^ (z1 >>> 20)) ^ z2Second ^ z3;
 
