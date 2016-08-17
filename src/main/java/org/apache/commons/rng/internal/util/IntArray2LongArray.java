@@ -30,7 +30,7 @@ public class IntArray2LongArray implements SeedConverter<int[], long[]> {
         for (int i = 0; i < outSize; i++) {
             final int lo = seed[i];
             final int hi = outSize + i < seed.length ? seed[outSize + i] : 0;
-            out[i] = NumberFactory.makeLong(hi, lo) ;
+            out[i] = NumberFactory.makeLong(hi, lo);
         }
 
         return out;

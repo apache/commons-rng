@@ -145,10 +145,10 @@ public class MersenneTwister extends IntProvider {
         int j = 0;
 
         for (int k = Math.max(N, seed.length); k != 0; k--) {
-            final long l0 = (mt[i] & LOWER_MASK_LONG)   | ((mt[i]   < 0) ? UPPER_MASK_LONG : 0);
-            final long l1 = (mt[i-1] & LOWER_MASK_LONG) | ((mt[i-1] < 0) ? UPPER_MASK_LONG : 0);
-            final long l  = (l0 ^ ((l1 ^ (l1 >> 30)) * 1664525l)) + seed[j] + j; // non linear
-            mt[i]   = (int) (l & INT_MASK_LONG);
+            final long l0 = (mt[i] & LOWER_MASK_LONG) | ((mt[i] < 0) ? UPPER_MASK_LONG : 0);
+            final long l1 = (mt[i - 1] & LOWER_MASK_LONG) | ((mt[i - 1] < 0) ? UPPER_MASK_LONG : 0);
+            final long l = (l0 ^ ((l1 ^ (l1 >> 30)) * 1664525l)) + seed[j] + j; // non linear
+            mt[i] = (int) (l & INT_MASK_LONG);
             i++; j++;
             if (i >= N) {
                 mt[0] = mt[N - 1];
@@ -160,10 +160,10 @@ public class MersenneTwister extends IntProvider {
         }
 
         for (int k = N - 1; k != 0; k--) {
-            final long l0 = (mt[i] & LOWER_MASK_LONG)   | ((mt[i]   < 0) ? UPPER_MASK_LONG : 0);
-            final long l1 = (mt[i-1] & LOWER_MASK_LONG) | ((mt[i-1] < 0) ? UPPER_MASK_LONG : 0);
+            final long l0 = (mt[i] & LOWER_MASK_LONG) | ((mt[i] < 0) ? UPPER_MASK_LONG : 0);
+            final long l1 = (mt[i - 1] & LOWER_MASK_LONG) | ((mt[i - 1] < 0) ? UPPER_MASK_LONG : 0);
             final long l  = (l0 ^ ((l1 ^ (l1 >> 30)) * 1566083941l)) - i; // non linear
-            mt[i]   = (int) (l & INT_MASK_LONG);
+            mt[i] = (int) (l & INT_MASK_LONG);
             i++;
             if (i >= N) {
                 mt[0] = mt[N - 1];
@@ -181,10 +181,10 @@ public class MersenneTwister extends IntProvider {
      */
     private void initState(int seed) {
         long longMT = seed & INT_MASK_LONG;
-        mt[0]= (int) longMT;
+        mt[0] = (int) longMT;
         for (mti = 1; mti < N; ++mti) {
             longMT = (1812433253L * (longMT ^ (longMT >> 30)) + mti) & INT_MASK_LONG;
-            mt[mti]= (int) longMT;
+            mt[mti] = (int) longMT;
         }
     }
 
