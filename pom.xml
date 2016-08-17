@@ -279,7 +279,36 @@
           <additionalparam>-header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
         </configuration>
       </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <executions>
+              <execution>
+                  <id>validate</id>
+                  <phase>validate</phase>
+                  <goals>
+                      <goal>check</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
     </plugins>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${rng.checkstyle.version}</version>
+                <configuration>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <resourceIncludes>**/*.java</resourceIncludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
   </build>
 
   <reporting>
@@ -349,7 +378,7 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${rng.checkstyle.version}</version>
         <configuration>
-          <configLocation>${basedir}/checkstyle.xml</configLocation>
+          <configLocation>checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
           <headerLocation>${basedir}/license-header.txt</headerLocation>
