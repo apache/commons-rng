@@ -250,7 +250,7 @@ RandomSource.restoreState(rngNew, stateNew);
   * <<<BaseProvider>>>: base class for all concrete RNG implementations;
     it contains higher-level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
     common to all implementations; it defines the implementation of the
-    <<<Random.State>>> public interface.
+    <<<RandomSource.State>>> public interface.
 
   * <<<StateSettable>>>: interface to be implemented by concrete random sources.
 
