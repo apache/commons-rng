@@ -34,10 +34,30 @@
     <section name="Download Rng">
       <subsection name="Releases">
         <p>
-          Download the 
-          <a href="http://commons.apache.org/rng/download_rng.cgi">
-            Latest Release</a> of Commons Rng.
+          <i>There isn't any release yet.</i>
         </p>
+
+        <p>
+          Work is currently performed actively towards release 1.0:
+          <a href="https://issues.apache.org/jira/browse/RNG-6">See our issue-tracking system.</a>
+        </p>
+
+        <p>
+          <b>Interested people are most welcome to review the API for this important milestone:</b>
+          Source code is available from <a href="./source-repository.html">a git repository at Apache</a>
+          or from its <a href="https://github.com/apache/commons-rng">Github</a> mirror.
+        </p>
+
+        <p>
+          <b>"Beta-testers" are welcome to test the library</b> by downloading the unofficial JAR (nightly builds) from
+          <a href="https://repository.apache.org/content/repositories/snapshots/org/apache/commons/commons-rng/1.0-SNAPSHOT/">here</a>.
+        </p>
+
+        <!-- <p> -->
+        <!--   Download the  -->
+        <!--   <a href="http://commons.apache.org/rng/download_rng.cgi"> -->
+        <!--     Latest Release</a> of Commons Rng. -->
+        <!-- </p> -->
       </subsection>
     </section>
 
