@@ -17,17 +17,13 @@
 
 package org.apache.commons.rng.internal;
 
-import java.util.Arrays;
-import java.io.Serializable;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.RandomSource;
 
 /**
  * Base class with default implementation for common methods.
  */
 public abstract class BaseProvider
-    implements UniformRandomProvider,
-               StateSettable {
+    implements UniformRandomProvider {
     /** {@inheritDoc} */
     @Override
     public int nextInt(int n) {
@@ -67,18 +63,25 @@ public abstract class BaseProvider
         return getClass().getName();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public RandomSource.State getState() {
-        return new State(getStateInternal());
+    /**
+     * Gets the instance's state.
+     *
+     * @return the current state. The given argument can then be passed
+     * to {@link #setState(byte[])} in order to recover the
+     * current state.
+     */
+    public byte[] getState() {
+        return getStateInternal();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setState(RandomSource.State state) {
-        // Cast will intentionally fail if the argument is not one we created.
-        final State s = (State) state;
-        setStateInternal(s.getState());
+    /**
+     * Sets the instance's state.
+     *
+     * @param state State. The given argument must have been retrieved
+     * by a call to {@link #getState()}.
+     */
+    public void setState(byte[] state) {
+        setStateInternal(state);
     }
 
     /**
@@ -148,39 +151,6 @@ public abstract class BaseProvider
     private void checkStrictlyPositive(long n) {
         if (n <= 0) {
             throw new IllegalArgumentException("Must be strictly positive: " + n);
-        }
-    }
-
-    /**
-     * "Black-box" state.
-     * Its sole purpose is to store all the data needed to recover
-     * the same state in order to restart a sequence where it left
-     * off.
-     * External code should not to modify the data contained in
-     * instances of this class.
-     */
-    private static class State
-        implements RandomSource.State,
-                   Serializable {
-        /** Serializable version identifier. */
-        private static final long serialVersionUID = 4720160226L;
-        /** Internal state. */
-        private byte[] state;
-
-        /**
-         * @param state Mapping of all the data which a subclass of
-         * {@link BaseProvider} needs in order to reset its internal
-         * state.
-         */
-        State(byte[] state) {
-            this.state = Arrays.copyOf(state, state.length);
-        }
-
-        /**
-         * @return the internal state.
-         */
-        byte[] getState() {
-            return Arrays.copyOf(state, state.length);
         }
     }
 }
