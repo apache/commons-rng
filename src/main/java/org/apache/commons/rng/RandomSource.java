@@ -130,8 +130,8 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
  * This factory thus provides a method for
  * {@link #saveState(UniformRandomProvider) saving} the internal
  * state of a generator.
- * The state is encapsulated in an {@link SourceState "opaque object"}
- * to be used for {@link #restoreState(UniformRandomProvider,SourceState) restoring}
+ * The state is wrapped in an {@link SourceState "opaque object"} to be
+ * used for {@link #restoreState(UniformRandomProvider,SourceState) restoring}
  * a generator (of the same type) to an identical state (e.g. to allow
  * persistent storage, or to continue a sequence from where the original
  * instance left off).
