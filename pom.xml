@@ -554,17 +554,14 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>${commons.jacoco.version}</version>
-            <executions>
-              <execution>
-                <id>prepare-agent</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-              </execution>
-            </executions>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>${commons.cobertura.version}</version>
+            <configuration>
+              <formats>
+                <format>xml</format>
+              </formats>
+            </configuration>
           </plugin>
           <plugin>
             <groupId>org.eluder.coveralls</groupId>
