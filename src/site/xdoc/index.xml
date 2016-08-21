@@ -49,8 +49,10 @@
         </p>
 
         <p>
-          <b>"Beta-testers" are welcome to test the library</b> by downloading the unofficial JAR (nightly builds) from
-          <a href="https://repository.apache.org/content/repositories/snapshots/org/apache/commons/commons-rng/1.0-SNAPSHOT/">here</a>.
+          <b>"Beta-testers" are welcome to test the library</b> by downloading the
+          <a href="https://repository.apache.org/content/repositories/snapshots/org/apache/commons/commons-rng/1.0-SNAPSHOT/">
+            <i><b>unofficial 1.0-SNAPSHOT JAR</b></i>
+          </a> that is generated through <a href="https://builds.apache.org/view/Apache%20Commons/job/Commons_Rng/">continuous integration</a>.
         </p>
 
         <!-- <p> -->
