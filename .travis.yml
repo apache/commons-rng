@@ -21,4 +21,4 @@ jdk:
   - oraclejdk8
 
 after_success:
-  - mvn clean cobertura:cobertura coveralls:report
+  - mvn clean test pmd:pmd findbugs:findbugs checkstyle:checkstyle cobertura:cobertura coveralls:report
