@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import org.apache.commons.rng.internal.util.NumberFactory;
 
 /**
- * Random number generator designed by Mark D. Overton.
+ * Random number generator designed by Mark D.&nbsp;Overton.
  * <p>
  *  It is one of the many generators described by the author in the following article series:
  *  <ul>
