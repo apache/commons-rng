@@ -202,12 +202,12 @@ UniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG ins
 RandomSource.State stateOrig = RandomSource.saveState(rngOrig);
 ByteArrayOutputStream bos = new ByteArrayOutputStream();
 ObjectOutputStream oos = new ObjectOutputStream(bos);
-oos.writeObject(stateOrig);
+oos.writeObject(stateOrig.getState());
 
 // Deserialize state.
 ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 ObjectInputStream ois = new ObjectInputStream(bis);
-RandomSource.State stateNew = (RandomSource.State) ois.readObject();
+RandomSource.State stateNew = new RandomSource.State((byte[]) ois.readObject());
 
 UniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
 

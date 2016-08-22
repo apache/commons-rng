@@ -292,7 +292,7 @@ public class ProvidersCommonParametricTest {
     }
 
     @Test
-    public void testSerializedState()
+    public void testSerializingState()
         throws IOException,
                ClassNotFoundException {
         // Large "n" is not necessary here as we only test the serialization.
@@ -302,7 +302,7 @@ public class ProvidersCommonParametricTest {
         final RandomSource.State stateOrig = RandomSource.saveState(generator);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(stateOrig);
+        oos.writeObject(stateOrig.getState());
 
         // Store some values.
         final List<Number> listOrig = makeList(n);
@@ -315,7 +315,7 @@ public class ProvidersCommonParametricTest {
         // Retrieve from serialized stream.
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
-        final RandomSource.State stateNew = (RandomSource.State) ois.readObject();
+        final RandomSource.State stateNew = new RandomSource.State((byte[]) ois.readObject());
 
         Assert.assertTrue(stateOrig != stateNew);
 
@@ -328,12 +328,6 @@ public class ProvidersCommonParametricTest {
 
         // Check that the serialized data recreated the orginal state.
         Assert.assertTrue(listOrig.equals(listReplay));
-    }
-
-    @Test(expected=ClassCastException.class)
-    public void testStateWrongClass() {
-        // Try to restore with an invalid state.
-        RandomSource.restoreState(generator, new RandomSource.State() {});
     }
 
     @Test(expected=IllegalArgumentException.class)
