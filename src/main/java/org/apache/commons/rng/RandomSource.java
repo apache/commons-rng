@@ -277,7 +277,12 @@ public enum RandomSource {
      *  <li>Native seed size: 312.</li>
      * </ul>
      */
-    MT_64(ProviderBuilder.RandomSourceInternal.MT_64);
+    MT_64(ProviderBuilder.RandomSourceInternal.MT_64),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.internal.source32.MultiplyWithCarry256}.
+     * Native seed type: {@code int[]}.
+     */
+    MWC_256(ProviderBuilder.RandomSourceInternal.MWC_256);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
