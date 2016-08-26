@@ -81,9 +81,6 @@ public abstract class AbstractWell extends IntProvider {
     /**
      * Initializes the generator with the given {@code seed}.
      *
-     * <p>The state of the generator is exactly the same as a new generator built
-     * with the same seed.</p>
-     *
      * @param seed Seed. Cannot be null.
      */
     private void setSeedInternal(final int[] seed) {
