@@ -140,6 +140,11 @@ public class MersenneTwister extends IntProvider {
      * @param seed Initial seed.
      */
     private void setSeedInternal(int[] seed) {
+        if (seed.length == 0) {
+            // Accept empty seed.
+            seed = new int[1];
+        }
+
         initState(19650218);
         int i = 1;
         int j = 0;
