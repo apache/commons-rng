@@ -266,6 +266,26 @@ public class ProvidersCommonParametricTest {
         Assert.assertEquals(3, nonNativeSeedCount);
     }
 
+    @Test
+    public void testEmptyIntArraySeed() {
+        final int[] empty = new int[0];
+        Assume.assumeTrue(originalSource.isNativeSeed(empty));
+
+        // Exercise the default seeding procedure.
+        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Test
+    public void testEmptyLongArraySeed() {
+        final long[] empty = new long[0];
+        Assume.assumeTrue(originalSource.isNativeSeed(empty));
+
+        // Exercise the default seeding procedure.
+        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
     // State save and restore tests.
 
     @Test
@@ -472,10 +492,23 @@ public class ProvidersCommonParametricTest {
      */
     private void checkNextIntegerInRange(final int max,
                                          int sampleSize) {
+        checkNextIntegerInRange(generator, max, sampleSize);
+    }
+
+    /**
+     * Tests uniformity of the distribution produced by {@code nextInt(int)}.
+     *
+     * @param rng Generator.
+     * @param max Upper bound.
+     * @param sampleSize Number of random values generated.
+     */
+    private void checkNextIntegerInRange(final UniformRandomProvider rng,
+                                         final int max,
+                                         int sampleSize) {
         final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                return generator.nextInt(max);
+                return rng.nextInt(max);
             }
         };
 
