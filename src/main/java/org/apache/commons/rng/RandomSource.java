@@ -282,7 +282,12 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.MultiplyWithCarry256}.
      * Native seed type: {@code int[]}.
      */
-    MWC_256(ProviderBuilder.RandomSourceInternal.MWC_256);
+    MWC_256(ProviderBuilder.RandomSourceInternal.MWC_256),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.internal.source32.KISSRandom}.
+     * Native seed type: {@code int[]}.
+     */
+    KISS(ProviderBuilder.RandomSourceInternal.KISS);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;

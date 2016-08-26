@@ -51,6 +51,7 @@ public class ProvidersList {
             add(LIST32, RandomSource.WELL_44497_B, new int[] { 123, 234, 345 });
             add(LIST32, RandomSource.ISAAC, new int[] { 123, -234, 345, -456 });
             add(LIST32, RandomSource.MWC_256, new int[] { 12, -1234, -3456, 45678 });
+            add(LIST32, RandomSource.KISS, new int[] { 12, 1234, 23456, 345678 });
             // ... add more here.
 
             // "long"-based RNGs.
