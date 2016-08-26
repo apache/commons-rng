@@ -104,6 +104,7 @@ public class MultiplyWithCarry256 extends IntProvider {
 
         // First element of the "seed" is the initial "carry".
         final int c = tmp[0];
+        // Marsaglia's recommendation: 0 <= carry < A.
         carry = (int) ((c < 0 ? -c : c) % A);
 
         // Initial state.
