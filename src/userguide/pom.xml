@@ -95,7 +95,7 @@
       <dependency>
           <groupId>org.apache.commons</groupId>
           <artifactId>commons-rng</artifactId>
-          <version>0.1-SNAPSHOT</version>
+          <version>1.0-SNAPSHOT</version>
       </dependency>
   </dependencies>
 </project>
