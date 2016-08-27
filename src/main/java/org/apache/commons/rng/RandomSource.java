@@ -85,6 +85,7 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
  * by this library may <i>not</i> be the same as the sequences produced
  * by other implementations of the same algorithm!
  * </p>
+ *
  * <p>
  * For each algorithm, the Javadoc mentions the "ideal" size of the seed,
  * meaning the number of {@code int} or {@code long} values that is neither
@@ -94,21 +95,38 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
  * </p>
  *
  * <p>
+ * Note that some algorithms are inherently sensitive to having too low
+ * diversity in their initial state.
+ * For example, it is often a bad idea to use a seed that is mostly
+ * composed of zeroes, or of repeated values.
+ * </p>
+ *
+ * <p>
  * This class provides methods to generate random seeds (single values
  * or arrays of values, of {@code int} or {@code long} types) that can
  * be passed to the {@link RandomSource#create(RandomSource,Object,Object[])
  * generators factory method}.
  * <br>
  * Although the seed-generating methods defined in this class will likely
- * return different values each time they are called, there is no guarantee
- * that the resulting "seed" will always generate a <i>good</i> (i.e.
- * sufficiently uniformly random for the intended purpose) sequence of
- * numbers, even if the generator is good!
- * The only way to ensure that the selected seed will make the generator
- * produce a good sequence is to submit that sequence to a series of
- * stringent tests, as provided by tools such as
- * <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">dieharder</a>
- * or <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TestU01</a>.
+ * return different values each time they are called, there is no guarantee:
+ * <ul>
+ *  <li>
+ *   In any sub-sequence, it is <a href="https://en.wikipedia.org/wiki/Birthday_problem">
+ *   expected</a> that the same numbers can occur, with a probability getting
+ *   higher as the range of allowed values is smaller and the sequence becomes
+ *   longer.
+ *  </li>
+ *  <li>
+ *   It possible that the resulting "seed" will not be <i>good</i> (i.e.
+ *   it will not generate a sufficiently uniformly random sequence for the
+ *   intended purpose), even if the generator is good!
+ *   The only way to ensure that the selected seed will make the generator
+ *   produce a good sequence is to submit that sequence to a series of
+ *   stringent tests, as provided by tools such as
+ *   <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">dieharder</a>
+ *   or <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TestU01</a>.
+ *  </li>
+ * </ul>
  * </p>
  *
  * <p>
