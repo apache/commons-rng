@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Assume;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -283,6 +284,22 @@ public class ProvidersCommonParametricTest {
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Ignore@Test
+    public void testZeroIntArraySeed() {
+        // Exercise capacity to escape all "zero" state.
+        final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
+        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Ignore@Test
+    public void testZeroLongArraySeed() {
+        // Exercise capacity to escape all "zero" state.
+        final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
+        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
