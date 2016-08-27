@@ -41,6 +41,8 @@ public class AbstractTestPerformance {
                 "MT",
                 "ISAAC",
                 "SPLIT_MIX_64",
+                "MWC_256",
+                "KISS",
                 "XOR_SHIFT_1024_S",
                 "TWO_CMRES",
                 "MT_64" })
@@ -54,5 +56,4 @@ public class AbstractTestPerformance {
             provider = RandomSource.create(randomSource);
         }
     }
-
 }
