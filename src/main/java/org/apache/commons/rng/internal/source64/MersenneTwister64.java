@@ -115,7 +115,7 @@ public class MersenneTwister64 extends LongProvider {
     }
 
     /**
-     * Reinitializes the generator as if just built with the given seed.
+     * Initializes the generator with the given seed.
      *
      * @param seed Initial seed.
      */
