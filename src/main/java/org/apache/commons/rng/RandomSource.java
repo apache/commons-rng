@@ -85,6 +85,13 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
  * by this library may <i>not</i> be the same as the sequences produced
  * by other implementations of the same algorithm!
  * </p>
+ * <p>
+ * For each algorithm, the Javadoc mentions the "ideal" size of the seed,
+ * meaning the number of {@code int} or {@code long} values that is neither
+ * too large (i.e. some of the seed is useless) or too small (i.e. an
+ * internal procedure will fill the state with redundant information
+ * computed from the given seed).
+ * </p>
  *
  * <p>
  * This class provides methods to generate random seeds (single values
@@ -142,73 +149,115 @@ import org.apache.commons.rng.internal.source64.TwoCmres;
 public enum RandomSource {
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.JDKRandom}.
-     * Native seed type: {@code Long}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
      */
     JDK(ProviderBuilder.RandomSourceInternal.JDK),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well512a}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
      */
     WELL_512_A(ProviderBuilder.RandomSourceInternal.WELL_512_A),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well1024a}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 32.</li>
+     * </ul>
      */
     WELL_1024_A(ProviderBuilder.RandomSourceInternal.WELL_1024_A),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well19937a}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 624.</li>
+     * </ul>
      */
     WELL_19937_A(ProviderBuilder.RandomSourceInternal.WELL_19937_A),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well19937c}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 624.</li>
+     * </ul>
      */
     WELL_19937_C(ProviderBuilder.RandomSourceInternal.WELL_19937_C),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well44497a}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 1391.</li>
+     * </ul>
      */
     WELL_44497_A(ProviderBuilder.RandomSourceInternal.WELL_44497_A),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well44497b}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 1391.</li>
+     * </ul>
      */
     WELL_44497_B(ProviderBuilder.RandomSourceInternal.WELL_44497_B),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.MersenneTwister}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 624.</li>
+     * </ul>
      */
     MT(ProviderBuilder.RandomSourceInternal.MT),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source32.ISAACRandom}.
-     * Native seed type: {@code int[]}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 256.</li>
+     * </ul>
      */
     ISAAC(ProviderBuilder.RandomSourceInternal.ISAAC),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.SplitMix64}.
-     * Native seed type: {@code Long}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
      */
     SPLIT_MIX_64(ProviderBuilder.RandomSourceInternal.SPLIT_MIX_64),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.XorShift1024Star}.
-     * Native seed type: {@code long[]}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
      */
     XOR_SHIFT_1024_S(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres}.
-     * Native seed type: {@code Integer}.
+     * <ul>
+     *  <li>Native seed type: {@code Integer}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
      */
     TWO_CMRES(ProviderBuilder.RandomSourceInternal.TWO_CMRES),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres},
      * with explicit selection of the two subcycle generators.
-     * Native seed type: {@code Integer}.
+     * <ul>
+     *  <li>Native seed type: {@code Integer}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
      */
     TWO_CMRES_SELECT(ProviderBuilder.RandomSourceInternal.TWO_CMRES_SELECT),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.MersenneTwister64}.
-     * Native seed type: {@code long[]}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 312.</li>
+     * </ul>
      */
     MT_64(ProviderBuilder.RandomSourceInternal.MT_64);
 
