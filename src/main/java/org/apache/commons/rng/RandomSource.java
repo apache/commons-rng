@@ -286,7 +286,7 @@ public enum RandomSource {
      * Wraps the internal state of a {@link UniformRandomProvider}.
      * Its purpose is to store all the data needed to recover the same
      * state in order to restart a sequence where it left off.
-     * External code should not to modify the data contained in instances
+     * External code should not try to modify the data contained in instances
      * of this class.
      */
     public static class State {
