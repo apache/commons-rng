@@ -20,7 +20,6 @@ import java.util.Arrays;
 import org.apache.commons.rng.internal.ProviderBuilder;
 import org.apache.commons.rng.internal.BaseProvider;
 import org.apache.commons.rng.internal.util.SeedFactory;
-import org.apache.commons.rng.internal.source64.TwoCmres;
 
 /**
  * This class provides the API for creating generators of random numbers.
@@ -255,6 +254,8 @@ public enum RandomSource {
     XOR_SHIFT_1024_S(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S),
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres}.
+     * This generator is equivalent to {@link #TWO_CMRES_SELECT} with the choice of the
+     * pair {@code (0, 1)} for the two subcycle generators.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
      *  <li>Native seed size: 1.</li>
@@ -264,6 +265,10 @@ public enum RandomSource {
     /**
      * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres},
      * with explicit selection of the two subcycle generators.
+     * The selection of the subcycle generator is by passing its index in the internal
+     * table, a value between 0 (included) and 13 (included).
+     * The two indices must be different.
+     * Different choices of an ordered pair of indices create independent generators.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
      *  <li>Native seed size: 1.</li>
@@ -430,16 +435,6 @@ public enum RandomSource {
                                                Object seed,
                                                Object ... data) {
         return ProviderBuilder.create(source.getInternalIdentifier(), seed, data);
-    }
-
-    /**
-     * Gets the number of elements of the set of "subcycle" generators from
-     * which two can be selected in order to create a {@link TwoCmres} RNG.
-     *
-     * @return the number of implemented subcycle generators.
-     */
-    public static int numberOfCmresGenerators() {
-        return TwoCmres.numberOfSubcycleGenerators();
     }
 
     /**

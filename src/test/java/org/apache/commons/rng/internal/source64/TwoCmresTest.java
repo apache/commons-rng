@@ -49,5 +49,38 @@ public class TwoCmresTest {
             }
         }
     }
+
+    @Test
+    public void testSubcycleGeneratorsIndex() {
+        final int seed = 246810;
+
+        // Valid indices are between 0 (included) and max (excluded).
+        final int max = TwoCmres.numberOfSubcycleGenerators();
+
+        for (int i = 0; i < max; i++) {
+            for (int j = 0; j < max; i++) {
+                if (i != j) { // Subcycle generators must be different.
+                    // Can be instantiated.
+                    new TwoCmres(seed, i, j);
+                }
+            }
+        }
+
+        for (int wrongIndex : new int[] { -1, max }) {
+            try {
+                new TwoCmres(seed, wrongIndex, 1);
+                Assert.fail("Exception expected for index=" + wrongIndex);
+            } catch (IllegalArgumentException e) {
+                // Expected.
+            }
+
+            try {
+                new TwoCmres(seed, 1, wrongIndex);
+                Assert.fail("Exception expected for index=" + wrongIndex);
+            } catch (IllegalArgumentException e) {
+                // Expected.
+            }
+        }
+    }
 }
 
