@@ -705,9 +705,6 @@ public class ProvidersCommonParametricTest {
  * Dummy class for checking that restoring fails when an invalid state is used.
  */
 class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvider {
-    /** State. */
-    private int state;
-
     /** {@inheritDoc} */
     @Override
     public int next() {
@@ -717,12 +714,12 @@ class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvide
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return NumberFactory.makeByteArray(state);
+        return new byte[0];
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        state = NumberFactory.makeInt(s);
+        // No state.
     }
 }
