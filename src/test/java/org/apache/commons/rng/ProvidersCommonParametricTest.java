@@ -377,6 +377,17 @@ public class ProvidersCommonParametricTest {
         RandomSource.restoreState(generator, state);
     }
 
+    @Test(expected=UnsupportedOperationException.class)
+    public void testSaveStateWrongClass() {
+        RandomSource.saveState(new ForeignDummyGenerator());
+    }
+
+    @Test(expected=UnsupportedOperationException.class)
+    public void testRestoreStateWrongClass() {
+        RandomSource.restoreState(new ForeignDummyGenerator(),
+                                  new RandomSource.State(new byte[0]));
+    }
+
     ///// Support methods below.
 
     /**
@@ -721,5 +732,59 @@ class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvide
     @Override
     protected void setStateInternal(byte[] s) {
         // No state.
+    }
+}
+
+/**
+ * Dummy class for checking that "save" and "restore" fail when a
+ * class is passed that is not providing the necessary functionality
+ * (i.e. a class that is not implemented by this library).
+ */
+class ForeignDummyGenerator implements UniformRandomProvider {
+    @Override
+    public void nextBytes(byte[] bytes) {
+        return;
+    }
+
+    @Override
+    public void nextBytes(byte[] bytes,
+                          int start,
+                          int len) {
+        return;
+    }
+
+    @Override
+    public int nextInt() {
+        return 0;
+    }
+
+    @Override
+    public int nextInt(int n) {
+        return 0;
+    }
+
+    @Override
+    public long nextLong() {
+        return 0;
+    }
+
+    @Override
+    public long nextLong(long n) {
+        return 0;
+    }
+
+    @Override
+    public boolean nextBoolean() {
+        return false;
+    }
+
+    @Override
+    public float nextFloat() {
+        return 0;
+    }
+
+    @Override
+    public double nextDouble() {
+        return 0;
     }
 }
