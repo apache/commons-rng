@@ -41,10 +41,4 @@ public class Long2IntArray implements SeedConverter<Long, int[]> {
     public int[] convert(Long seed) {
         return SeedFactory.createIntArray(size, new SplitMix64(seed));
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(size=" + size + ")";
-    }
 }

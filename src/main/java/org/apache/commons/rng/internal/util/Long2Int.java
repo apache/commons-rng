@@ -27,10 +27,4 @@ public class Long2Int implements SeedConverter<Long, Integer> {
     public Integer convert(Long seed) {
         return NumberFactory.makeInt(seed);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
 }

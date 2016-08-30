@@ -47,10 +47,4 @@ public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, 
         final TRANS trans = first.convert(seed);
         return second.convert(trans);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + " (" + second + " o " + first + ")";
-    }
 }

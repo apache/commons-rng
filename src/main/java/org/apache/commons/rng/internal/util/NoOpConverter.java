@@ -31,10 +31,4 @@ public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
     public SEED convert(SEED seed) {
         return seed;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "Pass-through";
-    }
 }

@@ -32,10 +32,4 @@ public class LongArray2Long implements SeedConverter<long[], Long> {
 
         return out;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
 }

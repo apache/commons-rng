@@ -32,10 +32,4 @@ public class IntArray2Int implements SeedConverter<int[], Integer> {
 
         return out;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
 }

@@ -28,10 +28,4 @@ public class Int2Long implements SeedConverter<Integer, Long> {
         final int s = seed;
         return NumberFactory.makeLong(s, ~s);
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
 }
