@@ -166,8 +166,7 @@ int second = 4; // Subcycle identifier.
 UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, seed, first, second);
 +--------------------------+
 
-    In the above example, valid "subcycle identifiers" are in the range 0, ... ,
-    {{{../apidocs/org/apache/commons/rng/RandomSource.html#numberOfCmresGenerators--}numberOfCmresGenerators() - 1}}.
+    In the above example, valid "subcycle identifiers" are in the interval [0, 13].
 
 
   * The current state of a generator can be
