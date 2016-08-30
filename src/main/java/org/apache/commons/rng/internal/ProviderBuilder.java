@@ -351,7 +351,9 @@ public class ProviderBuilder {
          * for this RNG type.
          */
         public <SEED> boolean isNativeSeed(SEED seed) {
-            return getSeed().equals(seed.getClass());
+            return seed == null ?
+                false :
+                getSeed().equals(seed.getClass());
         }
     }
 }
