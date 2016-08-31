@@ -58,7 +58,7 @@ public class TwoCmresTest {
         final int max = TwoCmres.numberOfSubcycleGenerators();
 
         for (int i = 0; i < max; i++) {
-            for (int j = 0; j < max; i++) {
+            for (int j = 0; j < max; j++) {
                 if (i != j) { // Subcycle generators must be different.
                     // Can be instantiated.
                     new TwoCmres(seed, i, j);
@@ -70,17 +70,16 @@ public class TwoCmresTest {
             try {
                 new TwoCmres(seed, wrongIndex, 1);
                 Assert.fail("Exception expected for index=" + wrongIndex);
-            } catch (IllegalArgumentException e) {
+            } catch (IndexOutOfBoundsException e) {
                 // Expected.
             }
 
             try {
                 new TwoCmres(seed, 1, wrongIndex);
                 Assert.fail("Exception expected for index=" + wrongIndex);
-            } catch (IllegalArgumentException e) {
+            } catch (IndexOutOfBoundsException e) {
                 // Expected.
             }
         }
     }
 }
-
