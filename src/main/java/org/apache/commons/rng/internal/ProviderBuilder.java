@@ -180,6 +180,9 @@ public class ProviderBuilder {
                 nativeSeed = SeedFactory.createIntArray(RANDOM_SEED_ARRAY_SIZE);
             } else if (source.getSeed().equals(long[].class)) {
                 nativeSeed = SeedFactory.createLongArray(RANDOM_SEED_ARRAY_SIZE);
+            } else {
+                // Source's native type is not handled.
+                throw new IllegalStateException(INTERNAL_ERROR_MSG);
             }
         } else {
             // Convert to native type.
