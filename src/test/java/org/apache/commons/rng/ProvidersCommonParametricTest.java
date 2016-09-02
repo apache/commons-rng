@@ -248,8 +248,14 @@ public class ProvidersCommonParametricTest {
         final Long longSeed = -1213141516171819L;
         final int[] intArraySeed = new int[] { 0, 11, -22, 33, -44, 55, -66, 77, -88, 99 };
         final long[] longArraySeed = new long[] { 11111L, -222222L, 3333333L, -44444444L };
+        final byte[] byteArraySeed = new byte[] { -128, -91, -45, -32, -1, 0, 11, 23, 54, 88, 127 };
 
-        final Object[] seeds = new Object[] { null, intSeed, longSeed, intArraySeed, longArraySeed };
+        final Object[] seeds = new Object[] { null,
+                                              intSeed,
+                                              longSeed,
+                                              intArraySeed,
+                                              longArraySeed,
+                                              byteArraySeed };
 
         int nonNativeSeedCount = 0;
         int seedCount = 0;
@@ -263,8 +269,8 @@ public class ProvidersCommonParametricTest {
             RandomSource.create(originalSource, s, originalArgs);
         }
 
-        Assert.assertEquals(5, seedCount);
-        Assert.assertEquals(4, nonNativeSeedCount);
+        Assert.assertEquals(6, seedCount);
+        Assert.assertEquals(5, nonNativeSeedCount);
     }
 
     @Test

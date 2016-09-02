@@ -35,6 +35,8 @@ import org.apache.commons.rng.internal.util.IntArray2LongArray;
 import org.apache.commons.rng.internal.util.LongArray2IntArray;
 import org.apache.commons.rng.internal.util.LongArray2Long;
 import org.apache.commons.rng.internal.util.IntArray2Int;
+import org.apache.commons.rng.internal.util.ByteArray2IntArray;
+import org.apache.commons.rng.internal.util.ByteArray2LongArray;
 import org.apache.commons.rng.internal.util.SeedConverter;
 import org.apache.commons.rng.internal.util.SeedConverterComposer;
 import org.apache.commons.rng.internal.source32.JDKRandom;
@@ -81,6 +83,10 @@ public class ProviderBuilder {
     private static final LongArray2IntArray LONG_ARRAY_TO_INT_ARRAY = new LongArray2IntArray();
     /** Seed converter. */
     private static final IntArray2LongArray INT_ARRAY_TO_LONG_ARRAY = new IntArray2LongArray();
+    /** Seed converter. */
+    private static final ByteArray2IntArray BYTE_ARRAY_TO_INT_ARRAY = new ByteArray2IntArray();
+    /** Seed converter. */
+    private static final ByteArray2LongArray BYTE_ARRAY_TO_LONG_ARRAY = new ByteArray2LongArray();
     /** Map to convert "Integer" seeds. */
     private static final Map<Class<?>, SeedConverter<Integer,?>> CONV_INT =
         new HashMap<Class<?>, SeedConverter<Integer,?>>();
@@ -93,6 +99,9 @@ public class ProviderBuilder {
     /** Map to convert "long[]" seeds. */
     private static final Map<Class<?>, SeedConverter<long[],?>> CONV_LONG_ARRAY =
         new HashMap<Class<?>, SeedConverter<long[],?>>();
+    /** Map to convert "byte[]" seeds. */
+    private static final Map<Class<?>, SeedConverter<byte[],?>> CONV_BYTE_ARRAY =
+        new HashMap<Class<?>, SeedConverter<byte[],?>>();
 
     static {
         // Input seed type is "Long".
@@ -122,6 +131,13 @@ public class ProviderBuilder {
         CONV_LONG_ARRAY.put(Long.class, LONG_ARRAY_TO_LONG);
         CONV_LONG_ARRAY.put(int[].class, LONG_ARRAY_TO_INT_ARRAY);
         CONV_LONG_ARRAY.put(long[].class, new NoOpConverter<long[]>());
+
+        // Input seed type is "byte[]".
+        // Key is the implementation's "native" seed type.
+        CONV_BYTE_ARRAY.put(Integer.class, new SeedConverterComposer<byte[],int[],Integer>(BYTE_ARRAY_TO_INT_ARRAY, INT_ARRAY_TO_INT));
+        CONV_BYTE_ARRAY.put(Long.class, new SeedConverterComposer<byte[],long[],Long>(BYTE_ARRAY_TO_LONG_ARRAY, LONG_ARRAY_TO_LONG));
+        CONV_BYTE_ARRAY.put(int[].class, BYTE_ARRAY_TO_INT_ARRAY);
+        CONV_BYTE_ARRAY.put(long[].class, BYTE_ARRAY_TO_LONG_ARRAY);
     }
 
     /**
@@ -195,6 +211,8 @@ public class ProviderBuilder {
                 nativeSeed = CONV_INT_ARRAY.get(source.getSeed()).convert((int[]) seed);
             } else if (seed instanceof long[]) {
                 nativeSeed = CONV_LONG_ARRAY.get(source.getSeed()).convert((long[]) seed);
+            } else if (seed instanceof byte[]) {
+                nativeSeed = CONV_BYTE_ARRAY.get(source.getSeed()).convert((byte[]) seed);
             }
 
             if (nativeSeed == null) {
