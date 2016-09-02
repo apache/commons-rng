@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.apache.commons.rng.internal.util.NumberFactory;
 
 /**
- * Test for tests which all generators must pass.
+ * Tests which all generators must pass.
  */
 @RunWith(value=Parameterized.class)
 public class ProvidersCommonParametricTest {
