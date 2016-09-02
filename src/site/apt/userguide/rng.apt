@@ -113,6 +113,8 @@ long[] seed = RandomSource.createLongArray(128); // Length of returned array is 
 
     ** <<<long[]>>>
 
+    ** <<<byte[]>>>
+
     []
 
 +--------------------------+
