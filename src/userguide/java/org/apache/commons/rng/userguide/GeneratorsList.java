@@ -47,6 +47,8 @@ public class GeneratorsList implements Iterable<UniformRandomProvider> {
         list.add(RandomSource.create(RandomSource.SPLIT_MIX_64));
         list.add(RandomSource.create(RandomSource.XOR_SHIFT_1024_S));
         list.add(RandomSource.create(RandomSource.TWO_CMRES));
+        list.add(RandomSource.create(RandomSource.MWC_256));
+        list.add(RandomSource.create(RandomSource.KISS));
     }
 
     /** {@inheritDoc} */
