@@ -396,6 +396,7 @@ public enum RandomSource {
      *   <li>{@code Long} (or {@code long})</li>
      *   <li>{@code int[]}</li>
      *   <li>{@code long[]}</li>
+     *   <li>{@code byte[]}</li>
      *  </ul>
      * </p>
      *
