@@ -252,8 +252,6 @@ RandomSource.restoreState(rngNew, stateNew);
     it contains higher-level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
     common to all implementations.
 
-  * <<<StateSettable>>>: interface to be implemented by concrete random sources.
-
   * <<<org.apache.commons.rng.internal.util>>>
 
     ** <<<NumberFactory>>>: contains utilities for interpreting and combining
