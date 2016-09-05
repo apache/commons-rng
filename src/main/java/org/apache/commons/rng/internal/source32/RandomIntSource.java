@@ -18,7 +18,7 @@
 package org.apache.commons.rng.internal.source32;
 
 /**
- * Source of randomness that generate values of type {@code int}.
+ * Source of randomness that generates values of type {@code int}.
  *
  * @since 1.0
  */

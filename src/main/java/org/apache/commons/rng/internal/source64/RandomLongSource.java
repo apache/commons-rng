@@ -18,7 +18,7 @@
 package org.apache.commons.rng.internal.source64;
 
 /**
- * Source of randomness that generate values of type {@code long}.
+ * Source of randomness that generates values of type {@code long}.
  *
  * @since 1.0
  */
