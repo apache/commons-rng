@@ -27,7 +27,7 @@
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Apache Commons Rng</name>
 
   <inceptionYear>2016</inceptionYear>
@@ -104,7 +104,7 @@
     <!-- do not use snapshot suffix here -->
     <commons.release.version>1.0</commons.release.version>
     <commons.release.desc>(requires Java 1.6+)</commons.release.desc>
-    <!-- <commons.rc.version>RC1</commons.rc.version> -->
+    <commons.rc.version>RC1</commons.rc.version>
     <commons.binary.suffix>-bin</commons.binary.suffix>
 
     <commons.jira.id>RNG</commons.jira.id>

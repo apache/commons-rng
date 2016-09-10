@@ -1,0 +1,19 @@
+
+              Apache Commons Rng 1.0 RELEASE NOTES
+
+The Apache Commons Rng team is pleased to announce the release of commons-rng-1.0
+
+The Apache Commons Rng project provides implementations of random numbers generators.
+
+This is the first release of Commons Rng.
+The minimum version of the Java platform required to compile and use
+Commons Rng 1.0 is Java 6.
+
+No changes defined in this version.
+
+For complete information on Apache Commons Rng, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons Rng website:
+
+http://commons.apache.org/proper/commons-rng/
+
+
