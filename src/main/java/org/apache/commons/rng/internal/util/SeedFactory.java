@@ -98,6 +98,42 @@ public class SeedFactory {
     }
 
     /**
+     * Simple filling procedure.
+     * It will
+     * <ol>
+     *  <li>
+     *   fill the beginning of {@code state} by copying
+     *   {@code min(seed.length, state.length)} elements from
+     *   {@code seed},
+     *  </li>
+     *  <li>
+     *   set all remaining elements of {@code state} with non-zero
+     *   values (even if {@code seed.length < state.length}).
+     *  </li>
+     * </ol>
+     *
+     * @param state State. Must be allocated.
+     * @param seed Seed. Cannot be null.
+     */
+    public static void fillState(int[] state,
+                                 int[] seed) {
+        final int stateSize = state.length;
+        final int seedSize = seed.length;
+        System.arraycopy(seed, 0, state, 0, Math.min(seedSize, stateSize));
+
+        if (seedSize < stateSize) {
+            for (int i = seedSize; i < stateSize; i++) {
+                state[i] = 26021969 * i;
+            }
+            for (int i = stateSize - 1; i > seedSize; i--) {
+                state[i] ^= state[stateSize - i - 1];
+            }
+
+            state[seedSize] = 0x80000000; // Ensuring non-zero initial array.
+        }
+    }
+
+    /**
      * Creates an array of numbers for use as a seed.
      *
      * @param n Size of the array to create.
