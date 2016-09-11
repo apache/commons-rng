@@ -201,7 +201,7 @@ Then, assuming the first candidate, the suffix will be "RC1" (this should
 be the same as in the "<properties>" in the "pom.xml"), and the command
 will be:
 
-  $ git tag -s -m "RC1." RNG_1_0_RC1
+  $ git tag -u "__Your_key_id__" -s -m "RC1." RNG_1_0_RC1
 
 If you have several GPG keys, you may prefer to use "-u keyId" to select a specific
 key for signing the tag instead of "-s" which select automatically one key
@@ -220,7 +220,7 @@ You will get something like:
 
   RC1.
 
-followed by GPG output lines
+followed by GPG output lines.
 
 Remember the commit ID listed in the object line (here cf4a9d70c9ac24dd7196995390171150e4e56451),
 as it is the most stable reference for traceability.
@@ -244,6 +244,7 @@ currently on any branch. This is expected in this situation.
 
 Check that the last commit has the id you noted in the previous step:
 
+  $ cd commons-rng
   $ git log -1
 
 
@@ -290,15 +291,15 @@ and their associated fingerprints
 and their signatures
   <file-name>.asc
 
-Note that Nexus automatically adds "md5" and "sha1" checksums files to the "asc"
-files (cryptographic signature). These fingerprints on signatures are spurious
-and have to be manually removed from Nexus staging area.
+Nexus used to add "md5" and "sha1" checksums files to the "asc" files
+(cryptographic signature). If these fingerprints on signatures are
+present, they must be manually removed from Nexus staging area.
 
 The process also transfers the complete source and binaries distributions files:
-  commons-rng-1.0.-bin.tar.gz
-  commons-rng-1.0.-bin.zip
-  commons-rng-1.0.-src.tar.gz
-  commons-rng-1.0.-src.zip
+  commons-rng-1.0-bin.tar.gz
+  commons-rng-1.0-bin.zip
+  commons-rng-1.0-src.tar.gz
+  commons-rng-1.0-src.zip
 as well as their associated .md5 and .sha1 fingerprints and .asc signatures.
 All these files are not maven artifacts but rather distribution archives: They
 belong elsewhere; hence they must also been removed from the Nexus staging
@@ -353,7 +354,7 @@ Then run these commands:
   $ mvn site
   $ cd target
   $ mv site commons-rng-1.0-RC1-site
-  $ lftp sftp://__Your_apache_login__@home.apache.org/
+  $ lftp sftp://__Your_apache_login__@home.apache.org
      lftp you@home.apache.org:~> cd public_html
      lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.0-RC1-site
      lftp you@home.apache.org:~/public_html> bye
@@ -370,13 +371,13 @@ Tag name:
   RNG_1_0_RC1 (signature can be checked from git using 'git tag -v')
 
 Tag URL:
-  <https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=cf4a9d70c9ac24dd7196995390171150e4e56451>
+  https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=cf4a9d70c9ac24dd7196995390171150e4e56451
 
 Commit ID the tag points at:
   cf4a9d70c9ac24dd7196995390171150e4e56451
 
 Site:
-  <http://home.apache.org/~__Your_apache_login__/commons-rng-1.0-RC1-site>
+  http://home.apache.org/~__Your_apache_login__/commons-rng-1.0-RC1-site
 
 Distribution files:
   https://dist.apache.org/repos/dist/dev/commons/rng/
@@ -391,7 +392,7 @@ KEYS file to check signatures:
   http://www.apache.org/dist/commons/KEYS
 
 Maven artifacts:
-  https://repository.apache.org/content/repositories/orgapachecommons-051/org/apache/commons/commons-rng3/1.0/
+  https://repository.apache.org/content/repositories/orgapachecommons-051/org/apache/commons/commons-rng/1.0/
 
 [ ] +1 Release it.
 [ ] +0 Go ahead; I don't care.
