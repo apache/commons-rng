@@ -16,12 +16,12 @@
 ~~
 
   -----------------------------
-  The Commons Rng User Guide
+  The Apache Commons RNG User Guide
   -----------------------------
 
 1. Usage overview
 
-  <<<Commons Rng>>> provides generators of random sequences of numbers.
+  <<<Commons RNG>>> provides generators of random sequences of numbers.
   Please refer to the {{{../apidocs/index.html}Javadoc}} for details on
   the API illustrated by the following examples.
 
@@ -501,11 +501,11 @@ RandomSource.restoreState(rngNew, stateNew);
 
 5. Dependencies
 
-  Commons Rng requires JDK 1.6+ and has no runtime dependencies.
+  Apache Commons RNG requires JDK 1.6+ and has no runtime dependencies.
 
 6. License
 
-  Commons Rng is distributed under the terms of the
+  Apache Commons RNG is distributed under the terms of the
   {{{http://www.apache.org/licenses/LICENSE-2.0}Apache License, Version 2.0}}.
 
   This product includes software developed by other third parties and

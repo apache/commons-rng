@@ -28,10 +28,10 @@
   <artifactId>commons-rng</artifactId>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Apache Commons Rng</name>
+  <name>Apache Commons RNG</name>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons Rng project provides implementations of random numbers generators.</description>
+  <description>The Apache Commons RNG project provides implementations of random numbers generators.</description>
 
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
@@ -65,6 +65,9 @@
   <contributors>
     <contributor>
       <name>Artem Barger</name>
+    </contributor>
+    <contributor>
+      <name>Rob Tompkins</name>
     </contributor>
   </contributors>
 
