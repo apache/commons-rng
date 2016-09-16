@@ -56,11 +56,11 @@ limitations under the License.
 -->
 <document>
   <properties>
-    <title>Download Apache Commons Rng</title>
+    <title>Download Apache Commons RNG</title>
     <author email="dev@commons.apache.org">Apache Commons Documentation Team</author>
   </properties>
   <body>
-    <section name="Download Apache Commons Rng">
+    <section name="Download Apache Commons RNG">
     <subsection name="Using a Mirror">
       <p>
         We recommend you use a mirror to download our release
@@ -111,7 +111,7 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Apache Commons Rng 1.0 (requires Java 1.6+)">
+    <section name="Apache Commons RNG 1.0 (requires Java 1.6+)">
       <subsection name="Binaries">
         <table>
           <tr>
