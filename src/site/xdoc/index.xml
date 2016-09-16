@@ -20,46 +20,44 @@
 <document>
 
   <properties>
-    <title>Commons Rng</title>
+    <title>Commons RNG</title>
   </properties>
 
   <body>
 
-    <section name="Commons Rng: Random numbers generators" href="summary">
+    <section name="Apache Commons RNG: Random Numbers Generators" href="summary">
       <p>
-        Commons Rng provides implementations of pseudo-random numbers generators.
+        Commons RNG provides implementations of pseudo-random numbers generators that are
+        either faster or of higher quality (and sometimes both) than <code>java.lang.Random</code>.
+      </p>
+
+      <p>
+        Casual use is as simple as:
+
+<source>import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.RandomSource;
+
+// Instantiate a "Mersenne-Twister" generator with a factory method.
+UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+
+// Use it to produce a floating-point value between 0 and 1.
+double random = rng.nextDouble();
+</source>
+
+      </p>
+
+      <p>
+        For more examples and more advanced usage, see the <a href="userguide/rng.html">userguide</a>.
       </p>
     </section>
 
-    <section name="Download Rng">
+    <section name="Download Apache Commons RNG">
       <subsection name="Releases">
         <p>
-          <i>There isn't any release yet.</i>
+          Download the
+          <a href="http://commons.apache.org/rng/download_rng.cgi">
+            Latest Release</a> of Apache Commons RNG.
         </p>
-
-        <p>
-          Work is currently performed actively towards release 1.0:
-          <a href="https://issues.apache.org/jira/browse/RNG-6">See our issue-tracking system.</a>
-        </p>
-
-        <p>
-          <b>Interested people are most welcome to review the API for this important milestone:</b>
-          Source code is available from <a href="./source-repository.html">a git repository at Apache</a>
-          or from its <a href="https://github.com/apache/commons-rng">Github</a> mirror.
-        </p>
-
-        <p>
-          <b>"Beta-testers" are welcome to test the library</b> by downloading the
-          <a href="https://repository.apache.org/content/repositories/snapshots/org/apache/commons/commons-rng/1.0-SNAPSHOT/">
-            <i><b>unofficial 1.0-SNAPSHOT JAR</b></i>
-          </a> that is generated through <a href="https://builds.apache.org/view/Apache%20Commons/job/Commons_Rng/">continuous integration</a>.
-        </p>
-
-        <!-- <p> -->
-        <!--   Download the  -->
-        <!--   <a href="http://commons.apache.org/rng/download_rng.cgi"> -->
-        <!--     Latest Release</a> of Commons Rng. -->
-        <!-- </p> -->
       </subsection>
     </section>
 

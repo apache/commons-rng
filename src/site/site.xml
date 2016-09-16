@@ -15,15 +15,15 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project name="Rng">
+<project name="RNG">
   <bannerRight>
-    <name>Commons Rng</name>
+    <name>Apache Commons RNG</name>
     <src>/images/commons_rng.small.png</src>
     <href>/index.html</href>
   </bannerRight>
 
   <body>
-    <menu name="Rng">
+    <menu name="RNG">
       <item name="Overview" href="/index.html"/>
       <item name="Downloads" href="http://commons.apache.org/rng/download_rng.cgi"/>
       <item name="Latest API docs (development)" href="apidocs/index.html"/>
@@ -33,7 +33,7 @@
       <item name="Source Repository (current)" 
          href="http://git-wip-us.apache.org/repos/asf/commons-rng.git"/>
       <!-- <item name="Wiki"   -->
-      <!--       href="http://wiki.apache.org/commons/Rng"/> -->
+      <!--       href="http://wiki.apache.org/commons/RNG"/> -->
       <item name="Developers Guide" href="/developers.html"/>
     </menu>
     

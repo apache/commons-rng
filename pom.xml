@@ -28,10 +28,10 @@
   <artifactId>commons-rng</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
-  <name>Apache Commons Rng</name>
+  <name>Apache Commons RNG</name>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons Rng project provides implementations of random numbers generators.</description>
+  <description>The Apache Commons RNG project provides implementations of random numbers generators.</description>
 
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
@@ -65,6 +65,9 @@
   <contributors>
     <contributor>
       <name>Artem Barger</name>
+    </contributor>
+    <contributor>
+      <name>Rob Tompkins</name>
     </contributor>
   </contributors>
 
@@ -217,61 +220,62 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <configuration>
-              <target>
-                <jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-tools.jar">
-                  <metainf dir="${basedir}" includes="NOTICE.txt,LICENSE.txt" />
-                  <manifest>
-                    <attribute name="Specification-Title" value="${project.name} Tools" />
-                    <attribute name="Implementation-Title" value="${project.name} Tools" />
-                    <attribute name="Implementation-Vendor" value="${project.organization.name}" />
-                    <attribute name="Implementation-Version" value="${project.version}" />
-                    <attribute name="Implementation-Vendor-Id" value="org.apache" />
-                    <attribute name="Implementation-Build" value="${implementation.build}"/>
-                    <attribute name="X-Compile-Source-JDK" value="${maven.compiler.source}" />
-                    <attribute name="X-Compile-Target-JDK" value="${maven.compiler.target}" />
-                  </manifest>
-                  <fileset dir="${project.build.directory}/test-classes"
-                           includes="org/apache/commons/rng/PerfTestUtils*" />
-                </jar>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- <plugin> -->
+      <!--   <artifactId>maven-antrun-plugin</artifactId> -->
+      <!--   <executions> -->
+      <!--     <execution> -->
+      <!--       <phase>package</phase> -->
+      <!--       <configuration> -->
+      <!--         <target> -->
+      <!--           <jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-tools.jar"> -->
+      <!--             <metainf dir="${basedir}" includes="NOTICE.txt,LICENSE.txt" /> -->
+      <!--             <manifest> -->
+      <!--               <attribute name="Specification-Title" value="${project.name} Tools" /> -->
+      <!--               <attribute name="Implementation-Title" value="${project.name} Tools" /> -->
+      <!--               <attribute name="Implementation-Vendor" value="${project.organization.name}" /> -->
+      <!--               <attribute name="Implementation-Version" value="${project.version}" /> -->
+      <!--               <attribute name="Implementation-Vendor-Id" value="org.apache" /> -->
+      <!--               <attribute name="Implementation-Build" value="${implementation.build}"/> -->
+      <!--               <attribute name="X-Compile-Source-JDK" value="${maven.compiler.source}" /> -->
+      <!--               <attribute name="X-Compile-Target-JDK" value="${maven.compiler.target}" /> -->
+      <!--             </manifest> -->
+      <!--             <fileset dir="${project.build.directory}/test-classes" -->
+      <!--                      includes="org/apache/commons/rng/PerfTestUtils*" /> -->
+      <!--           </jar> -->
+      <!--         </target> -->
+      <!--       </configuration> -->
+      <!--       <goals> -->
+      <!--         <goal>run</goal> -->
+      <!--       </goals> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!-- </plugin> -->
       <!--  Attaches the commons-rng tools JAR to the Maven lifecycle
             to ensure they will be signed and deployed as normal -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <id>attach-artifacts</id>
-            <phase>package</phase>
-            <goals>
-              <goal>attach-artifact</goal>
-            </goals>
-            <configuration>
-              <artifacts>
-                <artifact>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-tools.jar</file>
-                  <type>jar</type>
-                  <classifier>tools</classifier>
-                </artifact>
-              </artifacts>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- <plugin> -->
+      <!--   <groupId>org.codehaus.mojo</groupId> -->
+      <!--   <artifactId>build-helper-maven-plugin</artifactId> -->
+      <!--   <version>1.7</version> -->
+      <!--   <executions> -->
+      <!--     <execution> -->
+      <!--       <id>attach-artifacts</id> -->
+      <!--       <phase>package</phase> -->
+      <!--       <goals> -->
+      <!--         <goal>attach-artifact</goal> -->
+      <!--       </goals> -->
+      <!--       <configuration> -->
+      <!--         <artifacts> -->
+      <!--           <artifact> -->
+      <!--             <file>${project.build.directory}/${project.artifactId}-${project.version}-tools.jar</file> -->
+      <!--             <type>jar</type> -->
+      <!--             <classifier>tools</classifier> -->
+      <!--           </artifact> -->
+      <!--         </artifacts> -->
+      <!--       </configuration> -->
+      <!--     </execution> -->
+      <!--   </executions> -->
+      <!-- </plugin> -->
+
       <!--  MathJax -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

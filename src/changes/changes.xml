@@ -47,14 +47,14 @@ If the output is not quite correct, check for invisible trailing spaces!
 
 <document>
   <properties>
-    <title>Commons Rng Release Notes</title>
+    <title>Apache Commons RNG Release Notes</title>
   </properties>
   <body>
-    <release version="1.0" date="2016-09-17" description="
-This is the first release of Commons Rng.
+    <release version="1.0" date="2016-09-20" description="
+This is the first release of Apache Commons RNG.
 
 The minimum version of the Java platform required to compile and use
- Commons Rng 1.0 is Java 6.
+ Apache Commons RNG 1.0 is Java 6.
 ">
       <!-- <action dev="erans" type="fix" issue="RNG-xxx"> -->
       <!-- </action> -->
