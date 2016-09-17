@@ -28,7 +28,7 @@
     <section name="Apache Commons RNG: Random Numbers Generators" href="summary">
       <p>
         Commons RNG provides implementations of pseudo-random numbers generators that are
-        either faster or of higher quality (and sometimes both) than <code>java.lang.Random</code>.
+        either faster or of higher quality (and sometimes both) than <code>java.util.Random</code>.
       </p>
 
       <p>
