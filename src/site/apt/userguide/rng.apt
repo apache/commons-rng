@@ -54,7 +54,7 @@ int n = rng.nextInt(); // Integer.MIN_VALUE <= n <= Integer.MAX_VALUE.
 int m = rng.nextInt(max); // 0 <= m < max.
 +--------------------------+
 +--------------------------+
-long n =  rng.nextLong(); // Long.MIN_VALUE <= n <= Long.MAX_VALUE.
+long n = rng.nextLong(); // Long.MIN_VALUE <= n <= Long.MAX_VALUE.
 long m = rng.nextLong(max); // 0 <= m < max.
 +--------------------------+
 +--------------------------+
