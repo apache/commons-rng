@@ -332,6 +332,8 @@ Edit the "README.html" file to contain the released version number.
  $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-bin.* binaries
  $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-src.* source
  $ cp <path-to-the-RC-workspace>/RELEASE-NOTES.txt .
+ $ cp <path-to-the-RC-workspace>/CONTRIBUTING.md .
+ $ cp <path-to-the-RC-workspace>/README.md .
  $ svn add \
      CONTRIBUTING.md \
      README.md \
