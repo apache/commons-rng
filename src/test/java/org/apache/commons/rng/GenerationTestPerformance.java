@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-@Fork(1)
+@Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class GenerationTestPerformance extends AbstractTestPerformance {
     /**
      * Number of random values to generate.
