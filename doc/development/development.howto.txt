@@ -37,3 +37,13 @@ The conclusions reported here are based on ideas presented in this blog post:
    branch is merged into the "develop" branch, using the "--no-ff" git
    option.
    That feature branch is then deleted.
+
+
+Please note that a contribution that consists in the implementation of a
+"reference" generator will only be accepted if it comes with
+ 1. a unit test where the output (say, a few hundred numbers) of "Commons RNG"
+    is compared against another implementation,
+ 2. the outputs of the "RandomStressTester" (source is in "src/userguide/java"),
+    piping from the "Dieharder" and "TU01/BigCrush" actual stress test suites
+    (these software must be installed separately; there is a simple interface
+    to the "TU01" library in "src/userguide/c/").
