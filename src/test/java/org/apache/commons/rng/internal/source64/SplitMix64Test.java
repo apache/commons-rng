@@ -16,15 +16,12 @@
  */
 package org.apache.commons.rng.internal.source64;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class SplitMix64Test {
     @Test
     public void testReferenceCode() {
-        final long refSeed = 0x1a2b3c4d5e6f7531L;
-        final SplitMix64 rng = new SplitMix64(refSeed);
-
         final long[] refValues = {
             0x4141302768c9e9d0L, 0x64df48c4eab51b1aL, 0x4e723b53dbd901b3L, 0xead8394409dd6454L,
             0x3ef60e485b412a0aL, 0xb2a23aee63aecf38L, 0x6cc3b8933c4fa332L, 0x9c9e75e031e6fccbL,
@@ -38,8 +35,6 @@ public class SplitMix64Test {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        for (long i : refValues) {
-            Assert.assertEquals(i, rng.nextLong());
-        }
+        RandomAssert.assertEquals(refValues, new SplitMix64(0x1a2b3c4d5e6f7531L));
     }
 }

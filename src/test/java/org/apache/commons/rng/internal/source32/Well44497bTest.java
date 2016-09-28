@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.internal.source32;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class Well44497bTest {
@@ -166,8 +166,6 @@ public class Well44497bTest {
             0x2ad6ef24, 0x8764cc36, 0xb684ef70, 0x7e8d6183, 0x87087822, 0x9f8c3f85, 0xcba572e9, 0xf8f84147, 0xe99ec2d8, 0xda1606fd, 0xaf04573f, 0xa551905b, 0xf41694b8, 0x986bbf8d, 0x07bfda33, 0x6e9951dc
         };
 
-        for (int i : refInt) {
-            Assert.assertEquals(i, rng.nextInt());
-        }
+        RandomAssert.assertEquals(refInt, rng);
     }
 }

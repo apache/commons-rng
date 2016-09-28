@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.internal.source32;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class KISSRandomTest {
@@ -235,12 +235,6 @@ public class KISSRandomTest {
             0xd44b8926, 0x2d2ac88e, 0x2c3d072c, 0x3942afbc, 0xcc0402b7,
         };
 
-        final KISSRandom rng = new KISSRandom(seed);
-
-        for (int i = 0; i < refInt.length; ++i) {
-
-            final int r = rng.nextInt();
-            Assert.assertEquals("i=" + i, refInt[i], r);
-        }
+        RandomAssert.assertEquals(refInt, new KISSRandom(seed));
     }
 }

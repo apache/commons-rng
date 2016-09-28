@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.internal.source32;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class MultiplyWithCarry256Test {
@@ -285,12 +285,6 @@ public class MultiplyWithCarry256Test {
             0xf3786fa8, 0x3f086f0a, 0xef283067, 0xb9a86d48, 0x6c619d98,
         };
 
-        final MultiplyWithCarry256 rng = new MultiplyWithCarry256(seed);
-
-        for (int i = 0; i < refInt.length; ++i) {
-
-            final int r = rng.nextInt();
-            Assert.assertEquals("i=" + i, refInt[i], r);
-        }
+        RandomAssert.assertEquals(refInt, new MultiplyWithCarry256(seed));
     }
 }

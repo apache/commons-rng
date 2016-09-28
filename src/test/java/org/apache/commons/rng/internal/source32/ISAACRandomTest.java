@@ -17,7 +17,7 @@
 
 package org.apache.commons.rng.internal.source32;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public final class ISAACRandomTest {
@@ -365,25 +365,11 @@ public final class ISAACRandomTest {
 
     @Test
     public void testReference1() {
-        final ISAACRandom isaacRandom = new ISAACRandom(SEED_1);
-
-        final int[] actualSequence = getActualSequence(isaacRandom);
-        Assert.assertArrayEquals(EXPECTED_SEQUENCE_1, actualSequence);
+        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1, new ISAACRandom(SEED_1));
     }
 
     @Test
     public void testReference2() {
-        final ISAACRandom isaacRandom = new ISAACRandom(SEED_2);
-
-        final int[] actualSequence = getActualSequence(isaacRandom);
-        Assert.assertArrayEquals(EXPECTED_SEQUENCE_2, actualSequence);
-    }
-
-    private int[] getActualSequence(ISAACRandom isaacRandom) {
-        final int[] actualSequence = new int[1024];
-        for (int i = 0; i < actualSequence.length; i++) {
-            actualSequence[i] = isaacRandom.nextInt();
-        }
-        return actualSequence;
+        RandomAssert.assertEquals(EXPECTED_SEQUENCE_2, new ISAACRandom(SEED_2));
     }
 }

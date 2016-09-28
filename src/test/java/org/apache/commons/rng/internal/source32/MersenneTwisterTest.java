@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.internal.source32;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class MersenneTwisterTest {
@@ -232,8 +232,6 @@ public class MersenneTwisterTest {
             0x9d8b4bf7, 0xe83b5b67, 0x90106e3d, 0x534fbf99, 0xce3bcd2e, 
         };
 
-        for (int i : refInt) {
-            Assert.assertEquals(i, rng.nextInt());
-        }
+        RandomAssert.assertEquals(refInt, rng);
     }
 }

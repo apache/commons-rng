@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.internal.source64;
 
-import org.junit.Assert;
+import org.apache.commons.rng.RandomAssert;
 import org.junit.Test;
 
 public class XorShift1024StarTest {
@@ -33,8 +33,6 @@ public class XorShift1024StarTest {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        final XorShift1024Star rng = new XorShift1024Star(refSeed);
-
         final long[] refValues = {
             0xd85e9fc0855614cdL, 0xaf4965c9c1ac6a3dL, 0x067da398791111d8L, 0x2771c41db58d7644L,
             0xf71a471e1ac2b03eL, 0x953449ae275f7409L, 0x8aa570c72de0af5eL, 0xae59db2acdae32beL,
@@ -48,8 +46,6 @@ public class XorShift1024StarTest {
             0x769997671b2a0158L, 0xfa9cd84e0ffc174dL, 0x34df1cd959dca211L, 0xccea41a33ec1f763L,
         };
 
-        for (long i : refValues) {
-            Assert.assertEquals(i, rng.nextLong());
-        }
+        RandomAssert.assertEquals(refValues, new XorShift1024Star(refSeed));
     }
 }
