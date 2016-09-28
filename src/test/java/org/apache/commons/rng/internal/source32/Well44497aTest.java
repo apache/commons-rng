@@ -28,12 +28,12 @@ public class Well44497aTest {
             0xdc8174cf, 0x3e73a4bc, 0x6fce0775, 0x9e6141fc, 0x5232218a, 0x0fa9e601, 0x0b6fdb4a, 0xf10a0a8c,
             0x97829dba, 0xc60b0778, 0x0566db41, 0x620807aa, 0x599b89c9, 0x1a34942b, 0x6baae3da, 0x4ba0b73d
         };
-        final int[] init = new int[1391];
-        for (int i = 0; i < init.length; ++i) {
-            init[i] = base[i % base.length] + i;
+        final int[] seed = new int[1391];
+        for (int i = 0; i < seed.length; ++i) {
+            seed[i] = base[i % base.length] + i;
         }
 
-        final Well44497a rng = new Well44497a(init);
+        final Well44497a rng = new Well44497a(seed);
 
         final int[] expectedSequence = {
             0xa8ae884a, 0xa5241b7f, 0x3ad211ce, 0xf526210c, 0xcf2feb2e, 0x97ffba0e, 0x52feddda, 0xf51d0147, 0x8734a1d2, 0x4acbbeb2, 0xe788e18f, 0xad07070d, 0xc6425a56, 0x588f6997, 0xd490294e, 0xf9488e69,
