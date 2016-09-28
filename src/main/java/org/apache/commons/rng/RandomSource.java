@@ -17,7 +17,7 @@
 package org.apache.commons.rng;
 
 import java.util.Arrays;
-import org.apache.commons.rng.internal.ProviderBuilder;
+
 import org.apache.commons.rng.internal.BaseProvider;
 import org.apache.commons.rng.internal.util.SeedFactory;
 
