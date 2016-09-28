@@ -82,7 +82,7 @@ public class MultiplyWithCarry256Test {
          * Data generated from code snippet provided here:
          *   http://school.anhb.uwa.edu.au/personalpages/kwessen/shared/Marsaglia03.html
          */
-        final int[] refInt = {
+        final int[] expectedSequence = {
             0x257c6890, 0x2a638c7d, 0x24e92547, 0x3f021e24, 0x59cd3f37,
             0x92c71967, 0x6d55aab2, 0xa662f2ad, 0x8633e15a, 0x19d38d42,
             0xbbe8381e, 0x8312f976, 0xee4b2e57, 0xbe88c5d5, 0xb291b54e,
@@ -285,6 +285,6 @@ public class MultiplyWithCarry256Test {
             0xf3786fa8, 0x3f086f0a, 0xef283067, 0xb9a86d48, 0x6c619d98,
         };
 
-        RandomAssert.assertEquals(refInt, new MultiplyWithCarry256(seed));
+        RandomAssert.assertEquals(expectedSequence, new MultiplyWithCarry256(seed));
     }
 }

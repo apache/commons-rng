@@ -32,7 +32,7 @@ public class KISSRandomTest {
          * Test code was modified w.r.t the above (because the latter uses
          * calls to functions not defined for "KISS").
          */
-        final int[] refInt = {
+        final int[] expectedSequence = {
             0x9bddf92e, 0xd5a41e38, 0xb2f6ff02, 0x181980c1, 0x1a48acf3,
             0x5877789e, 0x08477a08, 0xabd9fdcd, 0x20d27205, 0xd55e1658,
             0x6625bdda, 0x46e92162, 0x5dc0ac63, 0x0be5e04a, 0x2c8cde38,
@@ -235,6 +235,6 @@ public class KISSRandomTest {
             0xd44b8926, 0x2d2ac88e, 0x2c3d072c, 0x3942afbc, 0xcc0402b7,
         };
 
-        RandomAssert.assertEquals(refInt, new KISSRandom(seed));
+        RandomAssert.assertEquals(expectedSequence, new KISSRandom(seed));
     }
 }

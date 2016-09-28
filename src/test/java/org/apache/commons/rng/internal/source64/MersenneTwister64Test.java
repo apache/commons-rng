@@ -29,7 +29,7 @@ public class MersenneTwister64Test {
          *   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/mt19937-64.out.txt
          * converted to hexadecimal.
          */
-        final long[] refLong = {
+        final long[] expectedSequence = {
             0x64d79b552a559d7fL, 0x44a572665a6ee240L, 0xeb2bf6dc3d72135cL, 0xe3836981f9f82ea0L, 0x43a38212350ee392L, 
             0xce77502bffcacf8bL, 0x5d8a82d90126f0e7L, 0xc0510c6f402c1e3cL, 0x48d895bf8b69f77bL, 0x8d9fbb371f1de07fL, 
             0x1126b97be8c91ce2L, 0xf05e1c9dc2674be2L, 0xe4d5327a12874c1eL, 0x7c1951ea43a7500dL, 0xbba2bbfbecbc239aL, 
@@ -232,6 +232,6 @@ public class MersenneTwister64Test {
             0x8d8325e82c4fdcdcL, 0xb47a658dad8e13a4L, 0x88710bf005fda027L, 0x69bd3edaf7111200L, 0x0dccdd0c65c810ffL, 
         };
 
-        RandomAssert.assertEquals(refLong, rng);
+        RandomAssert.assertEquals(expectedSequence, rng);
     }
 }

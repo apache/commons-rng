@@ -33,7 +33,7 @@ public class XorShift1024StarTest {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        final long[] refValues = {
+        final long[] expectedSequence = {
             0xd85e9fc0855614cdL, 0xaf4965c9c1ac6a3dL, 0x067da398791111d8L, 0x2771c41db58d7644L,
             0xf71a471e1ac2b03eL, 0x953449ae275f7409L, 0x8aa570c72de0af5eL, 0xae59db2acdae32beL,
             0x3d46f316b8f97301L, 0x72dc8399b7a70957L, 0xf5624d788b3b6f4eL, 0xb7a79275f6c0e7b1L,
@@ -46,6 +46,6 @@ public class XorShift1024StarTest {
             0x769997671b2a0158L, 0xfa9cd84e0ffc174dL, 0x34df1cd959dca211L, 0xccea41a33ec1f763L,
         };
 
-        RandomAssert.assertEquals(refValues, new XorShift1024Star(refSeed));
+        RandomAssert.assertEquals(expectedSequence, new XorShift1024Star(refSeed));
     }
 }

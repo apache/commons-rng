@@ -29,7 +29,7 @@ public class Well1024aTest {
             0x97829dba, 0xc60b0778, 0x0566db41, 0x620807aa, 0x599b89c9, 0x1a34942b, 0x6baae3da, 0x4ba0b73d
         });
 
-        final int[] refInt = {
+        final int[] expectedSequence = {
             0xa7dc11e2, 0x9dea7324, 0x844c7605, 0x85025732, 0x92ad1e10, 0x968e8090, 0xfd92cb4e, 0x665e1202,
             0x7eff3e03, 0x2eb25d85, 0x22002049, 0x5cfc119b, 0x26ef8f33, 0x519448b2, 0xfbb4d089, 0x3fd7de78,
             0x37a84c6c, 0x018e7b90, 0x02f93e0a, 0x6bc587fb, 0x4125b170, 0x2cfe1251, 0x4fb0ea3c, 0x8989e9b0,
@@ -64,6 +64,6 @@ public class Well1024aTest {
             0x7e3584fc, 0x10c0d6f0, 0x2c32f649, 0xe335092e, 0x6e5296ae, 0xf1677c99, 0xefdba4a4, 0x6c55e637
         };
 
-        RandomAssert.assertEquals(refInt, rng);
+        RandomAssert.assertEquals(expectedSequence, rng);
     }
 }

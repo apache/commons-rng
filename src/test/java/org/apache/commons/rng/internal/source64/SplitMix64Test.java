@@ -22,7 +22,7 @@ import org.junit.Test;
 public class SplitMix64Test {
     @Test
     public void testReferenceCode() {
-        final long[] refValues = {
+        final long[] expectedSequence = {
             0x4141302768c9e9d0L, 0x64df48c4eab51b1aL, 0x4e723b53dbd901b3L, 0xead8394409dd6454L,
             0x3ef60e485b412a0aL, 0xb2a23aee63aecf38L, 0x6cc3b8933c4fa332L, 0x9c9e75e031e6fccbL,
             0x0fddffb161c9f30fL, 0x2d1d75d4e75c12a3L, 0xcdcf9d2dde66da2eL, 0x278ba7d1d142cfecL,
@@ -35,6 +35,6 @@ public class SplitMix64Test {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        RandomAssert.assertEquals(refValues, new SplitMix64(0x1a2b3c4d5e6f7531L));
+        RandomAssert.assertEquals(expectedSequence, new SplitMix64(0x1a2b3c4d5e6f7531L));
     }
 }

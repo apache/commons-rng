@@ -29,7 +29,7 @@ public class MersenneTwisterTest {
          *   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/CODES/mt19937ar.out
          * converted to hexadecimal.
          */
-        final int[] refInt = {
+        final int[] expectedSequence = {
             0x3fa23623, 0x38fa935f, 0x1c72dc38, 0xf4cf2f5f, 0xfc110f5c, 
             0xc75677aa, 0xc802152f, 0x0d9155da, 0x304aacd1, 0x9a73f337, 
             0x989a7a43, 0xc1483a50, 0x268c922d, 0x582fa6ba, 0xfd0cc411, 
@@ -232,6 +232,6 @@ public class MersenneTwisterTest {
             0x9d8b4bf7, 0xe83b5b67, 0x90106e3d, 0x534fbf99, 0xce3bcd2e, 
         };
 
-        RandomAssert.assertEquals(refInt, rng);
+        RandomAssert.assertEquals(expectedSequence, rng);
     }
 }
