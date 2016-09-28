@@ -1,5 +1,5 @@
 This directory contains source code that is not part of the Apache
-Commons Rng library.  It contains syntactically correct and working
+Commons RNG library.  It contains syntactically correct and working
 examples of use.
 
 In order to run one of the applications (a class that must contain a

@@ -56,11 +56,11 @@ limitations under the License.
 -->
 <document>
   <properties>
-    <title>Download Apache Commons Rng</title>
+    <title>Download Apache Commons RNG</title>
     <author email="dev@commons.apache.org">Apache Commons Documentation Team</author>
   </properties>
   <body>
-    <section name="Download Apache Commons Rng">
+    <section name="Download Apache Commons RNG">
       <!-- DO NOT RUN "mvn commons:download-page" until there is something to download
            from this page -->
       <i>Coming soon.</i>
