@@ -232,9 +232,8 @@ public class MersenneTwisterTest {
             0x9d8b4bf7, 0xe83b5b67, 0x90106e3d, 0x534fbf99, 0xce3bcd2e, 
         };
 
-        for (int i = 0; i < refInt.length; ++i) {
-            final int r = rng.nextInt();
-            Assert.assertEquals(refInt[i], r);
+        for (int i : refInt) {
+            Assert.assertEquals(i, rng.nextInt());
         }
     }
 }

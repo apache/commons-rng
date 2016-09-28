@@ -48,8 +48,8 @@ public class XorShift1024StarTest {
             0x769997671b2a0158L, 0xfa9cd84e0ffc174dL, 0x34df1cd959dca211L, 0xccea41a33ec1f763L,
         };
 
-        for (int i = 0; i < refValues.length; ++i) {
-            Assert.assertEquals(refValues[i], rng.nextLong());
+        for (long i : refValues) {
+            Assert.assertEquals(i, rng.nextLong());
         }
     }
 }

@@ -62,8 +62,8 @@ public class Well512aTest {
             1812776767,    668822227,   -297283057,   2130183333,  -1169618692,    912860240,  -2028253096,   1244694278
         };
 
-        for (int i = 0; i < refInt.length; ++i) {
-            Assert.assertEquals(refInt[i], rng.nextInt());
+        for (int i : refInt) {
+            Assert.assertEquals(i, rng.nextInt());
         }
     }
 }

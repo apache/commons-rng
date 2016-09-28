@@ -38,8 +38,8 @@ public class SplitMix64Test {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        for (int i = 0; i < refValues.length; ++i) {
-            Assert.assertEquals(refValues[i], rng.nextLong());
+        for (long i : refValues) {
+            Assert.assertEquals(i, rng.nextLong());
         }
     }
 }

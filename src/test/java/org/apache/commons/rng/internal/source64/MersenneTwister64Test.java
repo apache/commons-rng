@@ -232,8 +232,8 @@ public class MersenneTwister64Test {
             0x8d8325e82c4fdcdcL, 0xb47a658dad8e13a4L, 0x88710bf005fda027L, 0x69bd3edaf7111200L, 0xdccdd0c65c810ffL, 
         };
 
-        for (int i = 0; i < refLong.length; ++i) {
-            Assert.assertEquals(refLong[i], rng.nextLong());
+        for (long i : refLong) {
+            Assert.assertEquals(i, rng.nextLong());
         }
     }
 }

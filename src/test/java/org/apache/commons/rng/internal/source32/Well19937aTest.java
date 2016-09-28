@@ -102,8 +102,8 @@ public class Well19937aTest {
             -1397829266,  -1666371809,    858913807,   -610818620,   1554973298,    580023809,  -1662988256,   -408630026,   1316681876,    738204271,    942829881,   -758486983,    780345857,    667165037,  -2086803585,    789741324
         };
 
-        for (int i = 0; i < refInt.length; ++i) {
-            Assert.assertEquals(refInt[i], rng.nextInt());
+        for (int i : refInt) {
+            Assert.assertEquals(i, rng.nextInt());
         }
     }
 }
