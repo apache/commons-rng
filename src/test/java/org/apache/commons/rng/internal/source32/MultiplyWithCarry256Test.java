@@ -22,7 +22,7 @@ import org.junit.Test;
 public class MultiplyWithCarry256Test {
     @Test
     public void testMarsaglia() {
-        final int[] seed = new int[] {
+        final int[] seed = {
             0x000587c4, // initial carry
             0xff710353, 0x1b427020, 0xc9c59991, 0x96e511e0, 0xf1d06013, 0xe0216c68, 0x98999e3d, 0xce158f68,
             0xb8d320ef, 0x905ddbf0, 0xda9717c9, 0x78498c30, 0x4681a0ab, 0x781347a8, 0x62eafcb5, 0x0a9bdc68,

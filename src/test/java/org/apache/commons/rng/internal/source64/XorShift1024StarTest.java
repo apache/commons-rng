@@ -26,7 +26,7 @@ public class XorShift1024StarTest {
          * Data from running the executable compiled from the author's C code:
          *   http://xorshift.di.unimi.it/xorshift1024star.c
          */
-        final long[] seed = new long[] {
+        final long[] seed = {
             0x012de1babb3c4104L, 0xa5a818b8fc5aa503L, 0xb124ea2b701f4993L, 0x18e0374933d8c782L,
             0x2af8df668d68ad55L, 0x76e56f59daa06243L, 0xf58c016f0f01e30fL, 0x8eeafa41683dbbf4L,
             0x7bf121347c06677fL, 0x4fd0c88d25db5ccbL, 0x99af3be9ebe0a272L, 0x94f2b33b74d0bdcbL,

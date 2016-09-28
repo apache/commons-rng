@@ -22,7 +22,7 @@ import org.junit.Test;
 public class KISSRandomTest {
     @Test
     public void testMarsaglia() {
-        final int[] seed = new int[] {
+        final int[] seed = {
             0x159a55e5, 0x1f123bb5, 0x75bcd15, 0x16a81cc0
         };
 
