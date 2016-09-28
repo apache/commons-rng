@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng;
 
-import java.util.Arrays;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
