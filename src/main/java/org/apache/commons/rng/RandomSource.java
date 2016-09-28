@@ -23,8 +23,8 @@ import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
  * This class provides the API for creating generators of random numbers.
- * <p>
- * Usage examples:
+ * 
+ * <p>Usage examples:</p>
  * <pre><code>
  *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
  * </code></pre>
@@ -41,7 +41,8 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * where the first argument to method {@code create} is the identifier
  * of the generator's concrete implementation, and the second the is the
  * (optional) seed.
- * <br>
+ *
+ * <p>
  * In the first form, a random seed will be {@link SeedFactory generated
  * automatically}; in the second form, a fixed seed is used; a random seed
  * is explicitly generated in the third form.
@@ -105,9 +106,11 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * or arrays of values, of {@code int} or {@code long} types) that can
  * be passed to the {@link RandomSource#create(RandomSource,Object,Object[])
  * generators factory method}.
- * <br>
+ * </p>
+ * <p>
  * Although the seed-generating methods defined in this class will likely
  * return different values each time they are called, there is no guarantee:
+ * </p>
  * <ul>
  *  <li>
  *   In any sub-sequence, it is <a href="https://en.wikipedia.org/wiki/Birthday_problem">
@@ -126,7 +129,6 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  *   or <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TestU01</a>.
  *  </li>
  * </ul>
- * </p>
  *
  * <p>
  * The current implementations have no provision for producing non-overlapping
@@ -365,12 +367,10 @@ public enum RandomSource {
     /**
      * Creates a random number generator with a random seed.
      *
-     * <p>
-     * Example of usage:
+     * <p>Example of usage:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
      * </code></pre>
-     * </p>
      *
      * @param source RNG type.
      * @return the RNG.
@@ -382,15 +382,12 @@ public enum RandomSource {
     /**
      * Creates a random number generator with the given {@code seed}.
      *
-     * <p>
-     * Example of usage:
+     * <p>Example of usage:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, 26219, 6, 9);
      * </code></pre>
-     * </p>
      *
-     * <p>
-     * Valid types for the {@code seed} are:
+     * <p>Valid types for the {@code seed} are:</p>
      *  <ul>
      *   <li>{@code Integer} (or {@code int})</li>
      *   <li>{@code Long} (or {@code long})</li>
@@ -398,10 +395,8 @@ public enum RandomSource {
      *   <li>{@code long[]}</li>
      *   <li>{@code byte[]}</li>
      *  </ul>
-     * </p>
      *
-     * <p>
-     * Notes:
+     * <p>Notes:</p>
      * <ul>
      *  <li>
      *   When the seed type passed as argument is more complex (i.e. more
@@ -419,7 +414,6 @@ public enum RandomSource {
      *   {@code null}, the size of the generated array will be 128.
      *  </li>
      * </ul>
-     * </p>
      *
      * @param source RNG type.
      * @param seed Seed value.  It can be {@code null} (in which case a

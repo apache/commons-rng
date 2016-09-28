@@ -35,7 +35,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * Here is their original copyright:
  * </p>
  *
- * <table border="0" width="80%" cellpadding="10" align="center" bgcolor="#E0E0E0">
+ * <table border="0" width="80%" cellpadding="10" style="background-color: #E0E0E0" summary="Mersenne Twister licence">
  * <tr><td>Copyright (C) 2004, Makoto Matsumoto and Takuji Nishimura,
  *     All rights reserved.</td></tr>
  *

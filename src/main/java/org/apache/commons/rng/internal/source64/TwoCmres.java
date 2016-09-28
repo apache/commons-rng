@@ -23,13 +23,12 @@ import org.apache.commons.rng.internal.util.NumberFactory;
 
 /**
  * Random number generator designed by Mark D.&nbsp;Overton.
- * <p>
- *  It is one of the many generators described by the author in the following article series:
+ * 
+ * <p>It is one of the many generators described by the author in the following article series:</p>
  *  <ul>
  *   <li><a href="http://www.drdobbs.com/tools/fast-high-quality-parallel-random-number/229625477">Part one</a></li>
  *   <li><a href="http://www.drdobbs.com/tools/fast-high-quality-parallel-random-number/231000484">Part two</a></li>
  *  </ul>
- * </p>
  *
  * @since 1.0
  */
