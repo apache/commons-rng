@@ -68,6 +68,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * DAMAGE.</strong></td></tr>
  * </table>
  *
+ * @see <a href="https://en.wikipedia.org/wiki/Mersenne_Twister">Mersenne Twister (Wikipedia)</a>
  * @since 1.0
  */
 public class MersenneTwister64 extends LongProvider {

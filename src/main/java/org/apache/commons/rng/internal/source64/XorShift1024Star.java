@@ -26,6 +26,7 @@ import org.apache.commons.rng.internal.util.NumberFactory;
  * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">
  * Original source code</a>
  *
+ * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
  * @since 1.0
  */
 public class XorShift1024Star extends LongProvider {

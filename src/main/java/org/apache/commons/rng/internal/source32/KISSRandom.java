@@ -26,6 +26,7 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * <a href="https://programmingpraxis.com/2010/10/05/george-marsaglias-random-number-generators/">here</a>
  * in a reply to the original post.
  *
+ * @see <a href="https://en.wikipedia.org/wiki/KISS_(algorithm)">KISS (Wikipedia)</a>
  * @since 1.0
  */
 public class KISSRandom extends IntProvider {

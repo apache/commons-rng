@@ -30,6 +30,7 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * that page</a>.
  * </p>
  *
+ * @see <a href="https://en.wikipedia.org/wiki/Multiply-with-carry">Multiply with carry (Wikipedia)</a>
  * @since 1.0
  */
 public class MultiplyWithCarry256 extends IntProvider {
