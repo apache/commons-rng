@@ -25,7 +25,7 @@ import java.io.ByteArrayInputStream;
 
 /**
  * A provider that uses the {@link Random#nextInt()} method of the JDK's
- * {@code Random} class as the source of randomness.
+ * {@link Random} class as the source of randomness.
  *
  * <p>
  * <b>Caveat:</b> All the other calls will be redirected to the methods
