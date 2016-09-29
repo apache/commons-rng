@@ -112,13 +112,13 @@ public final class NumberFactory {
 
     /**
      * Creates an {@code int} from a {@code long}, using the high order bits.
-     * 
+     *
      * <p>The returned value is such that if</p>
      * <pre><code>
      *  vL = extractLo(v);
      *  vH = extractHi(v);
      * </code></pre>
-     * 
+     *
      * <p>then {@code v} is equal to {@link #makeLong(int,int) makeLong(vH, vL)}.</p>
      *
      * @param v Number.
@@ -131,14 +131,14 @@ public final class NumberFactory {
 
     /**
      * Creates an {@code int} from a {@code long}, using the low order bits.
-     * 
+     *
      * <p>The returned value is such that if</p>
-     * 
+     *
      * <pre><code>
      *  vL = extractLo(v);
      *  vH = extractHi(v);
      * </code></pre>
-     * 
+     *
      * <p>then {@code v} is equal to {@link #makeLong(int,int) makeLong(vH, vL)}.</p>
      *
      * @param v Number.

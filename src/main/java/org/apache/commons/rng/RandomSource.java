@@ -23,7 +23,7 @@ import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
  * This class provides the API for creating generators of random numbers.
- * 
+ *
  * <p>Usage examples:</p>
  * <pre><code>
  *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
