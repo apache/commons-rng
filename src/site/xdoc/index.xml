@@ -49,6 +49,22 @@ double random = rng.nextDouble();
       <p>
         For more examples and more advanced usage, see the <a href="userguide/rng.html">userguide</a>.
       </p>
+
+      <p>
+        Commons RNG is intended to be a repository of pure Java implementations of
+        random number generators that produce deterministic sequences.
+        The current design has made no provision for features generally needed for
+        cryptography applications (e.g. strong unpredictability).
+      </p>
+
+      <p>
+        The emphasis is on state-of-the-art generators that pass stringent uniformity
+        tests such as <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TU01</a>
+        and <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">Dieharder</a>.
+        Weaker algorithms, with known shortcomings, are also provided (for reference or
+        due to their historical importance) but their use are best avoided in new
+        applications.
+      </p>
     </section>
 
     <section name="Download Apache Commons RNG">
