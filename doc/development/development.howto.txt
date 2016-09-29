@@ -31,7 +31,10 @@ This document summarizes the development process of Commons RNG:
 
 
 Please note that a contribution that consists in the implementation of a
-"reference" generator will only be accepted if it comes with
+"reference" generator, i.e. an algorithm described in a scientific paper
+or code published by a trusted party (e.g. an expert in the field, or the
+standard library of another programming language) will only be accepted
+if it comes with
  1. a unit test where the output (say, a few hundred numbers) of "Commons RNG"
     is compared against another implementation,
  2. the outputs of the "RandomStressTester" (source is in "src/userguide/java"),
