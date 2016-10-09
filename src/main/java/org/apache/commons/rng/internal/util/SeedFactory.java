@@ -123,13 +123,39 @@ public class SeedFactory {
 
         if (seedSize < stateSize) {
             for (int i = seedSize; i < stateSize; i++) {
-                state[i] = 26021969 * i;
+                state[i] = (int) (scrambleWell(state[i - seed.length], i) & 0xffffffffL);
             }
-            for (int i = stateSize - 1; i > seedSize; i--) {
-                state[i] ^= state[stateSize - i - 1];
-            }
+        }
+    }
 
-            state[seedSize] = 0x80000000; // Ensuring non-zero initial array.
+    /**
+     * Simple filling procedure.
+     * It will
+     * <ol>
+     *  <li>
+     *   fill the beginning of {@code state} by copying
+     *   {@code min(seed.length, state.length)} elements from
+     *   {@code seed},
+     *  </li>
+     *  <li>
+     *   set all remaining elements of {@code state} with non-zero
+     *   values (even if {@code seed.length < state.length}).
+     *  </li>
+     * </ol>
+     *
+     * @param state State. Must be allocated.
+     * @param seed Seed. Cannot be null.
+     */
+    public static void fillState(long[] state,
+                                 long[] seed) {
+        final int stateSize = state.length;
+        final int seedSize = seed.length;
+        System.arraycopy(seed, 0, state, 0, Math.min(seedSize, stateSize));
+
+        if (seedSize < stateSize) {
+            for (int i = seedSize; i < stateSize; i++) {
+                state[i] = scrambleWell(state[i - seed.length], i);
+            }
         }
     }
 
@@ -294,5 +320,38 @@ public class SeedFactory {
         synchronized (source) {
             return source.next() ^ number;
         }
+    }
+
+    /**
+     * Transformation used to scramble the initial state of
+     * a generator.
+     *
+     * @param n Seed element.
+     * @param mult Multiplier.
+     * @param shift Shift.
+     * @param add Offset.
+     * @return the transformed seed element.
+     */
+    private static long scramble(long n,
+                                 long mult,
+                                 int shift,
+                                 int add) {
+        // Code inspired from "AbstractWell" class.
+        return mult * (n ^ (n >> shift)) + add;
+    }
+
+    /**
+     * Transformation used to scramble the initial state of
+     * a generator.
+     *
+     * @param n Seed element.
+     * @param add Offset.
+     * @return the transformed seed element.
+     * @see #scramble(long,long,int,int)
+     */
+    private static long scrambleWell(long n,
+                                     int add) {
+        // Code inspired from "AbstractWell" class.
+        return scramble(n, 1812433253L, 30, add);
     }
 }
