@@ -27,7 +27,7 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(value=Parameterized.class)
 public class Providers64ParametricTest {
     /** RNG under test. */
-    private final UniformRandomProvider generator;
+    private final RestorableUniformRandomProvider generator;
 
     /**
      * Initializes generator instance.

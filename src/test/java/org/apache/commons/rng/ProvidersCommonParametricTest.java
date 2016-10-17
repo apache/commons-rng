@@ -315,8 +315,10 @@ public class ProvidersCommonParametricTest {
         // state is away from its initial settings.
         final int n = 10000;
 
+        // Cast is OK: all instances created by this library inherit from "BaseProvider".
+        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) generator;
         // Save.
-        final RandomSource.State state = RandomSource.saveState(generator);
+        final RandomProviderState state = restorable.saveState();
         // Store some values.
         final List<Number> listOrig = makeList(n);
         // Discard a few more.
@@ -324,7 +326,7 @@ public class ProvidersCommonParametricTest {
         Assert.assertTrue(listDiscard.size() != 0);
         Assert.assertFalse(listOrig.equals(listDiscard));
         // Reset.
-        RandomSource.restoreState(generator, state);
+        restorable.restoreState(state);
         // Replay.
         final List<Number> listReplay = makeList(n);
         Assert.assertFalse(listOrig == listReplay);
@@ -339,11 +341,15 @@ public class ProvidersCommonParametricTest {
         // Large "n" is not necessary here as we only test the serialization.
         final int n = 100;
 
-        // Save and serialize.
-        final RandomSource.State stateOrig = RandomSource.saveState(generator);
+        // Cast is OK: all instances created by this library inherit from "BaseProvider".
+        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) generator;
+
+        // Save.
+        final RandomProviderState stateOrig = restorable.saveState();
+        // Serialize.
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(stateOrig.getState());
+        oos.writeObject(((RandomSource.State) stateOrig).getState());
 
         // Store some values.
         final List<Number> listOrig = makeList(n);
@@ -356,12 +362,12 @@ public class ProvidersCommonParametricTest {
         // Retrieve from serialized stream.
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
-        final RandomSource.State stateNew = new RandomSource.State((byte[]) ois.readObject());
+        final RandomProviderState stateNew = new RandomSource.State((byte[]) ois.readObject());
 
         Assert.assertTrue(stateOrig != stateNew);
 
         // Reset.
-        RandomSource.restoreState(generator, stateNew);
+        restorable.restoreState(stateNew);
 
         // Replay.
         final List<Number> listReplay = makeList(n);
@@ -376,21 +382,11 @@ public class ProvidersCommonParametricTest {
         // We don't know what is the state of "java.lang.Random": skipping.
         Assume.assumeTrue(generator.toString().indexOf("JDKRandom") == -1);
 
-        final RandomSource.State state = RandomSource.saveState(new DummyGenerator());
+        final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
-        RandomSource.restoreState(generator, state);
+        ((RestorableUniformRandomProvider) generator).restoreState(state);
     }
 
-    @Test(expected=UnsupportedOperationException.class)
-    public void testSaveStateWrongClass() {
-        RandomSource.saveState(new ForeignDummyGenerator());
-    }
-
-    @Test(expected=UnsupportedOperationException.class)
-    public void testRestoreStateWrongClass() {
-        RandomSource.restoreState(new ForeignDummyGenerator(),
-                                  new RandomSource.State(new byte[0]));
-    }
 
     ///// Support methods below.
 
@@ -687,19 +683,19 @@ public class ProvidersCommonParametricTest {
      * @param chunkSize Size of the small buffer.
      * @param numChunks Number of chunks that make the large buffer.
      */
-    static void checkNextBytesChunks(UniformRandomProvider rng,
+    static void checkNextBytesChunks(RestorableUniformRandomProvider rng,
                                      int chunkSize,
                                      int numChunks) {
         final byte[] b1 = new byte[chunkSize * numChunks];
         final byte[] b2 = new byte[chunkSize];
 
-        final RandomSource.State state = RandomSource.saveState(rng);
+        final RandomProviderState state = rng.saveState();
 
         // Generate the chunks in a single call.
         rng.nextBytes(b1);
 
         // Reset to previous state.
-        RandomSource.restoreState(rng, state);
+        rng.restoreState(state);
 
         // Generate the chunks in consecutive calls.
         for (int i = 0; i < numChunks; i++) {
@@ -736,59 +732,5 @@ class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvide
     @Override
     protected void setStateInternal(byte[] s) {
         // No state.
-    }
-}
-
-/**
- * Dummy class for checking that "save" and "restore" fail when a
- * class is passed that is not providing the necessary functionality
- * (i.e. a class that is not implemented by this library).
- */
-class ForeignDummyGenerator implements UniformRandomProvider {
-    @Override
-    public void nextBytes(byte[] bytes) {
-        return;
-    }
-
-    @Override
-    public void nextBytes(byte[] bytes,
-                          int start,
-                          int len) {
-        return;
-    }
-
-    @Override
-    public int nextInt() {
-        return 0;
-    }
-
-    @Override
-    public int nextInt(int n) {
-        return 0;
-    }
-
-    @Override
-    public long nextLong() {
-        return 0;
-    }
-
-    @Override
-    public long nextLong(long n) {
-        return 0;
-    }
-
-    @Override
-    public boolean nextBoolean() {
-        return false;
-    }
-
-    @Override
-    public float nextFloat() {
-        return 0;
-    }
-
-    @Override
-    public double nextDouble() {
-        return 0;
     }
 }
