@@ -74,8 +74,8 @@ rng.nextBytes(a);
 +--------------------------+
 +--------------------------+
 bytes[] a = new bytes[47];
-// Only elements between index 15 (included) and 32 (excluded) are replaced with random values.
-rng.nextBytes(a, 15, 32);
+// Replace 3 elements of the array (at indices 15, 16 and 17) with random values.
+rng.nextBytes(a, 15, 3);
 +--------------------------+
 
 
