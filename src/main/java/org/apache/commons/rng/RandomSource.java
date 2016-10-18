@@ -151,15 +151,6 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * to "replay" all the calls performed by that other instance (and it
  * would require to know the number of calls to the primary source of
  * randomness, which is also not usually accessible).
- * <br>
- * This factory thus provides a method for
- * {@link #saveState(UniformRandomProvider) saving} the internal
- * state of a generator.
- * The state is wrapped in an {@link State "opaque object"} to be
- * used for {@link #restoreState(UniformRandomProvider,State) restoring}
- * a generator (of the same type) to an identical state (e.g. to allow
- * persistent storage, or to continue a sequence from where the original
- * instance left off).
  * </p>
  *
  * @since 1.0
