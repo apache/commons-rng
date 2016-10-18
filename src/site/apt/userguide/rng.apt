@@ -178,6 +178,9 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, s
     later on.
 
 +--------------------------+
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.RandomProviderState;
+
 RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.WELL_512_A);
 RandomProviderState state = rng.saveState();
 double x = rng.nextDouble();
@@ -186,8 +189,8 @@ double y = rng.nextDouble(); // x == y.
 +--------------------------+
 
 
-  * The <<<UniformRandomProvider>>> objects returned from the <<<create>>> methods are
-    not serializable.
+  * The <<<UniformRandomProvider>>> objects returned from the <<<create>>> methods do not
+    implement the <<<java.io.Serializable>>> interface.
 
     However, users can easily set up a custom serialization scheme if the random source
     is known at both ends of the communication channel.
