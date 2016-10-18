@@ -20,13 +20,13 @@ package org.apache.commons.rng;
 import org.junit.Assert;
 
 public class RandomAssert {
-    
+
     public static void assertEquals(int[] expected, UniformRandomProvider rng) {
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
         }
     }
-    
+
     public static void assertEquals(long[] expected, UniformRandomProvider rng) {
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
