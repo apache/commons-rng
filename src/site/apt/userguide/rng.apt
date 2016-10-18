@@ -172,22 +172,25 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, s
 
 
   * The current state of a generator can be
-    {{{../apidocs/org/apache/commons/rng/RandomSource.html#saveState-org.apache.commons.rng.UniformRandomProvider-}saved}}
+    {{{../apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#saveState}saved}}
     and
-    {{{../apidocs/org/apache/commons/rng/RandomSource.html#restoreState-org.apache.commons.rng.UniformRandomProvider-org.apache.commons.rng.RandomSource.State-}restored}}
+    {{{../apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#restoreState-org.apache.commons.rng.RandomProviderState-}restored}}
     later on.
 
 +--------------------------+
-UniformRandomProvider rng = RandomSource.create(RandomSource.WELL_512_A);
-RandomSource.State state = RandomSource.saveState(rng);
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.RandomProviderState;
+
+RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.WELL_512_A);
+RandomProviderState state = rng.saveState();
 double x = rng.nextDouble();
-RandomSource.restoreState(rng, state);
+rng.restoreState(state);
 double y = rng.nextDouble(); // x == y.
 +--------------------------+
 
 
-  * The <<<UniformRandomProvider>>> objects returned from the <<<create>>> methods are
-    not serializable.
+  * The <<<UniformRandomProvider>>> objects returned from the <<<create>>> methods do not
+    implement the <<<java.io.Serializable>>> interface.
 
     However, users can easily set up a custom serialization scheme if the random source
     is known at both ends of the communication channel.
@@ -197,23 +200,23 @@ double y = rng.nextDouble(); // x == y.
 +--------------------------+
 RandomSource source = RandomSource.MT_64; // Known source identifier.
 
-UniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG instance.
+RestorableUniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG instance.
 
 // Save and serialize state.
-RandomSource.State stateOrig = RandomSource.saveState(rngOrig);
+RandomProviderState stateOrig = rngOrig.saveState(rngOrig);
 ByteArrayOutputStream bos = new ByteArrayOutputStream();
 ObjectOutputStream oos = new ObjectOutputStream(bos);
-oos.writeObject(stateOrig.getState());
+oos.writeObject(((RandomSource.State) stateOrig).getState());
 
 // Deserialize state.
 ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 ObjectInputStream ois = new ObjectInputStream(bis);
-RandomSource.State stateNew = new RandomSource.State((byte[]) ois.readObject());
+RandomProviderState stateNew = new RandomSource.State((byte[]) ois.readObject());
 
-UniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
+RestorableUniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
 
 // Restore original state on the new instance.
-RandomSource.restoreState(rngNew, stateNew);
+rngNew.restoreState(stateNew);
 +--------------------------+
 
 
@@ -225,15 +228,18 @@ RandomSource.restoreState(rngNew, stateNew);
   The library's public API consists of classes and interfaces defined in package
   <<<org.apache.commons.rng>>>.
 
-  * <<<UniformRandomProvider>>>: provides access to a sequence of random values
-    uniformly distributed within some range.
+  * Interface <<<UniformRandomProvider>>> provides access to a sequence of
+    random values uniformly distributed within some range.
 
-  * <<<RandomSource>>>: determines which algorithm to use for generating the
+  * Enum <<<RandomSource>>> determines which algorithm to use for generating the
     sequence of random values.
 
-  * <<<RandomSource.State>>>: enables the save and restore functionality of
-    the state of a <<<UniformRandomProvider>>> instance created through one
-    of the <<<RandomSource>>> factory methods.
+  * Interfaces <<<RestorableUniformRandomProvider>>> and <<<RandomProviderState>>>
+    provide the "save/restore" API.
+
+  * Class <<<RandomSource.State>>> implements the <<<RandomProviderState>>>
+    interface to enable "save/restore" for all <<<RestorableUniformRandomProvider>>>
+    instances created through the <<<RandomSource>>> factory methods.
 
   []
 

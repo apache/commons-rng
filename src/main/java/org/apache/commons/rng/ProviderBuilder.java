@@ -154,9 +154,9 @@ class ProviderBuilder {
      * @return a new RNG instance.
      * @throws UnsupportedOperationException if the seed type is invalid.
      */
-    public static UniformRandomProvider create(RandomSourceInternal source,
-                                               Object seed,
-                                               Object[] args) {
+    public static RestorableUniformRandomProvider create(RandomSourceInternal source,
+                                                         Object seed,
+                                                         Object[] args) {
         // Convert seed to native type.
         final Object nativeSeed = createSeed(source, seed);
 
@@ -252,10 +252,10 @@ class ProviderBuilder {
      * @param args Arguments to the implementation's constructor.
      * @return a new RNG instance.
      */
-    private static UniformRandomProvider create(Constructor<?> rng,
-                                                Object[] args) {
+    private static RestorableUniformRandomProvider create(Constructor<?> rng,
+                                                          Object[] args) {
         try {
-            return (UniformRandomProvider) rng.newInstance(args);
+            return (RestorableUniformRandomProvider) rng.newInstance(args);
         } catch (InvocationTargetException e) {
             throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
         } catch (InstantiationException e) {

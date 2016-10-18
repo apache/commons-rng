@@ -17,13 +17,15 @@
 
 package org.apache.commons.rng.internal;
 
-import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.RandomProviderState;
+import org.apache.commons.rng.RandomSource;
 
 /**
  * Base class with default implementation for common methods.
  */
 public abstract class BaseProvider
-    implements UniformRandomProvider {
+    implements RestorableUniformRandomProvider {
     /** {@inheritDoc} */
     @Override
     public int nextInt(int n) {
@@ -55,6 +57,22 @@ public abstract class BaseProvider
         } while (bits - val + (n - 1) < 0);
 
         return val;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public RandomProviderState saveState() {
+        return new RandomSource.State(getStateInternal());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void restoreState(RandomProviderState state) {
+        if (state instanceof RandomSource.State) {
+            setStateInternal(((RandomSource.State) state).getState());
+        } else {
+            throw new IllegalArgumentException("Foreign instance");
+        }
     }
 
     /** {@inheritDoc} */

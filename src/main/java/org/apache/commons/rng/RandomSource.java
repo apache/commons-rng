@@ -18,7 +18,6 @@ package org.apache.commons.rng;
 
 import java.util.Arrays;
 
-import org.apache.commons.rng.internal.BaseProvider;
 import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
@@ -152,15 +151,6 @@ import org.apache.commons.rng.internal.util.SeedFactory;
  * to "replay" all the calls performed by that other instance (and it
  * would require to know the number of calls to the primary source of
  * randomness, which is also not usually accessible).
- * <br>
- * This factory thus provides a method for
- * {@link #saveState(UniformRandomProvider) saving} the internal
- * state of a generator.
- * The state is wrapped in an {@link State "opaque object"} to be
- * used for {@link #restoreState(UniformRandomProvider,State) restoring}
- * a generator (of the same type) to an identical state (e.g. to allow
- * persistent storage, or to continue a sequence from where the original
- * instance left off).
  * </p>
  *
  * @since 1.0
@@ -306,13 +296,14 @@ public enum RandomSource {
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
 
     /**
-     * Wraps the internal state of a {@link UniformRandomProvider}.
+     * Wraps the internal state of the {@link RestorableUniformRandomProvider}
+     * instances created by this factory.
      * Its purpose is to store all the data needed to recover the same
      * state in order to restart a sequence where it left off.
      * External code should not try to modify the data contained in instances
      * of this class.
      */
-    public static class State {
+    public static class State implements RandomProviderState {
         /** Internal state. */
         private final byte[] state;
 
@@ -367,22 +358,28 @@ public enum RandomSource {
     /**
      * Creates a random number generator with a random seed.
      *
-     * <p>Example of usage:</p>
+     * <p>Usage example:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+     * </code></pre>
+     * <p>or, if a {@link RestorableUniformRandomProvider "save/restore"} functionality is needed,</p>
+     * <pre><code>
+     *  RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.MT);
      * </code></pre>
      *
      * @param source RNG type.
      * @return the RNG.
+     *
+     * @see #create(RandomSource,Object,Object[])
      */
-    public static UniformRandomProvider create(RandomSource source) {
+    public static RestorableUniformRandomProvider create(RandomSource source) {
         return create(source, null);
     }
 
     /**
      * Creates a random number generator with the given {@code seed}.
      *
-     * <p>Example of usage:</p>
+     * <p>Usage example:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, 26219, 6, 9);
      * </code></pre>
@@ -425,56 +422,13 @@ public enum RandomSource {
      * is invalid.
      * @throws IllegalStateException if data is missing to initialize the
      * generator implemented by the given {@code source}.
+     *
+     * @see #create(RandomSource)
      */
-    public static UniformRandomProvider create(RandomSource source,
-                                               Object seed,
-                                               Object ... data) {
+    public static RestorableUniformRandomProvider create(RandomSource source,
+                                                         Object seed,
+                                                         Object ... data) {
         return ProviderBuilder.create(source.getInternalIdentifier(), seed, data);
-    }
-
-    /**
-     * Saves the state of a RNG.
-     *
-     * @param provider Provider.
-     * @return the current state of the given {@code provider}.
-     * @throws UnsupportedOperationException if the {@code provider} is
-     * not an object created by this factory or the underlying source of
-     * randomness does not support this functionality.
-     *
-     * @see #restoreState(UniformRandomProvider,State)
-     */
-    public static State saveState(UniformRandomProvider provider) {
-        if (!(provider instanceof BaseProvider)) {
-            throw new UnsupportedOperationException();
-        } else {
-            return new State(((BaseProvider) provider).getState());
-        }
-    }
-
-    /**
-     * Restores the state of a RNG.
-     *
-     * @param provider Provider.
-     * @param state State which the {@code provider} will be set to.
-     * This parameter must have been obtained by a call to
-     * {@link #saveState(UniformRandomProvider) saveState(rng)}
-     * where {@code rng} is either the same object as {@code provider},
-     * or an object of the exact same class.
-     * @throws UnsupportedOperationException if the {@code provider} is
-     * not an object created by this factory or the underlying source of
-     * randomness does not support this functionality.
-     * @throws IllegalArgumentException if it was detected that the
-     * {@code state} is incompatible with the given {@code provider}.
-     *
-     * @see #saveState(UniformRandomProvider)
-     */
-    public static void restoreState(UniformRandomProvider provider,
-                                    State state) {
-        if (!(provider instanceof BaseProvider)) {
-            throw new UnsupportedOperationException();
-        } else {
-            ((BaseProvider) provider).setState(state.getState());
-        }
     }
 
     /**
