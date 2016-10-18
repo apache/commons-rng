@@ -72,7 +72,7 @@ double random = rng.nextDouble();
         <p>
           Download the
           <a href="http://commons.apache.org/rng/download_rng.cgi">
-            Latest Release</a> of Apache Commons RNG.
+            latest release</a> of Apache Commons RNG.
         </p>
       </subsection>
     </section>
