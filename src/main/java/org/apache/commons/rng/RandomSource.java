@@ -358,13 +358,19 @@ public enum RandomSource {
     /**
      * Creates a random number generator with a random seed.
      *
-     * <p>Example of usage:</p>
+     * <p>Usage example:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+     * </code></pre>
+     * <p>or, if a {@link RestorableUniformRandomProvider "save/restore"} functionality is needed,</p>
+     * <pre><code>
+     *  RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.MT);
      * </code></pre>
      *
      * @param source RNG type.
      * @return the RNG.
+     *
+     * @see #create(RandomSource,Object,Object[])
      */
     public static RestorableUniformRandomProvider create(RandomSource source) {
         return create(source, null);
@@ -373,7 +379,7 @@ public enum RandomSource {
     /**
      * Creates a random number generator with the given {@code seed}.
      *
-     * <p>Example of usage:</p>
+     * <p>Usage example:</p>
      * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, 26219, 6, 9);
      * </code></pre>
@@ -416,6 +422,8 @@ public enum RandomSource {
      * is invalid.
      * @throws IllegalStateException if data is missing to initialize the
      * generator implemented by the given {@code source}.
+     *
+     * @see #create(RandomSource)
      */
     public static RestorableUniformRandomProvider create(RandomSource source,
                                                          Object seed,
