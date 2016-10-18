@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng;
+package org.apache.commons.rng.internal;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.internal.util.SeedFactory;
 import org.apache.commons.rng.internal.util.NoOpConverter;
 import org.apache.commons.rng.internal.util.Int2Long;
@@ -61,7 +63,7 @@ import org.apache.commons.rng.internal.source64.MersenneTwister64;
  * and performs seed type conversions.
  * </p>
  */
-class ProviderBuilder {
+public class ProviderBuilder {
     /** Error message. */
     private static final String INTERNAL_ERROR_MSG = "Internal error: Please file a bug report";
     /** Length of the seed array (for random seed). */

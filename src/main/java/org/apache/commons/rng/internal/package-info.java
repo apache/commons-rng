@@ -43,8 +43,9 @@
  *
  * <p>
  * Each implementation must have an identifier in
- * {@link org.apache.commons.rng.ProviderBuilder.RandomSourceInternal}
- * which must be referred to from the {@link org.apache.commons.rng.RandomSource public API}.
+ * {@link org.apache.commons.rng.internal.ProviderBuilder.RandomSourceInternal
+ * ProviderBuilder.RandomSourceInternal} which must be referred to from the
+ * {@link org.apache.commons.rng.RandomSource public API}.
  * </p>
  */
 
