@@ -407,6 +407,11 @@ public class ProvidersCommonParametricTest {
         ((RestorableUniformRandomProvider) generator).restoreState(state);
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testRestoreForeignState() {
+        ((RestorableUniformRandomProvider) generator).restoreState(new RandomProviderState() {});
+    }
+
 
     ///// Support methods below.
 
