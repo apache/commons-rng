@@ -335,6 +335,26 @@ public class ProvidersCommonParametricTest {
     }
 
     @Test
+    public void testUnrestorable() {
+        // Create two generators of the same type as the one being tested.
+        final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
+        final UniformRandomProvider rng2 = RandomSource.unrestorable(RandomSource.create(originalSource, originalSeed, originalArgs));
+
+        // Ensure that they generate the same values.
+        RandomAssert.assertProduceSameSequence(rng1, rng2);
+
+        // Cast must work.
+        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) rng1;
+        // Cast must fail.
+        try {
+            final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
+            Assert.fail("Cast should have failed");
+        } catch (ClassCastException e) {
+            // Expected.
+        }
+    }
+
+    @Test
     public void testSerializingState()
         throws IOException,
                ClassNotFoundException {

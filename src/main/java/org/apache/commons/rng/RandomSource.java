@@ -469,4 +469,71 @@ public enum RandomSource {
     public static long[] createLongArray(int n) {
         return SeedFactory.createLongArray(n);
     }
+
+    /**
+     * Wraps the given {@code delegate} generator in a new instance that
+     * does not allow access to the "save/restore" functionality.
+     *
+     * @param delegate Generator to which calls will be delegated.
+     * @return a new instance whose state cannot be saved or restored.
+     */
+    public static UniformRandomProvider unrestorable(final UniformRandomProvider delegate) {
+        return new UniformRandomProvider() {
+            /** {@inheritDoc} */
+            @Override
+            public void nextBytes(byte[] bytes) {
+                delegate.nextBytes(bytes);
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public void nextBytes(byte[] bytes,
+                                  int start,
+                                  int len) {
+                delegate.nextBytes(bytes, start, len);
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public int nextInt() {
+                return delegate.nextInt();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public int nextInt(int n) {
+                return delegate.nextInt(n);
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public long nextLong() {
+                return delegate.nextLong();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public long nextLong(long n) {
+                return delegate.nextLong(n);
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public boolean nextBoolean() {
+                return delegate.nextBoolean();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public float nextFloat() {
+                return delegate.nextFloat();
+            }
+
+            /** {@inheritDoc} */
+            @Override
+            public double nextDouble() {
+                return delegate.nextDouble();
+            }
+        };
+    }
 }
