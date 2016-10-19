@@ -26,7 +26,7 @@ public interface RestorableUniformRandomProvider extends UniformRandomProvider {
      * Saves the state of a generator.
      *
      * @return the current state of this instance. It is a value that can
-     * subsequently be passed to the {@link #restore(RandomProviderState)
+     * subsequently be passed to the {@link #restoreState(RandomProviderState)
      * restore} method.
      * @throws UnsupportedOperationException if the underlying source of
      * randomness does not support this functionality.
