@@ -82,27 +82,6 @@ public abstract class BaseProvider
     }
 
     /**
-     * Gets the instance's state.
-     *
-     * @return the current state. The given argument can then be passed
-     * to {@link #setState(byte[])} in order to recover the
-     * current state.
-     */
-    public byte[] getState() {
-        return getStateInternal();
-    }
-
-    /**
-     * Sets the instance's state.
-     *
-     * @param state State. The given argument must have been retrieved
-     * by a call to {@link #getState()}.
-     */
-    public void setState(byte[] state) {
-        setStateInternal(state);
-    }
-
-    /**
      * Creates a snapshot of the RNG state.
      *
      * @return the internal state.
