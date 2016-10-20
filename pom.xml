@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -14,10 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
@@ -26,12 +23,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Apache Commons RNG</name>
+  <name>Apache Commons Parent RNG</name>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons RNG project provides implementations of random numbers generators.</description>
+  <description>The Apache Commons RNG parent project.</description>
 
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
@@ -220,68 +217,12 @@
         </configuration>
       </plugin>
 
-      <!-- <plugin> -->
-      <!--   <artifactId>maven-antrun-plugin</artifactId> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <phase>package</phase> -->
-      <!--       <configuration> -->
-      <!--         <target> -->
-      <!--           <jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-tools.jar"> -->
-      <!--             <metainf dir="${basedir}" includes="NOTICE.txt,LICENSE.txt" /> -->
-      <!--             <manifest> -->
-      <!--               <attribute name="Specification-Title" value="${project.name} Tools" /> -->
-      <!--               <attribute name="Implementation-Title" value="${project.name} Tools" /> -->
-      <!--               <attribute name="Implementation-Vendor" value="${project.organization.name}" /> -->
-      <!--               <attribute name="Implementation-Version" value="${project.version}" /> -->
-      <!--               <attribute name="Implementation-Vendor-Id" value="org.apache" /> -->
-      <!--               <attribute name="Implementation-Build" value="${implementation.build}"/> -->
-      <!--               <attribute name="X-Compile-Source-JDK" value="${maven.compiler.source}" /> -->
-      <!--               <attribute name="X-Compile-Target-JDK" value="${maven.compiler.target}" /> -->
-      <!--             </manifest> -->
-      <!--             <fileset dir="${project.build.directory}/test-classes" -->
-      <!--                      includes="org/apache/commons/rng/PerfTestUtils*" /> -->
-      <!--           </jar> -->
-      <!--         </target> -->
-      <!--       </configuration> -->
-      <!--       <goals> -->
-      <!--         <goal>run</goal> -->
-      <!--       </goals> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
-      <!--  Attaches the commons-rng tools JAR to the Maven lifecycle
-            to ensure they will be signed and deployed as normal -->
-      <!-- <plugin> -->
-      <!--   <groupId>org.codehaus.mojo</groupId> -->
-      <!--   <artifactId>build-helper-maven-plugin</artifactId> -->
-      <!--   <version>1.7</version> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <id>attach-artifacts</id> -->
-      <!--       <phase>package</phase> -->
-      <!--       <goals> -->
-      <!--         <goal>attach-artifact</goal> -->
-      <!--       </goals> -->
-      <!--       <configuration> -->
-      <!--         <artifacts> -->
-      <!--           <artifact> -->
-      <!--             <file>${project.build.directory}/${project.artifactId}-${project.version}-tools.jar</file> -->
-      <!--             <type>jar</type> -->
-      <!--             <classifier>tools</classifier> -->
-      <!--           </artifact> -->
-      <!--         </artifacts> -->
-      <!--       </configuration> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
-
       <!--  MathJax -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
+          <additionalparam>-header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
         </configuration>
       </plugin>
       <plugin>
@@ -306,8 +247,8 @@
           <version>${rng.checkstyle.version}</version>
           <configuration>
             <includeTestSourceDirectory>false</includeTestSourceDirectory>
-            <configLocation>checkstyle.xml</configLocation>
-            <headerLocation>license-header.txt</headerLocation>
+            <configLocation>/checkstyle.xml</configLocation>
+            <headerLocation>/license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
             <failOnViolation>false</failOnViolation>
             <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
@@ -383,10 +324,10 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${rng.checkstyle.version}</version>
         <configuration>
-          <configLocation>checkstyle.xml</configLocation>
+          <configLocation>/checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
-          <headerLocation>${basedir}/license-header.txt</headerLocation>
+          <headerLocation>/license-header.txt</headerLocation>
         </configuration>
         <reportSets>
           <reportSet>
@@ -429,7 +370,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-Xdoclint:none -header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
+          <additionalparam>-Xdoclint:none -header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
         </configuration>
       </plugin>
     </plugins>
@@ -486,18 +427,18 @@
                 <configuration>
                   <tasks>
                     <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}"/>
                     </exec>
 
                     <exec executable="svn">
-                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs" />
+                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs"/>
                     </exec>
 
                     <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" />
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*"/>
                     </pathconvert>
                     <exec executable="svn">
-                      <arg line="update --set-depth infinity ${dirs}" />
+                      <arg line="update --set-depth infinity ${dirs}"/>
                     </exec>
                   </tasks>
                 </configuration>
@@ -667,4 +608,9 @@
       </build>
     </profile>
   </profiles>
+
+  <modules>
+    <module>commons-rng-core</module>
+  </modules>
+
 </project>
