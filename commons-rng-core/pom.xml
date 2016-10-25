@@ -16,10 +16,6 @@
   <name>Apache Commons RNG Core</name>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG Core module includes implementations of random numbers generators.</description>
 

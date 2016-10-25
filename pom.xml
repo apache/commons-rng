@@ -187,7 +187,7 @@
         <version>${rng.clirr.version}</version>
         <configuration>
           <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>${basedir}/clirr-ignored.xml</ignoredDifferencesFile>
+          <ignoredDifferencesFile>clirr/clirr-ignored.xml</ignoredDifferencesFile>
         </configuration>
         <executions>
           <execution>
@@ -195,6 +195,13 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-rng-build-tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -203,9 +210,16 @@
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
           <rulesets>
-            <ruleset>${basedir}/pmd-ruleset.xml</ruleset>
+            <ruleset>pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-rng-build-tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -222,7 +236,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
+          <additionalparam>-header '&lt;script type="text/javascript"
+            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'
+          </additionalparam>
         </configuration>
       </plugin>
       <plugin>
@@ -238,7 +254,32 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <version>${rng.clirr.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-rng-build-tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>${rng.findbugs.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-rng-build-tools</artifactId>
+            <version>1.0-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -247,12 +288,19 @@
           <version>${rng.checkstyle.version}</version>
           <configuration>
             <includeTestSourceDirectory>false</includeTestSourceDirectory>
-            <configLocation>/checkstyle.xml</configLocation>
-            <headerLocation>/license-header.txt</headerLocation>
+            <configLocation>checkstyle/checkstyle.xml</configLocation>
+            <headerLocation>checkstyle/license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
             <failOnViolation>false</failOnViolation>
             <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.commons</groupId>
+              <artifactId>commons-rng-build-tools</artifactId>
+              <version>1.0-SNAPSHOT</version>
+            </dependency>
+          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -316,7 +364,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
-          <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
+          <excludeFilterFile>findbugs/findbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
       <plugin>
@@ -324,10 +372,10 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${rng.checkstyle.version}</version>
         <configuration>
-          <configLocation>/checkstyle.xml</configLocation>
+          <configLocation>checkstyle/checkstyle.xml</configLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
-          <headerLocation>/license-header.txt</headerLocation>
+          <headerLocation>checkstyle/license-header.txt</headerLocation>
         </configuration>
         <reportSets>
           <reportSet>
@@ -343,7 +391,7 @@
         <version>${rng.clirr.version}</version>
         <configuration>
           <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>${basedir}/clirr-ignored.xml</ignoredDifferencesFile>
+          <ignoredDifferencesFile>clirr/clirr-ignored.xml</ignoredDifferencesFile>
         </configuration>
       </plugin>
       <plugin>
@@ -353,7 +401,7 @@
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
           <rulesets>
-            <ruleset>${basedir}/pmd-ruleset.xml</ruleset>
+            <ruleset>pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
         <reportSets>
@@ -611,6 +659,7 @@
 
   <modules>
     <module>commons-rng-core</module>
+    <module>commons-rng-build-tools</module>
   </modules>
 
 </project>
