@@ -19,7 +19,6 @@ package org.apache.commons.rng.internal;
 import org.junit.Test;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
-import org.apache.commons.rng.RandomSource;
 
 /**
  * Tests for {@link BaseProvider}.
@@ -39,7 +38,7 @@ public class BaseProviderTest {
     @Test(expected=UnsupportedOperationException.class)
     public void testMissingSetStateInternal() {
         final RestorableUniformRandomProvider rng = new DummyGenerator();
-        rng.restoreState(new RandomSource.State(new byte[1]));
+        rng.restoreState(new RandomProviderDefaultState(new byte[1]));
     }
 }
 

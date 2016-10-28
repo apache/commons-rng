@@ -34,6 +34,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import org.apache.commons.rng.internal.RandomProviderDefaultState;
+
 /**
  * Tests which all generators must pass.
  */
@@ -369,7 +371,7 @@ public class ProvidersCommonParametricTest {
         // Serialize.
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(((RandomSource.State) stateOrig).getState());
+        oos.writeObject(((RandomProviderDefaultState) stateOrig).getState());
 
         // Store some values.
         final List<Number> listOrig = makeList(n);
@@ -382,7 +384,7 @@ public class ProvidersCommonParametricTest {
         // Retrieve from serialized stream.
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
-        final RandomProviderState stateNew = new RandomSource.State((byte[]) ois.readObject());
+        final RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
         Assert.assertTrue(stateOrig != stateNew);
 

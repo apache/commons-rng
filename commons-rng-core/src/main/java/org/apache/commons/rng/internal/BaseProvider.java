@@ -62,14 +62,14 @@ public abstract class BaseProvider
     /** {@inheritDoc} */
     @Override
     public RandomProviderState saveState() {
-        return new RandomSource.State(getStateInternal());
+        return new RandomProviderDefaultState(getStateInternal());
     }
 
     /** {@inheritDoc} */
     @Override
     public void restoreState(RandomProviderState state) {
-        if (state instanceof RandomSource.State) {
-            setStateInternal(((RandomSource.State) state).getState());
+        if (state instanceof RandomProviderDefaultState) {
+            setStateInternal(((RandomProviderDefaultState) state).getState());
         } else {
             throw new IllegalArgumentException("Foreign instance");
         }
