@@ -116,7 +116,7 @@ public class ProvidersList {
      * Subclasses that are "parametric" tests can forward the call to
      * the "@Parameters"-annotated method to this method.
      *
-     * @return the list of 32-bits based generators.
+     * @return the list of 64-bits based generators.
      */
     public static Iterable<Data[]> list64() {
         return Collections.unmodifiableList(LIST64);
