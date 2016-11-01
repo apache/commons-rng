@@ -17,8 +17,7 @@
 package org.apache.commons.rng.internal;
 
 import org.junit.Test;
-
-import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.junit.Assert;
 
 /**
  * Tests for {@link BaseProvider}.
@@ -31,19 +30,57 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 public class BaseProviderTest {
     @Test(expected=UnsupportedOperationException.class)
     public void testMissingGetStateInternal() {
-        final RestorableUniformRandomProvider rng = new DummyGenerator();
-        rng.saveState();
+        new DummyGenerator().saveState();
     }
 
     @Test(expected=UnsupportedOperationException.class)
     public void testMissingSetStateInternal() {
-        final RestorableUniformRandomProvider rng = new DummyGenerator();
-        rng.restoreState(new RandomProviderDefaultState(new byte[1]));
+        new DummyGenerator().restoreState(new RandomProviderDefaultState(new byte[1]));
+    }
+
+    @Test
+    public void testFillStateInt() {
+        final int[] state = new int[10];
+        final int[] seed = {1, 2, 3};
+
+        for (int i = 0; i < state.length; i++) {
+            Assert.assertEquals(0, state[i]);
+        }
+
+        new DummyGenerator().fillState(state, seed);
+        for (int i = 0; i < seed.length; i++) {
+            Assert.assertEquals(seed[i], state[i]);
+        }
+        for (int i = seed.length; i < state.length; i++) {
+            Assert.assertNotEquals(0, state[i]);
+        }
+    }
+
+    @Test
+    public void testFillStateLong() {
+        final long[] state = new long[10];
+        final long[] seed = {1, 2, 3};
+
+        for (int i = 0; i < state.length; i++) {
+            Assert.assertEquals(0, state[i]);
+        }
+
+        new DummyGenerator().fillState(state, seed);
+        for (int i = 0; i < seed.length; i++) {
+            Assert.assertEquals(seed[i], state[i]);
+        }
+        for (int i = seed.length; i < state.length; i++) {
+            Assert.assertNotEquals(0, state[i]);
+        }
     }
 }
 
 /**
- * Dummy class for checking the behaviour of an incomplete implementation.
+ * Dummy class for checking the behaviour of
+ * <ul>
+ *  <li>an incomplete implementation</li>
+ *  <li>{@code fillState} methods with "protected" access</li>
+ * </ul>
  */
 class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvider {
     /** {@inheritDoc} */
@@ -53,4 +90,16 @@ class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvide
     }
 
     // Missing overrides of "setStateInternal" and "getStateInternal".
+
+    /** {@inheritDoc} */
+    @Override
+    public void fillState(int[] state, int[] seed) {
+        super.fillState(state, seed);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void fillState(long[] state, long[] seed) {
+        super.fillState(state, seed);
+    }
 }

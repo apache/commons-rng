@@ -17,7 +17,6 @@
 package org.apache.commons.rng.internal.source32;
 
 import org.apache.commons.rng.internal.util.NumberFactory;
-import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
  * Port from Marsaglia's <a href="http://www.cse.yorku.ca/~oz/marsaglia-rng.html">
@@ -81,7 +80,7 @@ public class KISSRandom extends IntProvider {
         // Reset the whole state of this RNG (i.e. the 4 state variables).
         // Filling procedure is not part of the reference code.
         final int[] tmp = new int[SEED_SIZE];
-        SeedFactory.fillState(tmp, seed);
+        fillState(tmp, seed);
 
         z = tmp[0];
         w = tmp[1];

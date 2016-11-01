@@ -26,42 +26,6 @@ import org.junit.Test;
  */
 public class SeedFactoryTest {
     @Test
-    public void testFillStateInt() {
-        final int[] state = new int[10];
-        final int[] seed = {1, 2, 3};
-
-        for (int i = 0; i < state.length; i++) {
-            Assert.assertEquals(0, state[i]);
-        }
-
-        SeedFactory.fillState(state, seed);
-        for (int i = 0; i < seed.length; i++) {
-            Assert.assertEquals(seed[i], state[i]);
-        }
-        for (int i = seed.length; i < state.length; i++) {
-            Assert.assertNotEquals(0, state[i]);
-        }
-    }
-
-    @Test
-    public void testFillStateLong() {
-        final long[] state = new long[10];
-        final long[] seed = {1, 2, 3};
-
-        for (int i = 0; i < state.length; i++) {
-            Assert.assertEquals(0, state[i]);
-        }
-
-        SeedFactory.fillState(state, seed);
-        for (int i = 0; i < seed.length; i++) {
-            Assert.assertEquals(seed[i], state[i]);
-        }
-        for (int i = seed.length; i < state.length; i++) {
-            Assert.assertNotEquals(0, state[i]);
-        }
-    }
-
-    @Test
     public void testCreateLong() {
         final Map<Long, Integer> values = new HashMap<Long, Integer>();
 

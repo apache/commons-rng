@@ -19,7 +19,6 @@ package org.apache.commons.rng.internal.source64;
 
 import java.util.Arrays;
 import org.apache.commons.rng.internal.util.NumberFactory;
-import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
  * A fast RNG.
@@ -78,7 +77,7 @@ public class XorShift1024Star extends LongProvider {
     private void setSeedInternal(long[] seed) {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
-        SeedFactory.fillState(state, seed);
+        fillState(state, seed);
         index = 0;
     }
 

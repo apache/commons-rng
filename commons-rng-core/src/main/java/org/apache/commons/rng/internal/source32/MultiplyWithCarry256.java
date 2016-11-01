@@ -18,7 +18,6 @@ package org.apache.commons.rng.internal.source32;
 
 import java.util.Arrays;
 import org.apache.commons.rng.internal.util.NumberFactory;
-import org.apache.commons.rng.internal.util.SeedFactory;
 
 /**
  * Port from Marsaglia's <a href="https://en.wikipedia.org/wiki/Multiply-with-carry">
@@ -90,7 +89,7 @@ public class MultiplyWithCarry256 extends IntProvider {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
         final int[] tmp = new int[SEED_SIZE];
-        SeedFactory.fillState(tmp, seed);
+        fillState(tmp, seed);
 
         // First element of the "seed" is the initial "carry".
         final int c = tmp[0];
