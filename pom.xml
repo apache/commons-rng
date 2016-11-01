@@ -659,8 +659,9 @@
   </profiles>
 
   <modules>
-    <module>commons-rng-core</module>
     <module>commons-rng-build-tools</module>
+    <module>commons-rng-client-api</module>
+    <module>commons-rng-core</module>
   </modules>
 
 </project>
