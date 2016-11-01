@@ -14,23 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
-
-import java.util.Arrays;
 import org.junit.Assert;
+import org.junit.Test;
 
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
+/**
+ * Tests for the {@link ByteArray2IntArray} converter.
+ */
+public class ByteArray2IntArrayTest {
+    @Test
+    public void testSeedSizeIsMultipleOfIntSize() {
+        final byte[] seed = new byte[128];
+        final int[] out = new ByteArray2IntArray().convert(seed);
+        Assert.assertEquals(32, out.length);
     }
 
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
+    @Test
+    public void testSeedSizeIsNotMultipleOfIntSize() {
+        final int len = 16;
+        final ByteArray2IntArray conv = new ByteArray2IntArray();
+        for (int i = 1; i < 4; i++) {
+            final byte[] seed = new byte[len + i];
+            final int[] out = conv.convert(seed);
+            Assert.assertEquals(5, out.length);
         }
     }
 }

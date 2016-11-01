@@ -14,23 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
+import org.apache.commons.rng.internal.source64.SplitMix64;
 
-import java.util.Arrays;
-import org.junit.Assert;
+/**
+ * Uses a {@code long} value to seed a {@link SplitMix64} RNG and
+ * create a {@code int[]} with the requested number of random
+ * values.
+ *
+ * @since 1.0
+ */
+public class Long2IntArray implements SeedConverter<Long, int[]> {
+    /** Size of the output array. */
+    private final int size;
 
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
+    /**
+     * @param size Size of the output array.
+     */
+    public Long2IntArray(int size) {
+        this.size = size;
     }
 
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
+    /** {@inheritDoc} */
+    @Override
+    public int[] convert(Long seed) {
+        return SeedFactory.createIntArray(size, new SplitMix64(seed));
     }
 }

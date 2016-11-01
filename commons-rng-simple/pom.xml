@@ -11,19 +11,19 @@
   </parent>
 
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-core</artifactId>
+  <artifactId>commons-rng-simple</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Apache Commons RNG Core</name>
+  <name>Apache Commons RNG Simple</name>
   <url>http://maven.apache.org</url>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons RNG Core module provides pure Java implementations of
-  random numbers generator algorithms.</description>
+  <description>The Apache Commons RNG Simple module provides a factory class to
+    easily instantiate a random numbers generator implementation.</description>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-client-api</artifactId>
+      <artifactId>commons-rng-core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>

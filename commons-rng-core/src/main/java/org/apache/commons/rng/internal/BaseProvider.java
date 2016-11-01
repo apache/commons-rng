@@ -19,7 +19,6 @@ package org.apache.commons.rng.internal;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
-import org.apache.commons.rng.RandomSource;
 
 /**
  * Base class with default implementation for common methods.

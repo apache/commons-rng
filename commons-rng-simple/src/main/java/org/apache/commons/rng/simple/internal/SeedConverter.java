@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
-
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
-    }
-
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
-    }
+/**
+ * Seed converter.
+ *
+ * @param <IN> Input seed type.
+ * @param <OUT> Output seed type.
+ *
+ * @since 1.0
+ */
+public interface SeedConverter<IN, OUT> {
+    /**
+     * Converts seed from input type to output type.
+     *
+     * @param seed Original seed value.
+     * @return the converted seed value.
+     */
+    OUT convert(IN seed);
 }

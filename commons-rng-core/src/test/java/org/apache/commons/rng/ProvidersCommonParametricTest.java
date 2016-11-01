@@ -42,28 +42,19 @@ import org.apache.commons.rng.internal.RandomProviderDefaultState;
 @RunWith(value=Parameterized.class)
 public class ProvidersCommonParametricTest {
     /** RNG under test. */
-    private final UniformRandomProvider generator;
-    /** RNG specifier. */
-    private final RandomSource originalSource;
-    /** Seed (constructor's first parameter). */
-    private final Object originalSeed;
-    /** Constructor's additional parameters. */
-    private final Object[] originalArgs;
+    private final RestorableUniformRandomProvider generator;
 
     /**
      * Initializes generator instance.
      *
      * @param rng RNG to be tested.
      */
-    public ProvidersCommonParametricTest(ProvidersList.Data data) {
-        originalSource = data.getSource();
-        originalSeed = data.getSeed();
-        originalArgs = data.getArgs();
-        generator = RandomSource.create(originalSource, originalSeed, originalArgs);
+    public ProvidersCommonParametricTest(RestorableUniformRandomProvider rng) {
+        generator = rng;
     }
 
     @Parameters(name = "{index}: data={0}")
-    public static Iterable<ProvidersList.Data[]> getList() {
+    public static Iterable<RestorableUniformRandomProvider[]> getList() {
         return ProvidersList.list();
     }
 
@@ -234,81 +225,6 @@ public class ProvidersCommonParametricTest {
         checkRandomWalk(1000, nextMethod);
     }
 
-    // Seeding tests.
-
-    @Test(expected=UnsupportedOperationException.class)
-    public void testUnsupportedSeedType() {
-        final byte seed = 123;
-        RandomSource.create(originalSource, seed, originalArgs);
-    }
-
-    @Test
-    public void testAllSeedTypes() {
-        final Integer intSeed = -12131415;
-        final Long longSeed = -1213141516171819L;
-        final int[] intArraySeed = new int[] { 0, 11, -22, 33, -44, 55, -66, 77, -88, 99 };
-        final long[] longArraySeed = new long[] { 11111L, -222222L, 3333333L, -44444444L };
-        final byte[] byteArraySeed = new byte[] { -128, -91, -45, -32, -1, 0, 11, 23, 54, 88, 127 };
-
-        final Object[] seeds = new Object[] { null,
-                                              intSeed,
-                                              longSeed,
-                                              intArraySeed,
-                                              longArraySeed,
-                                              byteArraySeed };
-
-        int nonNativeSeedCount = 0;
-        int seedCount = 0;
-        for (Object s : seeds) {
-            ++seedCount;
-            if (!(originalSource.isNativeSeed(s))) {
-                ++nonNativeSeedCount;
-            }
-
-            Assert.assertNotEquals(intSeed, originalSeed);
-            RandomSource.create(originalSource, s, originalArgs);
-        }
-
-        Assert.assertEquals(6, seedCount);
-        Assert.assertEquals(5, nonNativeSeedCount);
-    }
-
-    @Test
-    public void testEmptyIntArraySeed() {
-        final int[] empty = new int[0];
-        Assume.assumeTrue(originalSource.isNativeSeed(empty));
-
-        // Exercise the default seeding procedure.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
-        checkNextIntegerInRange(rng, 10, 10000);
-    }
-
-    @Test
-    public void testEmptyLongArraySeed() {
-        final long[] empty = new long[0];
-        Assume.assumeTrue(originalSource.isNativeSeed(empty));
-
-        // Exercise the default seeding procedure.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
-        checkNextIntegerInRange(rng, 10, 10000);
-    }
-
-    @Ignore@Test
-    public void testZeroIntArraySeed() {
-        // Exercise capacity to escape all "zero" state.
-        final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
-        checkNextIntegerInRange(rng, 10, 10000);
-    }
-
-    @Ignore@Test
-    public void testZeroLongArraySeed() {
-        // Exercise capacity to escape all "zero" state.
-        final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
-        checkNextIntegerInRange(rng, 10, 10000);
-    }
-
     // State save and restore tests.
 
     @Test
@@ -317,10 +233,8 @@ public class ProvidersCommonParametricTest {
         // state is away from its initial settings.
         final int n = 10000;
 
-        // Cast is OK: all instances created by this library inherit from "BaseProvider".
-        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) generator;
         // Save.
-        final RandomProviderState state = restorable.saveState();
+        final RandomProviderState state = generator.saveState();
         // Store some values.
         final List<Number> listOrig = makeList(n);
         // Discard a few more.
@@ -328,74 +242,11 @@ public class ProvidersCommonParametricTest {
         Assert.assertTrue(listDiscard.size() != 0);
         Assert.assertFalse(listOrig.equals(listDiscard));
         // Reset.
-        restorable.restoreState(state);
+        generator.restoreState(state);
         // Replay.
         final List<Number> listReplay = makeList(n);
         Assert.assertFalse(listOrig == listReplay);
         // Check that the restored state is the same as the orginal.
-        Assert.assertTrue(listOrig.equals(listReplay));
-    }
-
-    @Test
-    public void testUnrestorable() {
-        // Create two generators of the same type as the one being tested.
-        final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
-        final UniformRandomProvider rng2 = RandomSource.unrestorable(RandomSource.create(originalSource, originalSeed, originalArgs));
-
-        // Ensure that they generate the same values.
-        RandomAssert.assertProduceSameSequence(rng1, rng2);
-
-        // Cast must work.
-        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) rng1;
-        // Cast must fail.
-        try {
-            final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
-            Assert.fail("Cast should have failed");
-        } catch (ClassCastException e) {
-            // Expected.
-        }
-    }
-
-    @Test
-    public void testSerializingState()
-        throws IOException,
-               ClassNotFoundException {
-        // Large "n" is not necessary here as we only test the serialization.
-        final int n = 100;
-
-        // Cast is OK: all instances created by this library inherit from "BaseProvider".
-        final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) generator;
-
-        // Save.
-        final RandomProviderState stateOrig = restorable.saveState();
-        // Serialize.
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(((RandomProviderDefaultState) stateOrig).getState());
-
-        // Store some values.
-        final List<Number> listOrig = makeList(n);
-
-        // Discard a few more.
-        final List<Number> listDiscard = makeList(n);
-        Assert.assertTrue(listDiscard.size() != 0);
-        Assert.assertFalse(listOrig.equals(listDiscard));
-
-        // Retrieve from serialized stream.
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        ObjectInputStream ois = new ObjectInputStream(bis);
-        final RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
-
-        Assert.assertTrue(stateOrig != stateNew);
-
-        // Reset.
-        restorable.restoreState(stateNew);
-
-        // Replay.
-        final List<Number> listReplay = makeList(n);
-        Assert.assertFalse(listOrig == listReplay);
-
-        // Check that the serialized data recreated the orginal state.
         Assert.assertTrue(listOrig.equals(listReplay));
     }
 
@@ -406,12 +257,12 @@ public class ProvidersCommonParametricTest {
 
         final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
-        ((RestorableUniformRandomProvider) generator).restoreState(state);
+        generator.restoreState(state);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testRestoreForeignState() {
-        ((RestorableUniformRandomProvider) generator).restoreState(new RandomProviderState() {});
+        generator.restoreState(new RandomProviderState() {});
     }
 
 

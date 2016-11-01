@@ -15,22 +15,8 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng;
+/**
+ * Utilities for seed conversion.
+ */
 
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
-    }
-
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
-    }
-}
+package org.apache.commons.rng.simple.internal;

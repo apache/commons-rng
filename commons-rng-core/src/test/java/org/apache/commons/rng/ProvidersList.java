@@ -21,6 +21,22 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.apache.commons.rng.internal.source32.JDKRandom;
+import org.apache.commons.rng.internal.source32.Well512a;
+import org.apache.commons.rng.internal.source32.Well1024a;
+import org.apache.commons.rng.internal.source32.Well19937a;
+import org.apache.commons.rng.internal.source32.Well19937c;
+import org.apache.commons.rng.internal.source32.Well44497a;
+import org.apache.commons.rng.internal.source32.Well44497b;
+import org.apache.commons.rng.internal.source32.ISAACRandom;
+import org.apache.commons.rng.internal.source32.MersenneTwister;
+import org.apache.commons.rng.internal.source32.MultiplyWithCarry256;
+import org.apache.commons.rng.internal.source32.KISSRandom;
+import org.apache.commons.rng.internal.source64.SplitMix64;
+import org.apache.commons.rng.internal.source64.XorShift1024Star;
+import org.apache.commons.rng.internal.source64.TwoCmres;
+import org.apache.commons.rng.internal.source64.MersenneTwister64;
+
 /**
  * The purpose of this class is to provide the list of all generators
  * implemented in the library.
@@ -32,34 +48,37 @@ import java.util.Collections;
  */
 public class ProvidersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<Data[]> LIST = new ArrayList<Data[]>();
+    private static final List<RestorableUniformRandomProvider[]> LIST =
+        new ArrayList<RestorableUniformRandomProvider[]>();
     /** List of 32-bits based RNGs. */
-    private static final List<Data[]> LIST32 = new ArrayList<Data[]>();
+    private static final List<RestorableUniformRandomProvider[]> LIST32 =
+        new ArrayList<RestorableUniformRandomProvider[]>();
     /** List of 64-bits based RNGs. */
-    private static final List<Data[]> LIST64 = new ArrayList<Data[]>();
+    private static final List<RestorableUniformRandomProvider[]> LIST64 =
+        new ArrayList<RestorableUniformRandomProvider[]>();
 
     static {
         try {
             // "int"-based RNGs.
-            add(LIST32, RandomSource.JDK, -122333444455555L);
-            add(LIST32, RandomSource.MT, new int[] { -123, -234, -345 });
-            add(LIST32, RandomSource.WELL_512_A, new int[] { -23, -34, -45 });
-            add(LIST32, RandomSource.WELL_1024_A, new int[] { -1234, -2345, -3456 });
-            add(LIST32, RandomSource.WELL_19937_A, new int[] { -2123, -3234, -4345 });
-            add(LIST32, RandomSource.WELL_19937_C, new int[] { -123, -234, -345, -456 });
-            add(LIST32, RandomSource.WELL_44497_A, new int[] { -12345, -23456, -34567 });
-            add(LIST32, RandomSource.WELL_44497_B, new int[] { 123, 234, 345 });
-            add(LIST32, RandomSource.ISAAC, new int[] { 123, -234, 345, -456 });
-            add(LIST32, RandomSource.MWC_256, new int[] { 12, -1234, -3456, 45678 });
-            add(LIST32, RandomSource.KISS, new int[] { 12, 1234, 23456, 345678 });
+            add(LIST32, new JDKRandom(-122333444455555L));
+            add(LIST32, new MersenneTwister(new int[] { -123, -234, -345 }));
+            add(LIST32, new Well512a(new int[] { -23, -34, -45 }));
+            add(LIST32, new Well1024a(new int[] { -1234, -2345, -3456 }));
+            add(LIST32, new Well19937a(new int[] { -2123, -3234, -4345 }));
+            add(LIST32, new Well19937c(new int[] { -123, -234, -345, -456 }));
+            add(LIST32, new Well44497a(new int[] { -12345, -23456, -34567 }));
+            add(LIST32, new Well44497b(new int[] { 123, 234, 345 }));
+            add(LIST32, new ISAACRandom(new int[] { 123, -234, 345, -456 }));
+            add(LIST32, new MultiplyWithCarry256(new int[] { 12, -1234, -3456, 45678 }));
+            add(LIST32, new KISSRandom(new int[] { 12, 1234, 23456, 345678 }));
             // ... add more here.
 
             // "long"-based RNGs.
-            add(LIST64, RandomSource.SPLIT_MIX_64, -988777666655555L);
-            add(LIST64, RandomSource.XOR_SHIFT_1024_S, new long[] { 123456L, 234567L, -345678L });
-            add(LIST64, RandomSource.TWO_CMRES, 55443322);
-            add(LIST64, RandomSource.TWO_CMRES_SELECT, -987654321, 5, 8);
-            add(LIST64, RandomSource.MT_64, new long[] { 1234567L, 2345678L, -3456789L });
+            add(LIST64, new SplitMix64(-988777666655555L));
+            add(LIST64, new XorShift1024Star(new long[] { 123456L, 234567L, -345678L }));
+            add(LIST64, new TwoCmres(55443322));
+            add(LIST64, new TwoCmres(-987654321, 5, 8));
+            add(LIST64, new MersenneTwister64(new long[] { 1234567L, 2345678L, -3456789L }));
             // ... add more here.
 
             // Do not modify the remaining statements.
@@ -82,14 +101,9 @@ public class ProvidersList {
      * Helper to statisfy Junit requirement that each parameter set contains
      * the same number of objects.
      */
-    private static void add(List<Data[]> list,
-                            RandomSource source,
-                            Object ... data) {
-        final RandomSource rng = source;
-        final Object seed = data.length > 0 ? data[0] : null;
-        final Object[] args = data.length > 1 ? Arrays.copyOfRange(data, 1, data.length) : null;
-
-        list.add(new Data[] { new Data(rng, seed, args) });
+    private static void add(List<RestorableUniformRandomProvider[]> list,
+                            RestorableUniformRandomProvider rng) {
+        list.add(new RestorableUniformRandomProvider[] { rng });
     }
 
     /**
@@ -98,7 +112,7 @@ public class ProvidersList {
      *
      * @return the list of all generators.
      */
-    public static Iterable<Data[]> list() {
+    public static Iterable<RestorableUniformRandomProvider[]> list() {
         return Collections.unmodifiableList(LIST);
     }
 
@@ -108,7 +122,7 @@ public class ProvidersList {
      *
      * @return the list of 32-bits based generators.
      */
-    public static Iterable<Data[]> list32() {
+    public static Iterable<RestorableUniformRandomProvider[]> list32() {
         return Collections.unmodifiableList(LIST32);
     }
 
@@ -118,42 +132,7 @@ public class ProvidersList {
      *
      * @return the list of 64-bits based generators.
      */
-    public static Iterable<Data[]> list64() {
+    public static Iterable<RestorableUniformRandomProvider[]> list64() {
         return Collections.unmodifiableList(LIST64);
-    }
-
-    /**
-     * Helper.
-     * Better not to mix Junit assumptions of the usage of "Object[]".
-     */
-    public static class Data {
-        private final RandomSource source;
-        private final Object seed;
-        private final Object[] args;
-
-        public Data(RandomSource source,
-                    Object seed,
-                    Object[] args) {
-            this.source = source;
-            this.seed = seed;
-            this.args = args;
-        }
-
-        public RandomSource getSource() {
-            return source;
-        }
-
-        public Object getSeed() {
-            return seed;
-        }
-
-        public Object[] getArgs() {
-            return args == null ? null : Arrays.copyOf(args, args.length);
-        }
-
-        @Override
-        public String toString() {
-            return source.toString() + " seed=" + seed + " args=" + Arrays.toString(args);
-        }
     }
 }

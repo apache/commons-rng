@@ -14,23 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
 
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
-    }
-
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
+/**
+ * Dummy converter that simply passes on its input.
+ * It can be useful to avoid "unchecked" compiler warnings.
+ *
+ * @param <SEED> Seed type.
+ *
+ * @since 1.0
+ */
+public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
+    /** {@inheritDoc} */
+    @Override
+    public SEED convert(SEED seed) {
+        return seed;
     }
 }

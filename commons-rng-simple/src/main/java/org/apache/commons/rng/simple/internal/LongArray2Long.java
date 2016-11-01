@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
-
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
+/**
+ * Creates a single value by "xor" of all the values in the input array.
+ *
+ * @since 1.0
+ */
+public class LongArray2Long implements SeedConverter<long[], Long> {
+    /** {@inheritDoc} */
+    @Override
+    public Long convert(long[] seed) {
+        long out = 0;
+        for (int i = 0; i < seed.length; i++) {
+            out ^= seed[i];
         }
-    }
 
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
+        return out;
     }
 }

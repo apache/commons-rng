@@ -14,23 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
+import org.apache.commons.rng.internal.util.NumberFactory;
 
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
+/**
+ * Creates a {@code long[]} from an {@code int[]}.
+ *
+ * @since 1.0
+ */
+public class IntArray2LongArray implements SeedConverter<int[], long[]> {
+    /** {@inheritDoc} */
+    @Override
+    public long[] convert(int[] seed) {
+        final int outSize = (seed.length + 1) / 2;
+        final long[] out = new long[outSize];
+        for (int i = 0; i < outSize; i++) {
+            final int lo = seed[i];
+            final int hi = outSize + i < seed.length ? seed[outSize + i] : 0;
+            out[i] = NumberFactory.makeLong(hi, lo);
         }
-    }
 
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
+        return out;
     }
 }

@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.rng.simple.internal;
 
-package org.apache.commons.rng;
-
-import java.util.Arrays;
-import org.junit.Assert;
-
-public class RandomAssert {
-
-    public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
+/**
+ * Creates a single value by "xor" of all the values in the input array.
+ *
+ * @since 1.0
+ */
+public class IntArray2Int implements SeedConverter<int[], Integer> {
+    /** {@inheritDoc} */
+    @Override
+    public Integer convert(int[] seed) {
+        int out = 0;
+        for (int i = 0; i < seed.length; i++) {
+            out ^= seed[i];
         }
-    }
 
-    public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
-        }
+        return out;
     }
 }

@@ -34,18 +34,14 @@ public class Providers32ParametricTest {
      *
      * @param rng RNG to be tested.
      */
-    public Providers32ParametricTest(ProvidersList.Data data) {
-        final RandomSource source = data.getSource();
-        final Object seed = data.getSeed();
-        final Object[] args = data.getArgs();
-        generator = RandomSource.create(source, seed, args);
+    public Providers32ParametricTest(RestorableUniformRandomProvider rng) {
+        generator = rng;
     }
 
     @Parameters(name = "{index}: data={0}")
-    public static Iterable<ProvidersList.Data[]> getList() {
+    public static Iterable<RestorableUniformRandomProvider[]> getList() {
         return ProvidersList.list32();
     }
-
 
     @Test
     public void testNextBytesChunks() {
