@@ -69,7 +69,7 @@ public class ProvidersList {
             add(LIST32, new Well44497a(new int[] { -12345, -23456, -34567 }));
             add(LIST32, new Well44497b(new int[] { 123, 234, 345 }));
             add(LIST32, new ISAACRandom(new int[] { 123, -234, 345, -456 }));
-            add(LIST32, new MultiplyWithCarry256(new int[] { 12, -1234, -3456, 45678 }));
+            add(LIST32, new MultiplyWithCarry256(new int[] { 12, -1234, -3456, 45679 }));
             add(LIST32, new KISSRandom(new int[] { 12, 1234, 23456, 345678 }));
             // ... add more here.
 
