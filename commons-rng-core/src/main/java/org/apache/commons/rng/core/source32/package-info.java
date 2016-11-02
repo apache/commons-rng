@@ -42,9 +42,9 @@
  *   instance (cf. {@link org.apache.commons.rng.core.BaseProvider}).
  *  </li>
  *  <li>
- *   When a new class is implemented here, user-access to it must be provided
- *   through associated {@link org.apache.commons.rng.RandomSource
- *   factory methods}.
+ *   When a new class is implemented here, user-access to it must be
+ *   provided through associated {@code RandomSource} factory methods
+ *   defined in module "commons-rng-simple".
  *  </li>
  * </ul>
  */

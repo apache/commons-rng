@@ -21,8 +21,7 @@ import java.util.Arrays;
 import org.apache.commons.rng.RandomProviderState;
 
 /**
- * Wraps the internal state of the {@link RestorableUniformRandomProvider}
- * instances created by this factory.
+ * Wraps the internal state of a generator instance.
  * Its purpose is to store all the data needed to recover the same
  * state in order to restart a sequence where it left off.
  * External code should not try to modify the data contained in instances
