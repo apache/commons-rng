@@ -16,7 +16,7 @@
  */
 
 /**
- * <h3>Randomness Providers</h3>
+ * <h3>Randomness providers</h3>
  *
  * <p>
  * This package provides {@link org.apache.commons.rng.RandomSource factory

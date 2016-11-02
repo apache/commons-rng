@@ -16,13 +16,13 @@
  */
 
 /**
- * <h3>Randomness providers API</h3>
+ * <h3>Stress test application</h3>
  *
  * <p>
- * This package contains the library's interface to be used by client
- * code that needs a generator of sequences of pseudo-random numbers
- * that are <i>uniformly distributed</i> in a specified range.
+ * This package contains an application for interfacing with external
+ * software that perform stringent tests to check the uniformity of
+ * the sequences being passed to them.
  * </p>
  */
 
-package org.apache.commons.rng;
+package org.apache.commons.rng.examples.stress;

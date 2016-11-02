@@ -16,13 +16,12 @@
  */
 
 /**
- * <h3>Randomness providers API</h3>
+ * <h3>Performance benchmarks</h3>
  *
  * <p>
- * This package contains the library's interface to be used by client
- * code that needs a generator of sequences of pseudo-random numbers
- * that are <i>uniformly distributed</i> in a specified range.
+ * This package contains code to perform a
+ * {@link http://openjdk.java.net/projects/code-tools/jmh JMH} run.
  * </p>
  */
 
-package org.apache.commons.rng;
+package org.apache.commons.rng.jmh;

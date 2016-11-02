@@ -47,7 +47,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   $ java -jar examples.jar \
  *     report/dh_ \
  *     4 \
- *     org.apache.commons.rng.userguide.GeneratorsList \
+ *     org.apache.commons.rng.examples.stress.GeneratorsList \
  *     /usr/bin/dieharder -a -g 200 -Y 1 -k 2
  *  </code></pre>
  * </p>
