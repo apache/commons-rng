@@ -19,10 +19,12 @@
  * <h3>Randomness Providers</h3>
  *
  * <p>
- * {@link org.apache.commons.rng.RandomSource factory methods}.
- * The low-level classes are implemented in package
- * {@link org.apache.commons.rng.simple.internal} and its sub-packages,
- * but should not be used directly.
+ * This package provides {@link org.apache.commons.rng.RandomSource factory
+ * methods} by which low-level classes implemented in module "commons-rng-core"
+ * are instantiated.
+ * <br>
+ * Classes in package {@link org.apache.commons.rng.simple.internal}
+ * should not be used directly.
  * <br>
  * The generators are <i>not</i> thread-safe: Parallel applications must
  * use different generator instances in different threads.
