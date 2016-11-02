@@ -28,7 +28,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
  * <p>
  * This class provides methods to generate random seeds (single values
  * or arrays of values, of {@code int} or {@code long} types) that can
- * be passed to the {@link org.apache.commons.rng.RandomSource
+ * be passed to the {@link org.apache.commons.rng.simple.RandomSource
  * methods that create a generator instance}.
  * <br>
  * Although the seed-generating methods defined in this class will likely
