@@ -71,7 +71,7 @@ public class ComputePi extends MonteCarloIntegration {
     }
 
     /**
-     * @param n Number of random points to generate.
+     * @param numPoints Number of random points to generate.
      * @return the approximate value of pi.
      */
     public double compute(long numPoints) {
