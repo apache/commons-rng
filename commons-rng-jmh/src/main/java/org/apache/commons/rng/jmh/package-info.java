@@ -20,7 +20,7 @@
  *
  * <p>
  * This package contains code to perform a
- * {@link http://openjdk.java.net/projects/code-tools/jmh JMH} run.
+ * <a href="http://openjdk.java.net/projects/code-tools/jmh">JMH</a> run.
  * </p>
  */
 
