@@ -21,21 +21,21 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.apache.commons.rng.internal.source32.JDKRandom;
-import org.apache.commons.rng.internal.source32.Well512a;
-import org.apache.commons.rng.internal.source32.Well1024a;
-import org.apache.commons.rng.internal.source32.Well19937a;
-import org.apache.commons.rng.internal.source32.Well19937c;
-import org.apache.commons.rng.internal.source32.Well44497a;
-import org.apache.commons.rng.internal.source32.Well44497b;
-import org.apache.commons.rng.internal.source32.ISAACRandom;
-import org.apache.commons.rng.internal.source32.MersenneTwister;
-import org.apache.commons.rng.internal.source32.MultiplyWithCarry256;
-import org.apache.commons.rng.internal.source32.KISSRandom;
-import org.apache.commons.rng.internal.source64.SplitMix64;
-import org.apache.commons.rng.internal.source64.XorShift1024Star;
-import org.apache.commons.rng.internal.source64.TwoCmres;
-import org.apache.commons.rng.internal.source64.MersenneTwister64;
+import org.apache.commons.rng.core.source32.JDKRandom;
+import org.apache.commons.rng.core.source32.Well512a;
+import org.apache.commons.rng.core.source32.Well1024a;
+import org.apache.commons.rng.core.source32.Well19937a;
+import org.apache.commons.rng.core.source32.Well19937c;
+import org.apache.commons.rng.core.source32.Well44497a;
+import org.apache.commons.rng.core.source32.Well44497b;
+import org.apache.commons.rng.core.source32.ISAACRandom;
+import org.apache.commons.rng.core.source32.MersenneTwister;
+import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
+import org.apache.commons.rng.core.source32.KISSRandom;
+import org.apache.commons.rng.core.source64.SplitMix64;
+import org.apache.commons.rng.core.source64.XorShift1024Star;
+import org.apache.commons.rng.core.source64.TwoCmres;
+import org.apache.commons.rng.core.source64.MersenneTwister64;
 
 /**
  * The purpose of this class is to provide the list of all generators

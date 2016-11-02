@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.apache.commons.rng.internal.RandomProviderDefaultState;
+import org.apache.commons.rng.core.RandomProviderDefaultState;
 
 /**
  * Tests which all generators must pass.
@@ -593,7 +593,7 @@ public class ProvidersCommonParametricTest {
 /**
  * Dummy class for checking that restoring fails when an invalid state is used.
  */
-class DummyGenerator extends org.apache.commons.rng.internal.source32.IntProvider {
+class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
     /** {@inheritDoc} */
     @Override
     public int next() {
