@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.internal.source64.SplitMix64;
+import org.apache.commons.rng.core.source64.SplitMix64;
 
 /**
  * Uses a {@code long} value to seed a {@link SplitMix64} RNG and

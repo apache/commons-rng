@@ -21,7 +21,7 @@ import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.apache.commons.rng.internal.util.NumberFactory;
+import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
  * Tests for {@link SeedFactory}.

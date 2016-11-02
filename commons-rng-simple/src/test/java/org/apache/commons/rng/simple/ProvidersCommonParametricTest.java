@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
-import org.apache.commons.rng.internal.RandomProviderDefaultState;
+import org.apache.commons.rng.core.RandomProviderDefaultState;
 
 /**
  * Tests which all generators must pass.

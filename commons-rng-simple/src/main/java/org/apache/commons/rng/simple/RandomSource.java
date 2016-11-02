@@ -158,7 +158,7 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  */
 public enum RandomSource {
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.JDKRandom}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.JDKRandom}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      *  <li>Native seed size: 1.</li>
@@ -166,7 +166,7 @@ public enum RandomSource {
      */
     JDK(ProviderBuilder.RandomSourceInternal.JDK),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well512a}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well512a}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 16.</li>
@@ -174,7 +174,7 @@ public enum RandomSource {
      */
     WELL_512_A(ProviderBuilder.RandomSourceInternal.WELL_512_A),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well1024a}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well1024a}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 32.</li>
@@ -182,7 +182,7 @@ public enum RandomSource {
      */
     WELL_1024_A(ProviderBuilder.RandomSourceInternal.WELL_1024_A),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well19937a}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well19937a}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 624.</li>
@@ -190,7 +190,7 @@ public enum RandomSource {
      */
     WELL_19937_A(ProviderBuilder.RandomSourceInternal.WELL_19937_A),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well19937c}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well19937c}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 624.</li>
@@ -198,7 +198,7 @@ public enum RandomSource {
      */
     WELL_19937_C(ProviderBuilder.RandomSourceInternal.WELL_19937_C),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well44497a}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well44497a}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 1391.</li>
@@ -206,7 +206,7 @@ public enum RandomSource {
      */
     WELL_44497_A(ProviderBuilder.RandomSourceInternal.WELL_44497_A),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.Well44497b}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Well44497b}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 1391.</li>
@@ -214,7 +214,7 @@ public enum RandomSource {
      */
     WELL_44497_B(ProviderBuilder.RandomSourceInternal.WELL_44497_B),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.MersenneTwister}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.MersenneTwister}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 624.</li>
@@ -222,7 +222,7 @@ public enum RandomSource {
      */
     MT(ProviderBuilder.RandomSourceInternal.MT),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.ISAACRandom}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.ISAACRandom}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 256.</li>
@@ -230,7 +230,7 @@ public enum RandomSource {
      */
     ISAAC(ProviderBuilder.RandomSourceInternal.ISAAC),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source64.SplitMix64}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.SplitMix64}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      *  <li>Native seed size: 1.</li>
@@ -238,7 +238,7 @@ public enum RandomSource {
      */
     SPLIT_MIX_64(ProviderBuilder.RandomSourceInternal.SPLIT_MIX_64),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source64.XorShift1024Star}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XorShift1024Star}.
      * <ul>
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
@@ -246,7 +246,7 @@ public enum RandomSource {
      */
     XOR_SHIFT_1024_S(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.TwoCmres}.
      * This generator is equivalent to {@link #TWO_CMRES_SELECT} with the choice of the
      * pair {@code (0, 1)} for the two subcycle generators.
      * <ul>
@@ -256,7 +256,7 @@ public enum RandomSource {
      */
     TWO_CMRES(ProviderBuilder.RandomSourceInternal.TWO_CMRES),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source64.TwoCmres},
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.TwoCmres},
      * with explicit selection of the two subcycle generators.
      * The selection of the subcycle generator is by passing its index in the internal
      * table, a value between 0 (included) and 13 (included).
@@ -269,7 +269,7 @@ public enum RandomSource {
      */
     TWO_CMRES_SELECT(ProviderBuilder.RandomSourceInternal.TWO_CMRES_SELECT),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source64.MersenneTwister64}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.MersenneTwister64}.
      * <ul>
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 312.</li>
@@ -277,7 +277,7 @@ public enum RandomSource {
      */
     MT_64(ProviderBuilder.RandomSourceInternal.MT_64),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.MultiplyWithCarry256}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.MultiplyWithCarry256}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 257.</li>
@@ -285,7 +285,7 @@ public enum RandomSource {
      */
     MWC_256(ProviderBuilder.RandomSourceInternal.MWC_256),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.internal.source32.KISSRandom}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.KISSRandom}.
      * <ul>
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 4.</li>

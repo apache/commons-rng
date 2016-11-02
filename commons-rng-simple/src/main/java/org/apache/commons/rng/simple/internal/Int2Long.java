@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.internal.util.NumberFactory;
+import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
  * Converts a {@code Integer} to an {@code Long}.

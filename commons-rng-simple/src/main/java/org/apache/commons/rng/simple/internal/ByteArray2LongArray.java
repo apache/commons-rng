@@ -18,7 +18,7 @@ package org.apache.commons.rng.simple.internal;
 
 import java.util.Arrays;
 
-import org.apache.commons.rng.internal.util.NumberFactory;
+import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
  * Creates a {@code long[]} from a {@code byte[]}.

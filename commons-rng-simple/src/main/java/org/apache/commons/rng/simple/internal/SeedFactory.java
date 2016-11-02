@@ -16,11 +16,11 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.internal.util.NumberFactory;
-import org.apache.commons.rng.internal.source32.RandomIntSource;
-import org.apache.commons.rng.internal.source32.Well44497b;
-import org.apache.commons.rng.internal.source64.RandomLongSource;
-import org.apache.commons.rng.internal.source64.SplitMix64;
+import org.apache.commons.rng.core.util.NumberFactory;
+import org.apache.commons.rng.core.source32.RandomIntSource;
+import org.apache.commons.rng.core.source32.Well44497b;
+import org.apache.commons.rng.core.source64.RandomLongSource;
+import org.apache.commons.rng.core.source64.SplitMix64;
 
 /**
  * Utilities related to seeding.
