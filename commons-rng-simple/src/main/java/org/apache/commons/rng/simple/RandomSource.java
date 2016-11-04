@@ -500,6 +500,12 @@ public enum RandomSource {
             public double nextDouble() {
                 return delegate.nextDouble();
             }
+
+            /** {@inheritDoc} */
+            @Override
+            public String toString() {
+                return delegate.toString();
+            }
         };
     }
 }

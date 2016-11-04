@@ -210,6 +210,12 @@ public class ProvidersCommonParametricTest {
         Assert.assertTrue(listOrig.equals(listReplay));
     }
 
+    @Test
+    public void testUnrestorableToString() {
+        Assert.assertEquals(generator.toString(),
+                            RandomSource.unrestorable(generator).toString());
+    }
+
     ///// Support methods below.
 
 
