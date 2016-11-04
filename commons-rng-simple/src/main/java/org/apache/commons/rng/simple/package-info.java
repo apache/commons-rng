@@ -19,8 +19,9 @@
  * <h3>Randomness providers</h3>
  *
  * <p>
- * This package provides {@link org.apache.commons.rng.RandomSource factory
- * methods} by which low-level classes implemented in module "commons-rng-core"
+ * This package provides
+ * {@link org.apache.commons.rng.simple.RandomSource factory methods}
+ * by which low-level classes implemented in module "commons-rng-core"
  * are instantiated.
  * <br>
  * Classes in package {@link org.apache.commons.rng.simple.internal}
