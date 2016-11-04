@@ -63,14 +63,14 @@ public abstract class MonteCarloIntegration {
 
         return result;
     }
-    
+
     /**
      * Indicates whether the given points is inside the region whose
      * integral is computed.
      *
      * @param point Point whose coordinates are random numbers uniformly
      * distributed in the unit interval.
-     * @return {@code true} if the {@code point} is inside. 
+     * @return {@code true} if the {@code point} is inside.
      */
     protected abstract boolean isInside(double ... point);
 

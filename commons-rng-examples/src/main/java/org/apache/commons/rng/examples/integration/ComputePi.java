@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.examples.integration;
 
-import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
@@ -45,15 +44,18 @@ public class ComputePi extends MonteCarloIntegration {
     }
 
     /**
-     * Arguments:
-     * <ul>
+     * Program entry point.
+     *
+     * @param args Arguments.
+     * The order is as follows:
+     * <ol>
      *  <li>
      *   Number of random 2-dimensional points to generate.
      *  </li>
      *  <li>
      *   {@link RandomSource Random source identifier}.
      *  </li>
-     * </ul>
+     * </ol>
      */
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -66,8 +68,10 @@ public class ComputePi extends MonteCarloIntegration {
         final ComputePi piApp = new ComputePi(randomSource);
         final double piMC = piApp.compute(numPoints);
 
+        //CHECKSTYLE: stop all
         System.out.println("After generating " + (DIMENSION * numPoints) +
                            " random numbers, the error on 𝛑 is " + Math.abs(piMC - Math.PI));
+        //CHECKSTYLE: resume all
     }
 
     /**
@@ -77,7 +81,7 @@ public class ComputePi extends MonteCarloIntegration {
     public double compute(long numPoints) {
         return 4 * integrate(numPoints);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     protected boolean isInside(double ... rand) {

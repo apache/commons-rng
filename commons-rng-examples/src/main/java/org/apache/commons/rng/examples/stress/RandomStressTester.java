@@ -92,7 +92,7 @@ public class RandomStressTester {
      *
      * @param args Application's arguments.
      * The order is as follows:
-     * <ul>
+     * <ol>
      *  <li>Output prefix: Filename prefix where the output of the analysis will
      *   written to.  The appended suffix is the index of the instance within the
      *   list of generators to be tested.</li>
@@ -104,9 +104,9 @@ public class RandomStressTester {
      *  <li>Path to the executable: this is the analyzer software that reads 32-bits
      *   integers from stdin.</li>
      *  <li>All remaining arguments are passed to the executable.</li>
-     * </ul>
+     * </ol>
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final String output = args[0];
         final int numThreads = Integer.valueOf(args[1]);
 
@@ -116,7 +116,12 @@ public class RandomStressTester {
         cmdLine.addAll(Arrays.asList(Arrays.copyOfRange(args, 3, args.length)));
 
         final RandomStressTester app = new RandomStressTester(cmdLine, output);
-        app.run(rngList, numThreads);
+
+        try {
+            app.run(rngList, numThreads);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -126,6 +131,7 @@ public class RandomStressTester {
      * @param numConcurrentTasks Number of concurrent tasks.
      * Twice as many threads will be started: one thread for the RNG and one
      * for the analyzer.
+     * @throws IOException if an error occurs when writing to the disk.
      */
     private void run(Iterable<UniformRandomProvider> generators,
                      int numConcurrentTasks)
@@ -165,12 +171,16 @@ public class RandomStressTester {
      * @param name Name of the class that contains the generators to be
      * analyzed.
      * @return the list of generators.
+     * @throws IllegalStateException if an error occurs during instantiation.
      */
-    private static Iterable<UniformRandomProvider> createGeneratorsList(String name)
-        throws ClassNotFoundException,
-               InstantiationException,
-               IllegalAccessException {
-        return (Iterable<UniformRandomProvider>) Class.forName(name).newInstance();
+    private static Iterable<UniformRandomProvider> createGeneratorsList(String name) {
+        try {
+            return (Iterable<UniformRandomProvider>) Class.forName(name).newInstance();
+        } catch (ClassNotFoundException|
+                 InstantiationException|
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -188,8 +198,8 @@ public class RandomStressTester {
          * @param random RNG to be tested.
          * @param report Report file.
          */
-        public Task(UniformRandomProvider random,
-                    File report) {
+        Task(UniformRandomProvider random,
+             File report) {
             rng = random;
             output = report;
         }
@@ -232,6 +242,8 @@ public class RandomStressTester {
      * @param output File.
      * @param rng Generator being tested.
      * @param cmdLine
+     * @throws IOException if there was a problem opening or writing to
+     * the {@code output} file.
      */
     private void printHeader(File output,
                              UniformRandomProvider rng)
@@ -264,6 +276,8 @@ public class RandomStressTester {
     /**
      * @param output File.
      * @param nanoTime Duration of the run.
+     * @throws IOException if there was a problem opening or writing to
+     * the {@code output} file.
      */
     private void printFooter(File output,
                              long nanoTime)
