@@ -24,7 +24,12 @@
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
-  </properties> 
+
+    <!-- This value must reflect the current name of the base package. -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
+  </properties>
 
   <dependencies>
     <dependency>

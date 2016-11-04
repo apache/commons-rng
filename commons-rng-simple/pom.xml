@@ -20,6 +20,14 @@
   <description>The Apache Commons RNG Simple module provides a factory class to
     easily instantiate a random numbers generator implementation.</description>
 
+  <properties>
+    <!-- This value must reflect the current name of the base package. -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.simple</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng.simple</commons.osgi.export>
+    <commons.osgi.private>org.apache.commons.rng.simple.internal</commons.osgi.private>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>

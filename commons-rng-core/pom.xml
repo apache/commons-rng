@@ -20,6 +20,13 @@
   <description>The Apache Commons RNG Core module provides pure Java implementations of
   random numbers generator algorithms.</description>
 
+  <properties>
+    <!-- This value must reflect the current name of the base package. -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.core</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng.core</commons.osgi.export>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.commons</groupId>

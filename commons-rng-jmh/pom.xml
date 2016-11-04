@@ -41,6 +41,11 @@
   </dependencies>
 
   <properties>
+    <!-- This value must reflect the current name of the base package. -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.jmh</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng.jmh</commons.osgi.export>
+
     <!-- JMH Benchmark related properties, version, target compiler and name of the benchmarking uber jar. -->
     <jmh.version>1.13</jmh.version>
     <uberjar.name>benchmarks</uberjar.name>

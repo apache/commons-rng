@@ -19,4 +19,11 @@
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG API module defines the API for client code that uses random numbers generators.</description>
 
+  <properties>
+    <!-- This value must reflect the current name of the base package. -->
+    <commons.osgi.symbolicName>org.apache.commons.rng</commons.osgi.symbolicName>
+    <!-- OSGi -->
+    <commons.osgi.export>org.apache.commons.rng</commons.osgi.export>
+  </properties>
+
 </project>
