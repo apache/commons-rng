@@ -19,10 +19,4 @@
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG API module defines the API for client code that uses random numbers generators.</description>
 
-  <scm>
-    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/commons-rng.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/commons-rng.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=commons-rng.git</url>
-  </scm>
-
 </project>

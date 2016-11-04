@@ -28,10 +28,4 @@
     </dependency>
   </dependencies>
 
-  <scm>
-    <connection>scm:git:http://git-wip-us.apache.org/repos/asf/commons-rng.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/commons-rng.git</developerConnection>
-    <url>https://git-wip-us.apache.org/repos/asf?p=commons-rng.git</url>
-  </scm>
-
 </project>
