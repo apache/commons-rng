@@ -400,7 +400,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <additionalparam>-Xdoclint:none -header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
-          <aggregate>true</aggregate>
+          <!-- <aggregate>true</aggregate> -->
         </configuration>
       </plugin>
     </plugins>
