@@ -29,7 +29,6 @@
 
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG parent project.</description>
-
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
   <issueManagement>
