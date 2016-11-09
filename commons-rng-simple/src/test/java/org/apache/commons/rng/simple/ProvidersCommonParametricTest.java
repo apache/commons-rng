@@ -222,7 +222,7 @@ public class ProvidersCommonParametricTest {
     // The methods
     //   * makeList
     //   * checkNextIntegerInRange
-    //   * checkNextInRange"
+    //   * checkNextInRange
     // have been copied from "src/test" in module "commons-rng-core".
     // TODO: check whether it is possible to have a single implementation.
 
