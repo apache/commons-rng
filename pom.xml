@@ -594,6 +594,7 @@
     <module>commons-rng-client-api</module>
     <module>commons-rng-core</module>
     <module>commons-rng-simple</module>
+    <module>commons-rng-sampling</module>
     <module>commons-rng-jmh</module>
     <module>commons-rng-examples</module>
   </modules>
