@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.simple;
 
-import java.io.Serializable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
