@@ -71,8 +71,7 @@ public class ContinuousSamplerParametricTest {
      * Performs a chi-square test of homogeneity of the observed
      * distribution with the expected distribution.
      * Tests are performed at the 1% level and an average failure rate
-     * higher than 2% (i.e. more than 20 null hypothesis rejections)
-     * causes the test case to fail.
+     * higher than 2% causes the test case to fail.
      *
      * @param sampler Sampler.
      * @param sampleSize Number of random values to generate.
@@ -81,7 +80,7 @@ public class ContinuousSamplerParametricTest {
     private void check(long sampleSize,
                        ContinuousSampler sampler,
                        double[] deciles) {
-        final int numTests = 500;
+        final int numTests = 50;
 
         // Do not change (statistical test assumes that dof = 9).
         final int numBins = 10; // dof = numBins - 1
