@@ -27,7 +27,7 @@ import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * The purpose of this class is to provide a list of samplers
- * that use the "inverse method" to sampler from distributions.
+ * that use the "inverse method" to sample from distributions.
  */
 public class ContinuousSamplersList {
     /** List of all RNGs implemented in the library. */
