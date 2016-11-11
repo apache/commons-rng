@@ -116,7 +116,7 @@ public class ProvidersCommonParametricTest {
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
-        checkNextIntegerInRange(rng, 10, 10000);
+        checkNextIntegerInRange(rng, 10, 20000);
     }
 
     @Test
