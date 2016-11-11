@@ -32,13 +32,13 @@ public class BoxMullerGaussianSampler extends AbstractContinuousSampler {
     private final double standardDeviation;
 
     /**
+     * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
-     * @param rng Generator of uniformly distributed random numbers.
      */
-    public BoxMullerGaussianSampler(double mean,
-                                    double standardDeviation,
-                                    UniformRandomProvider rng) {
+    public BoxMullerGaussianSampler(UniformRandomProvider rng,
+                                    double mean,
+                                    double standardDeviation) {
         super(rng);
         this.mean = mean;
         this.standardDeviation = standardDeviation;

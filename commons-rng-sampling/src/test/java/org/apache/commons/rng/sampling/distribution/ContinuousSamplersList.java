@@ -44,7 +44,7 @@ public class ContinuousSamplersList {
                 RandomSource.create(RandomSource.KISS));
             // Gaussian ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
-                new BoxMullerGaussianSampler(meanNormal, sigmaNormal, RandomSource.create(RandomSource.MT)));
+                new BoxMullerGaussianSampler(RandomSource.create(RandomSource.MT), meanNormal, sigmaNormal));
 
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
