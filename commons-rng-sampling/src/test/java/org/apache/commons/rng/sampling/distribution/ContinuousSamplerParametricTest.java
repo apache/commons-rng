@@ -44,7 +44,7 @@ import org.apache.commons.rng.sampling.ContinuousSampler;
  * Tests for random deviates generators using the "inverse method".
  */
 @RunWith(value=Parameterized.class)
-public class InverseMethodContinuousSamplerParametricTest {
+public class ContinuousSamplerParametricTest {
     /** Sampler under test. */
     private final ContinuousSamplerTestData sampler;
 
@@ -53,7 +53,7 @@ public class InverseMethodContinuousSamplerParametricTest {
      *
      * @param rng RNG to be tested.
      */
-    public InverseMethodContinuousSamplerParametricTest(ContinuousSamplerTestData data) {
+    public ContinuousSamplerParametricTest(ContinuousSamplerTestData data) {
         sampler = data;
     }
 
