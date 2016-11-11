@@ -83,8 +83,8 @@ public class ContinuousSamplerParametricTest {
                        double[] deciles) {
         final int numTests = 500;
 
-        // Do not change (statistical test assumes that dof = 10).
-        final int numBins = 10;
+        // Do not change (statistical test assumes that dof = 9).
+        final int numBins = 10; // dof = numBins - 1
 
         // Run the tests.
         int numFailures = 0;
@@ -95,9 +95,9 @@ public class ContinuousSamplerParametricTest {
         }
 
         final long[] observed = new long[numBins];
-        // Chi-square critical value with 10 degrees of freedom
+        // Chi-square critical value with 9 degrees of freedom
         // and 1% significance level.
-        final double chi2CriticalValue = 23.209;
+        final double chi2CriticalValue = 21.67;
 
         try {
             final int lastDecileIndex = numBins - 1;

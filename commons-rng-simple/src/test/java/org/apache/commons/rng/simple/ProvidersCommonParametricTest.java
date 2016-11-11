@@ -279,8 +279,7 @@ public class ProvidersCommonParametricTest {
      * It performs a chi-square test of homogeneity of the observed
      * distribution with the expected uniform distribution.
      * Tests are performed at the 1% level and an average failure rate
-     * higher than 2% (i.e. more than 20 null hypothesis rejections)
-     * causes the test case to fail.
+     * higher than 2% causes the test case to fail.
      *
      * @param max Upper bound.
      * @param nextMethod method to call.
@@ -291,8 +290,8 @@ public class ProvidersCommonParametricTest {
                                                      Callable<T> nextMethod) {
         final int numTests = 500;
 
-        // Do not change (statistical test assumes that dof = 10).
-        final int numBins = 10;
+        // Do not change (statistical test assumes that dof = 9).
+        final int numBins = 10; // dof = numBins - 1
 
         // Set up bins.
         final long n = max.longValue();
@@ -314,9 +313,9 @@ public class ProvidersCommonParametricTest {
         }
 
         final int[] observed = new int[numBins];
-        // Chi-square critical value with 10 degrees of freedom
+        // Chi-square critical value with 9 degrees of freedom
         // and 1% significance level.
-        final double chi2CriticalValue = 23.209;
+        final double chi2CriticalValue = 21.67;
 
         try {
             for (int i = 0; i < numTests; i++) {
