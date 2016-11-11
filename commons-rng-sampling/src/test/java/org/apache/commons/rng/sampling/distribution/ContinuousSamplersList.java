@@ -38,17 +38,15 @@ public class ContinuousSamplersList {
         try {
             // List of distributions to test.
 
-            // 1. Gaussian
-            // 1.a Using the "inverse method".
-            final double mean = -123.45;
-            final double sigma = 6.789;
-            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(mean, sigma),
+            // Gaussian ("inverse method").
+            final double meanNormal = -123.45;
+            final double sigmaNormal = 6.789;
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
                 RandomSource.create(RandomSource.KISS));
-            // 1.b Using "Box-Muller".
-            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(mean, sigma),
-                new BoxMullerGaussianSampler(mean, sigma, RandomSource.create(RandomSource.MT)));
+            // Gaussian ("Box-Muller").
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
+                new BoxMullerGaussianSampler(meanNormal, sigmaNormal, RandomSource.create(RandomSource.MT)));
 
-            // 2. 
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
