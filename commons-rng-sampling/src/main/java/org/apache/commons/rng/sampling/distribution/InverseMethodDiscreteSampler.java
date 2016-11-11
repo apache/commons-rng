@@ -23,6 +23,37 @@ import org.apache.commons.rng.sampling.AbstractDiscreteSampler;
  * Distribution sampler that uses the
  * <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">
  * inversion method</a>.
+ *
+ * <p>
+ * It can be used to sample any distribution that provides access to its
+ * <em>inverse cumulative probabilty function</em>.
+ * </p>
+ *
+ * <p>Example:</p>
+ * <pre><source>
+ * import org.apache.commons.math3.distribution.IntegerDistribution;
+ * import org.apache.commons.math3.distribution.BinomialDistribution;
+ *
+ * import org.apache.commons.rng.simple.RandomSource;
+ * import org.apache.commons.rng.sampling.DiscreteSampler;
+ * import org.apache.commons.rng.sampling.distribution.InverseMethodDiscreteSampler;
+ * import org.apache.commons.rng.sampling.distribution.DiscreteInverseCumulativeProbabilityFunction;
+ *
+ * // Distribution to sample.
+ * final IntegerDistribution dist = new BinomialDistribution(11, 0.56);
+ * // Create the sampler.
+ * final DiscreteSampler binomialSampler =
+ *     new InverseMethodDiscreteSampler(RandomSource.create(RandomSource.MT),
+ *                                      new DiscreteInverseCumulativeProbabilityFunction() {
+ *                                          @Override
+ *                                          public int inverseCumulativeProbability(double p) {
+ *                                              return dist.inverseCumulativeProbability(p);
+ *                                          }
+ *                                      });
+ *
+ * // Generate random deviate.
+ * int random = binomialSampler.sample();
+ * </source></pre>
  */
 public class InverseMethodDiscreteSampler extends AbstractDiscreteSampler {
     /** Inverse cumulative probability function. */

@@ -19,8 +19,22 @@
  * <h3>Distribution samplers</h3>
  *
  * <p>
- * This package contains classes fro sampling from statistical distributions.
+ * This package contains classes for sampling from statistical distributions.
  * </p>
+ *
+ * <p>As of version 1.0, the code for specific distributions was adapted from
+ * the corresponding classes in the development version of "Commons Math" (in
+ * package {@code org.apache.commons.math4.distribution}).
+ * </p>
+ * <p>
+ * When no specific algorithm is provided, one can still sample from any
+ * distribution, using the <em>inverse method</em>, as illustrated in:
+ * <ul>
+ *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseMethodDiscreteSampler InverseMethodDiscreteSampler}</li>
+ *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseMethodContinuousSampler InverseMethodContinuousSampler}</li>
+ * </ul>
+ *
+ * Algorithms are described in e.g. <a href="http://luc.devroye.org/chapter_nine.pdf">Luc Devroye (1986)</a>.
  */
 
 package org.apache.commons.rng.sampling.distribution;

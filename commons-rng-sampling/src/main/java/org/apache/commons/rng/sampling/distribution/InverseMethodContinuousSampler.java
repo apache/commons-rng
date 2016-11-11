@@ -23,6 +23,37 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
  * Distribution sampler that uses the
  * <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">
  * inversion method</a>.
+ *
+ * <p>
+ * It can be used to sample any distribution that provides access to its
+ * <em>inverse cumulative probabilty function</em>.
+ * </p>
+ *
+ * <p>Example:</p>
+ * <pre><source>
+ * import org.apache.commons.math3.distribution.RealDistribution;
+ * import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+ *
+ * import org.apache.commons.rng.simple.RandomSource;
+ * import org.apache.commons.rng.sampling.ContinuousSampler;
+ * import org.apache.commons.rng.sampling.distribution.InverseMethodContinuousSampler;
+ * import org.apache.commons.rng.sampling.distribution.ContinuousInverseCumulativeProbabilityFunction;
+ *
+ * // Distribution to sample.
+ * final RealDistribution dist = new ChiSquaredDistribution(9);
+ * // Create the sampler.
+ * final ContinuousSampler chiSquareSampler =
+ *     new InverseMethodContinuousSampler(RandomSource.create(RandomSource.MT),
+ *                                        new ContinuousInverseCumulativeProbabilityFunction() {
+ *                                            @Override
+ *                                            public double inverseCumulativeProbability(double p) {
+ *                                                return dist.inverseCumulativeProbability(p);
+ *                                            }
+ *                                        });
+ *
+ * // Generate random deviate.
+ * double random = chiSquareSampler.sample();
+ * </source></pre>
  */
 public class InverseMethodContinuousSampler extends AbstractContinuousSampler {
     /** Inverse cumulative probability function. */
