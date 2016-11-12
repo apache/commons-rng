@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractBaseSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 import org.apache.commons.rng.sampling.DiscreteSampler;
 import org.apache.commons.rng.sampling.ContinuousSampler;
 
@@ -25,7 +25,7 @@ import org.apache.commons.rng.sampling.ContinuousSampler;
  * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
  */
 public class PoissonSampler
-    extends AbstractBaseSampler
+    extends SamplerBase
     implements DiscreteSampler {
     /** Mean of the distribution. */
     private final double mean;

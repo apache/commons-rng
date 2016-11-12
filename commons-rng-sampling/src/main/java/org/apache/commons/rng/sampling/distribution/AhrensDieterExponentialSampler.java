@@ -17,14 +17,17 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * Sampling from an exponential distribution.
  *
  * @see <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">Exponential distribution (MathWorld)</a>
  */
-public class AhrensDieterExponentialSampler extends AbstractContinuousSampler {
+public class AhrensDieterExponentialSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /**
      * Table containing the constants
      * \( q_i = sum_{j=1}^i (\ln 2)^j / j! = \ln 2 + (\ln 2)^2 / 2 + ... + (\ln 2)^i / i! \)

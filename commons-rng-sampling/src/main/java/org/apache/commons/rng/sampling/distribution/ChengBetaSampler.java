@@ -17,8 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
-
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * Utility class implementing Cheng's algorithms for beta distribution sampling.
@@ -33,7 +33,9 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
  *
  * @since 1.0
  */
-public class ChengBetaSampler extends AbstractContinuousSampler {
+public class ChengBetaSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /** First shape parameter. */
     private final double alphaShape;
     /** Second shape parameter. */

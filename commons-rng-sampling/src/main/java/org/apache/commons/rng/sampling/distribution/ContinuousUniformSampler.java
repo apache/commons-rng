@@ -17,12 +17,15 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * Sampling from a uniform distribution.
  */
-public class ContinuousUniformSampler extends AbstractContinuousSampler {
+public class ContinuousUniformSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /** Lower bound. */
     private final double lo;
     /** Higher bound. */

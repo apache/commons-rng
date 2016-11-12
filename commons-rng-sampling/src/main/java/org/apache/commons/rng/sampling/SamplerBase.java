@@ -19,21 +19,44 @@ package org.apache.commons.rng.sampling;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Base class for a sampler that generates values of type {@code int}.
+ * Base class for a sampler.
  */
-public abstract class AbstractDiscreteSampler
-    extends AbstractBaseSampler
-    implements DiscreteSampler {
+public class SamplerBase {
+    /** RNG. */
+    private final UniformRandomProvider rng;
+
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    protected AbstractDiscreteSampler(UniformRandomProvider rng) {
-        super(rng);
+    protected SamplerBase(UniformRandomProvider rng) {
+        this.rng = rng;
+    }
+
+    /**
+     * @return a random value from a uniform distribution in the
+     * interval {@code [0, 1)}.
+     */
+    protected double nextUniform() {
+        return rng.nextDouble();
+    }
+
+    /**
+     * @return a random {@code int} value.
+     */
+    protected int nextInt() {
+        return rng.nextInt();
+    }
+
+    /**
+     * @return a random {@code int} value in the interval {@code [0, max)}.
+     */
+    protected int nextInt(int max) {
+        return rng.nextInt(max);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[discrete sampler " + super.toString() + "]";
+        return "[" + rng.toString() + "]";
     }
 }

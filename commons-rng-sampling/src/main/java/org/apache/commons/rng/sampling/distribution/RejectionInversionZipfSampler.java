@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractBaseSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 import org.apache.commons.rng.sampling.DiscreteSampler;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.commons.rng.sampling.DiscreteSampler;
  * @since 1.0
  */
 public class RejectionInversionZipfSampler
-    extends AbstractBaseSampler
+    extends SamplerBase
     implements DiscreteSampler {
     /** Number of elements. */
     private final int numberOfElements;

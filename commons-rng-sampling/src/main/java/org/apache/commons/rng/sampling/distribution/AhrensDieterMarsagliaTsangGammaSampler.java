@@ -17,7 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * <p>
@@ -42,7 +43,9 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
  * </ul>
  * </p>
  */
-public class AhrensDieterMarsagliaTsangGammaSampler extends AbstractContinuousSampler {
+public class AhrensDieterMarsagliaTsangGammaSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /** The shape parameter. */
     private final double theta;
     /** The alpha parameter. */

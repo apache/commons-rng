@@ -17,7 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractDiscreteSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
+import org.apache.commons.rng.sampling.DiscreteSampler;
 
 /**
  * Distribution sampler that uses the
@@ -55,7 +56,9 @@ import org.apache.commons.rng.sampling.AbstractDiscreteSampler;
  * int random = binomialSampler.sample();
  * </source></pre>
  */
-public class InverseTransformDiscreteSampler extends AbstractDiscreteSampler {
+public class InverseTransformDiscreteSampler
+    extends SamplerBase
+    implements DiscreteSampler {
     /** Inverse cumulative probability function. */
     private final DiscreteInverseCumulativeProbabilityFunction function;
 

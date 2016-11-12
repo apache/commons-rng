@@ -17,7 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * Distribution sampler that uses the
@@ -55,7 +56,9 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
  * double random = chiSquareSampler.sample();
  * </source></pre>
  */
-public class InverseTransformContinuousSampler extends AbstractContinuousSampler {
+public class InverseTransformContinuousSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /** Inverse cumulative probability function. */
     private final ContinuousInverseCumulativeProbabilityFunction function;
 
@@ -64,7 +67,7 @@ public class InverseTransformContinuousSampler extends AbstractContinuousSampler
      * @param function Inverse cumulative probability function.
      */
     public InverseTransformContinuousSampler(UniformRandomProvider rng,
-                                          ContinuousInverseCumulativeProbabilityFunction function) {
+                                             ContinuousInverseCumulativeProbabilityFunction function) {
         super(rng);
         this.function = function;
     }

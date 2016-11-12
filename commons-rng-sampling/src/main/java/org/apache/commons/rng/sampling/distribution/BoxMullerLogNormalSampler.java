@@ -17,13 +17,16 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.ContinuousSampler;
+import org.apache.commons.rng.sampling.SamplerBase;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
  * Box-Muller algorithm</a> for sampling from a Log normal distribution.
  */
-public class BoxMullerLogNormalSampler extends AbstractContinuousSampler {
+public class BoxMullerLogNormalSampler
+    extends SamplerBase
+    implements ContinuousSampler {
     /** Scale. */
     private final double scale;
     /** Shape. */
