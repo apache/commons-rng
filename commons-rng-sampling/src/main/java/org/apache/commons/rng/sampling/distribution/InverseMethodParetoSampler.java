@@ -14,49 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.sampling;
+package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.AbstractContinuousSampler;
 
 /**
- * Base class for a sampler.
+ * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.
  */
-public class AbstractBaseSampler {
-    /** RNG. */
-    private final UniformRandomProvider rng;
+public class InverseMethodParetoSampler extends AbstractContinuousSampler {
+    /** Scale. */
+    private final double scale;
+    /** Shape. */
+    private final double shape;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
+     * @param scale Scale of the distribution.
+     * @param shape Shape of the distribution.
      */
-    protected AbstractBaseSampler(UniformRandomProvider rng) {
-        this.rng = rng;
+    public InverseMethodParetoSampler(UniformRandomProvider rng,
+                                      double scale,
+                                      double shape) {
+        super(rng);
+        this.scale = scale;
+        this.shape = shape;
     }
 
-    /**
-     * @return a random value from a uniform distribution in the
-     * interval {@code [0, 1)}.
-     */
-    protected double nextUniform() {
-        return rng.nextDouble();
-    }
-
-    /**
-     * @return a random {@code int} value.
-     */
-    protected int nextInt() {
-        return rng.nextInt();
-    }
-
-    /**
-     * @return a random {@code int} value in the interval {@code [0, max)}.
-     */
-    protected int nextInt(int max) {
-        return rng.nextInt(max);
+    /** {@inheritDoc} */
+    @Override
+    public double sample() {
+        return scale / Math.pow(nextUniform(), 1 / shape);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[" + rng.toString() + "]";
+        return "[Inverse method for Pareto distribution " + super.toString() + "]";
     }
 }
