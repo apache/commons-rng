@@ -64,14 +64,14 @@ public class ContinuousSamplerParametricTest {
 
     @Test
     public void testSampling() {
-        check(10000, sampler.getSampler(), sampler.getDeciles());
+        check(20000, sampler.getSampler(), sampler.getDeciles());
     }
 
     /**
      * Performs a chi-square test of homogeneity of the observed
      * distribution with the expected distribution.
      * Tests are performed at the 1% level and an average failure rate
-     * higher than 2% causes the test case to fail.
+     * higher than 5% causes the test case to fail.
      *
      * @param sampler Sampler.
      * @param sampleSize Number of random values to generate.
@@ -98,6 +98,8 @@ public class ContinuousSamplerParametricTest {
         // and 1% significance level.
         final double chi2CriticalValue = 21.67;
 
+        // For storing chi2 larger than the critical value.
+        final List<Double> failedStat = new ArrayList<Double>();
         try {
             final int lastDecileIndex = numBins - 1;
             for (int i = 0; i < numTests; i++) {
@@ -126,6 +128,7 @@ public class ContinuousSamplerParametricTest {
 
                 // Statistics check.
                 if (chi2 > chi2CriticalValue) {
+                    failedStat.add(chi2);
                     ++numFailures;
                 }
             }
@@ -134,9 +137,10 @@ public class ContinuousSamplerParametricTest {
             throw new RuntimeException("Unexpected", e);
         }
 
-        if ((double) numFailures / (double) numTests > 0.02) {
+        if ((double) numFailures / (double) numTests > 0.05) {
             Assert.fail(sampler + ": Too many failures for sample size = " + sampleSize +
-                        " (" + numFailures + " out of " + numTests + " tests failed)");
+                        " (" + numFailures + " out of " + numTests + " tests failed, " +
+                        "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
         }
     }
 }
