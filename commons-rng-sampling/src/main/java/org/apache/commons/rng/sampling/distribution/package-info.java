@@ -34,7 +34,8 @@
  *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseMethodContinuousSampler InverseMethodContinuousSampler}</li>
  * </ul>
  *
- * Algorithms are described in e.g. <a href="http://luc.devroye.org/chapter_nine.pdf">Luc Devroye (1986)</a>.
+ * Algorithms are described in e.g. Luc Devroye (1986), <a href="http://luc.devroye.org/chapter_nine.pdf">chapter 9</a>
+ * and <a href="http://luc.devroye.org/chapter_ten.pdf">chapter 10</a>.
  */
 
 package org.apache.commons.rng.sampling.distribution;
