@@ -78,6 +78,6 @@ public class InverseMethodDiscreteSampler extends AbstractDiscreteSampler {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[inverse method " + super.toString() + "]";
+        return "[Inverse method " + super.toString() + "]";
     }
 }

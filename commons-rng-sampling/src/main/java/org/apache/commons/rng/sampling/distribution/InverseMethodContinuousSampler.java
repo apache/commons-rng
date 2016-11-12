@@ -78,6 +78,6 @@ public class InverseMethodContinuousSampler extends AbstractContinuousSampler {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[inverse method " + super.toString() + "]";
+        return "[Inverse method " + super.toString() + "]";
     }
 }
