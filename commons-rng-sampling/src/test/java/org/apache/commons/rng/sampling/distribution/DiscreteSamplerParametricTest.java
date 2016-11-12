@@ -83,6 +83,8 @@ public class DiscreteSamplerParametricTest {
     /**
      * Performs a chi-square test of homogeneity of the observed
      * distribution with the expected distribution.
+     * An average failure rate higher than 5% causes the test case
+     * to fail.
      *
      * @param sampler Sampler.
      * @param sampleSize Number of random values to generate.
@@ -129,7 +131,7 @@ public class DiscreteSamplerParametricTest {
             throw new RuntimeException("Unexpected", e);
         }
 
-        if ((double) numFailures / (double) numTests > 0.02) {
+        if ((double) numFailures / (double) numTests > 0.05) {
             Assert.fail(sampler + ": Too many failures for sample size = " + sampleSize +
                         " (" + numFailures + " out of " + numTests + " tests failed, " +
                         "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
