@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.AbstractContinuousSampler;
+import org.apache.commons.rng.sampling.AbstractDiscreteSampler;
 
 /**
  * Distribution sampler that uses the
@@ -31,47 +31,47 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
  *
  * <p>Example:</p>
  * <pre><source>
- * import org.apache.commons.math3.distribution.RealDistribution;
- * import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+ * import org.apache.commons.math3.distribution.IntegerDistribution;
+ * import org.apache.commons.math3.distribution.BinomialDistribution;
  *
  * import org.apache.commons.rng.simple.RandomSource;
- * import org.apache.commons.rng.sampling.ContinuousSampler;
- * import org.apache.commons.rng.sampling.distribution.InverseMethodContinuousSampler;
- * import org.apache.commons.rng.sampling.distribution.ContinuousInverseCumulativeProbabilityFunction;
+ * import org.apache.commons.rng.sampling.DiscreteSampler;
+ * import org.apache.commons.rng.sampling.distribution.InverseTransformDiscreteSampler;
+ * import org.apache.commons.rng.sampling.distribution.DiscreteInverseCumulativeProbabilityFunction;
  *
  * // Distribution to sample.
- * final RealDistribution dist = new ChiSquaredDistribution(9);
+ * final IntegerDistribution dist = new BinomialDistribution(11, 0.56);
  * // Create the sampler.
- * final ContinuousSampler chiSquareSampler =
- *     new InverseMethodContinuousSampler(RandomSource.create(RandomSource.MT),
- *                                        new ContinuousInverseCumulativeProbabilityFunction() {
- *                                            @Override
- *                                            public double inverseCumulativeProbability(double p) {
- *                                                return dist.inverseCumulativeProbability(p);
- *                                            }
- *                                        });
+ * final DiscreteSampler binomialSampler =
+ *     new InverseTransformDiscreteSampler(RandomSource.create(RandomSource.MT),
+ *                                      new DiscreteInverseCumulativeProbabilityFunction() {
+ *                                          @Override
+ *                                          public int inverseCumulativeProbability(double p) {
+ *                                              return dist.inverseCumulativeProbability(p);
+ *                                          }
+ *                                      });
  *
  * // Generate random deviate.
- * double random = chiSquareSampler.sample();
+ * int random = binomialSampler.sample();
  * </source></pre>
  */
-public class InverseMethodContinuousSampler extends AbstractContinuousSampler {
+public class InverseTransformDiscreteSampler extends AbstractDiscreteSampler {
     /** Inverse cumulative probability function. */
-    private final ContinuousInverseCumulativeProbabilityFunction function;
+    private final DiscreteInverseCumulativeProbabilityFunction function;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param function Inverse cumulative probability function.
      */
-    public InverseMethodContinuousSampler(UniformRandomProvider rng,
-                                          ContinuousInverseCumulativeProbabilityFunction function) {
+    public InverseTransformDiscreteSampler(UniformRandomProvider rng,
+                                        DiscreteInverseCumulativeProbabilityFunction function) {
         super(rng);
         this.function = function;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double sample() {
+    public int sample() {
         return function.inverseCumulativeProbability(nextUniform());
     }
 

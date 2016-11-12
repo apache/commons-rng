@@ -141,7 +141,7 @@ public class ContinuousSamplersList {
                 RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 9, 11));
             // Pareto.
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(scalePareto, shapePareto),
-                new InverseMethodParetoSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scalePareto, shapePareto));
+                new InverseTransformParetoSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scalePareto, shapePareto));
 
             // T ("inverse method").
             final double dofT = 0.76543;
@@ -190,13 +190,13 @@ public class ContinuousSamplersList {
                             final org.apache.commons.math3.distribution.RealDistribution dist,
                             UniformRandomProvider rng) {
         final ContinuousSampler inverseMethodSampler =
-            new InverseMethodContinuousSampler(rng,
-                                               new ContinuousInverseCumulativeProbabilityFunction() {
-                                                   @Override
-                                                   public double inverseCumulativeProbability(double p) {
-                                                       return dist.inverseCumulativeProbability(p);
-                                                   }
-                                               });
+            new InverseTransformContinuousSampler(rng,
+                                                  new ContinuousInverseCumulativeProbabilityFunction() {
+                                                      @Override
+                                                      public double inverseCumulativeProbability(double p) {
+                                                          return dist.inverseCumulativeProbability(p);
+                                                      }
+                                                  });
         list.add(new ContinuousSamplerTestData[] { new ContinuousSamplerTestData(inverseMethodSampler,
                                                                                  getDeciles(dist)) });
      }

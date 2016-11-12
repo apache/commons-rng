@@ -30,8 +30,8 @@
  * When no specific algorithm is provided, one can still sample from any
  * distribution, using the <em>inverse method</em>, as illustrated in:
  * <ul>
- *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseMethodDiscreteSampler InverseMethodDiscreteSampler}</li>
- *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseMethodContinuousSampler InverseMethodContinuousSampler}</li>
+ *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseTransformDiscreteSampler InverseTransformDiscreteSampler}</li>
+ *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseTransformContinuousSampler InverseTransformContinuousSampler}</li>
  * </ul>
  *
  * Algorithms are described in e.g. Luc Devroye (1986), <a href="http://luc.devroye.org/chapter_nine.pdf">chapter 9</a>

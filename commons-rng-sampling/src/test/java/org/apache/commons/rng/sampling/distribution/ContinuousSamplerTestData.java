@@ -21,7 +21,7 @@ import java.util.Arrays;
 import org.apache.commons.rng.sampling.ContinuousSampler;
 
 /**
- * Data store for {@link InverseMethodContinuousParametricTest}.
+ * Data store for {@link ContinuousSamplerParametricTest}.
  */
 class ContinuousSamplerTestData {
     private final ContinuousSampler sampler;

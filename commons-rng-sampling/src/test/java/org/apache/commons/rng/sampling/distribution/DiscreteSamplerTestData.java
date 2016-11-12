@@ -21,7 +21,7 @@ import java.util.Arrays;
 import org.apache.commons.rng.sampling.DiscreteSampler;
 
 /**
- * Data store for {@link InverseMethodDiscreteParametricTest}.
+ * Data store for {@link DiscreteSamplerParametricTest}.
  */
 class DiscreteSamplerTestData {
     private final DiscreteSampler sampler;

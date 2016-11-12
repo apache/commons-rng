@@ -22,7 +22,7 @@ import org.apache.commons.rng.sampling.AbstractContinuousSampler;
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.
  */
-public class InverseMethodParetoSampler extends AbstractContinuousSampler {
+public class InverseTransformParetoSampler extends AbstractContinuousSampler {
     /** Scale. */
     private final double scale;
     /** Shape. */
@@ -33,7 +33,7 @@ public class InverseMethodParetoSampler extends AbstractContinuousSampler {
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.
      */
-    public InverseMethodParetoSampler(UniformRandomProvider rng,
+    public InverseTransformParetoSampler(UniformRandomProvider rng,
                                       double scale,
                                       double shape) {
         super(rng);

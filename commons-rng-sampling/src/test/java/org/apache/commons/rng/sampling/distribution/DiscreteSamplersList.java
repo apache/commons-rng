@@ -126,7 +126,7 @@ public class DiscreteSamplersList {
                             int[] points,
                             UniformRandomProvider rng) {
         final DiscreteSampler inverseMethodSampler =
-            new InverseMethodDiscreteSampler(rng,
+            new InverseTransformDiscreteSampler(rng,
                                              new DiscreteInverseCumulativeProbabilityFunction() {
                                                  @Override
                                                  public int inverseCumulativeProbability(double p) {
