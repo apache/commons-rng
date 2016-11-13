@@ -19,31 +19,19 @@ package org.apache.commons.rng.sampling.distribution;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.RandomProviderState;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
-import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.apache.commons.rng.sampling.DiscreteSampler;
 
 /**
- * Tests for samplers.
+ * Tests for random deviates generators.
  */
 @RunWith(value=Parameterized.class)
 public class DiscreteSamplerParametricTest {
