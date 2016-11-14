@@ -27,6 +27,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
 /**
  * Tests for random deviates generators.
@@ -56,9 +57,9 @@ public class DiscreteSamplerParametricTest {
 
         final double[] prob = sampler.getProbabilities();
         final int len = prob.length; 
-        final long[] expected = new long[len];
+        final double[] expected = new double[len];
         for (int i = 0; i < len; i++) {
-            expected[i] = (long) (prob[i] * sampleSize);
+            expected[i] = prob[i] * sampleSize;
         }
         check(sampleSize,
               sampler.getSampler(),
@@ -80,7 +81,8 @@ public class DiscreteSamplerParametricTest {
     private void check(long sampleSize,
                        DiscreteSampler sampler,
                        int[] points,
-                       long[] expected) {
+                       double[] expected) {
+        final ChiSquareTest chiSquareTest = new ChiSquareTest();
         final int numTests = 50;
 
         // Run the tests.
@@ -105,10 +107,8 @@ public class DiscreteSamplerParametricTest {
                     }
                 }
 
-                // Statistics check. XXX
-                final double chi2stat = chiSquareStat(expected, observed);
-                if (chi2stat < 0.001) {
-                    failedStat.add(chi2stat);
+                if (chiSquareTest.chiSquareTest(expected, observed, 0.001)) {
+                    failedStat.add(chiSquareTest.chiSquareTest(expected, observed));
                     ++numFailures;
                 }
             }
@@ -122,28 +122,5 @@ public class DiscreteSamplerParametricTest {
                         " (" + numFailures + " out of " + numTests + " tests failed, " +
                         "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
         }
-    }
-
-    /**
-     * @param expected Counts.
-     * @param observed Counts.
-     * @return the chi-square statistics.
-     */
-    private static double chiSquareStat(long[] expected,
-                                        long[] observed) {
-        final int numBins = expected.length;
-        double chi2 = 0;
-        for (int i = 0; i < numBins; i++) {
-            final long diff = observed[i] - expected[i];
-            chi2 += (diff / (double) expected[i]) * diff;
-            // System.out.println("bin[" + i + "]" +
-            //                    " obs=" + observed[i] +
-            //                    " exp=" + expected[i]);
-        }
-
-        final int dof = numBins - 1;
-        final ChiSquaredDistribution dist = new ChiSquaredDistribution(null, dof, 1e-8);
-
-        return 1 - dist.cumulativeProbability(chi2);
     }
 }

@@ -70,22 +70,22 @@ public class DiscreteSamplersList {
             final int loUniform = -3;
             final int hiUniform = 4;
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(loUniform, hiUniform),
-                MathArrays.sequence(10, -4, 1),
+                MathArrays.sequence(8, -3, 1),
                 RandomSource.create(RandomSource.SPLIT_MIX_64));
             // Uniform.
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(loUniform, hiUniform),
-                MathArrays.sequence(10, -4, 1),
+                MathArrays.sequence(8, -3, 1),
                 new DiscreteUniformSampler(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
 
             // Zipf ("inverse method").
             final int numElementsZipf = 5;
             final double exponentZipf = 2.345;
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(numElementsZipf, exponentZipf),
-                MathArrays.sequence(5, 0, 1),
+                MathArrays.sequence(5, 1, 1),
                 RandomSource.create(RandomSource.XOR_SHIFT_1024_S));
             // Zipf.
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(numElementsZipf, exponentZipf),
-                MathArrays.sequence(7, 0, 1),
+                MathArrays.sequence(5, 1, 1),
                 new RejectionInversionZipfSampler(RandomSource.create(RandomSource.WELL_19937_C), numElementsZipf, exponentZipf));
 
             // Poisson ("inverse method").
