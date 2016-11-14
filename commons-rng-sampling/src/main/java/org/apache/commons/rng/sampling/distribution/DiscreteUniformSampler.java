@@ -18,8 +18,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SamplerBase;
-import org.apache.commons.rng.sampling.DiscreteSampler;
 
 /**
  * Discrete uniform distribution sampler.

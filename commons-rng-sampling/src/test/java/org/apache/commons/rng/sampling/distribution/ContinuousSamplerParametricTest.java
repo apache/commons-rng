@@ -26,8 +26,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.apache.commons.rng.sampling.ContinuousSampler;
-
 /**
  * Tests for random deviates generators.
  */

@@ -17,8 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SamplerBase;
-import org.apache.commons.rng.sampling.ContinuousSampler;
 
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.

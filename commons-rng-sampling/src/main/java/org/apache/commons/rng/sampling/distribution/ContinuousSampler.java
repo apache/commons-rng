@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.sampling;
+package org.apache.commons.rng.sampling.distribution;
 
 /**
- * Sampler that generates values of type {@code int}.
+ * Sampler that generates values of type {@code double}.
  */
-public interface DiscreteSampler {
+public interface ContinuousSampler {
     /**
      * Creates a sample.
      *
      * @return a sample.
      */
-    int sample();
+    double sample();
 }

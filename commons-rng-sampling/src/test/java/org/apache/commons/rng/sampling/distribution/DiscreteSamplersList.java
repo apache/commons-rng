@@ -24,7 +24,6 @@ import java.util.Collections;
 import org.apache.commons.math3.util.MathArrays;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.DiscreteSampler;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**

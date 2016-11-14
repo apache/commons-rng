@@ -28,8 +28,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 
-import org.apache.commons.rng.sampling.DiscreteSampler;
-
 /**
  * Tests for random deviates generators.
  */

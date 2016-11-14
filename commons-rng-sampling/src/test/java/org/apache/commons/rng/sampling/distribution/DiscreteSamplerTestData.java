@@ -18,8 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import java.util.Arrays;
 
-import org.apache.commons.rng.sampling.DiscreteSampler;
-
 /**
  * Data store for {@link DiscreteSamplerParametricTest}.
  */

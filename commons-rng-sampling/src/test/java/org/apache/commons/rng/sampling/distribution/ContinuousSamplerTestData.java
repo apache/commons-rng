@@ -18,8 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import java.util.Arrays;
 
-import org.apache.commons.rng.sampling.ContinuousSampler;
-
 /**
  * Data store for {@link ContinuousSamplerParametricTest}.
  */
