@@ -86,7 +86,7 @@ public class PoissonSampler
             double rnd = 1;
 
             while (n < 1000 * meanPoisson) {
-                rnd = nextUniform();
+                rnd = nextDouble();
                 r *= rnd;
                 if (r >= p) {
                     n++;
@@ -119,7 +119,7 @@ public class PoissonSampler
             double qr = 0;
             double qa = 0;
             while (true) {
-                final double u = nextUniform();
+                final double u = nextDouble();
                 if (u <= p1) {
                     final double n = gaussian.sample();
                     x = n * Math.sqrt(lambda + halfDelta) - 0.5d;

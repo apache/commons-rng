@@ -74,7 +74,7 @@ public class AhrensDieterExponentialSampler
     public double sample() {
         // Step 1:
         double a = 0;
-        double u = nextUniform();
+        double u = nextDouble();
 
         // Step 2 and 3:
         while (u < 0.5) {
@@ -92,13 +92,13 @@ public class AhrensDieterExponentialSampler
 
         // Step 6:
         int i = 0; // Should be 1, be we iterate before it in while using 0.
-        double u2 = nextUniform();
+        double u2 = nextDouble();
         double umin = u2;
 
         // Step 7 and 8:
         do {
             ++i;
-            u2 = nextUniform();
+            u2 = nextDouble();
 
             if (u2 < umin) {
                 umin = u2;

@@ -73,7 +73,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
             while (true) {
                 // Step 1:
-                final double u = nextUniform();
+                final double u = nextDouble();
                 final double bGS = 1 + theta / Math.E;
                 final double p = bGS * u;
 
@@ -81,7 +81,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                     // Step 2:
 
                     final double x = Math.pow(p, 1 / theta);
-                    final double u2 = nextUniform();
+                    final double u2 = nextDouble();
 
                     if (u2 > Math.exp(-x)) {
                         // Reject.
@@ -93,7 +93,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                     // Step 3:
 
                     final double x = -1 * Math.log((bGS - p) / theta);
-                    final double u2 = nextUniform();
+                    final double u2 = nextDouble();
 
                     if (u2 > Math.pow(x, theta - 1)) {
                         // Reject.
@@ -119,7 +119,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
             }
 
             final double x2 = x * x;
-            final double u = nextUniform();
+            final double u = nextDouble();
 
             // Squeeze.
             if (u < 1 - 0.0331 * x2 * x2) {

@@ -97,7 +97,7 @@ public class RejectionInversionZipfSampler
     @Override
     public int sample() {
         while(true) {
-            final double u = hIntegralNumberOfElements + nextUniform() * (hIntegralX1 - hIntegralNumberOfElements);
+            final double u = hIntegralNumberOfElements + nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
             double x = hIntegralInverse(u);

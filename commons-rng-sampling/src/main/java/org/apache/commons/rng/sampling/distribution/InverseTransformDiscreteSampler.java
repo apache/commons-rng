@@ -73,7 +73,7 @@ public class InverseTransformDiscreteSampler
     /** {@inheritDoc} */
     @Override
     public int sample() {
-        return function.inverseCumulativeProbability(nextUniform());
+        return function.inverseCumulativeProbability(nextDouble());
     }
 
     /** {@inheritDoc} */

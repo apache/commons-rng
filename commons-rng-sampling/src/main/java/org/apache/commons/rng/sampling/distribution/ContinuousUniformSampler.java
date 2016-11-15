@@ -45,7 +45,7 @@ public class ContinuousUniformSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double u = nextUniform();
+        final double u = nextDouble();
         return u * hi + (1 - u) * lo;
     }
 

@@ -45,7 +45,7 @@ public class InverseTransformParetoSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return scale / Math.pow(nextUniform(), 1 / shape);
+        return scale / Math.pow(nextDouble(), 1 / shape);
     }
 
     /** {@inheritDoc} */

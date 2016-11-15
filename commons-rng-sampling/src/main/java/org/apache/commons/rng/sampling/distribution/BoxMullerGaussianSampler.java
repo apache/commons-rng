@@ -52,8 +52,8 @@ public class BoxMullerGaussianSampler
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 
-            final double x = nextUniform();
-            final double y = nextUniform();
+            final double x = nextDouble();
+            final double y = nextDouble();
             final double alpha = 2 * Math.PI * x;
             final double r = Math.sqrt(-2 * Math.log(y));
 

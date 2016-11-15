@@ -91,8 +91,8 @@ public class ChengBetaSampler
         double w;
         double t;
         do {
-            final double u1 = nextUniform();
-            final double u2 = nextUniform();
+            final double u1 = nextDouble();
+            final double u2 = nextDouble();
             final double v = beta * (Math.log(u1) - Math.log1p(-u1));
             w = a * Math.exp(v);
             final double z = u1 * u1 * u2;
@@ -131,8 +131,8 @@ public class ChengBetaSampler
 
         double w;
         while (true) {
-            final double u1 = nextUniform();
-            final double u2 = nextUniform();
+            final double u1 = nextDouble();
+            final double u2 = nextDouble();
             final double y = u1 * u2;
             final double z = u1 * y;
             if (u1 < 0.5) {

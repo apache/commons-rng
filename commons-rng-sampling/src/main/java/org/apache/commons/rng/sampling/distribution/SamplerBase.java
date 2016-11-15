@@ -36,7 +36,7 @@ public class SamplerBase {
      * @return a random value from a uniform distribution in the
      * interval {@code [0, 1)}.
      */
-    protected double nextUniform() {
+    protected double nextDouble() {
         return rng.nextDouble();
     }
 
