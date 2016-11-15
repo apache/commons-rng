@@ -48,6 +48,7 @@ public class SamplerBase {
     }
 
     /**
+     * @param max Upper bound (excluded).
      * @return a random {@code int} value in the interval {@code [0, max)}.
      */
     protected int nextInt(int max) {

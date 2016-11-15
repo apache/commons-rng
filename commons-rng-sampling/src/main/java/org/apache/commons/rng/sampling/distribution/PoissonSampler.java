@@ -20,6 +20,21 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
+ *
+ * <ul>
+ *  <li>
+ *   For small means, a Poisson process is simulated using uniform deviates, as
+ *   described <a href="http://mathaa.epfl.ch/cours/PMMI2001/interactive/rng7.htm">here</a>.
+ *   The Poisson process (and hence, the returned value) is bounded by 1000 * mean.
+ *  </li>
+ *  <li>
+ *   For large means, we use the rejection algorithm described in
+ *   <blockquote>
+ *    Devroye, Luc. (1981).<i>The Computer Generation of Poisson Random Variables</i><br>
+ *    <strong>Computing</strong> vol. 26 pp. 197-207.
+ *   </blockquote>
+ *  </li>
+ * </ul>
  */
 public class PoissonSampler
     extends SamplerBase
