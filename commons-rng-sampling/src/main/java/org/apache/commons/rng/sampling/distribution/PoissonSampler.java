@@ -39,6 +39,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class PoissonSampler
     extends SamplerBase
     implements DiscreteSampler {
+    /** Value for switching sampling algorithm. */
+    private static final double PIVOT = 40;
     /** Mean of the distribution. */
     private final double mean;
     /** Exponential. */
@@ -78,8 +80,7 @@ public class PoissonSampler
      * @return the next sample.
      */
     private long nextPoisson(double meanPoisson) {
-        final double pivot = 40;
-        if (meanPoisson < pivot) {
+        if (meanPoisson < PIVOT) {
             double p = Math.exp(-meanPoisson);
             long n = 0;
             double r = 1;
