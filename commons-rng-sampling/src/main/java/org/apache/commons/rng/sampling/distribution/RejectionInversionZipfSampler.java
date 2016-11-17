@@ -66,36 +66,33 @@ public class RejectionInversionZipfSampler
     /**
      * Rejection inversion sampling method for a discrete, bounded Zipf
      * distribution that is based on the method described in
-     * <p>
-     * Wolfgang Hörmann and Gerhard Derflinger
-     * "Rejection-inversion to generate variates from monotone discrete
-     * distributions", ACM Transactions on Modeling and Computer Simulation
-     * (TOMACS) 6.3 (1996): 169-184.
-     * </p>
-     *
-     * <p>
-     * The paper describes an algorithm for exponents larger than 1
-     * (Algorithm ZRI).
-     * The original method uses {@code H(x) = (v + x)^(1 - q) / (1 - q)}
-     * as the integral of the hat function.
-     * This function is undefined for q = 1, which is the reason for
-     * the limitation of the exponent.
-     * If instead the integral function
-     * {@code H(x) = ((v + x)^(1 - q) - 1) / (1 - q)} is used,
-     * for which a meaningful limit exists for q = 1, the method works
-     * for all positive exponents.
-     * </p>
-     *
-     * <p>
-     * The following implementation uses v = 0 and generates integral
-     * number in the range [1, numberOfElements].
-     * This is different to the original method where v is defined to
-     * be positive and numbers are taken from [0, i_max].
-     * This explains why the implementation looks slightly different.
-     * </p>
+     * <blockquote>
+     *   Wolfgang Hörmann and Gerhard Derflinger.
+     *   <i>"Rejection-inversion to generate variates from monotone discrete
+     *    distributions",<i><br>
+     *   <strong>ACM Transactions on Modeling and Computer Simulation</strong> (TOMACS) 6.3 (1996): 169-184.
+     * </blockquote>
      */
     @Override
     public int sample() {
+        // The paper describes an algorithm for exponents larger than 1
+        // (Algorithm ZRI).
+        // The original method uses
+        //   H(x) = (v + x)^(1 - q) / (1 - q)
+        // as the integral of the hat function.
+        // This function is undefined for q = 1, which is the reason for
+        // the limitation of the exponent.
+        // If instead the integral function
+        //   H(x) = ((v + x)^(1 - q) - 1) / (1 - q)
+        // is used,
+        // for which a meaningful limit exists for q = 1, the method works
+        // for all positive exponents.
+        // The following implementation uses v = 0 and generates integral
+        // number in the range [1, numberOfElements].
+        // This is different to the original method where v is defined to
+        // be positive and numbers are taken from [0, i_max].
+        // This explains why the implementation looks slightly different.
+
         while(true) {
             final double u = hIntegralNumberOfElements + nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
