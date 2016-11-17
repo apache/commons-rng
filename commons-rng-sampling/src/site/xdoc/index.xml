@@ -40,9 +40,20 @@
         Example:
 
 <source>import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
+import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
 
-  // TODO
+public class NormalDeviates {
+   private final ContinuousSampler normalizedGaussian;
+
+    public NormalDeviates(UniformRandomProvider rng) {
+        normalizedGaussian = new BoxMullerGaussianSampler(rng, 0, 1);
+    }
+
+    public double sample(double mean,
+                         double sigma) {
+        return mean + sigma * normalizedGaussian.sample();
+    }
 }
 </source>
       </p>
