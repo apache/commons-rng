@@ -42,5 +42,20 @@
     </site>
   </distributionManagement>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <!--
+              This module is not part of the library (used only for building).
+              Hence it must not be deployed.
+          -->
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
