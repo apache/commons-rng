@@ -76,6 +76,13 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(loUniform, hiUniform),
                 MathArrays.sequence(8, -3, 1),
                 new DiscreteUniformSampler(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
+            // Uniform (large range).
+            final int halfMax = Integer.MAX_VALUE / 2;
+            final int hiLargeUniform = halfMax + 10;
+            final int loLargeUniform = -hiLargeUniform;
+            add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(loLargeUniform, hiLargeUniform),
+                MathArrays.sequence(20, -halfMax, halfMax / 10),
+                new DiscreteUniformSampler(RandomSource.create(RandomSource.WELL_1024_A), loLargeUniform, hiLargeUniform));
 
             // Zipf ("inverse method").
             final int numElementsZipf = 5;
@@ -172,8 +179,21 @@ public class DiscreteSamplersList {
         final int len = points.length;
         final double[] prob = new double[len];
         for (int i = 0; i < len; i++) {
-            prob[i] = dist.probability(points[i]);
+            prob[i] = dist instanceof org.apache.commons.math3.distribution.UniformIntegerDistribution ? // XXX Workaround.
+                getProbability((org.apache.commons.math3.distribution.UniformIntegerDistribution) dist) :
+                dist.probability(points[i]);
+
+            if (prob[i] < 0) {
+                throw new IllegalStateException(dist + ": p < 0 (at " + points[i] + ", p=" + prob[i]);
+            }
         }
         return prob;
+    }
+
+    /**
+     * Workaround bugs in Commons Math's "UniformIntegerDistribution" (cf. MATH-1396).
+     */
+    private static double getProbability(org.apache.commons.math3.distribution.UniformIntegerDistribution dist) {
+        return 1 / ((double) dist.getSupportUpperBound() - (double) dist.getSupportLowerBound() + 1);
     }
 }
