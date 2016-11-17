@@ -110,7 +110,7 @@ public final class JDKRandomBridge extends Random {
      * @throws IOException if an error occurs.
      * @throws ClassNotFoundException if an error occurs.
      */
-    private synchronized void readObject(ObjectInputStream in)
+    private void readObject(ObjectInputStream in)
         throws IOException,
                ClassNotFoundException {
         // Read non-transient fields.
