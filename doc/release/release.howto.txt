@@ -359,7 +359,7 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  $ mvn site
+  $ mvn site site:stage
   $ cd target
   $ mv site commons-rng-1.0-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
