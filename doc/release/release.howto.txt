@@ -85,7 +85,7 @@ The command
 
   $ mvn clean deploy -Prelease -Ptest-deploy
 
-should create the artifacts in the "target/deploy".
+should create the artifacts in the "target/deploy" directory.
 
 At some point when processing the above command, the GPG passphrase will be
 requested; to avoid problems, the "gpg2" executable should be specified in
