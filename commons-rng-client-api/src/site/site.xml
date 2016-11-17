@@ -31,10 +31,5 @@
             href="http://commons.apache.org/rng/commons-rng-client-api/javadocs/api-1.0/index.html"/>
     </menu>
     
-    <head>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-      </script>
-    </head>
-
   </body>
 </project>
