@@ -53,6 +53,11 @@ public class ContinuousSamplersList {
             // Beta ("Cheng").
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(alphaBeta, betaBeta),
                 new ChengBetaSampler(RandomSource.create(RandomSource.MWC_256), alphaBeta, betaBeta));
+            // Beta ("Cheng", alternate algorithm).
+            final double alphaBetaAlt = 0.5678;
+            final double betaBetaAlt = 0.1234;
+            add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(alphaBetaAlt, betaBetaAlt),
+                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_512_A), alphaBetaAlt, betaBetaAlt));
 
             // Cauchy ("inverse method").
             final double medianCauchy = 0.123;
@@ -104,7 +109,7 @@ public class ContinuousSamplersList {
             final double muLaplace = 12.3;
             final double betaLaplace = 5.6;
             add(LIST, new org.apache.commons.math3.distribution.LaplaceDistribution(muLaplace, betaLaplace),
-                RandomSource.create(RandomSource.WELL_1024_A));
+                RandomSource.create(RandomSource.MWC_256));
 
             // Levy ("inverse method").
             final double muLevy = -1.098;
