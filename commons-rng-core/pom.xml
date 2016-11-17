@@ -31,10 +31,8 @@
   <version>1.0-SNAPSHOT</version>
   <name>Apache Commons RNG Core</name>
 
-  <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG Core module provides pure Java implementations of
     random numbers generator algorithms.</description>
-  <url>http://commons.apache.org/proper/commons-rng/core/</url>
 
   <properties>
     <!-- This value must reflect the current name of the base package. -->
