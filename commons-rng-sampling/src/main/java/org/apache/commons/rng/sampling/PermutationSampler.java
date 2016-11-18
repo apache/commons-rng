@@ -70,7 +70,7 @@ public class PermutationSampler {
     /**
      * @return a random permutation.
      *
-     * @see #Permutation(UniformRandomProvider,int,int)
+     * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
     public int[] sample() {
         shuffle(domain, rng);

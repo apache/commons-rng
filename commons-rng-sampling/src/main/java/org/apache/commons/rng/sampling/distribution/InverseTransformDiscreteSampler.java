@@ -44,7 +44,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  * final DiscreteSampler binomialSampler =
  *     new InverseTransformDiscreteSampler(RandomSource.create(RandomSource.MT),
  *                                      new DiscreteInverseCumulativeProbabilityFunction() {
- *                                          @Override
  *                                          public int inverseCumulativeProbability(double p) {
  *                                              return dist.inverseCumulativeProbability(p);
  *                                          }

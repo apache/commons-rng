@@ -44,7 +44,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  * final ContinuousSampler chiSquareSampler =
  *     new InverseTransformContinuousSampler(RandomSource.create(RandomSource.MT),
  *                                        new ContinuousInverseCumulativeProbabilityFunction() {
- *                                            @Override
  *                                            public double inverseCumulativeProbability(double p) {
  *                                                return dist.inverseCumulativeProbability(p);
  *                                            }
