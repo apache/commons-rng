@@ -77,6 +77,6 @@ public class BoxMullerGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Box-Muller method for Gaussian distribution " + super.toString() + "]";
+        return "Box-Muller Gaussian deviate [" + super.toString() + "]";
     }
 }

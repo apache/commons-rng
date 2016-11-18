@@ -58,6 +58,6 @@ public class SamplerBase {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[" + rng.toString() + "]";
+        return "rng=" + rng.toString();
     }
 }

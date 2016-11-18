@@ -159,6 +159,12 @@ public class RejectionInversionZipfSampler
         }
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Rejection inversion Zipf deviate [" + super.toString() + "]";
+    }
+
     /**
      * {@code H(x)} is defined as
      * <ul>

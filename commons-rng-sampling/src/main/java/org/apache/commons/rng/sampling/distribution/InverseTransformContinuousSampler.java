@@ -79,6 +79,6 @@ public class InverseTransformContinuousSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Inverse method " + super.toString() + "]";
+        return function.toString() + " (inverse method) [" + super.toString() + "]";
     }
 }

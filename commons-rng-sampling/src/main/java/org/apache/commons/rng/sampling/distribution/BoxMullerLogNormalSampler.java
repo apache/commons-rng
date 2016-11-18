@@ -55,6 +55,6 @@ public class BoxMullerLogNormalSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Box-Muller method for Log normal distribution " + gaussian.toString() + "]";
+        return "Box-Muller Log Normal [" + gaussian.toString() + "]";
     }
 }

@@ -52,6 +52,6 @@ public class ContinuousUniformSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Uniform distribution " + super.toString() + "]";
+        return "Uniform deviate [" + super.toString() + "]";
     }
 }

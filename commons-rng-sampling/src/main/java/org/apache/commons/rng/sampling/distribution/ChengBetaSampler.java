@@ -70,7 +70,7 @@ public class ChengBetaSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Cheng method for Beta distribution " + super.toString() + "]";
+        return "Cheng Beta deviate [" + super.toString() + "]";
     }
 
     /**

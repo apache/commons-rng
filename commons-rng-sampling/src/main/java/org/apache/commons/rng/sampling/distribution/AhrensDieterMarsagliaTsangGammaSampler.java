@@ -135,6 +135,6 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Ahrens-Dieter-Marsaglia-Tsang method for Gamma distribution " + super.toString() + "]";
+        return "Ahrens-Dieter-Marsaglia-Tsang Gamma deviate [" + super.toString() + "]";
     }
 }

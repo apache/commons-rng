@@ -65,7 +65,7 @@ public class InverseTransformDiscreteSampler
      * @param function Inverse cumulative probability function.
      */
     public InverseTransformDiscreteSampler(UniformRandomProvider rng,
-                                        DiscreteInverseCumulativeProbabilityFunction function) {
+                                           DiscreteInverseCumulativeProbabilityFunction function) {
         super(rng);
         this.function = function;
     }
@@ -79,6 +79,6 @@ public class InverseTransformDiscreteSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Inverse method " + super.toString() + "]";
+        return function.toString() + " (inverse method) [" + super.toString() + "]";
     }
 }

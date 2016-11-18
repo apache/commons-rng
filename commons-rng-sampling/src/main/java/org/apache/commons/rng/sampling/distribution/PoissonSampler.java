@@ -75,6 +75,12 @@ public class PoissonSampler
         return (int) Math.min(nextPoisson(mean), Integer.MAX_VALUE);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Poisson deviate [" + super.toString() + "]";
+    }
+
     /**
      * @param meanPoisson Mean.
      * @return the next sample.

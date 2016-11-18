@@ -113,6 +113,6 @@ public class AhrensDieterExponentialSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Ahrens-Dieter method for exponential distribution " + super.toString() + "]";
+        return "Ahrens-Dieter Exponential deviate [" + super.toString() + "]";
     }
 }
