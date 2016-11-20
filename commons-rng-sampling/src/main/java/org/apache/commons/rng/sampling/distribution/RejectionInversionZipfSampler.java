@@ -50,10 +50,10 @@ public class RejectionInversionZipfSampler
                                          double exponent) {
         super(rng);
         if (numberOfElements <= 0) {
-            throw new IllegalArgumentException(numberOfElements + " <= " + 0);
+            throw new IllegalArgumentException("number of elements is not strictly positive: " + numberOfElements);
         }
         if (exponent <= 0) {
-            throw new IllegalArgumentException(exponent + " <= " + 0);
+            throw new IllegalArgumentException("exponent is not strictly positive: " + exponent);
         }
 
         this.numberOfElements = numberOfElements;
