@@ -43,12 +43,6 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
      * by a {@code long} (i.e. if {@code n > 20}).
      */
     public static long factorial(int n)  {
-        if (n < 0) {
-            throw new IllegalArgumentException(n + " < " + 0);
-        }
-        if (n > 20) {
-            throw new IllegalArgumentException(n + " > " + 20);
-        }
         return FACTORIALS[n];
     }
 
@@ -74,10 +68,6 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          */
         private FactorialLog(int numValues,
                              double[] cache) {
-            if (numValues < 0) {
-                throw new IllegalArgumentException(numValues + " < " + 0);
-            }
-
             LOG_FACTORIALS = new double[numValues];
 
             final int beginCopy = 2;
@@ -98,6 +88,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
 
         /**
          * Creates an instance with no precomputed values.
+         *
          * @return an instance with no precomputed values.
          */
         public static FactorialLog create() {
@@ -124,10 +115,6 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          * @throws IllegalArgumentException if {@code n < 0}.
          */
         public double value(final int n) {
-            if (n < 0) {
-                throw new IllegalArgumentException(n + " < " + 0);
-            }
-
             // Use cache of precomputed values.
             if (n < LOG_FACTORIALS.length) {
                 return LOG_FACTORIALS[n];
