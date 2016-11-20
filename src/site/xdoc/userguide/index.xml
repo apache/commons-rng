@@ -29,23 +29,27 @@
       <ul>
 
         <li>
-          <a href="rng.html#a1._Usage_overview">
+          <a href="rng.html#a1._Purpose">
           1. Usage overview (for users)</a>
         </li>
         <li>
-          <a href="rng.html#a2._Library_layout">
+          <a href="rng.html#a2._Usage_overview">
+          1. Usage overview (for users)</a>
+        </li>
+        <li>
+          <a href="rng.html#a3._Library_layout">
           2. Library layout (for developers)</a>
         </li>
         <li>
-          <a href="rng.html#a3._Performance">
+          <a href="rng.html#a4._Performance">
           3. Performance</a>
         </li>
         <li>
-          <a href="rng.html#a4._Quality">
+          <a href="rng.html#a5._Quality">
           4. Quality</a>
         </li>
         <li>
-          <a href="rng.html#a5._Dependencies">
+          <a href="rng.html#a6._Dependencies">
           5. Dependencies</a>
         </li>
       </ul>

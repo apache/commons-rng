@@ -19,26 +19,54 @@
   The Apache Commons RNG User Guide
   -----------------------------
 
-1. Usage overview
+1. Purpose
 
-  <<<Commons RNG>>> provides generators of random sequences of numbers.
-  Please refer to the {{{../apidocs/index.html}Javadoc}} for details on
-  the API illustrated by the following examples.
+  <<<Commons RNG>>> provides generators of "pseudo-randomness", i.e. the
+  generators produces deterministic sequences of bytes, currently in chunks
+  of 32 (a.k.a. <<<int>>) or 64 bits (a.k.a. <<<long>>>), depending on the
+  implementation.
+
+  The goal was to provide an API that is simple and unencumbered with old
+  design decisions.
+
+  The design is clean and its rationale is explained extensively in the code
+  and Javadoc.
+  The code evolved during several months in order to accommodate the
+  requirements gathered from the design issues identified in the
+  <<<org.apache.commons.math3.random>>> package and the explicit design
+  goal of {{{./why_not_java_random.html}severing ties}} to <<<java.util.Random>>>.
+
+  The library is divided into modules:
+
+  * {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}Client API}}
+
+  * {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}Core}}
+
+  * {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}Simple}}
+
+  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}}
+
+  * {{{../commons-rng-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}Benchmark}}
+
+  * {{{../commons-rng-examples/apidocs/org/apache/commons/rng/examples/package-summary.html}Examples}}
+
+  []
 
 
-  * The public API is defined in package <<<org.apache.commons.rng>>>.
+2. Usage overview
 
-+--------------------------+
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.RandomSource;
-+--------------------------+
+  Please refer to the generated documentation (of the appropriate module)
+  for details on the API illustrated by the following examples.
 
 
   * Random number generator objects are instantiated through factory
     methods defined in <<<RandomSource>>>, an <<<enum>>> that declares
-    {{{../apidocs/org/apache/commons/rng/RandomSource.html#enum.constant.detail}all the available implementations}}.
+    {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html#enum.constant.detail}all the available implementations}}.
 
 +--------------------------+
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
+
 UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
 +--------------------------+
 
@@ -155,7 +183,7 @@ if (!RandomSource.TWO_CMRES.isNativeSeed(seed)) {
 +--------------------------+
 
     For each available implementation, the native seed type is specified in the
-    {{{../apidocs/org/apache/commons/rng/RandomSource.html#enum.constant.detail}Javadoc}}.
+    {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html#enum.constant.detail}Javadoc}}.
 
 
   * Whenever a random source implementation is parameterized, the custom arguments
@@ -172,9 +200,9 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, s
 
 
   * The current state of a generator can be
-    {{{../apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#saveState}saved}}
+    {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#saveState--}saved}}
     and
-    {{{../apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#restoreState-org.apache.commons.rng.RandomProviderState-}restored}}
+    {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html#restoreState-org.apache.commons.rng.RandomProviderState-}restored}}
     later on.
 
 +--------------------------+
@@ -198,6 +226,10 @@ double y = rng.nextDouble(); // x == y.
     such that the sequence will continue from where it left off.
 
 +--------------------------+
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.core.RandomProviderDefaultState;
+
 RandomSource source = RandomSource.MT_64; // Known source identifier.
 
 RestorableUniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG instance.
@@ -206,12 +238,12 @@ RestorableUniformRandomProvider rngOrig = RandomSource.create(source); // Origin
 RandomProviderState stateOrig = rngOrig.saveState(rngOrig);
 ByteArrayOutputStream bos = new ByteArrayOutputStream();
 ObjectOutputStream oos = new ObjectOutputStream(bos);
-oos.writeObject(((RandomSource.State) stateOrig).getState());
+oos.writeObject(((RandomProviderDefaultState) stateOrig).getState());
 
 // Deserialize state.
 ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 ObjectInputStream ois = new ObjectInputStream(bis);
-RandomProviderState stateNew = new RandomSource.State((byte[]) ois.readObject());
+RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
 RestorableUniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
 
@@ -220,62 +252,121 @@ rngNew.restoreState(stateNew);
 +--------------------------+
 
 
+  * Generation of random deviates for various distributions.
+
++--------------------------+
+import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
+import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
+
+ContinuousSampler sampler = new BoxMullerGaussianSampler(RandomSource.create(RandomSource.MT_64),
+                                                         45.6, 2.3);
+double random = sampler.sample();
++--------------------------+
+
++--------------------------+
+import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
+
+DiscreteSampler sampler = new RejectionInversionZipfSampler(RandomSource.create(RandomSource.ISAAC),
+                                                            5, 1.2);
+int random = sampler.sample();
++--------------------------+
+
+  * Permutation, sampling from a <<<Collection>>> and shuffling utilities.
+
++--------------------------+
+import org.apache.commons.rng.sampling.PermutationSampler;
+
+PermutationSampler sampler = new PermutationSampler(RandomSource.create(RandomSource.KISS),
+                                                    6, 3);
+
+// 3 elements from a shuffling of the (0, 1, 2, 3, 4, 5) tuplet.
+int[] random = sampler.sample();
++--------------------------+
+
++--------------------------+
+import java.util.ArrayList;
+import org.apache.commons.rng.sampling.CollectionSampler;
+
+ArrayList<String> list = new ArrayList<>();
+list.add("Apache")
+list.add("Commons");
+list.add("RNG");
+
+CollectionSampler sampler = new CollectionSampler(RandomSource.create(RandomSource.MWC_256),
+                                                  list, 1);
+String word = sampler.sample().get(0);
++--------------------------+
+
   []
 
 
-2. Library layout
+3. Library layout
 
-  The library's public API consists of classes and interfaces defined in package
-  <<<org.apache.commons.rng>>>.
+  The API for client code consists of classes and interfaces defined in package
+  {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}org.apache.commons.rng}}.
 
   * Interface <<<UniformRandomProvider>>> provides access to a sequence of
     random values uniformly distributed within some range.
 
-  * Enum <<<RandomSource>>> determines which algorithm to use for generating the
-    sequence of random values.
-
   * Interfaces <<<RestorableUniformRandomProvider>>> and <<<RandomProviderState>>>
     provide the "save/restore" API.
 
-  * Class <<<RandomSource.State>>> implements the <<<RandomProviderState>>>
-    interface to enable "save/restore" for all <<<RestorableUniformRandomProvider>>>
-    instances created through the <<<RandomSource>>> factory methods.
+  []
+
+
+  The API for instantiating generators is defined in package
+  {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}org.apache.commons.rng.simple}}.
+
+  * Enum <<<RandomSource>>> determines which algorithm to use for generating the
+    sequence of random values.
 
   []
 
-  The <<<org.apache.commons.rng.internal>>> package and packages below it
-  contain classes for supporting the above API.
-  None of those classes should be used directly in applications.
-
-  The rest of this section briefly describes the internal classes.
-  More information is available in the {{{../apidocs/index.html}Javadoc}}.
+  The <<<org.apache.commons.rng.simple.internal>>> package contain classes
+  for supporting initialization (a.k.a. "seeding") of the generators.
+  They must not be used directly in applications, as all the necessary utilities
+  are accessible through methods defined in <<<RandomSource>>>.
 
   * <<<ProviderBuilder>>>: contains methods for instantiating the concrete
     RNG implementations based on the source identifier; it also takes care
     of calling the appropriate classes for seed type conversion.
 
+  * <<<SeedFactory>>>: contains factory methods for generating random seeds.
+
+  * <<<SeedConverter>>>: interface for classes that transform between
+    supported seed types.
+
+  * Various classes that implement <<<SeedConverter>>> in order to transform
+    from caller's seed to "native" seed.
+
+  []
+
+
+  The {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}org.apache.commons.rng.core}}.
+  package contain the implementation of the algorithms for the generation of
+  pseudo-random sequences.
+  Applications should not directly import or use classes defined in this package:
+  all generators can be instantiated through the <<<RandomSource>>> factory.
+
+  * Class <<<RandomProviderDefaultState>>> implements the <<<RandomProviderState>>>
+    interface to enable "save/restore" for all <<<RestorableUniformRandomProvider>>>
+    instances created through the <<<RandomSource>>> factory methods.
+
   * <<<BaseProvider>>>: base class for all concrete RNG implementations;
     it contains higher-level algorithms <<<nextInt(int n)>>> and <<<nextLong(long n)>>>
     common to all implementations.
 
-  * <<<org.apache.commons.rng.internal.util>>>
+  * <<<org.apache.commons.rng.core.util>>>
 
     ** <<<NumberFactory>>>: contains utilities for interpreting and combining
        the output (<<<int>>> or <<<long>>>) of the underlying source of
        randomness into the requested output, i.e. one of the Java primitive
        types supported by <<<UniformRandomProvider>>>.
 
-    ** <<<SeedFactory>>>: contains factory methods for generating random seeds.
-
-    ** <<<SeedConverter>>>: interface for classes that transform between
-       supported seed types.
-
-    ** Various classes that implement <<<SeedConverter>>> in order to transform
-       from caller's seed to "native" seed.
-
     []
 
-  * <<<org.apache.commons.rng.internal.source32>>>
+  * <<<org.apache.commons.rng.core.source32>>>
 
     ** <<<RandomIntSource>>>: describes an algorithm that generates randomness in
        32-bits chunks (a.k.a Java <<<int>>>).
@@ -286,7 +377,7 @@ rngNew.restoreState(stateNew);
 
     []
 
-  * <<<org.apache.commons.rng.internal.source64>>>
+  * <<<org.apache.commons.rng.core.source64>>>
 
     ** <<<RandomLongSource>>>: describes an algorithm that generates randomness in
        64-bits chunks (a.k.a Java <<<long>>>).
@@ -300,9 +391,12 @@ rngNew.restoreState(stateNew);
   []
 
 
-3. Performance
+4. Performance
 
-  This section reports benchmarks of the RNG implementations.
+  This section reports
+  {{{../commons-rng-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}performance benchmarks}}
+  of the RNG implementations.
+
   All runs were performed on a platform with the following characteristics:
 
   * CPU: Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz
@@ -324,12 +418,9 @@ rngNew.restoreState(stateNew);
 
   []
 
-  The benchmark code is available in the "src/test" part of the source
-  code repository (in class <<<GenerationTestPerformance>>>).
 
-  The first column is the RNG identifier (see {{{../apidocs/org/apache/commons/rng/RandomSource.html}RandomSource}});
-  the performance value is the ratio of the (JMH) score with respect
-  to the score of <<<RandomSource.JDK>>>.
+  The first column is the RNG identifier (see {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html}RandomSource}});
+  the performance value is the ratio of the (JMH) score with respect to the score of <<<RandomSource.JDK>>>.
 
   In these tables, <lower> is <better>.
 
@@ -446,10 +537,12 @@ rngNew.restoreState(stateNew);
 
 
 
-4. Quality
+5. Quality
 
-  This section reports results of performing "stress tests" that aim at detecting failures
-  of an implementation to produce sequences of numbers that follow a uniform distribution.
+  This section reports results of
+  {{{../commons-rng-examples/apidocs/org/apache/commons/rng/examples/stress/package-summary.html}performing "stress tests"}}
+  that aim at detecting failures of an implementation to produce sequences of numbers
+  that follow a uniform distribution.
 
   Two different test suites were used:
 
@@ -459,7 +552,7 @@ rngNew.restoreState(stateNew);
 
   []
 
-  The first column is the RNG identifier (see {{{../apidocs/org/apache/commons/rng/RandomSource.html}RandomSource}}).
+  The first column is the RNG identifier (see {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html}RandomSource}}).
   The second and third columns contain the number of tests which <Dieharder> and <TestU01>
   respectively reported as below the accepted threshold for considering the sequence as
   uniformly random; hence, in this table, <lower> is <better>.
@@ -479,7 +572,7 @@ rngNew.restoreState(stateNew);
 *---------------------------------*----------------*----------------*
 | WELL_512_A          | {{{../txt/userguide/stress/dh/run_1/dh_3}0}}, {{{../txt/userguide/stress/dh/run_2/dh_3}0}}, {{{../txt/userguide/stress/dh/run_3/dh_3}0}} | {{{../txt/userguide/stress/tu/run_1/tu_3}6}}, {{{../txt/userguide/stress/tu/run_2/tu_3}6}}, {{{../txt/userguide/stress/tu/run_3/tu_3}6}} |
 *---------------------------------*----------------*----------------*
-| WELL_1024_A         | {{{../txt/userguide/stress/dh/run_1/dh_4}0}}, {{{../txt/userguide/stress/dh/run_2/dh_4}0}} , {{{../txt/userguide/stress/dh/run_3/dh_4}1}}| {{{../txt/userguide/stress/tu/run_1/tu_4}4}}, {{{../txt/userguide/stress/tu/run_2/tu_4}6}}, {{{../txt/userguide/stress/tu/run_3/tu_4}5}} |
+| WELL_1024_A         | {{{../txt/userguide/stress/dh/run_1/dh_4}0}}, {{{../txt/userguide/stress/dh/run_2/dh_4}0}}, {{{../txt/userguide/stress/dh/run_3/dh_4}1}}| {{{../txt/userguide/stress/tu/run_1/tu_4}4}}, {{{../txt/userguide/stress/tu/run_2/tu_4}6}}, {{{../txt/userguide/stress/tu/run_3/tu_4}5}} |
 *---------------------------------*----------------*----------------*
 | WELL_19937_A        | {{{../txt/userguide/stress/dh/run_1/dh_5}0}}, {{{../txt/userguide/stress/dh/run_2/dh_5}0}}, {{{../txt/userguide/stress/dh/run_3/dh_5}0}} | {{{../txt/userguide/stress/tu/run_1/tu_5}2}}, {{{../txt/userguide/stress/tu/run_2/tu_5}3}}, {{{../txt/userguide/stress/tu/run_3/tu_5}4}} |
 *---------------------------------*----------------*----------------*
@@ -505,6 +598,6 @@ rngNew.restoreState(stateNew);
 *---------------------------------*----------------*----------------*
 
 
-5. Dependencies
+6. Dependencies
 
   Apache Commons RNG requires JDK 1.6+ and has no runtime dependencies.
