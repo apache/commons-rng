@@ -16,158 +16,41 @@
  */
 package org.apache.commons.rng.sampling;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
-import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Tests for {@link CollectionSampler}.
  */
 public class CollectionSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, 6543432321L);
-    private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
-    public void testSample() {
-        final String[][] c = { { "0", "1" }, { "0", "2" }, { "0", "3" }, { "0", "4" },
-                               { "1", "2" }, { "1", "3" }, { "1", "4" },
-                               { "2", "3" }, { "2", "4" },
-                               { "3", "4" } };
-        final long[] observed = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        final double[] expected = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+    public void testSampleTrivial() {
+        final ArrayList<String> list = new ArrayList<String>();
+        list.add("Apache");
+        list.add("Commons");
+        list.add("RNG");
 
-        final HashSet<String> cPop = new HashSet<String>(); // {0, 1, 2, 3, 4}.
-        for (int i = 0; i < 5; i++) {
-            cPop.add(Integer.toString(i));
+        final CollectionSampler<String> sampler =
+            new CollectionSampler<String>(RandomSource.create(RandomSource.MWC_256),
+                                          list);
+        final String word = sampler.sample();
+        for (String w : list) {
+            if (word.equals(w)) {
+                return;
+            }
         }
-
-        final List<Set<String>> sets = new ArrayList<Set<String>>(); // 2-sets from 5.
-        for (int i = 0; i < 10; i++) {
-            final HashSet<String> hs = new HashSet<String>();
-            hs.add(c[i][0]);
-            hs.add(c[i][1]);
-            sets.add(hs);
-        }
-
-        final CollectionSampler<String> sampler = new CollectionSampler<String>(rng, cPop, 2);
-        for (int i = 0; i < 1000; i++) {
-            observed[findSample(sets, sampler.sample())]++;
-        }
-
-        // Pass if we cannot reject null hypothesis that distributions are the same
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
-    }
-
-    @Test
-    public void testSampleWhole() {
-        // Sample of size = size of collection must return the same collection.
-        final HashSet<String> hs = new HashSet<String>();
-        hs.add("one");
-
-        final CollectionSampler<String> sampler = new CollectionSampler<String>(rng, hs, 1);
-        final Collection<String> one = sampler.sample();
-        Assert.assertEquals(1, one.size());
-        Assert.assertTrue(one.contains("one"));
+        Assert.fail(word + " not in list");
     }
 
     @Test(expected=IllegalArgumentException.class)
-    public void testSamplePrecondition1() {
-        // Must fail for sample size > collection size.
-        final HashSet<String> hs = new HashSet<String>();
-        hs.add("one");
-        new CollectionSampler<String>(rng, hs, 2).sample();
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testSamplePrecondition2() {
+    public void testSamplePrecondition() {
         // Must fail for empty collection.
-        final HashSet<String> hs = new HashSet<String>();
-        new CollectionSampler<String>(rng, hs, 0).sample();
-    }
-
-    @Test
-    public void testShuffleTail() {
-        final List<Integer> orig = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++) {
-            orig.add((i + 1) * rng.nextInt());
-        }
-        final List<Integer> list = new ArrayList<Integer>(orig);
-
-        final int start = 4;
-        CollectionSampler.shuffle(list, start, false, rng);
-
-        // Ensure that all entries below index "start" did not move.
-        for (int i = 0; i < start; i++) {
-            Assert.assertEquals(orig.get(i), list.get(i));
-        }
-
-        // Ensure that at least one entry has moved.
-        boolean ok = false;
-        for (int i = start; i < orig.size() - 1; i++) {
-            if (!orig.get(i).equals(list.get(i))) {
-                ok = true;
-                break;
-            }
-        }
-        Assert.assertTrue(ok);
-    }
-
-    @Test
-    public void testShuffleHead() {
-        final List<Integer> orig = new ArrayList<Integer>();
-        for (int i = 0; i < 10; i++) {
-            orig.add((i + 1) * rng.nextInt());
-        }
-        final List<Integer> list = new ArrayList<Integer>(orig);
-
-        final int start = 4;
-        CollectionSampler.shuffle(list, start, true, rng);
-
-        // Ensure that all entries above index "start" did not move.
-        for (int i = start + 1; i < orig.size(); i++) {
-            Assert.assertEquals(orig.get(i), list.get(i));
-        }
-
-        // Ensure that at least one entry has moved.
-        boolean ok = false;
-        for (int i = 0; i <= start; i++) {
-            if (!orig.get(i).equals(list.get(i))) {
-                ok = true;
-                break;
-            }
-        }
-        Assert.assertTrue(ok);
-    }
-
-    //// Support methods.
-
-    private <T extends Set<String>> int findSample(List<T> u,
-                                                   Collection<String> sampList) {
-        final String[] samp = sampList.toArray(new String[sampList.size()]);
-        for (int i = 0; i < u.size(); i++) {
-            final T set = u.get(i);
-            final HashSet<String> sampSet = new HashSet<String>();
-            for (int j = 0; j < samp.length; j++) {
-                sampSet.add(samp[j]);
-            }
-            if (set.equals(sampSet)) {
-                return i;
-            }
-        }
-
-        Assert.fail("Sample not found: { " +
-                    samp[0] + ", " + samp[1] + " }");
-        return -1;
+        new CollectionSampler<String>(RandomSource.create(RandomSource.MT),
+                                      new ArrayList<String>());
     }
 }
