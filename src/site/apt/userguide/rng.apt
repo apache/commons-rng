@@ -29,8 +29,10 @@
   The goal was to provide an API that is simple and unencumbered with old
   design decisions.
 
-  The design is clean and its rationale is explained extensively in the code
-  and Javadoc.
+  The design is clean and its rationale is explained in the code and Javadoc
+  (as well as in the extensive discussions on the "Apache Commons" project's
+  mailing list).
+
   The code evolved during several months in order to accommodate the
   requirements gathered from the design issues identified in the
   <<<org.apache.commons.math3.random>>> package and the explicit design
@@ -252,7 +254,8 @@ rngNew.restoreState(stateNew);
 +--------------------------+
 
 
-  * Generation of random deviates for various distributions.
+  * Generation of random deviates for various
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/distribution/package-summary.html}distributions}}.
 
 +--------------------------+
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
@@ -272,7 +275,9 @@ DiscreteSampler sampler = new RejectionInversionZipfSampler(RandomSource.create(
 int random = sampler.sample();
 +--------------------------+
 
-  * Permutation, sampling from a <<<Collection>>> and shuffling utilities.
+  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/PermutationSampler.html}Permutation}},
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/CollectionSampler.html}sampling from a <<<Collection>>>}}
+    and shuffling utilities.
 
 +--------------------------+
 import org.apache.commons.rng.sampling.PermutationSampler;
@@ -288,13 +293,13 @@ int[] random = sampler.sample();
 import java.util.ArrayList;
 import org.apache.commons.rng.sampling.CollectionSampler;
 
-ArrayList<String> list = new ArrayList<>();
-list.add("Apache")
+ArrayList<String> list = new ArrayList<String>();
+list.add("Apache");
 list.add("Commons");
 list.add("RNG");
 
-CollectionSampler sampler = new CollectionSampler(RandomSource.create(RandomSource.MWC_256),
-                                                  list, 1);
+CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.create(RandomSource.MWC_256),
+                                                                  list, 1);
 String word = sampler.sample().get(0);
 +--------------------------+
 
