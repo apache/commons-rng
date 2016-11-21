@@ -45,6 +45,7 @@ public class ListSampler {
      * contains identical objects, the sample may include repeats.
      * </p>
      *
+     * @param <T> Type of the list items.
      * @param rng Generator of uniformly distributed random numbers.
      * @param collection List to be sampled from.
      * @param k Size of the returned sample.
