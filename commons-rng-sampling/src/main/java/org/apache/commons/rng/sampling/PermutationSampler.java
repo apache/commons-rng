@@ -24,7 +24,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Class for representing permutations of a sequence of integers.
  *
- * This class also contains utilities for shuffling an {@code int[]} array.
+ * This class also contains utilities for shuffling an {@code int[]} array in-place.
  */
 public class PermutationSampler {
     /** Domain of the permutation. */
