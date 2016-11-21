@@ -73,21 +73,21 @@ public class PermutationSampler {
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
     public int[] sample() {
-        shuffle(domain, rng);
+        shuffle(rng, domain);
         return Arrays.copyOf(domain, size);
     }
 
     /**
      * Shuffles the entries of the given array.
      *
-     * @see #shuffle(int[],int,boolean,UniformRandomProvider)
+     * @see #shuffle(UniformRandomProvider,int[],int,boolean)
      *
-     * @param list Array whose entries will be shuffled (in-place).
      * @param rng Random number generator.
+     * @param list Array whose entries will be shuffled (in-place).
      */
-    public static void shuffle(int[] list,
-                               UniformRandomProvider rng) {
-        shuffle(list, 0, false, rng);
+    public static void shuffle(UniformRandomProvider rng,
+                               int[] list) {
+        shuffle(rng, list, 0, false);
     }
 
     /**
@@ -97,17 +97,17 @@ public class PermutationSampler {
      * The {@code start} and {@code pos} parameters select which part
      * of the array is randomized and which is left untouched.
      *
+     * @param rng Random number generator.
      * @param list Array whose entries will be shuffled (in-place).
      * @param start Index at which shuffling begins.
      * @param towardHead Shuffling is performed for index positions between
      * {@code start} and either the end (if {@code false}) or the beginning
      * (if {@code true}) of the array.
-     * @param rng Random number generator.
      */
-    public static void shuffle(int[] list,
+    public static void shuffle(UniformRandomProvider rng,
+                               int[] list,
                                int start,
-                               boolean towardHead,
-                               UniformRandomProvider rng) {
+                               boolean towardHead) {
         if (towardHead) {
             for (int i = 0; i <= start; i++) {
                 final int target;

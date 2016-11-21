@@ -130,7 +130,7 @@ public class PermutationSamplerTest {
     public void testShuffleNoDuplicates() {
         final int n = 100;
         final int[] orig = PermutationSampler.natural(n);
-        PermutationSampler.shuffle(orig, rng);
+        PermutationSampler.shuffle(rng, orig);
 
         // Test that all (unique) entries exist in the shuffled array.
         final int[] count = new int[n];
@@ -148,7 +148,7 @@ public class PermutationSamplerTest {
         final int[] orig = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         final int[] list = orig.clone();
         final int start = 4;
-        PermutationSampler.shuffle(list, start, false, rng);
+        PermutationSampler.shuffle(rng, list, start, false);
 
         // Ensure that all entries below index "start" did not move.
         for (int i = 0; i < start; i++) {
@@ -171,7 +171,7 @@ public class PermutationSamplerTest {
         final int[] orig = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         final int[] list = orig.clone();
         final int start = 4;
-        PermutationSampler.shuffle(list, start, true, rng);
+        PermutationSampler.shuffle(rng, list, start, true);
 
         // Ensure that all entries above index "start" did not move.
         for (int i = start + 1; i < orig.length; i++) {

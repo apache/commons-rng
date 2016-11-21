@@ -103,7 +103,7 @@ public class ListSamplerTest {
         final List<Integer> list = new ArrayList<Integer>(orig);
 
         final int start = 4;
-        ListSampler.shuffle(list, start, false, rng);
+        ListSampler.shuffle(rng, list, start, false);
 
         // Ensure that all entries below index "start" did not move.
         for (int i = 0; i < start; i++) {
@@ -130,7 +130,7 @@ public class ListSamplerTest {
         final List<Integer> list = new ArrayList<Integer>(orig);
 
         final int start = 4;
-        ListSampler.shuffle(list, start, true, rng);
+        ListSampler.shuffle(rng, list, start, true);
 
         // Ensure that all entries above index "start" did not move.
         for (int i = start + 1; i < orig.size(); i++) {

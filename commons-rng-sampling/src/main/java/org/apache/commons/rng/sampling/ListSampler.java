@@ -70,15 +70,15 @@ public class ListSampler {
     /**
      * Shuffles the entries of the given array.
      *
-     * @see #shuffle(List,int,boolean,UniformRandomProvider)
+     * @see #shuffle(UniformRandomProvider,List,int,boolean)
      *
      * @param <T> Type of the list items.
-     * @param list List whose entries will be shuffled (in-place).
      * @param rng Random number generator.
+     * @param list List whose entries will be shuffled (in-place).
      */
-    public static <T> void shuffle(List<T> list,
-                                   UniformRandomProvider rng) {
-        shuffle(list, 0, false, rng);
+    public static <T> void shuffle(UniformRandomProvider rng,
+                                   List<T> list) {
+        shuffle(rng, list, 0, false);
     }
 
     /**
@@ -89,20 +89,20 @@ public class ListSampler {
      * of the array is randomized and which is left untouched.
      *
      * @param <T> Type of the list items.
+     * @param rng Random number generator.
      * @param list List whose entries will be shuffled (in-place).
      * @param start Index at which shuffling begins.
      * @param towardHead Shuffling is performed for index positions between
      * {@code start} and either the end (if {@code false}) or the beginning
      * (if {@code true}) of the array.
-     * @param rng Random number generator.
      */
-    public static <T> void shuffle(List<T> list,
+    public static <T> void shuffle(UniformRandomProvider rng,
+                                   List<T> list,
                                    int start,
-                                   boolean towardHead,
-                                   UniformRandomProvider rng) {
+                                   boolean towardHead) {
         final int len = list.size();
         final int[] indices = PermutationSampler.natural(len);
-        PermutationSampler.shuffle(indices, start, towardHead, rng);
+        PermutationSampler.shuffle(rng, indices, start, towardHead);
 
         final ArrayList<T> items = new ArrayList<T>(list);
         for (int i = 0; i < len; i++) {
