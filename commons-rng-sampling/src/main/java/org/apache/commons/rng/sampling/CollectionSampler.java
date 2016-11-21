@@ -18,7 +18,6 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.rng.UniformRandomProvider;
