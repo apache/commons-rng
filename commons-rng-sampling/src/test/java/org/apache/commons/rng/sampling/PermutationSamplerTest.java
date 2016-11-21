@@ -39,7 +39,24 @@ public class PermutationSamplerTest {
     private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
-    public void testSample() {
+    public void testSampleTrivial() {
+        final int n = 6;
+        final int k = 3;
+        final PermutationSampler sampler = new PermutationSampler(RandomSource.create(RandomSource.KISS),
+                                                                  6, 3);
+        final int[] random = sampler.sample();
+        SAMPLE: for (int s : random) {
+            for (int i = 0; i < n; i++) {
+                if (i == s) {
+                    continue SAMPLE;
+                }
+            }
+            Assert.fail("number " + s + " not in array");
+        }
+    }
+
+    @Test
+    public void testSampleChiSquareTest() {
         final int[][] p = { { 0, 1, 2 }, { 0, 2, 1 },
                             { 1, 0, 2 }, { 1, 2, 0 },
                             { 2, 0, 1 }, { 2, 1, 0 } };
@@ -55,7 +72,7 @@ public class PermutationSamplerTest {
             observed[findPerm(p, sampler.sample())]++;
         }
 
-        // Pass if we cannot reject null hypothesis that distributions are the same
+        // Pass if we cannot reject null hypothesis that distributions are the same.
         Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
     
