@@ -96,7 +96,7 @@ public class PoissonSampler
                 if (r >= p) {
                     n++;
                 } else {
-                    return n;
+                    break;
                 }
             }
             return n;
