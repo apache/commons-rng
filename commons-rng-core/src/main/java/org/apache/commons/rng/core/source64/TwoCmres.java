@@ -144,7 +144,7 @@ public class TwoCmres extends LongProvider {
 
         // Make two positive 16-bits integers.
         final long s = NumberFactory.makeLong(0, seed); // s >= 0
-        final int xMax = (int) (s & 0xffff + SEED_GUARD);
+        final int xMax = (int) ((s & 0xffff) + SEED_GUARD);
         final int yMax = (int) ((s >> 16) + SEED_GUARD);
 
         if (xMax < 0 ||
