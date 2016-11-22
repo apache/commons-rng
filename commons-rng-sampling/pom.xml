@@ -39,6 +39,8 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.sampling</commons.osgi.symbolicName>
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng.sampling</commons.osgi.export>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
   </properties>
 
   <dependencies>

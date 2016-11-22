@@ -43,6 +43,8 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
   </properties>
 
   <dependencies>

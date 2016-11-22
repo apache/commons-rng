@@ -101,6 +101,8 @@
     <rng.findbugs.version>3.0.2</rng.findbugs.version>
     <rng.checkstyle.version>2.17</rng.checkstyle.version>
     <rng.clirr.version>2.7</rng.clirr.version>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}</rng.parent.dir>
 
     <!-- Temporary fix to support Java 8 -->
     <commons.jacoco.version>0.7.5.201505241946</commons.jacoco.version>
@@ -176,13 +178,6 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rng-build-tools</artifactId>
-            <version>1.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -194,13 +189,6 @@
             <ruleset>pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rng-build-tools</artifactId>
-            <version>1.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -238,25 +226,11 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <version>${rng.clirr.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rng-build-tools</artifactId>
-            <version>1.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
         <version>${rng.findbugs.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-rng-build-tools</artifactId>
-            <version>1.0-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
     </plugins>
 
@@ -268,19 +242,12 @@
           <version>${rng.checkstyle.version}</version>
           <configuration>
             <includeTestSourceDirectory>false</includeTestSourceDirectory>
-            <configLocation>checkstyle/checkstyle.xml</configLocation>
-            <headerLocation>checkstyle/license-header.txt</headerLocation>
+            <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+            <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
             <failOnViolation>false</failOnViolation>
             <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
           </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-rng-build-tools</artifactId>
-              <version>1.0-SNAPSHOT</version>
-            </dependency>
-          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -344,7 +311,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
-          <excludeFilterFile>findbugs/findbugs-exclude-filter.xml</excludeFilterFile>
+          <excludeFilterFile>${rng.parent.dir}/src/main/resources/findbugs/findbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
       <plugin>
@@ -352,10 +319,10 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${rng.checkstyle.version}</version>
         <configuration>
-          <configLocation>checkstyle/checkstyle.xml</configLocation>
+          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
-          <headerLocation>checkstyle/license-header.txt</headerLocation>
         </configuration>
         <reportSets>
           <reportSet>
@@ -371,7 +338,7 @@
         <version>${rng.clirr.version}</version>
         <configuration>
           <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>clirr/clirr-ignored.xml</ignoredDifferencesFile>
+          <ignoredDifferencesFile>${rng.parent.dir}/src/main/resources/clirr/clirr-ignored.xml</ignoredDifferencesFile>
         </configuration>
       </plugin>
       <plugin>
@@ -381,7 +348,7 @@
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
           <rulesets>
-            <ruleset>pmd/pmd-ruleset.xml</ruleset>
+            <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
         <reportSets>
@@ -590,7 +557,6 @@
   </profiles>
 
   <modules>
-    <module>commons-rng-build-tools</module>
     <module>commons-rng-client-api</module>
     <module>commons-rng-core</module>
     <module>commons-rng-simple</module>

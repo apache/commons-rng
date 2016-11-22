@@ -40,6 +40,8 @@
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng.simple</commons.osgi.export>
     <commons.osgi.private>org.apache.commons.rng.simple.internal</commons.osgi.private>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
   </properties>
 
   <dependencies>

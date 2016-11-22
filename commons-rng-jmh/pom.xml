@@ -59,6 +59,8 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.jmh</commons.osgi.symbolicName>
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng.jmh</commons.osgi.export>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
 
     <!-- JMH Benchmark related properties, version, target compiler and name of the benchmarking uber jar. -->
     <jmh.version>1.13</jmh.version>
