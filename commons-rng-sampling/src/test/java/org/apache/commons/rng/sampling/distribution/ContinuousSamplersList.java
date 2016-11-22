@@ -53,11 +53,15 @@ public class ContinuousSamplersList {
             // Beta ("Cheng").
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(alphaBeta, betaBeta),
                 new ChengBetaSampler(RandomSource.create(RandomSource.MWC_256), alphaBeta, betaBeta));
+            add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(betaBeta, alphaBeta),
+                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_19937_A), betaBeta, alphaBeta));
             // Beta ("Cheng", alternate algorithm).
             final double alphaBetaAlt = 0.5678;
             final double betaBetaAlt = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(alphaBetaAlt, betaBetaAlt),
                 new ChengBetaSampler(RandomSource.create(RandomSource.WELL_512_A), alphaBetaAlt, betaBetaAlt));
+            add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(betaBetaAlt, alphaBetaAlt),
+                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_19937_C), betaBetaAlt, alphaBetaAlt));
 
             // Cauchy ("inverse method").
             final double medianCauchy = 0.123;
