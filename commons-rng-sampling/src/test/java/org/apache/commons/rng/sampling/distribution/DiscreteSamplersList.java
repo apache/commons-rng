@@ -94,6 +94,11 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(numElementsZipf, exponentZipf),
                 MathArrays.sequence(5, 1, 1),
                 new RejectionInversionZipfSampler(RandomSource.create(RandomSource.WELL_19937_C), numElementsZipf, exponentZipf));
+            // Zipf (exponent close to 1).
+            final double exponentCloseToOneZipf = 1 - 1e-10;
+            add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(numElementsZipf, exponentCloseToOneZipf),
+                MathArrays.sequence(5, 1, 1),
+                new RejectionInversionZipfSampler(RandomSource.create(RandomSource.WELL_19937_C), numElementsZipf, exponentCloseToOneZipf));
 
             // Poisson ("inverse method").
             final double meanPoisson = 3.21;
