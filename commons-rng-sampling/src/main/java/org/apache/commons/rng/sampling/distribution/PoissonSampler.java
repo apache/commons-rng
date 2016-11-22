@@ -90,11 +90,9 @@ public class PoissonSampler
             double p = Math.exp(-meanPoisson);
             long n = 0;
             double r = 1;
-            double rnd = 1;
 
             while (n < 1000 * meanPoisson) {
-                rnd = nextDouble();
-                r *= rnd;
+                r *= nextDouble();
                 if (r >= p) {
                     n++;
                 } else {
