@@ -23,5 +23,6 @@
 -->
 <FindBugsFilter>
 
+  <Class name="~.*\.jmh\.generated\..*" />
 
 </FindBugsFilter>
