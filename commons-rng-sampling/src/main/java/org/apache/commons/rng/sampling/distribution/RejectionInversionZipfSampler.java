@@ -98,14 +98,13 @@ public class RejectionInversionZipfSampler
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
             double x = hIntegralInverse(u);
-            int k = (int)(x + 0.5);
+            int k = (int) (x + 0.5);
 
-            // Limit k to the range [1, numberOfElements]
-            // (k could be outside due to numerical inaccuracies)
+            // Limit k to the range [1, numberOfElements] if it would be outside
+            // due to numerical inaccuracies.
             if (k < 1) {
                 k = 1;
-            }
-            else if (k > numberOfElements) {
+            } else if (k > numberOfElements) {
                 k = numberOfElements;
             }
 
@@ -173,12 +172,12 @@ public class RejectionInversionZipfSampler
      * </ul>
      * H(x) is an integral function of h(x), the derivative of H(x) is h(x).
      *
-     * @param x free parameter
+     * @param x Free parameter.
      * @return {@code H(x)}.
      */
     private double hIntegral(final double x) {
         final double logX = Math.log(x);
-        return helper2((1d-exponent)*logX)*logX;
+        return helper2((1 - exponent) * logX) * logX;
     }
 
     /**
@@ -219,8 +218,7 @@ public class RejectionInversionZipfSampler
     private static double helper1(final double x) {
         if (Math.abs(x) > 1e-8) {
             return Math.log1p(x) / x;
-        }
-        else {
+        } else {
             return 1 - x * (0.5 - x * (0.33333333333333333 - 0.25 * x));
         }
     }
@@ -237,8 +235,7 @@ public class RejectionInversionZipfSampler
     private static double helper2(final double x) {
         if (Math.abs(x) > 1e-8) {
             return Math.expm1(x) / x;
-        }
-        else {
+        } else {
             return 1 + x * 0.5 * (1 + x * 0.33333333333333333 * (1 + 0.25 * x));
         }
     }
