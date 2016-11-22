@@ -68,10 +68,19 @@ public class GenerationPerformance {
                 "XOR_SHIFT_1024_S",
                 "TWO_CMRES",
                 "MT_64" })
-        String randomSourceName;
+        private String randomSourceName;
 
-        UniformRandomProvider provider;
+        /** RNG. */
+        private UniformRandomProvider provider;
 
+        /**
+         * @return the RNG.
+         */
+        public UniformRandomProvider getGenerator() {
+            return provider;
+        }
+
+        /** Intantiates generator. */
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
@@ -83,71 +92,103 @@ public class GenerationPerformance {
      * Number of random values to generate.
      */
     @Param({"1", "100", "10000", "1000000"})
-    int numValues;
+    private int numValues;
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextBoolean(Sources sources,
                             Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextBoolean());
+            bh.consume(sources.getGenerator().nextBoolean());
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextInt(Sources sources,
                         Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextInt());
+            bh.consume(sources.getGenerator().nextInt());
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextIntN(Sources sources,
                          Blackhole bh) {
         final int n = 10;
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextInt(n));
+            bh.consume(sources.getGenerator().nextInt(n));
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextLong(Sources sources,
                          Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextLong());
+            bh.consume(sources.getGenerator().nextLong());
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextLongN(Sources sources,
                           Blackhole bh) {
         final long n = 2L * Integer.MAX_VALUE;
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextLong(n));
+            bh.consume(sources.getGenerator().nextLong(n));
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextFloat(Sources sources,
                           Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextFloat());
+            bh.consume(sources.getGenerator().nextFloat());
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextDouble(Sources sources,
                            Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
-            bh.consume(sources.provider.nextDouble());
+            bh.consume(sources.getGenerator().nextDouble());
         }
     }
 
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
     @Benchmark
     public void nextBytes(Sources sources,
                           Blackhole bh) {
         final byte[] result = new byte[numValues];
-        sources.provider.nextBytes(result);
+        sources.getGenerator().nextBytes(result);
         bh.consume(result);
     }
 }
