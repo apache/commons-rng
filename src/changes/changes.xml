@@ -50,7 +50,7 @@ If the output is not quite correct, check for invisible trailing spaces!
     <title>Apache Commons RNG Release Notes</title>
   </properties>
   <body>
-    <release version="1.0" date="TBD" description="
+    <release version="1.0" date="2016-11-30" description="
 This is the first release of Apache Commons RNG.
 
 The minimum version of the Java platform required to compile and use
