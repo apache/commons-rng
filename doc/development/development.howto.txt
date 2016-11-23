@@ -14,26 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-This document summarizes a discussion that took place on the "dev" ML:
-  http://markmail.org/message/7lnus64entdwj4vo
+This document summarizes the development process of Commons RNG:
 
-The conclusions reported here are based on ideas presented in this blog post:
-  http://nvie.com/posts/a-successful-git-branching-model/
-
-1. The "master" branch can only contain released code; i.e. the only
-   accepted commits are the result of a merge from the "release" branch
-   (from a release candidate that passed a vote).
-2. Contents that is candidate for being released must be merged into the
-   "release" branch, from the "develop" branch.
-3. The "develop" branch collects all modifications that will be part
+1. The "master" branch collects all modifications that will be part
    of the next release.
-   Usually, changes should not be committed directly to the "develop"
+   Usually, non trivial changes should not be committed directly to the "master"
    branch; they should be merged from a branch specifically created for
    that purpose (see next point).
-4. Work on an identified issue (bug fix or new feature) must be done in a
+2. Work on an identified issue (bug fix or new feature) must be done in a
    new branch named after its corresponding report in the bug-tracking
    system (JIRA), e.g. "feature-RNG-123".
    After completion, and in the absence of technical objections, the feature
-   branch is merged into the "develop" branch, using the "--no-ff" git
+   branch is merged into the "master" branch, using the "--no-ff" git
    option.
    That feature branch is then deleted.
+
+
+Please note that a contribution that consists in the implementation of a
+"reference" generator, i.e. an algorithm described in a scientific paper
+or code published by a trusted party (e.g. an expert in the field, or the
+standard library of another programming language) will only be accepted
+if it comes with
+ 1. a unit test where the output (say, a few hundred numbers) of "Commons RNG"
+    is compared against another implementation,
+ 2. the outputs of the "RandomStressTester" (Java source is in module
+    "commons-rng-examples"), piping from the "Dieharder" and "TU01/BigCrush"
+    actual stress test suites (these software must be installed separately;
+    the C source of a simple interface to the "TU01" library is in module
+    "commons-rng-examples").

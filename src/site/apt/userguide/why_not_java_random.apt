@@ -1,0 +1,100 @@
+~~
+~~ Licensed to the Apache Software Foundation (ASF) under one or more
+~~ contributor license agreements.  See the NOTICE file distributed with
+~~ this work for additional information regarding copyright ownership.
+~~ The ASF licenses this file to You under the Apache License, Version 2.0
+~~ (the "License"); you may not use this file except in compliance with
+~~ the License.  You may obtain a copy of the License at
+~~
+~~      http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~
+
+  -----------------------------
+  Why not <<<java.util.Random>>> ?
+  -----------------------------
+
+  The "Apache Commons RNG" project started off from code originally in the
+  "Apache Commons Math" project; there, the code in package
+  {{{http://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/org/apache/commons/math3/random/package-summary.html}org.apache.commons.math3.random}}
+  had its design prominently based on the JDK's
+  {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html}Random}}
+  class.
+
+  Although it is often a good idea to rely on the language's standard library,
+  sometimes it is not.
+
+  * The {{{https://en.wikipedia.org/wiki/Linear_congruential_generator}LCG}}
+    algorithm used by <<<java.util.Random>>>
+
+      ** has a serious {{{http://www.ics.uci.edu/~fowlkes/class/cs177/marsaglia.pdf}defect}}, and
+
+      ** is not as efficient as some of the alternatives that do not suffer from this problem.
+
+      []
+
+
+  * Although the {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html#next(int)}next}}
+    method seems to imply that it is designed for inheritance, it is not quite so:
+
+      ** {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html#setSeed(long)}setSeed}}
+         is tied to the assumption that the state of the generator is entirely
+         defined by a single <<<long>>> value.
+
+      ** {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html#next(int)}next}}
+         implies that an implementation must produce a 32-bits value.
+
+      ** <<<Random>>> is {{{http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html}Serializable}}
+         and thus imposes it on subclasses even though the issue of persistent
+         storage is application-dependent.
+
+      []
+
+
+   As a side note, the newer
+   {{{https://docs.oracle.com/javase/8/docs/api/java/util/SplittableRandom.html}SplittableRandom}}
+
+     ** is <<<final>>> (hence, there is no temptation to mistake it as an interface), and
+
+     ** does not inherit from <<<Random>>> (which is a clear hint that the
+        JDK's developers themselves do not consider <<<Random>>> as the
+        best option for new code).
+
+     []
+
+
+  * Thus, <<<java.util.Random>>> should have been an implementation of a
+    more general interface (without a <<<setSeed>>> method that is bound to
+    be implementation-specific, or a {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html#nextGaussian()}nextGaussian}}
+    that singles out just one of many types of random deviates).
+
+
+  * As a concrete class, <<<java.util.Random>>> contains code tied to
+    "implementation details"; it is hard to modify it without changing
+    long-established behaviour, even if it would be to fix a
+    {{{https://bugs.openjdk.java.net/browse/JDK-8154225}bug}}.
+
+
+  * Methods are <<<synchronized>>>, incurring an unnecessary  performance
+    impact for single-threaded applications, while multi-threaded ones will
+    be subject to contention.
+
+  []
+
+
+  Unless unfazed by the above, it is clear that application developers should
+  avoid <<<java.util.Random>>>, as a generator, and as a base class.
+
+  For new applications, it is recommended to switch to any of the better
+  alternatives provided in "Commons RNG".
+
+  For legacy applications where the <<<java.util.Random>>> type is part of
+  an API that cannot be changed, developers can wrap any of the generators
+  implemented in this library within an instance of the
+  {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/JDKRandomBridge.html}JDKRandomBridge}}
+  adapter class.

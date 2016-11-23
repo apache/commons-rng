@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -15,9 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
@@ -26,13 +24,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <version>1.0</version>
-  <name>Apache Commons RNG</name>
+  <name>Apache Commons Parent RNG</name>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons RNG project provides implementations of random numbers generators.</description>
-
+  <description>The Apache Commons RNG parent project.</description>
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
   <issueManagement>
@@ -73,23 +70,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-core</artifactId>
-      <version>${jmh.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-generator-annprocess</artifactId>
-      <version>${jmh.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -103,11 +86,10 @@
     <commons.osgi.symbolicName>org.apache.commons.rng</commons.osgi.symbolicName>
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng</commons.osgi.export>
-    <commons.osgi.private>org.apache.commons.rng.internal</commons.osgi.private>
     <!-- do not use snapshot suffix here -->
     <commons.release.version>1.0</commons.release.version>
-    <commons.release.desc>(requires Java 1.6+)</commons.release.desc>
-    <commons.rc.version>RC2</commons.rc.version>
+    <commons.release.desc>(requires Java 6+)</commons.release.desc>
+    <commons.rc.version>RC3</commons.rc.version>
     <commons.binary.suffix>-bin</commons.binary.suffix>
 
     <commons.jira.id>RNG</commons.jira.id>
@@ -119,6 +101,8 @@
     <rng.findbugs.version>3.0.2</rng.findbugs.version>
     <rng.checkstyle.version>2.17</rng.checkstyle.version>
     <rng.clirr.version>2.7</rng.clirr.version>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}</rng.parent.dir>
 
     <!-- Temporary fix to support Java 8 -->
     <commons.jacoco.version>0.7.5.201505241946</commons.jacoco.version>
@@ -141,10 +125,6 @@
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
-
-    <!-- JMH Benchmark related properties, version, target compiler and name of the benchmarking uber jar. -->
-    <jmh.version>1.13</jmh.version>
-    <uberjar.name>benchmarks</uberjar.name>
   </properties>
 
   <build>
@@ -185,32 +165,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>clirr-maven-plugin</artifactId>
-        <version>${rng.clirr.version}</version>
-        <configuration>
-          <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>${basedir}/clirr-ignored.xml</ignoredDifferencesFile>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <version>${rng.pmd.version}</version>
-        <configuration>
-          <targetJdk>${maven.compiler.target}</targetJdk>
-          <skipEmptyReport>false</skipEmptyReport>
-          <rulesets>
-            <ruleset>${basedir}/pmd-ruleset.xml</ruleset>
-          </rulesets>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
         <configuration>
@@ -220,68 +174,13 @@
         </configuration>
       </plugin>
 
-      <!-- <plugin> -->
-      <!--   <artifactId>maven-antrun-plugin</artifactId> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <phase>package</phase> -->
-      <!--       <configuration> -->
-      <!--         <target> -->
-      <!--           <jar destfile="${project.build.directory}/${project.artifactId}-${project.version}-tools.jar"> -->
-      <!--             <metainf dir="${basedir}" includes="NOTICE.txt,LICENSE.txt" /> -->
-      <!--             <manifest> -->
-      <!--               <attribute name="Specification-Title" value="${project.name} Tools" /> -->
-      <!--               <attribute name="Implementation-Title" value="${project.name} Tools" /> -->
-      <!--               <attribute name="Implementation-Vendor" value="${project.organization.name}" /> -->
-      <!--               <attribute name="Implementation-Version" value="${project.version}" /> -->
-      <!--               <attribute name="Implementation-Vendor-Id" value="org.apache" /> -->
-      <!--               <attribute name="Implementation-Build" value="${implementation.build}"/> -->
-      <!--               <attribute name="X-Compile-Source-JDK" value="${maven.compiler.source}" /> -->
-      <!--               <attribute name="X-Compile-Target-JDK" value="${maven.compiler.target}" /> -->
-      <!--             </manifest> -->
-      <!--             <fileset dir="${project.build.directory}/test-classes" -->
-      <!--                      includes="org/apache/commons/rng/PerfTestUtils*" /> -->
-      <!--           </jar> -->
-      <!--         </target> -->
-      <!--       </configuration> -->
-      <!--       <goals> -->
-      <!--         <goal>run</goal> -->
-      <!--       </goals> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
-      <!--  Attaches the commons-rng tools JAR to the Maven lifecycle
-            to ensure they will be signed and deployed as normal -->
-      <!-- <plugin> -->
-      <!--   <groupId>org.codehaus.mojo</groupId> -->
-      <!--   <artifactId>build-helper-maven-plugin</artifactId> -->
-      <!--   <version>1.7</version> -->
-      <!--   <executions> -->
-      <!--     <execution> -->
-      <!--       <id>attach-artifacts</id> -->
-      <!--       <phase>package</phase> -->
-      <!--       <goals> -->
-      <!--         <goal>attach-artifact</goal> -->
-      <!--       </goals> -->
-      <!--       <configuration> -->
-      <!--         <artifacts> -->
-      <!--           <artifact> -->
-      <!--             <file>${project.build.directory}/${project.artifactId}-${project.version}-tools.jar</file> -->
-      <!--             <type>jar</type> -->
-      <!--             <classifier>tools</classifier> -->
-      <!--           </artifact> -->
-      <!--         </artifacts> -->
-      <!--       </configuration> -->
-      <!--     </execution> -->
-      <!--   </executions> -->
-      <!-- </plugin> -->
-
       <!--  MathJax -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
+          <additionalparam>-header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'
+          </additionalparam>
         </configuration>
       </plugin>
       <plugin>
@@ -297,7 +196,13 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>${rng.findbugs.version}</version>
+      </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -306,8 +211,8 @@
           <version>${rng.checkstyle.version}</version>
           <configuration>
             <includeTestSourceDirectory>false</includeTestSourceDirectory>
-            <configLocation>checkstyle.xml</configLocation>
-            <headerLocation>license-header.txt</headerLocation>
+            <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+            <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
             <logViolationsToConsole>false</logViolationsToConsole>
             <failOnViolation>false</failOnViolation>
             <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
@@ -375,7 +280,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
-          <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
+          <excludeFilterFile>${rng.parent.dir}/src/main/resources/findbugs/findbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
       <plugin>
@@ -383,10 +288,10 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <version>${rng.checkstyle.version}</version>
         <configuration>
-          <configLocation>checkstyle.xml</configLocation>
+          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
-          <headerLocation>${basedir}/license-header.txt</headerLocation>
         </configuration>
         <reportSets>
           <reportSet>
@@ -402,7 +307,7 @@
         <version>${rng.clirr.version}</version>
         <configuration>
           <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>${basedir}/clirr-ignored.xml</ignoredDifferencesFile>
+          <ignoredDifferencesFile>${rng.parent.dir}/src/main/resources/clirr/clirr-ignored.xml</ignoredDifferencesFile>
         </configuration>
       </plugin>
       <plugin>
@@ -412,7 +317,7 @@
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
           <rulesets>
-            <ruleset>${basedir}/pmd-ruleset.xml</ruleset>
+            <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
         <reportSets>
@@ -429,7 +334,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-Xdoclint:none -header &apos;&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;&apos;</additionalparam>
+          <additionalparam>-Xdoclint:none -header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
+          <!-- <aggregate>true</aggregate> -->
         </configuration>
       </plugin>
     </plugins>
@@ -486,18 +392,18 @@
                 <configuration>
                   <tasks>
                     <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}"/>
                     </exec>
 
                     <exec executable="svn">
-                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs" />
+                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs"/>
                     </exec>
 
                     <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" />
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*"/>
                     </pathconvert>
                     <exec executable="svn">
-                      <arg line="update --set-depth infinity ${dirs}" />
+                      <arg line="update --set-depth infinity ${dirs}"/>
                     </exec>
                   </tasks>
                 </configuration>
@@ -617,54 +523,15 @@
       </build>
     </profile>
 
-    <profile>
-      <id>benchmark</id>
-      <properties>
-        <skipTests>true</skipTests>
-        <benchmark>org.apache</benchmark>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.1</version>
-            <configuration>
-              <compilerVersion>${maven.compiler.target}</compilerVersion>
-              <source>${maven.compiler.target}</source>
-              <target>${maven.compiler.target}</target>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>benchmark</id>
-                <phase>test</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <classpathScope>test</classpathScope>
-                  <executable>java</executable>
-                  <arguments>
-                    <argument>-classpath</argument>
-                    <classpath/>
-                    <argument>org.openjdk.jmh.Main</argument>
-                    <argument>-rf</argument>
-                    <argument>json</argument>
-                    <argument>-rff</argument>
-                    <argument>target/jmh-result.${benchmark}.json</argument>
-                    <argument>${benchmark}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
+
+  <modules>
+    <module>commons-rng-client-api</module>
+    <module>commons-rng-core</module>
+    <module>commons-rng-simple</module>
+    <module>commons-rng-sampling</module>
+    <module>commons-rng-jmh</module>
+    <module>commons-rng-examples</module>
+  </modules>
+
 </project>

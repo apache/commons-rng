@@ -40,7 +40,7 @@
  |                                                                      |
  +======================================================================+
 --->
-Apache Commons Rng
+Apache Commons RNG
 ===================
 
 [![Build Status](https://travis-ci.org/apache/commons-rng.svg?branch=master)](https://travis-ci.org/apache/commons-rng)
@@ -48,14 +48,14 @@ Apache Commons Rng
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-The Apache Commons Rng project provides Java implementations of pseudo-random numbers generators.
+The Apache Commons RNG project provides Java implementations of pseudo-random numbers generators.
 
 Documentation
 -------------
 
 More information can be found on the [homepage](https://commons.apache.org/proper/commons-rng).
 The [JavaDoc](https://commons.apache.org/proper/commons-rng/apidocs) can be browsed.
-Questions related to the usage of Apache Commons Rng should be posted to the [user mailing list][ml].
+Questions related to the usage of Apache Commons RNG should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
 -----------------------------------
@@ -90,7 +90,7 @@ Code is under the [Apache Licence v2](https://www.apache.org/licenses/LICENSE-2.
 
 Donations
 ---------
-You like Apache Commons Rng? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Apache Commons RNG? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------

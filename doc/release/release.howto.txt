@@ -85,7 +85,7 @@ The command
 
   $ mvn clean deploy -Prelease -Ptest-deploy
 
-should create the artifacts in the "target/deploy".
+should create the artifacts in the "target/deploy" directory.
 
 At some point when processing the above command, the GPG passphrase will be
 requested; to avoid problems, the "gpg2" executable should be specified in
@@ -332,6 +332,8 @@ Edit the "README.html" file to contain the released version number.
  $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-bin.* binaries
  $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-src.* source
  $ cp <path-to-the-RC-workspace>/RELEASE-NOTES.txt .
+ $ cp <path-to-the-RC-workspace>/CONTRIBUTING.md .
+ $ cp <path-to-the-RC-workspace>/README.md .
  $ svn add \
      CONTRIBUTING.md \
      README.md \
@@ -357,7 +359,7 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  $ mvn site
+  $ mvn site site:stage
   $ cd target
   $ mv site commons-rng-1.0-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
