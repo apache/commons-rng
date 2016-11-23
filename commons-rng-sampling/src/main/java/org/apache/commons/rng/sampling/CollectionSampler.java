@@ -18,6 +18,7 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -31,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class CollectionSampler<T> {
     /** Collection to be sampled from. */
-    private final ArrayList<T> items;
+    private final List<T> items;
     /** RNG. */
     private final UniformRandomProvider rng;
 
