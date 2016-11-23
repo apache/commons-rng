@@ -22,7 +22,7 @@
 1. Purpose
 
   <<<Commons RNG>>> provides generators of "pseudo-randomness", i.e. the
-  generators produces deterministic sequences of bytes, currently in chunks
+  generators produce deterministic sequences of bytes, currently in chunks
   of 32 (a.k.a. <<<int>>) or 64 bits (a.k.a. <<<long>>>), depending on the
   implementation.
 
