@@ -26,7 +26,7 @@
   <artifactId>commons-rng</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Apache Commons Parent RNG</name>
+  <name>Apache Commons RNG</name>
 
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG parent project.</description>
