@@ -25,16 +25,18 @@ import org.apache.commons.rng.core.RandomProviderDefaultState;
 
 /**
  * Subclass of {@link Random} that {@link #next(int) delegates} to a
- * {@link RestorableUniformRandomProvider} instance but will otherwise
- * rely on the base class for generating all the random types.
- * </p>
+ * {@link RestorableUniformRandomProvider} instance but will otherwise rely
+ * on the base class for generating all the random types.
  *
  * <p>
  * Legacy applications coded against the JDK's API could use this subclass
  * of {@link Random} in order to replace its linear congruential generator
  * by any {@link RandomSource}.
- * Use of this class is however <em>not</em> recommended for new applications.
  * </p>
+ *
+ * Caveat: Use of this class is <em>not</em> recommended for new applications.
+ * In particular, there is no guarantee that the serialized form of this class
+ * will be compatible across (even <em>minor</em>) releases of the library.
  *
  * @since 1.0
  */
