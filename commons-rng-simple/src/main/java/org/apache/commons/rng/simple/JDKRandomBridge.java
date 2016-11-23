@@ -48,7 +48,7 @@ public final class JDKRandomBridge extends Random {
     /** Delegate. */
     private transient RestorableUniformRandomProvider delegate;
     /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225 */
-    private final boolean isInitialized;
+    private final transient boolean isInitialized;
 
     /**
      * Creates a new instance.
