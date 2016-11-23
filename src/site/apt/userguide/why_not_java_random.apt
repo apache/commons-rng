@@ -68,7 +68,7 @@
      []
 
 
-  * Thus, <<<java.util.Random>>> _should_ have been an implementation of a
+  * Thus, <<<java.util.Random>>> should have been an implementation of a
     more general interface (without a <<<setSeed>>> method that is bound to
     be implementation-specific, or a {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html#nextGaussian()}nextGaussian}}
     that singles out just one of many types of random deviates).
