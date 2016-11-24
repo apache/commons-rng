@@ -523,6 +523,15 @@
       </build>
     </profile>
 
+    <!--
+        Profiles for modules with special requirements.
+    -->
+    <profile>
+      <id>commons-rng-examples</id>
+      <modules>
+        <module>commons-rng-examples</module>
+      </modules>
+    </profile>
   </profiles>
 
   <modules>
@@ -531,7 +540,11 @@
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
     <module>commons-rng-jmh</module>
-    <module>commons-rng-examples</module>
+    <!--
+        Built only upon explicit request (requires Java 1.7+).
+        See profile "commons-rng-examples".
+    -->
+    <!-- <module>commons-rng-examples</module> -->
   </modules>
 
 </project>
