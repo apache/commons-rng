@@ -73,33 +73,33 @@ public class BaseProviderTest {
             Assert.assertNotEquals(0, state[i]);
         }
     }
-}
 
-/**
- * Dummy class for checking the behaviour of
- * <ul>
- *  <li>an incomplete implementation</li>
- *  <li>{@code fillState} methods with "protected" access</li>
- * </ul>
- */
-class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
-    /** {@inheritDoc} */
-    @Override
-    public int next() {
-        return 4; // https://www.xkcd.com/221/
-    }
+    /**
+     * Dummy class for checking the behaviour of
+     * <ul>
+     *  <li>an incomplete implementation</li>
+     *  <li>{@code fillState} methods with "protected" access</li>
+     * </ul>
+     */
+    class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
+        /** {@inheritDoc} */
+        @Override
+        public int next() {
+            return 4; // https://www.xkcd.com/221/
+        }
 
-    // Missing overrides of "setStateInternal" and "getStateInternal".
+        // Missing overrides of "setStateInternal" and "getStateInternal".
 
-    /** {@inheritDoc} */
-    @Override
-    public void fillState(int[] state, int[] seed) {
-        super.fillState(state, seed);
-    }
+        /** {@inheritDoc} */
+        @Override
+        public void fillState(int[] state, int[] seed) {
+            super.fillState(state, seed);
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    public void fillState(long[] state, long[] seed) {
-        super.fillState(state, seed);
+        /** {@inheritDoc} */
+        @Override
+        public void fillState(long[] state, long[] seed) {
+            super.fillState(state, seed);
+        }
     }
 }
