@@ -92,7 +92,7 @@ public class PermutationSampler {
 
     /**
      * Shuffles the entries of the given array, using the
-     * <a href="http://en.wikipedia.org/wiki/Fisher–Yates_shuffle#The_modern_algorithm">
+     * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
      * Fisher-Yates</a> algorithm.
      * The {@code start} and {@code pos} parameters select which part
      * of the array is randomized and which is left untouched.

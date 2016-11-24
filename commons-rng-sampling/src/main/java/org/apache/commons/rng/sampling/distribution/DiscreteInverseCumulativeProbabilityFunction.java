@@ -27,8 +27,8 @@ public interface DiscreteInverseCumulativeProbabilityFunction {
      * For a random variable {@code X} distributed according to this distribution,
      * the returned value is
      * <ul>
-     *  <li>\( \inf_{x \in \mathcal{Z}} P(X \le x) \ge p \) for \( 0 < p \le 1 \)</li>
-     *  <li>\( \inf_{x \in \mathcal{Z}} P(X \le x) > 0   \) for \( p = 0 \)</li>
+     *  <li>\( \inf_{x \in \mathcal{Z}} P(X \le x) \ge p \) for \( 0 \lt p \le 1 \)</li>
+     *  <li>\( \inf_{x \in \mathcal{Z}} P(X \le x) \gt 0 \) for \( p = 0 \)</li>
      * </ul>
      *
      * @param p Cumulative probability.

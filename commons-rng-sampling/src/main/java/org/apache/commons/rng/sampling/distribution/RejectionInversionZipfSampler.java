@@ -69,7 +69,7 @@ public class RejectionInversionZipfSampler
      * <blockquote>
      *   Wolfgang Hörmann and Gerhard Derflinger.
      *   <i>"Rejection-inversion to generate variates from monotone discrete
-     *    distributions",<i><br>
+     *    distributions",</i><br>
      *   <strong>ACM Transactions on Modeling and Computer Simulation</strong> (TOMACS) 6.3 (1996): 169-184.
      * </blockquote>
      */

@@ -23,13 +23,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">
  * inversion method</a>.
  *
- * <p>
  * It can be used to sample any distribution that provides access to its
  * <em>inverse cumulative probabilty function</em>.
- * </p>
  *
  * <p>Example:</p>
- * <pre><source>
+ * <pre><code>
  * import org.apache.commons.math3.distribution.IntegerDistribution;
  * import org.apache.commons.math3.distribution.BinomialDistribution;
  *
@@ -51,7 +49,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * // Generate random deviate.
  * int random = binomialSampler.sample();
- * </source></pre>
+ * </code></pre>
  */
 public class InverseTransformDiscreteSampler
     extends SamplerBase

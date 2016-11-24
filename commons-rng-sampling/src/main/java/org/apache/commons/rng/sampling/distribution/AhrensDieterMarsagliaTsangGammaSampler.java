@@ -19,7 +19,6 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * <p>
  * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
  * <ul>
  *  <li>
@@ -39,7 +38,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  * </ul>
- * </p>
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
