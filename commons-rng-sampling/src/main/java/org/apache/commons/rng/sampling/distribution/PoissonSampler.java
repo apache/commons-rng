@@ -133,7 +133,7 @@ public class PoissonSampler
                     }
                     y = x < 0 ? Math.floor(x) : Math.ceil(x);
                     final double e = exponential.sample();
-                    v = -e - (n * n / 2) + c1;
+                    v = -e - 0.5 * n * n + c1;
                 } else {
                     if (u > p1 + p2) {
                         y = lambda;
