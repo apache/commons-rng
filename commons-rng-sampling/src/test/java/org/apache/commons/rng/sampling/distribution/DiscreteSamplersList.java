@@ -112,7 +112,7 @@ public class DiscreteSamplersList {
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(largeMeanPoisson),
-                MathArrays.sequence(100, (int) (largeMeanPoisson - 50), 1),
+                MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
                 new PoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
             // Poisson (mean >> 40).
             final double veryLargeMeanPoisson = 543.21;
