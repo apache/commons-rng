@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Apache Commons RNG Examples</name>
 
   <description>The Apache Commons RNG Examples module contains examples
@@ -51,7 +51,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-simple</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0</version>
     </dependency>
   </dependencies>
 
