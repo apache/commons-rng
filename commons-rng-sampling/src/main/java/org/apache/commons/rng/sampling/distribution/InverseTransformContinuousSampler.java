@@ -32,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * import org.apache.commons.math3.distribution.ChiSquaredDistribution;
  *
  * import org.apache.commons.rng.simple.RandomSource;
- * import org.apache.commons.rng.sampling.ContinuousSampler;
+ * import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
  * import org.apache.commons.rng.sampling.distribution.InverseTransformContinuousSampler;
  * import org.apache.commons.rng.sampling.distribution.ContinuousInverseCumulativeProbabilityFunction;
  *
@@ -41,11 +41,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * // Create the sampler.
  * final ContinuousSampler chiSquareSampler =
  *     new InverseTransformContinuousSampler(RandomSource.create(RandomSource.MT),
- *                                        new ContinuousInverseCumulativeProbabilityFunction() {
- *                                            public double inverseCumulativeProbability(double p) {
- *                                                return dist.inverseCumulativeProbability(p);
- *                                            }
- *                                        });
+ *                                           new ContinuousInverseCumulativeProbabilityFunction() {
+ *                                               public double inverseCumulativeProbability(double p) {
+ *                                                   return dist.inverseCumulativeProbability(p);
+ *                                               }
+ *                                           });
  *
  * // Generate random deviate.
  * double random = chiSquareSampler.sample();

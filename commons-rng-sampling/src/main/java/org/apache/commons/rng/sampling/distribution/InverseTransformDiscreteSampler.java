@@ -32,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * import org.apache.commons.math3.distribution.BinomialDistribution;
  *
  * import org.apache.commons.rng.simple.RandomSource;
- * import org.apache.commons.rng.sampling.DiscreteSampler;
+ * import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
  * import org.apache.commons.rng.sampling.distribution.InverseTransformDiscreteSampler;
  * import org.apache.commons.rng.sampling.distribution.DiscreteInverseCumulativeProbabilityFunction;
  *
@@ -41,11 +41,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * // Create the sampler.
  * final DiscreteSampler binomialSampler =
  *     new InverseTransformDiscreteSampler(RandomSource.create(RandomSource.MT),
- *                                      new DiscreteInverseCumulativeProbabilityFunction() {
- *                                          public int inverseCumulativeProbability(double p) {
- *                                              return dist.inverseCumulativeProbability(p);
- *                                          }
- *                                      });
+ *                                         new DiscreteInverseCumulativeProbabilityFunction() {
+ *                                             public int inverseCumulativeProbability(double p) {
+ *                                                 return dist.inverseCumulativeProbability(p);
+ *                                             }
+ *                                         });
  *
  * // Generate random deviate.
  * int random = binomialSampler.sample();
