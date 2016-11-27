@@ -35,8 +35,8 @@ public class InverseTransformParetoSampler
      * @param shape Shape of the distribution.
      */
     public InverseTransformParetoSampler(UniformRandomProvider rng,
-                                      double scale,
-                                      double shape) {
+                                         double scale,
+                                         double shape) {
         super(rng);
         this.scale = scale;
         this.shape = shape;
