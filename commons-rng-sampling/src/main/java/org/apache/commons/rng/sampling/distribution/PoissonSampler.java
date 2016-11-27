@@ -66,7 +66,9 @@ public class PoissonSampler
 
         gaussian = new BoxMullerGaussianSampler(rng, 0, 1);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
-        factorialLog = InternalUtils.FactorialLog.create();
+        factorialLog = mean < PIVOT ?
+            null : // Not used.
+            InternalUtils.FactorialLog.create().withCache((int) Math.min(mean, 2 * PIVOT));
     }
 
     /** {@inheritDoc} */
