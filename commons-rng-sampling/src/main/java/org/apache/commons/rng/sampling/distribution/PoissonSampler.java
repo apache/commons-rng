@@ -66,7 +66,9 @@ public class PoissonSampler
 
         gaussian = new BoxMullerGaussianSampler(rng, 0, 1);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
-        factorialLog = InternalUtils.FactorialLog.create();
+        factorialLog = mean < PIVOT ?
+            null : // Not used.
+            InternalUtils.FactorialLog.create().withCache((int) Math.min(mean, 2 * PIVOT));
     }
 
     /** {@inheritDoc} */
@@ -133,7 +135,7 @@ public class PoissonSampler
                     }
                     y = x < 0 ? Math.floor(x) : Math.ceil(x);
                     final double e = exponential.sample();
-                    v = -e - (n * n / 2) + c1;
+                    v = -e - 0.5 * n * n + c1;
                 } else {
                     if (u > p1 + p2) {
                         y = lambda;

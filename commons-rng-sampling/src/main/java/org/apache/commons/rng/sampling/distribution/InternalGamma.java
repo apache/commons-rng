@@ -113,7 +113,7 @@ class InternalGamma { // Class is package-private on purpose; do not make it pub
 
         final double sum = lanczos(x);
         final double tmp = x + LANCZOS_G + 0.5;
-        return ((x + 0.5) * Math.log(tmp)) - tmp +  HALF_LOG_2_PI + Math.log(sum / x);
+        return (x + 0.5) * Math.log(tmp) - tmp +  HALF_LOG_2_PI + Math.log(sum / x);
     }
 
     /**

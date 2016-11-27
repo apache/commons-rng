@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.core.source64;
 
-import org.apache.commons.rng.RandomAssert;
+import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
 public class MersenneTwister64Test {

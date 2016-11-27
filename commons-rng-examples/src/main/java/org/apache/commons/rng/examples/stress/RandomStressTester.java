@@ -37,20 +37,18 @@ import org.apache.commons.rng.UniformRandomProvider;
  * program that reads {@code int} values from its standard input and
  * writes an analysis report to standard output.
  *
- * <p>
- *  The <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">
- *  "dieharder"</a> test suite is such a software.
- *  <br>
- *  Example of command line, assuming that "examples.jar" specifies this
- *  class as the "main" class (see {@link #main(String[]) main} method):
- *  <pre><code>
- *   $ java -jar examples.jar \
- *     report/dh_ \
- *     4 \
- *     org.apache.commons.rng.examples.stress.GeneratorsList \
- *     /usr/bin/dieharder -a -g 200 -Y 1 -k 2
- *  </code></pre>
- * </p>
+ * The <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">
+ * "dieharder"</a> test suite is such a software.
+ *
+ * Example of command line, assuming that "examples.jar" specifies this
+ * class as the "main" class (see {@link #main(String[]) main} method):
+ * <pre><code>
+ *  $ java -jar examples.jar \
+ *    report/dh_ \
+ *    4 \
+ *    org.apache.commons.rng.examples.stress.GeneratorsList \
+ *    /usr/bin/dieharder -a -g 200 -Y 1 -k 2
+ * </code></pre>
  */
 public class RandomStressTester {
     /** Comment prefix. */

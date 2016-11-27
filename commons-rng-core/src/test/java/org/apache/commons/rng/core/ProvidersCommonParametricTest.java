@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng;
+package org.apache.commons.rng.core;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +34,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.apache.commons.rng.core.RandomProviderDefaultState;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.RandomProviderState;
 
 /**
  * Tests which all generators must pass.
@@ -587,27 +589,27 @@ public class ProvidersCommonParametricTest {
         Assert.assertArrayEquals("chunkSize=" + chunkSize + " numChunks=" + numChunks,
                                  b2, b3);
     }
-}
 
-/**
- * Dummy class for checking that restoring fails when an invalid state is used.
- */
-class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
-    /** {@inheritDoc} */
-    @Override
-    public int next() {
-        return 4; // https://www.xkcd.com/221/
-    }
+    /**
+     * Dummy class for checking that restoring fails when an invalid state is used.
+     */
+    class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
+        /** {@inheritDoc} */
+        @Override
+        public int next() {
+            return 4; // https://www.xkcd.com/221/
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    protected byte[] getStateInternal() {
-        return new byte[0];
-    }
+        /** {@inheritDoc} */
+        @Override
+        protected byte[] getStateInternal() {
+            return new byte[0];
+        }
 
-    /** {@inheritDoc} */
-    @Override
-    protected void setStateInternal(byte[] s) {
-        // No state.
+        /** {@inheritDoc} */
+        @Override
+        protected void setStateInternal(byte[] s) {
+            // No state.
+        }
     }
 }

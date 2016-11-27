@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng;
+package org.apache.commons.rng.core;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import org.apache.commons.rng.RestorableUniformRandomProvider;
+
 /**
- * Tests which all 64-bits based generators must pass.
+ * Tests which all 32-bits based generators must pass.
  */
 @RunWith(value=Parameterized.class)
-public class Providers64ParametricTest {
+public class Providers32ParametricTest {
     /** RNG under test. */
     private final RestorableUniformRandomProvider generator;
 
@@ -34,18 +36,18 @@ public class Providers64ParametricTest {
      *
      * @param rng RNG to be tested.
      */
-    public Providers64ParametricTest(RestorableUniformRandomProvider rng) {
+    public Providers32ParametricTest(RestorableUniformRandomProvider rng) {
         generator = rng;
     }
 
     @Parameters(name = "{index}: data={0}")
     public static Iterable<RestorableUniformRandomProvider[]> getList() {
-        return ProvidersList.list64();
+        return ProvidersList.list32();
     }
 
     @Test
     public void testNextBytesChunks() {
-        final int[] chunkSizes = { 8, 16, 24 };
+        final int[] chunkSizes = { 4, 8, 12, 16 };
         final int[] chunks = { 1, 2, 3, 4, 5 };
         for (int chunkSize : chunkSizes) {
             for (int numChunks : chunks) {

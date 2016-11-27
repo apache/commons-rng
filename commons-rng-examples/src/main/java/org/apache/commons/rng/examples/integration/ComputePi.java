@@ -29,7 +29,7 @@ import org.apache.commons.rng.simple.RandomSource;
  * Hence, the probability is \( \frac{\pi}{4} \).
  *
  * The Monte Carlo simulation will produce \( N \) points.
- * Defining \( N_c \) as the number of point that satisfy \( x^2 + y^2 <= 1 \),
+ * Defining \( N_c \) as the number of point that satisfy \( x^2 + y^2 \le 1 \),
  * we will have \( \frac{N_c}{N} \approx \frac{\pi}{4} \).
  */
 public class ComputePi extends MonteCarloIntegration {

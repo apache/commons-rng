@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng;
+package org.apache.commons.rng.core;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +36,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
+import org.apache.commons.rng.RestorableUniformRandomProvider;
 
 /**
  * The purpose of this class is to provide the list of all generators

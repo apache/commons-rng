@@ -29,7 +29,7 @@
   <name>Apache Commons RNG</name>
 
   <inceptionYear>2016</inceptionYear>
-  <description>The Apache Commons RNG parent project.</description>
+  <description>The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.</description>
   <url>http://commons.apache.org/proper/commons-rng/</url>
 
   <issueManagement>
@@ -174,15 +174,6 @@
         </configuration>
       </plugin>
 
-      <!--  MathJax -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <additionalparam>-header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'
-          </additionalparam>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -334,7 +325,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <additionalparam>-Xdoclint:none -header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
+          <additionalparam>-Xdoclint:all -header '&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
           <!-- <aggregate>true</aggregate> -->
         </configuration>
       </plugin>
@@ -523,6 +514,15 @@
       </build>
     </profile>
 
+    <!--
+        Profiles for modules with special requirements.
+    -->
+    <profile>
+      <id>commons-rng-examples</id>
+      <modules>
+        <module>commons-rng-examples</module>
+      </modules>
+    </profile>
   </profiles>
 
   <modules>
@@ -531,7 +531,11 @@
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
     <module>commons-rng-jmh</module>
-    <module>commons-rng-examples</module>
+    <!--
+        Built only upon explicit request (requires Java 1.7+).
+        See profile "commons-rng-examples".
+    -->
+    <!-- <module>commons-rng-examples</module> -->
   </modules>
 
 </project>

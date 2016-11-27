@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng;
+package org.apache.commons.rng.core;
 
 import java.util.Arrays;
 import org.junit.Assert;
+
+import org.apache.commons.rng.UniformRandomProvider;
 
 public class RandomAssert {
 
