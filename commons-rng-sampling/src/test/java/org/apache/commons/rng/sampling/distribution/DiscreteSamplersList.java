@@ -138,12 +138,16 @@ public class DiscreteSamplersList {
                             UniformRandomProvider rng) {
         final DiscreteSampler inverseMethodSampler =
             new InverseTransformDiscreteSampler(rng,
-                                             new DiscreteInverseCumulativeProbabilityFunction() {
-                                                 @Override
-                                                 public int inverseCumulativeProbability(double p) {
-                                                     return dist.inverseCumulativeProbability(p);
-                                                 }
-                                             });
+                                                new DiscreteInverseCumulativeProbabilityFunction() {
+                                                    @Override
+                                                    public int inverseCumulativeProbability(double p) {
+                                                        return dist.inverseCumulativeProbability(p);
+                                                    }
+                                                    @Override
+                                                    public String toString() {
+                                                        return dist.toString();
+                                                    }
+                                                });
         list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(inverseMethodSampler,
                                                                              points,
                                                                              getProbabilities(dist, points)) });

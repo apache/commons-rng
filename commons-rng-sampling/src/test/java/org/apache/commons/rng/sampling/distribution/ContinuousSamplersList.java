@@ -172,7 +172,7 @@ public class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.UniformRealDistribution(loUniform, hiUniform),
                 new ContinuousUniformSampler(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
 
-            // Weibull.
+            // Weibull ("inverse method").
             final double alphaWeibull = 678.9;
             final double betaWeibull = 98.76;
             add(LIST, new org.apache.commons.math3.distribution.WeibullDistribution(alphaWeibull, betaWeibull),
@@ -203,6 +203,10 @@ public class ContinuousSamplersList {
                                                       @Override
                                                       public double inverseCumulativeProbability(double p) {
                                                           return dist.inverseCumulativeProbability(p);
+                                                      }
+                                                      @Override
+                                                      public String toString() {
+                                                          return dist.toString();
                                                       }
                                                   });
         list.add(new ContinuousSamplerTestData[] { new ContinuousSamplerTestData(inverseMethodSampler,
