@@ -109,11 +109,16 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(meanPoisson),
                 MathArrays.sequence(10, 0, 1),
                 new PoissonSampler(RandomSource.create(RandomSource.KISS), meanPoisson));
-            // Poisson (mean > 40).
-            final double largeMeanPoisson = 543.21;
+            // Poisson (40 < mean < 80).
+            final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(largeMeanPoisson),
                 MathArrays.sequence(100, (int) (largeMeanPoisson - 50), 1),
                 new PoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
+            // Poisson (mean >> 40).
+            final double veryLargeMeanPoisson = 543.21;
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(veryLargeMeanPoisson),
+                MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
+                new PoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
