@@ -79,17 +79,31 @@ Preliminary checks:
 
 
 (1)
-As a first optional step, you can test that everything works locally, i.e.
+As an optional step, you can test that everything works locally, i.e.
 that the build process can create all the necessary artifacts.
-The command
 
-  $ mvn clean deploy -Prelease -Ptest-deploy
+  (1a)
+  The command
 
-should create the artifacts in the "target/deploy" directory.
+    $ mvn clean deploy -Prelease -Ptest-deploy -Pcommons-rng-examples
 
-At some point when processing the above command, the GPG passphrase will be
-requested; to avoid problems, the "gpg2" executable should be specified in
-the "settings.xml" file (see below).
+  should create the artifacts in the "target/deploy" directory.
+
+  At some point when processing the above command, the GPG passphrase will be
+  requested; to avoid problems, the "gpg2" executable should be specified in
+  the "settings.xml" file (see below).
+
+  (1b)
+  When the above works, you can test the creation of the full distribution
+  files with the following commands:
+
+    $ ( cd dist-archive && mvn assembly:single )
+
+  The "dist-archive/target" directory will then contain those files:
+    commons-rng-1.0-SNAPSHOT-bin.tar.gz
+    commons-rng-1.0-SNAPSHOT-bin.zip
+    commons-rng-1.0-SNAPSHOT-src.tar.gz
+    commons-rng-1.0-SNAPSHOT-src.zip
 
 
 (2)
@@ -172,7 +186,7 @@ The "release notes" file will be created by gathering all the changes
 collected during development in the file "src/changes/changes.xml".
 Create it by running:
 
-  $ mvn -Prelease-notes changes:announcement-generate
+  $ mvn -Prelease-notes -Pcommons-rng-examples changes:announcement-generate
 
 Check the file for weird line breaks, and commit the updated files to git:
 
@@ -272,7 +286,7 @@ in the settings.xml file.
 
 You can then run
 
-  $ mvn clean deploy -Prelease
+  $ mvn clean deploy -Prelease -Pcommons-rng-examples
 
 which will transfer the artifacts to the Nexus repository located at
   https://repository.apache.org/index.html#stagingRepositories
@@ -359,7 +373,7 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  $ mvn site site:stage
+  $ mvn -Pcommons-rng-examples site site:stage
   $ cd target
   $ mv site commons-rng-1.0-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
