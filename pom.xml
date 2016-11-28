@@ -21,9 +21,10 @@
     <artifactId>commons-parent</artifactId>
     <version>41</version>
   </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng</artifactId>
+  <artifactId>commons-rng-parent</artifactId>
   <packaging>pom</packaging>
   <version>1.0</version>
   <name>Apache Commons RNG</name>
@@ -523,6 +524,7 @@
         <module>commons-rng-examples</module>
       </modules>
     </profile>
+
   </profiles>
 
   <modules>
