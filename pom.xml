@@ -126,6 +126,13 @@
 
     <!-- Override default buildNumber timestamp format, needed for coveralls plugin -->
     <maven.buildNumber.timestampFormat>{0,date,yyyy-MM-dd HH:mm:ssZ}</maven.buildNumber.timestampFormat>
+
+    <!--
+        Override so that "mvn commons:download-page" will generates a web page
+        referring to the files created by the "dist-archive" module.
+        Temporary workaround?
+    -->
+    <commons.release.name>commons-rng-${project.version}</commons.release.name>
   </properties>
 
   <build>
