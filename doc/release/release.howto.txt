@@ -309,11 +309,12 @@ Nexus used to add "md5" and "sha1" checksums files to the "asc" files
 (cryptographic signature). If these fingerprints on signatures are
 present, they must be manually removed from Nexus staging area.
 
-The process also transfers the complete source and binaries distributions files:
-  commons-rng-1.0-bin.tar.gz
-  commons-rng-1.0-bin.zip
-  commons-rng-1.0-src.tar.gz
-  commons-rng-1.0-src.zip
+The process also transfers the complete source and binaries distributions files,
+(for each module):
+  commons-rng-<ModuleArtefactId>-1.0-bin.tar.gz
+  commons-rng-<ModuleArtefactId>-1.0-bin.zip
+  commons-rng-<ModuleArtefactId>-1.0-src.tar.gz
+  commons-rng-<ModuleArtefactId>-1.0-src.zip
 as well as their associated .md5 and .sha1 fingerprints and .asc signatures.
 All these files are not maven artifacts but rather distribution archives: They
 belong elsewhere; hence they must also been removed from the Nexus staging
@@ -326,36 +327,51 @@ How to "close" the staging repository is explained at this page:
 
 
 (12)
-Upload the other distribution files to the Apache servers.
+Create and upload the other distribution files to the Apache servers.
 
-The archive files have been created during the previous step. They have been put
-in the .m2 local repository. The RELEASE_NOTES.txt file has been created earlier
-and is still in the checkout directory of the release candidate. The README.html
-file can be copied from the release area of the Apache dist server.
-All these files can be uploaded to the development area of the Apache dist server
-using the following commands:
+  (12a)
+  Perform a server-side copy of the README.html file can be copied from the
+  "release" area of the Apache dist server to the "dev" area:
 
- $ cd /tmp
- $ svn cp https://dist.apache.org/repos/dist/release/commons/rng/README.html \
-          https://dist.apache.org/repos/dist/dev/commons/rng/README.html
- $ svn checkout https://dist.apache.org/repos/dist/dev/commons/rng
- $ cd rng
+    $ svn cp https://dist.apache.org/repos/dist/release/commons/rng/README.html \
+             https://dist.apache.org/repos/dist/dev/commons/rng/README.html
 
-Edit the "README.html" file to contain the released version number.
+  (12b)
+  The modules "dist-archive" dedicated to creating the archive files.
+  Run the following command:
 
- $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-bin.* binaries
- $ cp ~/.m2/repository/org/apache/commons/commons-rng/1.0/*-src.* source
- $ cp <path-to-the-RC-workspace>/RELEASE-NOTES.txt .
- $ cp <path-to-the-RC-workspace>/CONTRIBUTING.md .
- $ cp <path-to-the-RC-workspace>/README.md .
- $ svn add \
-     CONTRIBUTING.md \
-     README.md \
-     README.html \
-     RELEASE-NOTES.txt \
-     binaries/* \
-     source/*
- $ svn commit -m "Distribution files for Commons RNG v1.0 (RC1)."
+    $ ( cd dist-archive && mvn assembly:single )
+
+  (12c)
+  Go to a temporary directory and check cout the "dev" area.
+
+    $ cd /tmp
+    $ svn checkout https://dist.apache.org/repos/dist/dev/commons/rng
+    $ cd rng
+
+  (12d)
+  Edit the "README.html" file to contain the released version number.
+
+  (12e)
+  Copy other files from the RC workspace:
+
+    $ cp <path-to-the-RC-workspace>/RELEASE-NOTES.txt .
+    $ cp <path-to-the-RC-workspace>/CONTRIBUTING.md .
+    $ cp <path-to-the-RC-workspace>/README.md .
+    $ cp <path-to-the-RC-workspace>/dist-archive/target/*-bin.* binaries
+    $ cp <path-to-the-RC-workspace>/dist-archive/target/*-src.* source
+
+  (12f)
+  Commit to SVN:
+
+    $ svn add \
+      CONTRIBUTING.md \
+      README.md \
+      README.html \
+      RELEASE-NOTES.txt \
+      binaries/* \
+      source/*
+    $ svn commit -m "Distribution files for Commons RNG v1.0 (RC1)."
 
 
 (13)
