@@ -330,8 +330,8 @@ How to "close" the staging repository is explained at this page:
 Create and upload the other distribution files to the Apache servers.
 
   (12a)
-  Perform a server-side copy of the README.html file can be copied from the
-  "release" area of the Apache dist server to the "dev" area:
+  Perform a server-side copy of the README.html from the "release" area of
+  the Apache dist server to the "dev" area:
 
     $ svn cp https://dist.apache.org/repos/dist/release/commons/rng/README.html \
              https://dist.apache.org/repos/dist/dev/commons/rng/README.html
@@ -389,9 +389,9 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  $ mvn -Pcommons-rng-examples site site:stage
+  $ mvn clean -Pcommons-rng-examples site site:stage
   $ cd target
-  $ mv site commons-rng-1.0-RC1-site
+  $ mv staging commons-rng-1.0-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
      lftp you@home.apache.org:~> cd public_html
      lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.0-RC1-site
@@ -430,7 +430,8 @@ KEYS file to check signatures:
   http://www.apache.org/dist/commons/KEYS
 
 Maven artifacts:
-  https://repository.apache.org/content/repositories/orgapachecommons-051/org/apache/commons/commons-rng/1.0/
+  https://repository.apache.org/content/repositories/orgapachecommons-4321
+
 
 [ ] +1 Release it.
 [ ] +0 Go ahead; I don't care.
