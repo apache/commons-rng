@@ -267,7 +267,7 @@
             <exclude>.ekstazi/**</exclude>
             <exclude>src/site/resources/txt/userguide/stress/dh/**</exclude>
             <exclude>src/site/resources/txt/userguide/stress/tu/**</exclude>
-            <exclude>src/userguide/target/**</exclude>
+            <exclude>target/**</exclude>
 
           </excludes>
         </configuration>
