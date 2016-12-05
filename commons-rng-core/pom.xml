@@ -31,8 +31,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>Apache Commons RNG Core</name>
 
-  <description>The Apache Commons RNG Core module provides pure Java implementations of
-    random numbers generator algorithms.</description>
+  <description>Pure Java implementations of random numbers generator algorithms.</description>
 
   <properties>
     <!-- This value must reflect the current name of the base package. -->

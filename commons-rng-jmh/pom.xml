@@ -31,8 +31,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>Apache Commons RNG JMH</name>
 
-  <description>The Apache Commons RNG JMH module provides code for running
-    JMH benchmarks that assess the performance of the generators.</description>
+  <description>Code for running JMH benchmarks that assess the performance of the generators.</description>
 
   <dependencies>
     <dependency>

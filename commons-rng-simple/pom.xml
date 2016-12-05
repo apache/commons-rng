@@ -31,8 +31,7 @@
   <version>1.0-SNAPSHOT</version>
   <name>Apache Commons RNG Simple</name>
 
-  <description>The Apache Commons RNG Simple module provides a factory class to
-    easily instantiate a random numbers generator implementation.</description>
+  <description>Simple API for instantiating random numbers generators.</description>
 
   <properties>
     <!-- This value must reflect the current name of the base package. -->
