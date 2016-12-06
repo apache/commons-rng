@@ -31,9 +31,7 @@
   <version>1.0</version>
   <name>Apache Commons RNG Examples</name>
 
-  <description>The Apache Commons RNG Examples module contains examples
-    of usage the random numbers generator implementations available
-    through the "commons-rng-simple" module.</description>
+  <description>Examples of use of the random numbers generator implemented in the "commons-rng-simple" module.</description>
 
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>

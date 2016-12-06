@@ -23,7 +23,7 @@
 
   <<<Commons RNG>>> provides generators of "pseudo-randomness", i.e. the
   generators produce deterministic sequences of bytes, currently in chunks
-  of 32 (a.k.a. <<<int>>) or 64 bits (a.k.a. <<<long>>>), depending on the
+  of 32 (a.k.a. <<<int>>>) or 64 bits (a.k.a. <<<long>>>), depending on the
   implementation.
 
   The goal was to provide an API that is simple and unencumbered with old

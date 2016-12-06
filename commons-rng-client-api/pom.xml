@@ -31,8 +31,7 @@
   <version>1.0</version>
   <name>Apache Commons RNG Client API</name>
 
-  <description>The Apache Commons RNG API module defines the API for client
-    code that uses random numbers generators.</description>
+  <description>API for client code that uses random numbers generators.</description>
 
   <properties>
     <!-- This value must reflect the current name of the base package. -->
