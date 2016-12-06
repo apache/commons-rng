@@ -343,7 +343,7 @@ Create and upload the other distribution files to the Apache servers.
     $ ( cd dist-archive && mvn assembly:single )
 
   (12c)
-  Go to a temporary directory and check cout the "dev" area.
+  Go to a temporary directory and check out the "dev" area.
 
     $ cd /tmp
     $ svn checkout https://dist.apache.org/repos/dist/dev/commons/rng
@@ -355,11 +355,20 @@ Create and upload the other distribution files to the Apache servers.
   (12e)
   Copy other files from the RC workspace:
 
-    $ cp <path-to-the-RC-workspace>/RELEASE-NOTES.txt .
-    $ cp <path-to-the-RC-workspace>/CONTRIBUTING.md .
-    $ cp <path-to-the-RC-workspace>/README.md .
-    $ cp <path-to-the-RC-workspace>/dist-archive/target/*-bin.* binaries
-    $ cp <path-to-the-RC-workspace>/dist-archive/target/*-src.* source
+    $ cp path-to-the-RC-workspace/RELEASE-NOTES.txt .
+    $ cp path-to-the-RC-workspace/CONTRIBUTING.md .
+    $ cp path-to-the-RC-workspace/README.md .
+    $ cp path-to-the-RC-workspace/dist-archive/target/*-bin.* binaries
+    $ cp path-to-the-RC-workspace/dist-archive/target/*-src.* source
+
+  Currently, the commons-parent build does not create the
+   * signatures (".asc"),
+   * checksums (".md5"),
+   * hashes (".sha1")
+  of the distribution files.  Hence, you have to create them "manually"!
+  For the signature, the command would be
+    $ gpg -ab file-to-sign
+  For the hash and checksum, see e.g. the "Digest" Perl module.
 
   (12f)
   Commit to SVN:
