@@ -50,7 +50,7 @@ If the output is not quite correct, check for invisible trailing spaces!
     <title>Apache Commons RNG Release Notes</title>
   </properties>
   <body>
-    <release version="1.0" date="2016-11-30" description="
+    <release version="1.0" date="2016-12-20" description="
 This is the first release of Apache Commons RNG.
 
 Apache Commons RNG 1.0 contains the following modules:
