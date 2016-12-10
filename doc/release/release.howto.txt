@@ -560,18 +560,29 @@ Clean up files and prepare for next version (here we assume it will be 1.1):
 
 Edit "doap_rng.rdf" to add the just released version date.
 
-Edit "pom.xml" to contain
+Edit every "pom.xml" file (i.e. for each module) to contain
 
   <version>1.1-SNAPSHOT</version>
 
 Edit "src/changes/changes.xml" to add a new section for the next release,
 setting the release date to "TBD" and the description to the empty string.
 
-Double-check that the "pom.xml" file *really* has a "-SNAPSHOT" suffix in
-the "<version>" property.
+Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
+in the "<version>" property.
 Then commit everything:
 
-  $ git add doap_rng.rdf pom.xml src/changes/changes.xml
+  $ git add \
+      doap_rng.rdf \
+      src/changes/changes.xml \
+      pom.xml \
+      commons-rng-client-api/pom.xml \
+      commons-rng-core/pom.xml \
+      commons-rng-simple/pom.xml \
+      commons-rng-sampling/pom.xml \
+      commons-rng-jmh/pom.xml \
+      commons-rng-examples/pom.xml \
+      dist-archive/pom.xml
+
   $ git commit -m "Preparing next version (1.1)"
   $ git push
 
@@ -580,7 +591,7 @@ Then commit everything:
 Switch back to branch "master" and merge the "1.0-release" branch
 
   $ git checkout master
-  $ get merge 1.0-release
+  $ git merge 1.0-release
   $ git push
 
 
