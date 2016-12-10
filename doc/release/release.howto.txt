@@ -412,43 +412,44 @@ Call to vote by sending a message to the "dev" ML with subject
 "[VOTE][RC1] Release Commons RNG 1.0". You can use the following example as
 a starting point, replacing the URLs with the appropriate ones:
 ----------
-This is a [VOTE] for releasing Apache Commons RNG 1.0 (from RC1).
+This is a [VOTE] for releasing Apache Commons RNG 1.0 (from RC6).
+
 
 Tag name:
-  RNG_1_0_RC1 (signature can be checked from git using 'git tag -v')
+  RNG_1_0_RC6 (signature can be checked from git using 'git tag -v')
 
 Tag URL:
-  https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=cf4a9d70c9ac24dd7196995390171150e4e56451
+  https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=4581a4520315657a4219b37c81f5db80e4a4e43c
 
 Commit ID the tag points at:
-  cf4a9d70c9ac24dd7196995390171150e4e56451
+  4581a4520315657a4219b37c81f5db80e4a4e43c
 
 Site:
-  http://home.apache.org/~__Your_apache_login__/commons-rng-1.0-RC1-site
+  http://home.apache.org/~erans/commons-rng-1.0-RC6-site
 
-Distribution files:
+Distribution files (committed at revision 17284):
   https://dist.apache.org/repos/dist/dev/commons/rng/
 
 Distribution files hashes (SHA1):
-  e02c981d49c1f12b1fc237e69cb551a5620e57b4 commons-rng-1.0-bin.tar.gz
-  11965eb97033d4d6ef0aeb902f1450641f40d3c5 commons-rng-1.0-bin.zip
-  ce3efda70ac8f850f15154b38438bc337adc027a commons-rng-1.0-src.tar.gz
-  d343c885a9d6eea611403f7f92ff580911363681 commons-rng-1.0-src.zip
+  c5e70a523160ed848194eeba0efa2b14d23c7a61 commons-rng-1.0-bin.tar.gz
+  66d7701afc90aafa4c4b6e033b8df6cd84365161 commons-rng-1.0-bin.zip
+  ef56543c8882a0e4771de83ecf8b3be190f122cf commons-rng-1.0-src.tar.gz
+  3dc56b0793d8bbd703a4efa68547eb58f6fb5b35 commons-rng-1.0-src.zip
 
 KEYS file to check signatures:
   http://www.apache.org/dist/commons/KEYS
 
 Maven artifacts:
-  https://repository.apache.org/content/repositories/orgapachecommons-4321
+  https://repository.apache.org/content/repositories/orgapachecommons-1229/
 
+Please select one of the following options:
+ [ ] +1 Release it.
+ [ ] +0 Go ahead; I don't care.
+ [ ] -0 There are a few minor glitches: ...
+ [ ] -1 No, do not release it because ...
 
-[ ] +1 Release it.
-[ ] +0 Go ahead; I don't care.
-[ ] -0 There are a few minor glitches: ...
-[ ] -1 No, do not release it because ...
-
-This vote will close in 72 hours, at YYYY-MM-DDThh:mm:ssZ (this is UTC
-time).
+This vote will be open for at least 72 hours, i.e. until 2016-12-10T00:00:00Z
+(this is UTC time).
 ----------
 
 
