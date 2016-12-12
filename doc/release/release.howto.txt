@@ -569,6 +569,9 @@ Put the official final tag to point at the same commit as the last release candi
 Clean up files and prepare for next version (here we assume it will be 1.1):
 
 Edit "doap_rng.rdf" to add the just released version date.
+It is located at
+  https://svn.apache.org/repos/asf/commons/cms-site/trunk/doap
+in the SVN repository.
 
 Edit every "pom.xml" file (i.e. for each module) to contain
 
