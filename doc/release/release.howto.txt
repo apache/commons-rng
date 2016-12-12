@@ -561,7 +561,7 @@ to make sure that everything looks correct.
 (21)
 Put the official final tag to point at the same commit as the last release candidate tag:
 
-  $ git tag -s -m "RC1 becomes v1.0 official release." RNG_1_0 cf4a9d70c9ac24dd7196995390171150e4e56451
+  $ git tag -u "__Your_key_id__" -s -m "RC6 becomes v1.0 official release." RNG_1_0 cf4a9d70c9ac24dd7196995390171150e4e56451
   $ git push --tags
 
 
@@ -606,11 +606,6 @@ Switch back to branch "master" and merge the "1.0-release" branch
 
 
 (24)
-Update the report database:
-  https://reporter.apache.org/addrelease.html?commons
-
-
-(25)
 Allow for the web site mirrors to be updated (possibly several hours); then
 send (from your apache account) a release announcement to the following ML:
   announce@apache.org
