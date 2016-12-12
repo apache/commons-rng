@@ -536,9 +536,22 @@ The Javadoc must therefore be copied manually using server side copy from the
 "apidocs" directory after release, in order for the links to former versions
 to work. This is done as follows:
 
-  $ svn cp -m "copying 1.0 apidocs to versioned directory for the long-term links" \
-        https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng/apidocs \
-        https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng/javadocs/api-1.0
+  $ export RNG_WEB_SITE_SVN_REVISION=1002658
+  $ export RNG_RELEASE_VERSION=1.0
+  $ svnmucc -U https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-client-api/apidocs \
+                                    commons-rng-client-api/javadocs/api-$RNG_RELEASE_VERSION \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-core/apidocs \
+                                    commons-rng-core/javadocs/api-$RNG_RELEASE_VERSION \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-simple/apidocs \
+                                    commons-rng-simple/javadocs/api-$RNG_RELEASE_VERSION \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-sampling/apidocs \
+                                    commons-rng-sampling/javadocs/api-$RNG_RELEASE_VERSION \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-jmh/apidocs \
+                                    commons-rng-jmh/javadocs/api-$RNG_RELEASE_VERSION \
+      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-examples/apidocs \
+                                    commons-rng-examples/javadocs/api-$RNG_RELEASE_VERSION \
+      -m "Commons RNG: Copying $RNG_RELEASE_VERSION apidocs to versioned directories for the long-term links."
 
 Now wait a few minutes for the live site to fully sync and then check
   http://commons.apache.org/proper/commons-rng/
