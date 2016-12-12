@@ -469,30 +469,26 @@ from PMC members to pass.
 
 (17)
 The distribution files must be moved from the development area to the release
-area of the Apache dist server:
+area of the Apache dist server.
 
-$ svnmucc -U https://dist.apache.org/repos/dist \
-          rm release/commons/rng/README.html \
-          mv dev/commons/rng/README.html release/commons/rng/README.html \
-          rm release/commons/rng/RELEASE-NOTES.txt \
-          mv dev/commons/rng/RELEASE-NOTES.txt release/commons/rng/RELEASE-NOTES.txt \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.tar.gz release/commons/rng/binaries/commons-rng-1.0-bin.tar.gz \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.asc release/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.asc \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.md5 release/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.md5 \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.sha1 release/commons/rng/binaries/commons-rng-1.0-bin.tar.gz.sha1 \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.zip release/commons/rng/binaries/commons-rng-1.0-bin.zip \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.zip.asc release/commons/rng/binaries/commons-rng-1.0-bin.zip.asc \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.zip.md5 release/commons/rng/binaries/commons-rng-1.0-bin.zip.md5 \
-          mv dev/commons/rng/binaries/commons-rng-1.0-bin.zip.sha1 release/commons/rng/binaries/commons-rng-1.0-bin.zip.sha1 \
-          mv dev/commons/rng/source/commons-rng-1.0-src.tar.gz release/commons/rng/source/commons-rng-1.0-src.tar.gz \
-          mv dev/commons/rng/source/commons-rng-1.0-src.tar.gz.asc release/commons/rng/source/commons-rng-1.0-src.tar.gz.asc \
-          mv dev/commons/rng/source/commons-rng-1.0-src.tar.gz.md5 release/commons/rng/source/commons-rng-1.0-src.tar.gz.md5 \
-          mv dev/commons/rng/source/commons-rng-1.0-src.tar.gz.sha1 release/commons/rng/source/commons-rng-1.0-src.tar.gz.sha1 \
-          mv dev/commons/rng/source/commons-rng-1.0-src.zip release/commons/rng/source/commons-rng-1.0-src.zip \
-          mv dev/commons/rng/source/commons-rng-1.0-src.zip.asc release/commons/rng/source/commons-rng-1.0-src.zip.asc \
-          mv dev/commons/rng/source/commons-rng-1.0-src.zip.md5 release/commons/rng/source/commons-rng-1.0-src.zip.md5 \
-          mv dev/commons/rng/source/commons-rng-1.0-src.zip.sha1 release/commons/rng/source/commons-rng-1.0-src.zip.sha1 \
-          -m "Release Commons RNG v1.0"
+  (17a)
+  Checkout the official distribution repository:
+
+    $ svn co https://dist.apache.org/repos/dist/release/commons/rng
+
+  (17b)
+  Copy the files from the checkout of the repository that was voted on:
+
+    $ cd rng
+    $ rsync -Cavz path-to-RC-dev/rng/ .
+
+  (17c)
+  Check (and possibly "svn add") files.
+
+  (17d)
+  Commit:
+
+    $ svn commit -m "Release Commons RNG v1.0 (from RC6)."
 
 
 (18)
