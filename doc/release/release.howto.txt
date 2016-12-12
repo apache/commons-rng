@@ -490,6 +490,9 @@ area of the Apache dist server.
 
     $ svn commit -m "Release Commons RNG v1.0 (from RC6)."
 
+  (17e)
+  Register the release at
+    https://reporter.apache.org/addrelease.html?commons
 
 (18)
 Release (a.k.a. "promote") the artifacts on the Nexus server, as shown here:
@@ -508,22 +511,20 @@ immediately synced with the live site and so your changes should show up in a
 few minutes once you commit the new site. You can also check out the site
 directly by yourself elsewhere:
 
-  svn checkout https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng site-content
+  $ svn checkout https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng site-content
 
 Remove all files there (except .svn folder) and move all the files from the site.
 
  $ cd site-content
- $ rm -fr *
+ $ rm -rf *
  $ cp -pR ../target/commons-rng-1.0-RC1-site/* .
 
-Check for possibly new files:
+Check for new or deleted files:
  $ svn status
-and "svn add" them if necessary.
+and "svn add" or "svn del" them if necessary.
 
 Commit the new contents of the web site:
- $ svn commit -m "Version 1.0 was released: Updating site."
-
-Beware the commit command may be very long (several hours).
+ $ svn commit -m "Commons RNG v1.0 was released (from RC6). Web site update"
 
 
 (20)
