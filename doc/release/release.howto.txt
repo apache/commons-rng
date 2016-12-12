@@ -437,7 +437,7 @@ Distribution files hashes (SHA1):
   3dc56b0793d8bbd703a4efa68547eb58f6fb5b35 commons-rng-1.0-src.zip
 
 KEYS file to check signatures:
-  http://www.apache.org/dist/commons/KEYS
+  https://www.apache.org/dist/commons/KEYS
 
 Maven artifacts:
   https://repository.apache.org/content/repositories/orgapachecommons-1229/
