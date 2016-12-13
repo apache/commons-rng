@@ -50,7 +50,7 @@ If the output is not quite correct, check for invisible trailing spaces!
     <title>Apache Commons RNG Release Notes</title>
   </properties>
   <body>
-    <release version="1.0" date="TBD" description="
+    <release version="1.0" date="2016-12-13" description="
 This is the first release of Apache Commons RNG.
 
 Apache Commons RNG 1.0 contains the following modules:
@@ -60,6 +60,12 @@ Apache Commons RNG 1.0 contains the following modules:
   commons-rng-sampling (requires Java 6)
   commons-rng-jmh (requires Java 6)
   commons-rng-examples (requires Java 7)
+">
+      <!-- <action dev="erans" type="fix" issue="RNG-xxx"> -->
+      <!-- </action> -->
+    </release>
+
+    <release version="1.1" date="TBD" description="TBD
 ">
       <!-- <action dev="erans" type="fix" issue="RNG-xxx"> -->
       <!-- </action> -->
