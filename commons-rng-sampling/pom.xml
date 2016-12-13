@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-sampling</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
   <name>Apache Commons RNG Sampling</name>
 
   <description>The Apache Commons RNG Sampling module provides samplers
@@ -47,13 +47,13 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-client-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-simple</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
