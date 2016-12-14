@@ -614,25 +614,25 @@ https://reference.apache.org/committer/email#sendingemailfromyourapacheorgemaila
 You can use the following message as a template:
 
 ----------
-The Apache Commons Team is pleased to announce the availability of:
-
-Apache Commons RNG 1.0
+The Apache Commons Team is pleased to announce the availability of
+version 1.0 of "Apache Commons RNG".
 
 Apache Commons RNG provides Java implementations of pseudo-random
 numbers generators.
 
-The release notes can be reviewed at:
-http://www.apache.org/dist/commons/rng/RELEASE-NOTES.txt
+The release notes can be reviewed at
+  https://www.apache.org/dist/commons/rng/RELEASE-NOTES.txt
 
-Distribution packages can be downloaded from:
-https://commons.apache.org/proper/commons-rng/download_rng.cgi
+Distribution packages can be downloaded from
+  https://commons.apache.org/proper/commons-rng/download_rng.cgi
 
-When downloading, please verify signatures using the KEYS file available at:
-http://www.apache.org/dist/commons
+When downloading, please verify signatures using the KEYS file
+available at
+  https://www.apache.org/dist/commons/KEYS
 
 Maven artifacts are also available in the central Maven repository:
+  https://repo1.maven.org/maven2/org/apache/commons/
 
-http://repo1.maven.org/maven2/org/apache/commons/
 
 The Apache Commons Team
 ----------
