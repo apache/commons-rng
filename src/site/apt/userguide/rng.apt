@@ -328,7 +328,7 @@ String word = sampler.sample().get(0);
 
   []
 
-  The <<<org.apache.commons.rng.simple.internal>>> package contain classes
+  The <<<org.apache.commons.rng.simple.internal>>> package contains classes
   for supporting initialization (a.k.a. "seeding") of the generators.
   They must not be used directly in applications, as all the necessary utilities
   are accessible through methods defined in <<<RandomSource>>>.
@@ -348,8 +348,8 @@ String word = sampler.sample().get(0);
   []
 
 
-  The {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}org.apache.commons.rng.core}}.
-  package contain the implementation of the algorithms for the generation of
+  The {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}org.apache.commons.rng.core}}
+  package contains the implementation of the algorithms for the generation of
   pseudo-random sequences.
   Applications should not directly import or use classes defined in this package:
   all generators can be instantiated through the <<<RandomSource>>> factory.
