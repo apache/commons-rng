@@ -30,10 +30,6 @@ public abstract class LongProvider
 
     /** {@inheritDoc} */
     @Override
-    public abstract long next();
-
-    /** {@inheritDoc} */
-    @Override
     public long nextLong() {
         return next();
     }
