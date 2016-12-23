@@ -71,7 +71,7 @@ public class RandomStressTester {
         final File exec = new File(cmd.get(0));
         if (!exec.exists() ||
             !exec.canExecute()) {
-            throw new RuntimeException("Program is not executable: " + exec);
+            throw new IllegalArgumentException("Program is not executable: " + exec);
         }
 
         cmdLine = new ArrayList<String>(cmd);
@@ -81,7 +81,7 @@ public class RandomStressTester {
         if (!reportDir.exists() ||
             !reportDir.isDirectory() ||
             !reportDir.canWrite()) {
-            throw new RuntimeException("Invalid output directory: " + reportDir);
+            throw new IllegalArgumentException("Invalid output directory: " + reportDir);
         }
     }
 
