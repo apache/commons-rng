@@ -42,11 +42,11 @@ public class CollectionSampler<T> {
      * @param rng Generator of uniformly distributed random numbers.
      * @param collection Collection to be sampled.
      * A (shallow) copy will be stored in the created instance.
-     * @throws IllegalArgumentException if {@code collection.size() <= 0}.
+     * @throws IllegalArgumentException if {@code collection} is empty.
      */
     public CollectionSampler(UniformRandomProvider rng,
                              Collection<T> collection) {
-        if (collection.size() <= 0) {
+        if (collection.isEmpty()) {
             throw new IllegalArgumentException("Empty collection");
         }
 
