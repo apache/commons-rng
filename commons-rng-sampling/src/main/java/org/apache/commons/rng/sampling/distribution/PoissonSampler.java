@@ -118,13 +118,13 @@ public class PoissonSampler
             final double p2 = a2 / aSum;
             final double c1 = 1 / (8 * lambda);
 
-            double x = 0;
-            double y = 0;
-            double v = 0;
-            int a = 0;
-            double t = 0;
-            double qr = 0;
-            double qa = 0;
+            double x;
+            double y;
+            double v;
+            int a;
+            double t;
+            double qr;
+            double qa;
             while (true) {
                 final double u = nextDouble();
                 if (u <= p1) {
