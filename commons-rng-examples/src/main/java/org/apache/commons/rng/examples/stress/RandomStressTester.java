@@ -106,7 +106,7 @@ public class RandomStressTester {
      */
     public static void main(String[] args) {
         final String output = args[0];
-        final int numThreads = Integer.valueOf(args[1]);
+        final int numThreads = Integer.parseInt(args[1]);
 
         final Iterable<UniformRandomProvider> rngList = createGeneratorsList(args[2]);
 

@@ -62,7 +62,7 @@ public class ComputePi extends MonteCarloIntegration {
             throw new IllegalStateException("Missing arguments");
         }
 
-        final long numPoints = Long.valueOf(args[0]);
+        final long numPoints = Long.parseLong(args[0]);
         final RandomSource randomSource = RandomSource.valueOf(args[1]);
 
         final ComputePi piApp = new ComputePi(randomSource);
