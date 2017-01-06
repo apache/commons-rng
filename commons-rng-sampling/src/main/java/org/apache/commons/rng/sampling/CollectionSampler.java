@@ -55,16 +55,9 @@ public class CollectionSampler<T> {
     }
 
     /**
-     * Picks one of the items in the given {@code collection}.
-     *
-     * <p>
-     * Sampling is without replacement; but if the source collection
-     * contains identical objects, the sample may include repeats.
-     * </p>
-     * <p>
-     * There is no guarantee that the concrete type of the returned
-     * collection is the same as the source collection.
-     * </p>
+     * Picks one of the items from the
+     * {@link #CollectionSampler(UniformRandomProvider,Collection)
+     * collection passed to the constructor}.
      *
      * @return a random sample.
      */
