@@ -21,7 +21,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
  * Box-Muller algorithm</a> for sampling from a Gaussian distribution.
+ *
+ * @deprecated since v1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
+ * and {@link GaussianSampler} instead.
  */
+@Deprecated
 public class BoxMullerGaussianSampler
     extends SamplerBase
     implements ContinuousSampler {
