@@ -47,7 +47,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     /** The alpha parameter. */
     private final double alpha;
     /** Gaussian sampling. */
-    private final BoxMullerGaussianSampler gaussian;
+    private final NormalizedGaussianSampler gaussian;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -60,7 +60,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         super(rng);
         this.alpha = alpha;
         this.theta = theta;
-        gaussian = new BoxMullerGaussianSampler(rng, 0, 1);
+        gaussian = new BoxMullerNormalizedGaussianSampler(rng);
     }
 
     /** {@inheritDoc} */
