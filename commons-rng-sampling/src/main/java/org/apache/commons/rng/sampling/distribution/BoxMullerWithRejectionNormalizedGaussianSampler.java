@@ -24,7 +24,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * mean 0 and standard deviation 1.
  * This is a variation, suggested in <a href="http://haifux.org/lectures/79/random.pdf">
  * this presentation</a> (page 39), of the algorithm implemented in
- * {@link BoxMullerNormalizedGaussianSampler}, 
+ * {@link BoxMullerNormalizedGaussianSampler}.
  *
  * @since 1.1
  */
