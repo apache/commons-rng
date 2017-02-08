@@ -20,33 +20,25 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
- * Box-Muller algorithm</a> for sampling from a Gaussian distribution.
+ * Box-Muller algorithm</a> for sampling from Gaussian distribution with
+ * mean 0 and standard deviation 1.
+ * This is a variation, suggested in <a href="http://haifux.org/lectures/79/random.pdf">
+ * this presentation</a> (page 39), of the algorithm implemented in
+ * {@link BoxMullerNormalizedGaussianSampler}, 
  *
- * @deprecated since v1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
- * and {@link GaussianSampler} instead.
+ * @since 1.1
  */
-@Deprecated
-public class BoxMullerGaussianSampler
+public class BoxMullerWithRejectionNormalizedGaussianSampler
     extends SamplerBase
-    implements ContinuousSampler {
+    implements NormalizedGaussianSampler {
     /** Next gaussian. */
     private double nextGaussian = Double.NaN;
-    /** Mean. */
-    private final double mean;
-    /** standardDeviation. */
-    private final double standardDeviation;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
-     * @param mean Mean of the Gaussian distribution.
-     * @param standardDeviation Standard deviation of the Gaussian distribution.
      */
-    public BoxMullerGaussianSampler(UniformRandomProvider rng,
-                                    double mean,
-                                    double standardDeviation) {
+    public BoxMullerWithRejectionNormalizedGaussianSampler(UniformRandomProvider rng) {
         super(rng);
-        this.mean = mean;
-        this.standardDeviation = standardDeviation;
     }
 
     /** {@inheritDoc} */
@@ -54,18 +46,28 @@ public class BoxMullerGaussianSampler
     public double sample() {
         final double random;
         if (Double.isNaN(nextGaussian)) {
-            // Generate a pair of Gaussian numbers.
+            // Rejection scheme for selecting a pair that lies within the unit circle.
+            SAMPLE: while (true) {
+                // Generate a pair of numbers within [-1 , 1).
+                final double x = 2 * nextDouble() - 1;
+                final double y = 2 * nextDouble() - 1;
+                final double r2 = x * x + y * y;
 
-            final double x = nextDouble();
-            final double y = nextDouble();
-            final double alpha = 2 * Math.PI * x;
-            final double r = Math.sqrt(-2 * Math.log(y));
+                if (r2 < 1) {
+                    // Pair (x, y) is within unit circle.
 
-            // Return the first element of the generated pair.
-            random = r * Math.cos(alpha);
+                    final double r = Math.sqrt(r2);
+                    final double alpha = 2 * Math.sqrt(-Math.log(r)) / r;
 
-            // Keep second element of the pair for next invocation.
-            nextGaussian = r * Math.sin(alpha);
+                    // Return the first element of the generated pair.
+                    random = alpha * x;
+
+                    // Keep second element of the pair for next invocation.
+                    nextGaussian = alpha * y;
+                    break SAMPLE;
+                }
+                // Pair is not within the unit circle: Generate another one.
+            }
         } else {
             // Use the second element of the pair (generated at the
             // previous invocation).
@@ -75,12 +77,12 @@ public class BoxMullerGaussianSampler
             nextGaussian = Double.NaN;
         }
 
-        return standardDeviation * random + mean;
+        return random;
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Box-Muller Gaussian deviate [" + super.toString() + "]";
+        return "Box-Muller (with rejection) normalized Gaussian deviate [" + super.toString() + "]";
     }
 }

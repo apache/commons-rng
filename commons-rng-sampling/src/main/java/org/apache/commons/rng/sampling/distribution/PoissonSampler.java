@@ -46,7 +46,7 @@ public class PoissonSampler
     /** Exponential. */
     private final ContinuousSampler exponential;
     /** Gaussian. */
-    private final ContinuousSampler gaussian;
+    private final NormalizedGaussianSampler gaussian;
     /** {@code log(n!)}. */
     private final InternalUtils.FactorialLog factorialLog;
 
@@ -64,7 +64,7 @@ public class PoissonSampler
 
         this.mean = mean;
 
-        gaussian = new BoxMullerGaussianSampler(rng, 0, 1);
+        gaussian = new BoxMullerNormalizedGaussianSampler(rng);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
         factorialLog = mean < PIVOT ?
             null : // Not used.

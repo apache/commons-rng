@@ -19,42 +19,41 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
- * Box-Muller algorithm</a> for sampling from a Log normal distribution.
+ * Sampling from a Gaussian distribution with given mean and
+ * standard deviation.
+ *
+ * @since 1.1
  */
-public class BoxMullerLogNormalSampler
-    extends SamplerBase
-    implements ContinuousSampler {
-    /** Scale. */
-    private final double scale;
-    /** Shape. */
-    private final double shape;
-    /** Gaussian sampling. */
-    private final NormalizedGaussianSampler gaussian;
+public class GaussianSampler implements ContinuousSampler {
+    /** Mean. */
+    private final double mean;
+    /** standardDeviation. */
+    private final double standardDeviation;
+    /** Normalized Gaussian sampler. */
+    private final NormalizedGaussianSampler normalized;
 
     /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param scale Scale of the Log normal distribution.
-     * @param shape Shape of the Log normal distribution.
+     * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
+     * @param mean Mean of the Gaussian distribution.
+     * @param standardDeviation Standard deviation of the Gaussian distribution.
      */
-    public BoxMullerLogNormalSampler(UniformRandomProvider rng,
-                                     double scale,
-                                     double shape) {
-        super(null); // Not used.
-        this.scale = scale;
-        this.shape = shape;
-        gaussian = new BoxMullerNormalizedGaussianSampler(rng);
+    public GaussianSampler(NormalizedGaussianSampler normalized,
+                           double mean,
+                           double standardDeviation) {
+        this.normalized = normalized;
+        this.mean = mean;
+        this.standardDeviation = standardDeviation;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return Math.exp(scale + shape * gaussian.sample());
+        return standardDeviation * normalized.sample() + mean;
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Box-Muller Log Normal [" + gaussian.toString() + "]";
+        return "Gaussian deviate [" + normalized.toString() + "]";
     }
 }
