@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.UniformRandomProvider;
-
 /**
  * Sampling from a Gaussian distribution with given mean and
  * standard deviation.
