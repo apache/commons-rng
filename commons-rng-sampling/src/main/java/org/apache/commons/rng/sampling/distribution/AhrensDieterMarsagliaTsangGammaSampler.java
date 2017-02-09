@@ -60,7 +60,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         super(rng);
         this.alpha = alpha;
         this.theta = theta;
-        gaussian = new BoxMullerNormalizedGaussianSampler(rng);
+        gaussian = new BoxMullerWithRejectionNormalizedGaussianSampler(rng);
     }
 
     /** {@inheritDoc} */
