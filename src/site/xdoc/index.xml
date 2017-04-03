@@ -62,7 +62,7 @@ double random = rng.nextDouble();
         tests such as <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TU01</a>
         and <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">Dieharder</a>.
         Weaker algorithms, with known shortcomings, are also provided (for reference or
-        due to their historical importance) but their use are best avoided in new
+        due to their historical importance) but their use is best avoided in new
         applications.
       </p>
     </section>
