@@ -37,7 +37,7 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
-import org.apache.commons.rng.sampling.distribution.BoxMullerWithRejectionNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterMarsagliaTsangGammaSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerLogNormalSampler;
@@ -157,9 +157,9 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runBoxMullerWithRejectionNormalizedGaussianSampler(Sources sources,
+    public void runMarsagliaNormalizedGaussianSampler(Sources sources,
                                                                    Blackhole bh) {
-        runSample(new BoxMullerWithRejectionNormalizedGaussianSampler(sources.getGenerator()), bh);
+        runSample(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), bh);
     }
 
     /**
