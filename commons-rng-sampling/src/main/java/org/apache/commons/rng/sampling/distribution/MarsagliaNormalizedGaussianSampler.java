@@ -55,8 +55,7 @@ public class MarsagliaNormalizedGaussianSampler
                 if (r2 < 1) {
                     // Pair (x, y) is within unit circle.
 
-                    final double r = Math.sqrt(r2);
-                    final double alpha = 2 * Math.sqrt(-Math.log(r)) / r;
+                    final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
 
                     // Return the first element of the generated pair.
                     random = alpha * x;
