@@ -64,7 +64,7 @@ public class PoissonSampler
 
         this.mean = mean;
 
-        gaussian = new BoxMullerWithRejectionNormalizedGaussianSampler(rng);
+        gaussian = new MarsagliaNormalizedGaussianSampler(rng);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
         factorialLog = mean < PIVOT ?
             null : // Not used.

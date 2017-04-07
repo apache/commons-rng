@@ -43,7 +43,7 @@ public class BoxMullerLogNormalSampler
         super(null); // Not used.
         this.scale = scale;
         this.shape = shape;
-        gaussian = new BoxMullerWithRejectionNormalizedGaussianSampler(rng);
+        gaussian = new MarsagliaNormalizedGaussianSampler(rng);
     }
 
     /** {@inheritDoc} */

@@ -19,16 +19,15 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
- * Box-Muller algorithm</a> for sampling from Gaussian distribution with
- * mean 0 and standard deviation 1.
- * This is a variation, suggested in <a href="http://haifux.org/lectures/79/random.pdf">
- * this presentation</a> (page 39), of the algorithm implemented in
+ * <a href="https://en.wikipedia.org/wiki/Marsaglia_polar_method">
+ * Marsaglia polar method</a> for sampling from a Gaussian distribution
+ * with mean 0 and standard deviation 1.
+ * This is a variation of the algorithm implemented in
  * {@link BoxMullerNormalizedGaussianSampler}.
  *
  * @since 1.1
  */
-public class BoxMullerWithRejectionNormalizedGaussianSampler
+public class MarsagliaNormalizedGaussianSampler
     extends SamplerBase
     implements NormalizedGaussianSampler {
     /** Next gaussian. */
@@ -37,7 +36,7 @@ public class BoxMullerWithRejectionNormalizedGaussianSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    public BoxMullerWithRejectionNormalizedGaussianSampler(UniformRandomProvider rng) {
+    public MarsagliaNormalizedGaussianSampler(UniformRandomProvider rng) {
         super(rng);
     }
 

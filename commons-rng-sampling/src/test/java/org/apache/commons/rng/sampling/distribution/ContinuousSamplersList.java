@@ -50,7 +50,7 @@ public class ContinuousSamplersList {
                                     meanNormal, sigmaNormal));
             // Gaussian ("Box-Muller" with rejection).
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
-                new GaussianSampler(new BoxMullerWithRejectionNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
+                new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
                                     meanNormal, sigmaNormal));
 
             // Beta ("inverse method").
