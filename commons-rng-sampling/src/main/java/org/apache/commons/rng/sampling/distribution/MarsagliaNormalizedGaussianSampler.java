@@ -43,7 +43,6 @@ public class MarsagliaNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double random;
         if (Double.isNaN(nextGaussian)) {
             // Rejection scheme for selecting a pair that lies within the unit circle.
             SAMPLE: while (true) {
@@ -52,30 +51,30 @@ public class MarsagliaNormalizedGaussianSampler
                 final double y = 2 * nextDouble() - 1;
                 final double r2 = x * x + y * y;
 
-                if (r2 < 1) {
-                    // Pair (x, y) is within unit circle.
-
-                    final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
-
-                    // Return the first element of the generated pair.
-                    random = alpha * x;
-
-                    // Keep second element of the pair for next invocation.
-                    nextGaussian = alpha * y;
-                    break SAMPLE;
+                if (r2 > 1 || r2 == 0) {
+                    // Pair is not within the unit circle: Generate another one.
+                    continue SAMPLE;
                 }
-                // Pair is not within the unit circle: Generate another one.
+
+                // Pair (x, y) is within unit circle.
+                final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
+
+                // Keep second element of the pair for next invocation.
+                nextGaussian = alpha * y;
+
+                // Return the first element of the generated pair.
+                return alpha * x;
             }
         } else {
             // Use the second element of the pair (generated at the
             // previous invocation).
-            random = nextGaussian;
+            final double r = nextGaussian;
 
             // Both elements of the pair have been used.
             nextGaussian = Double.NaN;
-        }
 
-        return random;
+            return r;
+        }
     }
 
     /** {@inheritDoc} */
