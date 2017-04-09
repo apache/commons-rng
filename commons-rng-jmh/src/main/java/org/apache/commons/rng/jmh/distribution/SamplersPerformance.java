@@ -41,6 +41,7 @@ import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianS
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterMarsagliaTsangGammaSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerLogNormalSampler;
+import org.apache.commons.rng.sampling.distribution.MarsagliaLogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.ChengBetaSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousUniformSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
@@ -190,6 +191,16 @@ public class SamplersPerformance {
     public void runBoxMullerLogNormalSampler(Sources sources,
                                              Blackhole bh) {
         runSample(new BoxMullerLogNormalSampler(sources.getGenerator(), 12.3, 4.6), bh);
+    }
+
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void runMarsagliaLogNormalSampler(Sources sources,
+                                             Blackhole bh) {
+        runSample(new MarsagliaLogNormalSampler(sources.getGenerator(), 12.3, 4.6), bh);
     }
 
     /**

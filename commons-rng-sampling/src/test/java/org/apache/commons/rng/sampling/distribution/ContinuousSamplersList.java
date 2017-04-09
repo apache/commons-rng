@@ -48,7 +48,7 @@ public class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
                 new GaussianSampler(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
                                     meanNormal, sigmaNormal));
-            // Gaussian ("Box-Muller" with rejection).
+            // Gaussian ("Marsaglia").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
                 new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
                                     meanNormal, sigmaNormal));
@@ -137,6 +137,9 @@ public class ContinuousSamplersList {
             // Log normal ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
                 new BoxMullerLogNormalSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scaleLogNormal, shapeLogNormal));
+            // Log normal ("Marsaglia").
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
+                new MarsagliaLogNormalSampler(RandomSource.create(RandomSource.MT_64), scaleLogNormal, shapeLogNormal));
 
             // Logistic ("inverse method").
             final double muLogistic = -123.456;
