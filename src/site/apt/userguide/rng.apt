@@ -259,10 +259,11 @@ rngNew.restoreState(stateNew);
 
 +--------------------------+
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
-import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.GaussianSampler;
+import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 
-ContinuousSampler sampler = new BoxMullerGaussianSampler(RandomSource.create(RandomSource.MT_64),
-                                                         45.6, 2.3);
+ContinuousSampler sampler = new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT_64)),
+                                                45.6, 2.3);
 double random = sampler.sample();
 +--------------------------+
 
