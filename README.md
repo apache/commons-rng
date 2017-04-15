@@ -45,7 +45,8 @@ Apache Commons RNG
 
 [![Build Status](https://travis-ci.org/apache/commons-rng.svg?branch=master)](https://travis-ci.org/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/github/apache/commons-rng/badge.svg?branch=master)](https://coveralls.io/github/apache/commons-rng?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/)
+<!-- [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng/)
+-->
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 The Apache Commons RNG project provides Java implementations of pseudo-random numbers generators.
