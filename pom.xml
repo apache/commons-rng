@@ -85,6 +85,7 @@
     <commons.componentid>rng</commons.componentid>
     <!-- This value must reflect the current name of the base package. -->
     <commons.osgi.symbolicName>org.apache.commons.rng</commons.osgi.symbolicName>
+    <commons.module.name>org.apache.commons.rng</commons.module.name>
     <!-- OSGi -->
     <commons.osgi.export>org.apache.commons.rng</commons.osgi.export>
     <!-- do not use snapshot suffix here -->
