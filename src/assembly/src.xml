@@ -21,6 +21,12 @@
     <format>tar.gz</format>
     <format>zip</format>
   </formats>
+  <repositories>
+      <repository>
+          <includeMetadata>true</includeMetadata>
+          <outputDirectory>maven2</outputDirectory>
+      </repository>
+  </repositories>
   <baseDirectory>
      ${project.artifactId}-${commons.release.version}-src
   </baseDirectory>

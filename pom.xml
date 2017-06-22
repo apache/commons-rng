@@ -151,6 +151,27 @@
       </plugin>
 
       <plugin>
+          <groupId>net.nicoulaj.maven.plugins</groupId>
+          <artifactId>checksum-maven-plugin</artifactId>
+          <version>1.5</version>
+          <executions>
+              <execution>
+                  <goals>
+                      <goal>dependencies</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <configuration>
+              <scopes>
+                  <scope>compile</scope>
+              </scopes>
+              <types>
+                  <type>jar</type>
+              </types>
+          </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
@@ -220,6 +241,13 @@
             <exclude>dist-archive/**</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <configuration>
+              <createChecksum>true</createChecksum>
+          </configuration>
       </plugin>
     </plugins>
 

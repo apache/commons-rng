@@ -22,6 +22,12 @@
     <format>tar.gz</format>
     <format>zip</format>
   </formats>
+  <repositories>
+      <repository>
+          <includeMetadata>true</includeMetadata>
+          <outputDirectory>maven2</outputDirectory>
+      </repository>
+  </repositories>
   <includeSiteDirectory>false</includeSiteDirectory>
   <fileSets>
     <fileSet>
