@@ -34,7 +34,7 @@ public class UnitSphereSampler {
 
     /**
      * @param dimension Space dimension.
-     * @param sampler Generator for the individual components of the vectors.
+     * @param rng Generator for the individual components of the vectors.
      * A shallow copy will be stored in this instance.
      */
     public UnitSphereSampler(int dimension,
