@@ -51,8 +51,22 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.1" date="TBD" description="TBD
+    <release version="1.1" date="TBD" description="
+This is a minor release of Apache Commons RNG, containing some
+new features and performance improvements.
+
+Apache Commons RNG 1.1 contains the following modules:
+  commons-rng-client-api (requires Java 6)
+  commons-rng-core (requires Java 6)
+  commons-rng-simple (requires Java 6)
+  commons-rng-sampling (requires Java 6)
+  commons-rng-jmh (requires Java 6)
+  commons-rng-examples (requires Java 7)
 ">
+      <action dev="erans" type="add" issue="RNG-39">
+        "UnitSphereSampler": generate random vectors isotropically located
+        on the surface of a sphere (feature ported from "Commons Math").
+      </action>
       <action dev="erans" type="add" issue="RNG-36">
         "MarsagliaNormalizedGaussianSampler": faster variation of the
         Box-Muller algorithm.
