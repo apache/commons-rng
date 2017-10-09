@@ -20,15 +20,16 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Gaussian Sampling by Ziggurat algorithm: https://en.wikipedia.org/wiki/Ziggurat_algorithm.
+ * Gaussian Sampling by
+ * <a href="https://en.wikipedia.org/wiki/Ziggurat_algorithm">Ziggurat algorithm</a>
  *
- * based on
- * The Ziggurat Method for Generating Random Variables
- * by George Marsaglia and Wai Wan Tsang
+ * <p>Based on
+ * "The Ziggurat Method for Generating Random Variables"<br>
+ * by George Marsaglia and Wai Wan Tsang</p>
  *
  * @see <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">Ziggurat Method for Generating Random Variables</a>
  *
- * @since 1.0
+ * @since 1.1
  */
 
 public class ZigguratGaussianSampler
@@ -105,6 +106,10 @@ public class ZigguratGaussianSampler
         return (j < KN[i]) ? j * WN[i] : nfix(j,i);
     }
 
+    /** get the value from the tail of the distribution
+     * @param hz - start random integer
+     * @param iz - corresponding to hz cell's number
+     */
     private double nfix(int hz, int iz) {
         /* The start of the right tail */
         final double r = 3.442619855899;
