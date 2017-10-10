@@ -44,8 +44,13 @@ public class ZigguratGaussianSampler
      * the rightmost 8 bits of j. If j < k_i return x = j * w_i.
      */
 
+    /* @param KN - an auxiliary table of integers, k_i = 2^32*(x_{i-1}/x_i) */
     private static final int[] KN = new int[128];
+    /* @param WN - table of doubles, w_i = x_i/2^32 */
     private static final double[] WN = new double[128];
+    /* @param FN - the function values table (normalized gaussian in this implementation)
+     * f_i(x_i) = exp(-x_i^2/2)
+     */
     private static final double[] FN = new double[128];
 
     /**
@@ -106,9 +111,11 @@ public class ZigguratGaussianSampler
         return (j < KN[i]) ? j * WN[i] : nfix(j,i);
     }
 
-    /** get the value from the tail of the distribution
+    /**
+     * Get the value from the tail of the distribution
      * @param hz - start random integer
      * @param iz - corresponding to hz cell's number
+     * @return the requested random value
      */
     private double nfix(int hz, int iz) {
         /* The start of the right tail */
@@ -138,7 +145,7 @@ public class ZigguratGaussianSampler
             hz = nextInt();
             iz = hz & 127;
             if (Math.abs(hz) < KN[iz]) {
-                return (hz * WN[iz]);
+                return hz * WN[iz];
             }
         }
     }
