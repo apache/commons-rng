@@ -51,19 +51,18 @@ public class MarsagliaNormalizedGaussianSampler
                 final double y = 2 * nextDouble() - 1;
                 final double r2 = x * x + y * y;
 
-                if (r2 > 1 || r2 == 0) {
-                    // Pair is not within the unit circle: Generate another one.
-                    continue SAMPLE;
+                if (r2 <= 1 && r2 != 0) {
+                    // Pair (x, y) is within unit circle.
+                    final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
+
+                    // Keep second element of the pair for next invocation.
+                    nextGaussian = alpha * y;
+
+                    // Return the first element of the generated pair.
+                    return alpha * x;
                 }
 
-                // Pair (x, y) is within unit circle.
-                final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
-
-                // Keep second element of the pair for next invocation.
-                nextGaussian = alpha * y;
-
-                // Return the first element of the generated pair.
-                return alpha * x;
+                // Pair is not within the unit circle: Generate another one.
             }
         } else {
             // Use the second element of the pair (generated at the
