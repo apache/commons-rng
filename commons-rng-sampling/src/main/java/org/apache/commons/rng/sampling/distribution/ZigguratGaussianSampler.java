@@ -48,7 +48,9 @@ public class ZigguratGaussianSampler
     private static final int[] KN = new int[128];
     /* @param WN - table of doubles, w_i = x_i/2^32 */
     private static final double[] WN = new double[128];
-    /* @param FN - the function values table (normalized gaussian in this implementation)
+    /**
+     * This is a Javadoc. @param FN - the function values table
+     * (normalized gaussian in this implementation)
      * f_i(x_i) = exp(-x_i^2/2)
      */
     private static final double[] FN = new double[128];
