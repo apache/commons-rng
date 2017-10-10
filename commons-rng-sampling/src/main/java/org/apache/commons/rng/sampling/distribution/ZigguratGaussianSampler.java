@@ -44,15 +44,11 @@ public class ZigguratGaussianSampler
      * the rightmost 8 bits of j. If j < k_i return x = j * w_i.
      */
 
-    /* @param KN - an auxiliary table of integers, k_i = 2^32*(x_{i-1}/x_i) */
+    /** An auxiliary table of integers, k_i = 2^32*(x_{i-1}/x_i) */
     private static final int[] KN = new int[128];
-    /* @param WN - table of doubles, w_i = x_i/2^32 */
+    /** The table of doubles, w_i = x_i/2^32 */
     private static final double[] WN = new double[128];
-    /**
-     * This is a Javadoc. @param FN - the function values table
-     * (normalized gaussian in this implementation)
-     * f_i(x_i) = exp(-x_i^2/2)
-     */
+    /** The function values table (normalized gaussian in this implementation) f_i(x_i) = exp(-x_i^2/2) */
     private static final double[] FN = new double[128];
 
     /**
