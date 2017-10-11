@@ -32,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 
-public class ZigguratGaussianSampler
+public class ZigguratNormalizedGaussianSampler
     extends SamplerBase
     implements NormalizedGaussianSampler {
 
@@ -97,7 +97,7 @@ public class ZigguratGaussianSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    public ZigguratGaussianSampler(UniformRandomProvider rng) {
+    public ZigguratNormalizedGaussianSampler(UniformRandomProvider rng) {
         super(rng);
     }
 
@@ -151,7 +151,6 @@ public class ZigguratGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Ziggurat Gaussian deviate [" + super.toString() + "]";
+        return "Ziggurat normalized Gaussian deviate [" + super.toString() + "]";
     }
-
 }
