@@ -20,59 +20,50 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Gaussian Sampling by
- * <a href="https://en.wikipedia.org/wiki/Ziggurat_algorithm">Ziggurat algorithm</a>
+ * <a href="https://en.wikipedia.org/wiki/Ziggurat_algorithm">
+ * Marsaglia and Tsang "Ziggurat" method</a> for sampling from a Gaussian
+ * distribution with mean 0 and standard deviation 1.
  *
- * <p>Based on
- * "The Ziggurat Method for Generating Random Variables"<br>
- * by George Marsaglia and Wai Wan Tsang</p>
- *
- * @see <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">Ziggurat Method for Generating Random Variables</a>
+ * <p>
+ * Implementation is based on this <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
+ * </p>
  *
  * @since 1.1
  */
-
 public class ZigguratNormalizedGaussianSampler
     extends SamplerBase
     implements NormalizedGaussianSampler {
 
-    /**
-     * Generates values from Gaussian (normal) probability distribution
-     * It uses two tables, integers KN and reals WN. Some 99% of the time,
-     * the required x is produced by:
-     * generate a random 32-bit integer j and let i be the index formed from
-     * the rightmost 8 bits of j. If j < k_i return x = j * w_i.
-     */
+     // Generates values from Gaussian (normal) probability distribution
+     // It uses two tables, integers KN and reals WN. Some 99% of the time,
+     // the required x is produced by:
+     // generate a random 32-bit integer j and let i be the index formed from
+     // the rightmost 8 bits of j. If j < k_i return x = j * w_i.
 
-    /** An auxiliary table of integers, k_i = 2^32*(x_{i-1}/x_i) */
+    /** Auxiliary table (see code) */
     private static final int[] KN = new int[128];
-    /** The table of doubles, w_i = x_i/2^32 */
+    /** Auxiliary table (see code) */
     private static final double[] WN = new double[128];
-    /** The function values table (normalized gaussian in this implementation) f_i(x_i) = exp(-x_i^2/2) */
+    /** Auxiliary table (see code) */
     private static final double[] FN = new double[128];
 
-    /**
-     * Initialize tables.
-     */
     static {
-        /**
-         * Filling the tables.
-         * k_0 = 2^32 * r * f(dn) / vn
-         * k_i = 2^32 * ( x_{i-1} / x_i )
-         * w_0 = .5^32 * vn / f(dn)
-         * w_i = .5^32 * x_i
-         * where dn - the rightmost x_i
-         * vn - the area of the rectangle
-         * f(dn) = exp(-.5 * dn * dn)
-         */
-        final double m = 2147483648.0; // 2^31
+         // Filling the tables.
+         //  k_0 = 2^32 * r * f(dn) / vn
+         //  k_i = 2^32 * ( x_{i-1} / x_i )
+         //  w_0 = 0.5^32 * vn / f(dn)
+         //  w_i = 0.5^32 * x_i
+         //  f(dn) = exp(-0.5 * dn * dn)
+         // where "dn" is the rightmost x_i
+         //       "vn" is the area of the rectangle
+        final double m = 2147483648.0; // 2^31.
 
-        /* provides z(r) = 0, where z(r): x_255 = r, vn = r*f(r)+integral_r^inf f(x)dx */
+        // Provides z(r) = 0, where z(r): x_255 = r, vn = r * f(r) + integral_r^inf f(x) dx
         final double vn = 9.91256303526217e-3;
 
         double dn = 3.442619855899;
         double tn = dn;
-        double e = Math.exp(-.5 * dn * dn);
+        double e = Math.exp(-0.5 * dn * dn);
         final double q = vn / e;
 
         KN[0] = (int) ((dn / q) * m);
@@ -81,12 +72,12 @@ public class ZigguratNormalizedGaussianSampler
         WN[0] = q / m;
         WN[127] = dn / m;
 
-        FN[0] = 1.0;
+        FN[0] = 1;
         FN[127] = e;
 
         for (int i = 126; i >= 1; i--){
-            e = Math.exp(-.5 *dn * dn);
-            dn = Math.sqrt(-2. * Math.log(vn / dn + e));
+            e = Math.exp(-0.5 *dn * dn);
+            dn = Math.sqrt(-2 * Math.log(vn / dn + e));
             KN[i+1] = (int) ((dn / tn) * m);
             tn = dn;
             FN[i] = e;
@@ -110,13 +101,14 @@ public class ZigguratNormalizedGaussianSampler
     }
 
     /**
-     * Get the value from the tail of the distribution
-     * @param hz - start random integer
-     * @param iz - corresponding to hz cell's number
-     * @return the requested random value
+     * Gets the value from the tail of the distribution.
+     *
+     * @param hz Start random integer.
+     * @param iz Corresponding to hz cell's number.
+     * @return the requested random value.
      */
     private double nfix(int hz, int iz) {
-        /* The start of the right tail */
+        // The start of the right tail.
         final double r = 3.442619855899;
 
         double uni;
@@ -126,9 +118,9 @@ public class ZigguratNormalizedGaussianSampler
         while (true) {
             uni = .5 + hz * .2328306e-9;
             x = hz * WN[iz];
-            /* iz==0, handles the base strip */
+            // iz == 0 handles the base strip.
             if (iz == 0) {
-                /* return x from the tail */
+                // Return x from the tail.
                 do {
                     y = -Math.log(uni);
                     x = y * 0.2904764;
@@ -136,8 +128,8 @@ public class ZigguratNormalizedGaussianSampler
                 } while (y + y < x * x);
                 return (hz > 0) ? r + x : -r - x;
             }
-            /* iz>0, handle the wedges of other strips */
-            if (FN[iz] + uni * (FN[iz - 1] - FN[iz]) < Math.exp(-.5 * x * x)) {
+            // iz > 0 handles the wedges of other strips.
+            if (FN[iz] + uni * (FN[iz - 1] - FN[iz]) < Math.exp(-0.5 * x * x)) {
                 return x;
             }
             hz = nextInt();
