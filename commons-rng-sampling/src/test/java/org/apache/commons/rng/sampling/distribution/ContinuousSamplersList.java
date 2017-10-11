@@ -52,6 +52,10 @@ public class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
                 new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
                                     meanNormal, sigmaNormal));
+            // Gaussian ("Ziggurat").
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(meanNormal, sigmaNormal),
+                new GaussianSampler(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
+                                    meanNormal, sigmaNormal));
 
             // Beta ("inverse method").
             final double alphaBeta = 4.3;
