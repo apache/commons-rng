@@ -41,13 +41,13 @@
 
 <source>import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
-import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 
 public class NormalDeviates {
    private final ContinuousSampler normalizedGaussian;
 
     public NormalDeviates(UniformRandomProvider rng) {
-        normalizedGaussian = new BoxMullerGaussianSampler(rng, 0, 1);
+        normalizedGaussian = new MarsagliaNormalizedGaussianSampler(rng);
     }
 
     public double sample(double mean,
