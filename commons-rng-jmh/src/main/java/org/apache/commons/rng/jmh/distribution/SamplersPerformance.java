@@ -38,6 +38,7 @@ import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterMarsagliaTsangGammaSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerLogNormalSampler;
@@ -159,8 +160,18 @@ public class SamplersPerformance {
      */
     @Benchmark
     public void runMarsagliaNormalizedGaussianSampler(Sources sources,
-                                                                   Blackhole bh) {
+                                                      Blackhole bh) {
         runSample(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), bh);
+    }
+
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void runZigguratNormalizedGaussianSampler(Sources sources,
+                                                     Blackhole bh) {
+        runSample(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), bh);
     }
 
     /**
