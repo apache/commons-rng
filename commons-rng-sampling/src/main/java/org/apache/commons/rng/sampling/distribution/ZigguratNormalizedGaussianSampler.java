@@ -76,7 +76,7 @@ public class ZigguratNormalizedGaussianSampler
         FN[127] = e;
 
         for (int i = 126; i >= 1; i--){
-            e = Math.exp(-0.5 *dn * dn);
+            e = Math.exp(-0.5 * dn * dn);
             dn = Math.sqrt(-2 * Math.log(vn / dn + e));
             KN[i+1] = (int) ((dn / tn) * m);
             tn = dn;
@@ -95,9 +95,9 @@ public class ZigguratNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        int j = nextInt();
-        int i = j & 127;
-        return (j < KN[i]) ? j * WN[i] : nfix(j,i);
+        final int j = nextInt();
+        final int i = j & 127;
+        return (j < KN[i]) ? j * WN[i] : nfix(j, i);
     }
 
     /**
@@ -107,7 +107,8 @@ public class ZigguratNormalizedGaussianSampler
      * @param iz Corresponding to hz cell's number.
      * @return the requested random value.
      */
-    private double nfix(int hz, int iz) {
+    private double nfix(int hz,
+                        int iz) {
         // The start of the right tail.
         final double r = 3.442619855899;
 
@@ -116,7 +117,7 @@ public class ZigguratNormalizedGaussianSampler
         double y;
 
         while (true) {
-            uni = .5 + hz * .2328306e-9;
+            uni = 0.5 + hz * 0.2328306e-9;
             x = hz * WN[iz];
             // iz == 0 handles the base strip.
             if (iz == 0) {
@@ -124,7 +125,7 @@ public class ZigguratNormalizedGaussianSampler
                 do {
                     y = -Math.log(uni);
                     x = y * 0.2904764;
-                    uni = .5 + nextInt() * .2328306e-9;
+                    uni = 0.5 + nextInt() * 0.2328306e-9;
                 } while (y + y < x * x);
                 return (hz > 0) ? r + x : -r - x;
             }
