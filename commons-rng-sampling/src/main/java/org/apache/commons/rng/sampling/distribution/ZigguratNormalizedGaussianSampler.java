@@ -41,7 +41,7 @@ public class ZigguratNormalizedGaussianSampler
      // the rightmost 8 bits of j. If j < k_i return x = j * w_i.
 
     /** Auxiliary table (see code) */
-    private static final int[] KN = new int[128];
+    private static final long[] KN = new long[128];
     /** Auxiliary table (see code) */
     private static final double[] WN = new double[128];
     /** Auxiliary table (see code) */
@@ -66,7 +66,7 @@ public class ZigguratNormalizedGaussianSampler
         double e = Math.exp(-0.5 * dn * dn);
         final double q = vn / e;
 
-        KN[0] = (int) ((dn / q) * m);
+        KN[0] = (long) ((dn / q) * m);
         KN[1] = 0;
 
         WN[0] = q / m;
@@ -78,7 +78,7 @@ public class ZigguratNormalizedGaussianSampler
         for (int i = 126; i >= 1; i--){
             e = Math.exp(-0.5 * dn * dn);
             dn = Math.sqrt(-2 * Math.log(vn / dn + e));
-            KN[i+1] = (int) ((dn / tn) * m);
+            KN[i+1] = (long) ((dn / tn) * m);
             tn = dn;
             FN[i] = e;
             WN[i] = dn / m;
@@ -125,7 +125,7 @@ public class ZigguratNormalizedGaussianSampler
                 do {
                     y = -Math.log(uni);
                     x = y * 0.2904764;
-                    uni = 0.5 + nextInt() * 0.2328306e-9;
+                    uni = 0.5 + nextLong() * 0.2328306e-9;
                 } while (y + y < x * x);
                 return (hz > 0) ? r + x : -r - x;
             }

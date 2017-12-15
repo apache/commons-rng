@@ -55,6 +55,13 @@ public class SamplerBase {
         return rng.nextInt(max);
     }
 
+    /**
+     * @return a random {@code long} value.
+     */
+    protected long nextLong() {
+        return rng.nextLong();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String toString() {
