@@ -24,64 +24,63 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Marsaglia and Tsang "Ziggurat" method</a> for sampling from a Gaussian
  * distribution with mean 0 and standard deviation 1.
  *
- * <p>
- * Implementation is based on this <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
- * </p>
+ * The algorithm is explained in this
+ * <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
+ * and this implementation has been adapted from the C code provided therein.
  *
  * @since 1.1
  */
 public class ZigguratNormalizedGaussianSampler
     extends SamplerBase
     implements NormalizedGaussianSampler {
-
-     // Generates values from Gaussian (normal) probability distribution
-     // It uses two tables, integers KN and reals WN. Some 99% of the time,
-     // the required x is produced by:
-     // generate a random 32-bit integer j and let i be the index formed from
-     // the rightmost 8 bits of j. If j < k_i return x = j * w_i.
-
-    /** Auxiliary table (see code) */
-    private static final int[] KN = new int[128];
-    /** Auxiliary table (see code) */
-    private static final double[] WN = new double[128];
-    /** Auxiliary table (see code) */
-    private static final double[] FN = new double[128];
+    /** Start of tail. */
+    private static final double R = 3.442619855899;
+    /** Inverse of R. */
+    private static final double ONE_OVER_R = 1 / R;
+    /** Rectangle area. */
+    private static final double V = 9.91256303526217e-3;
+    /** 2^63 */
+    private static final double MAX = Math.pow(2, 63);
+    /** 2^-63 */
+    private static final double ONE_OVER_MAX = 1d / MAX;
+    /** Number of entries. */
+    private static final int LEN = 128;
+    /** Index of last entry. */
+    private static final int LAST = LEN - 1;
+    /** Auxiliary table. */
+    private static final long[] K = new long[LEN];
+    /** Auxiliary table. */
+    private static final double[] W = new double[LEN];
+    /** Auxiliary table. */
+    private static final double[] F = new double[LEN];
 
     static {
-         // Filling the tables.
-         //  k_0 = 2^32 * r * f(dn) / vn
-         //  k_i = 2^32 * ( x_{i-1} / x_i )
-         //  w_0 = 0.5^32 * vn / f(dn)
-         //  w_i = 0.5^32 * x_i
-         //  f(dn) = exp(-0.5 * dn * dn)
-         // where "dn" is the rightmost x_i
-         //       "vn" is the area of the rectangle
-        final double m = 2147483648.0; // 2^31.
+        // Filling the tables.
 
-        // Provides z(r) = 0, where z(r): x_255 = r, vn = r * f(r) + integral_r^inf f(x) dx
-        final double vn = 9.91256303526217e-3;
+        double d = R;
+        double t = d;
+        double fd = gauss(d);
+        final double q = V / fd;
 
-        double dn = 3.442619855899;
-        double tn = dn;
-        double e = Math.exp(-0.5 * dn * dn);
-        final double q = vn / e;
+        K[0] = (long) ((d / q) * MAX);
+        K[1] = 0;
 
-        KN[0] = (int) ((dn / q) * m);
-        KN[1] = 0;
+        W[0] = q * ONE_OVER_MAX;
+        W[LAST] = d * ONE_OVER_MAX;
 
-        WN[0] = q / m;
-        WN[127] = dn / m;
+        F[0] = 1;
+        F[LAST] = fd;
 
-        FN[0] = 1;
-        FN[127] = e;
+        for (int i = LAST - 1; i >= 1; i--) {
+            d = Math.sqrt(-2 * Math.log(V / d + fd));
+            fd = gauss(d);
 
-        for (int i = 126; i >= 1; i--){
-            e = Math.exp(-0.5 * dn * dn);
-            dn = Math.sqrt(-2 * Math.log(vn / dn + e));
-            KN[i+1] = (int) ((dn / tn) * m);
-            tn = dn;
-            FN[i] = e;
-            WN[i] = dn / m;
+            K[i + 1] = (long) ((d / t) * MAX);
+            t = d;
+
+            F[i] = fd;
+
+            W[i] = d * ONE_OVER_MAX;
         }
     }
 
@@ -95,9 +94,19 @@ public class ZigguratNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final int j = nextInt();
-        final int i = j & 127;
-        return (j < KN[i]) ? j * WN[i] : nfix(j, i);
+        final long j = nextLong();
+        final int i = (int) (j & LAST);
+        if (Math.abs(j) < K[i]) {
+            return j * W[i];
+        } else {
+            return fix(j, i);
+        }
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Ziggurat normalized Gaussian deviate [" + super.toString() + "]";
     }
 
     /**
@@ -107,43 +116,42 @@ public class ZigguratNormalizedGaussianSampler
      * @param iz Corresponding to hz cell's number.
      * @return the requested random value.
      */
-    private double nfix(int hz,
-                        int iz) {
-        // The start of the right tail.
-        final double r = 3.442619855899;
-
-        double uni;
+    private double fix(long hz,
+                       int iz) {
         double x;
         double y;
 
         while (true) {
-            uni = 0.5 + hz * 0.2328306e-9;
-            x = hz * WN[iz];
-            // iz == 0 handles the base strip.
+            x = hz * W[iz];
             if (iz == 0) {
-                // Return x from the tail.
+                // Base strip.
                 do {
-                    y = -Math.log(uni);
-                    x = y * 0.2904764;
-                    uni = 0.5 + nextInt() * 0.2328306e-9;
+                    y = -Math.log(nextDouble());
+                    x = -Math.log(nextDouble()) * ONE_OVER_R;
                 } while (y + y < x * x);
-                return (hz > 0) ? r + x : -r - x;
-            }
-            // iz > 0 handles the wedges of other strips.
-            if (FN[iz] + uni * (FN[iz - 1] - FN[iz]) < Math.exp(-0.5 * x * x)) {
-                return x;
-            }
-            hz = nextInt();
-            iz = hz & 127;
-            if (Math.abs(hz) < KN[iz]) {
-                return hz * WN[iz];
+
+                final double out = R + x;
+                return hz > 0 ? out : -out;
+            } else {
+                // Wedge of other strips.
+                if (F[iz] + nextDouble() * (F[iz - 1] - F[iz]) < gauss(x)) {
+                    return x;
+                } else {
+                    hz = nextLong();
+                    iz = (int) (hz & LAST);
+                    if (Math.abs(hz) < K[iz]) {
+                        return hz * W[iz];
+                    }
+                }
             }
         }
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "Ziggurat normalized Gaussian deviate [" + super.toString() + "]";
+    /**
+     * @param x Argument.
+     * @return \( e^{-\frac{x^2}{2}} \)
+     */
+    private static double gauss(double x) {
+        return Math.exp(-0.5 * x * x);
     }
 }
