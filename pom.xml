@@ -348,8 +348,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <header>&lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /&gt;</header>
-          <additionalparam>-Xdoclint:all --allow-script-in-comments</additionalparam>
+          <additionalparam>-Xdoclint:all --allow-script-in-comments -header &lt;script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" /&gt;</additionalparam>
           <!-- <aggregate>true</aggregate> -->
         </configuration>
       </plugin>
