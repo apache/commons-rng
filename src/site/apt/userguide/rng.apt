@@ -254,7 +254,7 @@ rngNew.restoreState(stateNew);
 +--------------------------+
 
 
-  * Generation of random deviates for various
+  * Generation of {{{./dist_density_approx.html}random deviates}} for various
     {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/distribution/package-summary.html}distributions}}.
 
 +--------------------------+
