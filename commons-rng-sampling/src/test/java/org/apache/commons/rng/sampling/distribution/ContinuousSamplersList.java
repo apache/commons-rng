@@ -134,16 +134,25 @@ public class ContinuousSamplersList {
                 RandomSource.create(RandomSource.TWO_CMRES));
 
             // Log normal ("inverse method").
-            final double scaleLogNormal = 23.45;
+            final double scaleLogNormal = 2.345;
             final double shapeLogNormal = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
                 RandomSource.create(RandomSource.KISS));
-            // Log normal ("Box-Muller").
+            // Log-normal (DEPRECATED "Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
                 new BoxMullerLogNormalSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scaleLogNormal, shapeLogNormal));
-            // Log normal ("Marsaglia").
+            // Log-normal ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
-                new MarsagliaLogNormalSampler(RandomSource.create(RandomSource.MT_64), scaleLogNormal, shapeLogNormal));
+                new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S)),
+                                     scaleLogNormal, shapeLogNormal));
+            // Log-normal ("Marsaglia").
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
+                new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT_64)),
+                                     scaleLogNormal, shapeLogNormal));
+            // Log-normal ("Ziggurat").
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(scaleLogNormal, shapeLogNormal),
+                new LogNormalSampler(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MWC_256)),
+                                     scaleLogNormal, shapeLogNormal));
 
             // Logistic ("inverse method").
             final double muLogistic = -123.456;
