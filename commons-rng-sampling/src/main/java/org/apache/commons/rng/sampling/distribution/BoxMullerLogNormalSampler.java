@@ -19,42 +19,21 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
- * Box-Muller algorithm</a> for sampling from a Log normal distribution.
+ * Sampling from a <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">
+ * log-normal distribution</a>.
+ * Uses {@link BoxMullerNormalizedGaussianSampler} as the underlying sampler.
  */
 public class BoxMullerLogNormalSampler
-    extends SamplerBase
-    implements ContinuousSampler {
-    /** Scale. */
-    private final double scale;
-    /** Shape. */
-    private final double shape;
-    /** Gaussian sampling. */
-    private final NormalizedGaussianSampler gaussian;
-
+    extends LogNormalSampler {
     /**
      * @param rng Generator of uniformly distributed random numbers.
-     * @param scale Scale of the Log normal distribution.
-     * @param shape Shape of the Log normal distribution.
+     * @param scale Scale of the log-normal distribution.
+     * @param shape Shape of the log-normal distribution.
      */
     public BoxMullerLogNormalSampler(UniformRandomProvider rng,
                                      double scale,
                                      double shape) {
-        super(null); // Not used.
-        this.scale = scale;
-        this.shape = shape;
-        gaussian = new BoxMullerNormalizedGaussianSampler(rng);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public double sample() {
-        return Math.exp(scale + shape * gaussian.sample());
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "Box-Muller Log Normal [" + gaussian.toString() + "]";
+        super(new BoxMullerNormalizedGaussianSampler(rng),
+              scale, shape);
     }
 }
