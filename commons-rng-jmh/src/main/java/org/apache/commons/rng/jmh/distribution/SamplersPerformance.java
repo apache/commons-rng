@@ -35,14 +35,12 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
-import org.apache.commons.rng.sampling.distribution.BoxMullerGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterMarsagliaTsangGammaSampler;
-import org.apache.commons.rng.sampling.distribution.BoxMullerLogNormalSampler;
-import org.apache.commons.rng.sampling.distribution.MarsagliaLogNormalSampler;
+import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.ChengBetaSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousUniformSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
@@ -139,16 +137,6 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runBoxMullerGaussianSampler(Sources sources,
-                                            Blackhole bh) {
-        runSample(new BoxMullerGaussianSampler(sources.getGenerator(), 0, 1), bh);
-    }
-
-    /**
-     * @param sources Source of randomness.
-     * @param bh Data sink.
-     */
-    @Benchmark
     public void runBoxMullerNormalizedGaussianSampler(Sources sources,
                                                       Blackhole bh) {
         runSample(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), bh);
@@ -201,7 +189,7 @@ public class SamplersPerformance {
     @Benchmark
     public void runBoxMullerLogNormalSampler(Sources sources,
                                              Blackhole bh) {
-        runSample(new BoxMullerLogNormalSampler(sources.getGenerator(), 12.3, 4.6), bh);
+        runSample(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
     }
 
     /**
@@ -211,7 +199,17 @@ public class SamplersPerformance {
     @Benchmark
     public void runMarsagliaLogNormalSampler(Sources sources,
                                              Blackhole bh) {
-        runSample(new MarsagliaLogNormalSampler(sources.getGenerator(), 12.3, 4.6), bh);
+        runSample(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
+    }
+
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void runZigguratLogNormalSampler(Sources sources,
+                                            Blackhole bh) {
+        runSample(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
     }
 
     /**
