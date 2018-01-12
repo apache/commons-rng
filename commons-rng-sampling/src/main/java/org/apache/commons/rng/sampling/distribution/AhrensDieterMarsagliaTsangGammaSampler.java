@@ -114,28 +114,27 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                     }
                 }
             }
-        }
+        } else {
+            while (true) {
+                final double x = gaussian.sample();
+                final double oPcTx = (1 + cOptim * x);
+                final double v = oPcTx * oPcTx * oPcTx;
 
-        // Now theta >= 1.
-        while (true) {
-            final double x = gaussian.sample();
-            final double oPcTx = (1 + cOptim * x);
-            final double v = oPcTx * oPcTx * oPcTx;
+                if (v <= 0) {
+                    continue;
+                }
 
-            if (v <= 0) {
-                continue;
-            }
+                final double x2 = x * x;
+                final double u = nextDouble();
 
-            final double x2 = x * x;
-            final double u = nextDouble();
+                // Squeeze.
+                if (u < 1 - 0.0331 * x2 * x2) {
+                    return alpha * dOptim * v;
+                }
 
-            // Squeeze.
-            if (u < 1 - 0.0331 * x2 * x2) {
-                return alpha * dOptim * v;
-            }
-
-            if (Math.log(u) < 0.5 * x2 + dOptim * (1 - v + Math.log(v))) {
-                return alpha * dOptim * v;
+                if (Math.log(u) < 0.5 * x2 + dOptim * (1 - v + Math.log(v))) {
+                    return alpha * dOptim * v;
+                }
             }
         }
     }
