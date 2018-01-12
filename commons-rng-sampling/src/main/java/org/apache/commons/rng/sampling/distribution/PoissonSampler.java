@@ -129,8 +129,9 @@ public class PoissonSampler
                 final double u = nextDouble();
                 if (u <= p1) {
                     final double n = gaussian.sample();
-                    x = n * Math.sqrt(lambda + halfDelta) - 0.5d;
-                    if (x > delta || x < -lambda) {
+                    x = n * Math.sqrt(lambda + halfDelta) - 0.5;
+                    if (x > delta ||
+                        x < -lambda) {
                         continue;
                     }
                     y = x < 0 ? Math.floor(x) : Math.ceil(x);
