@@ -18,7 +18,8 @@
 package org.apache.commons.rng.sampling;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 
 /**
  * Generate vectors <a href="http://mathworld.wolfram.com/SpherePointPicking.html">
@@ -28,7 +29,7 @@ import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianS
  */
 public class UnitSphereSampler {
     /** Sampler used for generating the individual components of the vectors. */
-    private final MarsagliaNormalizedGaussianSampler sampler;
+    private final NormalizedGaussianSampler sampler;
     /** Space dimension. */
     private final int dimension;
 
@@ -40,7 +41,7 @@ public class UnitSphereSampler {
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
         this.dimension = dimension;
-        sampler = new MarsagliaNormalizedGaussianSampler(rng);
+        sampler = new ZigguratNormalizedGaussianSampler(rng);
     }
 
     /**
