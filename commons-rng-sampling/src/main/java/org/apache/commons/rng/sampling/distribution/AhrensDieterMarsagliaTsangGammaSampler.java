@@ -22,7 +22,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
  * <ul>
  *  <li>
- *   For {@code 0 < shape < 1}:
+ *   For {@code 0 < theta < 1}:
  *   <blockquote>
  *    Ahrens, J. H. and Dieter, U.,
  *    <i>Computer methods for sampling from gamma, beta, Poisson and binomial distributions,</i>
@@ -30,7 +30,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  *  <li>
- *  For {@code shape >= 1}:
+ *  For {@code theta >= 1}:
  *   <blockquote>
  *   Marsaglia and Tsang, <i>A Simple Method for Generating
  *   Gamma Variables.</i> ACM Transactions on Mathematical Software,
