@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.sampling;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ import java.util.Arrays;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampling from a {@link Collection} of items with user-defined
+ * Sampling from a collection of items with user-defined
  * <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
  * probabilities</a>.
  * Note that if all unique items are assigned the same probability,
@@ -157,6 +156,7 @@ public class DiscreteProbabilityCollectionSampler<T> {
      * @throws IllegalArgumentException if the number of items in the
      * {@code collection} is not equal to the number of provided
      * {@code probabilities}.
+     * @param <T> Type of items in the collection.
      */
     private static <T> Map<T, Double> consolidate(List<T> collection,
                                                   double[] probabilities) {
