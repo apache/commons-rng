@@ -42,7 +42,7 @@ import java.util.Random;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class NextGaussianPerformance {
     /** Number of samples per run. */
-    private final int NUM_SAMPLES = 10000000;
+    private static final int NUM_SAMPLES = 10000000;
     /** JDK's generator. */
     private final Random random = new Random();
     /**

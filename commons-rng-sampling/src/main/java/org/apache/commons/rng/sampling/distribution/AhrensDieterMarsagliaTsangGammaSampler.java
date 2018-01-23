@@ -117,7 +117,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         } else {
             while (true) {
                 final double x = gaussian.sample();
-                final double oPcTx = (1 + cOptim * x);
+                final double oPcTx = 1 + cOptim * x;
                 final double v = oPcTx * oPcTx * oPcTx;
 
                 if (v <= 0) {
