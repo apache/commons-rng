@@ -82,6 +82,6 @@ public class DiscreteProbabilityCollectionSamplerTest {
         final double mean = sum / n;
         Assert.assertEquals(expectedMean, mean, 1e-3);
         final double variance = sumOfSquares / n - mean * mean;
-        Assert.assertEquals(expectedVariance, variance, 1e-3);
+        Assert.assertEquals(expectedVariance, variance, 2e-3);
     }
 }
