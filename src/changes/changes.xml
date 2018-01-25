@@ -63,12 +63,32 @@ Apache Commons RNG 1.1 contains the following modules:
   commons-rng-jmh (requires Java 6)
   commons-rng-examples (requires Java 7)
 ">
+      <action dev="erans" type="add" issue="RNG-37">
+        Implementation of the "Ziggurat" algorithm for Gaussian sampling.
+      </action>
+      <action dev="erans" type="fix" issue="RNG-42">
+        Use "ZigguratNormalizedGaussianSampler" within the library.
+      </action>
+      <action dev="erans" type="add" issue="RNG-47">
+        "DiscreteProbabilityCollectionSampler": Sampling from a collection of items
+        with user-defined probabilities (feature ported from "Commons Math").
+      </action>
+      <action dev="erans" type="add" issue="RNG-43">
+        "LogNormalSampler" with user-defined underlying "NormalizedGaussianSampler".
+      </action>
+      <action dev="erans" type="fix" issue="RNG-46">
+        Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
+        Furthermore, its base class has been removed; although it is a binary
+        incompatibility, it cannot cause any problem that were not already
+        present in code using v1.0 of the library: Calls to the base class
+        would have raised a NPE.
+      </action>
       <action dev="erans" type="add" issue="RNG-39">
         "UnitSphereSampler": generate random vectors isotropically located
         on the surface of a sphere (feature ported from "Commons Math").
       </action>
       <action dev="erans" type="add" issue="RNG-36">
-        "MarsagliaNormalizedGaussianSampler": faster variation of the
+        "MarsagliaNormalizedGaussianSampler": Faster variation of the
         Box-Muller algorithm.
         This version is used within "AhrensDieterMarsagliaTsangGammaSampler"
         "MarsagliaLogNormalSampler" and "PoissonSampler" (generated sequences
