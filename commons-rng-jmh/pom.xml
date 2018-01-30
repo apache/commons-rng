@@ -60,10 +60,11 @@
   </dependencies>
 
   <properties>
-    <!-- This value must reflect the current name of the base package. -->
-    <commons.osgi.symbolicName>org.apache.commons.rng.jmh</commons.osgi.symbolicName>
     <!-- OSGi -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.jmh</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.jmh</commons.osgi.export>
+    <!-- Java 9+ -->
+    <commons.automatic.module.name>org.apache.commons.rng.jmh</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
 

@@ -34,11 +34,12 @@
   <description>Simple API for instantiating random numbers generators.</description>
 
   <properties>
-    <!-- This value must reflect the current name of the base package. -->
-    <commons.osgi.symbolicName>org.apache.commons.rng.simple</commons.osgi.symbolicName>
     <!-- OSGi -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.simple</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.simple</commons.osgi.export>
     <commons.osgi.private>org.apache.commons.rng.simple.internal</commons.osgi.private>
+    <!-- Java 9+ -->
+    <commons.automatic.module.name>org.apache.commons.rng.simple</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
   </properties>

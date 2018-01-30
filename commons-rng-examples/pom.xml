@@ -37,10 +37,11 @@
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
 
-    <!-- This value must reflect the current name of the base package. -->
-    <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
     <!-- OSGi -->
+    <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
+    <!-- Java 9+ -->
+    <commons.automatic.module.name>org.apache.commons.rng.examples</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
   </properties>
