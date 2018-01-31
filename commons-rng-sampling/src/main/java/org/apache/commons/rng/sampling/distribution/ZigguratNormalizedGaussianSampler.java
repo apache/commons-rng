@@ -113,7 +113,7 @@ public class ZigguratNormalizedGaussianSampler
      * Gets the value from the tail of the distribution.
      *
      * @param hz Start random integer.
-     * @param iz Corresponding to hz cell's number.
+     * @param iz Index of cell corresponding to {@code hz}.
      * @return the requested random value.
      */
     private double fix(long hz,
@@ -137,10 +137,10 @@ public class ZigguratNormalizedGaussianSampler
                 if (F[iz] + nextDouble() * (F[iz - 1] - F[iz]) < gauss(x)) {
                     return x;
                 } else {
-                    hz = nextLong();
-                    iz = (int) (hz & LAST);
-                    if (Math.abs(hz) < K[iz]) {
-                        return hz * W[iz];
+                    final long hzNew = nextLong();
+                    final int izNew = (int) (hzNew & LAST);
+                    if (Math.abs(hzNew) < K[izNew]) {
+                        return hzNew * W[izNew];
                     }
                 }
             }
