@@ -43,6 +43,8 @@ public class UniformSamplingVisualCheck {
 
     /**
      * Program entry point.
+     *
+     * @param args Unused.
      */
     public static void main(String[] args) {
         final float lo = 0.1f;

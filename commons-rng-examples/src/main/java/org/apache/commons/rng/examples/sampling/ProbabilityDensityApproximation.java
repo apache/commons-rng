@@ -114,11 +114,12 @@ public class ProbabilityDensityApproximation {
     /**
      * Program entry point.
      *
-     * @params args Argument. They must be provided, in the following order:
+     * @param args Argument. They must be provided, in the following order:
      * <ol>
      *  <li>Number of "equal-width" bins.</li>
      *  <li>Number of samples.</li>
      * </ol>
+     * @throws IOException if failure occurred while writing to files.
      */
     public static void main(String[] args)
         throws IOException {
