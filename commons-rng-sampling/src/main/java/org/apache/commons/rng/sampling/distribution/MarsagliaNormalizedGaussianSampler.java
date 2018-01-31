@@ -45,7 +45,7 @@ public class MarsagliaNormalizedGaussianSampler
     public double sample() {
         if (Double.isNaN(nextGaussian)) {
             // Rejection scheme for selecting a pair that lies within the unit circle.
-            SAMPLE: while (true) {
+            while (true) {
                 // Generate a pair of numbers within [-1 , 1).
                 final double x = 2 * nextDouble() - 1;
                 final double y = 2 * nextDouble() - 1;
