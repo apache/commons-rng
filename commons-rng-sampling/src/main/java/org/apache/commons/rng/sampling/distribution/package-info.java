@@ -36,6 +36,8 @@
  *
  * Algorithms are described in e.g. Luc Devroye (1986), <a href="http://luc.devroye.org/chapter_nine.pdf">chapter 9</a>
  * and <a href="http://luc.devroye.org/chapter_ten.pdf">chapter 10</a>.
+ *
+ * This <a href="http://www.doc.ic.ac.uk/~wl/papers/07/csur07dt.pdf">paper</a> discusses Gaussian generators.
  */
 
 package org.apache.commons.rng.sampling.distribution;
