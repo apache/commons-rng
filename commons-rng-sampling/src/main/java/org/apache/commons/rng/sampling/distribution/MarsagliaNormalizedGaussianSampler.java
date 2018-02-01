@@ -51,7 +51,7 @@ public class MarsagliaNormalizedGaussianSampler
                 final double y = 2 * nextDouble() - 1;
                 final double r2 = x * x + y * y;
 
-                if (r2 <= 1 && r2 != 0) {
+                if (r2 < 1 && r2 > 0) {
                     // Pair (x, y) is within unit circle.
                     final double alpha = Math.sqrt(-2 * Math.log(r2) / r2);
 
