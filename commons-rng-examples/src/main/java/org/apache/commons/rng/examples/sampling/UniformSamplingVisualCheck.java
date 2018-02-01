@@ -58,7 +58,6 @@ public class UniformSamplingVisualCheck {
 
         final UniformSamplingVisualCheck app = new UniformSamplingVisualCheck();
 
-        long n = 0;
         while (true) {
             System.out.printf("%.16e\t", app.rng.nextDouble());
 
