@@ -108,7 +108,7 @@
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
     <!-- Temporary fix to support Java 8 -->
-    <commons.jacoco.version>0.7.5.201505241946</commons.jacoco.version>
+    <commons.jacoco.version>0.8.0</commons.jacoco.version>
     <commons.jacoco.classRatio>0.96</commons.jacoco.classRatio>
     <commons.jacoco.instructionRatio>0.8</commons.jacoco.instructionRatio>
     <commons.jacoco.methodRatio>0.8</commons.jacoco.methodRatio>
@@ -171,8 +171,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <!-- Default "forkCount" leads to build failure on JDK 9. -->
-          <forkCount>0</forkCount>
           <includes>
             <include>**/*Test.java</include>
           </includes>
