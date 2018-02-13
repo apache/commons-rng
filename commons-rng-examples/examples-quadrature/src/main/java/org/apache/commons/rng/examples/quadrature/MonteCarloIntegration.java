@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.integration;
+package org.apache.commons.rng.examples.quadrature;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;

@@ -22,17 +22,16 @@
 
   <parent>
     <groupId>org.apache.commons</groupId>
-    <artifactId>commons-rng-parent</artifactId>
+    <artifactId>commons-rng-examples</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-examples</artifactId>
+  <artifactId>commons-rng-examples-quadrature</artifactId>
   <version>1.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Apache Commons RNG Examples</name>
+  <name>Apache Commons RNG Quadrature Test Example</name>
 
-  <description>Examples of use of the random numbers generator implemented in the "commons-rng-simple" module.
+  <description>Application for calling external tools that perform stringent uniformity tests.
   Code in this module is not part of the public API.</description>
 
   <properties>
@@ -40,33 +39,24 @@
     <maven.compiler.target>1.7</maven.compiler.target>
 
     <!-- OSGi -->
-    <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
-    <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
+    <commons.osgi.symbolicName>org.apache.commons.rng.examples.quadrature</commons.osgi.symbolicName>
+    <commons.osgi.export>org.apache.commons.rng.examples.quadrature</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.examples</commons.automatic.module.name>
+    <commons.automatic.module.name>org.apache.commons.rng.examples.quadrature</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-rng-simple</artifactId>
-        <version>1.1-SNAPSHOT</version>
-      </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-rng-simple</artifactId>
+    </dependency>
 
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-rng-sampling</artifactId>
-        <version>1.1-SNAPSHOT</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-rng-sampling</artifactId>
+    </dependency>
+  </dependencies>
 
-  <modules>
-    <module>examples-stress</module>
-    <module>examples-sampling</module>
-    <module>examples-quadrature</module>
-  </modules>
 </project>

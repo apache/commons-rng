@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.examples.integration;
+package org.apache.commons.rng.examples.quadrature;
 
 import org.apache.commons.rng.simple.RandomSource;
 

@@ -24,4 +24,4 @@
  * </p>
  */
 
-package org.apache.commons.rng.examples.integration;
+package org.apache.commons.rng.examples.quadrature;
