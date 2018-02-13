@@ -22,12 +22,12 @@
 
   <parent>
     <groupId>org.apache.commons</groupId>
-    <artifactId>commons-rng-parent</artifactId>
+    <artifactId>commons-rng-examples</artifactId>
     <version>1.1-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-jmh</artifactId>
+  <artifactId>examples-jmh</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>Apache Commons RNG JMH</name>
 
@@ -38,13 +38,11 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-simple</artifactId>
-      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-sampling</artifactId>
-      <version>1.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -62,12 +60,12 @@
 
   <properties>
     <!-- OSGi -->
-    <commons.osgi.symbolicName>org.apache.commons.rng.jmh</commons.osgi.symbolicName>
-    <commons.osgi.export>org.apache.commons.rng.jmh</commons.osgi.export>
+    <commons.osgi.symbolicName>org.apache.commons.rng.examples.jmh</commons.osgi.symbolicName>
+    <commons.osgi.export>org.apache.commons.rng.examples.jmh</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.jmh</commons.automatic.module.name>
+    <commons.automatic.module.name>org.apache.commons.rng.examples.jmh</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 
     <!-- JMH Benchmark related properties, version, target compiler and name of the benchmarking uber jar. -->
     <jmh.version>1.13</jmh.version>

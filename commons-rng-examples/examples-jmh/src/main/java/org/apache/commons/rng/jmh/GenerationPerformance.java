@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.jmh;
+package org.apache.commons.rng.examples.jmh;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
