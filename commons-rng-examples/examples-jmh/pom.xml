@@ -29,7 +29,7 @@
   <groupId>org.apache.commons</groupId>
   <artifactId>examples-jmh</artifactId>
   <version>1.1-SNAPSHOT</version>
-  <name>Apache Commons RNG JMH</name>
+  <name>Apache Commons RNG JMH Benchmark</name>
 
   <description>Code for running JMH benchmarks that assess the performance of the generators.
   Code in this module is not part of the public API.</description>

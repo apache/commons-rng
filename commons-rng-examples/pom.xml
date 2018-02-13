@@ -68,5 +68,6 @@
     <module>examples-stress</module>
     <module>examples-sampling</module>
     <module>examples-quadrature</module>
+    <module>examples-jmh</module>
   </modules>
 </project>
