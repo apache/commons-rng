@@ -32,8 +32,10 @@
   <packaging>pom</packaging>
   <name>Apache Commons RNG Examples</name>
 
-  <description>Examples of use of the random numbers generator implemented in the "commons-rng-simple" module.
-  Code in this module is not part of the public API.</description>
+  <description>Examples of use of the "Commons RNG" library.
+  Codes in this module and its sub-modules are not part of the library.
+  They provide checking, benchmarking tools to enhance the documentation
+  and to help ensure correctness of the implementations.</description>
 
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
