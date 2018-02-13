@@ -40,12 +40,12 @@
  |                                                                      |
  +======================================================================+
 --->
-Apache Commons RNG Integration
+JPMS module example (application)
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-jpms.svg?branch=master)](https://travis-ci.org/apache/commons-rng-jpms)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-jpms/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-jpms)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-jpms/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-jpms/)
+[![Build Status](https://travis-ci.org/apache/commons-rng-examples-jpms-app.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples-jpms-app)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples-jpms-app/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples-jpms-app)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Testing JPMS. Code in this module is not part of the public API.
@@ -53,9 +53,9 @@ Testing JPMS. Code in this module is not part of the public API.
 Documentation
 -------------
 
-More information can be found on the [Apache Commons RNG Integration homepage](https://commons.apache.org/proper/commons-rng).
+More information can be found on the [JPMS module example (application) homepage](https://commons.apache.org/proper/commons-rng).
 The [JavaDoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
-Questions related to the usage of Apache Commons RNG Integration should be posted to the [user mailing list][ml].
+Questions related to the usage of JPMS module example (application) should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
 -----------------------------------
@@ -66,7 +66,7 @@ Alternatively you can pull it from the central Maven repositories:
 ```xml
 <dependency>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-jpms</artifactId>
+  <artifactId>commons-rng-examples-jpms-app</artifactId>
   <version>1.0</version>
 </dependency>
 ```
@@ -92,7 +92,7 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like Apache Commons RNG Integration? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like JPMS module example (application)? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------

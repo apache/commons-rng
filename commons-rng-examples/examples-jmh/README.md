@@ -40,22 +40,23 @@
  |                                                                      |
  +======================================================================+
 --->
-Apache Commons RNG JMH
+Apache Commons RNG JMH Benchmark
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-jmh.svg?branch=master)](https://travis-ci.org/apache/commons-rng-jmh)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-jmh/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-jmh)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-jmh/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-jmh/)
+[![Build Status](https://travis-ci.org/apache/commons-rng-examples-jmh.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples-jmh)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples-jmh/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples-jmh)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jmh/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jmh/)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Code for running JMH benchmarks that assess the performance of the generators.
+  Code in this module is not part of the public API.
 
 Documentation
 -------------
 
-More information can be found on the [Apache Commons RNG JMH homepage](https://commons.apache.org/proper/commons-rng).
+More information can be found on the [Apache Commons RNG JMH Benchmark homepage](https://commons.apache.org/proper/commons-rng).
 The [JavaDoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
-Questions related to the usage of Apache Commons RNG JMH should be posted to the [user mailing list][ml].
+Questions related to the usage of Apache Commons RNG JMH Benchmark should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
 -----------------------------------
@@ -66,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 ```xml
 <dependency>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-jmh</artifactId>
+  <artifactId>commons-rng-examples-jmh</artifactId>
   <version>1.0</version>
 </dependency>
 ```
@@ -92,7 +93,7 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like Apache Commons RNG JMH? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Apache Commons RNG JMH Benchmark? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------
