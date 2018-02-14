@@ -31,7 +31,11 @@
   <version>1.1-SNAPSHOT</version>
   <name>Apache Commons RNG Core</name>
 
-  <description>Pure Java implementations of random numbers generator algorithms.</description>
+  <description>Pure Java implementations of random numbers generator algorithms.
+  Code in this module should not be used directly by applications; please use
+  the client interface defined in module "commons-rng-client-api" and the factory
+  methods defined in module "commons-rng-simple". In a future release, modularization
+  may be enforced through JPMS access restrictions.</description>
 
   <properties>
     <!-- OSGi -->
