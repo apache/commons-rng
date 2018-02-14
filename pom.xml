@@ -99,7 +99,7 @@
     <commons.encoding>UTF-8</commons.encoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
-    <rng.pmd.version>3.5</rng.pmd.version>
+    <rng.pmd.version>3.9.0</rng.pmd.version>
     <rng.findbugs.version>3.0.5</rng.findbugs.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
     <rng.clirr.version>2.8</rng.clirr.version>
