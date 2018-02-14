@@ -30,7 +30,7 @@
   <artifactId>commons-rng-examples-jpms</artifactId>
   <version>1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Apache Commons RNG JPMS Integration test</name>
+  <name>JPMS Integration test</name>
 
   <description>Testing JPMS. Code in this module is not part of the public API.</description>
 
