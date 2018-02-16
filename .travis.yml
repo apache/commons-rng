@@ -22,4 +22,4 @@ jdk:
   - oraclejdk9
 
 after_success:
-  - mvn clean test pmd:pmd findbugs:findbugs checkstyle:checkstyle jacoco:report coveralls:report
+  - mvn clean test pmd:pmd spotbugs:spotbugs checkstyle:checkstyle jacoco:report coveralls:report
