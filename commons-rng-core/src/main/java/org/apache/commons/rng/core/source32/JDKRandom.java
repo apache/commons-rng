@@ -75,7 +75,7 @@ public class JDKRandom extends IntProvider {
             return bos.toByteArray();
         } catch (IOException e) {
             // Workaround checked exception.
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -89,10 +89,10 @@ public class JDKRandom extends IntProvider {
             delegate = (Random) ois.readObject();
         } catch (ClassNotFoundException e) {
             // Workaround checked exception.
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         } catch (IOException e) {
             // Workaround checked exception.
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 }
