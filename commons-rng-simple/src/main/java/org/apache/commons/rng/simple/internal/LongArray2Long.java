@@ -26,8 +26,8 @@ public class LongArray2Long implements SeedConverter<long[], Long> {
     @Override
     public Long convert(long[] seed) {
         long out = 0;
-        for (int i = 0; i < seed.length; i++) {
-            out ^= seed[i];
+        for (long s : seed) {
+            out ^= s;
         }
 
         return out;
