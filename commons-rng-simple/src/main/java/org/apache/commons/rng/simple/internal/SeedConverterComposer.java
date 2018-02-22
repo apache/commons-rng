@@ -27,9 +27,9 @@ package org.apache.commons.rng.simple.internal;
  */
 public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, OUT> {
     /** First conversion. */
-    private SeedConverter<IN, TRANS> first;
+    private final SeedConverter<IN, TRANS> first;
     /** Second conversion. */
-    private SeedConverter<TRANS, OUT> second;
+    private final SeedConverter<TRANS, OUT> second;
 
     /**
      * @param first First conversion.
