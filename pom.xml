@@ -361,6 +361,7 @@
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
+          <analysisCache>true</analysisCache>
           <rulesets>
             <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
