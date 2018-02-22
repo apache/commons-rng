@@ -69,7 +69,7 @@ public interface UniformRandomProvider {
      * specified value (exclusive).
      *
      * @param n Bound on the random number to be returned.  Must be positive.
-     * @return a random {@code int} value between 0 (inclusive) and n
+     * @return a random {@code int} value between 0 (inclusive) and {@code n}
      * (exclusive).
      * @throws IllegalArgumentException if {@code n} is negative.
      */
@@ -87,7 +87,7 @@ public interface UniformRandomProvider {
      * value (exclusive).
      *
      * @param n Bound on the random number to be returned.  Must be positive.
-     * @return a random {@code long} value between 0 (inclusive) and n
+     * @return a random {@code long} value between 0 (inclusive) and {@code n}
      * (exclusive).
      * @throws IllegalArgumentException if {@code n} is negative.
      */
