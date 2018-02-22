@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -49,7 +49,7 @@ import org.apache.commons.rng.core.source64.MersenneTwister64;
  * and performs seed type conversions.
  * </p>
  */
-public class ProviderBuilder {
+public final class ProviderBuilder {
     /** Error message. */
     private static final String INTERNAL_ERROR_MSG = "Internal error: Please file a bug report";
     /** Length of the seed array (for random seed). */
@@ -76,19 +76,19 @@ public class ProviderBuilder {
     private static final ByteArray2LongArray BYTE_ARRAY_TO_LONG_ARRAY = new ByteArray2LongArray();
     /** Map to convert "Integer" seeds. */
     private static final Map<Class<?>, SeedConverter<Integer,?>> CONV_INT =
-        new HashMap<Class<?>, SeedConverter<Integer,?>>();
+        new ConcurrentHashMap<Class<?>, SeedConverter<Integer,?>>();
     /** Map to convert "int[]" seeds. */
     private static final Map<Class<?>, SeedConverter<int[],?>> CONV_INT_ARRAY =
-        new HashMap<Class<?>, SeedConverter<int[],?>>();
+        new ConcurrentHashMap<Class<?>, SeedConverter<int[],?>>();
     /** Map to convert "Long" seeds. */
     private static final Map<Class<?>, SeedConverter<Long,?>> CONV_LONG =
-        new HashMap<Class<?>, SeedConverter<Long,?>>();
+        new ConcurrentHashMap<Class<?>, SeedConverter<Long,?>>();
     /** Map to convert "long[]" seeds. */
     private static final Map<Class<?>, SeedConverter<long[],?>> CONV_LONG_ARRAY =
-        new HashMap<Class<?>, SeedConverter<long[],?>>();
+        new ConcurrentHashMap<Class<?>, SeedConverter<long[],?>>();
     /** Map to convert "byte[]" seeds. */
     private static final Map<Class<?>, SeedConverter<byte[],?>> CONV_BYTE_ARRAY =
-        new HashMap<Class<?>, SeedConverter<byte[],?>>();
+        new ConcurrentHashMap<Class<?>, SeedConverter<byte[],?>>();
 
     static {
         // Input seed type is "Long".

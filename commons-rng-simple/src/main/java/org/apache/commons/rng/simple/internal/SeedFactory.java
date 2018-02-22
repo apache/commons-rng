@@ -41,7 +41,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
  *
  * @since 1.0
  */
-public class SeedFactory {
+public final class SeedFactory {
     /** Generator with a long period. */
     private static final RandomIntSource SEED_GENERATOR;
 
