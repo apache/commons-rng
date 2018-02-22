@@ -40,17 +40,66 @@
 
   The library is divided into modules:
 
-  * {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}Client API}}
+  * {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}Client API}} (requires Java 6)
 
-  * {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}Core}}
+  This module provides the
+  {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html}interface}}
+  to be passed as argument to a procedure that needs to access to a sequence of random numbers.
 
-  * {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}Simple}}
+  * {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}Core}} (requires Java 6)
 
-  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}}
+  This module contains the implementations of several generators of pseudo-random sequences of numbers.
+  Code in this module is intended to be internal to this library and no user code should access it
+  directly.
+  With the advent of {{{http://openjdk.java.net/projects/jigsaw/}Java modularization}}, it is possible
+  that future releases of the library will enforce access through the
+  {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html}RandomSource}}
+  factory.
 
-  * {{{../commons-rng-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}Benchmark}}
+  * {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}Simple}} (requires Java 6)
 
-  * {{{../commons-rng-examples/apidocs/org/apache/commons/rng/examples/package-summary.html}Examples}}
+  This module provides factory methods for creating instances of all the generators implemented
+  in the <<<commons-rng-core>>> module.
+
+  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}} (requires Java 6)
+
+  This module provides implementations that generate a sequence of numbers according to some
+  specified probability distribution, and utilities to sample from a generic collection of items.
+  It is an example of usage of the API provided in the <<<commons-rng-client-api>>> module.
+
+  * Examples
+
+  This module provides miscellaneous complete applications that illustrate usage of the library.
+  Please note that this module is not part of the library's API; no compatibility should be expected
+  in successive releases of "Commons RNG".
+
+  As of version 1.1, the following modules are provided:
+
+   ** <<<examples-jmh>>>: JMH benchmarking (requires Java 8)
+
+   This module uses the {{{http://openjdk.java.net/projects/code-tools/jmh/}JMH micro-benchmark framework}}
+   in order to assess the relative performance of the generators (see tables below).
+
+   ** <<<examples-stress>>>: Stress testing (requires Java 8)
+
+   This module implements a wrapper that calls external tools that can assess the quality of
+   the generators by submitting their output to a battery of "stress tests" (see tables below).
+
+   ** <<<examples-sampling>>>: Probability density (requires Java 8)
+
+   This module contains the code that generates the data used to produce the probability density
+   plots shown in {{{./dist_density_approx.html}this userguide}}.
+
+   ** <<<examples-jpms>>>: JPMS integration (requires Java 9)
+
+   This module implements a dummy application that shows how to use the artefacts (produced
+   from the maven modules described above) as Java modules ({{{https://en.wikipedia.org/wiki/Java_Platform_Module_System}JPMS}}).
+
+   ** <<<examples-quadrature>>>: Quadrature (requires Java 8)
+
+   This module contains an application that estimates the number 𝞹 using quasi-Montecarlo integration.
+
+   []
 
   []
 
@@ -98,12 +147,12 @@ double x = rng.nextDouble(); // 0 <= x < 1.
   * A generator will fill a given <<<byte>>> array with random values.
 
 +--------------------------+
-bytes[] a = new bytes[47];
+byte[] a = new byte[47];
 // The elements of "a" are replaced with random values from the interval [-128, 127].
 rng.nextBytes(a);
 +--------------------------+
 +--------------------------+
-bytes[] a = new bytes[47];
+byte[] a = new byte[47];
 // Replace 3 elements of the array (at indices 15, 16 and 17) with random values.
 rng.nextBytes(a, 15, 3);
 +--------------------------+
