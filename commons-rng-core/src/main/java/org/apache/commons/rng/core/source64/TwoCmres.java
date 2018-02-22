@@ -168,6 +168,10 @@ public class TwoCmres extends LongProvider {
      * Class is immutable.
      */
     static class Cmres {
+        /** Separator. */
+        private static final String SEP = ", ";
+        /** Hexadecimal format. */
+        private static final String HEX_FORMAT = "0x%016xL";
         /** Cycle start. */
         private final int start;
         /** Multiplier. */
@@ -191,10 +195,8 @@ public class TwoCmres extends LongProvider {
         /** {@inheritDoc} */
         @Override
         public String toString() {
-            final String sep = ", ";
-            // Use hexadecimal for "multiplier" field.
-            final String m = String.format((java.util.Locale) null, "0x%016xL", multiply);
-            return "Cmres: [" + m + sep + rotate + sep + start + "]";
+            final String m = String.format((java.util.Locale) null, HEX_FORMAT, multiply);
+            return "Cmres: [" + m + SEP + rotate + SEP + start + "]";
         }
 
         /**
