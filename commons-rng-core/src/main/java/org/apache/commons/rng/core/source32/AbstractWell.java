@@ -38,6 +38,8 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * @since 1.0
  */
 public abstract class AbstractWell extends IntProvider {
+    /** Block size. */
+    private static final int BLOCK_SIZE = 32;
     /** Current index in the bytes pool. */
     protected int index;
     /** Bytes pool. */
@@ -103,11 +105,10 @@ public abstract class AbstractWell extends IntProvider {
      * @return the number of 32-bits blocks.
      */
     private static int calculateBlockCount(final int k) {
-        // the bits pool contains k bits, k = r w - p where r is the number
+        // The bits pool contains k bits, k = r w - p where r is the number
         // of w bits blocks, w is the block size (always 32 in the original paper)
-        // and p is the number of unused bits in the last block
-        final int w = 32;
-        return (k + w - 1) / w;
+        // and p is the number of unused bits in the last block.
+        return (k + BLOCK_SIZE - 1) / BLOCK_SIZE;
     }
 
     /**
