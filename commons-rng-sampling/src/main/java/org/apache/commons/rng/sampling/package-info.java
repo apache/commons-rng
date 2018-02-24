@@ -19,8 +19,10 @@
  * <h3>Samplers</h3>
  *
  * <p>
- * This package defines the samplers API.
+ * This package provides sampling utilities.
  * </p>
+ * The {@link org.apache.commons.rng.sampling.distribution distribution}
+ * sub-package provides sampling from statistical distributions.
  */
 
 package org.apache.commons.rng.sampling;
