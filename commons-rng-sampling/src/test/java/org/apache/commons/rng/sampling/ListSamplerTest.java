@@ -95,6 +95,19 @@ public class ListSamplerTest {
     }
 
     @Test
+    public void testShuffle() {
+        final List<Integer> orig = new ArrayList<Integer>();
+        for (int i = 0; i < 10; i++) {
+            orig.add((i + 1) * rng.nextInt());
+        }
+        final List<Integer> list = new ArrayList<Integer>(orig);
+
+        ListSampler.shuffle(rng, list);
+        // Ensure that at least one entry has moved.
+        Assert.assertTrue(compare(orig, list, 0, orig.size(), false));
+    }
+
+    @Test
     public void testShuffleTail() {
         final List<Integer> orig = new ArrayList<Integer>();
         for (int i = 0; i < 10; i++) {
@@ -106,19 +119,10 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng, list, start, false);
 
         // Ensure that all entries below index "start" did not move.
-        for (int i = 0; i < start; i++) {
-            Assert.assertEquals(orig.get(i), list.get(i));
-        }
+        Assert.assertTrue(compare(orig, list, 0, start, true));
 
         // Ensure that at least one entry has moved.
-        boolean ok = false;
-        for (int i = start; i < orig.size() - 1; i++) {
-            if (!orig.get(i).equals(list.get(i))) {
-                ok = true;
-                break;
-            }
-        }
-        Assert.assertTrue(ok);
+        Assert.assertTrue(compare(orig, list, start, orig.size(), false));
     }
 
     @Test
@@ -133,22 +137,31 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng, list, start, true);
 
         // Ensure that all entries above index "start" did not move.
-        for (int i = start + 1; i < orig.size(); i++) {
-            Assert.assertEquals(orig.get(i), list.get(i));
-        }
+        Assert.assertTrue(compare(orig, list, start + 1, orig.size(), true));
 
         // Ensure that at least one entry has moved.
-        boolean ok = false;
-        for (int i = 0; i <= start; i++) {
-            if (!orig.get(i).equals(list.get(i))) {
-                ok = true;
-                break;
-            }
-        }
-        Assert.assertTrue(ok);
+        Assert.assertTrue(compare(orig, list, 0, start + 1, false));
     }
 
     //// Support methods.
+
+    /**
+     * If {@code same == true}, return {@code true} if all entries are
+     * the same; if {@code same == false}, return {@code true} if at
+     * least one entry is different.
+     */
+    private <T> boolean compare(List<T> orig,
+                                List<T> list,
+                                int start,
+                                int end,
+                                boolean same) {
+        for (int i = start; i < end; i++) {
+            if (!orig.get(i).equals(list.get(i))) {
+                return same ? false : true;
+            }
+        }
+        return same ? true : false;
+    }
 
     private <T extends Set<String>> int findSample(List<T> u,
                                                    Collection<String> sampList) {
