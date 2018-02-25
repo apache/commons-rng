@@ -27,6 +27,14 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class RejectionInversionZipfSampler
     extends SamplerBase
     implements DiscreteSampler {
+    /** Threshold below which Taylor series will be used. */
+    private static final double TAYLOR_THRESHOLD = 1e-8;
+    /** 1/2 */
+    private static final double F_1_2 = 0.5;
+    /** 1/3 */
+    private static final double F_1_3 = 1d / 3;
+    /** 1/4 */
+    private static final double F_1_4 = 0.25;
     /** Number of elements. */
     private final int numberOfElements;
     /** Exponent parameter of the distribution. */
@@ -59,7 +67,7 @@ public class RejectionInversionZipfSampler
         this.numberOfElements = numberOfElements;
         this.exponent = exponent;
         this.hIntegralX1 = hIntegral(1.5) - 1;
-        this.hIntegralNumberOfElements = hIntegral(numberOfElements + 0.5);
+        this.hIntegralNumberOfElements = hIntegral(numberOfElements + F_1_2);
         this.s = 2 - hIntegralInverse(hIntegral(2.5) - h(2));
     }
 
@@ -98,7 +106,7 @@ public class RejectionInversionZipfSampler
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
             double x = hIntegralInverse(u);
-            int k = (int) (x + 0.5);
+            int k = (int) (x + F_1_2);
 
             // Limit k to the range [1, numberOfElements] if it would be outside
             // due to numerical inaccuracies.
@@ -115,7 +123,7 @@ public class RejectionInversionZipfSampler
             //
             //   where C = 1 / (hIntegralNumberOfElements - hIntegralX1)
 
-            if (k - x <= s || u >= hIntegral(k + 0.5) - h(k)) {
+            if (k - x <= s || u >= hIntegral(k + F_1_2) - h(k)) {
 
                 // Case k = 1:
                 //
@@ -216,10 +224,10 @@ public class RejectionInversionZipfSampler
      * @return {@code log(1 + x) / x}.
      */
     private static double helper1(final double x) {
-        if (Math.abs(x) > 1e-8) {
+        if (Math.abs(x) > TAYLOR_THRESHOLD) {
             return Math.log1p(x) / x;
         } else {
-            return 1 - x * (0.5 - x * (0.33333333333333333 - 0.25 * x));
+            return 1 - x * (F_1_2 - x * (F_1_3 - F_1_4 * x));
         }
     }
 
@@ -233,10 +241,10 @@ public class RejectionInversionZipfSampler
      * @return {@code (exp(x) - 1) / x} if x is non-zero, or 1 if x = 0.
      */
     private static double helper2(final double x) {
-        if (Math.abs(x) > 1e-8) {
+        if (Math.abs(x) > TAYLOR_THRESHOLD) {
             return Math.expm1(x) / x;
         } else {
-            return 1 + x * 0.5 * (1 + x * 0.33333333333333333 * (1 + 0.25 * x));
+            return 1 + x * F_1_2 * (1 + x * F_1_3 * (1 + F_1_4 * x));
         }
     }
 }
