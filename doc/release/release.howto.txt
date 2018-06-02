@@ -85,13 +85,24 @@ that the build process can create all the necessary artifacts.
   (1a)
   The command
 
-    $ mvn clean deploy -Prelease -Ptest-deploy -Pcommons-rng-examples
+    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean test site deploy
 
   should create the artifacts in the "target/deploy" directory.
 
   At some point when processing the above command, the GPG passphrase will be
   requested; to avoid problems, the "gpg2" executable should be specified in
   the "settings.xml" file (see below).
+  Note: If running from a remote terminal, you might need to tune the "gpg-agent"
+  configuration file
+    ~/.gnupg/gpg-agent.conf
+  to contain the following statements:
+    ---CUT---
+    enable-ssh-support
+    pinentry-program /usr/bin/pinentry-tty
+    ---CUT---
+  and execute
+    $ export GPG_TTY=$(tty)
+  in order to set up the environment for entering the passphrase.
 
   (1b)
   When the above works, you can test the creation of the full distribution
