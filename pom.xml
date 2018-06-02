@@ -100,7 +100,7 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <rng.pmd.version>3.9.0</rng.pmd.version>
-    <rng.spotbugs.version>3.1.1</rng.spotbugs.version>
+    <rng.spotbugs.version>3.1.3</rng.spotbugs.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
     <rng.clirr.version>2.8</rng.clirr.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
