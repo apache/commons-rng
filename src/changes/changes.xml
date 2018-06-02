@@ -73,7 +73,7 @@ should be expected in subsequent releases.
       <action dev="erans" type="add" issue="RNG-37">
         Implementation of the "Ziggurat" algorithm for Gaussian sampling.
       </action>
-      <action dev="erans" type="fix" issue="RNG-42">
+      <action dev="erans" type="update" issue="RNG-42">
         Use "ZigguratNormalizedGaussianSampler" within the library.
       </action>
       <action dev="erans" type="add" issue="RNG-47">
@@ -83,7 +83,7 @@ should be expected in subsequent releases.
       <action dev="erans" type="add" issue="RNG-43">
         "LogNormalSampler" with user-defined underlying "NormalizedGaussianSampler".
       </action>
-      <action dev="erans" type="fix" issue="RNG-46">
+      <action dev="erans" type="update" issue="RNG-46">
         Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
         Furthermore, its base class has been removed; although it is a binary
         incompatibility, it cannot cause any problem that were not already
