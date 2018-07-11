@@ -41,6 +41,8 @@
     <!-- Java language level. -->
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
+    <animal.sniffer.skip>true</animal.sniffer.skip>
+    <maven.compiler.release>9</maven.compiler.release>
   </properties>
 
   <modules>
