@@ -449,8 +449,7 @@ String word = sampler.sample().get(0);
 4. Performance
 
   This section reports
-  {{{../commons-rng-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}performance benchmarks}}
-  of the RNG implementations.
+  {{{../commons-rng-examples/examples-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}performance benchmarks}} of the RNG implementations.
 
   All runs were performed on a platform with the following characteristics:
 
