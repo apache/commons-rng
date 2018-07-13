@@ -89,7 +89,8 @@
     <!-- Java 9+ -->
     <commons.automatic.module.name>org.apache.commons.rng.parent</commons.automatic.module.name>
     <!-- do not use snapshot suffix here -->
-    <commons.release.version>1.0</commons.release.version>
+    <commons.release.version>1.1</commons.release.version>
+    <commons.rc.version>RC1</commons.rc.version>
     <commons.release.desc>(requires Java 6+)</commons.release.desc>
     <!-- <commons.rc.version>RC1</commons.rc.version> -->
     <commons.binary.suffix>-bin</commons.binary.suffix>
@@ -180,17 +181,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/assembly/src.xml</descriptor>
-            <descriptor>src/assembly/bin.xml</descriptor>
-          </descriptors>
-          <!-- There are a lot of long file names. Suppress the warnings. -->
-          <tarLongFileMode>gnu</tarLongFileMode>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
         <configuration>
@@ -247,6 +237,13 @@
           <!-- Enable MathJax -->
           <additionalparam>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
           <!-- <aggregate>true</aggregate> -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <skipAssembly>true</skipAssembly>
         </configuration>
       </plugin>
     </plugins>
@@ -587,6 +584,7 @@
     <module>commons-rng-core</module>
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
+    <module>dist-archive</module>
     <!--
         Built only upon explicit request (requires Java 1.7+).
         See profile "commons-rng-examples".

@@ -38,5 +38,18 @@ limitations under the License.
         <include>RELEASE-NOTES.txt</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../target/site</directory>
+      <outputDirectory>docs</outputDirectory>
+      <excludes>
+      </excludes>
+    </fileSet>
   </fileSets>
 </assembly>

@@ -41,6 +41,7 @@
     <commons.automatic.module.name>org.apache.commons.rng.api</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <commons.release.isDistModule>false</commons.release.isDistModule>
   </properties>
 
 </project>
