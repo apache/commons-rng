@@ -1,0 +1,22 @@
+
+              Apache Commons RNG 1.0 RELEASE NOTES
+
+The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.0
+
+The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
+
+This is the first release of Apache Commons RNG.
+Apache Commons RNG 1.0 contains the following modules:
+ commons-rng-client-api (requires Java 6)
+ commons-rng-core (requires Java 6)
+ commons-rng-simple (requires Java 6)
+ commons-rng-sampling (requires Java 6)
+ commons-rng-jmh (requires Java 6)
+ commons-rng-examples (requires Java 7)
+
+No changes defined in this version.
+
+For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons RNG website:
+
+http://commons.apache.org/proper/commons-rng/
