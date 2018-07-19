@@ -92,7 +92,7 @@
     <commons.release.version>1.1</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.desc>(requires Java 6+)</commons.release.desc>
-    <!-- <commons.rc.version>RC1</commons.rc.version> -->
+     <commons.rc.version>RC2</commons.rc.version>
     <commons.binary.suffix>-bin</commons.binary.suffix>
 
     <commons.jira.id>RNG</commons.jira.id>
