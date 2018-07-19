@@ -39,14 +39,14 @@ limitations under the License.
       </includes>
     </fileSet>
     <fileSet>
-      <directory>target</directory>
+      <directory>${project.basedir}/target/dependency</directory>
       <outputDirectory></outputDirectory>
       <includes>
-        <include>*.jar</include>
+        <include>commons-rng*.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>../target/site</directory>
+      <directory>${project.basedir}/../target/site</directory>
       <outputDirectory>docs</outputDirectory>
       <excludes>
       </excludes>
