@@ -25,6 +25,7 @@ limitations under the License.
     <fileSet>
       <directory>../</directory>
       <excludes>
+        <exclude>**/.git/**</exclude>
         <exclude>**/site-content/**</exclude>
         <exclude>**/target/**</exclude>
       </excludes>
