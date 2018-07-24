@@ -262,7 +262,7 @@ under the License.
             <executions>
               <execution>
                 <id>get-dependencies</id>
-                <phase>install</phase>
+                <phase>prepare-package</phase>
                 <goals>
                   <goal>copy-dependencies</goal>
                 </goals>
@@ -278,7 +278,7 @@ under the License.
             <executions>
               <execution>
                 <id>create-distribution</id>
-                <phase>install</phase>
+                <phase>package</phase>
                 <goals>
                   <goal>single</goal>
                 </goals>
