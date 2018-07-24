@@ -23,12 +23,10 @@ limitations under the License.
   <baseDirectory>${project.artifactId}-${project.version}-src</baseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${project.basedir}/..</directory>
+      <directory>../</directory>
       <excludes>
-        <exclude>${project.build.directory}/**</exclude>
-        <exclude>.*/**</exclude>
-        <exclude>**/${project.build.directory}/**</exclude>
-        <exclude>**/.*/**</exclude>
+        <exclude>**/site-content/**</exclude>
+        <exclude>**/target/**</exclude>
       </excludes>
     </fileSet>
   </fileSets>
