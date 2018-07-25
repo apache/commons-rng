@@ -223,6 +223,7 @@
             <exclude>.ekstazi/**</exclude>
             <exclude>**/site-content/**</exclude>
             <exclude>**/target/**</exclude>
+            <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
             <exclude>src/site/resources/txt/userguide/stress/dh/**</exclude>
             <exclude>src/site/resources/txt/userguide/stress/tu/**</exclude>
             <exclude>dist-archive/**</exclude>
