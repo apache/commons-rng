@@ -4,6 +4,29 @@ The Apache Commons RNG team is pleased to announce the commons-rng-parent-1.1 re
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
+Apache Commons RNG 1.1 contains the following library modules:
+  commons-rng-client-api (requires Java 6)
+  commons-rng-core (requires Java 6)
+  commons-rng-simple (requires Java 6)
+  commons-rng-sampling (requires Java 6)
+
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as future release might make use of
+the JPMS modularization feature available from Java 9.
+
+Additional code is provided in the following module:
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that commons-rng-sampling has mildly 'flaky' tests due to the
+non-deterministic nature of random number generation. For this purpose, we have set
+failing tests to be re-run in the maven-surefire-plugin. Our current guess is that
+the build process could fail somewhere in the realm of 1 - 5 in 100 runs.
+
 Changes in this version include:
 
 New features:

@@ -51,7 +51,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.1" date="TBD" description="
+    <release version="1.1" date="2018-07-27" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 
@@ -69,6 +69,11 @@ Additional code is provided in the following module:
   commons-rng-examples (requires Java 9)
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
+
+We would like to also note that commons-rng-sampling has mildly 'flaky' tests due to the
+non-deterministic nature of random number generation. For this purpose, we have set
+failing tests to be re-run in the maven-surefire-plugin. Our current guess is that
+the build process could fail somewhere in the realm of 1 - 5 in 100 runs.
 ">
       <action dev="erans" type="add" issue="RNG-37">
         Implementation of the "Ziggurat" algorithm for Gaussian sampling.
