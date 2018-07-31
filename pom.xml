@@ -575,7 +575,24 @@
     <profile>
       <id>commons-rng-examples</id>
       <modules>
+        <module>commons-rng-client-api</module>
+        <module>commons-rng-core</module>
+        <module>commons-rng-simple</module>
+        <module>commons-rng-sampling</module>
         <module>commons-rng-examples</module>
+      </modules>
+    </profile>
+
+
+    <profile>
+      <id>release</id>
+      <modules>
+        <module>commons-rng-client-api</module>
+        <module>commons-rng-core</module>
+        <module>commons-rng-simple</module>
+        <module>commons-rng-sampling</module>
+        <module>commons-rng-examples</module>
+        <module>dist-archive</module>
       </modules>
     </profile>
 
@@ -586,8 +603,6 @@
     <module>commons-rng-core</module>
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
-    <module>commons-rng-examples</module>
-    <module>dist-archive</module>
     <!--
         Built only upon explicit request (requires Java 1.7+).
         See profile "commons-rng-examples".
