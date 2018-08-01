@@ -31,7 +31,7 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  *   </blockquote>
  *  </li>
  * </ul>
- * 
+ *
  * This sampler is suitable for {@code mean >= 40}.
  */
 public class LargeMeanPoissonSampler
@@ -39,7 +39,7 @@ public class LargeMeanPoissonSampler
     implements DiscreteSampler {
 
     /** Class to compute {@code log(n!)}. This has no cached values. */
-    static private final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
+    private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
 
     static {
         // Create without a cache.
@@ -52,17 +52,40 @@ public class LargeMeanPoissonSampler
     private final ContinuousSampler gaussian;
     /** Local class to compute {@code log(n!)}. This may have cached values. */
     private final InternalUtils.FactorialLog factorialLog;
- 
+
     // Working values
+
+    /** Algorithm constant: {@code Math.floor(mean)}. */
     private final double lambda;
+    /** Algorithm constant: {@code mean - lambda}. */
     private final double lambdaFractional;
+    /** Algorithm constant: {@code Math.log(lambda)}. */
     private final double logLambda;
+    /** Algorithm constant: {@code factorialLog((int) lambda)}. */
     private final double logLambdaFactorial;
+    /** Algorithm constant: {@code Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1))}. */
     private final double delta;
+    /** Algorithm constant: {@code delta / 2}. */
     private final double halfDelta;
+    /** Algorithm constant: {@code 2 * lambda + delta}. */
     private final double twolpd;
+    /**
+     * Algorithm constant: {@code a1 / aSum} with
+     * <ul>
+     *  <li>{@code a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(c1)}</li>
+     *  <li>{@code aSum = a1 + a2 + 1}</li>
+     * </ul>
+     */
     private final double p1;
+    /**
+     * Algorithm constant: {@code a1 / aSum} with
+     * <ul>
+     *  <li>{@code a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd)}</li>
+     *  <li>{@code aSum = a1 + a2 + 1}</li>
+     * </ul>
+     */
     private final double p2;
+    /** Algorithm constant: {@code 1 / (8 * lambda)}. */
     private final double c1;
 
     /** The internal Poisson sampler for the lambda fraction. */
@@ -73,13 +96,13 @@ public class LargeMeanPoissonSampler
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean <= 0}.
      */
-    public LargeMeanPoissonSampler(UniformRandomProvider rng, 
-    		                       double mean) {
+    public LargeMeanPoissonSampler(UniformRandomProvider rng,
+                                   double mean) {
         super(rng);
         if (mean <= 0) {
             throw new IllegalArgumentException(mean + " <= " + 0);
         }
-        
+
         gaussian = new ZigguratNormalizedGaussianSampler(rng);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
         // Plain constructor uses the uncached function.
@@ -105,15 +128,15 @@ public class LargeMeanPoissonSampler
             null : // Not used.
             new SmallMeanPoissonSampler(rng, lambdaFractional);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public int sample() {
 
-        final int y2 = (smallMeanPoissonSampler == null) ? 
+        final int y2 = (smallMeanPoissonSampler == null) ?
             0 : // No lambda fraction
             smallMeanPoissonSampler.sample();
-        
+
         double x = 0;
         double y = 0;
         double v = 0;
@@ -161,7 +184,7 @@ public class LargeMeanPoissonSampler
                 break;
             }
         }
-        
+
         return (int) Math.min(y2 + (long) y, Integer.MAX_VALUE);
     }
 
@@ -172,7 +195,7 @@ public class LargeMeanPoissonSampler
      * @return {@code log(n!)}
      * @throws IllegalArgumentException if {@code n < 0}.
      */
-    private final double factorialLog(int n) {
+    private double factorialLog(int n) {
         return factorialLog.value(n);
     }
 

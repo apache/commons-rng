@@ -28,15 +28,15 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   The Poisson process (and hence, the returned value) is bounded by 1000 * mean.
  *  </li>
  * </ul>
- * 
+ *
  * This sampler is suitable for {@code mean < 40}.
  */
 public class SmallMeanPoissonSampler
     extends SamplerBase
     implements DiscreteSampler {
 
-    /** 
-     * Pre-compute {@code Math.exp(-mean)}. 
+    /**
+     * Pre-compute {@code Math.exp(-mean)}.
      * Note: This is the probability of the Poisson sample {@code P(n=0)}.
      */
     private final double p0;
@@ -54,7 +54,7 @@ public class SmallMeanPoissonSampler
         if (mean <= 0) {
             throw new IllegalArgumentException(mean + " <= " + 0);
         }
-        
+
         p0 = Math.exp(-mean);
         // The returned sample is bounded by 1000 * mean or Integer.MAX_VALUE
         limit = (int) Math.ceil(Math.min(1000 * mean, Integer.MAX_VALUE));
@@ -76,7 +76,7 @@ public class SmallMeanPoissonSampler
         }
         return n;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public String toString() {
