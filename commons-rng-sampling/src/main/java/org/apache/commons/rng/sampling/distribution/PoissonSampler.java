@@ -40,7 +40,7 @@ public class PoissonSampler
     implements DiscreteSampler {
 
     /** Value for switching sampling algorithm. */
-    static final double PIVOT = 40;
+    private static final double PIVOT = 40;
     /** The internal Poisson sampler. */
     private final DiscreteSampler poissonSampler;
 
