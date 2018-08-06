@@ -14,18 +14,19 @@ Apache Commons RNG 1.1 contains the following library modules:
   commons-rng-sampling (requires Java 6)
 
 The code in module 'commons-rng-core' should not be accessed
-directly by applications as future release might make use of
-the JPMS modularization feature available from Java 9.
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
 
 Additional code is provided in the following module:
   commons-rng-examples (requires Java 9)
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
 
-We would like to also note that commons-rng-sampling has mildly 'flaky' tests due to the
-non-deterministic nature of random number generation. For this purpose, we have set
-failing tests to be re-run in the maven-surefire-plugin. Our current guess is that
-the build process could fail somewhere in the realm of 1 - 5 in 100 runs.
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
 
 Changes in this version include:
 
@@ -48,6 +49,10 @@ o RNG-35:  New generic "GaussianSampler" based on "NormalizedGaussianSampler"
 
 
 Changes:
+o RNG-50: "PoissonSampler": Algorithms for small mean and large mean have
+	    been separated into dedicated classes.  Cache precomputation has
+	    been disabled as it is only marginally used and is a performance
+	    hit for small sampling sets.Thanks to Alex D. Herbert.
 o RNG-42:  Use "ZigguratNormalizedGaussianSampler" within the library.
 o RNG-46:  Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
         Furthermore, its base class has been removed; although it is a binary
