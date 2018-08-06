@@ -27,46 +27,59 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   described <a href="http://mathaa.epfl.ch/cours/PMMI2001/interactive/rng7.htm">here</a>.
  *   The Poisson process (and hence, the returned value) is bounded by 1000 * mean.
  *  </li>
- *  <li>
- *   For large means, we use the rejection algorithm described in
- *   <blockquote>
- *    Devroye, Luc. (1981). <i>The Computer Generation of Poisson Random Variables</i><br>
- *    <strong>Computing</strong> vol. 26 pp. 197-207.
- *   </blockquote>
- *  </li>
  * </ul>
+ *
+ * This sampler is suitable for {@code mean < 40}.
  */
-public class PoissonSampler
+public class SmallMeanPoissonSampler
+    extends SamplerBase
     implements DiscreteSampler {
 
-    /** Value for switching sampling algorithm. */
-    private static final double PIVOT = 40;
-    /** The internal Poisson sampler. */
-    private final DiscreteSampler poissonSampler;
+    /**
+     * Pre-compute {@code Math.exp(-mean)}.
+     * Note: This is the probability of the Poisson sample {@code P(n=0)}.
+     */
+    private final double p0;
+    /** Pre-compute {@code 1000 * mean} as the upper limit of the sample. */
+    private final int limit;
 
     /**
-     * @param rng Generator of uniformly distributed random numbers.
+     * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean <= 0}.
      */
-    public PoissonSampler(UniformRandomProvider rng,
-                          double mean) {
-        // Delegate all work to specialised samplers.
-        // These should check the input arguments.
-        poissonSampler = mean < PIVOT ?
-            new SmallMeanPoissonSampler(rng, mean) :
-            new LargeMeanPoissonSampler(rng, mean);
+    public SmallMeanPoissonSampler(UniformRandomProvider rng,
+                                   double mean) {
+        super(rng);
+        if (mean <= 0) {
+            throw new IllegalArgumentException(mean + " <= " + 0);
+        }
+
+        p0 = Math.exp(-mean);
+        // The returned sample is bounded by 1000 * mean or Integer.MAX_VALUE
+        limit = (int) Math.ceil(Math.min(1000 * mean, Integer.MAX_VALUE));
     }
 
     /** {@inheritDoc} */
     @Override
     public int sample() {
-        return poissonSampler.sample();
+        int n = 0;
+        double r = 1;
+
+        while (n < limit) {
+            r *= nextDouble();
+            if (r >= p0) {
+                n++;
+            } else {
+                break;
+            }
+        }
+        return n;
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Poisson deviate [" + super.toString() + "]";
+        return "Small Mean Poisson deviate [" + super.toString() + "]";
     }
 }

@@ -51,7 +51,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.1" date="2018-08-05" description="
+    <release version="1.1" date="2018-08-06" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 
@@ -76,6 +76,12 @@ of random number generation.  The 'maven-surefire-plugin' can be configured
 to re-run tests that fail and pass the build if they succeed (the test will
 be marked as 'flaky' in the report).
 ">
+      <action dev="erans" type="update" issue="RNG-50" due-to="Alex D. Herbert">
+	"PoissonSampler": Algorithms for small mean and large mean have
+	been separated into dedicated classes.  Cache precomputation has
+	been disabled as it is only marginally used and is a performance
+	hit for small sampling sets.
+      </action>
       <action dev="erans" type="add" issue="RNG-37">
         Implementation of the "Ziggurat" algorithm for Gaussian sampling.
       </action>
