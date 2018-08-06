@@ -305,25 +305,25 @@ public class PoissonSamplerCacheTest {
 
     /**
      * Test the cache returns the same samples as the PoissonSampler with
-     * a new cache reusing none of the range.
+     * a new cache reusing some of the lower range.
      */
     @Test
     public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheLowerRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
                                                             minRange,
-                                                            midRange);
+                                                            midRange + 1);
     }
 
     /**
      * Test the cache returns the same samples as the PoissonSampler with
-     * a new cache reusing none of the range.
+     * a new cache reusing some of the upper range.
      */
     @Test
     public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheUpperRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
-                                                            maxRange,
+                                                            maxRange - 1,
                                                             maxRange + 5);
     }
 
