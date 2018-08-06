@@ -78,7 +78,7 @@ public class LargeMeanPoissonSampler
      */
     private final double p1;
     /**
-     * Algorithm constant: {@code a1 / aSum} with
+     * Algorithm constant: {@code a2 / aSum} with
      * <ul>
      *  <li>{@code a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd)}</li>
      *  <li>{@code aSum = a1 + a2 + 1}</li>
@@ -90,6 +90,113 @@ public class LargeMeanPoissonSampler
 
     /** The internal Poisson sampler for the lambda fraction. */
     private final DiscreteSampler smallMeanPoissonSampler;
+
+    /**
+     * Encapsulate the state of the sampler. The state is valid for construction of
+     * a sampler in the range {@code lambda <= mean < lambda+1}.
+     */
+    static class LargeMeanPoissonSamplerState {
+        /** Algorithm constant: {@code Math.floor(mean)}. */
+        private final double lambda;
+        /** Algorithm constant: {@code Math.log(lambda)}. */
+        private final double logLambda;
+        /** Algorithm constant: {@code factorialLog((int) lambda)}. */
+        private final double logLambdaFactorial;
+        /** Algorithm constant: {@code Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1))}. */
+        private final double delta;
+        /** Algorithm constant: {@code delta / 2}. */
+        private final double halfDelta;
+        /** Algorithm constant: {@code 2 * lambda + delta}. */
+        private final double twolpd;
+        /**
+         * Algorithm constant: {@code a1 / aSum} with
+         * <ul>
+         *  <li>{@code a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(c1)}</li>
+         *  <li>{@code aSum = a1 + a2 + 1}</li>
+         * </ul>
+         */
+        private final double p1;
+        /**
+         * Algorithm constant: {@code a2 / aSum} with
+         * <ul>
+         *  <li>{@code a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd)}</li>
+         *  <li>{@code aSum = a1 + a2 + 1}</li>
+         * </ul>
+         */
+        private final double p2;
+        /** Algorithm constant: {@code 1 / (8 * lambda)}. */
+        private final double c1;
+
+        /**
+         * Instantiates a new large mean poisson sampler state for
+         * the range {@code lambda <= mean < lambda+1}.
+         *
+         * @param lambda             {@code Math.floor(mean)}
+         * @param logLambda          {@code Math.log(lambda)}
+         * @param logLambdaFactorial {@code factorialLog((int) lambda)}
+         * @param delta              {@code Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1))}
+         * @param halfDelta          {@code delta / 2}
+         * @param twolpd             {@code 2 * lambda + delta}
+         * @param p1                 {@code a1 / aSum}
+         * @param p2                 {@code a2 / aSum}
+         * @param c1                 {@code 1 / (8 * lambda)}
+         */
+        private LargeMeanPoissonSamplerState(double lambda,
+                                             double logLambda,
+                                             double logLambdaFactorial,
+                                             double delta,
+                                             double halfDelta,
+                                             double twolpd,
+                                             double p1,
+                                             double p2,
+                                             double c1) {
+            this.lambda = lambda;
+            this.logLambda = logLambda;
+            this.logLambdaFactorial = logLambdaFactorial;
+            this.delta = delta;
+            this.halfDelta = halfDelta;
+            this.twolpd = twolpd;
+            this.p1 = p1;
+            this.p2 = p2;
+            this.c1 = c1;
+        }
+
+        /**
+         * Creates the state. The state is valid for construction of a sampler in the
+         * range {@code n <= mean < n+1}.
+         *
+         * @param n the value n ({@code floor(mean)})
+         * @return the state
+         * @throws IllegalArgumentException if {@code n < 0}.
+         */
+        static LargeMeanPoissonSamplerState create(int n) {
+            if (n < 0) {
+                throw new IllegalArgumentException(n + " < " + 0);
+            }
+            final double lambda = n;
+            final double logLambda = Math.log(lambda);
+            final double logLambdaFactorial = NO_CACHE_FACTORIAL_LOG.value(n);
+            final double delta = Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1));
+            final double halfDelta = delta / 2;
+            final double twolpd = 2 * lambda + delta;
+            final double c1 = 1 / (8 * lambda);
+            final double a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(c1);
+            final double a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd);
+            final double aSum = a1 + a2 + 1;
+            final double p1 = a1 / aSum;
+            final double p2 = a2 / aSum;
+            return new LargeMeanPoissonSamplerState(lambda, logLambda, logLambdaFactorial, delta, halfDelta, twolpd, p1,
+                    p2, c1);
+        }
+
+        /**
+         * Get the lambda value for the state. Equals to {@code floor(mean)}.
+         * @return {@code floor(mean)}
+         */
+        int getLambda() {
+            return (int) lambda;
+        }
+    }
 
     /**
      * @param rng  Generator of uniformly distributed random numbers.
@@ -122,6 +229,48 @@ public class LargeMeanPoissonSampler
         final double aSum = a1 + a2 + 1;
         p1 = a1 / aSum;
         p2 = a2 / aSum;
+
+        // The algorithm requires a Poisson sample from the remaining lambda fraction.
+        smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
+            null : // Not used.
+            new SmallMeanPoissonSampler(rng, lambdaFractional);
+    }
+
+    /**
+     * Instantiates a sampler using a precomputed state.
+     *
+     * @param rng              Generator of uniformly distributed random numbers.
+     * @param state            The state for {@code (int)Math.floor(mean)}.
+     * @param lambdaFractional The lambda fractional value
+     *                         ({@code mean - (int)Math.floor(mean))}.
+     * @throws IllegalArgumentException
+     *                         if {@code lambdaFractional < 0 || lambdaFractional >= 1}.
+     */
+    LargeMeanPoissonSampler(UniformRandomProvider rng,
+                            LargeMeanPoissonSamplerState state,
+                            double lambdaFractional) {
+        super(rng);
+        if (lambdaFractional < 0 || lambdaFractional >= 1) {
+            throw new IllegalArgumentException(
+                    "lambdaFractional must be in the range 0 (inclusive) to 1 (exclusive): " + lambdaFractional);
+        }
+
+        gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        exponential = new AhrensDieterExponentialSampler(rng, 1);
+        // Plain constructor uses the uncached function.
+        factorialLog = NO_CACHE_FACTORIAL_LOG;
+
+        // Use the state to initialise the algorithm
+        this.lambda = state.lambda;
+        this.logLambda = state.logLambda;
+        this.logLambdaFactorial = state.logLambdaFactorial;
+        this.delta = state.delta;
+        this.halfDelta = state.halfDelta;
+        this.twolpd = state.twolpd;
+        this.p1 = state.p1;
+        this.p2 = state.p2;
+        this.c1 = state.c1;
+        this.lambdaFractional = lambdaFractional;
 
         // The algorithm requires a Poisson sample from the remaining lambda fraction.
         smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
