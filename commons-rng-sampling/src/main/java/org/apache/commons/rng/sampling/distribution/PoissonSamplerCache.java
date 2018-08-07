@@ -289,7 +289,6 @@ public class PoissonSamplerCache {
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
      * @throws IllegalArgumentException if {@code maxMean < minMean}
-     * @throws IllegalStateException if the cache values cannot be reused
      * @return the poisson sampler cache
      */
     public PoissonSamplerCache withRange(double minMean,
@@ -330,14 +329,11 @@ public class PoissonSamplerCache {
         while (currentIndex < values.length() && nextIndex < states.length) {
             LargeMeanPoissonSamplerState state = values.get(currentIndex);
             if (state != null) {
-                //  Validate
-                int expected = nextMinN + nextIndex;
-                int actual = state.getLambda();
-                if (expected != actual) {
-                    throw new IllegalStateException(String.format(
-                        "Unexpected lambda value: expected <%d>, found <%d>",
-                            expected, actual));
-                }
+                // Validate with assert
+                assert nextMinN + nextIndex == state.getLambda() :
+                    String.format("Unexpected lambda value: expected <%d>, found <%d>",
+                                  nextMinN + nextIndex,
+                                  state.getLambda());
                 states[nextIndex] = state;
             }
             currentIndex++;

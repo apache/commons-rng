@@ -190,7 +190,7 @@ public class LargeMeanPoissonSampler
         }
 
         /**
-         * Get the lambda value for the state. Equals to {@code floor(mean)}.
+         * Get the lambda value for the state. Equal to {@code floor(mean)}.
          * @return {@code floor(mean)}
          */
         int getLambda() {

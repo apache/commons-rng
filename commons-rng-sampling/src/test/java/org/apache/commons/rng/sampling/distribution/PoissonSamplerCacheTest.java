@@ -38,6 +38,8 @@ public class PoissonSamplerCacheTest {
     /** The mid-point of the range of the mean */
     private final int midRange = (minRange + maxRange) / 2;
 
+    // Edge cases for construction
+
     /**
      * Test the cache can be created without a range that requires a cache.
      * In this case the cache will be a pass through to the constructor
@@ -69,7 +71,6 @@ public class PoissonSamplerCacheTest {
                             cache.getMaxMean(), 0);
     }
 
-
     /**
      * Test the cache can be created with a range of 1.
      * In this case the cache will be valid for all mean values
@@ -94,6 +95,21 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextAfter(min, -1);
         createPoissonSamplerCache(min, max);
+    }
+
+    /**
+     * Test the cache can be created with a min range below 0.
+     * In this case the range is truncated to 0.
+     */
+    @Test
+    public void testConstructorWhenMinBelow0() {
+        final double min = -1;
+        final double max = PoissonSampler.PIVOT + 2;
+        PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
+        Assert.assertTrue(cache.isValidRange());
+        Assert.assertEquals(PoissonSampler.PIVOT, cache.getMinMean(), 0);
+        Assert.assertEquals(Math.nextAfter(Math.floor(max) + 1, -1),
+                            cache.getMaxMean(), 0);
     }
 
     /**
@@ -152,6 +168,54 @@ public class PoissonSamplerCacheTest {
         final double max = Math.nextAfter(min, -1);
         createPoissonSamplerCache().withRange(min, max);
     }
+
+    /**
+     * Test the cache can be created with a min range below 0.
+     * In this case the range is truncated to 0.
+     */
+    @Test
+    public void testWithRangeConstructorWhenMinBelow0() {
+        final double min = -1;
+        final double max = PoissonSampler.PIVOT + 2;
+        PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
+        Assert.assertTrue(cache.isValidRange());
+        Assert.assertEquals(PoissonSampler.PIVOT, cache.getMinMean(), 0);
+        Assert.assertEquals(Math.nextAfter(Math.floor(max) + 1, -1),
+                            cache.getMaxMean(), 0);
+    }
+
+    /**
+     * Test the cache can be created from a cache with no capacity.
+     */
+    @Test
+    public void testWithRangeConstructorWhenCacheHasNoCapcity() {
+        final double min = PoissonSampler.PIVOT + 2;
+        final double max = min + 10;
+        PoissonSamplerCache cache = createPoissonSamplerCache(0, 0).withRange(min, max);
+        Assert.assertTrue(cache.isValidRange());
+        Assert.assertEquals(min, cache.getMinMean(), 0);
+        Assert.assertEquals(Math.nextAfter(Math.floor(max) + 1, -1),
+                            cache.getMaxMean(), 0);
+    }
+
+    /**
+     * Test the withRange function of the cache signals when construction
+     * cost is minimal.
+     */
+    @Test
+    public void testWithRange() {
+        final double min = PoissonSampler.PIVOT + 10;
+        final double max = PoissonSampler.PIVOT + 20;
+        PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
+        // Under the pivot point is always within range
+        Assert.assertTrue(cache.withinRange(PoissonSampler.PIVOT - 1));
+        Assert.assertFalse(cache.withinRange(min - 1));
+        Assert.assertTrue(cache.withinRange(min));
+        Assert.assertTrue(cache.withinRange(max));
+        Assert.assertFalse(cache.withinRange(max + 10));
+    }
+
+    // Sampling tests
 
     /**
      * Test the cache returns the same samples as the PoissonSampler when it
