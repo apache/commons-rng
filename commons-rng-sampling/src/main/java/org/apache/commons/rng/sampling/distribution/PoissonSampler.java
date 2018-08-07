@@ -39,8 +39,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class PoissonSampler
     implements DiscreteSampler {
 
-    /** Value for switching sampling algorithm. */
-    private static final double PIVOT = 40;
+    /**
+     * Value for switching sampling algorithm.
+     * Package scope for the {@link PoissonSamplerCache}.
+     */
+    static final double PIVOT = 40;
     /** The internal Poisson sampler. */
     private final DiscreteSampler poissonSampler;
 
