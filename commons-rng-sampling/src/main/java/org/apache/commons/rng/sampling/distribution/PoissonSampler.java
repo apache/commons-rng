@@ -67,6 +67,48 @@ public class PoissonSampler
         return poissonSampler.sample();
     }
 
+    /**
+     * @return a random value from a uniform distribution in the
+     * interval {@code [0, 1)}.
+     * @deprecated - one should be using the {@link PoissonSampler#sample()} method,
+     * as it is considerably faster.
+     */
+    @Deprecated
+    protected double nextDouble() {
+        return super.nextDouble();
+    }
+
+    /**
+     * @return a random {@code int} value.
+     * @deprecated - one should be using the {@link PoissonSampler#sample()} method,
+     * as it is considerably faster.
+     */
+    @Deprecated
+    protected int nextInt() {
+        return super.nextInt();
+    }
+
+    /**
+     * @param max Upper bound (excluded).
+     * @return a random {@code int} value in the interval {@code [0, max)}.
+     * @deprecated - one should be using the {@link PoissonSampler#sample()} method,
+     *      * as it is considerably faster.
+     */
+    @Deprecated
+    protected int nextInt(int max) {
+        return super.nextInt(max);
+    }
+
+    /**
+     * @return a random {@code long} value.
+     * @deprecated - one should be using the {@link PoissonSampler#sample()} method,
+     *      * as it is considerably faster.
+     */
+    @Deprecated
+    protected long nextLong() {
+        return super.nextLong();
+    }
+
     /** {@inheritDoc} */
     @Override
     public String toString() {
