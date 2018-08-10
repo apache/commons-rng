@@ -22,7 +22,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
  * Box-Muller algorithm</a> for sampling from a Gaussian distribution.
  *
- * @deprecated since v1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
+ * @since 1.0
+ *
+ * @deprecated Since v1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
  * and {@link GaussianSampler} instead.
  */
 @Deprecated
@@ -35,6 +37,8 @@ public class BoxMullerGaussianSampler
     private final double mean;
     /** standardDeviation. */
     private final double standardDeviation;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -44,7 +48,8 @@ public class BoxMullerGaussianSampler
     public BoxMullerGaussianSampler(UniformRandomProvider rng,
                                     double mean,
                                     double standardDeviation) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.mean = mean;
         this.standardDeviation = standardDeviation;
     }
@@ -56,8 +61,8 @@ public class BoxMullerGaussianSampler
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 
-            final double x = nextDouble();
-            final double y = nextDouble();
+            final double x = rng.nextDouble();
+            final double y = rng.nextDouble();
             final double alpha = 2 * Math.PI * x;
             final double r = Math.sqrt(-2 * Math.log(y));
 
@@ -81,6 +86,6 @@ public class BoxMullerGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Box-Muller Gaussian deviate [" + super.toString() + "]";
+        return "Box-Muller Gaussian deviate [" + rng.toString() + "]";
     }
 }

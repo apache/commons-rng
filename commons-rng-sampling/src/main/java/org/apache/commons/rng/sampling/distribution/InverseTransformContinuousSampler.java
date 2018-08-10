@@ -50,12 +50,16 @@ import org.apache.commons.rng.UniformRandomProvider;
  * // Generate random deviate.
  * double random = chiSquareSampler.sample();
  * </code></pre>
+ *
+ * @since 1.0
  */
 public class InverseTransformContinuousSampler
     extends SamplerBase
     implements ContinuousSampler {
     /** Inverse cumulative probability function. */
     private final ContinuousInverseCumulativeProbabilityFunction function;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -63,19 +67,20 @@ public class InverseTransformContinuousSampler
      */
     public InverseTransformContinuousSampler(UniformRandomProvider rng,
                                              ContinuousInverseCumulativeProbabilityFunction function) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.function = function;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return function.inverseCumulativeProbability(nextDouble());
+        return function.inverseCumulativeProbability(rng.nextDouble());
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return function.toString() + " (inverse method) [" + super.toString() + "]";
+        return function.toString() + " (inverse method) [" + rng.toString() + "]";
     }
 }

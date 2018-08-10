@@ -35,6 +35,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  * </ul>
+ *
+ * @since 1.0
  */
 public class PoissonSampler
     extends SamplerBase
@@ -52,7 +54,7 @@ public class PoissonSampler
      */
     public PoissonSampler(UniformRandomProvider rng,
                           double mean) {
-        super(rng);
+        super(null);
 
         // Delegate all work to specialised samplers.
         // These should check the input arguments.
@@ -70,6 +72,6 @@ public class PoissonSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Poisson deviate [" + super.toString() + "]";
+        return poissonSampler.toString();
     }
 }

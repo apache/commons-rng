@@ -26,16 +26,17 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 public class BoxMullerNormalizedGaussianSampler
-    extends SamplerBase
     implements NormalizedGaussianSampler {
     /** Next gaussian. */
     private double nextGaussian = Double.NaN;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
     public BoxMullerNormalizedGaussianSampler(UniformRandomProvider rng) {
-        super(rng);
+        this.rng = rng;
     }
 
     /** {@inheritDoc} */
@@ -45,8 +46,8 @@ public class BoxMullerNormalizedGaussianSampler
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 
-            final double x = nextDouble();
-            final double y = nextDouble();
+            final double x = rng.nextDouble();
+            final double y = rng.nextDouble();
             final double alpha = 2 * Math.PI * x;
             final double r = Math.sqrt(-2 * Math.log(y));
 
@@ -70,6 +71,6 @@ public class BoxMullerNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Box-Muller normalized Gaussian deviate [" + super.toString() + "]";
+        return "Box-Muller normalized Gaussian deviate [" + rng.toString() + "]";
     }
 }

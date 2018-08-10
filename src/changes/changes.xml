@@ -76,11 +76,16 @@ of random number generation.  The 'maven-surefire-plugin' can be configured
 to re-run tests that fail and pass the build if they succeed (the test will
 be marked as 'flaky' in the report).
 ">
+      <action dev="erans" type="fix" issue="RNG-53">
+        Class "SamplerBase" has been deprecated.  It was meant for internal use
+        only but, through inheritance, it allows incorrect usage of the sampler
+        classes.
+      </action>
       <action dev="erans" type="update" issue="RNG-50" due-to="Alex D. Herbert">
-	"PoissonSampler": Algorithms for small mean and large mean have
-	been separated into dedicated classes.  Cache precomputation has
-	been disabled as it is only marginally used and is a performance
-	hit for small sampling sets.
+	    "PoissonSampler": Algorithms for small mean and large mean have
+	    been separated into dedicated classes.  Cache precomputation has
+	    been disabled as it is only marginally used and is a performance
+	    hit for small sampling sets.
       </action>
       <action dev="erans" type="add" issue="RNG-37">
         Implementation of the "Ziggurat" algorithm for Gaussian sampling.
@@ -97,10 +102,6 @@ be marked as 'flaky' in the report).
       </action>
       <action dev="erans" type="update" issue="RNG-46">
         Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
-        Furthermore, its base class has been removed; although it is a binary
-        incompatibility, it cannot cause any problem that were not already
-        present in code using v1.0 of the library: Calls to the base class
-        would have raised a NPE.
       </action>
       <action dev="erans" type="add" issue="RNG-39">
         "UnitSphereSampler": generate random vectors isotropically located

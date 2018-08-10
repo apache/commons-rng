@@ -27,7 +27,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 @Deprecated
 public class BoxMullerLogNormalSampler
-    extends LogNormalSampler {
+    extends SamplerBase
+    implements ContinuousSampler {
+    /** Delegate. */
+    private final ContinuousSampler sampler;
+
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param scale Scale of the log-normal distribution.
@@ -36,7 +40,20 @@ public class BoxMullerLogNormalSampler
     public BoxMullerLogNormalSampler(UniformRandomProvider rng,
                                      double scale,
                                      double shape) {
-        super(new BoxMullerNormalizedGaussianSampler(rng),
-              scale, shape);
+        super(null);
+        sampler = new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng),
+                                       scale, shape);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public double sample() {
+        return sampler.sample();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return sampler.toString();
     }
 }

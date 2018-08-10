@@ -20,7 +20,12 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Base class for a sampler.
+ *
+ * @since 1.0
+ *
+ * @deprecated Since version 1.1. Class intended for internal use only.
  */
+@Deprecated
 public class SamplerBase {
     /** RNG. */
     private final UniformRandomProvider rng;

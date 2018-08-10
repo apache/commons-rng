@@ -28,16 +28,17 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 public class MarsagliaNormalizedGaussianSampler
-    extends SamplerBase
     implements NormalizedGaussianSampler {
     /** Next gaussian. */
     private double nextGaussian = Double.NaN;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
     public MarsagliaNormalizedGaussianSampler(UniformRandomProvider rng) {
-        super(rng);
+        this.rng = rng;
     }
 
     /** {@inheritDoc} */
@@ -47,8 +48,8 @@ public class MarsagliaNormalizedGaussianSampler
             // Rejection scheme for selecting a pair that lies within the unit circle.
             while (true) {
                 // Generate a pair of numbers within [-1 , 1).
-                final double x = 2 * nextDouble() - 1;
-                final double y = 2 * nextDouble() - 1;
+                final double x = 2 * rng.nextDouble() - 1;
+                final double y = 2 * rng.nextDouble() - 1;
                 final double r2 = x * x + y * y;
 
                 if (r2 < 1 && r2 > 0) {
@@ -79,6 +80,6 @@ public class MarsagliaNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Box-Muller (with rejection) normalized Gaussian deviate [" + super.toString() + "]";
+        return "Box-Muller (with rejection) normalized Gaussian deviate [" + rng.toString() + "]";
     }
 }
