@@ -38,6 +38,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  * </ul>
+ *
+ * @since 1.0
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
@@ -58,6 +60,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     private final double cOptim;
     /** Gaussian sampling. */
     private final NormalizedGaussianSampler gaussian;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -67,7 +71,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     public AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                   double alpha,
                                                   double theta) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.alpha = alpha;
         this.theta = theta;
         gaussian = new ZigguratNormalizedGaussianSampler(rng);
@@ -85,14 +90,14 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
             while (true) {
                 // Step 1:
-                final double u = nextDouble();
+                final double u = rng.nextDouble();
                 final double p = bGSOptim * u;
 
                 if (p <= 1) {
                     // Step 2:
 
                     final double x = Math.pow(p, oneOverTheta);
-                    final double u2 = nextDouble();
+                    final double u2 = rng.nextDouble();
 
                     if (u2 > Math.exp(-x)) {
                         // Reject.
@@ -104,7 +109,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                     // Step 3:
 
                     final double x = -Math.log((bGSOptim - p) * oneOverTheta);
-                    final double u2 = nextDouble();
+                    final double u2 = rng.nextDouble();
 
                     if (u2 > Math.pow(x, theta - 1)) {
                         // Reject.
@@ -125,7 +130,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                 }
 
                 final double x2 = x * x;
-                final double u = nextDouble();
+                final double u = rng.nextDouble();
 
                 // Squeeze.
                 if (u < 1 - 0.0331 * x2 * x2) {
@@ -142,6 +147,6 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Ahrens-Dieter-Marsaglia-Tsang Gamma deviate [" + super.toString() + "]";
+        return "Ahrens-Dieter-Marsaglia-Tsang Gamma deviate [" + rng.toString() + "]";
     }
 }

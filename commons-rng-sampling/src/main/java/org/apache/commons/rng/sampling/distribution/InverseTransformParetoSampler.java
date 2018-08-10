@@ -28,6 +28,8 @@ public class InverseTransformParetoSampler
     private final double scale;
     /** Shape. */
     private final double shape;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -37,7 +39,8 @@ public class InverseTransformParetoSampler
     public InverseTransformParetoSampler(UniformRandomProvider rng,
                                          double scale,
                                          double shape) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.scale = scale;
         this.shape = shape;
     }
@@ -45,12 +48,12 @@ public class InverseTransformParetoSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return scale / Math.pow(nextDouble(), 1 / shape);
+        return scale / Math.pow(rng.nextDouble(), 1 / shape);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "[Inverse method for Pareto distribution " + super.toString() + "]";
+        return "[Inverse method for Pareto distribution " + rng.toString() + "]";
     }
 }

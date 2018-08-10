@@ -38,6 +38,8 @@ public class ChengBetaSampler
     private final double alphaShape;
     /** Second shape parameter. */
     private final double betaShape;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * Creates a sampler instance.
@@ -49,7 +51,8 @@ public class ChengBetaSampler
     public ChengBetaSampler(UniformRandomProvider rng,
                             double alpha,
                             double beta) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         alphaShape = alpha;
         betaShape = beta;
     }
@@ -70,7 +73,7 @@ public class ChengBetaSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Cheng Beta deviate [" + super.toString() + "]";
+        return "Cheng Beta deviate [" + rng.toString() + "]";
     }
 
     /**
@@ -91,8 +94,8 @@ public class ChengBetaSampler
         double w;
         double t;
         do {
-            final double u1 = nextDouble();
-            final double u2 = nextDouble();
+            final double u1 = rng.nextDouble();
+            final double u2 = rng.nextDouble();
             final double v = beta * (Math.log(u1) - Math.log1p(-u1));
             w = a * Math.exp(v);
             final double z = u1 * u1 * u2;
@@ -131,8 +134,8 @@ public class ChengBetaSampler
 
         double w;
         while (true) {
-            final double u1 = nextDouble();
-            final double u2 = nextDouble();
+            final double u1 = rng.nextDouble();
+            final double u2 = rng.nextDouble();
             final double y = u1 * u2;
             final double z = u1 * y;
             if (u1 < 0.5) {

@@ -31,7 +31,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 public class ZigguratNormalizedGaussianSampler
-    extends SamplerBase
     implements NormalizedGaussianSampler {
     /** Start of tail. */
     private static final double R = 3.442619855899;
@@ -53,6 +52,8 @@ public class ZigguratNormalizedGaussianSampler
     private static final double[] W = new double[LEN];
     /** Auxiliary table. */
     private static final double[] F = new double[LEN];
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     static {
         // Filling the tables.
@@ -88,13 +89,13 @@ public class ZigguratNormalizedGaussianSampler
      * @param rng Generator of uniformly distributed random numbers.
      */
     public ZigguratNormalizedGaussianSampler(UniformRandomProvider rng) {
-        super(rng);
+        this.rng = rng;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final long j = nextLong();
+        final long j = rng.nextLong();
         final int i = (int) (j & LAST);
         if (Math.abs(j) < K[i]) {
             return j * W[i];
@@ -106,7 +107,7 @@ public class ZigguratNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Ziggurat normalized Gaussian deviate [" + super.toString() + "]";
+        return "Ziggurat normalized Gaussian deviate [" + rng.toString() + "]";
     }
 
     /**
@@ -126,18 +127,18 @@ public class ZigguratNormalizedGaussianSampler
             if (iz == 0) {
                 // Base strip.
                 do {
-                    y = -Math.log(nextDouble());
-                    x = -Math.log(nextDouble()) * ONE_OVER_R;
+                    y = -Math.log(rng.nextDouble());
+                    x = -Math.log(rng.nextDouble()) * ONE_OVER_R;
                 } while (y + y < x * x);
 
                 final double out = R + x;
                 return hz > 0 ? out : -out;
             } else {
                 // Wedge of other strips.
-                if (F[iz] + nextDouble() * (F[iz - 1] - F[iz]) < gauss(x)) {
+                if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < gauss(x)) {
                     return x;
                 } else {
-                    final long hzNew = nextLong();
+                    final long hzNew = rng.nextLong();
                     final int izNew = (int) (hzNew & LAST);
                     if (Math.abs(hzNew) < K[izNew]) {
                         return hzNew * W[izNew];

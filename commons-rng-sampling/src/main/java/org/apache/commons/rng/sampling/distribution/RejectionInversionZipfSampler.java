@@ -45,6 +45,8 @@ public class RejectionInversionZipfSampler
     private final double hIntegralNumberOfElements;
     /** {@code 2 - hIntegralInverse(hIntegral(2.5) - h(2)}. */
     private final double s;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -56,7 +58,8 @@ public class RejectionInversionZipfSampler
     public RejectionInversionZipfSampler(UniformRandomProvider rng,
                                          int numberOfElements,
                                          double exponent) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         if (numberOfElements <= 0) {
             throw new IllegalArgumentException("number of elements is not strictly positive: " + numberOfElements);
         }
@@ -102,7 +105,7 @@ public class RejectionInversionZipfSampler
         // This explains why the implementation looks slightly different.
 
         while(true) {
-            final double u = hIntegralNumberOfElements + nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
+            final double u = hIntegralNumberOfElements + rng.nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
             double x = hIntegralInverse(u);
@@ -169,7 +172,7 @@ public class RejectionInversionZipfSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Rejection inversion Zipf deviate [" + super.toString() + "]";
+        return "Rejection inversion Zipf deviate [" + rng.toString() + "]";
     }
 
     /**
