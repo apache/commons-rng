@@ -104,10 +104,10 @@ be marked as 'flaky' in the report).
         classes.
       </action>
       <action dev="erans" type="update" issue="RNG-50" due-to="Alex D. Herbert">
-	    "PoissonSampler": Algorithms for small mean and large mean have
-	    been separated into dedicated classes.  Cache precomputation has
-	    been disabled as it is only marginally used and is a performance
-	    hit for small sampling sets.
+        "PoissonSampler": Algorithms for small mean and large mean have
+        been separated into dedicated classes.  Cache precomputation has
+        been disabled as it is only marginally used and is a performance
+        hit for small sampling sets.
       </action>
       <action dev="erans" type="add" issue="RNG-37">
         Implementation of the "Ziggurat" algorithm for Gaussian sampling.
