@@ -47,6 +47,10 @@ o RNG-35:  New generic "GaussianSampler" based on "NormalizedGaussianSampler"
         Implementation of "BoxMullerNormalizedGaussianSampler" deprecates
         "BoxMullerGaussianSampler".
 
+Fixed Bugs:
+o RNG-53:  Class "SamplerBase" has been deprecated.  It was meant for internal use
+        only but, through inheritance, it allows incorrect usage of the sampler
+        classes.
 
 Changes:
 o RNG-50: "PoissonSampler": Algorithms for small mean and large mean have
