@@ -20,5 +20,7 @@ package org.apache.commons.rng.sampling.distribution;
  * Marker interface for a sampler that generates values from an N(0,1)
  * <a href="https://en.wikipedia.org/wiki/Normal_distribution">
  *  Gaussian distribution</a>.
+ *
+ * @since 1.1
  */
 public interface NormalizedGaussianSampler extends ContinuousSampler {}

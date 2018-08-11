@@ -20,6 +20,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Sampling from a uniform distribution.
+ *
+ * @since 1.0
  */
 public class ContinuousUniformSampler
     extends SamplerBase

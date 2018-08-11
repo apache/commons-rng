@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 /**
  * Sampler that generates values of type {@code int}.
+ *
+ * @since 1.0
  */
 public interface DiscreteSampler {
     /**

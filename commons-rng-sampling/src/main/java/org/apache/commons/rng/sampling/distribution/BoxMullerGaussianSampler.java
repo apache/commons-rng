@@ -24,7 +24,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.0
  *
- * @deprecated Since v1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
+ * @deprecated Since version 1.1. Please use {@link BoxMullerNormalizedGaussianSampler}
  * and {@link GaussianSampler} instead.
  */
 @Deprecated

@@ -21,6 +21,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Discrete uniform distribution sampler.
+ *
+ * @since 1.0
  */
 public class DiscreteUniformSampler
     extends SamplerBase
