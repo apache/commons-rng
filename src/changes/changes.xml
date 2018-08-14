@@ -51,7 +51,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.1" date="2018-08-06" description="
+    <release version="1.1" date="2018-08-14" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 
