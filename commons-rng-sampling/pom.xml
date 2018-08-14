@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-sampling</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>Apache Commons RNG Sampling</name>
 
   <description>The Apache Commons RNG Sampling module provides samplers
@@ -48,13 +48,13 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-client-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-simple</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.2-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -72,7 +72,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.0</version>
         <configuration>
-          <rerunFailingTestsCount>1</rerunFailingTestsCount>
+          <rerunFailingTestsCount>4</rerunFailingTestsCount>
         </configuration>
       </plugin>
     </plugins>

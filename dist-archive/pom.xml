@@ -25,133 +25,30 @@ under the License.
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-parent</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG (full distribution)</name>
   <description>This module creates the Apache Commons RNG distribution.</description>
 
-  <dependencies>
+  <properties>
+    <checkstyle.skip>true</checkstyle.skip>
+    <animal.sniffer.skip>true</animal.sniffer.skip>
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>1.0</commons.bc.version>
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.siteOutputDirectory>${basedir}/../target/site</commons.siteOutputDirectory>
+    <commons.releaseNotesLocation>${basedir}/../RELEASE-NOTES.txt</commons.releaseNotesLocation>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <commons.releaseManagerName>Rob Tompkins</commons.releaseManagerName>
+    <commons.releaseManagerKey>B6E73D84EA4FCC47166087253FAAD2CD5ECBB314</commons.releaseManagerKey>
+  </properties>
 
-    <!-- Module: Client API -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-client-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-client-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-client-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
 
-    <!-- Module: Core -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-core</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-core</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-core</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
-
-    <!-- Module: Simple -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-simple</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-simple</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-simple</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
-
-    <!-- Module: Sampling -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-sampling</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-sampling</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-sampling</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
-
-    <!-- Module: JMH -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-jmh</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-jmh</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-jmh</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
-
-    <!-- Module: Examples -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-examples</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-examples</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-rng-examples</artifactId>
-      <version>1.1-SNAPSHOT</version>
-      <classifier>javadoc</classifier>
-    </dependency>
-
-  </dependencies>
 
   <build>
     <plugins>
@@ -168,11 +65,217 @@ under the License.
 
     <profile>
       <id>release</id>
+      <dependencies>
+
+        <!-- Module: Client API -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-client-api</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-client-api</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-client-api</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Core -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-core</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-core</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-core</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Simple -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-simple</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-simple</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-simple</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Sampling -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Examples - JMH -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jmh</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jmh</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jmh</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Examples - JPMS -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-app</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-app</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-app</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-lib</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-lib</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-jpms-lib</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Examples - Quadrature -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-quadrature</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-quadrature</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-quadrature</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Examples - Sampling -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-sampling</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- Module: Examples - Stress -->
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-stress</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-stress</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>sources</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-rng-examples-stress</artifactId>
+          <version>1.2-SNAPSHOT</version>
+          <classifier>javadoc</classifier>
+        </dependency>
+
+      </dependencies>
       <build>
         <plugins>
           <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>get-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
             <version>2.4</version>
+            <configuration>
+              <skipAssembly>false</skipAssembly>
+            </configuration>
             <executions>
               <execution>
                 <id>create-distribution</id>
@@ -181,6 +284,7 @@ under the License.
                   <goal>single</goal>
                 </goals>
                 <configuration>
+                  <skipAssembly>false</skipAssembly>
                   <descriptors>
                     <descriptor>src/assembly/bin.xml</descriptor>
                     <descriptor>src/assembly/src.xml</descriptor>
