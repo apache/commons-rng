@@ -67,6 +67,9 @@ Additional code is provided in the following module:
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
 ">
+      <action dev="erans" type="fix" issue="RNG-55" due-to="Alex D. Herbert">
+        "UnitSphereSampler": Prevent returning NaN components.
+      </action>
     </release>
 
     <release version="1.1" date="2018-08-14" description="

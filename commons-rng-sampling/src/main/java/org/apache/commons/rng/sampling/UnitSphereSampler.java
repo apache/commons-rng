@@ -59,6 +59,15 @@ public class UnitSphereSampler {
             normSq += comp * comp;
         }
 
+        if (normSq == 0) {
+            // Zero-norm vector is discarded.
+            // Using recursion as it is highly unlikely to generate more
+            // than a few such vectors. It also protects against infinite
+            // loop (in case a buggy generator is used), by eventually
+            // raising a "StackOverflowError".
+            return nextVector();
+        }
+
         final double f = 1 / Math.sqrt(normSq);
         for (int i = 0; i < dimension; i++) {
             v[i] *= f;
