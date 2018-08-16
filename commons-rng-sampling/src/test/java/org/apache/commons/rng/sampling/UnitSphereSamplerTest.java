@@ -25,6 +25,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Test for {@link UnitSphereSampler}.
  */
 public class UnitSphereSamplerTest {
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrecondition() {
+        new UnitSphereSampler(0, null);
+    }
+
     /**
      * Test the distribution of points in two dimensions.
      */

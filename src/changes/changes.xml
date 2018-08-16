@@ -68,7 +68,8 @@ It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
 ">
       <action dev="erans" type="fix" issue="RNG-55" due-to="Alex D. Herbert">
-        "UnitSphereSampler": Prevent returning NaN components.
+        "UnitSphereSampler": Prevent returning NaN components and forbid
+        negative dimension.
       </action>
     </release>
 

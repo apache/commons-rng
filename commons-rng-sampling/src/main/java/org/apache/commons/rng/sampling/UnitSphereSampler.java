@@ -40,6 +40,10 @@ public class UnitSphereSampler {
      */
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
+        if (dimension <= 0) {
+            throw new IllegalArgumentException("Dimension must be strictly positive");
+        }
+
         this.dimension = dimension;
         sampler = new ZigguratNormalizedGaussianSampler(rng);
     }
