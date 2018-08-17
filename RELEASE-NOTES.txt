@@ -1,6 +1,6 @@
               Apache Commons RNG 1.1 RELEASE NOTES
 
-The Apache Commons RNG team is pleased to announce the commons-rng-parent-1.1 release!
+The Apache Commons RNG team is pleased to announce the Apache Commons RNG 1.1 release!
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
