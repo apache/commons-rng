@@ -67,6 +67,9 @@ Additional code is provided in the following module:
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
 ">
+      <action dev="erans" type="fix" issue="RNG-56">
+        "ZigguratNormalizedGaussianSampler": Missing statements in least used branch.
+      </action>
       <action dev="erans" type="fix" issue="RNG-55" due-to="Alex D. Herbert">
         "UnitSphereSampler": Prevent returning NaN components and forbid
         negative dimension.
