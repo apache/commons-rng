@@ -125,6 +125,7 @@ public class ZigguratNormalizedGaussianSampler
         x = hz * W[iz];
         if (iz == 0) {
             // Base strip.
+            // This branch is called about 5.7624515E-4 times per sample.
             do {
                 y = -Math.log(rng.nextDouble());
                 x = -Math.log(rng.nextDouble()) * ONE_OVER_R;
@@ -134,16 +135,13 @@ public class ZigguratNormalizedGaussianSampler
             return hz > 0 ? out : -out;
         } else {
             // Wedge of other strips.
+            // This branch is called about 0.027323 times per sample.
             if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < gauss(x)) {
                 return x;
             } else {
-                final long hzNew = rng.nextLong();
-                final int izNew = (int) (hzNew & LAST);
-                if (Math.abs(hzNew) < K[izNew]) {
-                    return hzNew * W[izNew];
-                } else {
-                    return fix(hzNew, izNew);
-                }
+                // Try again.
+                // This branch is called about 0.012362 times per sample.
+                return sample();
             }
         }
     }
