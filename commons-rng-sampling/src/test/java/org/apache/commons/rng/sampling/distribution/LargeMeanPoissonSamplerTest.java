@@ -24,8 +24,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This test checks the {@link LargeMeanPoissonSampler} using the
- * {@link LargeMeanPoissonSamplerState}.
+ * This test checks the {@link LargeMeanPoissonSampler} can be created
+ * from a saved state.
  */
 public class LargeMeanPoissonSamplerTest {
 
@@ -55,22 +55,13 @@ public class LargeMeanPoissonSamplerTest {
     }
 
     /**
-     * Test the state cannot be created with a negative n.
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testStateCreationThrowsWithNegativeN() {
-        @SuppressWarnings("unused")
-        LargeMeanPoissonSamplerState state = new LargeMeanPoissonSamplerState(-1);
-    }
-
-    /**
      * Test the constructor with a negative fractional mean.
      */
     @Test(expected=IllegalArgumentException.class)
     public void testConstructorThrowsWithNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
-        LargeMeanPoissonSamplerState state = new LargeMeanPoissonSamplerState(0);
+        final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, -0.1);
     }
@@ -82,7 +73,7 @@ public class LargeMeanPoissonSamplerTest {
     public void testConstructorThrowsWithNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
-        LargeMeanPoissonSamplerState state = new LargeMeanPoissonSamplerState(0);
+        final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, 1.1);
     }
@@ -94,7 +85,7 @@ public class LargeMeanPoissonSamplerTest {
     public void testConstructorThrowsWithFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
-        LargeMeanPoissonSamplerState state = new LargeMeanPoissonSamplerState(0);
+        final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, 1);
     }
@@ -103,7 +94,7 @@ public class LargeMeanPoissonSamplerTest {
 
     /**
      * Test the {@link LargeMeanPoissonSampler} returns the same samples when it
-     * is created using the {@link LargeMeanPoissonSamplerState}.
+     * is created using the saved state.
      */
     @Test
     public void testCanComputeSameSamplesWhenConstructedWithState() {
@@ -125,8 +116,8 @@ public class LargeMeanPoissonSamplerTest {
     }
 
     /**
-     * Test poisson samples are the same from the {@link PoissonSampler}
-     * and {@link PoissonSamplerCache}. The random providers must be
+     * Test the {@link LargeMeanPoissonSampler} returns the same samples when it
+     * is created using the saved state. The random providers must be
      * identical (including state).
      *
      * @param rng1  the first random provider
@@ -141,9 +132,11 @@ public class LargeMeanPoissonSamplerTest {
         final DiscreteSampler s1 = new LargeMeanPoissonSampler(rng1, mean);
         final int n = (int) Math.floor(mean);
         final double lambdaFractional = mean - n;
-        final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSamplerState(n);
-        Assert.assertEquals("Not the correct lambda", n, state.getLambda());
-        final DiscreteSampler s2 = new LargeMeanPoissonSampler(rng2, state, lambdaFractional);
+        final LargeMeanPoissonSamplerState state1 = ((LargeMeanPoissonSampler)s1).getState();
+        final DiscreteSampler s2 = new LargeMeanPoissonSampler(rng2, state1, lambdaFractional);
+        final LargeMeanPoissonSamplerState state2 = ((LargeMeanPoissonSampler)s2).getState();
+        Assert.assertEquals("State lambdas are not equal", state1.getLambda(), state2.getLambda());
+        Assert.assertNotSame("States are the same object", state1, state2);
         for (int j = 0; j < 10; j++)
             Assert.assertEquals("Not the same sample", s1.sample(), s2.sample());
     }

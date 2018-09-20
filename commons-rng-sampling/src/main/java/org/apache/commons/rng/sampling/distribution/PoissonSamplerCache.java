@@ -105,7 +105,8 @@ public class PoissonSamplerCache {
                                 LargeMeanPoissonSamplerState[] states) {
         this.minN = minN;
         this.maxN = maxN;
-        this.values = states.clone();
+        // Stored directly as the states were newly created within this class.
+        this.values = states;
     }
 
     /**
@@ -166,14 +167,15 @@ public class PoissonSamplerCache {
         // Look in the cache for a state that can be reused.
         // Note: The cache is offset by minN.
         final int index = n - minN;
-        LargeMeanPoissonSamplerState state = values[index];
+        final LargeMeanPoissonSamplerState state = values[index];
         if (state == null) {
-            // Compute and store for reuse.
+            // Create a sampler and store the state for reuse.
             // Do not worry about thread contention
             // as the state is effectively immutable.
             // If recomputed and replaced it will the same.
-            state = new LargeMeanPoissonSamplerState(n);
-            values[index] = state;
+            final LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
+            values[index] = sampler.getState();
+            return sampler;
         }
         // Compute the remaining fraction of the mean
         final double lambdaFractional = mean - n;
