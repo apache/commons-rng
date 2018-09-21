@@ -151,16 +151,17 @@ public class PoissonSamplerCache {
         if (mean < PoissonSampler.PIVOT) {
             return new SmallMeanPoissonSampler(rng, mean);
         }
-        // The algorithm is not valid if Math.floor(mean) is not an integer.
-        if (mean > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException(mean + " > " + Integer.MAX_VALUE);
+        if (mean > maxN) {
+            // Outside the range of the cache.
+            // This avoids extra parameter checks and handles the case when
+            // the cache is empty or if Math.floor(mean) is not an integer.
+            return new LargeMeanPoissonSampler(rng, mean);
         }
 
         // Convert the mean into an integer.
         final int n = (int) Math.floor(mean);
-        // Check maxN first as the cache is likely to be used from min=0
-        if (n > maxN || n < minN) {
-            // Outside the range of the cache.
+        if (n < minN) {
+            // Outside the lower range of the cache.
             return new LargeMeanPoissonSampler(rng, mean);
         }
 
@@ -277,6 +278,18 @@ public class PoissonSamplerCache {
             return Math.nextAfter(maxN + 1.0, -1);
         }
         return 0;
+    }
+
+    /**
+     * Gets the minimum mean value that can be cached.
+     *
+     * <p>Any {@link PoissonSampler} created with a mean below this level will not
+     * have any state that can be cached.
+     *
+     * @return the minimum cached mean
+     */
+    public static double getMinimumCachedMean() {
+        return PoissonSampler.PIVOT;
     }
 
     /**

@@ -41,6 +41,9 @@ public class LargeMeanPoissonSampler
     /** Class to compute {@code log(n!)}. This has no cached values. */
     private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
 
+    /** Used when there is no requirement for a small mean Poisson sampler. */
+    private static final DiscreteSampler NO_SMALL_MEAN_POISSON_SAMPLER = null;
+
     static {
         // Create without a cache.
         NO_CACHE_FACTORIAL_LOG = FactorialLog.create();
@@ -57,8 +60,6 @@ public class LargeMeanPoissonSampler
 
     /** Algorithm constant: {@code Math.floor(mean)}. */
     private final double lambda;
-    /** Algorithm constant: {@code mean - lambda}. */
-    private final double lambdaFractional;
     /** Algorithm constant: {@code Math.log(lambda)}. */
     private final double logLambda;
     /** Algorithm constant: {@code factorialLog((int) lambda)}. */
@@ -115,7 +116,6 @@ public class LargeMeanPoissonSampler
 
         // Cache values used in the algorithm
         lambda = Math.floor(mean);
-        lambdaFractional = mean - lambda;
         logLambda = Math.log(lambda);
         logLambdaFactorial = factorialLog((int) lambda);
         delta = Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1));
@@ -129,8 +129,9 @@ public class LargeMeanPoissonSampler
         p2 = a2 / aSum;
 
         // The algorithm requires a Poisson sample from the remaining lambda fraction.
+        final double lambdaFractional = mean - lambda;
         smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
-            null : // Not used.
+            NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
             new SmallMeanPoissonSampler(rng, lambdaFractional);
     }
 
@@ -160,7 +161,6 @@ public class LargeMeanPoissonSampler
 
         // Use the state to initialise the algorithm
         lambda = state.getLambdaRaw();
-        this.lambdaFractional = lambdaFractional;
         logLambda = state.getLogLambda();
         logLambdaFactorial = state.getLogLambdaFactorial();
         delta = state.getDelta();
@@ -172,7 +172,7 @@ public class LargeMeanPoissonSampler
 
         // The algorithm requires a Poisson sample from the remaining lambda fraction.
         smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
-            null : // Not used.
+            NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
             new SmallMeanPoissonSampler(rng, lambdaFractional);
     }
 
