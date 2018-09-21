@@ -25,6 +25,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Test for {@link UnitSphereSampler}.
  */
 public class UnitSphereSamplerTest {
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrecondition() {
+        new UnitSphereSampler(0, null);
+    }
+
     /**
      * Test the distribution of points in two dimensions.
      */
@@ -54,6 +59,24 @@ public class UnitSphereSamplerTest {
             Assert.assertTrue("Bucket count " + bucket + " vs expected " + expectedBucketSize,
                               Math.abs(expectedBucketSize - bucket) < 350);
         }
+    }
+
+    /** Cf. RNG-55. */
+    @Test(expected = StackOverflowError.class)
+    public void testBadProvider1() {
+        final UniformRandomProvider bad = new UniformRandomProvider() {
+                public long nextLong(long n) { return 0; }
+                public long nextLong() { return 0; }
+                public int nextInt(int n) { return 0; }
+                public int nextInt() { return 0; }
+                public float nextFloat() { return 0; }
+                public double nextDouble() { return 0;}
+                public void nextBytes(byte[] bytes, int start, int len) {}
+                public void nextBytes(byte[] bytes) {}
+                public boolean nextBoolean() { return false; }
+            };
+
+        new UnitSphereSampler(1, bad).nextVector();
     }
 
     /**

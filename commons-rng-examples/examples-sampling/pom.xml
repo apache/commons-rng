@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-examples</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-sampling</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>Sampling example</name>
 
   <description>Application for calling external tools that perform stringent uniformity tests.

@@ -20,6 +20,8 @@ package org.apache.commons.rng.sampling.distribution;
  * Interface for a discrete distribution that can be sampled using
  * the <a href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">
  * inversion method</a>.
+ *
+ * @since 1.0
  */
 public interface DiscreteInverseCumulativeProbabilityFunction {
     /**

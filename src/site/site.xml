@@ -32,6 +32,7 @@
       <!-- <item name="Wiki"   -->
       <!--       href="http://wiki.apache.org/commons/RNG"/> -->
       <item name="Developers Guide" href="/developers.html"/>
+      <item name="Release History" href="/release-history.html" />
     </menu>
     
     <menu name="User Guide">

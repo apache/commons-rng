@@ -21,6 +21,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Discrete uniform distribution sampler.
+ *
+ * @since 1.0
  */
 public class DiscreteUniformSampler
     extends SamplerBase
@@ -29,6 +31,8 @@ public class DiscreteUniformSampler
     private final int lower;
     /** Upper bound. */
     private final int upper;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -39,7 +43,8 @@ public class DiscreteUniformSampler
     public DiscreteUniformSampler(UniformRandomProvider rng,
                                   int lower,
                                   int upper) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         if (lower > upper) {
             throw new IllegalArgumentException(lower  + " > " + upper);
         }
@@ -57,7 +62,7 @@ public class DiscreteUniformSampler
             // than 2^31); as it covers more than half the integer range,
             // we use a simple rejection method.
             while (true) {
-                final int r = nextInt();
+                final int r = rng.nextInt();
                 if (r >= lower &&
                     r <= upper) {
                     return r;
@@ -65,13 +70,13 @@ public class DiscreteUniformSampler
             }
         } else {
             // We can shift the range and directly generate a positive int.
-            return lower + nextInt(max);
+            return lower + rng.nextInt(max);
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Uniform deviate [" + super.toString() + "]";
+        return "Uniform deviate [" + rng.toString() + "]";
     }
 }

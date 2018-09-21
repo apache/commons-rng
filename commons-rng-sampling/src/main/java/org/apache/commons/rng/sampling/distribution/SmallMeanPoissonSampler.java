@@ -29,10 +29,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  </li>
  * </ul>
  *
+ * @since 1.1
+ *
  * This sampler is suitable for {@code mean < 40}.
  */
 public class SmallMeanPoissonSampler
-    extends SamplerBase
     implements DiscreteSampler {
 
     /**
@@ -42,6 +43,8 @@ public class SmallMeanPoissonSampler
     private final double p0;
     /** Pre-compute {@code 1000 * mean} as the upper limit of the sample. */
     private final int limit;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng  Generator of uniformly distributed random numbers.
@@ -50,7 +53,7 @@ public class SmallMeanPoissonSampler
      */
     public SmallMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
-        super(rng);
+        this.rng = rng;
         if (mean <= 0) {
             throw new IllegalArgumentException(mean + " <= " + 0);
         }
@@ -67,7 +70,7 @@ public class SmallMeanPoissonSampler
         double r = 1;
 
         while (n < limit) {
-            r *= nextDouble();
+            r *= rng.nextDouble();
             if (r >= p0) {
                 n++;
             } else {
@@ -80,6 +83,6 @@ public class SmallMeanPoissonSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Small Mean Poisson deviate [" + super.toString() + "]";
+        return "Small Mean Poisson deviate [" + rng.toString() + "]";
     }
 }

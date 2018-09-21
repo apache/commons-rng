@@ -35,8 +35,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  * </ul>
+ *
+ * @since 1.0
  */
 public class PoissonSampler
+    extends SamplerBase
     implements DiscreteSampler {
 
     /**
@@ -56,6 +59,8 @@ public class PoissonSampler
      */
     public PoissonSampler(UniformRandomProvider rng,
                           double mean) {
+        super(null);
+
         // Delegate all work to specialised samplers.
         // These should check the input arguments.
         poissonSampler = mean < PIVOT ?
@@ -72,6 +77,6 @@ public class PoissonSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Poisson deviate [" + super.toString() + "]";
+        return poissonSampler.toString();
     }
 }

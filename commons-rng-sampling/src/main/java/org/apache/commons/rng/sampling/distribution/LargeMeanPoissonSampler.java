@@ -32,10 +32,11 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  *  </li>
  * </ul>
  *
+ * @since 1.1
+ *
  * This sampler is suitable for {@code mean >= 40}.
  */
 public class LargeMeanPoissonSampler
-    extends SamplerBase
     implements DiscreteSampler {
 
     /** Class to compute {@code log(n!)}. This has no cached values. */
@@ -49,6 +50,8 @@ public class LargeMeanPoissonSampler
         NO_CACHE_FACTORIAL_LOG = FactorialLog.create();
     }
 
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
     /** Exponential. */
     private final ContinuousSampler exponential;
     /** Gaussian. */
@@ -100,7 +103,7 @@ public class LargeMeanPoissonSampler
      */
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
-        super(rng);
+        this.rng = rng;
         if (mean <= 0) {
           throw new IllegalArgumentException(mean + " <= " + 0);
         }
@@ -192,7 +195,7 @@ public class LargeMeanPoissonSampler
         double qr = 0;
         double qa = 0;
         while (true) {
-            final double u = nextDouble();
+            final double u = rng.nextDouble();
             if (u <= p1) {
                 final double n = gaussian.sample();
                 x = n * Math.sqrt(lambda + halfDelta) - 0.5d;
@@ -249,7 +252,7 @@ public class LargeMeanPoissonSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Large Mean Poisson deviate [" + super.toString() + "]";
+        return "Large Mean Poisson deviate [" + rng.toString() + "]";
     }
 
     /**

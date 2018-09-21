@@ -20,6 +20,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Sampling from a uniform distribution.
+ *
+ * @since 1.0
  */
 public class ContinuousUniformSampler
     extends SamplerBase
@@ -28,6 +30,8 @@ public class ContinuousUniformSampler
     private final double lo;
     /** Higher bound. */
     private final double hi;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -37,7 +41,8 @@ public class ContinuousUniformSampler
     public ContinuousUniformSampler(UniformRandomProvider rng,
                                     double lo,
                                     double hi) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.lo = lo;
         this.hi = hi;
     }
@@ -45,13 +50,13 @@ public class ContinuousUniformSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double u = nextDouble();
+        final double u = rng.nextDouble();
         return u * hi + (1 - u) * lo;
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Uniform deviate [" + super.toString() + "]";
+        return "Uniform deviate [" + rng.toString() + "]";
     }
 }

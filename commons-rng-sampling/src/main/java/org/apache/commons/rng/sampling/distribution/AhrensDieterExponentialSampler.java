@@ -20,6 +20,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Sampling from an <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
+ *
+ * @since 1.0
  */
 public class AhrensDieterExponentialSampler
     extends SamplerBase
@@ -39,6 +41,8 @@ public class AhrensDieterExponentialSampler
     private static final double[] EXPONENTIAL_SA_QI = new double[16];
     /** The mean of this distribution. */
     private final double mean;
+    /** Underlying source of randomness. */
+    private final UniformRandomProvider rng;
 
     /**
      * Initialize tables.
@@ -63,7 +67,8 @@ public class AhrensDieterExponentialSampler
      */
     public AhrensDieterExponentialSampler(UniformRandomProvider rng,
                                           double mean) {
-        super(rng);
+        super(null);
+        this.rng = rng;
         this.mean = mean;
     }
 
@@ -72,7 +77,7 @@ public class AhrensDieterExponentialSampler
     public double sample() {
         // Step 1:
         double a = 0;
-        double u = nextDouble();
+        double u = rng.nextDouble();
 
         // Step 2 and 3:
         while (u < 0.5) {
@@ -90,13 +95,13 @@ public class AhrensDieterExponentialSampler
 
         // Step 6:
         int i = 0; // Should be 1, be we iterate before it in while using 0.
-        double u2 = nextDouble();
+        double u2 = rng.nextDouble();
         double umin = u2;
 
         // Step 7 and 8:
         do {
             ++i;
-            u2 = nextDouble();
+            u2 = rng.nextDouble();
 
             if (u2 < umin) {
                 umin = u2;
@@ -111,6 +116,6 @@ public class AhrensDieterExponentialSampler
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Ahrens-Dieter Exponential deviate [" + super.toString() + "]";
+        return "Ahrens-Dieter Exponential deviate [" + rng.toString() + "]";
     }
 }

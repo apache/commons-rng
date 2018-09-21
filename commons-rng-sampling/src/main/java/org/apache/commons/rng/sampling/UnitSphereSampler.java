@@ -40,6 +40,10 @@ public class UnitSphereSampler {
      */
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
+        if (dimension <= 0) {
+            throw new IllegalArgumentException("Dimension must be strictly positive");
+        }
+
         this.dimension = dimension;
         sampler = new ZigguratNormalizedGaussianSampler(rng);
     }
@@ -57,6 +61,15 @@ public class UnitSphereSampler {
             final double comp = sampler.sample();
             v[i] = comp;
             normSq += comp * comp;
+        }
+
+        if (normSq == 0) {
+            // Zero-norm vector is discarded.
+            // Using recursion as it is highly unlikely to generate more
+            // than a few such vectors. It also protects against infinite
+            // loop (in case a buggy generator is used), by eventually
+            // raising a "StackOverflowError".
+            return nextVector();
         }
 
         final double f = 1 / Math.sqrt(normSq);
