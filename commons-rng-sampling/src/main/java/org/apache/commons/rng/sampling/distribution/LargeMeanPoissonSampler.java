@@ -103,7 +103,6 @@ public class LargeMeanPoissonSampler
      */
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
-        this.rng = rng;
         if (mean <= 0) {
           throw new IllegalArgumentException(mean + " <= " + 0);
         }
@@ -111,6 +110,7 @@ public class LargeMeanPoissonSampler
         if (mean > Integer.MAX_VALUE) {
             throw new IllegalArgumentException(mean + " > " + Integer.MAX_VALUE);
         }
+        this.rng = rng;
 
         gaussian = new ZigguratNormalizedGaussianSampler(rng);
         exponential = new AhrensDieterExponentialSampler(rng, 1);
@@ -151,11 +151,11 @@ public class LargeMeanPoissonSampler
     LargeMeanPoissonSampler(UniformRandomProvider rng,
                             LargeMeanPoissonSamplerState state,
                             double lambdaFractional) {
-        super(rng);
         if (lambdaFractional < 0 || lambdaFractional >= 1) {
             throw new IllegalArgumentException(
                     "lambdaFractional must be in the range 0 (inclusive) to 1 (exclusive): " + lambdaFractional);
         }
+        this.rng = rng;
 
         gaussian = new ZigguratNormalizedGaussianSampler(rng);
         exponential = new AhrensDieterExponentialSampler(rng, 1);

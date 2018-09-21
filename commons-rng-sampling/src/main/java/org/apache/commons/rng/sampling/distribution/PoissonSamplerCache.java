@@ -53,6 +53,8 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
  * <p>The cache is thread safe. Note that concurrent threads using the cache
  * must ensure a thread safe {@link UniformRandomProvider} is used when creating
  * samplers, e.g. a unique sampler per thread.
+ *
+ * @since 1.2
  */
 public class PoissonSamplerCache {
 
