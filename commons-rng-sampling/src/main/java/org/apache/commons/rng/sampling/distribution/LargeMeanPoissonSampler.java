@@ -277,7 +277,7 @@ public class LargeMeanPoissonSampler
      *
      * @see #getLambda()
      */
-    static class LargeMeanPoissonSamplerState {
+    static final class LargeMeanPoissonSamplerState {
         /** Algorithm constant {@code lambda}. */
         private final double lambda;
         /** Algorithm constant {@code logLambda}. */
