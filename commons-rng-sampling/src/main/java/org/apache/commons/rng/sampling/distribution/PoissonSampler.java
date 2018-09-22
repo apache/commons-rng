@@ -42,15 +42,20 @@ public class PoissonSampler
     extends SamplerBase
     implements DiscreteSampler {
 
-    /** Value for switching sampling algorithm. */
-    private static final double PIVOT = 40;
+    /**
+     * Value for switching sampling algorithm.
+     *
+     * <p>Package scope for the {@link PoissonSamplerCache}.
+     */
+    static final double PIVOT = 40;
     /** The internal Poisson sampler. */
     private final DiscreteSampler poissonSampler;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0}.
+     * @throws IllegalArgumentException if {@code mean <= 0} or
+     * {@code mean >} {@link Integer#MAX_VALUE}.
      */
     public PoissonSampler(UniformRandomProvider rng,
                           double mean) {
