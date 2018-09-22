@@ -233,7 +233,7 @@ public class PoissonSamplerCacheTest {
 
     /**
      * Test createPoissonSampler() with a bad mean.
-     * 
+     *
      * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
      */
     @Test(expected=IllegalArgumentException.class)

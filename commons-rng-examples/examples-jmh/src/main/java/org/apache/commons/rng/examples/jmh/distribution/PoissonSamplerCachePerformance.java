@@ -287,7 +287,8 @@ public class PoissonSamplerCachePerformance {
      * @param bh      Data sink.
      */
     private static void runSample(PoissonSamplerFactory factory,
-            MeanRange range, Blackhole bh) {
+                                  MeanRange range,
+                                  Blackhole bh) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
             bh.consume(factory.createPoissonSampler(range.getMean(i)).sample());
         }
@@ -301,8 +302,9 @@ public class PoissonSamplerCachePerformance {
      * @param bh      Data sink.
      */
     @Benchmark
-    public void runPoissonSampler(Sources sources, MeanRange range,
-            Blackhole bh) {
+    public void runPoissonSampler(Sources sources,
+                                  MeanRange range,
+                                  Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
             @Override
@@ -319,8 +321,9 @@ public class PoissonSamplerCachePerformance {
      * @param bh      Data sink.
      */
     @Benchmark
-    public void runPoissonSamplerCacheWhenEmpty(Sources sources, MeanRange range,
-            Blackhole bh) {
+    public void runPoissonSamplerCacheWhenEmpty(Sources sources,
+                                                MeanRange range,
+                                                Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(0, 0);
         final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
@@ -338,8 +341,9 @@ public class PoissonSamplerCachePerformance {
      * @param bh      Data sink.
      */
     @Benchmark
-    public void runPoissonSamplerCache(Sources sources, MeanRange range,
-            Blackhole bh) {
+    public void runPoissonSamplerCache(Sources sources,
+                                       MeanRange range,
+                                       Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(
                 range.getMin(), range.getMax());
