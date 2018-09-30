@@ -98,8 +98,8 @@ public class CachedUniformRandomProviderFactoryTest {
                     Collections.shuffle(list, random);
                     int v = 0;
                     for (int i = 0; i < size; i++) {
-                        // An unset bit corresponds to true
-                        if (!list.get(i)) {
+                        // An set bit corresponds to true
+                        if (list.get(i)) {
                             v |= (1 << i);
                         }
                     }
@@ -128,8 +128,8 @@ public class CachedUniformRandomProviderFactoryTest {
                     Collections.shuffle(list, random);
                     long v = 0;
                     for (int i = 0; i < size; i++) {
-                        // An unset bit corresponds to true
-                        if (!list.get(i)) {
+                        // An set bit corresponds to true
+                        if (list.get(i)) {
                             v |= (1L << i);
                         }
                     }

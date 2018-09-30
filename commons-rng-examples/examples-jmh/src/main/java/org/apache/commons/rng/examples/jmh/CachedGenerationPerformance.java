@@ -51,6 +51,112 @@ public class CachedGenerationPerformance {
     /** Number of samples per run. */
     private static final int NUM_SAMPLES = 1000000;
 
+    /** Used to create fixed values for the Flip providers. */
+    private static final UniformRandomProvider random = 
+            RandomSource.create(RandomSource.MWC_256);
+
+    /**
+     * Name for the special test provider that flips bits.
+     */
+    private static final String FLIP_NAME = "FLIP";
+
+    /**
+     * Name for the special test provider that swaps a value.
+     */
+    private static final String SWAP_NAME = "SWAP";
+
+    /**
+     * Simple test class to flip the bits in an int and return it.
+     * 
+     * <p>Flipping the bits ensures that repeat sampling booleans should be 50:50
+     * true:false.
+     */
+    private static final class IntFlip extends IntProvider {
+
+        /** The value. This is flipped on each call to next(). */
+        private int value;
+
+        IntFlip(int seed) {
+            value = seed;
+        }
+
+        @Override
+        public int next() {
+            // Flip the bits.
+            value = ~value;
+            return value;
+        }
+    }
+
+    /**
+     * Simple test class to flip the bits in a long and return it.
+     * 
+     * <p>Flipping the bits ensures that repeat sampling booleans should be 50:50
+     * true:false.
+     */
+    private static final class LongFlip extends LongProvider {
+
+        /** The value. This is flipped on each call to next(). */
+        private long value;
+
+        LongFlip(long seed) {
+            value = seed;
+        }
+
+        @Override
+        public long next() {
+            // Flip the bits.
+            value = ~value;
+            return value;
+        }
+    }
+
+    /**
+     * Simple test class to swap the upper and lower bits in an int and return it.
+     * 
+     * <p>Swapping the bits ensures that repeat sampling booleans should be 50:50
+     * true:false.
+     */
+    private static final class IntSwap extends IntProvider {
+
+        /** The value. This is swapped on each call to next(). */
+        private int value;
+
+        IntSwap(int seed) {
+            value = seed;
+        }
+
+        @Override
+        public int next() {
+            // Swap the bits.
+            value = (value << Short.SIZE) | (value >>> Short.SIZE);
+            return value;
+        }
+    }
+
+    /**
+     * Simple test class to swap the upper and lower bits in a long and return it.
+     * 
+     * <p>Swapping the bits ensures that repeat sampling booleans should be 50:50
+     * true:false.
+     */
+    private static final class LongSwap extends LongProvider {
+
+        /** The value. This is swapped on each call to next(). */
+        private long value;
+
+        LongSwap(long seed) {
+            value = seed;
+        }
+
+        @Override
+        public long next() {
+            // Swap the bits.
+            value = (value << Integer.SIZE) | (value >>> Integer.SIZE);
+            return value;
+        }
+    }
+
     /**
      * Retrieve the various "RandomSource"s for testing.
      *
@@ -61,7 +167,8 @@ public class CachedGenerationPerformance {
         /**
          * RNG providers.
          */
-        @Param({"JDK",
+        @Param({
+                "JDK",
                 "WELL_512_A",
                 "WELL_1024_A",
                 "WELL_19937_A",
@@ -71,7 +178,10 @@ public class CachedGenerationPerformance {
                 "MT",
                 "ISAAC",
                 "MWC_256",
-                "KISS"})
+                "KISS", 
+                FLIP_NAME,
+                SWAP_NAME
+                })
         private String randomSourceName;
 
         /** RNG. */
@@ -87,8 +197,14 @@ public class CachedGenerationPerformance {
         /** Instantiates generator. */
         @Setup
         public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            provider = RandomSource.create(randomSource);
+            if (randomSourceName.equals(FLIP_NAME)) {
+                provider = new IntFlip(random.nextInt());
+            } else if (randomSourceName.equals(SWAP_NAME)) {
+                provider = new IntSwap(random.nextInt());
+            } else {
+                final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
+                provider = RandomSource.create(randomSource);
+            }
         }
     }
 
@@ -102,10 +218,14 @@ public class CachedGenerationPerformance {
         /**
          * RNG providers.
          */
-        @Param({"SPLIT_MIX_64",
+        @Param({
+                "SPLIT_MIX_64",
                 "XOR_SHIFT_1024_S",
                 "TWO_CMRES",
-                "MT_64"})
+                "MT_64",
+                FLIP_NAME,
+                SWAP_NAME
+                })
         private String randomSourceName;
 
         /** RNG. */
@@ -121,16 +241,22 @@ public class CachedGenerationPerformance {
         /** Instantiates generator. */
         @Setup
         public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            provider = RandomSource.create(randomSource);
+            if (randomSourceName.equals(FLIP_NAME)) {
+                provider = new LongFlip(random.nextLong());
+            } else if (randomSourceName.equals(SWAP_NAME)) {
+                provider = new LongSwap(random.nextLong());
+            } else {
+                final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
+                provider = RandomSource.create(randomSource);
+            }
         }
     }
 
     /**
      * Flag to indicate the provider should be wrapped with a cache.
      */
-    @Param({"false", "true"})
-    private boolean cache;
+    @Param({"0", "1", "2", "3", "4"})
+    private int cacheMethod;
 
     /**
      * Exercises {@link UniformRandomProvider#nextBoolean()}.
@@ -166,8 +292,8 @@ public class CachedGenerationPerformance {
     public void nextBooleanIntProvider(SourcesInt sources,
                                        Blackhole bh) {
         UniformRandomProvider rng = sources.getGenerator();
-        if (cache) {
-            rng = CachedUniformRandomProviderFactory.wrap(rng);
+        if (cacheMethod != 0) {
+            rng = CachedUniformRandomProviderFactory.wrap(rng, cacheMethod);
         }
         runNextBoolean(rng, bh);
     }
@@ -180,8 +306,8 @@ public class CachedGenerationPerformance {
     public void nextBooleanLongProvider(SourcesLong sources,
                                         Blackhole bh) {
         UniformRandomProvider rng = sources.getGenerator();
-        if (cache) {
-            rng = CachedUniformRandomProviderFactory.wrap(rng);
+        if (cacheMethod != 0) {
+            rng = CachedUniformRandomProviderFactory.wrap(rng, cacheMethod);
         }
         runNextBoolean(rng, bh);
     }
@@ -194,8 +320,8 @@ public class CachedGenerationPerformance {
     public void nextIntLongProvider(SourcesLong sources,
                                     Blackhole bh) {
         UniformRandomProvider rng = sources.getGenerator();
-        if (cache) {
-            rng = CachedUniformRandomProviderFactory.wrap(rng);
+        if (cacheMethod != 0) {
+            rng = CachedUniformRandomProviderFactory.wrap(rng, cacheMethod);
         }
         runNextInt(rng, bh);
     }
