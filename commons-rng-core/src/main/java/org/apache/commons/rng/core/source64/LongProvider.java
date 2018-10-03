@@ -28,6 +28,42 @@ public abstract class LongProvider
     extends BaseProvider
     implements RandomLongSource {
 
+    /**
+     * Provides a bit source for booleans.
+     *
+     * <p>
+     * A cached value from a call to {@link #nextLong()}.
+     * </p>
+     */
+    private long booleanSource; // Initialised as 0
+
+    /**
+     * The bit mask of the boolean source to obtain the boolean bit.
+     *
+     * <p>
+     * The bit mask contains a single bit set. This begins at the least
+     * significant bit and is gradually shifted upwards until overflow to zero.
+     * </p>
+     *
+     * <p>
+     * When zero a new boolean source should be created and the mask set to the
+     * least significant bit (i.e. 1).
+     * </p>
+     */
+    private long booleanBitMask; // Initialised as 0
+
+    /**
+     * Provides a source for ints.
+     *
+     * <p>
+     * A cached value from a call to {@link #nextLong()}.
+     * </p>
+     */
+    private long intSource;
+
+    /** Flag to indicate an int source has been cached. */
+    private boolean cachedIntSource; // Initialised as false
+
     /** {@inheritDoc} */
     @Override
     public long nextLong() {
@@ -37,7 +73,18 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     public int nextInt() {
-        return NumberFactory.makeInt(nextLong());
+        // Directly store and use the long value as a source for ints
+        if (cachedIntSource) {
+            // Consume the cache value
+            cachedIntSource = false;
+            // Return the lower 32 bits
+            return NumberFactory.extractLo(intSource);
+        }
+        // Fill the cache
+        cachedIntSource = true;
+        intSource = nextLong();
+        // Return the upper 32 bits
+        return NumberFactory.extractHi(intSource);
     }
 
     /** {@inheritDoc} */
@@ -49,7 +96,17 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     public boolean nextBoolean() {
-        return NumberFactory.makeBoolean(nextLong());
+        // Shift up. This will eventually overflow and become zero.
+        booleanBitMask <<= 1;
+        // The mask will either contain a single bit or none.
+        if (booleanBitMask == 0) {
+            // Set the least significant bit
+            booleanBitMask = 1;
+            // Get the next value
+            booleanSource = nextLong();
+        }
+        // Return if the bit is set
+        return (booleanSource & booleanBitMask) != 0;
     }
 
     /** {@inheritDoc} */
