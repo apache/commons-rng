@@ -254,9 +254,6 @@ public class ProvidersCommonParametricTest {
 
     @Test(expected=IllegalStateException.class)
     public void testStateWrongSize() {
-        // We don't know what is the state of "java.lang.Random": skipping.
-        Assume.assumeTrue(generator.toString().indexOf("JDKRandom") == -1);
-
         final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
         generator.restoreState(state);
