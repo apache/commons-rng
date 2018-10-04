@@ -30,6 +30,13 @@ public abstract class IntProvider
 
     /** {@inheritDoc} */
     @Override
+    protected byte[] getStateInternal() {
+        return composeStateInternal(super.getStateInternal(),
+                                    new byte[0]); // No local state.
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public int nextInt() {
         return next();
     }

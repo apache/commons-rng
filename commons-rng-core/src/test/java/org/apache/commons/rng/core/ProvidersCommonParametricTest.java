@@ -252,7 +252,7 @@ public class ProvidersCommonParametricTest {
         Assert.assertTrue(listOrig.equals(listReplay));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected=IllegalStateException.class)
     public void testStateWrongSize() {
         // We don't know what is the state of "java.lang.Random": skipping.
         Assume.assumeTrue(generator.toString().indexOf("JDKRandom") == -1);

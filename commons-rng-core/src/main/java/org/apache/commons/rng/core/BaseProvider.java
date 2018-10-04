@@ -81,13 +81,87 @@ public abstract class BaseProvider
     }
 
     /**
+     * Combine parent and subclass states.
+     * This method must be called by all subclasses in order to ensure
+     * that state can be restored in case some of it is stored higher
+     * up in the class hierarchy.
+     *
+     * I.e. the body of the overridden {@link #getStateInternal()},
+     * will end with a statement like the following:
+     * <pre>
+     *  <code>
+     *    return composeStateInternal(super.getStateInternal(),
+     *                                state);
+     *  </code>
+     * </pre>
+     * where {@code state} is the state needed and defined by the class
+     * where the method is overridden.
+     *
+     * @param parentState State of the calling class' parent.
+     * @param state State of the calling class.
+     * @return the combined state.
+     * Bytes that belong to the local state will be stored at the
+     * beginning of the resulting array.
+     */
+    protected byte[] composeStateInternal(byte[] state,
+                                          byte[] parentState) {
+        if (parentState == null) {
+            return state;
+        }
+
+        final int len = parentState.length + state.length;
+        final byte[] c = new byte[len];
+        System.arraycopy(state, 0, c, 0, state.length);
+        System.arraycopy(parentState, 0, c, state.length, parentState.length);
+        return c;
+    }
+
+    /**
+     * Splits the given {@code state} into a part to be consumed by the caller
+     * in order to restore its local state, while the reminder is passed to
+     * the parent class.
+     *
+     * I.e. the body of the overridden {@link #setStateInternal(byte[])},
+     * will contain statements like the following:
+     * <pre>
+     *  <code>
+     *    final byte[][] s = splitState(state, localStateLength);
+     *    // Use "s[0]" to recover the local state.
+     *    super.setStateInternal(s[1]);
+     *  </code>
+     * </pre>
+     * where {@code state} is the combined state of the calling class and of
+     * all its parents.
+     *
+     * @param state State.
+     * The local state must be stored at the beginning of the array.
+     * @param localStateLength Number of elements that will be consumed by the
+     * locally defined state.
+     * @return the local state (in slot 0) and the parent state (in slot 1).
+     * @throws IllegalStateException if {@code state.length < localStateLength}.
+     */
+    protected byte[][] splitStateInternal(byte[] state,
+                                          int localStateLength) {
+        checkStateSize(state, localStateLength);
+
+        final byte[] local = new byte[localStateLength];
+        System.arraycopy(state, 0, local, 0, localStateLength);
+        final int parentLength = state.length - localStateLength;
+        final byte[] parent = new byte[parentLength];
+        System.arraycopy(state, localStateLength, parent, 0, parentLength);
+
+        return new byte[][] { local, parent };
+    }
+
+    /**
      * Creates a snapshot of the RNG state.
      *
      * @return the internal state.
-     * @throws UnsupportedOperationException if not implemented.
      */
     protected byte[] getStateInternal() {
-        throw new UnsupportedOperationException();
+        // This class has no state (and is the top-level class that
+        // declares this method).
+        return new byte[0];
     }
 
     /**
@@ -95,12 +169,16 @@ public abstract class BaseProvider
      *
      * @param state State (previously obtained by a call to
      * {@link #getStateInternal()}).
-     * @throws UnsupportedOperationException if not implemented.
+     * @throws IllegalStateException if the size of the given array is
+     * not consistent with the state defined by this class.
      *
      * @see #checkStateSize(byte[],int)
      */
     protected void setStateInternal(byte[] state) {
-        throw new UnsupportedOperationException();
+        if (state.length != 0) {
+            // This class has no state.
+            throw new IllegalStateException("State not fully recovered by subclasses");
+        }
     }
 
     /**
@@ -170,13 +248,16 @@ public abstract class BaseProvider
      *
      * @param state State.
      * @param expected Expected length of {@code state} array.
-     * @throws IllegalArgumentException if {@code state.length != expected}.
+     * @throws IllegalStateException if {@code state.length < expected}.
+     * @deprecated Method is used internally and should be made private in
+     * some future release.
      */
+    @Deprecated
     protected void checkStateSize(byte[] state,
                                   int expected) {
-        if (state.length != expected) {
-            throw new IllegalArgumentException("State size must be " + expected +
-                                               " but was " + state.length);
+        if (state.length < expected) {
+            throw new IllegalStateException("State size must be larger than " +
+                                            expected + " but was " + state.length);
         }
     }
 

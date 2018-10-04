@@ -28,13 +28,8 @@ import org.junit.Assert;
  * tests too).
  */
 public class BaseProviderTest {
-    @Test(expected=UnsupportedOperationException.class)
-    public void testMissingGetStateInternal() {
-        new DummyGenerator().saveState();
-    }
-
-    @Test(expected=UnsupportedOperationException.class)
-    public void testMissingSetStateInternal() {
+    @Test(expected=IllegalStateException.class)
+    public void testWrongStateSize() {
         new DummyGenerator().restoreState(new RandomProviderDefaultState(new byte[1]));
     }
 

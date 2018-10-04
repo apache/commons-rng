@@ -67,17 +67,20 @@ public abstract class AbstractWell extends IntProvider {
         final int[] s = Arrays.copyOf(v, v.length + 1);
         s[v.length] = index;
 
-        return NumberFactory.makeByteArray(s);
+        return composeStateInternal(super.getStateInternal(),
+                                    NumberFactory.makeByteArray(s));
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        checkStateSize(s, (v.length + 1) * 4);
+        final byte[][] c = splitStateInternal(s, (v.length + 1) * 4);
 
-        final int[] tmp = NumberFactory.makeIntArray(s);
+        final int[] tmp = NumberFactory.makeIntArray(c[0]);
         System.arraycopy(tmp, 0, v, 0, v.length);
         index = tmp[v.length];
+
+        super.setStateInternal(c[1]);
     }
 
     /**

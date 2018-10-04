@@ -55,20 +55,22 @@ public class KISSRandom extends IntProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return NumberFactory.makeByteArray(new int[] { z, w, jsr, jcong });
+        return composeStateInternal(super.getStateInternal(),
+                                    NumberFactory.makeByteArray(new int[] { z, w, jsr, jcong }));
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        checkStateSize(s, SEED_SIZE * 4);
+        final byte[][] c = splitStateInternal(s, SEED_SIZE * 4);
 
-        final int[] tmp = NumberFactory.makeIntArray(s);
-
+        final int[] tmp = NumberFactory.makeIntArray(c[0]);
         z = tmp[0];
         w = tmp[1];
         jsr = tmp[2];
         jcong = tmp[3];
+
+        super.setStateInternal(c[1]);
     }
 
     /**
