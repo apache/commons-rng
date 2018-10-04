@@ -105,10 +105,6 @@ public abstract class BaseProvider
      */
     protected byte[] composeStateInternal(byte[] state,
                                           byte[] parentState) {
-        if (parentState == null) {
-            return state;
-        }
-
         final int len = parentState.length + state.length;
         final byte[] c = new byte[len];
         System.arraycopy(state, 0, c, 0, state.length);
