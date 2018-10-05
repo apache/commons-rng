@@ -18,6 +18,7 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.util.NumberFactory;
+
 import org.apache.commons.rng.core.BaseProvider;
 
 /**
@@ -31,32 +32,40 @@ public abstract class IntProvider
     /**
      * Provides a bit source for booleans.
      *
-     * <p>
-     * A cached value from a call to {@link #nextInt()}.
-     * </p>
+     * <p>A cached value from a call to {@link #nextInt()}.
      */
     private int booleanSource; // Initialised as 0
 
     /**
      * The bit mask of the boolean source to obtain the boolean bit.
      *
-     * <p>
-     * The bit mask contains a single bit set. This begins at the least
+     * <p>The bit mask contains a single bit set. This begins at the least
      * significant bit and is gradually shifted upwards until overflow to zero.
-     * </p>
      *
-     * <p>
-     * When zero a new boolean source should be created and the mask set to the
+     * <p>When zero a new boolean source should be created and the mask set to the
      * least significant bit (i.e. 1).
-     * </p>
      */
     private int booleanBitMask; // Initialised as 0
 
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
+        final int[] state = new int[] { booleanSource,
+                                        booleanBitMask };
         return composeStateInternal(super.getStateInternal(),
-                                    new byte[0]); // No local state.
+                                    NumberFactory.makeByteArray(state));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void setStateInternal(byte[] s) {
+        final byte[][] c = splitStateInternal(s, 8);
+
+        final int[] state = NumberFactory.makeIntArray(c[0]);
+        booleanSource  = state[0];
+        booleanBitMask = state[1];
+
+        super.setStateInternal(c[1]);
     }
 
     /** {@inheritDoc} */
