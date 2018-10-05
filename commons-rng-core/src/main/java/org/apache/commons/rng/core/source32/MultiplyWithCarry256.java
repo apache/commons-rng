@@ -65,8 +65,8 @@ public class MultiplyWithCarry256 extends IntProvider {
         s[SEED_SIZE - 1] = carry;
         s[SEED_SIZE] = index;
 
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(s));
+        return composeStateInternal(NumberFactory.makeByteArray(s),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

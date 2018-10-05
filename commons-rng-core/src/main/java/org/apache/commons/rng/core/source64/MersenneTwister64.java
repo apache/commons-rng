@@ -102,8 +102,8 @@ public class MersenneTwister64 extends LongProvider {
         final long[] s = Arrays.copyOf(mt, NN + 1);
         s[NN] = mti;
 
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(s));
+        return composeStateInternal(NumberFactory.makeByteArray(s),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

@@ -122,8 +122,8 @@ public class MersenneTwister extends IntProvider {
         final int[] s = Arrays.copyOf(mt, N + 1);
         s[N] = mti;
 
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(s));
+        return composeStateInternal(NumberFactory.makeByteArray(s),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */
