@@ -76,8 +76,8 @@ public class JDKRandom extends IntProvider {
 
             final byte[] state = bos.toByteArray();
             stateSize = state.length; // To allow state recovery.
-            return composeStateInternal(super.getStateInternal(),
-                                        state);
+            return composeStateInternal(state,
+                                        super.getStateInternal());
         } catch (IOException e) {
             // Workaround checked exception.
             throw new IllegalStateException(e);

@@ -119,8 +119,8 @@ public class TwoCmres extends LongProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(new long[] { xx, yy }));
+        return composeStateInternal(NumberFactory.makeByteArray(new long[] { xx, yy }),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

@@ -62,8 +62,8 @@ public class SplitMix64 extends LongProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(state));
+        return composeStateInternal(NumberFactory.makeByteArray(state),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

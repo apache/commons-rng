@@ -55,8 +55,8 @@ public class XorShift1024Star extends LongProvider {
         final long[] s = Arrays.copyOf(state, SEED_SIZE + 1);
         s[SEED_SIZE] = index;
 
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(s));
+        return composeStateInternal(NumberFactory.makeByteArray(s),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

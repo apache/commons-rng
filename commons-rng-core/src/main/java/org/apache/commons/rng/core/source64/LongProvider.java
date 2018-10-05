@@ -64,8 +64,8 @@ public abstract class LongProvider
                                           booleanBitMask,
                                           intSource,
                                           cachedIntSource ? 1 : 0 };
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(state));
+        return composeStateInternal(NumberFactory.makeByteArray(state),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

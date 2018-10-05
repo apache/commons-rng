@@ -94,8 +94,8 @@ public class ISAACRandom extends IntProvider {
         System.arraycopy(sMem, 0, s, SIZE, SIZE);
         System.arraycopy(sRem, 0, s, 2 * SIZE, sRem.length);
 
-        return composeStateInternal(super.getStateInternal(),
-                                    NumberFactory.makeByteArray(s));
+        return composeStateInternal(NumberFactory.makeByteArray(s),
+                                    super.getStateInternal());
     }
 
     /** {@inheritDoc} */

@@ -90,25 +90,21 @@ public abstract class BaseProvider
      * will end with a statement like the following:
      * <pre>
      *  <code>
-     *    return composeStateInternal(super.getStateInternal(),
-     *                                state);
+     *    return composeStateInternal(state,
+     *                                super.getStateInternal());
      *  </code>
      * </pre>
      * where {@code state} is the state needed and defined by the class
      * where the method is overridden.
      *
-     * @param parentState State of the calling class' parent.
      * @param state State of the calling class.
+     * @param parentState State of the calling class' parent.
      * @return the combined state.
      * Bytes that belong to the local state will be stored at the
      * beginning of the resulting array.
      */
-    protected byte[] composeStateInternal(byte[] parentState,
-                                          byte[] state) {
-        if (parentState == null) {
-            return state;
-        }
-
+    protected byte[] composeStateInternal(byte[] state,
+                                          byte[] parentState) {
         final int len = parentState.length + state.length;
         final byte[] c = new byte[len];
         // Store the local state first
