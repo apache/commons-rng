@@ -62,14 +62,16 @@ public class SplitMix64 extends LongProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return NumberFactory.makeByteArray(state);
+        return composeStateInternal(super.getStateInternal(),
+                                    NumberFactory.makeByteArray(state));
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        checkStateSize(s, 8);
+        final byte[][] c = splitStateInternal(s, 8);
 
-        state = NumberFactory.makeLong(s);
+        state = NumberFactory.makeLong(c[0]);
+        super.setStateInternal(c[1]);
     }
 }

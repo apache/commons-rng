@@ -119,17 +119,20 @@ public class TwoCmres extends LongProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return NumberFactory.makeByteArray(new long[] { xx, yy });
+        return composeStateInternal(super.getStateInternal(),
+                                    NumberFactory.makeByteArray(new long[] { xx, yy }));
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        checkStateSize(s, 16);
+        final byte[][] c = splitStateInternal(s, 16);
 
-        final long[] state = NumberFactory.makeLongArray(s);
+        final long[] state = NumberFactory.makeLongArray(c[0]);
         xx = state[0];
         yy = state[1];
+
+        super.setStateInternal(c[1]);
     }
 
     /**

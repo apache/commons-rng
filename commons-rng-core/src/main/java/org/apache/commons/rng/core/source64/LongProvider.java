@@ -66,6 +66,13 @@ public abstract class LongProvider
 
     /** {@inheritDoc} */
     @Override
+    protected byte[] getStateInternal() {
+        return composeStateInternal(super.getStateInternal(),
+                                    new byte[0]); // No local state.
+    }
+
+    /** {@inheritDoc} */
+    @Override
     public long nextLong() {
         return next();
     }
