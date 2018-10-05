@@ -94,15 +94,16 @@ public class ISAACRandom extends IntProvider {
         System.arraycopy(sMem, 0, s, SIZE, SIZE);
         System.arraycopy(sRem, 0, s, 2 * SIZE, sRem.length);
 
-        return NumberFactory.makeByteArray(s);
+        return composeStateInternal(super.getStateInternal(),
+                                    NumberFactory.makeByteArray(s));
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        checkStateSize(s, (2 * SIZE + 4) * 4);
+        final byte[][] c = splitStateInternal(s, (2 * SIZE + 4) * 4);
 
-        final int[] tmp = NumberFactory.makeIntArray(s);
+        final int[] tmp = NumberFactory.makeIntArray(c[0]);
         System.arraycopy(tmp, 0, rsl, 0, SIZE);
         System.arraycopy(tmp, SIZE, mem, 0, SIZE);
         final int offset = 2 * SIZE;
@@ -110,6 +111,8 @@ public class ISAACRandom extends IntProvider {
         isaacA = tmp[offset + 1];
         isaacB = tmp[offset + 2];
         isaacC = tmp[offset + 3];
+
+        super.setStateInternal(c[1]);
     }
 
     /**

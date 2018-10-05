@@ -42,6 +42,8 @@ import java.io.ByteArrayInputStream;
 public class JDKRandom extends IntProvider {
     /** Delegate.  Cannot be "final" (to allow serialization). */
     private Random delegate;
+    /** Size of the byte representation of the state (of the delegate). */
+    private int stateSize;
 
     /**
      * Creates an instance with the given seed.
@@ -72,7 +74,10 @@ public class JDKRandom extends IntProvider {
             // Serialize the "delegate".
             oos.writeObject(delegate);
 
-            return bos.toByteArray();
+            final byte[] state = bos.toByteArray();
+            stateSize = state.length; // To allow state recovery.
+            return composeStateInternal(super.getStateInternal(),
+                                        state);
         } catch (IOException e) {
             // Workaround checked exception.
             throw new IllegalStateException(e);
@@ -82,8 +87,10 @@ public class JDKRandom extends IntProvider {
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
+        final byte[][] c = splitStateInternal(s, stateSize);
+
         try {
-            final ByteArrayInputStream bis = new ByteArrayInputStream(s);
+            final ByteArrayInputStream bis = new ByteArrayInputStream(c[0]);
             final ObjectInputStream ois = new ObjectInputStream(bis);
 
             delegate = (Random) ois.readObject();
@@ -94,5 +101,7 @@ public class JDKRandom extends IntProvider {
             // Workaround checked exception.
             throw new IllegalStateException(e);
         }
+
+        super.setStateInternal(c[1]);
     }
 }
