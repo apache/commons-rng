@@ -107,6 +107,7 @@ public abstract class BaseProvider
                                           byte[] parentState) {
         final int len = parentState.length + state.length;
         final byte[] c = new byte[len];
+        // Store the local state first
         System.arraycopy(state, 0, c, 0, state.length);
         System.arraycopy(parentState, 0, c, state.length, parentState.length);
         return c;
@@ -140,6 +141,7 @@ public abstract class BaseProvider
                                           int localStateLength) {
         checkStateSize(state, localStateLength);
 
+        // The local state is stored first
         final byte[] local = new byte[localStateLength];
         System.arraycopy(state, 0, local, 0, localStateLength);
         final int parentLength = state.length - localStateLength;
