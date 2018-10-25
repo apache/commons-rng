@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
+import java.security.SecureRandom;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.apache.commons.rng.core.source32.RandomIntSource;
 import org.apache.commons.rng.core.source32.Well44497b;
@@ -46,10 +47,11 @@ public final class SeedFactory {
     private static final RandomIntSource SEED_GENERATOR;
 
     static {
-        // Another RNG for initializing the "SEED_GENERATOR".
-        final long t = System.currentTimeMillis();
-        final int h = System.identityHashCode(Runtime.getRuntime());
-        final SplitMix64 rng = new SplitMix64(t ^ NumberFactory.makeLong(h, ~h));
+        // Use a secure RNG so that different instances (e.g. in multiple JVM
+        // instances started in rapid succession) will have different seeds.
+        final SecureRandom seedGen = new SecureRandom();
+        final long initSeed = NumberFactory.makeLong(seedGen.generateSeed(8));
+        final SplitMix64 rng = new SplitMix64(initSeed);
 
         final int blockCount = 1391; // Size of the state array of "Well44497b".
         SEED_GENERATOR = new Well44497b(createIntArray(blockCount, rng));

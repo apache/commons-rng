@@ -67,6 +67,9 @@ Additional code is provided in the following module:
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
 ">
+      <action dev="erans" type="fix" issue="RNG-59">
+        Use JDK's "SecureRandom" to seed the "SeedFactory".
+      </action>
       <action dev="erans" type="update" issue="RNG-58">
         Allow part of RNG state to be contained in base classes, e.g. to enable
         caching in common code (see RNG-57).
