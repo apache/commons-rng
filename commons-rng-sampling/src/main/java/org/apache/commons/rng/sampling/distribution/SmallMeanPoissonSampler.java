@@ -32,10 +32,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  *
  * This sampler is suitable for {@code mean < 40}.
+ * For large means, {@link LargePoissonSampler} should be used instead.
  */
 public class SmallMeanPoissonSampler
     implements DiscreteSampler {
-
+    /** Upper bound to avoid truncation. */
+    private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /**
      * Pre-compute {@code Math.exp(-mean)}.
      * Note: This is the probability of the Poisson sample {@code P(n=0)}.
@@ -56,6 +58,9 @@ public class SmallMeanPoissonSampler
         this.rng = rng;
         if (mean <= 0) {
             throw new IllegalArgumentException(mean + " <= " + 0);
+        }
+        if (mean > MAX_MEAN) {
+            throw new IllegalArgumentException(mean + " > " + MAX_MEAN);
         }
 
         p0 = Math.exp(-mean);

@@ -35,23 +35,22 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with a bad mean.
      */
     @Test(expected=IllegalArgumentException.class)
+    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+        final RestorableUniformRandomProvider rng =
+                RandomSource.create(RandomSource.SPLIT_MIX_64);
+        @SuppressWarnings("unused")
+        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, Integer.MAX_VALUE / 2 + 1);
+    }
+
+    /**
+     * Test the constructor with a bad mean.
+     */
+    @Test(expected=IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, 0);
-    }
-
-    /**
-     * Test the constructor with a mean that is too large.
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNonIntegerMean() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE + 1.0;
-        @SuppressWarnings("unused")
-        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
     }
 
     /**

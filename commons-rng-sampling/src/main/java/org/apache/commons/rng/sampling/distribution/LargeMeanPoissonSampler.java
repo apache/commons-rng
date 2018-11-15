@@ -38,10 +38,10 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  */
 public class LargeMeanPoissonSampler
     implements DiscreteSampler {
-
+    /** Upper bound to avoid truncation. */
+    private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /** Class to compute {@code log(n!)}. This has no cached values. */
     private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
-
     /** Used when there is no requirement for a small mean Poisson sampler. */
     private static final DiscreteSampler NO_SMALL_MEAN_POISSON_SAMPLER = null;
 
@@ -96,10 +96,10 @@ public class LargeMeanPoissonSampler
     private final DiscreteSampler smallMeanPoissonSampler;
 
     /**
-     * @param rng  Generator of uniformly distributed random numbers.
+     * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code mean >} {@link Integer#MAX_VALUE}.
+     * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
@@ -107,8 +107,8 @@ public class LargeMeanPoissonSampler
           throw new IllegalArgumentException(mean + " <= " + 0);
         }
         // The algorithm is not valid if Math.floor(mean) is not an integer.
-        if (mean > Integer.MAX_VALUE) {
-            throw new IllegalArgumentException(mean + " > " + Integer.MAX_VALUE);
+        if (mean > MAX_MEAN) {
+            throw new IllegalArgumentException(mean + " > " + MAX_MEAN);
         }
         this.rng = rng;
 
