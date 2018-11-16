@@ -28,11 +28,41 @@ public abstract class IntProvider
     extends BaseProvider
     implements RandomIntSource {
 
+    /**
+     * Provides a bit source for booleans.
+     *
+     * <p>A cached value from a call to {@link #nextInt()}.
+     */
+    private int booleanSource; // Initialised as 0
+
+    /**
+     * The bit mask of the boolean source to obtain the boolean bit.
+     *
+     * <p>The bit mask contains a single bit set. This begins at the least
+     * significant bit and is gradually shifted upwards until overflow to zero.
+     *
+     * <p>When zero a new boolean source should be created and the mask set to the
+     * least significant bit (i.e. 1).
+     */
+    private int booleanBitMask; // Initialised as 0
+
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
+        final int[] state = new int[] { booleanSource,
+                                        booleanBitMask };
         return composeStateInternal(super.getStateInternal(),
-                                    new byte[0]); // No local state.
+                                    NumberFactory.makeByteArray(state));
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void setStateInternal(byte[] s) {
+        final byte[][] c = splitStateInternal(s, 8);
+        final int[] state = NumberFactory.makeIntArray(c[0]);
+        booleanSource  = state[0];
+        booleanBitMask = state[1];
+        super.setStateInternal(c[1]);
     }
 
     /** {@inheritDoc} */
@@ -44,7 +74,17 @@ public abstract class IntProvider
     /** {@inheritDoc} */
     @Override
     public boolean nextBoolean() {
-        return NumberFactory.makeBoolean(nextInt());
+        // Shift up. This will eventually overflow and become zero.
+        booleanBitMask <<= 1;
+        // The mask will either contain a single bit or none.
+        if (booleanBitMask == 0) {
+            // Set the least significant bit
+            booleanBitMask = 1;
+            // Get the next value
+            booleanSource = nextInt();
+        }
+        // Return if the bit is set
+        return (booleanSource & booleanBitMask) != 0;
     }
 
     /** {@inheritDoc} */
