@@ -66,7 +66,17 @@ Additional code is provided in the following module:
   commons-rng-examples (requires Java 9)
 It is however not part of the official API and no compatibility
 should be expected in subsequent releases.
+
+It must be noted that, due to the nature of random number
+generation, some of unit tests are bound to fail with some
+probability.  The 'maven-surefire-plugin' is configured to
+re-run tests that fail, and pass the build if they succeed
+within the allotted number of reruns (the test will be marked
+as 'flaky' in the report).
 ">
+      <action dev="erans" type="update" issue="RNG-60">
+        Use random seeds for unit testing.
+      </action>
       <action dev="erans" type="update" issue="RNG-52">
         Set conservative upper bound in "LargePoissonSampler" to avoid truncation.
       </action>

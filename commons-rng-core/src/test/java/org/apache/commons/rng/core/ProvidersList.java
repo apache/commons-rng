@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.security.SecureRandom;
 
 import org.apache.commons.rng.core.source32.JDKRandom;
 import org.apache.commons.rng.core.source32.Well512a;
@@ -59,27 +60,30 @@ public class ProvidersList {
         new ArrayList<RestorableUniformRandomProvider[]>();
 
     static {
+        // External generator for creating a random seed.
+        final SecureRandom g = new SecureRandom();
+
         try {
             // "int"-based RNGs.
-            add(LIST32, new JDKRandom(-122333444455555L));
-            add(LIST32, new MersenneTwister(new int[] { -123, -234, -345 }));
-            add(LIST32, new Well512a(new int[] { -23, -34, -45 }));
-            add(LIST32, new Well1024a(new int[] { -1234, -2345, -3456 }));
-            add(LIST32, new Well19937a(new int[] { -2123, -3234, -4345 }));
-            add(LIST32, new Well19937c(new int[] { -123, -234, -345, -456 }));
-            add(LIST32, new Well44497a(new int[] { -12345, -23456, -34567 }));
-            add(LIST32, new Well44497b(new int[] { 123, 234, 345 }));
-            add(LIST32, new ISAACRandom(new int[] { 123, -234, 345, -456 }));
-            add(LIST32, new MultiplyWithCarry256(new int[] { 12, -1234, -3456, 45679 }));
-            add(LIST32, new KISSRandom(new int[] { 12, 1234, 23456, 345678 }));
+            add(LIST32, new JDKRandom(g.nextLong()));
+            add(LIST32, new MersenneTwister(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well512a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well1024a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well19937a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well19937c(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well44497a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new Well44497b(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new ISAACRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new MultiplyWithCarry256(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new KISSRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
             // ... add more here.
 
             // "long"-based RNGs.
-            add(LIST64, new SplitMix64(-98877766544333L));
-            add(LIST64, new XorShift1024Star(new long[] { 123456L, 234567L, -345678L }));
-            add(LIST64, new TwoCmres(55443322));
-            add(LIST64, new TwoCmres(-987654321, 5, 8));
-            add(LIST64, new MersenneTwister64(new long[] { 1234567L, 2345678L, -3456789L }));
+            add(LIST64, new SplitMix64(g.nextLong()));
+            add(LIST64, new XorShift1024Star(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new TwoCmres(g.nextInt()));
+            add(LIST64, new TwoCmres(g.nextInt(), 5, 8));
+            add(LIST64, new MersenneTwister64(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
             // ... add more here.
 
             // Do not modify the remaining statements.
