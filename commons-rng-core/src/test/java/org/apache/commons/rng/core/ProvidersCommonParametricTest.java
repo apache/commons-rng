@@ -20,16 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -113,7 +106,7 @@ public class ProvidersCommonParametricTest {
 
 
     // Uniformity tests
- 
+
     @Test
     public void testUniformNextBytesFullBuffer() {
         // Value chosen to exercise all the code lines in the
@@ -156,7 +149,7 @@ public class ProvidersCommonParametricTest {
 
     @Test
     public void testUniformNextIntegerInRange() {
-        checkNextIntegerInRange(4, 1000);
+        // Statistical test uses 10 bins so tests are invalid below this level
         checkNextIntegerInRange(10, 1000);
         checkNextIntegerInRange(12, 1000);
         checkNextIntegerInRange(31, 1000);
@@ -169,7 +162,7 @@ public class ProvidersCommonParametricTest {
 
     @Test
     public void testUniformNextLongInRange() {
-        checkNextLongInRange(4, 1000);
+        // Statistical test uses 10 bins so tests are invalid below this level
         checkNextLongInRange(11, 1000);
         checkNextLongInRange(19, 1000);
         checkNextLongInRange(31, 1000);
@@ -248,7 +241,7 @@ public class ProvidersCommonParametricTest {
         // Replay.
         final List<Number> listReplay = makeList(n);
         Assert.assertFalse(listOrig == listReplay);
-        // Check that the restored state is the same as the orginal.
+        // Check that the restored state is the same as the original.
         Assert.assertTrue(listOrig.equals(listReplay));
     }
 
@@ -288,7 +281,7 @@ public class ProvidersCommonParametricTest {
             list.add(generator.nextFloat());
             list.add(generator.nextDouble());
             list.add(generator.nextDouble());
-            list.add(generator.nextDouble());
+            list.add(generator.nextBoolean() ? 1 : 0);
         }
 
         return list;
@@ -499,6 +492,8 @@ public class ProvidersCommonParametricTest {
         for (int k = 0; k < numBins; k++) {
             binUpperBounds[k] = (long) ((k + 1) * step);
         }
+        // Rounding error occurs on the long value of 2305843009213693951L
+        binUpperBounds[numBins - 1] = n;
 
         // Run the tests.
         int numFailures = 0;
@@ -548,7 +543,16 @@ public class ProvidersCommonParametricTest {
             throw new RuntimeException("Unexpected", e);
         }
 
-        if ((double) numFailures / (double) numTests > 0.02) {
+        // The expected number of failed tests can be modelled as a Binomial distribution
+        // B(n, p) with n=500, p=0.01 (500 tests with a 1% significance level).
+        // The cumulative probability of the number of failed tests (X) is:
+        // x     P(X>x)
+        // 10    0.0132
+        // 11    0.00521
+        // 12    0.00190
+
+        if (numFailures > 11) { // Test will fail with 0.5% probability
+        //if ((double) numFailures / (double) numTests > 0.02) { // Sets a level of 10 failed tests
             Assert.fail(generator + ": Too many failures for n = " + n +
                         " (" + numFailures + " out of " + numTests + " tests failed)");
         }
