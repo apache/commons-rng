@@ -552,7 +552,6 @@ public class ProvidersCommonParametricTest {
         // 12    0.00190
 
         if (numFailures > 11) { // Test will fail with 0.5% probability
-        //if ((double) numFailures / (double) numTests > 0.02) { // Sets a level of 10 failed tests
             Assert.fail(generator + ": Too many failures for n = " + n +
                         " (" + numFailures + " out of " + numTests + " tests failed)");
         }
