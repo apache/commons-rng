@@ -24,7 +24,9 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Class for representing permutations of a sequence of integers.
  *
- * This class also contains utilities for shuffling an {@code int[]} array in-place.
+ * <p>This class also contains utilities for shuffling an {@code int[]} array in-place.
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Permutation">Permutation definition</a>
  */
 public class PermutationSampler {
     /** Domain of the permutation. */
@@ -37,7 +39,7 @@ public class PermutationSampler {
     /**
      * Creates a generator of permutations.
      *
-     * The {@link #sample()} method will generate an integer array of
+     * <p>The {@link #sample()} method will generate an integer array of
      * length {@code k} whose entries are selected randomly, without
      * repetition, from the integers 0, 1, ..., {@code n}-1 (inclusive).
      * The returned array represents a permutation of {@code n} taken
@@ -53,13 +55,13 @@ public class PermutationSampler {
                               int n,
                               int k) {
         if (n < 0) {
-            throw new IllegalArgumentException(n + " < " + 0);
+            throw new IllegalArgumentException("n < 0 : n=" + n);
         }
         if (k <= 0) {
-            throw new IllegalArgumentException(k + " <= " + 0);
+            throw new IllegalArgumentException("k <= 0 : k=" + k);
         }
         if (k > n) {
-            throw new IllegalArgumentException(k + " > " + n);
+            throw new IllegalArgumentException("k > n : k=" + k + ", n=" + n);
         }
 
         domain = natural(n);
@@ -87,14 +89,14 @@ public class PermutationSampler {
      */
     public static void shuffle(UniformRandomProvider rng,
                                int[] list) {
-        shuffle(rng, list, 0, false);
+        shuffle(rng, list, list.length - 1, true);
     }
 
     /**
      * Shuffles the entries of the given array, using the
      * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
      * Fisher-Yates</a> algorithm.
-     * The {@code start} and {@code pos} parameters select which part
+     * The {@code start} and {@code towardHead} parameters select which part
      * of the array is randomized and which is left untouched.
      *
      * @param rng Random number generator.
@@ -109,30 +111,34 @@ public class PermutationSampler {
                                int start,
                                boolean towardHead) {
         if (towardHead) {
-            for (int i = 0; i <= start; i++) {
-                final int target;
-                if (i == start) {
-                    target = start;
-                } else {
-                    target = rng.nextInt(start - i + 1) + i;
-                }
-                final int temp = list[target];
-                list[target] = list[i];
-                list[i] = temp;
+            // Visit all positions from start to 0.
+            // Do not visit 0 to avoid a swap with itself.
+            for (int i = start; i > 0; i--) {
+                // Swap index with any position down to 0
+                swap(list, i, rng.nextInt(i + 1));
             }
         } else {
-            for (int i = list.length - 1; i >= start; i--) {
-                final int target;
-                if (i == start) {
-                    target = start;
-                } else {
-                    target = rng.nextInt(i - start + 1) + start;
-                }
-                final int temp = list[target];
-                list[target] = list[i];
-                list[i] = temp;
+            // Visit all positions from the end to start.
+            // Start is not visited to avoid a swap with itself.
+            for (int i = list.length - 1; i > start; i--) {
+                // Swap index with any position down to start.
+                // Note: i - start + 1 is the number of elements remaining.
+                swap(list, i, rng.nextInt(i - start + 1) + start);
             }
         }
+    }
+
+    /**
+     * Swaps the two specified elements in the specified array.
+     *
+     * @param array the array
+     * @param i the first index
+     * @param j the second index
+     */
+    private static void swap(int[] array, int i, int j) {
+        final int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
     }
 
     /**
