@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="erans" type="update" issue="RNG-61" due-to="Alex D. Herbert">
+        "PermutationSampler": Performance improvement.
+      </action>
       <action dev="erans" type="update" issue="RNG-57" due-to="Alex D. Herbert">
         Cache for using up all the bits provided by the underlying source of randomness.
       </action>
