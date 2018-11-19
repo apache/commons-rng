@@ -62,6 +62,7 @@ Apache Commons RNG 1.2 contains the following library modules:
 The code in module 'commons-rng-core' should not be accessed
 directly by applications as a future release might make use of
 the JPMS modularization feature available in Java 9+.
+
 Additional code is provided in the following module:
   commons-rng-examples (requires Java 9)
 It is however not part of the official API and no compatibility
@@ -74,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="erans" type="update" issue="RNG-57" due-to="Alex D. Herbert">
+        Cache for using up all the bits provided by the underlying source of randomness.
+      </action>
       <action dev="erans" type="update" issue="RNG-60">
         Use random seeds for unit testing.
       </action>
