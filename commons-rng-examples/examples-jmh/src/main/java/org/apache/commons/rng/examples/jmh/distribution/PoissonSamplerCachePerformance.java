@@ -268,7 +268,6 @@ public class PoissonSamplerCachePerformance {
     /**
      * A factory for creating Poisson sampler objects.
      */
-    @FunctionalInterface
     private interface PoissonSamplerFactory {
         /**
          * Creates a new Poisson sampler object.
