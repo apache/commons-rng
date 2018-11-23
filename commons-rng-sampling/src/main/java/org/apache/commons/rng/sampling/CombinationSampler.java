@@ -146,22 +146,4 @@ public class CombinationSampler {
         array[i] = array[j];
         array[j] = tmp;
     }
-
-    /**
-     * Gets the domain size (n) of the combination C(n, k).
-     *
-     * @return the number of elements (n) in the domain
-     */
-    public int getN() {
-        return domain.length;
-    }
-
-    /**
-     * Gets the sample size (k) of the combination C(n, k).
-     *
-     * @return the number of elements (k) in the combination
-     */
-    public int getK() {
-        return size;
-    }
 }
