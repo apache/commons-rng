@@ -126,7 +126,7 @@ public class ContinuousSamplerParametricTest {
         if ((double) numFailures / (double) numTests > 0.05) {
             Assert.fail(sampler + ": Too many failures for sample size = " + sampleSize +
                         " (" + numFailures + " out of " + numTests + " tests failed, " +
-                        "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
+                        "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])) + ")");
         }
     }
 }
