@@ -16,17 +16,12 @@
  */
 package org.apache.commons.rng.sampling;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-import org.apache.commons.math3.util.MathArrays;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
@@ -57,25 +52,27 @@ public class PermutationSamplerTest {
 
     @Test
     public void testSampleChiSquareTest() {
+        final int n = 3;
+        final int k = 3;
         final int[][] p = { { 0, 1, 2 }, { 0, 2, 1 },
                             { 1, 0, 2 }, { 1, 2, 0 },
                             { 2, 0, 1 }, { 2, 1, 0 } };
-        final int len = p.length; 
-        final long[] observed = new long[len];
-        final int numSamples = 6000;
-        final double numExpected = numSamples / (double) len;
-        final double[] expected = new double[len];
-        Arrays.fill(expected, numExpected);
-
-        final PermutationSampler sampler = new PermutationSampler(rng, 3, 3);
-        for (int i = 0; i < numSamples; i++) {
-            observed[findPerm(p, sampler.sample())]++;
-        }
-
-        // Pass if we cannot reject null hypothesis that distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        runSampleChiSquareTest(n, k, p);
     }
-    
+
+    @Test
+    public void testSubSampleChiSquareTest() {
+        final int n = 4;
+        final int k = 2;
+        final int[][] p = { { 0, 1 }, { 1, 0 },
+                            { 0, 2 }, { 2, 0 },
+                            { 0, 3 }, { 3, 0 },
+                            { 1, 2 }, { 2, 1 },
+                            { 1, 3 }, { 3, 1 },
+                            { 2, 3 }, { 3, 2 } };
+        runSampleChiSquareTest(n, k, p);
+    }
+
     @Test
     public void testSampleBoundaryCase() {
         // Check size = 1 boundary case.
@@ -191,20 +188,32 @@ public class PermutationSamplerTest {
 
     //// Support methods.
 
-    private int findPerm(int[][] p,
-                         int[] samp) {
+    private void runSampleChiSquareTest(int n,
+                                        int k,
+                                        int[][] p) {
+        final int len = p.length;
+        final long[] observed = new long[len];
+        final int numSamples = 6000;
+        final double numExpected = numSamples / (double) len;
+        final double[] expected = new double[len];
+        Arrays.fill(expected, numExpected);
+
+        final PermutationSampler sampler = new PermutationSampler(rng, n, k);
+        for (int i = 0; i < numSamples; i++) {
+            observed[findPerm(p, sampler.sample())]++;
+        }
+
+        // Pass if we cannot reject null hypothesis that distributions are the same.
+        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+    }
+
+    private static int findPerm(int[][] p,
+                                int[] samp) {
         for (int i = 0; i < p.length; i++) {
-            boolean good = true;
-            for (int j = 0; j < samp.length; j++) {
-                if (samp[j] != p[i][j]) {
-                    good = false;
-                }
-            }
-            if (good) {
+            if (Arrays.equals(p[i], samp)) {
                 return i;
             }
         }
-
         Assert.fail("Permutation not found");
         return -1;
     }

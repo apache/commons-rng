@@ -20,7 +20,8 @@ package org.apache.commons.rng.sampling;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Class for representing combinations of a sequence of integers.
+ * Class for representing <a href="https://en.wikipedia.org/wiki/Combination">combinations</a>
+ * of a sequence of integers.
  *
  * <p>A combination is a selection of items from a collection, such that (unlike
  * permutations) the order of selection <strong>does not matter</strong>. This
@@ -34,24 +35,17 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>The sampler can be used to generate indices to select subsets where the
  * order of the subset is not important.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Combination">Combination
- *      definition</a>
  * @see PermutationSampler
  */
 public class CombinationSampler {
     /** Domain of the combination. */
     private final int[] domain;
-    /** Size of the combination. */
-    private final int size;
     /** The number of steps of a full shuffle to perform. */
     private final int steps;
     /**
-     * The position to copy the domain from after a partial shuffle.
-     *
-     * <p>The copy is either in the range [0 : size] or [domain.length - size :
-     * domain.length].
+     * The section to copy the domain from after a partial shuffle.
      */
-    private final int from;
+    private final boolean upper;
     /** RNG. */
     private final UniformRandomProvider rng;
 
@@ -77,34 +71,19 @@ public class CombinationSampler {
      * @throws IllegalArgumentException if {@code n <= 0} or {@code k <= 0} or
      *                                  {@code k > n}.
      */
-    public CombinationSampler(UniformRandomProvider rng, int n, int k) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("n <= 0 : n=" + n);
-        }
-        if (k <= 0) {
-            throw new IllegalArgumentException("k <= 0 : k=" + k);
-        }
-        if (k > n) {
-            throw new IllegalArgumentException("k > n : k=" + k + ", n=" + n);
-        }
-
+    public CombinationSampler(UniformRandomProvider rng,
+                              int n,
+                              int k) {
+        SubsetSamplerUtils.checkSubset(n, k);
         domain = PermutationSampler.natural(n);
-        size = k;
         // The sample can be optimised by only performing the first k or (n - k) steps
         // from a full Fisher-Yates shuffle from the end of the domain to the start.
         // The upper positions will then contain a random sample from the domain. The
         // lower half is then by definition also a random sample (just not in a random order).
         // The sample is then picked using the upper or lower half depending which
         // makes the number of steps smaller.
-        if (k <= n / 2) {
-            // Upper half
-            steps = k;
-            from = n - k;
-        } else {
-            // Lower half
-            steps = n - k;
-            from = 0;
-        }
+        upper = k <= n / 2;
+        steps = upper ? k : n - k;
         this.rng = rng;
     }
 
@@ -118,32 +97,6 @@ public class CombinationSampler {
      * @return a random combination.
      */
     public int[] sample() {
-        // Shuffle from the end but limit to a number of steps.
-        // The subset C(n, k) is then either those positions that have
-        // been sampled, or those that haven't been, depending
-        // on the number of steps.
-        // Note: if n==k the number of steps is zero and the result
-        // is just a clone of the domain.
-        for (int i = domain.length - 1,
-                j = 0; i > 0 && j < steps; i--, j++) {
-            // Swap index i with any position down to 0 (including itself)
-            swap(domain, i, rng.nextInt(i + 1));
-        }
-        final int[] result = new int[size];
-        System.arraycopy(domain, from, result, 0, size);
-        return result;
-    }
-
-    /**
-     * Swaps the two specified elements in the specified array.
-     *
-     * @param array the array
-     * @param i     the first index
-     * @param j     the second index
-     */
-    private static void swap(int[] array, int i, int j) {
-        final int tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
+        return SubsetSamplerUtils.partialSample(domain, steps, rng, upper);
     }
 }
