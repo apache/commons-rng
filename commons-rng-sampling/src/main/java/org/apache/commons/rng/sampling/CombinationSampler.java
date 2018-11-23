@@ -20,7 +20,8 @@ package org.apache.commons.rng.sampling;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Class for representing combinations of a sequence of integers.
+ * Class for representing <a href="https://en.wikipedia.org/wiki/Combination">combinations</a>
+ * of a sequence of integers.
  *
  * <p>A combination is a selection of items from a collection, such that (unlike
  * permutations) the order of selection <strong>does not matter</strong>. This
@@ -34,8 +35,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>The sampler can be used to generate indices to select subsets where the
  * order of the subset is not important.
  *
- * @see <a href="https://en.wikipedia.org/wiki/Combination">Combination
- *      definition</a>
  * @see PermutationSampler
  */
 public class CombinationSampler {
