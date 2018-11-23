@@ -37,8 +37,6 @@ public class CombinationSamplerTest {
         final int n = 6;
         for (int k = 1; k <= n; k++) {
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
-            Assert.assertEquals("Incorrect n", n, sampler.getN());
-            Assert.assertEquals("Incorrect k", k, sampler.getK());
             final int[] random = sampler.sample();
             for (int s : random) {
                 assertIsInDomain(n, s);
@@ -67,8 +65,6 @@ public class CombinationSamplerTest {
         for (int n = 1; n < 3; n++) {
             final int k = n;
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
-            Assert.assertEquals("Incorrect n", n, sampler.getN());
-            Assert.assertEquals("Incorrect k", k, sampler.getK());
             final int[] sample = sampler.sample();
             Assert.assertEquals("Incorrect sample length", n, sample.length);
             for (int i = 0; i < n; i++) {
