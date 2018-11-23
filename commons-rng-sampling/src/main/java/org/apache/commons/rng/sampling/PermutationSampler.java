@@ -17,8 +17,6 @@
 
 package org.apache.commons.rng.sampling;
 
-import java.util.Arrays;
-
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
@@ -48,22 +46,13 @@ public class PermutationSampler {
      * @param rng Generator of uniformly distributed random numbers.
      * @param n Domain of the permutation.
      * @param k Size of the permutation.
-     * @throws IllegalArgumentException if {@code n < 0} or {@code k <= 0}
+     * @throws IllegalArgumentException if {@code n <= 0} or {@code k <= 0}
      * or {@code k > n}.
      */
     public PermutationSampler(UniformRandomProvider rng,
                               int n,
                               int k) {
-        if (n < 0) {
-            throw new IllegalArgumentException("n < 0 : n=" + n);
-        }
-        if (k <= 0) {
-            throw new IllegalArgumentException("k <= 0 : k=" + k);
-        }
-        if (k > n) {
-            throw new IllegalArgumentException("k > n : k=" + k + ", n=" + n);
-        }
-
+        SubsetSamplerUtils.checkSubset(n, k);
         domain = natural(n);
         size = k;
         this.rng = rng;
@@ -75,8 +64,7 @@ public class PermutationSampler {
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
     public int[] sample() {
-        shuffle(rng, domain);
-        return Arrays.copyOf(domain, size);
+        return SubsetSamplerUtils.partialSample(domain, size, rng, true);
     }
 
     /**
@@ -115,7 +103,7 @@ public class PermutationSampler {
             // Do not visit 0 to avoid a swap with itself.
             for (int i = start; i > 0; i--) {
                 // Swap index with any position down to 0
-                swap(list, i, rng.nextInt(i + 1));
+                SubsetSamplerUtils.swap(list, i, rng.nextInt(i + 1));
             }
         } else {
             // Visit all positions from the end to start.
@@ -123,22 +111,9 @@ public class PermutationSampler {
             for (int i = list.length - 1; i > start; i--) {
                 // Swap index with any position down to start.
                 // Note: i - start + 1 is the number of elements remaining.
-                swap(list, i, rng.nextInt(i - start + 1) + start);
+                SubsetSamplerUtils.swap(list, i, rng.nextInt(i - start + 1) + start);
             }
         }
-    }
-
-    /**
-     * Swaps the two specified elements in the specified array.
-     *
-     * @param array the array
-     * @param i the first index
-     * @param j the second index
-     */
-    private static void swap(int[] array, int i, int j) {
-        final int tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
     }
 
     /**
