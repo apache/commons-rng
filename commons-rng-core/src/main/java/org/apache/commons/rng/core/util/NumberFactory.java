@@ -46,7 +46,11 @@ public final class NumberFactory {
     /**
      * @param v Number.
      * @return a boolean.
+     *
+     * @deprecated Since version 1.2. Method has become obsolete following
+     * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
+    @Deprecated
     public static boolean makeBoolean(int v) {
         return (v >>> 31) != 0;
     }
@@ -54,7 +58,11 @@ public final class NumberFactory {
     /**
      * @param v Number.
      * @return a boolean.
+     *
+     * @deprecated Since version 1.2. Method has become obsolete following
+     * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
+    @Deprecated
     public static boolean makeBoolean(long v) {
         return (v >>> 63) != 0;
     }
@@ -105,7 +113,11 @@ public final class NumberFactory {
      * @return an {@code int} value made from the "xor" of the
      * {@link #extractHi(long) high order bits} and
      * {@link #extractLo(long) low order bits} of {@code v}.
+     *
+     * @deprecated Since version 1.2. Method has become obsolete following
+     * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
+    @Deprecated
     public static int makeInt(long v) {
         return extractHi(v) ^ extractLo(v);
     }
