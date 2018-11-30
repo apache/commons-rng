@@ -94,7 +94,7 @@
     <!-- Java 9+ -->
     <commons.automatic.module.name>org.apache.commons.rng.parent</commons.automatic.module.name>
     <!-- do not use snapshot suffix here -->
-    <commons.release.version>1.1</commons.release.version>
+    <commons.release.version>1.2</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.release.desc>(requires Java 6+)</commons.release.desc>
     <commons.binary.suffix>-bin</commons.binary.suffix>
