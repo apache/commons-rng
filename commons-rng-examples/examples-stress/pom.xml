@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-examples</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-stress</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <name>Stress test example</name>
 
   <description>Application for calling external tools that perform stringent uniformity tests.

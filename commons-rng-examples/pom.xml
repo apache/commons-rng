@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG Examples</name>
 
@@ -55,19 +55,19 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-simple</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-sampling</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-client-api</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
