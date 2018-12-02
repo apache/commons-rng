@@ -105,9 +105,7 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <rng.pmd.version>3.9.0</rng.pmd.version>
-    <rng.spotbugs.version>3.1.3</rng.spotbugs.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
-    <rng.clirr.version>2.8</rng.clirr.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -213,12 +211,11 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${rng.spotbugs.version}</version>
+        <version>${commons.spotbugs.version}</version>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>${commons.rat.version}</version>
         <configuration>
         <!--
           Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check
@@ -257,25 +254,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.revapi</groupId>
-        <artifactId>revapi-maven-plugin</artifactId>
-        <version>0.10.5</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.revapi</groupId>
-            <artifactId>revapi-java</artifactId>
-            <version>0.18.2</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>check</id>
-            <goals><goal>check</goal></goals>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
 
     <pluginManagement>
@@ -303,7 +281,6 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
-        <version>${commons.rat.version}</version>
         <configuration>
          <!--  Should agree with apache-rat-plugin config under <build> -->
           <excludes combine.children="append">
@@ -347,7 +324,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${rng.spotbugs.version}</version>
+        <version>${commons.spotbugs.version}</version>
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
@@ -372,15 +349,6 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>clirr-maven-plugin</artifactId>
-        <version>${rng.clirr.version}</version>
-        <configuration>
-          <minSeverity>${minSeverity}</minSeverity>
-          <ignoredDifferencesFile>${rng.parent.dir}/src/main/resources/clirr/clirr-ignored.xml</ignoredDifferencesFile>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -411,20 +379,6 @@
           <additionalparam>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
           <!-- <aggregate>true</aggregate> -->
         </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.revapi</groupId>
-        <artifactId>revapi-maven-plugin</artifactId>
-        <version>0.10.5</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>report</report>
-              <report>report-aggregate</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
 
     </plugins>
