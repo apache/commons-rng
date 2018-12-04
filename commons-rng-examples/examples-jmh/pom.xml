@@ -78,6 +78,7 @@
       <properties>
         <skipTests>true</skipTests>
         <benchmark>org.apache</benchmark>
+        <java.cmd>java</java.cmd>
       </properties>
 
       <build>
@@ -104,7 +105,7 @@
                 </goals>
                 <configuration>
                   <classpathScope>test</classpathScope>
-                  <executable>java</executable>
+                  <executable>${java.cmd}</executable>
                   <arguments>
                     <argument>-classpath</argument>
                     <classpath/>
