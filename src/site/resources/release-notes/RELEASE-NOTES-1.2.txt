@@ -1,0 +1,46 @@
+
+              Apache Commons RNG 1.2 RELEASE NOTES
+
+The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.2
+
+The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
+
+This is a minor release of Apache Commons RNG, containing a few new features and performance improvements. Apache Commons RNG 1.2 contains the following library modules:
+ commons-rng-client-api (requires Java 6)
+ commons-rng-core (requires Java 6)
+ commons-rng-simple (requires Java 6)
+ commons-rng-sampling (requires Java 6) The code in module 'commons-rng-core' should not be accessed directly by applications as a future release might make use of the JPMS modularization feature available in Java 9+.
+Additional code is provided in the following module:
+ commons-rng-examples (requires Java 9) It is however not part of the official API and no compatibility should be expected in subsequent releases.
+It must be noted that, due to the nature of random number generation, some of unit tests are bound to fail with some probability.
+The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
+
+Changes in this version include:
+
+New features:
+o RNG-62:  New "CombinationSampler" class. Thanks to Alex D. Herbert. 
+
+Fixed Bugs:
+o RNG-59:  Use JDK's "SecureRandom" to seed the "SeedFactory". 
+o RNG-56:  "ZigguratNormalizedGaussianSampler": Missing statements in least used branch. 
+o RNG-55:  "UnitSphereSampler": Prevent returning NaN components and forbid
+        negative dimension. Thanks to Alex D. Herbert. 
+
+Changes:
+o RNG-63:  "NumberFactory": Some methods have become obsolete following RNG-57. 
+o RNG-64:  "PermutationSampler" and "CombinationSampler" shared code moved to a utility class. Thanks to Alex D. Herbert. 
+o RNG-61:  "PermutationSampler": Performance improvement. Thanks to Alex D. Herbert. 
+o RNG-57:  Cache for using up all the bits provided by the underlying source of randomness. Thanks to Alex D. Herbert. 
+o RNG-60:  Use random seeds for unit testing. 
+o RNG-52:  Set conservative upper bound in "LargePoissonSampler" to avoid truncation. 
+o RNG-58:  Allow part of RNG state to be contained in base classes, e.g. to enable
+        caching in common code (see RNG-57). 
+o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert. 
+
+
+For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons RNG website:
+
+http://commons.apache.org/proper/commons-rng/
+
+
