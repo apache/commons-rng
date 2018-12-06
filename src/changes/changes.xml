@@ -51,7 +51,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.2" date="2018-12-07" description="
+    <release version="1.2" date="2018-12-12" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 Apache Commons RNG 1.2 contains the following library modules:
