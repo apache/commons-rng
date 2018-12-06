@@ -73,7 +73,7 @@ Preliminary checks:
  * For a "minor" release, the library must be backward-compatible. Check all
    the errors reported by the "Clirr" plugin.
  * Clear all "CheckStyle" warnings.
- * Make sure that the construct reported by "FindBugs" are intentional.
+ * Make sure that the construct reported by "SpotBugs" are intentional.
  * Mark all fixed issues as such in the bug-tracking system, and add a
    corresponding entry in "src/changes/changes.xml".
 
@@ -297,7 +297,7 @@ in the settings.xml file.
 
 You can then run
 
-  $ mvn clean deploy -Prelease -Pcommons-rng-examples
+  $ mvn -Duser.name="__Your_Apache_id__" -Pcommons-rng-examples -Prelease clean site site:stage deploy
 
 which will transfer the artifacts to the Nexus repository located at
   https://repository.apache.org/index.html#stagingRepositories
