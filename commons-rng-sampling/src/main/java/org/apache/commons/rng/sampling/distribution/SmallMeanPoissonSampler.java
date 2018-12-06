@@ -32,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  *
  * This sampler is suitable for {@code mean < 40}.
- * For large means, {@link LargePoissonSampler} should be used instead.
+ * For large means, {@link LargeMeanPoissonSampler} should be used instead.
  */
 public class SmallMeanPoissonSampler
     implements DiscreteSampler {
