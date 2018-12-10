@@ -744,7 +744,7 @@ String word = sampler.sample().get(0);
 *---------------------------------*----------------*----------------*
 | WELL_44497_A        | {{{../txt/userguide/stress/dh/run_1/dh_7}0}}, {{{../txt/userguide/stress/dh/run_2/dh_7}0}}, {{{../txt/userguide/stress/dh/run_3/dh_7}0}} | {{{../txt/userguide/stress/tu/run_1/tu_7}2}}, {{{../txt/userguide/stress/tu/run_2/tu_7}3}}, {{{../txt/userguide/stress/tu/run_3/tu_7}3}} |
 *---------------------------------*----------------*----------------*
-| WELL_44497_B        | {{{../txt/userguide/stress/dh/run_1/dh_8}0}}, {{{../txt/userguide/stress/dh/run_2/dh_8}}}, {{{../txt/userguide/stress/dh/run_3/dh_8}0}} | {{{../txt/userguide/stress/tu/run_1/tu_8}2}}, {{{../txt/userguide/stress/tu/run_2/tu_8}2}}, {{{../txt/userguide/stress/tu/run_3/tu_8}2}} |
+| WELL_44497_B        | {{{../txt/userguide/stress/dh/run_1/dh_8}0}}, {{{../txt/userguide/stress/dh/run_2/dh_8}0}}, {{{../txt/userguide/stress/dh/run_3/dh_8}0}} | {{{../txt/userguide/stress/tu/run_1/tu_8}2}}, {{{../txt/userguide/stress/tu/run_2/tu_8}2}}, {{{../txt/userguide/stress/tu/run_3/tu_8}2}} |
 *---------------------------------*----------------*----------------*
 | ISAAC       | {{{../txt/userguide/stress/dh/run_1/dh_9}0}}, {{{../txt/userguide/stress/dh/run_2/dh_9}0}}, {{{../txt/userguide/stress/dh/run_3/dh_9}1}} | {{{../txt/userguide/stress/tu/run_1/tu_9}0}}, {{{../txt/userguide/stress/tu/run_2/tu_9}1}}, {{{../txt/userguide/stress/tu/run_3/tu_9}0}} |
 *---------------------------------*----------------*----------------*
