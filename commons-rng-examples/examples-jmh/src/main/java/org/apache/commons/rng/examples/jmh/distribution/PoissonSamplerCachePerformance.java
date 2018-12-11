@@ -54,13 +54,13 @@ import org.openjdk.jmh.infra.Blackhole;
  * UniformRandomProvider rng = ...;
  *
  * // Compare ...
- * for (int i = 0; i < 1000; i++) {
+ * for (int i = 0; i &lt; 1000; i++) {
  *   new PoissonSampler(rng, min + rng.nextDouble() * range).sample();
  * }
  *
  * // To ...
  * PoissonSamplerCache cache = new PoissonSamplerCache(min, max);
- * for (int i = 0; i < 1000; i++) {
+ * for (int i = 0; i &lt; 1000; i++) {
  *   PoissonSamplerCache.createPoissonSampler(rng, min + rng.nextDouble() * range).sample();
  * }
  * </pre>
@@ -76,7 +76,7 @@ import org.openjdk.jmh.infra.Blackhole;
  *   PoissonSampler[] samplers = new PoissonSampler[max - min + 1];
  *
  *   public PoissonSampler createPoissonSampler(UniformRandomProvider rng, int mean) {
- *     if (mean < min || mean > max) {
+ *     if (mean &lt; min || mean &gt; max) {
  *       return new PoissonSampler(rng, mean);
  *     }
  *     int index = mean - min;
