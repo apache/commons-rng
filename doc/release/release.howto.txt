@@ -338,6 +338,9 @@ How to "close" the staging repository is explained at this page:
 
 
 (12)
+[NOTE: The "Commons release-plugin" now automatically performs all the tasks
+referred to in this section.]
+
 Create and upload the other distribution files to the Apache servers.
 
   (12a)
@@ -395,6 +398,10 @@ Create and upload the other distribution files to the Apache servers.
 
 
 (13)
+[NOTE: The "Commons release-plugin" now automatically uploads the web site
+to the "dist dev" area of the svn repository.  However, for multi-module
+maven projects, the site is incomplete.]
+
 As the web site staging area is shared among all commons components and therefore
 could be published before the vote ends, it is not recommended to use the standard
 staging area for the release candidate. So you will just archive the site and
@@ -419,6 +426,10 @@ Then run these commands:
 
 
 (14)
+[NOTE: The "Commons release-plugin" can generate the text for the "[VOTE]"
+message. However, the script makes some (incorrect) assumptions and produces
+a result that must be heavily edited.]
+
 Call to vote by sending a message to the "dev" ML with subject
 "[VOTE][RC1] Release Commons RNG 1.0". You can use the following example as
 a starting point, replacing the URLs with the appropriate ones:
@@ -493,8 +504,13 @@ area of the Apache dist server.
     $ cd rng
     $ rsync -Cavz path-to-RC-dev/rng/ .
 
+  [Note: This might overwrite symbolic links; in this case, do a "svn
+  revert" in order to restore the files that should not be updated.]
+
   (17c)
-  Check (and possibly "svn add") files.
+  Check files.
+  Perform a "svn add" for the new release artefacts.
+  Perform a "svn del" for the old release(s) artefacts.
 
   (17d)
   Commit:
@@ -558,13 +574,12 @@ to work. This is done as follows:
                                     commons-rng-simple/javadocs/api-$RNG_RELEASE_VERSION \
       cp $RNG_WEB_SITE_SVN_REVISION commons-rng-sampling/apidocs \
                                     commons-rng-sampling/javadocs/api-$RNG_RELEASE_VERSION \
-      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-jmh/apidocs \
-                                    commons-rng-jmh/javadocs/api-$RNG_RELEASE_VERSION \
-      cp $RNG_WEB_SITE_SVN_REVISION commons-rng-examples/apidocs \
-                                    commons-rng-examples/javadocs/api-$RNG_RELEASE_VERSION \
       -m "Commons RNG: Copying $RNG_RELEASE_VERSION apidocs to versioned directories for the long-term links."
 
-Now wait a few minutes for the live site to fully sync and then check
+[Note: The script "doc/release/copyLongTermJavadoc.sh" performs the above
+command (options are the svn revision and the component's new version).]
+
+Wait a few minutes for the live site to fully sync and then check
   http://commons.apache.org/proper/commons-rng/
 to make sure that everything looks correct.
 
