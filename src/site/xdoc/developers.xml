@@ -190,7 +190,7 @@
             terms used in component documentation <i>must</i> be provided.
           </li>
           <li>
-            Commons rng javadoc generation supports embedded LaTeX formulas via the
+            Commons RNG javadoc generation supports embedded LaTeX formulas via the
             <a href="http://www.mathjax.org">MathJax</a> javascript display engine.
             To embed mathematical expressions formatted in LaTeX in javadoc, simply surround
             the expression to be formatted with either <code>\(</code> and <code>\)</code>
