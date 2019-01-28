@@ -46,9 +46,13 @@ public class DiscreteSamplersList {
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
-            add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(probSuccessGeometric),
+            add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(null, probSuccessGeometric),
                 MathArrays.sequence(10, 0, 1),
                 RandomSource.create(RandomSource.ISAAC));
+            // Geometric.
+            add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(probSuccessGeometric),
+                MathArrays.sequence(10, 0, 1),
+                new GeometricSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), probSuccessGeometric));
 
             // Hypergeometric ("inverse method").
             final int popSizeHyper = 34;
@@ -197,7 +201,7 @@ public class DiscreteSamplersList {
     /**
      * @param dist Distribution.
      * @param points Points.
-     * @return the probabilities of the given points according to the distribution. 
+     * @return the probabilities of the given points according to the distribution.
      */
     private static double[] getProbabilities(org.apache.commons.math3.distribution.IntegerDistribution dist,
                                              int[] points) {
