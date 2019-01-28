@@ -115,7 +115,6 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
                 if (p <= 1) {
                     // Step 2:
-
                     final double x = Math.pow(p, oneOverTheta);
                     final double u2 = rng.nextDouble();
 
@@ -127,7 +126,6 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                 }
 
                 // Step 3:
-
                 final double x = -Math.log((bGSOptim - p) * oneOverTheta);
                 final double u2 = rng.nextDouble();
 
@@ -162,8 +160,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param theta Theta scale parameter of the distribution.
          */
         LargeThetaAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                     double alpha,
-                                                     double theta) {
+                                                         double alpha,
+                                                         double theta) {
             super(rng, alpha, theta);
             gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = theta - ONE_THIRD;
