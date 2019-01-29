@@ -65,7 +65,7 @@ public class GeometricSamplerTest {
         // All samples should be max value
         for (int i = 0; i < 10; i++) {
             Assert.assertEquals("p=(almost 0) should have Integer.MAX_VALUE for all samples", Integer.MAX_VALUE,
-                    sampler.sample());
+                sampler.sample());
         }
     }
 
