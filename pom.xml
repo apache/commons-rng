@@ -63,14 +63,16 @@
       <id>chtompki</id>
       <email>chtompki at apache dot org</email>
     </developer>
+    <developer>
+      <name>Alex Herbert</name>
+      <id>aherbert</id>
+      <email>aherbert at apache dot org</email>
+    </developer>
   </developers>
 
   <contributors>
     <contributor>
       <name>Artem Barger</name>
-    </contributor>
-    <contributor>
-      <name>Alex D. Herbert</name>
     </contributor>
   </contributors>
 
