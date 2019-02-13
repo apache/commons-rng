@@ -28,31 +28,10 @@ package org.apache.commons.rng.sampling.distribution;
  * This is a utility class that provides computation methods related to the
  * &Gamma; (Gamma) family of functions.
  * </p>
- * <p>
- * Implementation of {@link #invGamma1pm1(double)} and
- * {@link #logGamma1p(double)} is based on the algorithms described in
- * <ul>
- * <li><a href="http://dx.doi.org/10.1145/22721.23109">Didonato and Morris
- * (1986)</a>, <em>Computation of the Incomplete Gamma Function Ratios and
- *     their Inverse</em>, TOMS 12(4), 377-393,</li>
- * <li><a href="http://dx.doi.org/10.1145/131766.131776">Didonato and Morris
- * (1992)</a>, <em>Algorithm 708: Significant Digit Computation of the
- *     Incomplete Beta Function Ratios</em>, TOMS 18(3), 360-373,</li>
- * </ul>
- * and implemented in the
- * <a href="http://www.dtic.mil/docs/citations/ADA476840">NSWC Library of Mathematical Functions</a>,
- * available
- * <a href="http://www.ualberta.ca/CNS/RESEARCH/Software/NumericalNSWC/site.html">here</a>.
- * This library is "approved for public release", and the
- * <a href="http://www.dtic.mil/dtic/pdf/announcements/CopyrightGuidance.pdf">Copyright guidance</a>
- * indicates that unless otherwise stated in the code, all FORTRAN functions in
- * this library are license free. Since no such notice appears in the code these
- * functions can safely be ported to Commons-Math.
- * </p>
  */
 class InternalGamma { // Class is package-private on purpose; do not make it public.
     /**
-     * Constant \( g = \frac{607}{128} \) in the {@link #lanczos(double) Lanczos approximation}.
+     * Constant \( g = \frac{607}{128} \) in the Lanczos approximation.
      */
     public static final double LANCZOS_G = 607.0 / 128.0;
 
