@@ -55,7 +55,7 @@ public class DiscreteSamplerParametricTest {
         final int sampleSize = 10000;
 
         final double[] prob = sampler.getProbabilities();
-        final int len = prob.length; 
+        final int len = prob.length;
         final double[] expected = new double[len];
         for (int i = 0; i < len; i++) {
             expected[i] = prob[i] * sampleSize;

@@ -260,7 +260,7 @@ public class ContinuousSamplersList {
 
     /**
      * @param dist Distribution.
-     * @return the deciles of the given distribution. 
+     * @return the deciles of the given distribution.
      */
     private static double[] getDeciles(org.apache.commons.math3.distribution.RealDistribution dist) {
         final int last = 9;

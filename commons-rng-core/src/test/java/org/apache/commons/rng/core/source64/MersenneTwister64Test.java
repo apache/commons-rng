@@ -34,7 +34,7 @@ public class MersenneTwister64Test {
                 0x43a38212350ee392L, 0xce77502bffcacf8bL, 0x5d8a82d90126f0e7L, 0xc0510c6f402c1e3cL,
                 0x48d895bf8b69f77bL, 0x8d9fbb371f1de07fL, 0x1126b97be8c91ce2L, 0xf05e1c9dc2674be2L,
                 0xe4d5327a12874c1eL, 0x7c1951ea43a7500dL, 0xbba2bbfbecbc239aL, 0xc5704350b17f0215L,
-                0x823a67c5f88337e7L, 0xd9bf140bfeb4c1a9L, 0x9fbe3cfcd1f08059L, 0xdc29309412e352b9L, 
+                0x823a67c5f88337e7L, 0xd9bf140bfeb4c1a9L, 0x9fbe3cfcd1f08059L, 0xdc29309412e352b9L,
                 0x5a0ff7908b1b3c57L, 0x46f39cb43b126c55L, 0x9648168491f3b126L, 0xdd3e72538fd39a1cL,
                 0xd65a3663fc9b0898L, 0x421ee7823c2af2ebL, 0xcba3a4b69b6ed152L, 0x0348399b7d2b8428L,
                 0xbdb750bf00c34a38L, 0xcf36d95eae514f52L, 0x7b9231d5308d7534L, 0xb225e28cfc5aa663L,
@@ -279,7 +279,7 @@ public class MersenneTwister64Test {
                 0xad268fb5b1105028L, 0xa480149a0dcbc5f4L, 0xb0e8d69c8b15c864L, 0x6ed49c46f19bb8eaL,
                 0x7f1871fdf321818dL, 0x1ec5816f5a9843eaL, 0x77c8da91b5313675L, 0x4cdb66ad515e0717L,
                 0x2ec4712b0bfdfcd6L, 0x6c6f5767fff27330L, 0x071083b972d80c0cL, 0x8d8325e82c4fdcdcL,
-                0xb47a658dad8e13a4L, 0x88710bf005fda027L, 0x69bd3edaf7111200L, 0x0dccdd0c65c810ffL, 
+                0xb47a658dad8e13a4L, 0x88710bf005fda027L, 0x69bd3edaf7111200L, 0x0dccdd0c65c810ffL,
         };
 
         RandomAssert.assertEquals(expectedSequence, rng);

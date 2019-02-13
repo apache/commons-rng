@@ -72,7 +72,7 @@ public class SeedFactoryTest {
 
         for (int i = 0; i < 50000; i++) {
             final int[] a = SeedFactory.createIntArray(2);
-            final long v = NumberFactory.makeLong(a[0], a[1]); 
+            final long v = NumberFactory.makeLong(a[0], a[1]);
             Integer count = values.get(v);
             if (count == null) {
                 count = 0;

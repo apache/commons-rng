@@ -26,7 +26,7 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 
 /**
  * Creates 2D plot of sampling output.
- * It is a "manual" check that could help ensure that no artefacts 
+ * It is a "manual" check that could help ensure that no artefacts
  * exist in some tiny region of the expected range, due to loss of
  * accuracy, e.g. when porting C code based on 32-bits "float" to
  * "Commons RNG" that uses Java "double" (64-bits).

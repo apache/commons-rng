@@ -197,7 +197,7 @@ public class DiscreteSamplersList {
     /**
      * @param dist Distribution.
      * @param points Points.
-     * @return the probabilities of the given points according to the distribution. 
+     * @return the probabilities of the given points according to the distribution.
      */
     private static double[] getProbabilities(org.apache.commons.math3.distribution.IntegerDistribution dist,
                                              int[] points) {
