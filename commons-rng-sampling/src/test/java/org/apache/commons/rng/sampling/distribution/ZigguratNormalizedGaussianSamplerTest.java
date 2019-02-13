@@ -16,9 +16,7 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.Assert;
 import org.junit.Test;
-import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**

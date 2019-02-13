@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.core;
 
-import java.util.Arrays;
 import org.junit.Assert;
 
 import org.apache.commons.rng.UniformRandomProvider;

@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
 /**
@@ -38,9 +37,9 @@ public class DiscreteSamplerParametricTest {
     private final DiscreteSamplerTestData sampler;
 
     /**
-     * Initializes generator instance.
+     * Initializes the test with the test data
      *
-     * @param rng RNG to be tested.
+     * @param data the test data
      */
     public DiscreteSamplerParametricTest(DiscreteSamplerTestData data) {
         sampler = data;
