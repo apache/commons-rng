@@ -16,8 +16,11 @@
  */
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.rng.core.source64.TwoCmres.Cmres;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 
 public class TwoCmresTest {
@@ -81,5 +84,26 @@ public class TwoCmresTest {
                 // Expected.
             }
         }
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void testCmresFactoryThrowsWithDuplicateMultiplier() {
+        ArrayList<Cmres> list = new ArrayList<Cmres>();
+        final long multiply = 0;
+        final int rotate = 3;
+        final int start = 5;
+
+        list.add(new Cmres(multiply, rotate, start));
+
+        long nextMultiply = multiply + 1;
+        try {
+            Cmres.Factory.checkUnique(list, nextMultiply);
+        } catch (IllegalStateException ex) {
+            Assert.fail("The next multiply should be unique: " + nextMultiply);
+        }
+
+        list.add(new Cmres(nextMultiply, rotate, start));
+        // This should throw as the list now contains the multiply value
+        Cmres.Factory.checkUnique(list, nextMultiply);
     }
 }

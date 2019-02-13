@@ -299,13 +299,24 @@ public class TwoCmres extends LongProvider {
                                     int start) {
                 // Sanity check: if there are duplicates, the class initialization
                 // will fail (and the JVM will report "NoClassDefFoundError").
-                for (Cmres sg : TABLE) {
+                checkUnique(TABLE, multiply);
+
+                TABLE.add(new Cmres(multiply, rotate, start));
+            }
+
+            /**
+             * Check the multiply parameter is unique (not contained in any entry in the provided
+             * table).
+             *
+             * @param table the table
+             * @param multiply the multiply parameter
+             */
+            static void checkUnique(List<Cmres> table, long multiply) {
+                for (Cmres sg : table) {
                     if (multiply == sg.getMultiply()) {
                         throw new IllegalStateException(INTERNAL_ERROR_MSG);
                     }
                 }
-
-                TABLE.add(new Cmres(multiply, rotate, start));
             }
         }
     }
