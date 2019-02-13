@@ -54,9 +54,9 @@ public class ProvidersCommonParametricTest {
     private final Object[] originalArgs;
 
     /**
-     * Initializes generator instance.
+     * Initializes the test instance.
      *
-     * @param rng RNG to be tested.
+     * @param data Random source (and seed arguments) to be tested.
      */
     public ProvidersCommonParametricTest(ProvidersList.Data data) {
         originalSource = data.getSource();

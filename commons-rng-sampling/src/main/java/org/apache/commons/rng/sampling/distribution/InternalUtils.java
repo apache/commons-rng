@@ -49,8 +49,8 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
     /**
      * Class for computing the natural logarithm of the factorial of {@code n}.
      * It allows to allocate a cache of precomputed values.
-     * In case of cache miss, computation is preformed by a call to
-     * {@link Gamma#logGamma(double)}.
+     * In case of cache miss, computation is performed by a call to
+     * {@link InternalGamma#logGamma(double)}.
      */
     public static final class FactorialLog {
         /**
