@@ -37,9 +37,9 @@ public class DiscreteSamplerParametricTest {
     private final DiscreteSamplerTestData sampler;
 
     /**
-     * Initializes the test with the test data
+     * Initializes the test instance.
      *
-     * @param data the test data
+     * @param data sampler to be tested.
      */
     public DiscreteSamplerParametricTest(DiscreteSamplerTestData data) {
         sampler = data;

@@ -35,9 +35,9 @@ public class ContinuousSamplerParametricTest {
     private final ContinuousSamplerTestData sampler;
 
     /**
-     * Initializes generator instance.
+     * Initializes the test instance.
      *
-     * @param rng RNG to be tested.
+     * @param data sampler to be tested.
      */
     public ContinuousSamplerParametricTest(ContinuousSamplerTestData data) {
         sampler = data;
