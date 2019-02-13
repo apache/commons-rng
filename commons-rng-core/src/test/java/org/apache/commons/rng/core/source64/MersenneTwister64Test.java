@@ -17,6 +17,7 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MersenneTwister64Test {
@@ -283,5 +284,14 @@ public class MersenneTwister64Test {
         };
 
         RandomAssert.assertEquals(expectedSequence, rng);
+    }
+
+    @Test
+    public void testConstructorWithEmptySeed() {
+        // An empty seed is allowed
+        final MersenneTwister64 rng = new MersenneTwister64(new long[0]);
+        // It should be functional so check it returns different values.
+        Assert.assertNotEquals("Empty seed creates sequence with same values",
+            rng.nextLong(), rng.nextLong());
     }
 }
