@@ -97,11 +97,14 @@ public class ProvidersCommonParametricTest {
         int seedCount = 0;
         for (Object s : seeds) {
             ++seedCount;
-            if (!(originalSource.isNativeSeed(s))) {
+            if (originalSource.isNativeSeed(s)) {
+                Assert.assertNotNull("Identified native seed is null", s);
+                Assert.assertEquals("Incorrect identification of native seed type",
+                                    s.getClass(), originalSeed.getClass());
+            } else {
                 ++nonNativeSeedCount;
             }
 
-            Assert.assertNotEquals(intSeed, originalSeed);
             RandomSource.create(originalSource, s, originalArgs);
         }
 
