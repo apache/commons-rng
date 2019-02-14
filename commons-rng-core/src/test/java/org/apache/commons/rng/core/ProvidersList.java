@@ -23,6 +23,10 @@ import java.security.SecureRandom;
 
 import org.apache.commons.rng.core.source32.JDKRandom;
 import org.apache.commons.rng.core.source32.Well512a;
+import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
+import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
+import org.apache.commons.rng.core.source32.XoShiRo128Plus;
+import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source32.Well1024a;
 import org.apache.commons.rng.core.source32.Well19937a;
 import org.apache.commons.rng.core.source32.Well19937c;
@@ -36,6 +40,12 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
+import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
+import org.apache.commons.rng.core.source64.XoRoShiRo128StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo256Plus;
+import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo512Plus;
+import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 
@@ -76,6 +86,10 @@ public class ProvidersList {
             add(LIST32, new ISAACRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
             add(LIST32, new MultiplyWithCarry256(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
             add(LIST32, new KISSRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new XoRoShiRo64Star(new int[] { g.nextInt(), g.nextInt() }));
+            add(LIST32, new XoRoShiRo64StarStar(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new XoShiRo128Plus(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new XoShiRo128StarStar(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -85,6 +99,12 @@ public class ProvidersList {
             add(LIST64, new TwoCmres(g.nextInt()));
             add(LIST64, new TwoCmres(g.nextInt(), 5, 8));
             add(LIST64, new MersenneTwister64(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoRoShiRo128Plus(new long[] { g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoRoShiRo128StarStar(new long[] { g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoShiRo256Plus(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoShiRo256StarStar(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoShiRo512Plus(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XoShiRo512StarStar(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
             // ... add more here.
 
             // Do not modify the remaining statements.

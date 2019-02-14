@@ -37,11 +37,21 @@ import org.apache.commons.rng.core.source32.ISAACRandom;
 import org.apache.commons.rng.core.source32.MersenneTwister;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
+import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
+import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
+import org.apache.commons.rng.core.source32.XoShiRo128Plus;
+import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
+import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
+import org.apache.commons.rng.core.source64.XoRoShiRo128StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo256Plus;
+import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo512Plus;
+import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 
 /**
  * RNG builder.
@@ -314,6 +324,36 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link XorShift1024StarPhi}. */
         XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
                              long[].class),
+        /** Source of randomness is {@link XoRoShiRo64Star}. */
+        XO_RO_SHI_RO_64_S(XoRoShiRo64Star.class,
+                          int[].class),
+        /** Source of randomness is {@link XoRoShiRo64StarStar}. */
+        XO_RO_SHI_RO_64_SS(XoRoShiRo64StarStar.class,
+                           int[].class),
+        /** Source of randomness is {@link XoShiRo128Plus}. */
+        XO_SHI_RO_128_PLUS(XoShiRo128Plus.class,
+                           int[].class),
+        /** Source of randomness is {@link XoShiRo128StarStar}. */
+        XO_SHI_RO_128_SS(XoShiRo128StarStar.class,
+                         int[].class),
+        /** Source of randomness is {@link XoRoShiRo128Plus}. */
+        XO_RO_SHI_RO_128_PLUS(XoRoShiRo128Plus.class,
+                              long[].class),
+        /** Source of randomness is {@link XoRoShiRo128StarStar}. */
+        XO_RO_SHI_RO_128_SS(XoRoShiRo128StarStar.class,
+                            long[].class),
+        /** Source of randomness is {@link XoShiRo256Plus}. */
+        XO_SHI_RO_256_PLUS(XoShiRo256Plus.class,
+                           long[].class),
+        /** Source of randomness is {@link XoShiRo256StarStar}. */
+        XO_SHI_RO_256_SS(XoShiRo256StarStar.class,
+                         long[].class),
+        /** Source of randomness is {@link XoShiRo512Plus}. */
+        XO_SHI_RO_512_PLUS(XoShiRo512Plus.class,
+                           long[].class),
+        /** Source of randomness is {@link XoShiRo512StarStar}. */
+        XO_SHI_RO_512_SS(XoShiRo512StarStar.class,
+                         long[].class),
         ;
 
         /** Source type. */

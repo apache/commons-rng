@@ -52,6 +52,10 @@ public class ProvidersList {
             add(LIST32, RandomSource.ISAAC, new int[] { 123, -234, 345, -456 });
             add(LIST32, RandomSource.MWC_256, new int[] { 12, -1234, -3456, 45678 });
             add(LIST32, RandomSource.KISS, new int[] { 12, 1234, 23456, 345678 });
+            add(LIST32, RandomSource.XO_RO_SHI_RO_64_S, new int[] { 42, 12345 });
+            add(LIST32, RandomSource.XO_RO_SHI_RO_64_SS, new int[] { 78942, 134 });
+            add(LIST32, RandomSource.XO_SHI_RO_128_PLUS, new int[] { 565642, 1234, 4534 });
+            add(LIST32, RandomSource.XO_SHI_RO_128_SS, new int[] { 89, 1234, 6787 });
             // ... add more here.
 
             // "long"-based RNGs.
@@ -61,6 +65,12 @@ public class ProvidersList {
             add(LIST64, RandomSource.TWO_CMRES, 55443322);
             add(LIST64, RandomSource.TWO_CMRES_SELECT, -987654321, 5, 8);
             add(LIST64, RandomSource.MT_64, new long[] { 1234567L, 2345678L, -3456789L });
+            add(LIST64, RandomSource.XO_RO_SHI_RO_128_PLUS, new long[] { 55646L, -456659L, 565656L });
+            add(LIST64, RandomSource.XO_RO_SHI_RO_128_SS, new long[] { 45655L, 5454544L, 4564659L });
+            add(LIST64, RandomSource.XO_SHI_RO_256_PLUS, new long[] { 11222L, -568989L, -456789L });
+            add(LIST64, RandomSource.XO_SHI_RO_256_SS, new long[] { 98765L, -2345678L, -3456789L });
+            add(LIST64, RandomSource.XO_SHI_RO_512_PLUS, new long[] { 89932L, -545669L, 4564689L });
+            add(LIST64, RandomSource.XO_SHI_RO_512_SS, new long[] { 123L, -654654L, 45646789L });
             // ... add more here.
 
             // Do not modify the remaining statements.
