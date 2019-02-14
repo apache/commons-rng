@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,8 +27,8 @@ import org.junit.Test;
  */
 public class GeometricSamplerTest {
     /**
-     * Test the edge case where the probability of success is 1. This is a valid geometric distribution
-     * where the sample should always be 0.
+     * Test the edge case where the probability of success is 1. This is a valid geometric
+     * distribution where the sample should always be 0.
      */
     @Test
     public void testProbabilityOfSuccessIsOneGeneratesZeroForSamples() {
@@ -45,18 +46,20 @@ public class GeometricSamplerTest {
      */
     @Test
     public void testProbabilityOfSuccessIsOneSamplerToString() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final GeometricSampler sampler = new GeometricSampler(rng, 1);
-        Assert.assertTrue("Missing 'Geometric' from toString", sampler.toString().contains("Geometric"));
+        final UniformRandomProvider unusedRng = new SplitMix64(0L);
+        final GeometricSampler sampler = new GeometricSampler(unusedRng, 1);
+        Assert.assertTrue("Missing 'Geometric' from toString",
+            sampler.toString().contains("Geometric"));
     }
 
     /**
      * Test the edge case where the probability of success is nearly 0. This is a valid geometric
-     * distribution but the sample is clipped to max integer value because the underlying exponential
-     * has a mean of positive infinity (effectively the sample is from a truncated distribution).
+     * distribution but the sample is clipped to max integer value because the underlying
+     * exponential has a mean of positive infinity (effectively the sample is from a truncated
+     * distribution).
      *
-     * <p>This test can be changed in future if a lower bound limit for the probability of success is
-     * introduced.
+     * <p>This test can be changed in future if a lower bound limit for the probability of success
+     * is introduced.
      */
     @Test
     public void testProbabilityOfSuccessIsAlmostZeroGeneratesMaxValueForSamples() {
@@ -64,8 +67,8 @@ public class GeometricSamplerTest {
         final GeometricSampler sampler = new GeometricSampler(rng, Double.MIN_VALUE);
         // All samples should be max value
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals("p=(almost 0) should have Integer.MAX_VALUE for all samples", Integer.MAX_VALUE,
-                sampler.sample());
+            Assert.assertEquals("p=(almost 0) should have Integer.MAX_VALUE for all samples",
+                Integer.MAX_VALUE, sampler.sample());
         }
     }
 
@@ -75,8 +78,8 @@ public class GeometricSamplerTest {
     @SuppressWarnings("unused")
     @Test(expected = IllegalArgumentException.class)
     public void testProbabilityOfSuccessAboveOneThrows() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, Long.valueOf(0));
-        new GeometricSampler(rng, Math.nextUp(1.0));
+        final UniformRandomProvider unusedRng = new SplitMix64(0L);
+        new GeometricSampler(unusedRng, Math.nextUp(1.0));
     }
 
     /**
@@ -85,7 +88,7 @@ public class GeometricSamplerTest {
     @SuppressWarnings("unused")
     @Test(expected = IllegalArgumentException.class)
     public void testProbabilityOfSuccessIsZeroThrows() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, Long.valueOf(0));
-        new GeometricSampler(rng, 0);
+        final UniformRandomProvider unusedRng = new SplitMix64(0L);
+        new GeometricSampler(unusedRng, 0);
     }
 }

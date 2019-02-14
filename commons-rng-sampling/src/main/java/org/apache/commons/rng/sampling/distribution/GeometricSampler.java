@@ -78,7 +78,8 @@ public class GeometricSampler implements DiscreteSampler {
 
         /**
          * @param rng Generator of uniformly distributed random numbers
-         * @param probabilityOfSuccess The probability of success (must be {@code 0<p<1})
+         * @param probabilityOfSuccess The probability of success (must be in the range
+         * {@code [0 < probabilityOfSuccess < 1]})
          */
         GeometricExponentialSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
             this.rng = rng;
@@ -116,13 +117,14 @@ public class GeometricSampler implements DiscreteSampler {
      *
      * @param rng Generator of uniformly distributed random numbers
      * @param probabilityOfSuccess The probability of success
-     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in the range [0 <
-     * probabilityOfSuccess <= 1]
+     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in the range
+     * {@code [0 < probabilityOfSuccess <= 1]})
      */
     public GeometricSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
         if (probabilityOfSuccess <= 0 || probabilityOfSuccess > 1) {
             throw new IllegalArgumentException(
-                "Probability of success must be in the range [0 < p <= 1]: " + probabilityOfSuccess);
+                "Probability of success (p) must be in the range [0 < p <= 1]: "
+                    + probabilityOfSuccess);
         }
         delegate = probabilityOfSuccess == 1 ?
             GeometricP1Sampler.INSTANCE :
@@ -132,8 +134,8 @@ public class GeometricSampler implements DiscreteSampler {
     /**
      * Create a sample from a geometric distribution.
      *
-     * <p>The sample will take the values in the set {@code [0, 1, 2, ...]}, equivalent to the number of
-     * failures before the first success.
+     * <p>The sample will take the values in the set {@code [0, 1, 2, ...]}, equivalent to the
+     * number of failures before the first success.
      */
     @Override
     public int sample() {

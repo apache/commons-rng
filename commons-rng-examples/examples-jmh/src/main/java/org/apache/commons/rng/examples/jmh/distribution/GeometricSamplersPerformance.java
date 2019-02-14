@@ -134,8 +134,9 @@ public class GeometricSamplersPerformance {
             // ---
             // Note: if cumulativeProbability == 0 then log1p(-0) is zero and the result
             // after the range check is 0.
-            // Note: if cumulativeProbability == 1 then log1p(-1) is negative infinity, the result of
-            // the divide is positive infinity and the result after the range check is Integer.MAX_VALUE.
+            // Note: if cumulativeProbability == 1 then log1p(-1) is negative infinity, the result
+            // of the divide is positive infinity and the result after the range check is
+            // Integer.MAX_VALUE.
             return Math.max(0, (int) Math.ceil(Math.log1p(-cumulativeProbability) / log1mProbabilityOfSuccess - 1));
         }
     }
