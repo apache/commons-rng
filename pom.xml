@@ -108,6 +108,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <rng.pmd.version>3.9.0</rng.pmd.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
+    <rng.checkstyle.dep.version>8.17</rng.checkstyle.dep.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -196,20 +197,7 @@
           </ignorePathsToDelete>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>validate</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- maven-checkstyle-plugin runs in JDK 8+ profile -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
@@ -257,25 +245,6 @@
       </plugin>
 
     </plugins>
-
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>${rng.checkstyle.version}</version>
-          <configuration>
-            <includeTestSourceDirectory>false</includeTestSourceDirectory>
-            <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-            <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-            <logViolationsToConsole>false</logViolationsToConsole>
-            <failOnViolation>false</failOnViolation>
-            <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
-            <excludes>**/module-info.java</excludes>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
   <reporting>
@@ -333,25 +302,7 @@
           <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${rng.checkstyle.version}</version>
-        <configuration>
-          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-          <enableRulesSummary>false</enableRulesSummary>
-          <includeResources>false</includeResources>
-          <excludes>**/module-info.java</excludes>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>checkstyle</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
+      <!-- maven-checkstyle-plugin runs in JDK 8+ profile -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${rng.pmd.version}</version>
@@ -567,6 +518,70 @@
         </plugins>
       </build>
     </profile>
+    <!-- profile to allow the use of plugin versions that require Java 8+ -->
+    <profile>
+      <id>jdk8-plugins</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${rng.checkstyle.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <version>${rng.checkstyle.dep.version}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <includeTestSourceDirectory>false</includeTestSourceDirectory>
+              <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+              <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+              <logViolationsToConsole>false</logViolationsToConsole>
+              <failOnViolation>false</failOnViolation>
+              <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
+              <excludes>**/module-info.java</excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>validate</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${rng.checkstyle.version}</version>
+            <configuration>
+              <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+              <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+              <enableRulesSummary>false</enableRulesSummary>
+              <includeResources>false</includeResources>
+              <excludes>**/module-info.java</excludes>
+            </configuration>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>checkstyle</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
 
     <!--
         Profiles for modules with special requirements.
@@ -581,7 +596,6 @@
         <module>commons-rng-examples</module>
       </modules>
     </profile>
-
 
     <profile>
       <id>release</id>
