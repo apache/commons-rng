@@ -52,6 +52,10 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(rng, probSuccessGeometric),
                 MathArrays.sequence(10, 0, 1),
                 RandomSource.create(RandomSource.ISAAC));
+            // Geometric.
+            add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(rng, probSuccessGeometric),
+                MathArrays.sequence(10, 0, 1),
+                new GeometricSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), probSuccessGeometric));
 
             // Hypergeometric ("inverse method").
             final int popSizeHyper = 34;

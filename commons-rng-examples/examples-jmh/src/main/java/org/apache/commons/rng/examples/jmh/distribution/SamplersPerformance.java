@@ -44,6 +44,7 @@ import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.ChengBetaSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousUniformSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
+import org.apache.commons.rng.sampling.distribution.GeometricSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
 import org.apache.commons.rng.sampling.distribution.PoissonSampler;
 
@@ -110,8 +111,8 @@ public class SamplersPerformance {
      * @param sampler Sampler.
      * @param bh Data sink.
      */
-    private void runSample(ContinuousSampler sampler,
-                           Blackhole bh) {
+    private static void runSample(ContinuousSampler sampler,
+                                  Blackhole bh) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
             bh.consume(sampler.sample());
         }
@@ -123,8 +124,8 @@ public class SamplersPerformance {
      * @param sampler Sampler.
      * @param bh Data sink.
      */
-    private void runSample(DiscreteSampler sampler,
-                           Blackhole bh) {
+    private static void runSample(DiscreteSampler sampler,
+                                  Blackhole bh) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
             bh.consume(sampler.sample());
         }
@@ -260,5 +261,15 @@ public class SamplersPerformance {
     public void runPoissonSampler(Sources sources,
                                   Blackhole bh) {
         runSample(new PoissonSampler(sources.getGenerator(), 8.9), bh);
+    }
+
+    /**
+     * @param sources Source of randomness.
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void runGeometricSampler(Sources sources,
+                                    Blackhole bh) {
+        runSample(new GeometricSampler(sources.getGenerator(), 0.21), bh);
     }
 }
