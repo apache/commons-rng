@@ -123,8 +123,8 @@ public class GeometricSampler implements DiscreteSampler {
     public GeometricSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
         if (probabilityOfSuccess <= 0 || probabilityOfSuccess > 1) {
             throw new IllegalArgumentException(
-                "Probability of success (p) must be in the range [0 < p <= 1]: "
-                    + probabilityOfSuccess);
+                "Probability of success (p) must be in the range [0 < p <= 1]: " +
+                    probabilityOfSuccess);
         }
         delegate = probabilityOfSuccess == 1 ?
             GeometricP1Sampler.INSTANCE :
