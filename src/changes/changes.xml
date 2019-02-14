@@ -75,11 +75,13 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-67">
+        Instructions for how to build and run the examples-stress code.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-69">
         New "GeometricSampler" class.
       </action>
     </release>
-
 
     <release version="1.2" date="2018-12-12" description="
 This is a minor release of Apache Commons RNG, containing a
