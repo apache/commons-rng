@@ -25,17 +25,17 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>This distribution samples the number of failures before the first success taking values in the
  * set {@code [0, 1, 2, ...]}.
  *
- * <p>The sample is computed using a related an exponential distribution. If {@code X} is an
- * exponentially distributed random variable with parameter λ, then {@code Y = floor(X)} is a
- * geometrically distributed random variable with parameter p = 1 − e<sup>−λ</sup>, with {@code p}
- * the probability of success.
+ * <p>The sample is computed using a related exponential distribution. If \( X \) is an
+ * exponentially distributed random variable with parameter \( \lambda \), then
+ * \( Y = \left \lfloor X \right \rfloor \) is a geometrically distributed random variable with
+ * parameter \( p = 1 − e^\lambda \), with \( p \) the probability of success.
  *
  * <p>This sampler outperforms using the {@link InverseTransformDiscreteSampler} with an appropriate
  * Geometric inverse cumulative probability function.
  *
- * <p>Usage note: As the probability of success ({@code p}) tends towards zero the mean of the
- * distribution ({@code (1-p)/p}) tends towards infinity and due to the use of {@code int} for the
- * sample this can result in truncation of the distribution.
+ * <p>Usage note: As the probability of success (\( p \)) tends towards zero the mean of the
+ * distribution (\( \frac{1-p}{p} \)) tends towards infinity and due to the use of {@code int}
+ * for the sample this can result in truncation of the distribution.
  *
  * @see <a
  * href="https://en.wikipedia.org/wiki/Geometric_distribution#Related_distributions">Geometric
