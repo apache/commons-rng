@@ -41,6 +41,9 @@ public class UniformSamplingVisualCheck {
         new BoxMullerNormalizedGaussianSampler(rng),
     };
 
+    // Allow System.out
+    // CHECKSTYLE: stop RegexpCheck
+
     /**
      * Program entry point.
      *
