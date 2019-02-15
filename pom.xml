@@ -524,6 +524,10 @@
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
+      <properties>
+        <!-- MathJax requires additional Javadoc qualifier for Java8+ -->
+        <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
+      </properties>
       <build>
         <plugins>
           <plugin>
