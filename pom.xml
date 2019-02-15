@@ -329,7 +329,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <!-- Enable MathJax -->
-          <additionalparam>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalparam>
+          <additionalOptions>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalOptions>
           <!-- <aggregate>true</aggregate> -->
         </configuration>
       </plugin>
@@ -525,6 +525,8 @@
         <jdk>[1.8,)</jdk>
       </activation>
       <properties>
+        <!-- Check for all javadoc errors -->
+        <doclint.javadoc.qualifier>-Xdoclint:all</doclint.javadoc.qualifier>
         <!-- MathJax requires additional Javadoc qualifier for Java8+ -->
         <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
       </properties>
