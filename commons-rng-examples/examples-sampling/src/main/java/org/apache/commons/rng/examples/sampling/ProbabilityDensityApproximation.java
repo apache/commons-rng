@@ -59,10 +59,11 @@ public class ProbabilityDensityApproximation {
      * @param min Right abscissa of the first bin: every sample smaller
      * than that value will increment an additional bin (of infinite width)
      * placed before the first "equal-width" bin.
-     * @param Left abscissa of the last bin: every sample larger than or
+     * @param max abscissa of the last bin: every sample larger than or
      * equal to that value will increment an additional bin (of infinite
      * width) placed after the last "equal-width" bin.
-     * @param output Filename.
+     * @param outputFile Filename.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private void createDensity(ContinuousSampler sampler,
                                double min,
@@ -96,6 +97,7 @@ public class ProbabilityDensityApproximation {
         final double norm = 1 / (binSize * numSamples);
 
         final PrintWriter out = new PrintWriter(outputFile);
+        // CHECKSTYLE: stop MultipleStringLiteralsCheck
         out.println("# Sampler: " + sampler);
         out.println("# Number of bins: " + numBins);
         out.println("# Min: " + min + " (fraction of samples below: " + (belowMin / (double) numSamples) + ")");
@@ -109,6 +111,7 @@ public class ProbabilityDensityApproximation {
         }
         out.println("# " + (max + binHalfSize) + " " + (aboveMax * norm));
         out.close();
+        // CHECKSTYLE: resume MultipleStringLiteralsCheck
     }
 
     /**
