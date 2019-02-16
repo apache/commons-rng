@@ -43,10 +43,10 @@
 JPMS module example (application)
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-examples-jpms-app.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples-jpms-app)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples-jpms-app/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples-jpms-app)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-jpms-app/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-jpms-app/1.2)
 
 Testing JPMS. Code in this module is not part of the public API.
 
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-jpms-app</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 

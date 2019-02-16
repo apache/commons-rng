@@ -40,13 +40,13 @@
  |                                                                      |
  +======================================================================+
 --->
-Apache Commons RNG Stress Test Example
+Stress test example
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-examples-stress.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples-stress)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples-stress/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples-stress)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-stress/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-stress/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-stress/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-stress/1.2)
 
 Application for calling external tools that perform stringent uniformity tests.
   Code in this module is not part of the public API.
@@ -54,9 +54,9 @@ Application for calling external tools that perform stringent uniformity tests.
 Documentation
 -------------
 
-More information can be found on the [Apache Commons RNG Stress Test Example homepage](https://commons.apache.org/proper/commons-rng).
+More information can be found on the [Stress test example homepage](https://commons.apache.org/proper/commons-rng).
 The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
-Questions related to the usage of Apache Commons RNG Stress Test Example should be posted to the [user mailing list][ml].
+Questions related to the usage of Stress test example should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
 -----------------------------------
@@ -68,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-stress</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 
@@ -93,7 +93,7 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like Apache Commons RNG Stress Test Example? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Stress test example? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------

@@ -34,8 +34,8 @@
  | 3) Example Properties                                                |
  |                                                                      |
  |  <properties>                                                        |
- |    <commons.componentid>rng</commons.componentid>                    |
- |    <commons.release.version>1.0</commons.release.version>            |
+ |    <commons.componentid>math</commons.componentid>                   |
+ |    <commons.release.version>1.2</commons.release.version>            |
  |  </properties>                                                       |
  |                                                                      |
  +======================================================================+
@@ -43,19 +43,18 @@
 Apache Commons RNG
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng.svg?branch=master)](https://travis-ci.org/apache/commons-rng)
-[![Coverage Status](https://coveralls.io/repos/github/apache/commons-rng/badge.svg?branch=master)](https://coveralls.io/github/apache/commons-rng?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-sampling/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-sampling/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-parent/)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-parent/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-parent/1.2)
 
-The Apache Commons RNG project provides Java implementations of pseudo-random numbers generators.
+The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
 Documentation
 -------------
 
-More information can be found on the [homepage](https://commons.apache.org/proper/commons-rng).
-The [Javadoc](https://commons.apache.org/proper/commons-rng/apidocs) can be browsed.
+More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
+The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
 Questions related to the usage of Apache Commons RNG should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
@@ -67,15 +66,15 @@ Alternatively you can pull it from the central Maven repositories:
 ```xml
 <dependency>
   <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng</artifactId>
-  <version>1.1</version>
+  <artifactId>commons-rng-parent</artifactId>
+  <version>1.2</version>
 </dependency>
 ```
 
 Contributing
 ------------
 
-We accept PRs via github. The [developer mailing list][ml] is the main channel of communication for contributors.
+We accept Pull Requests via GitHub. The [developer mailing list][ml] is the main channel of communication for contributors.
 There are some guidelines which will make applying PRs easier for us:
 + No tabs! Please use spaces for indentation.
 + Respect the code style.
@@ -87,7 +86,9 @@ You can learn more about contributing via GitHub in our [contribution guidelines
 
 License
 -------
-Code is under the [Apache Licence v2](https://www.apache.org/licenses/LICENSE-2.0.txt).
+This code is under the [Apache Licence v2](https://www.apache.org/licenses/LICENSE-2.0).
+
+See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
@@ -97,8 +98,8 @@ Additional Resources
 --------------------
 
 + [Apache Commons Homepage](https://commons.apache.org/)
-+ [Apache Bugtracker (JIRA)](https://issues.apache.org/jira/)
++ [Apache Issue Tracker (JIRA)](https://issues.apache.org/jira/browse/RNG)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
-+ #apachecommons IRC channel on freenode.org
++ `#apache-commons` IRC channel on `irc.freenode.org`
 
 [ml]:https://commons.apache.org/mail-lists.html

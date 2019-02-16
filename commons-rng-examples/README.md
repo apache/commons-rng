@@ -43,13 +43,15 @@
 Apache Commons RNG Examples
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-examples.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples/1.2)
 
-Examples of use of the random numbers generator implemented in the "commons-rng-simple" module.
-  Code in this module is not part of the public API.
+Examples of use of the "Commons RNG" library.
+  Codes in this module and its sub-modules are not part of the library.
+  They provide checking, benchmarking tools to enhance the documentation
+  and to help ensure correctness of the implementations.
 
 Documentation
 -------------
@@ -68,7 +70,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 

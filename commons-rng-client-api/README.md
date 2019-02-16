@@ -43,10 +43,10 @@
 Apache Commons RNG Client API
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-client-api.svg?branch=master)](https://travis-ci.org/apache/commons-rng-client-api)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-client-api/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-client-api)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-client-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-client-api/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-client-api/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-client-api/1.2)
 
 API for client code that uses random numbers generators.
 
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-client-api</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 
