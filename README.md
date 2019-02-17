@@ -74,6 +74,11 @@ Alternatively you can pull it from the central Maven repositories, e.g.:
   <artifactId>commons-rng-simple</artifactId>
   <version>1.2</version>
 </dependency>
+<dependency>
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-rng-sampling</artifactId>
+  <version>1.2</version>
+</dependency>
 ```
 
 Contributing
