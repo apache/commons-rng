@@ -55,6 +55,7 @@ Documentation
 
 More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng). The Javadoc for each of the modules can be browsed:
 
+- [Commons RNG Client API](https://commons.apache.org/proper/commons-rng/commons-rng-client-api/apidocs/)
 - [Commons RNG Core](https://commons.apache.org/proper/commons-rng/commons-rng-core/apidocs/)
 - [Commons RNG Simple](https://commons.apache.org/proper/commons-rng/commons-rng-simple/apidocs/)
 - [Commons RNG Sampling](https://commons.apache.org/proper/commons-rng/commons-rng-sampling/apidocs/)
