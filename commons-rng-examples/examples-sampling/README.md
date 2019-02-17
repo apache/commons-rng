@@ -34,7 +34,7 @@
  | 3) Example Properties                                                |
  |                                                                      |
  |  <properties>                                                        |
- |    <commons.componentid>math</commons.componentid>                   |
+ |    <commons.componentid>rng</commons.componentid>                    |
  |    <commons.release.version>1.2</commons.release.version>            |
  |  </properties>                                                       |
  |                                                                      |
@@ -54,7 +54,7 @@ Application for calling external tools that perform stringent uniformity tests.
 Documentation
 -------------
 
-More information can be found on the [Sampling example homepage](https://commons.apache.org/proper/commons-rng).
+More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
 The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
 Questions related to the usage of Sampling example should be posted to the [user mailing list][ml].
 
@@ -93,12 +93,12 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like Sampling example? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Apache Commons RNG? The [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------
 
-+ [Apache Commons Homepage](https://commons.apache.org/)
++ [Apache Commons RNG homepage](https://commons.apache.org/)
 + [Apache Issue Tracker (JIRA)](https://issues.apache.org/jira/browse/RNG)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 + `#apache-commons` IRC channel on `irc.freenode.org`
