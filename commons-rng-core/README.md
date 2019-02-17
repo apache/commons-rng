@@ -101,7 +101,7 @@ You like Apache Commons RNG? Then [donate back to the ASF](https://www.apache.or
 Additional Resources
 --------------------
 
-+ [Apache Commons homepage](https://commons.apache.org/)
++ [Apache Commons Homepage](https://commons.apache.org/)
 + [Apache Issue Tracker (JIRA)](https://issues.apache.org/jira/browse/RNG)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 + `#apache-commons` IRC channel on `irc.freenode.org`
