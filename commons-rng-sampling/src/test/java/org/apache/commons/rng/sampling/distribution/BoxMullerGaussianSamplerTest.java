@@ -21,30 +21,20 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link BoxMullerGaussianSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+public class BoxMullerGaussianSamplerTest {
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad standard deviation.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+        final double mean = 1;
+        final double standardDeviation = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
-    }
-
-    /**
-     * Test the constructor with a bad mean.
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
-        @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final BoxMullerGaussianSampler sampler =
+            new BoxMullerGaussianSampler(rng, mean, standardDeviation);
     }
 }

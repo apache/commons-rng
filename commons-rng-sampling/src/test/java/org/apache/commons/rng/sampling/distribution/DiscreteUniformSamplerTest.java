@@ -16,35 +16,23 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link DiscreteUniformSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+public class DiscreteUniformSamplerTest {
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad range.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+    public void testConstructorThrowsWithLowerAboveUpper() {
+        final int upper = 55;
+        final int lower = upper + 1;
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
-    }
-
-    /**
-     * Test the constructor with a bad mean.
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
-        @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
     }
 }

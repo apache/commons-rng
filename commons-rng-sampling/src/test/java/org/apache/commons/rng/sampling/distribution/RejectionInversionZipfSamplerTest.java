@@ -21,30 +21,34 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link RejectionInversionZipfSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+public class RejectionInversionZipfSamplerTest {
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad number of elements.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    public void testConstructorThrowsWithZeroNumberOfElements() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+        final int numberOfElements = 0;
+        final double exponent = 1;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final RejectionInversionZipfSampler sampler =
+            new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
     }
 
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad exponent.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
+    public void testConstructorThrowsWithZeroExponent() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
+        final int numberOfElements = 1;
+        final double exponent = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final RejectionInversionZipfSampler sampler =
+            new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
     }
 }

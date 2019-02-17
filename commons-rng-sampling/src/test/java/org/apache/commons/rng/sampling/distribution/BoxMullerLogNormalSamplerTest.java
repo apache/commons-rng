@@ -21,30 +21,34 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link BoxMullerLogNormalSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+public class BoxMullerLogNormalSamplerTest {
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad scale.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+        final double scale = -1e-6;
+        final double shape = 1;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final BoxMullerLogNormalSampler sampler =
+            new BoxMullerLogNormalSampler(rng, scale, shape);
     }
 
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad shape.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
+    public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
+        final double scale = 1;
+        final double shape = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final BoxMullerLogNormalSampler sampler =
+            new BoxMullerLogNormalSampler(rng, scale, shape);
     }
 }

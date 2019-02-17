@@ -34,10 +34,15 @@ public class GaussianSampler implements ContinuousSampler {
      * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
      */
     public GaussianSampler(NormalizedGaussianSampler normalized,
                            double mean,
                            double standardDeviation) {
+        if (standardDeviation <= 0) {
+            throw new IllegalArgumentException(
+                "standard deviation is not strictly positive: " + standardDeviation);
+        }
         this.normalized = normalized;
         this.mean = mean;
         this.standardDeviation = standardDeviation;

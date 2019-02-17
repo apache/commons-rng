@@ -64,10 +64,17 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha shape parameter of the distribution.
          * @param theta Theta scale parameter of the distribution.
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
         BaseAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                    double alpha,
                                                    double theta) {
+            if (alpha <= 0) {
+                throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
+            }
+            if (theta <= 0) {
+                throw new IllegalArgumentException("theta is not strictly positive: " + theta);
+            }
             this.rng = rng;
             this.alpha = alpha;
             this.theta = theta;
@@ -95,6 +102,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha shape parameter of the distribution.
          * @param theta Theta scale parameter of the distribution.
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
         SmallThetaAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                          double alpha,
@@ -158,6 +166,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha shape parameter of the distribution.
          * @param theta Theta scale parameter of the distribution.
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
         LargeThetaAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                          double alpha,
@@ -198,6 +207,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Alpha shape parameter of the distribution.
      * @param theta Theta scale parameter of the distribution.
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
      */
     public AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                   double alpha,

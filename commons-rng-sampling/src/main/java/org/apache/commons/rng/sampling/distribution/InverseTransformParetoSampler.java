@@ -37,11 +37,18 @@ public class InverseTransformParetoSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.
+     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
      */
     public InverseTransformParetoSampler(UniformRandomProvider rng,
                                          double scale,
                                          double shape) {
         super(null);
+        if (scale <= 0) {
+            throw new IllegalArgumentException("scale is not strictly positive: " + scale);
+        }
+        if (shape <= 0) {
+            throw new IllegalArgumentException("shape is not strictly positive: " + shape);
+        }
         this.rng = rng;
         this.scale = scale;
         this.shape = shape;

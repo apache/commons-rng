@@ -21,21 +21,9 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link AhrensDieterExponentialSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
-    /**
-     * Test the constructor with a bad mean.
-     */
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
-        @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
-    }
-
+public class AhrensDieterExponentialSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
@@ -45,6 +33,7 @@ public class SmallMeanPoissonSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double mean = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final AhrensDieterExponentialSampler sampler =
+            new AhrensDieterExponentialSampler(rng, mean);
     }
 }

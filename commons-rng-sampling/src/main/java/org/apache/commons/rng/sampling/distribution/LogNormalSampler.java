@@ -33,10 +33,17 @@ public class LogNormalSampler implements ContinuousSampler {
      * @param gaussian N(0,1) generator.
      * @param scale Scale of the log-normal distribution.
      * @param shape Shape of the log-normal distribution.
+     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
      */
     public LogNormalSampler(NormalizedGaussianSampler gaussian,
                             double scale,
                             double shape) {
+        if (scale < 0) {
+            throw new IllegalArgumentException("scale is not positive: " + scale);
+        }
+        if (shape <= 0) {
+            throw new IllegalArgumentException("shape is not strictly positive: " + shape);
+        }
         this.scale = scale;
         this.shape = shape;
         this.gaussian = gaussian;

@@ -21,30 +21,34 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
 /**
- * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
+ * Test for the {@link AhrensDieterMarsagliaTsangGammaSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad alpha.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+        final double alpha = 0;
+        final double theta = 1;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final AhrensDieterMarsagliaTsangGammaSampler sampler =
+            new AhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a bad theta.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
+    public void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
+        final double alpha = 1;
+        final double theta = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        final AhrensDieterMarsagliaTsangGammaSampler sampler =
+            new AhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 }

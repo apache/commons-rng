@@ -44,11 +44,16 @@ public class BoxMullerGaussianSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
      */
     public BoxMullerGaussianSampler(UniformRandomProvider rng,
                                     double mean,
                                     double standardDeviation) {
         super(null);
+        if (standardDeviation <= 0) {
+            throw new IllegalArgumentException("standard deviation is not strictly positive: " +
+                standardDeviation);
+        }
         this.rng = rng;
         this.mean = mean;
         this.standardDeviation = standardDeviation;
