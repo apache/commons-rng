@@ -58,7 +58,7 @@ Documentation
 -------------
 
 More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
-The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
+The [Javadoc](https://commons.apache.org/proper/commons-rng/commons-rng-core/apidocs/) can be browsed.
 Questions related to the usage of Apache Commons RNG Core should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
