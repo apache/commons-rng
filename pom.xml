@@ -518,18 +518,6 @@
         </plugins>
       </build>
     </profile>
-    <!-- profile for MathJax in Java 8 -->
-    <profile>
-      <id>jdk8-javadoc</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <properties>
-        <!-- MathJax requires additional Javadoc qualifier for Java8 as of 8u121 -->
-        <!-- Note that this option is not in Java9 -->
-        <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
-      </properties>
-    </profile>
     <!-- profile to allow the use of plugin versions that require Java 8+ -->
     <profile>
       <id>jdk8-plugins</id>
@@ -537,6 +525,8 @@
         <jdk>[1.8,)</jdk>
       </activation>
       <properties>
+        <!-- MathJax script inclusion requires additional Javadoc qualifier for Java8 as of 8u121 -->
+        <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
         <!-- Check for all javadoc errors -->
         <doclint.javadoc.qualifier>-Xdoclint:all</doclint.javadoc.qualifier>
       </properties>
