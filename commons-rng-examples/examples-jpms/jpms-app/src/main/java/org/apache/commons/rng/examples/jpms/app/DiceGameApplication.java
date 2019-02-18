@@ -47,6 +47,10 @@ public class DiceGameApplication {
                             4.3, 2.1);
     }
 
+    // Allow System.out and multiple " ---" strings
+    // CHECKSTYLE: stop RegexpCheck
+    // CHECKSTYLE: stop MultipleStringLiteralsCheck
+
     /**
      * Application's entry point.
      *
@@ -55,7 +59,7 @@ public class DiceGameApplication {
      *  <li>Number of games</li>
      *  <li>Number of players</li>
      *  <li>Number of rounds per game</li>
-     *  <li>RNG {@link RandomSource indentifier}</li>
+     *  <li>RNG {@link RandomSource identifier}</li>
      * </ol>
      */
     public static void main(String[] args) {
