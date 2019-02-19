@@ -37,6 +37,7 @@ public class UnitSphereSampler {
      * @param dimension Space dimension.
      * @param rng Generator for the individual components of the vectors.
      * A shallow copy will be stored in this instance.
+     * @throws IllegalArgumentException If {@code dimension <= 0}
      */
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
