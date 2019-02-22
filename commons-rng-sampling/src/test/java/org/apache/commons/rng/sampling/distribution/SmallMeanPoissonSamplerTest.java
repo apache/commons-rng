@@ -16,8 +16,9 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -33,7 +34,7 @@ public class SmallMeanPoissonSamplerTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
-        final RestorableUniformRandomProvider rng =
+        final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         @SuppressWarnings("unused")
         SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, Integer.MAX_VALUE / 2 + 1);
@@ -44,9 +45,33 @@ public class SmallMeanPoissonSamplerTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng =
+        final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         @SuppressWarnings("unused")
         SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, 0);
+    }
+
+    /**
+     * Test the sample is bounded to 1000 * mean.
+     */
+    @Test
+    public void testSampleUpperBounds() {
+        // If the nextDouble() is always 1 then the sample will hit the upper bounds
+        final UniformRandomProvider rng = new UniformRandomProvider() {
+            public long nextLong(long n) { return 0; }
+            public long nextLong() { return 0; }
+            public int nextInt(int n) { return 0; }
+            public int nextInt() { return 0; }
+            public float nextFloat() { return 0; }
+            public double nextDouble() { return 1;}
+            public void nextBytes(byte[] bytes, int start, int len) {}
+            public void nextBytes(byte[] bytes) {}
+            public boolean nextBoolean() { return false; }
+        };
+        for (double mean : new double[] { 0.5, 1, 1.5, 2.2 }) {
+            final SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+            final int expected = (int) Math.ceil(1000 * mean);
+            Assert.assertEquals(expected, sampler.sample());
+        }
     }
 }
