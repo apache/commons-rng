@@ -46,7 +46,6 @@ Apache Commons RNG Examples
 [![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples/1.2)
 
 Examples of use of the "Commons RNG" library.
   Codes in this module and its sub-modules are not part of the library.
