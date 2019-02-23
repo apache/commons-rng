@@ -31,6 +31,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +53,7 @@ import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
 
 /**
  * Executes a benchmark to compare the speed of construction of random number
@@ -143,6 +145,12 @@ public class ConstructionPerformance {
         /** The {@code byte[]} seeds, truncated to the appropriate length for the native seed type. */
         private byte[][] byteSeeds;
 
+        /** The implementing class for the random source. */
+        private Class<?> implementingClass;
+
+        /** The constructor. */
+        private Constructor<Object> constructor;
+
         /**
          * Gets the random source.
          *
@@ -179,9 +187,32 @@ public class ConstructionPerformance {
             return byteSeeds;
         }
 
-        /** Create the random source and the test seeds. */
+        /**
+         * Gets the implementing class.
+         *
+         * @return the implementing class
+         */
+        public Class<?> getImplementingClass() {
+            return implementingClass;
+        }
+
+        /**
+         * Gets the constructor.
+         *
+         * @return the constructor
+         */
+        public Constructor<Object> getConstructor() {
+            return constructor;
+        }
+
+        /**
+         * Create the random source and the test seeds.
+         *
+         * @throws NoSuchMethodException If the constructor cannot be found
+         */
+        @SuppressWarnings("unchecked")
         @Setup(value=Level.Trial)
-        public void setup() {
+        public void setup() throws NoSuchMethodException {
             randomSource = RandomSource.valueOf(randomSourceName);
             nativeSeeds = findNativeSeeds(randomSource);
 
@@ -203,6 +234,10 @@ public class ConstructionPerformance {
             for (int i = 0; i < SEEDS; i++) {
                 byteSeeds[i] = Arrays.copyOf(BYTE_ARRAY_SEEDS[i], byteSize);
             }
+
+            // Cache the class type and constructor
+            implementingClass = getRandomSourceInternal(randomSource).getRng();
+            constructor = (Constructor<Object>) implementingClass.getConstructor(nativeSeeds[0].getClass());
         }
 
         /**
@@ -230,6 +265,9 @@ public class ConstructionPerformance {
          */
         private static Object[] findNativeSeeds(RandomSource randomSource) {
             switch (randomSource) {
+            case TWO_CMRES:
+            case TWO_CMRES_SELECT:
+                return INTEGER_SEEDS;
             case JDK:
             case SPLIT_MIX_64:
                 return LONG_SEEDS;
@@ -241,8 +279,6 @@ public class ConstructionPerformance {
             case WELL_44497_B:
             case MT:
             case ISAAC:
-            case TWO_CMRES:
-            case TWO_CMRES_SELECT:
             case MWC_256:
             case KISS:
                 return INT_ARRAY_SEEDS;
@@ -322,6 +358,35 @@ public class ConstructionPerformance {
                 return 8; // long
             default:
                 throw new AssertionError("Unknown native seed element byte size");
+            }
+        }
+
+        /**
+         * Gets the random source internal.
+         *
+         * @param randomSource the random source
+         * @return the random source internal
+         */
+        private static RandomSourceInternal getRandomSourceInternal(RandomSource randomSource) {
+            switch (randomSource) {
+            case JDK: return RandomSourceInternal.JDK;
+            case WELL_512_A: return RandomSourceInternal.WELL_512_A;
+            case WELL_1024_A: return RandomSourceInternal.WELL_1024_A;
+            case WELL_19937_A: return RandomSourceInternal.WELL_19937_A;
+            case WELL_19937_C: return RandomSourceInternal.WELL_19937_C;
+            case WELL_44497_A: return RandomSourceInternal.WELL_44497_A;
+            case WELL_44497_B: return RandomSourceInternal.WELL_44497_B;
+            case MT: return RandomSourceInternal.MT;
+            case ISAAC: return RandomSourceInternal.ISAAC;
+            case TWO_CMRES: return RandomSourceInternal.TWO_CMRES;
+            case TWO_CMRES_SELECT: return RandomSourceInternal.TWO_CMRES_SELECT;
+            case MWC_256: return RandomSourceInternal.MWC_256;
+            case KISS: return RandomSourceInternal.KISS;
+            case SPLIT_MIX_64: return RandomSourceInternal.SPLIT_MIX_64;
+            case XOR_SHIFT_1024_S: return RandomSourceInternal.XOR_SHIFT_1024_S;
+            case MT_64: return RandomSourceInternal.MT_64;
+            default:
+                throw new AssertionError("Unknown random source internal");
             }
         }
     }
@@ -473,6 +538,38 @@ public class ConstructionPerformance {
     public void newKISSRandom(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             bh.consume(new KISSRandom(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * Create a new instance using reflection with a cached constructor.
+     *
+     * @param sources Source of randomness.
+     * @param bh      Data sink.
+     * @throws Exception If reflection failed.
+     */
+    @Benchmark
+    public void newInstance(Sources sources, Blackhole bh) throws Exception {
+        final Object[] nativeSeeds = sources.getNativeSeeds();
+        final Constructor<?> constructor = sources.getConstructor();
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(constructor.newInstance(nativeSeeds[i]));
+        }
+    }
+
+    /**
+     * Create a new instance using reflection to lookup the constructor then invoke it.
+     *
+     * @param sources Source of randomness.
+     * @param bh      Data sink.
+     * @throws Exception If reflection failed.
+     */
+    @Benchmark
+    public void lookupNewInstance(Sources sources, Blackhole bh) throws Exception {
+        final Object[] nativeSeeds = sources.getNativeSeeds();
+        final Class<?> implementingClass = sources.getImplementingClass();
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(implementingClass.getConstructor(nativeSeeds[i].getClass()).newInstance(nativeSeeds[i]));
         }
     }
 
