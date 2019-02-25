@@ -51,16 +51,17 @@ public class SmallMeanPoissonSampler
     /**
      * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0}.
+     * @throws IllegalArgumentException if {@code mean <= 0} or
+     * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
     public SmallMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
         this.rng = rng;
         if (mean <= 0) {
-            throw new IllegalArgumentException(mean + " <= " + 0);
+            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
         }
         if (mean > MAX_MEAN) {
-            throw new IllegalArgumentException(mean + " > " + MAX_MEAN);
+            throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
         }
 
         p0 = Math.exp(-mean);

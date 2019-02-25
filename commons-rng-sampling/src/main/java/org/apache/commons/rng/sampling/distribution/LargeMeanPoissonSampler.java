@@ -104,11 +104,11 @@ public class LargeMeanPoissonSampler
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
         if (mean <= 0) {
-          throw new IllegalArgumentException(mean + " <= " + 0);
+            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
         }
         // The algorithm is not valid if Math.floor(mean) is not an integer.
         if (mean > MAX_MEAN) {
-            throw new IllegalArgumentException(mean + " > " + MAX_MEAN);
+            throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
         }
         this.rng = rng;
 

@@ -38,8 +38,9 @@ public class LargeMeanPoissonSamplerTest {
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double mean = Integer.MAX_VALUE / 2 + 1;
         @SuppressWarnings("unused")
-        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, Integer.MAX_VALUE / 2 + 1);
+        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
     }
 
     /**
@@ -49,8 +50,9 @@ public class LargeMeanPoissonSamplerTest {
     public void testConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double mean = 0;
         @SuppressWarnings("unused")
-        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, 0);
+        LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
     }
 
     /**
@@ -121,7 +123,6 @@ public class LargeMeanPoissonSamplerTest {
      *
      * @param rng1  the first random provider
      * @param rng2  the second random provider
-     * @param cache the cache
      * @param mean  the mean
      */
     private static void testPoissonSamples(
@@ -136,7 +137,8 @@ public class LargeMeanPoissonSamplerTest {
         final LargeMeanPoissonSamplerState state2 = ((LargeMeanPoissonSampler)s2).getState();
         Assert.assertEquals("State lambdas are not equal", state1.getLambda(), state2.getLambda());
         Assert.assertNotSame("States are the same object", state1, state2);
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 10; j++) {
             Assert.assertEquals("Not the same sample", s1.sample(), s2.sample());
+        }
     }
 }

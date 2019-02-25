@@ -64,10 +64,14 @@ public class AhrensDieterExponentialSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of this distribution.
+     * @throws IllegalArgumentException if {@code mean <= 0}
      */
     public AhrensDieterExponentialSampler(UniformRandomProvider rng,
                                           double mean) {
         super(null);
+        if (mean <= 0) {
+            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
+        }
         this.rng = rng;
         this.mean = mean;
     }

@@ -38,6 +38,7 @@ public class BoxMullerLogNormalSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param scale Scale of the log-normal distribution.
      * @param shape Shape of the log-normal distribution.
+     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
      */
     public BoxMullerLogNormalSampler(UniformRandomProvider rng,
                                      double scale,

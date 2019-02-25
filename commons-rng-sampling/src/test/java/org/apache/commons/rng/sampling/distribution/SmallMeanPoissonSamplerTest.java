@@ -22,13 +22,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * This test checks the {@link SmallMeanPoissonSampler} can be created
- * from a saved state.
+ * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
  */
 public class SmallMeanPoissonSamplerTest {
-
-    // Edge cases for construction
-
     /**
      * Test the constructor with a bad mean.
      */
@@ -36,8 +32,9 @@ public class SmallMeanPoissonSamplerTest {
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double mean = Integer.MAX_VALUE / 2 + 1;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, Integer.MAX_VALUE / 2 + 1);
+        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
     }
 
     /**
@@ -47,8 +44,9 @@ public class SmallMeanPoissonSamplerTest {
     public void testConstructorThrowsWithZeroMean() {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double mean = 0;
         @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, 0);
+        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
     }
 
     /**
