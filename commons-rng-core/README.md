@@ -34,7 +34,7 @@
  | 3) Example Properties                                                |
  |                                                                      |
  |  <properties>                                                        |
- |    <commons.componentid>math</commons.componentid>                   |
+ |    <commons.componentid>rng</commons.componentid>                    |
  |    <commons.release.version>1.2</commons.release.version>            |
  |  </properties>                                                       |
  |                                                                      |
@@ -43,18 +43,22 @@
 Apache Commons RNG Core
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-core.svg?branch=master)](https://travis-ci.org/apache/commons-rng-core)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-core/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-core)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-core/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-core/1.2)
 
 Pure Java implementations of random numbers generator algorithms.
+  Code in this module should not be used directly by applications; please use
+  the client interface defined in module "commons-rng-client-api" and the factory
+  methods defined in module "commons-rng-simple". In a future release, modularization
+  may be enforced through JPMS access restrictions.
 
 Documentation
 -------------
 
-More information can be found on the [Apache Commons RNG Core homepage](https://commons.apache.org/proper/commons-rng).
-The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
+More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
+The [Javadoc](https://commons.apache.org/proper/commons-rng/commons-rng-core/apidocs/) can be browsed.
 Questions related to the usage of Apache Commons RNG Core should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
@@ -67,7 +71,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-core</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 
@@ -92,7 +96,7 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like Apache Commons RNG Core? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Apache Commons RNG? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------
