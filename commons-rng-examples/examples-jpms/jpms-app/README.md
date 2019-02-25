@@ -34,7 +34,7 @@
  | 3) Example Properties                                                |
  |                                                                      |
  |  <properties>                                                        |
- |    <commons.componentid>math</commons.componentid>                   |
+ |    <commons.componentid>rng</commons.componentid>                    |
  |    <commons.release.version>1.2</commons.release.version>            |
  |  </properties>                                                       |
  |                                                                      |
@@ -43,18 +43,18 @@
 JPMS module example (application)
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng-examples-jpms-app.svg?branch=master)](https://travis-ci.org/apache/commons-rng-examples-jpms-app)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng-examples-jpms-app/badge.svg?branch=master)](https://coveralls.io/r/apache/commons-rng-examples-jpms-app)
+[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jpms-app/)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-jpms-app/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-jpms-app/1.2)
 
 Testing JPMS. Code in this module is not part of the public API.
 
 Documentation
 -------------
 
-More information can be found on the [JPMS module example (application) homepage](https://commons.apache.org/proper/commons-rng).
-The [Javadoc](https://commons.apache.org/proper/commons-rng/javadocs/api-release) can be browsed.
+More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
+The [Javadoc](https://commons.apache.org/proper/commons-rng/commons-rng-examples-jpms-app/apidocs/) can be browsed.
 Questions related to the usage of JPMS module example (application) should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-jpms-app</artifactId>
-  <version>1.0</version>
+  <version>1.2</version>
 </dependency>
 ```
 
@@ -92,7 +92,7 @@ See the `NOTICE.txt` file for required notices and attributions.
 
 Donations
 ---------
-You like JPMS module example (application)? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
+You like Apache Commons RNG? Then [donate back to the ASF](https://www.apache.org/foundation/contributing.html) to support the development.
 
 Additional Resources
 --------------------
