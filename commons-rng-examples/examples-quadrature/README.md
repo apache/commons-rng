@@ -48,7 +48,7 @@ Quadrature example
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-quadrature/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-quadrature/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-quadrature/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-quadrature/1.2)
 
-Application for calling external tools that perform stringent uniformity tests.
+Contains examples for computing numerical quadrature (integration).
   Code in this module is not part of the public API.
 
 Documentation

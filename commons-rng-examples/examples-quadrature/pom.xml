@@ -31,7 +31,7 @@
   <version>1.3-SNAPSHOT</version>
   <name>Quadrature example</name>
 
-  <description>Application for calling external tools that perform stringent uniformity tests.
+  <description>Contains examples for computing numerical quadrature (integration).
   Code in this module is not part of the public API.</description>
 
   <properties>
