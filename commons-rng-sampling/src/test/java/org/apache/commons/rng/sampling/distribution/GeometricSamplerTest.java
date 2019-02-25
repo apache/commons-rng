@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,7 +45,7 @@ public class GeometricSamplerTest {
      */
     @Test
     public void testProbabilityOfSuccessIsOneSamplerToString() {
-        final UniformRandomProvider unusedRng = new SplitMix64(0L);
+        final UniformRandomProvider unusedRng = RandomSource.create(RandomSource.SPLIT_MIX_64);
         final GeometricSampler sampler = new GeometricSampler(unusedRng, 1);
         Assert.assertTrue("Missing 'Geometric' from toString",
             sampler.toString().contains("Geometric"));
@@ -75,20 +74,22 @@ public class GeometricSamplerTest {
     /**
      * Test probability of success {@code >1} is not allowed.
      */
-    @SuppressWarnings("unused")
     @Test(expected = IllegalArgumentException.class)
     public void testProbabilityOfSuccessAboveOneThrows() {
-        final UniformRandomProvider unusedRng = new SplitMix64(0L);
-        new GeometricSampler(unusedRng, Math.nextUp(1.0));
+        final UniformRandomProvider unusedRng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double probabilityOfSuccess = Math.nextUp(1.0);
+        @SuppressWarnings("unused")
+        final GeometricSampler sampler = new GeometricSampler(unusedRng, probabilityOfSuccess);
     }
 
     /**
      * Test probability of success {@code 0} is not allowed.
      */
-    @SuppressWarnings("unused")
     @Test(expected = IllegalArgumentException.class)
     public void testProbabilityOfSuccessIsZeroThrows() {
-        final UniformRandomProvider unusedRng = new SplitMix64(0L);
-        new GeometricSampler(unusedRng, 0);
+        final UniformRandomProvider unusedRng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final double probabilityOfSuccess = 0;
+        @SuppressWarnings("unused")
+        final GeometricSampler sampler = new GeometricSampler(unusedRng, probabilityOfSuccess);
     }
 }

@@ -47,11 +47,18 @@ public class ChengBetaSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Distribution first shape parameter.
      * @param beta Distribution second shape parameter.
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
      */
     public ChengBetaSampler(UniformRandomProvider rng,
                             double alpha,
                             double beta) {
         super(null);
+        if (alpha <= 0) {
+            throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
+        }
+        if (beta <= 0) {
+            throw new IllegalArgumentException("beta is not strictly positive: " + beta);
+        }
         this.rng = rng;
         alphaShape = alpha;
         betaShape = beta;
