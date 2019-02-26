@@ -135,8 +135,7 @@ public class DiscreteProbabilityCollectionSampler<T> {
             index = -index - 1;
         }
 
-        if (index >= 0 &&
-            index < cumulativeProbabilities.length &&
+        if (index < cumulativeProbabilities.length &&
             rand < cumulativeProbabilities[index]) {
             return items.get(index);
         }
