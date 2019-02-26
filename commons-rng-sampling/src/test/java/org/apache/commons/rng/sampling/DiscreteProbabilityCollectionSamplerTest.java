@@ -36,36 +36,42 @@ public class DiscreteProbabilityCollectionSamplerTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition1() {
+        // Size mismatch
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d});
     }
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition2() {
+        // Negative probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, -1d});
     }
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition3() {
+        // Probabilities do not sum above 0
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, 0d});
     }
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition4() {
+        // NaN probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, Double.NaN});
     }
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition5() {
+        // Infinite probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, Double.POSITIVE_INFINITY});
     }
     @Test(expected=IllegalArgumentException.class)
     public void testPrecondition6() {
+        // Empty Map<T, Double> not allowed
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          new HashMap<Double,Double>());
     }
@@ -121,7 +127,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     /**
      * Edge-case test:
      * Create a sampler that will return over 1 for nextDouble() forcing the binary search to
-     * identify insertion at the end of the cumulative probability array
+     * identify insertion at the end of the cumulative probability array.
      */
     @Test
     public void testSampleWithProbabilityPastLastItem() {
