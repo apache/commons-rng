@@ -100,7 +100,6 @@ public class DiscreteProbabilityCollectionSamplerTest {
         Assert.assertEquals(expectedVariance, variance, 2e-3);
     }
 
-
     /**
      * Edge-case test:
      * Create a sampler that will return 1 for nextDouble() forcing the binary search to
@@ -108,20 +107,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
      */
     @Test
     public void testSampleWithProbabilityAtLastItem() {
-        final List<Double> list = Arrays.asList(new Double[] {1d, 2d});
-        UniformRandomProvider dummyRng = new SplitMix64(0L) {
-            @Override
-            public double nextDouble() {
-                return 1;
-            }
-        };
-
-        final DiscreteProbabilityCollectionSampler<Double> sampler =
-            new DiscreteProbabilityCollectionSampler<Double>(dummyRng,
-                                                             list,
-                                                             new double[] {0.5, 0.5});
-        final Double item = sampler.sample();
-        Assert.assertEquals(list.get(list.size() - 1), item);
+        sampleWithProbabilityForLastItem(false);
     }
 
     /**
@@ -131,19 +117,38 @@ public class DiscreteProbabilityCollectionSamplerTest {
      */
     @Test
     public void testSampleWithProbabilityPastLastItem() {
-        final List<Double> list = Arrays.asList(new Double[] {1d, 2d});
-        UniformRandomProvider dummyRng = new SplitMix64(0L) {
-            @Override
-            public double nextDouble() {
-                return 1.1;
-            }
+        sampleWithProbabilityForLastItem(true);
+    }
+
+    private static void sampleWithProbabilityForLastItem(boolean pastLast) {
+        // Ensure the samples pick probability 0 (the first item) and then
+        // a probability (for the second item) that hits an edge case.
+        final double probability = pastLast ? 1.1 : 1;
+        final UniformRandomProvider dummyRng = new UniformRandomProvider() {
+            int count;
+            public long nextLong(long n) { return 0; }
+            public long nextLong() { return 0; }
+            public int nextInt(int n) { return 0; }
+            public int nextInt() { return 0; }
+            public float nextFloat() { return 0; }
+            // Return 0 then the given probability
+            public double nextDouble() { return (count++ == 0) ? 0 : probability; }
+            public void nextBytes(byte[] bytes, int start, int len) {}
+            public void nextBytes(byte[] bytes) {}
+            public boolean nextBoolean() { return false; }
         };
 
+        final List<Double> items = Arrays.asList(new Double[] {1d, 2d});
         final DiscreteProbabilityCollectionSampler<Double> sampler =
             new DiscreteProbabilityCollectionSampler<Double>(dummyRng,
-                                                             list,
+                                                             items,
                                                              new double[] {0.5, 0.5});
-        final Double item = sampler.sample();
-        Assert.assertEquals(list.get(list.size() - 1), item);
+        final Double item1 = sampler.sample();
+        final Double item2 = sampler.sample();
+        // Check they are in the list
+        Assert.assertTrue("Sample item1 is not from the list", items.contains(item1));
+        Assert.assertTrue("Sample item2 is not from the list", items.contains(item2));
+        // Test the two samples are different items
+        Assert.assertNotSame("Item1 and 2 should be different", item1, item2);
     }
 }
