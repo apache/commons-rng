@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 
 /**
  * Test for {@link UnitSphereSampler}.
@@ -77,6 +78,21 @@ public class UnitSphereSamplerTest {
             };
 
         new UnitSphereSampler(1, bad).nextVector();
+    }
+
+    /** Cf. RNG-55. */
+    @Test
+    public void testBadProvider1ThenGoodProvider() {
+        // Create a provider that will create a bad first sample but then recover.
+        // This checks recursion will return a good value.
+        final UniformRandomProvider bad = new SplitMix64(0L) {
+                int count;
+                public long nextLong() { return (count++ == 0) ? 0 : super.nextLong(); }
+                public double nextDouble() { return (count++ == 0) ? 0 : super.nextDouble(); }
+            };
+
+        final double[] vector = new UnitSphereSampler(1, bad).nextVector();
+        Assert.assertEquals(1, vector.length);
     }
 
     /**
