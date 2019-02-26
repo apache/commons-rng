@@ -18,9 +18,13 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
@@ -60,6 +64,11 @@ public class DiscreteProbabilityCollectionSamplerTest {
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, Double.POSITIVE_INFINITY});
     }
+    @Test(expected=IllegalArgumentException.class)
+    public void testPrecondition6() {
+        new DiscreteProbabilityCollectionSampler<Double>(rng,
+                                                         new HashMap<Double,Double>());
+    }
 
     @Test
     public void testSample() {
@@ -83,5 +92,52 @@ public class DiscreteProbabilityCollectionSamplerTest {
         Assert.assertEquals(expectedMean, mean, 1e-3);
         final double variance = sumOfSquares / n - mean * mean;
         Assert.assertEquals(expectedVariance, variance, 2e-3);
+    }
+
+
+    /**
+     * Edge-case test:
+     * Create a sampler that will return 1 for nextDouble() forcing the binary search to
+     * identify the end item of the cumulative probability array.
+     */
+    @Test
+    public void testSampleWithProbabilityAtLastItem() {
+        final List<Double> list = Arrays.asList(new Double[] {1d, 2d});
+        UniformRandomProvider dummyRng = new SplitMix64(0L) {
+            @Override
+            public double nextDouble() {
+                return 1;
+            }
+        };
+
+        final DiscreteProbabilityCollectionSampler<Double> sampler =
+            new DiscreteProbabilityCollectionSampler<Double>(dummyRng,
+                                                             list,
+                                                             new double[] {0.5, 0.5});
+        final Double item = sampler.sample();
+        Assert.assertEquals(list.get(list.size() - 1), item);
+    }
+
+    /**
+     * Edge-case test:
+     * Create a sampler that will return over 1 for nextDouble() forcing the binary search to
+     * identify insertion at the end of the cumulative probability array
+     */
+    @Test
+    public void testSampleWithProbabilityPastLastItem() {
+        final List<Double> list = Arrays.asList(new Double[] {1d, 2d});
+        UniformRandomProvider dummyRng = new SplitMix64(0L) {
+            @Override
+            public double nextDouble() {
+                return 1.1;
+            }
+        };
+
+        final DiscreteProbabilityCollectionSampler<Double> sampler =
+            new DiscreteProbabilityCollectionSampler<Double>(dummyRng,
+                                                             list,
+                                                             new double[] {0.5, 0.5});
+        final Double item = sampler.sample();
+        Assert.assertEquals(list.get(list.size() - 1), item);
     }
 }
