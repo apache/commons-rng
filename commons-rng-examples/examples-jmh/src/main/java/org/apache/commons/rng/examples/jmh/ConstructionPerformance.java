@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.ISAACRandom;
-import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source32.JDKRandom;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.MersenneTwister;
@@ -57,8 +56,20 @@ import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
 
 /**
- * Executes a benchmark to compare the speed of construction of random number
- * providers.
+ * Executes a benchmark to compare the speed of construction of random number providers.
+ *
+ * <p>Note that random number providers are created and then used. Thus the construction time must
+ * be analysed together with the run time performance benchmark (see
+ * {@link GenerationPerformance}).
+ *
+ * <pre>
+ * [Total time] = [Construction time] + [Run time]
+ * </pre>
+ *
+ * <p>Selection of a suitable random number provider based on construction speed should consider
+ * when the construction time is a large fraction of the run time. In the majority of cases the
+ * run time will be the largest component of the total time and the provider should be selected
+ * based on its other properties such as the period, statistical randomness and speed.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -393,39 +404,12 @@ public class ConstructionPerformance {
     }
 
     /**
-     * Number of random values to generate after construction.
-     */
-    @Param({"0", "1", "100", "10000"})
-    private int numValues;
-
-    /**
-     * Consume the generator and run the native generation method a set number of times.
-     *
-     * @param bh Data sink.
-     * @param rng the random generator
-     */
-    private void runGenerator(Blackhole bh, UniformRandomProvider rng) {
-        bh.consume(rng);
-        // For fairness this should run when no values are generated
-        if (rng instanceof IntProvider) {
-            for (int i = numValues; i-- != 0; ) {
-                bh.consume(rng.nextInt());
-            }
-        } else {
-            // Assume a long provider
-            for (int i = numValues; i-- != 0; ) {
-                bh.consume(rng.nextLong());
-            }
-        }
-    }
-
-    /**
      * @param bh Data sink.
      */
     @Benchmark
     public void newJDKRandom(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new JDKRandom(LONG_SEEDS[i]));
+            bh.consume(new JDKRandom(LONG_SEEDS[i]));
         }
     }
 
@@ -435,7 +419,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell512a(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well512a(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well512a(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -445,7 +429,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell1024a(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well1024a(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well1024a(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -455,7 +439,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell19937a(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well19937a(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well19937a(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -465,7 +449,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell19937c(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well19937c(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well19937c(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -475,7 +459,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell44497a(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well44497a(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well44497a(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -485,7 +469,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newWell44497b(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new Well44497b(INT_ARRAY_SEEDS[i]));
+            bh.consume(new Well44497b(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -495,7 +479,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newMersenneTwister(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new MersenneTwister(INT_ARRAY_SEEDS[i]));
+            bh.consume(new MersenneTwister(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -505,7 +489,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newISAACRandom(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new ISAACRandom(INT_ARRAY_SEEDS[i]));
+            bh.consume(new ISAACRandom(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -515,7 +499,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newSplitMix64(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new SplitMix64(LONG_SEEDS[i]));
+            bh.consume(new SplitMix64(LONG_SEEDS[i]));
         }
     }
 
@@ -525,7 +509,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newXorShift1024Star(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new XorShift1024Star(LONG_ARRAY_SEEDS[i]));
+            bh.consume(new XorShift1024Star(LONG_ARRAY_SEEDS[i]));
         }
     }
 
@@ -535,7 +519,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newTwoCmres(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new TwoCmres(INTEGER_SEEDS[i]));
+            bh.consume(new TwoCmres(INTEGER_SEEDS[i]));
         }
     }
 
@@ -545,7 +529,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newMersenneTwister64(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new MersenneTwister64(LONG_ARRAY_SEEDS[i]));
+            bh.consume(new MersenneTwister64(LONG_ARRAY_SEEDS[i]));
         }
     }
 
@@ -555,7 +539,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newMultiplyWithCarry256(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new MultiplyWithCarry256(INT_ARRAY_SEEDS[i]));
+            bh.consume(new MultiplyWithCarry256(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -565,7 +549,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newKISSRandom(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, new KISSRandom(INT_ARRAY_SEEDS[i]));
+            bh.consume(new KISSRandom(INT_ARRAY_SEEDS[i]));
         }
     }
 
@@ -581,7 +565,7 @@ public class ConstructionPerformance {
         final Object[] nativeSeeds = sources.getNativeSeeds();
         final Constructor<?> constructor = sources.getConstructor();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, (UniformRandomProvider) constructor.newInstance(nativeSeeds[i]));
+            bh.consume(constructor.newInstance(nativeSeeds[i]));
         }
     }
 
@@ -597,8 +581,7 @@ public class ConstructionPerformance {
         final Object[] nativeSeeds = sources.getNativeSeeds();
         final Class<?> implementingClass = sources.getImplementingClass();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, (UniformRandomProvider) implementingClass.getConstructor(
-                nativeSeeds[i].getClass()).newInstance(nativeSeeds[i]));
+            bh.consume(implementingClass.getConstructor(nativeSeeds[i].getClass()).newInstance(nativeSeeds[i]));
         }
     }
 
@@ -610,7 +593,7 @@ public class ConstructionPerformance {
     public void createNullSeed(Sources sources, Blackhole bh) {
         final RandomSource randomSource = sources.getRandomSource();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, RandomSource.create(randomSource, null));
+            bh.consume(RandomSource.create(randomSource, null));
         }
     }
 
@@ -623,7 +606,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final Object[] nativeSeeds = sources.getNativeSeeds();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, RandomSource.create(randomSource, nativeSeeds[i]));
+            bh.consume(RandomSource.create(randomSource, nativeSeeds[i]));
         }
     }
 
@@ -642,7 +625,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final Object[] nativeSeeds1 = sources.getNativeSeeds1();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, RandomSource.create(randomSource, nativeSeeds1[i]));
+            bh.consume(RandomSource.create(randomSource, nativeSeeds1[i]));
         }
     }
 
@@ -654,7 +637,7 @@ public class ConstructionPerformance {
     public void createLongSeed(Sources sources, Blackhole bh) {
         final RandomSource randomSource = sources.getRandomSource();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, RandomSource.create(randomSource, LONG_SEEDS[i]));
+            bh.consume(RandomSource.create(randomSource, LONG_SEEDS[i]));
         }
     }
 
@@ -667,7 +650,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final byte[][] byteSeeds = sources.getByteSeeds();
         for (int i = 0; i < SEEDS; i++) {
-            runGenerator(bh, RandomSource.create(randomSource, byteSeeds[i]));
+            bh.consume(RandomSource.create(randomSource, byteSeeds[i]));
         }
     }
  }
