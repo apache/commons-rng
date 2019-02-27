@@ -80,7 +80,7 @@ public class GenerationPerformance {
             return provider;
         }
 
-        /** Intantiates generator. */
+        /** Instantiates generator. */
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
