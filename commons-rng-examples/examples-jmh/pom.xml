@@ -68,7 +68,7 @@
     <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 
     <!-- JMH Benchmark related properties: version, name of the benchmarking uber jar. -->
-    <jmh.version>1.13</jmh.version>
+    <jmh.version>1.21</jmh.version>
     <uberjar.name>benchmarks</uberjar.name>
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
   </properties>
