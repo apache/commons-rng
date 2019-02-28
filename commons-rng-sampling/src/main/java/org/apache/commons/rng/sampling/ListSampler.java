@@ -25,7 +25,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from a {@link List}.
  *
- * This class also contains utilities for shuffling a {@link List} in-place.
+ * <p>This class also contains utilities for shuffling a {@link List} in-place.</p>
  *
  * @since 1.0
  */
@@ -43,6 +43,10 @@ public class ListSampler {
      * <p>
      * Sampling is without replacement; but if the source collection
      * contains identical objects, the sample may include repeats.
+     * </p>
+     *
+     * <p>
+     * Sampling uses {@link UniformRandomProvider#nextInt(int)}.
      * </p>
      *
      * @param <T> Type of the list items.
@@ -88,6 +92,10 @@ public class ListSampler {
      * Fisher-Yates</a> algorithm.
      * The {@code start} and {@code pos} parameters select which part
      * of the array is randomized and which is left untouched.
+     *
+     * <p>
+     * Sampling uses {@link UniformRandomProvider#nextInt(int)}.
+     * </p>
      *
      * @param <T> Type of the list items.
      * @param rng Random number generator.

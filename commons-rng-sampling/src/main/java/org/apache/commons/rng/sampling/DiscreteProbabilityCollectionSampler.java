@@ -32,6 +32,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Note that if all unique items are assigned the same probability,
  * it is much more efficient to use {@link CollectionSampler}.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @param <T> Type of items in the collection.
  *
  * @since 1.1

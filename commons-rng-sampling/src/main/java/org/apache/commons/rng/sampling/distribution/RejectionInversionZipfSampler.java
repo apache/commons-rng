@@ -22,6 +22,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Implementation of the <a href="https://en.wikipedia.org/wiki/Zipf's_law">Zipf distribution</a>.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.0
  */
 public class RejectionInversionZipfSampler

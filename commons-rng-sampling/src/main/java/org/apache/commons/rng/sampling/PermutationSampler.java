@@ -23,7 +23,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Class for representing <a href="https://en.wikipedia.org/wiki/Permutation">permutations</a>
  * of a sequence of integers.
  *
- * <p>This class also contains utilities for shuffling an {@code int[]} array in-place.
+ * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
+ *
+ * <p>This class also contains utilities for shuffling an {@code int[]} array in-place.</p>
  */
 public class PermutationSampler {
     /** Domain of the permutation. */
@@ -40,7 +42,7 @@ public class PermutationSampler {
      * length {@code k} whose entries are selected randomly, without
      * repetition, from the integers 0, 1, ..., {@code n}-1 (inclusive).
      * The returned array represents a permutation of {@code n} taken
-     * {@code k}.
+     * {@code k}.</p>
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param n Domain of the permutation.
@@ -85,6 +87,8 @@ public class PermutationSampler {
      * Fisher-Yates</a> algorithm.
      * The {@code start} and {@code towardHead} parameters select which part
      * of the array is randomized and which is left untouched.
+     *
+     * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
      *
      * @param rng Random number generator.
      * @param list Array whose entries will be shuffled (in-place).

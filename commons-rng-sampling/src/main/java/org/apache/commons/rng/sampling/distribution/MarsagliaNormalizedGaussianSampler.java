@@ -25,6 +25,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * This is a variation of the algorithm implemented in
  * {@link BoxMullerNormalizedGaussianSampler}.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.1
  */
 public class MarsagliaNormalizedGaussianSampler

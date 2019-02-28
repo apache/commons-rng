@@ -32,9 +32,16 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  *  </li>
  * </ul>
  *
- * @since 1.1
+ * <p>This sampler is suitable for {@code mean >= 40}.</p>
  *
- * This sampler is suitable for {@code mean >= 40}.
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextLong()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ * </ul>
+ *
+ * @since 1.1
  */
 public class LargeMeanPoissonSampler
     implements DiscreteSampler {

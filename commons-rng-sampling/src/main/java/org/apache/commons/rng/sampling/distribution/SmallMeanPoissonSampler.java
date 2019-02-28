@@ -29,10 +29,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  </li>
  * </ul>
  *
- * @since 1.1
+ * <p>This sampler is suitable for {@code mean < 40}.
+ * For large means, {@link LargeMeanPoissonSampler} should be used instead.</p>
  *
- * This sampler is suitable for {@code mean < 40}.
- * For large means, {@link LargeMeanPoissonSampler} should be used instead.
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
+ * @since 1.1
  */
 public class SmallMeanPoissonSampler
     implements DiscreteSampler {

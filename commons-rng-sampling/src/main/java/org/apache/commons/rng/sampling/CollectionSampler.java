@@ -26,6 +26,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from a {@link Collection}.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
+ *
  * @param <T> Type of items in the collection.
  *
  * @since 1.0

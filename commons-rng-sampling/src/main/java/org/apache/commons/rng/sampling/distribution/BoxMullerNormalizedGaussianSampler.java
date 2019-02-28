@@ -23,6 +23,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Box-Muller algorithm</a> for sampling from Gaussian distribution with
  * mean 0 and standard deviation 1.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.1
  */
 public class BoxMullerNormalizedGaussianSampler
