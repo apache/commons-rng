@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-74">
+        "DiscreteUniformSampler": Algorithms for small and large integer ranges have
+        been delegated to specialised classes.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-72">
         Add new JMH benchmark ConstructionPerformance.
       </action>
