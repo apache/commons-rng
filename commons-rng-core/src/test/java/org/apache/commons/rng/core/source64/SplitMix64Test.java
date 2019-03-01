@@ -35,6 +35,11 @@ public class SplitMix64Test {
             0x24b5d9d7a00a3140L, 0x79d983d781a34a3cL, 0x582e4a84d595f5ecL, 0x7316fe8b0f606d20L,
         };
 
-        RandomAssert.assertEquals(expectedSequence, new SplitMix64(0x1a2b3c4d5e6f7531L));
+        final long seed = 0x1a2b3c4d5e6f7531L;
+
+        RandomAssert.assertEquals(expectedSequence, new SplitMix64(seed));
+
+        // Test with Long
+        RandomAssert.assertEquals(expectedSequence, new SplitMix64(Long.valueOf(seed)));
     }
 }

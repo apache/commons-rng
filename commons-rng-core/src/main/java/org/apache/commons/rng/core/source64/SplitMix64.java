@@ -37,7 +37,18 @@ public class SplitMix64 extends LongProvider {
      *
      * @param seed Initial seed.
      */
+    public SplitMix64(long seed) {
+        state = seed;
+    }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param seed Initial seed.
+     */
     public SplitMix64(Long seed) {
+        // Support for Long to allow instantiation through the
+        // rng.simple.RandomSource factory methods.
         setSeedInternal(seed);
     }
 
@@ -47,7 +58,7 @@ public class SplitMix64 extends LongProvider {
      * @param seed Seed.
      */
     private void setSeedInternal(Long seed) {
-        state = seed;
+        state = seed.longValue();
     }
 
     /** {@inheritDoc} */
