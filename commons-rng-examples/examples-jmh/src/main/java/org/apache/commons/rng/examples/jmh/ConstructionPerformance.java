@@ -76,7 +76,7 @@ import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceIntern
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
-@Fork(value = 1, jvmArgs = { "-server", "-Xms128M", "-Xmx128M" })
+@Fork(value = 1, jvmArgs = { "-server", "-Xms512M", "-Xmx512M" })
 public class ConstructionPerformance {
 
     /** The number of different constructor seeds. */
@@ -111,8 +111,8 @@ public class ConstructionPerformance {
                 longArray[j] = rng.nextLong();
                 intArray[j] = (int) longArray[j];
             }
-            LONG_SEEDS[i] = longArray[i];
-            INTEGER_SEEDS[i] = intArray[i];
+            LONG_SEEDS[i] = longArray[0];
+            INTEGER_SEEDS[i] = intArray[0];
             LONG_ARRAY_SEEDS[i] = longArray;
             INT_ARRAY_SEEDS[i] = intArray;
             BYTE_ARRAY_SEEDS[i] = NumberFactory.makeByteArray(longArray);
