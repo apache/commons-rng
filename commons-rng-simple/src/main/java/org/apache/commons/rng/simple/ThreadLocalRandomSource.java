@@ -81,7 +81,7 @@ public final class ThreadLocalRandomSource {
      */
     private static class ThreadLocalRng extends ThreadLocal<UniformRandomProvider> {
         /** The source. */
-        protected final RandomSource source;
+        private final RandomSource source;
 
         /**
          * Create a new instance.
