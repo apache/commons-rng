@@ -42,26 +42,26 @@ import org.apache.commons.rng.simple.ThreadLocalRandomSource;
  * random numbers on multiple-threads.
  */
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class ThreadLocalPerformance {
+
     /**
-     * The benchmark state (retrieve the various "RandomSource"s).
+     * The benchmark state (to retrieve the various "RandomSource"s).
      */
     @State(Scope.Benchmark)
     public static class Sources {
         /**
          * RNG providers.
          */
-        @Param({"SPLIT_MIX_64",
-                "MWC_256" })
+        @Param({"SPLIT_MIX_64"})
         private String randomSourceName;
 
         /** The random source. */
-        private RandomSource randomSource;
+        protected RandomSource randomSource;
 
         /**
          * @return the random source
@@ -78,9 +78,38 @@ public class ThreadLocalPerformance {
     }
 
     /**
+     * The benchmark state (to retrieve the various "RandomSource"s thread locally).
+     */
+    @State(Scope.Benchmark)
+    public static class LocalSources extends Sources {
+        /** The thread-local random provider. */
+        private ThreadLocal<UniformRandomProvider> rng;
+
+        /**
+         * @return the random number generator
+         */
+        public UniformRandomProvider getRNG() {
+            return rng.get();
+        }
+
+        /** Instantiates the ThreadLocal holding the random source. */
+        @Override
+        @Setup
+        public void setup() {
+            super.setup();
+
+            rng = new ThreadLocal<UniformRandomProvider>() {
+                @Override
+                protected UniformRandomProvider initialValue() {
+                    return RandomSource.create(randomSource);
+                }
+            };
+        }
+    }
+    /**
      * Number of random values to generate.
      */
-    @Param({"1", "10", "100"})
+    @Param({"0", "1"})
     private int numValues;
 
     /**
@@ -154,6 +183,21 @@ public class ThreadLocalPerformance {
     @Threads(4)
     public long threadLocalRandomSourceCurrent(Sources sources) {
         final UniformRandomProvider rng = ThreadLocalRandomSource.current(sources.getRandomSource());
+        long result = 0;
+        for (int i = 0; i < numValues; i++) {
+            result = result ^ rng.nextLong();
+        }
+        return result;
+    }
+
+    /**
+     * @param localSources Local source of randomness.
+     * @return the result
+     */
+    @Benchmark
+    @Threads(4)
+    public long threadLocalRNG(LocalSources localSources) {
+        final UniformRandomProvider rng = localSources.getRNG();
         long result = 0;
         for (int i = 0; i < numValues; i++) {
             result = result ^ rng.nextLong();
