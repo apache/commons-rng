@@ -187,13 +187,13 @@ public class LargeMeanPoissonSampler
             0 : // No lambda fraction
             smallMeanPoissonSampler.sample();
 
-        double x = 0;
-        double y = 0;
-        double v = 0;
-        int a = 0;
-        double t = 0;
-        double qr = 0;
-        double qa = 0;
+        double x;
+        double y;
+        double v;
+        int a;
+        double t;
+        double qr;
+        double qa;
         while (true) {
             final double u = rng.nextDouble();
             if (u <= p1) {

@@ -49,7 +49,7 @@ public class PoissonSampler
      */
     static final double PIVOT = 40;
     /** The internal Poisson sampler. */
-    private final DiscreteSampler poissonSampler;
+    private final DiscreteSampler poissonSamplerDelegate;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -63,7 +63,7 @@ public class PoissonSampler
 
         // Delegate all work to specialised samplers.
         // These should check the input arguments.
-        poissonSampler = mean < PIVOT ?
+        poissonSamplerDelegate = mean < PIVOT ?
             new SmallMeanPoissonSampler(rng, mean) :
             new LargeMeanPoissonSampler(rng, mean);
     }
@@ -71,12 +71,12 @@ public class PoissonSampler
     /** {@inheritDoc} */
     @Override
     public int sample() {
-        return poissonSampler.sample();
+        return poissonSamplerDelegate.sample();
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return poissonSampler.toString();
+        return poissonSamplerDelegate.toString();
     }
 }
