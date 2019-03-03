@@ -40,6 +40,25 @@ public class GeometricSamplerTest {
     }
 
     /**
+     * Test to demonstrate that any probability of success under one produces a valid
+     * mean for the exponential distribution.
+     */
+    @Test
+    public void testProbabilityOfSuccessUnderOneIsValid() {
+        // The sampler explicitly handles probabilityOfSuccess == 1 as an edge case.
+        // Anything under it should be valid for sampling from an ExponentialDistribution.
+        final double probabilityOfSuccess = Math.nextAfter(1, -1);
+        // Map to the mean
+        final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
+        // As long as this is finite positive then the sampler is valid
+        Assert.assertTrue(exponentialMean > 0 && exponentialMean <= Double.MAX_VALUE);
+        // The internal exponential sampler validates the mean so demonstrate creating a
+        // geometric sampler does not throw.
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        new GeometricSampler(rng, probabilityOfSuccess);
+    }
+
+    /**
      * Test the edge case where the probability of success is 1 since it uses a different
      * {@link Object#toString()} method to the normal case tested elsewhere.
      */
