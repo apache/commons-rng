@@ -39,8 +39,8 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
     /**
      * @param n Argument.
      * @return {@code n!}
-     * @throws IllegalArgumentException if the result is too large to be represented
-     * by a {@code long} (i.e. if {@code n > 20}).
+     * @throws IndexOutOfBoundsException if the result is too large to be represented
+     * by a {@code long} (i.e. if {@code n > 20}), or {@code n} is negative.
      */
     public static long factorial(int n)  {
         return FACTORIALS[n];
@@ -64,7 +64,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          *
          * @param numValues Number of values of the function to compute.
          * @param cache Existing cache.
-         * @throw IllegalArgumentException if {@code numValues < 0}.
+         * @throw NegativeArraySizeException if {@code numValues < 0}.
          */
         private FactorialLog(int numValues,
                              double[] cache) {
@@ -112,7 +112,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          *
          * @param n Argument.
          * @return {@code log(n!)}.
-         * @throws IllegalArgumentException if {@code n < 0}.
+         * @throw IndexOutOfBoundsException if {@code numValues < 0}.
          */
         public double value(final int n) {
             // Use cache of precomputed values.
