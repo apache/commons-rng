@@ -85,4 +85,9 @@ public class InternalUtilsTest {
     public void testLogFactorialThrowsWhenNegative() {
         FactorialLog.create().value(-1);
     }
+
+    @Test(expected = NegativeArraySizeException.class)
+    public void testLogFactorialWithCacheThrowsWhenNegative() {
+        FactorialLog.create().withCache(-1);
+    }
 }
