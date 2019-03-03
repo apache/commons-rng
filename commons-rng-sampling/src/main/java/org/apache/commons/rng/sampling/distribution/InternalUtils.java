@@ -64,7 +64,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          *
          * @param numValues Number of values of the function to compute.
          * @param cache Existing cache.
-         * @throw NegativeArraySizeException if {@code numValues < 0}.
+         * @throws NegativeArraySizeException if {@code numValues < 0}.
          */
         private FactorialLog(int numValues,
                              double[] cache) {
@@ -112,7 +112,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          *
          * @param n Argument.
          * @return {@code log(n!)}.
-         * @throw IndexOutOfBoundsException if {@code numValues < 0}.
+         * @throws IndexOutOfBoundsException if {@code numValues < 0}.
          */
         public double value(final int n) {
             // Use cache of precomputed values.
