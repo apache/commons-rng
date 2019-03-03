@@ -109,7 +109,7 @@ public class ThreadLocalPerformance {
     /**
      * Number of random values to generate.
      */
-    @Param({"0", "1"})
+    @Param({"0", "1", "10", "100"})
     private int numValues;
 
     /**
@@ -196,7 +196,7 @@ public class ThreadLocalPerformance {
      */
     @Benchmark
     @Threads(4)
-    public long threadLocalRNG(LocalSources localSources) {
+    public long threadLocalUniformRandomProvider(LocalSources localSources) {
         final UniformRandomProvider rng = localSources.getRNG();
         long result = 0;
         for (int i = 0; i < numValues; i++) {
