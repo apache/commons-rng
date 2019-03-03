@@ -21,8 +21,13 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Tests for {@link ThreadLocalRandomSource}.
@@ -39,10 +44,6 @@ public class ThreadLocalRandomSourceTest {
         toIgnore = EnumSet.of(RandomSource.TWO_CMRES_SELECT);
     }
 
-    private static Object[] getData(Object ... data) {
-        return Arrays.copyOf(data, data.length);
-    }
-
     @Test(expected=IllegalArgumentException.class)
     public void testCurrentThrowsForNullRandomSource() {
         ThreadLocalRandomSource.current(null);
@@ -54,7 +55,8 @@ public class ThreadLocalRandomSourceTest {
     }
 
     @Test
-    public void testCurrentForAllRandomSources() {
+    public void testCurrentForAllRandomSources()
+            throws InterruptedException, ExecutionException, TimeoutException {
         final RandomSource[] sources = RandomSource.values();
         final UniformRandomProvider[] rngs = new UniformRandomProvider[sources.length];
 
@@ -74,25 +76,39 @@ public class ThreadLocalRandomSourceTest {
             Assert.assertSame("Failed to return same source: " + sources[i], rngs[i], rng);
         }
 
-        // Build on a new thread. It should be different
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < sources.length; i++) {
-                    if (toIgnore.contains(sources[i])) {
-                        continue;
+        // Build on a new thread
+        final UniformRandomProvider[] rngs2 = new UniformRandomProvider[rngs.length];
+        final ExecutorService executor = Executors.newFixedThreadPool(1);
+        final Future<?> future = executor.submit(
+            new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < sources.length; i++) {
+                        if (toIgnore.contains(sources[i])) {
+                            continue;
+                        }
+                        rngs2[i] = getCurrent(sources[i]);
                     }
-                    final UniformRandomProvider rng = getCurrent(sources[i]);
-                    Assert.assertNotSame("Failed to return different source: " + sources[i], rngs[i], rng);
                 }
+            });
+
+        // Shutdown and wait for task to end
+        executor.shutdown();
+        future.get(30, TimeUnit.SECONDS);
+
+        // The RNG from the new thread should be different
+        for (int i = 0; i < sources.length; i++) {
+            if (toIgnore.contains(sources[i])) {
+                continue;
             }
-        }).start();
+            Assert.assertNotSame("Failed to return different source: " + sources[i], rngs[i], rngs2[i]);
+        }
     }
 
     private static UniformRandomProvider getCurrent(RandomSource source) {
         try {
             return ThreadLocalRandomSource.current(source);
-        } catch (RuntimeException ex) {
+        } catch (final RuntimeException ex) {
             throw new RuntimeException("Failed to get current: " + source, ex);
         }
     }
