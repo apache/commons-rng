@@ -151,8 +151,8 @@ public class NumberFactoryTest {
         Assert.assertEquals(1, Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, 1e-6);
 
         final int noBits = 0;
-        Assert.assertEquals(0, (noBits >>> 8) * 0x1.0p-24f, 0);
         Assert.assertEquals(0, (noBits >>> 9) * 0x1.0p-23f, 0);
+        Assert.assertEquals(0, (noBits >>> 8) * 0x1.0p-24f, 0);
         Assert.assertEquals(0, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f, 0);
     }
 
