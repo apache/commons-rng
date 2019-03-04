@@ -29,29 +29,12 @@ public class NumberFactoryTest {
     final int LONG_SIZE = 8;
 
     /** Test values. */
-    private static final long[] LONG_TEST_VALUES = new long[] {
-        0L,
-        1L,
-        -1L,
-        19337L,
-        1234567891011213L,
-        -11109876543211L,
-        Long.valueOf(Integer.MAX_VALUE),
-        Long.valueOf(Integer.MIN_VALUE),
-        Long.MAX_VALUE,
-        Long.MIN_VALUE,
-    };
+    private static final long[] LONG_TEST_VALUES = new long[] { 0L, 1L, -1L, 19337L, 1234567891011213L,
+            -11109876543211L, Long.valueOf(Integer.MAX_VALUE), Long.valueOf(Integer.MIN_VALUE), Long.MAX_VALUE,
+            Long.MIN_VALUE, };
     /** Test values. */
-    private static final int[] INT_TEST_VALUES = new int[] {
-        0,
-        1,
-        -1,
-        19337,
-        1234567891,
-        -1110987656,
-        Integer.MAX_VALUE,
-        Integer.MIN_VALUE,
-    };
+    private static final int[] INT_TEST_VALUES = new int[] { 0, 1, -1, 19337, 1234567891, -1110987656,
+            Integer.MAX_VALUE, Integer.MIN_VALUE, };
 
     @Test
     public void testMakeIntFromLong() {
@@ -85,8 +68,7 @@ public class NumberFactoryTest {
     @Test
     public void testLongArrayFromByteArray2LongArray() {
         final byte[] b = NumberFactory.makeByteArray(LONG_TEST_VALUES);
-        Assert.assertArrayEquals(LONG_TEST_VALUES,
-                                 NumberFactory.makeLongArray(b));
+        Assert.assertArrayEquals(LONG_TEST_VALUES, NumberFactory.makeLongArray(b));
     }
 
     @Test
@@ -100,8 +82,7 @@ public class NumberFactoryTest {
     @Test
     public void testIntArrayFromByteArray2IntArray() {
         final byte[] b = NumberFactory.makeByteArray(INT_TEST_VALUES);
-        Assert.assertArrayEquals(INT_TEST_VALUES,
-                                 NumberFactory.makeIntArray(b));
+        Assert.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
     }
 
     @Test
@@ -158,5 +139,35 @@ public class NumberFactoryTest {
                 // Expected.
             }
         }
+    }
+
+    @Test
+    public void testFloatGeneration() {
+        final int allBits = 0xffffffff;
+
+        // Not capable of generating 1
+        Assert.assertEquals(1, (allBits >>> 9) * 0x1.0p-23f, 1e-6);
+        Assert.assertEquals(1, (allBits >>> 8) * 0x1.0p-24f, 1e-6);
+        Assert.assertEquals(1, Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, 1e-6);
+
+        final int noBits = 0;
+        Assert.assertEquals(0, (noBits >>> 8) * 0x1.0p-24f, 0);
+        Assert.assertEquals(0, (noBits >>> 9) * 0x1.0p-23f, 0);
+        Assert.assertEquals(0, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f, 0);
+    }
+
+    @Test
+    public void testDoubleGeneration() {
+        final long allBits = 0xffffffffffffffffL;
+
+        // Not capable of generating 1
+        Assert.assertEquals(1, (allBits >>> 12) * 0x1.0p-52d, 1e-10);
+        Assert.assertEquals(1, (allBits >>> 11) * 0x1.0p-53d, 1e-10);
+        Assert.assertEquals(1, Double.longBitsToDouble(0x3ffL << 52 | allBits >>> 12) - 1.0, 1e-10);
+
+        final long noBits = 0;
+        Assert.assertEquals(0, (noBits >>> 12) * 0x1.0p-52d, 0);
+        Assert.assertEquals(0, (noBits >>> 11) * 0x1.0p-53d, 0);
+        Assert.assertEquals(0, Double.longBitsToDouble(0x3ffL << 52 | noBits >>> 12) - 1.0, 0);
     }
 }
