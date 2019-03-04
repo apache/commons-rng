@@ -145,10 +145,12 @@ public class NumberFactoryTest {
     public void testFloatGeneration() {
         final int allBits = 0xffffffff;
 
-        // Not capable of generating 1
-        Assert.assertEquals(1, (allBits >>> 9) * 0x1.0p-23f, 1e-6);
-        Assert.assertEquals(1, (allBits >>> 8) * 0x1.0p-24f, 1e-6);
-        Assert.assertEquals(1, Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, 1e-6);
+        // Not capable of generating 1. Set the delta with 1 or 2 ULP of 1.
+        final float deltaUlp2 = 1f - Math.nextAfter(Math.nextAfter(1f, -1), -1);
+        final float deltaUlp1 = 1f - Math.nextAfter(1f, -1);
+        Assert.assertEquals(1, (allBits >>> 9) * 0x1.0p-23f, deltaUlp2);
+        Assert.assertEquals(1, (allBits >>> 8) * 0x1.0p-24f, deltaUlp1);
+        Assert.assertEquals(1, Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, deltaUlp2);
 
         final int noBits = 0;
         Assert.assertEquals(0, (noBits >>> 9) * 0x1.0p-23f, 0);
@@ -160,10 +162,12 @@ public class NumberFactoryTest {
     public void testDoubleGeneration() {
         final long allBits = 0xffffffffffffffffL;
 
-        // Not capable of generating 1
-        Assert.assertEquals(1, (allBits >>> 12) * 0x1.0p-52d, 1e-10);
-        Assert.assertEquals(1, (allBits >>> 11) * 0x1.0p-53d, 1e-10);
-        Assert.assertEquals(1, Double.longBitsToDouble(0x3ffL << 52 | allBits >>> 12) - 1.0, 1e-10);
+        // Not capable of generating 1. Set the delta with 1 or 2 ULP of 1.
+        final double deltaUlp2 = 1 - Math.nextAfter(Math.nextAfter(1, -1), -1);
+        final double deltaUlp1 = 1 - Math.nextAfter(1, -1);
+        Assert.assertEquals(1, (allBits >>> 12) * 0x1.0p-52d, deltaUlp2);
+        Assert.assertEquals(1, (allBits >>> 11) * 0x1.0p-53d, deltaUlp1);
+        Assert.assertEquals(1, Double.longBitsToDouble(0x3ffL << 52 | allBits >>> 12) - 1.0, deltaUlp2);
 
         final long noBits = 0;
         Assert.assertEquals(0, (noBits >>> 12) * 0x1.0p-52d, 0);
