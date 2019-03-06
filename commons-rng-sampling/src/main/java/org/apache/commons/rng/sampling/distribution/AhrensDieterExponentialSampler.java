@@ -21,6 +21,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from an <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.0
  */
 public class AhrensDieterExponentialSampler

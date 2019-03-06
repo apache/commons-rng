@@ -22,6 +22,10 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Discrete uniform distribution sampler.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)} when
+ * the range {@code (upper - lower) <} {@link Integer#MAX_VALUE}, otherwise
+ * {@link UniformRandomProvider#nextInt()}.</p>
+ *
  * @since 1.0
  */
 public class DiscreteUniformSampler

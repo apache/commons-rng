@@ -23,6 +23,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * log-normal distribution</a>.
  * Uses {@link BoxMullerNormalizedGaussianSampler} as the underlying sampler.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.0
  *
  * @deprecated Since version 1.1. Please use {@link LogNormalSampler} instead.

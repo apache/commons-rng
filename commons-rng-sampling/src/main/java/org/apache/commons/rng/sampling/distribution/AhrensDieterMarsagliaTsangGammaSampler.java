@@ -39,6 +39,13 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  </li>
  * </ul>
  *
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextDouble()} (both algorithms)
+ *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code theta >= 1})
+ * </ul>
+ *
  * @since 1.0
  */
 public class AhrensDieterMarsagliaTsangGammaSampler

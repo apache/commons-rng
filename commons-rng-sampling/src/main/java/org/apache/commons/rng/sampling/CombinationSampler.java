@@ -26,14 +26,16 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>A combination is a selection of items from a collection, such that (unlike
  * permutations) the order of selection <strong>does not matter</strong>. This
  * sampler can be used to generate a combination in an unspecified order and is
- * faster than the corresponding {@link PermutationSampler}.
+ * faster than the corresponding {@link PermutationSampler}.</p>
  *
  * <p>Note that the sample order is unspecified. For example a sample
  * combination of 2 from 4 may return {@code [0,1]} or {@code [1,0]} as the two are
- * equivalent, and the order of a given combination may change in subsequent samples.
+ * equivalent, and the order of a given combination may change in subsequent samples.</p>
  *
  * <p>The sampler can be used to generate indices to select subsets where the
- * order of the subset is not important.
+ * order of the subset is not important.</p>
+ *
+ * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
  *
  * @see PermutationSampler
  */

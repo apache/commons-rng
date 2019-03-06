@@ -23,19 +23,21 @@ import org.apache.commons.rng.UniformRandomProvider;
  * distribution</a>.
  *
  * <p>This distribution samples the number of failures before the first success taking values in the
- * set {@code [0, 1, 2, ...]}.
+ * set {@code [0, 1, 2, ...]}.</p>
  *
  * <p>The sample is computed using a related exponential distribution. If \( X \) is an
  * exponentially distributed random variable with parameter \( \lambda \), then
  * \( Y = \left \lfloor X \right \rfloor \) is a geometrically distributed random variable with
- * parameter \( p = 1 − e^\lambda \), with \( p \) the probability of success.
+ * parameter \( p = 1 − e^\lambda \), with \( p \) the probability of success.</p>
  *
  * <p>This sampler outperforms using the {@link InverseTransformDiscreteSampler} with an appropriate
- * Geometric inverse cumulative probability function.
+ * Geometric inverse cumulative probability function.</p>
  *
  * <p>Usage note: As the probability of success (\( p \)) tends towards zero the mean of the
  * distribution (\( \frac{1-p}{p} \)) tends towards infinity and due to the use of {@code int}
- * for the sample this can result in truncation of the distribution.
+ * for the sample this can result in truncation of the distribution.</p>
+ *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
  *
  * @see <a
  * href="https://en.wikipedia.org/wiki/Geometric_distribution#Related_distributions">Geometric

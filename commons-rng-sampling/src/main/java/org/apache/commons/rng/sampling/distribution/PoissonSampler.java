@@ -36,6 +36,13 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  </li>
  * </ul>
  *
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextLong()} (large means only)
+ * </ul>
+ *
  * @since 1.0
  */
 public class PoissonSampler

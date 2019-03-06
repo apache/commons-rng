@@ -29,6 +29,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * </pre>
  * </blockquote>
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.0
  */
 public class ChengBetaSampler

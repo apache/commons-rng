@@ -21,6 +21,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.
  *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ *
  * @since 1.0
  */
 public class InverseTransformParetoSampler

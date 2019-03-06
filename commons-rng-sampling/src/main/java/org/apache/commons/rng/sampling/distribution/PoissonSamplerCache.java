@@ -25,14 +25,14 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
  * distribution</a> using a cache to minimise construction cost.
  *
  * <p>The cache will return a sampler equivalent to
- * {@link PoissonSampler#PoissonSampler(UniformRandomProvider, double)}.
+ * {@link PoissonSampler#PoissonSampler(UniformRandomProvider, double)}.</p>
  *
  * <p>The cache allows the {@link PoissonSampler} construction cost to be minimised
  * for low size Poisson samples. The cache stores state for a range of integers where
  * integer value {@code n} can be used to construct a sampler for the range
- * {@code n <= mean < n+1}.
+ * {@code n <= mean < n+1}.</p>
  *
- * <p>The cache is advantageous under the following conditions:
+ * <p>The cache is advantageous under the following conditions:</p>
  *
  * <ul>
  *   <li>The mean of the Poisson distribution falls within a known range.
@@ -44,15 +44,22 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
  *
  * <p>If the sample size to be made with the <strong>same</strong> sampler is large
  * then the construction cost is low compared to the sampling time and the cache
- * has minimal benefit.
+ * has minimal benefit.</p>
  *
  * <p>Performance improvement is dependent on the speed of the
  * {@link UniformRandomProvider}. A fast provider can obtain a two-fold speed
- * improvement for a single-use Poisson sampler.
+ * improvement for a single-use Poisson sampler.</p>
  *
  * <p>The cache is thread safe. Note that concurrent threads using the cache
  * must ensure a thread safe {@link UniformRandomProvider} is used when creating
- * samplers, e.g. a unique sampler per thread.
+ * samplers, e.g. a unique sampler per thread.</p>
+ *
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextLong()} (large means only)
+ * </ul>
  *
  * @since 1.2
  */

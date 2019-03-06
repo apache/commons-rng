@@ -24,9 +24,16 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Marsaglia and Tsang "Ziggurat" method</a> for sampling from a Gaussian
  * distribution with mean 0 and standard deviation 1.
  *
- * The algorithm is explained in this
+ * <p>The algorithm is explained in this
  * <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
- * and this implementation has been adapted from the C code provided therein.
+ * and this implementation has been adapted from the C code provided therein.</p>
+ *
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextLong()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ * </ul>
  *
  * @since 1.1
  */

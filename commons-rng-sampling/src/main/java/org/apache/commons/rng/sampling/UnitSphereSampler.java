@@ -25,6 +25,13 @@ import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSa
  * Generate vectors <a href="http://mathworld.wolfram.com/SpherePointPicking.html">
  * isotropically located on the surface of a sphere</a>.
  *
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextLong()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ * </ul>
+ *
  * @since 1.1
  */
 public class UnitSphereSampler {

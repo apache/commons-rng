@@ -31,7 +31,7 @@ final class SubsetSamplerUtils {
      * Checks the subset of length {@code k} from {@code n} is valid.
      *
      * <p>If {@code n <= 0} or {@code k <= 0} or {@code k > n} then no subset
-     * is required and an exception is raised.
+     * is required and an exception is raised.</p>
      *
      * @param n   Size of the set.
      * @param k   Size of the subset.
@@ -57,7 +57,9 @@ final class SubsetSamplerUtils {
      * shuffled section.
      *
      * <p>The returned combination will have a length of {@code steps} for
-     * {@code upper=true}, or {@code domain.length - steps} otherwise.
+     * {@code upper=true}, or {@code domain.length - steps} otherwise.</p>
+     *
+     * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
      *
      * @param domain The domain.
      * @param steps  The number of shuffle steps.

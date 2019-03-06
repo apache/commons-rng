@@ -24,7 +24,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  * inversion method</a>.
  *
  * It can be used to sample any distribution that provides access to its
- * <em>inverse cumulative probabilty function</em>.
+ * <em>inverse cumulative probability function</em>.
+ *
+ * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
  *
  * <p>Example:</p>
  * <pre><code>
