@@ -53,6 +53,13 @@
       <artifactId>commons-rng-client-api</artifactId>
       <version>1.3-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <!-- For testing floating point precision -->
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
