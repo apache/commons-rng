@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-79">
+        Benchmark methods for producing nextDouble and nextFloat.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-73">
         Add the methods used from UniformRandomProvider to each sampler in the sampling module.
       </action>
