@@ -39,6 +39,7 @@ import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
+import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 
@@ -289,6 +290,9 @@ public final class ProviderBuilder {
                      Long.class),
         /** Source of randomness is {@link XorShift1024Star}. */
         XOR_SHIFT_1024_S(XorShift1024Star.class,
+                         long[].class),
+        /** Source of randomness is {@link XorShift1024StarPhi}. */
+        XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
                          long[].class),
         /** Source of randomness is {@link TwoCmres}. */
         TWO_CMRES(TwoCmres.class,

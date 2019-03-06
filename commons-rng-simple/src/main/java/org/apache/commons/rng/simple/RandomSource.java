@@ -246,6 +246,14 @@ public enum RandomSource {
      */
     XOR_SHIFT_1024_S(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S),
     /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XorShift1024StarPhi}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
+     */
+    XOR_SHIFT_1024_S_PHI(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S_PHI),
+    /**
      * Source of randomness is {@link org.apache.commons.rng.core.source64.TwoCmres}.
      * This generator is equivalent to {@link #TWO_CMRES_SELECT} with the choice of the
      * pair {@code (0, 1)} for the two subcycle generators.
