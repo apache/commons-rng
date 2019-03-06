@@ -156,9 +156,9 @@ public class NumberFactoryTest {
         assertCloseToNotAbove1(Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, 2);
 
         final int noBits = 0;
-        Assert.assertEquals(0, (noBits >>> 9) * 0x1.0p-23f, 0);
-        Assert.assertEquals(0, (noBits >>> 8) * 0x1.0p-24f, 0);
-        Assert.assertEquals(0, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f, 0);
+        Assert.assertEquals(0.0f, (noBits >>> 9) * 0x1.0p-23f, 0);
+        Assert.assertEquals(0.0f, (noBits >>> 8) * 0x1.0p-24f, 0);
+        Assert.assertEquals(0.0f, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f, 0);
     }
 
     /**
@@ -175,11 +175,37 @@ public class NumberFactoryTest {
         assertCloseToNotAbove1(Double.longBitsToDouble(0x3ffL << 52 | allBits >>> 12) - 1.0, 2);
 
         final long noBits = 0;
-        Assert.assertEquals(0, (noBits >>> 12) * 0x1.0p-52d, 0);
-        Assert.assertEquals(0, (noBits >>> 11) * 0x1.0p-53d, 0);
-        Assert.assertEquals(0, Double.longBitsToDouble(0x3ffL << 52 | noBits >>> 12) - 1.0, 0);
+        Assert.assertEquals(0.0, (noBits >>> 12) * 0x1.0p-52d, 0);
+        Assert.assertEquals(0.0, (noBits >>> 11) * 0x1.0p-53d, 0);
+        Assert.assertEquals(0.0, Double.longBitsToDouble(0x3ffL << 52 | noBits >>> 12) - 1.0, 0);
     }
 
+    @Test
+    public void testMakeDoubleFromLong() {
+        final long allBits = 0xffffffffffffffffL;
+        final long noBits = 0;
+        // Within 1 ULP of 1.0
+        assertCloseToNotAbove1(NumberFactory.makeDouble(allBits), 1);
+        Assert.assertEquals(0.0, NumberFactory.makeDouble(noBits), 0);
+    }
+
+    @Test
+    public void testMakeDoubleFromIntInt() {
+        final int allBits = 0xffffffff;
+        final int noBits = 0;
+        // Within 1 ULP of 1.0
+        assertCloseToNotAbove1(NumberFactory.makeDouble(allBits, allBits), 1);
+        Assert.assertEquals(0.0, NumberFactory.makeDouble(noBits, noBits), 0);
+    }
+
+    @Test
+    public void testMakeFloatFromInt() {
+        final int allBits = 0xffffffff;
+        final int noBits = 0;
+        // Within 1 ULP of 1.0f
+        assertCloseToNotAbove1(NumberFactory.makeFloat(allBits), 1);
+        Assert.assertEquals(0.0f, NumberFactory.makeFloat(noBits), 0);
+    }
 
     /**
      * Assert that the value is close to but <strong>not above</strong> 1. This is used to test
