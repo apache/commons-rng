@@ -738,7 +738,7 @@ String word = sampler.sample();
 *---------------------------------*----------------*----------------*
 | WELL_1024_A         | {{{../txt/userguide/stress/dh/run_1/dh_4}0}}, {{{../txt/userguide/stress/dh/run_2/dh_4}0}}, {{{../txt/userguide/stress/dh/run_3/dh_4}0}}| {{{../txt/userguide/stress/tu/run_1/tu_4}4}}, {{{../txt/userguide/stress/tu/run_2/tu_4}4}}, {{{../txt/userguide/stress/tu/run_3/tu_4}5}} |
 *---------------------------------*----------------*----------------*
-| WELL_19937_A        | {{{../txt/userguide/stress/dh/run_1/dh_5}0}}, {{{../txt/userguide/stress/dh/run_2/dh_5}0}}, {{{../txt/userguide/stress/dh/run_3/dh_5}0}} | {{{../txt/userguide/stress/tu/run_1/tu_5}3}}, {{{../txt/userguide/stress/tu/run_2/tu_5}2}}, {{{../txt/userguide/stress/tu/run_3/tu_5}3}} |
+| WELL_19937_A        | {{{../txt/userguide/stress/dh/run_1/dh_5}0}}, {{{../txt/userguide/stress/dh/run_2/dh_5}0}}, {{{../txt/userguide/stress/dh/run_3/dh_5}0}} | {{{../txt/userguide/stress/tu/run_1/tu_5}3}}, {{{../txt/userguide/stress/tu/run_2/tu_5}2}}, {{{../txt/userguide/stress/tu/run_3/tu_5}2}} |
 *---------------------------------*----------------*----------------*
 | WELL_19937_C        | {{{../txt/userguide/stress/dh/run_1/dh_6}0}}, {{{../txt/userguide/stress/dh/run_2/dh_6}1}}, {{{../txt/userguide/stress/dh/run_3/dh_6}0}} | {{{../txt/userguide/stress/tu/run_1/tu_6}2}}, {{{../txt/userguide/stress/tu/run_2/tu_6}2}}, {{{../txt/userguide/stress/tu/run_3/tu_6}3}} |
 *---------------------------------*----------------*----------------*
