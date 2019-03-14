@@ -350,7 +350,7 @@ list.add("RNG");
 
 CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.create(RandomSource.MWC_256),
                                                                   list, 1);
-String word = sampler.sample().get(0);
+String word = sampler.sample();
 +--------------------------+
 
   []
