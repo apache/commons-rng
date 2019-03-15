@@ -145,10 +145,10 @@ public class TwoCmres extends LongProvider {
         // not exceed about 130,000 (which is negligible as seeding
         // will not occur more than once in normal usage).
 
-        // Make two positive 16-bits integers.
-        final long s = NumberFactory.makeLong(0, seed); // s >= 0
-        final int xMax = (int) ((s & 0xffff) + SEED_GUARD);
-        final int yMax = (int) ((s >> 16) + SEED_GUARD);
+        // Make two positive 16-bits integers from the 32-bit seed.
+        // Add the small positive seed guard. The result will never be negative.
+        final int xMax = (seed & 0xffff) + (SEED_GUARD & 0xff);
+        final int yMax = (seed >>> 16)   + (SEED_GUARD & 0xff);
 
         if (xMax < 0 ||
             yMax < 0) {
