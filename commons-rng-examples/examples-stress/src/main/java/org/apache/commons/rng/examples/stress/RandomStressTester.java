@@ -19,11 +19,14 @@ package org.apache.commons.rng.examples.stress;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.io.IOException;
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.FileWriter;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,11 +57,13 @@ public class RandomStressTester {
     /** Comment prefix. */
     private static final String C = "# ";
     /** New line. */
-    private static final String N = "\n";
+    private static final String N = System.lineSeparator();
     /** Command line. */
     private final List<String> cmdLine;
     /** Output prefix. */
     private final String fileOutputPrefix;
+    /** The date format. */
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Creates the application.
@@ -115,11 +120,8 @@ public class RandomStressTester {
 
         final RandomStressTester app = new RandomStressTester(cmdLine, output);
 
-        try {
-            app.run(rngList, numThreads);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // Throws runtime exceptions
+        app.run(rngList, numThreads);
     }
 
     /**
@@ -129,11 +131,9 @@ public class RandomStressTester {
      * @param numConcurrentTasks Number of concurrent tasks.
      * Twice as many threads will be started: one thread for the RNG and one
      * for the analyzer.
-     * @throws IOException if an error occurs when writing to the disk.
      */
     private void run(Iterable<UniformRandomProvider> generators,
-                     int numConcurrentTasks)
-        throws IOException {
+                     int numConcurrentTasks) {
         // Parallel execution.
         final ExecutorService service = Executors.newFixedThreadPool(numConcurrentTasks);
 
@@ -171,6 +171,7 @@ public class RandomStressTester {
      * @return the list of generators.
      * @throws IllegalStateException if an error occurs during instantiation.
      */
+    @SuppressWarnings("unchecked")
     private static Iterable<UniformRandomProvider> createGeneratorsList(String name) {
         try {
             return (Iterable<UniformRandomProvider>) Class.forName(name).newInstance();
@@ -213,7 +214,8 @@ public class RandomStressTester {
                 final ProcessBuilder builder = new ProcessBuilder(cmdLine);
                 builder.redirectOutput(ProcessBuilder.Redirect.appendTo(output));
                 final Process testingProcess = builder.start();
-                final DataOutputStream sink = new DataOutputStream(testingProcess.getOutputStream());
+                final DataOutputStream sink = new DataOutputStream(
+                    new BufferedOutputStream(testingProcess.getOutputStream()));
 
                 final long startTime = System.nanoTime();
 
@@ -266,9 +268,11 @@ public class RandomStressTester {
         sb.append(N);
         sb.append(C).append(N);
 
-        final PrintWriter w = new PrintWriter(new FileWriter(output, true));
-        w.print(sb.toString());
-        w.close();
+        appendDate(sb, "Start");
+
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(output, true))) {
+            w.write(sb.toString());
+        }
     }
 
     /**
@@ -280,13 +284,35 @@ public class RandomStressTester {
     private void printFooter(File output,
                              long nanoTime)
         throws IOException {
-        final PrintWriter w = new PrintWriter(new FileWriter(output, true));
-        w.println(C);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(C).append(N);
 
-        final double duration = ((double) nanoTime) * 1e-9 / 60;
-        w.println(C + "Test duration: " + duration + " minutes");
+        appendDate(sb, "End");
 
-        w.println(C);
-        w.close();
+        final double duration = nanoTime * 1e-9 / 60;
+        sb.append(C).append("Test duration: ").append(duration).append(" minutes").append(N);
+
+        sb.append(C).append(N);
+
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(output, true))) {
+            w.write(sb.toString());
+        }
+    }
+
+    /**
+     * Append a comment with the current date to the {@link StringBuilder}.
+     *
+     * <pre>
+     * # [prefix]: yyyy-MM-dd HH:mm:ss
+     * #
+     * </pre>
+     *
+     * @param sb the StringBuilder.
+     * @param prefix the prefix used before the formatted date, e.g. "Start".
+     */
+    private void appendDate(StringBuilder sb,
+                            String prefix) {
+        sb.append(C).append(prefix).append(": ").append(dateFormat.format(new Date())).append(N);
+        sb.append(C).append(N);
     }
 }
