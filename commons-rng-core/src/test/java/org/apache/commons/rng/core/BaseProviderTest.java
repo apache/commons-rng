@@ -18,6 +18,7 @@ package org.apache.commons.rng.core;
 
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Assume;
 
 /**
  * Tests for {@link BaseProvider}.
@@ -29,8 +30,18 @@ import org.junit.Assert;
  */
 public class BaseProviderTest {
     @Test(expected=IllegalStateException.class)
-    public void testWrongStateSize() {
-        new DummyGenerator().restoreState(new RandomProviderDefaultState(new byte[1]));
+    public void testStateSizeTooSmall() {
+        final DummyGenerator dummy = new DummyGenerator();
+        final int size = dummy.getStateSize();
+        Assume.assumeTrue(size > 0);
+        dummy.restoreState(new RandomProviderDefaultState(new byte[size - 1]));
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void testStateSizeTooLarge() {
+        final DummyGenerator dummy = new DummyGenerator();
+        final int size = dummy.getStateSize();
+        dummy.restoreState(new RandomProviderDefaultState(new byte[size + 1]));
     }
 
     @Test
@@ -76,11 +87,20 @@ public class BaseProviderTest {
      *  <li>{@code fillState} methods with "protected" access</li>
      * </ul>
      */
-    class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
+    static class DummyGenerator extends org.apache.commons.rng.core.source32.IntProvider {
         /** {@inheritDoc} */
         @Override
         public int next() {
             return 4; // https://www.xkcd.com/221/
+        }
+
+        /**
+         * Gets the state size. This captures the state size of the IntProvider.
+         *
+         * @return the state size
+         */
+        int getStateSize() {
+            return getStateInternal().length;
         }
 
         // Missing overrides of "setStateInternal" and "getStateInternal".
