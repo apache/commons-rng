@@ -29,9 +29,23 @@
 #include <unistd.h>
 #include <string.h>
 
-#include <testu01/unif01.h>
-#include <testu01/bbattery.h>
-#include <testu01/util.h>
+/*
+ * Use this flag to switch the includes for TestU01.
+ * - An install from the TestU01 source puts headers directly
+ *   into the <install directory> (e.g. /usr/local/include).
+ * - The linux package install uses a testu01 sub-directory.
+ */
+#define TEST_U01_SRC 0
+
+#if TEST_U01_SRC
+  #include <unif01.h>
+  #include <bbattery.h>
+  #include <util.h>
+#else
+  #include <testu01/unif01.h>
+  #include <testu01/bbattery.h>
+  #include <testu01/util.h>
+#endif
 
 #define TU_S "SmallCrush"
 #define TU_C "Crush"
