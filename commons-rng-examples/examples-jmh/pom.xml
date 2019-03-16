@@ -70,7 +70,6 @@
     <!-- JMH Benchmark related properties: version, name of the benchmarking uber jar. -->
     <jmh.version>1.21</jmh.version>
     <uberjar.name>benchmarks</uberjar.name>
-    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
   </properties>
 
   <profiles>
@@ -96,7 +95,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin.version}</version>
             <executions>
               <execution>
                 <id>benchmark</id>

@@ -58,12 +58,12 @@ public class RandomStressTester {
     private static final String C = "# ";
     /** New line. */
     private static final String N = System.lineSeparator();
+    /** The date format. */
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /** Command line. */
     private final List<String> cmdLine;
     /** Output prefix. */
     private final String fileOutputPrefix;
-    /** The date format. */
-    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * Creates the application.

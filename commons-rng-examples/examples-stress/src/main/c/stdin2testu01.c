@@ -50,24 +50,123 @@
 #define TU_S "SmallCrush"
 #define TU_C "Crush"
 #define TU_B "BigCrush"
-#define BUFFER_LENGTH 256
+#define T_STDOUT "stdout"
+#define BUFFER_LENGTH 512
 
 typedef struct {
-  unsigned long buffer[BUFFER_LENGTH];
+  uint32_t buffer[BUFFER_LENGTH];
   uint32_t index;
 } StdinReader_state;
 
+/*
+ * Flag used to store if the system is little endian.
+ *
+ * Note: Java is big endian and the bytes passed on stdin by a
+ * Java DataOutputStream will be written most significant first.
+ * If the c compiler is little endian for uint32_t the bytes
+ * read from stdin must be reversed.
+ */
+static int littleEndian = 0;
+
+/* Lookup table for binary representation of bytes. */
+const char *bit_rep[16] = {
+    [ 0] = "0000", [ 1] = "0001", [ 2] = "0010", [ 3] = "0011",
+    [ 4] = "0100", [ 5] = "0101", [ 6] = "0110", [ 7] = "0111",
+    [ 8] = "1000", [ 9] = "1001", [10] = "1010", [11] = "1011",
+    [12] = "1100", [13] = "1101", [14] = "1110", [15] = "1111",
+};
+
+/*
+ * Print a binary string representation of the 8-bits of the byte to stdout.
+ *
+ * 01101101
+ */
+void printByte(uint8_t byte)
+{
+  printf("%s%s", bit_rep[byte >> 4], bit_rep[byte & 0x0F]);
+}
+
+/*
+ * Print a string representation of the 4 bytes of the unsigned int
+ * to stdout on a single line using: a binary string representation of
+ * the bytes; the unsigned integer; and the signed integer.
+ *
+ * 11001101 00100011 01101111 01110000   3441651568  -853315728
+ */
+void printInt(uint32_t value)
+{
+  /* Write out as 4 bytes with spaces between them, high byte first. */
+  printByte((uint8_t)((value >> 24) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 16) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >>  8) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)( value        & 0xff));
+  /* Write the unsigned and signed int value */
+  printf(" %11u %11d\n", value, (int) value);
+}
+
+/*
+ * Determine endianess.
+ */
+void detectEndianess() {
+  uint32_t val = 0x01;
+  /*
+   * Use a raw view of the bytes with a char* to determine if
+   * the first byte is unset (big endian) or set (little endian).
+   */
+  char * buff = (char *)&val;
+
+  littleEndian = (buff[0] != 0);
+}
+
+/*
+ * Reverse the 4 bytes in an unsigned int, effectively converting from big
+ * endian to small or vice versa.
+ */
+uint32_t reverseBytes(uint32_t value) {
+  return ((value >> 24) & 0x000000ff) | // move byte 3 to byte 0
+         ((value <<  8) & 0x00ff0000) | // move byte 1 to byte 2
+         ((value >>  8) & 0x0000ff00) | // move byte 2 to byte 1
+         ((value << 24) & 0xff000000);  // byte 0 to byte 3
+}
+
 unsigned long nextInt(void *par,
                       void *sta) {
+  static size_t last_read = 0;
+
   StdinReader_state *state = (StdinReader_state *) sta;
-  if (state->index >= BUFFER_LENGTH) {
+  if (state->index >= last_read) {
     /* Refill. */
-    fread(state->buffer, sizeof(unsigned long), BUFFER_LENGTH, stdin);
+    last_read = fread(state->buffer, sizeof(uint32_t), BUFFER_LENGTH, stdin);
+    if (last_read != BUFFER_LENGTH) {
+      // Allow reading less than the buffer length, but not zero
+      if (last_read == 0) {
+        // Error handling
+        if (feof(stdin)) {
+          // End of stream, just exit. This is used for testing.
+          exit(0);
+        } else if (ferror(stdin)) {
+          // perror will contain a description of the error code
+          perror("[ERROR] Failed to read stdin");
+          exit(1);
+        } else {
+          printf("[ERROR] No data from stdin\n");
+          exit(1);
+        }
+      }
+    }
     state->index = 0;
   }
 
   uint32_t random = state->buffer[state->index];
   ++state->index; /* Next request. */
+
+  if (littleEndian) {
+    /* Convert to machine representation from Java big endian. */
+    random = reverseBytes(random);
+  }
 
   return random;
 }
@@ -122,6 +221,8 @@ int main(int argc,
   unif01_Gen *gen = createStdinReader();
   char *spec = argv[1];
 
+  detectEndianess();
+
   if (argc < 2) {
     printf("[ERROR] Specify test suite: '%s', '%s' or '%s'\n", TU_S, TU_C, TU_B);
     exit(1);
@@ -131,6 +232,11 @@ int main(int argc,
     bbattery_Crush(gen);
   } else if (strcmp(spec, TU_B) == 0) {
     bbattery_BigCrush(gen);
+  } else if (strcmp(spec, T_STDOUT) == 0) {
+    // Print to stdout until stdin closes
+    while (1) {
+      printInt(nextInt(0, gen->state));
+    }
   } else {
     printf("[ERROR] Unknown specification: '%s'\n", spec);
     exit(1);
