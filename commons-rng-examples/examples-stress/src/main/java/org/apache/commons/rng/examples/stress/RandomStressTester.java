@@ -63,7 +63,7 @@ public class RandomStressTester {
     /** Output prefix. */
     private final String fileOutputPrefix;
     /** The date format. */
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * Creates the application.
@@ -312,6 +312,8 @@ public class RandomStressTester {
      */
     private void appendDate(StringBuilder sb,
                             String prefix) {
+        // Use local date format. It is not thread safe.
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         sb.append(C).append(prefix).append(": ").append(dateFormat.format(new Date())).append(N);
         sb.append(C).append(N);
     }
