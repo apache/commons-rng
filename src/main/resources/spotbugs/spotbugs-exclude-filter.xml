@@ -30,4 +30,10 @@
     <Class name="~.*\.jmh\..*generated\..*" />
   </Match>
 
+  <Match>
+    <!-- Direct access to an internal array is required for the benchmark. -->
+    <Class name="org.apache.commons.rng.examples.jmh.ConstructionPerformance$Sources" />
+    <BugPattern name="EI_EXPOSE_REP"/>
+  </Match>
+
 </FindBugsFilter>
