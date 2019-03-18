@@ -197,11 +197,28 @@
           </ignorePathsToDelete>
         </configuration>
       </plugin>
-      <!-- maven-checkstyle-plugin runs in JDK 8+ profile -->
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
         <version>${commons.spotbugs.version}</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+      <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${rng.pmd.version}</version>
+        <configuration>
+          <targetJdk>${maven.compiler.target}</targetJdk>
+          <skipEmptyReport>false</skipEmptyReport>
+          <analysisCache>true</analysisCache>
+          <rulesets>
+            <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
+          </rulesets>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
@@ -302,7 +319,7 @@
           <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
-      <!-- maven-checkstyle-plugin runs in JDK 8+ profile -->
+      <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${rng.pmd.version}</version>
