@@ -226,7 +226,7 @@ public class RandomStressTester {
 
                 try {
                     while (true) {
-                        sink.writeInt(Integer.reverseBytes(rng.nextInt()));
+                        sink.writeInt(rng.nextInt());
                     }
                 } catch (IOException e) {
                     // Hopefully getting here when the analyzing software terminates.
