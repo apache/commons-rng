@@ -23,12 +23,20 @@ import java.util.Arrays;
  * or one {@code long} value, or a sequence of bytes.
  */
 public final class NumberFactory {
-    /** See {@link #makeDouble(long)}. */
-    private static final long DOUBLE_HIGH_BITS = 0x3ffL << 52;
-    /** See {@link #makeFloat(int)}. */
-    private static final float FLOAT_MULTIPLIER = 0x1.0p-23f;
-    /** See {@link #makeDouble(int, int)}. */
-    private static final double DOUBLE_MULTIPLIER = 0x1.0p-52d;
+    /**
+     * The multiplier to convert the least significant 24-bits of an {@code int} to a {@code float}.
+     * See {@link #makeFloat(int)}.
+     *
+     * <p>This is equivalent to 1.0f / (1 << 24).
+     */
+    private static final float FLOAT_MULTIPLIER = 0x1.0p-24f;
+    /**
+     * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+     * See {@link #makeDouble(long)} and {@link #makeDouble(int, int)}.
+     *
+     * <p>This is equivalent to 1.0 / (1L << 53).
+     */
+    private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
     /** Lowest byte mask. */
     private static final long LONG_LOWEST_BYTE_MASK = 0xffL;
     /** Number of bytes in a {@code long}. */
@@ -72,8 +80,8 @@ public final class NumberFactory {
      * @return a {@code double} value in the interval {@code [0, 1]}.
      */
     public static double makeDouble(long v) {
-        // http://xorshift.di.unimi.it
-        return Double.longBitsToDouble(DOUBLE_HIGH_BITS | v >>> 12) - 1d;
+        // Require the least significant 53-bits so shift the higher bits across
+        return (v >>> 11) * DOUBLE_MULTIPLIER;
     }
 
     /**
@@ -83,8 +91,10 @@ public final class NumberFactory {
      */
     public static double makeDouble(int v,
                                     int w) {
-        final long high = ((long) (v >>> 6)) << 26;
-        final int low = w >>> 6;
+        // Require the least significant 53-bits from a long.
+        // Join the most significant 26 from v with 27 from w.
+        final long high = ((long) (v >>> 6)) << 27;  // 26-bits remain
+        final int low = w >>> 5;                     // 27-bits remain
         return (high | low) * DOUBLE_MULTIPLIER;
     }
 
@@ -93,7 +103,8 @@ public final class NumberFactory {
      * @return a {@code float} value in the interval {@code [0, 1]}.
      */
     public static float makeFloat(int v) {
-        return (v >>> 9) * FLOAT_MULTIPLIER;
+        // Require the least significant 24-bits so shift the higher bits across
+        return (v >>> 8) * FLOAT_MULTIPLIER;
     }
 
     /**
