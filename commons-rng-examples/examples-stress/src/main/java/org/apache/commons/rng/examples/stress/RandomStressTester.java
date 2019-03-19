@@ -82,7 +82,7 @@ public class RandomStressTester {
         cmdLine = new ArrayList<String>(cmd);
         fileOutputPrefix = outputPrefix;
 
-        final File reportDir = new File(fileOutputPrefix).getParentFile();
+        final File reportDir = new File(fileOutputPrefix).getAbsoluteFile().getParentFile();
         if (!reportDir.exists() ||
             !reportDir.isDirectory() ||
             !reportDir.canWrite()) {
@@ -226,7 +226,7 @@ public class RandomStressTester {
 
                 try {
                     while (true) {
-                        sink.writeInt(rng.nextInt());
+                        sink.writeInt(Integer.reverseBytes(rng.nextInt()));
                     }
                 } catch (IOException e) {
                     // Hopefully getting here when the analyzing software terminates.
