@@ -186,6 +186,10 @@ public class RandomStressTester {
      * Pipes random numbers to the standard input of an analyzer.
      */
     private class Task implements Runnable {
+        /** The timeout to wait for the process exit value in milliseconds. */
+        private final long TIMEOUT = 1000000L;
+        /** The default exit value to use when the process has not terminated. */
+        private final int DEFAULT_EXIT_VALUE = -808080;
         /** Directory for reports of the tester processes. */
         private final File output;
         /** RNG to be tested. */
@@ -205,7 +209,7 @@ public class RandomStressTester {
 
         /** {@inheritDoc} */
         @Override
-            public void run() {
+        public void run() {
             try {
                 // Write header.
                 printHeader(output, rng);
@@ -213,6 +217,7 @@ public class RandomStressTester {
                 // Start test suite.
                 final ProcessBuilder builder = new ProcessBuilder(cmdLine);
                 builder.redirectOutput(ProcessBuilder.Redirect.appendTo(output));
+                builder.redirectErrorStream(true);
                 final Process testingProcess = builder.start();
                 final DataOutputStream sink = new DataOutputStream(
                     new BufferedOutputStream(testingProcess.getOutputStream()));
@@ -229,12 +234,48 @@ public class RandomStressTester {
 
                 final long endTime = System.nanoTime();
 
+                // Get the exit value
+                final int exitValue = getExitValue(testingProcess);
+
                 // Write footer.
-                printFooter(output, endTime - startTime);
+                printFooter(output, endTime - startTime, exitValue);
 
             } catch (IOException e) {
                 throw new RuntimeException("Failed to start task: " + e.getMessage());
             }
+        }
+
+        /**
+         * Get the exit value from the process, waiting at most for 1 second, otherwise kill the process
+         * and return a dummy value.
+         *
+         * @param process the process.
+         * @return the exit value.
+         * @see Process#destroy()
+         */
+        private int getExitValue(Process process) {
+            long startTime = System.currentTimeMillis();
+            long remaining = TIMEOUT;
+
+            while (remaining > 0) {
+                try {
+                    return process.exitValue();
+                } catch (IllegalThreadStateException ex) {
+                    try {
+                        Thread.sleep(Math.min(remaining + 1, 100));
+                    } catch (InterruptedException e) {
+                        // Reset interrupted status and stop waiting
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+                remaining = TIMEOUT - (System.currentTimeMillis() - startTime);
+            }
+
+            // Not finished so kill it
+            process.destroy();
+
+            return DEFAULT_EXIT_VALUE;
         }
     }
 
@@ -278,16 +319,21 @@ public class RandomStressTester {
     /**
      * @param output File.
      * @param nanoTime Duration of the run.
+     * @param exitValue The process exit value.
      * @throws IOException if there was a problem opening or writing to
      * the {@code output} file.
      */
     private void printFooter(File output,
-                             long nanoTime)
+                             long nanoTime,
+                             int exitValue)
         throws IOException {
         final StringBuilder sb = new StringBuilder();
         sb.append(C).append(N);
 
         appendDate(sb, "End");
+
+        sb.append(C).append("Exit value: ").append(exitValue).append(N);
+        sb.append(C).append(N);
 
         final double duration = nanoTime * 1e-9 / 60;
         sb.append(C).append("Test duration: ").append(duration).append(" minutes").append(N);

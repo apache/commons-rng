@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class that can be used for testing that {@code int} values can be piped to a
@@ -48,6 +49,8 @@ public class BridgeTester {
         "1000", "1001", "1010", "1011",
         "1100", "1101", "1110", "1111",
     };
+    /** The timeout to wait for a process to end (1 second in milliseconds). */
+    private static final long TIMEOUT = TimeUnit.SECONDS.toMillis(1);
 
     /** Command line. */
     private final List<String> cmdLine;
@@ -143,7 +146,17 @@ public class BridgeTester {
                 }
             }
 
-        } catch (IOException e) {
+            if (waitFor(testingProcess)) {
+                final int exitValue = testingProcess.exitValue();
+                if (exitValue != 0) {
+                    System.out.printf("[ERROR] %s exit code = %d%n", cmdLine.get(0), exitValue);
+                }
+            } else {
+                System.out.printf("[ERROR] %s did not exit, killing the subprocess%n", cmdLine.get(0));
+                testingProcess.destroy();
+            }
+
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Failed to run process: " + e.getMessage());
         }
     }
@@ -198,8 +211,33 @@ public class BridgeTester {
     private static void writeByte(BufferedWriter data,
                                   int value) throws IOException {
         // This matches the functionality of:
-        // data.write(String.format("%8s", Integer.toBinaryString(value & 0xff)).replace(' ', '0'));
+        // data.write(String.format("%8s", Integer.toBinaryString(value & 0xff)).replace(' ', '0'))
         data.write(BIT_REP[value >>> 4]);
         data.write(BIT_REP[value & 0x0F]);
+    }
+
+    /**
+     * Wait until the given {@code Process} object has terminated, waiting at most for 1 second.
+     *
+     * @param process the process.
+     * @return {@code true} if the process has exited, {@code false} otherwise.
+     * @throws InterruptedException if interrupted while waiting.
+     */
+    private static boolean waitFor(Process process) throws InterruptedException {
+        // TODO - use Java 1.8 Process.waitFor(long, TimeUnit) instead
+        long startTime = System.currentTimeMillis();
+        long remaining = TIMEOUT;
+
+        while (remaining > 0) {
+            try {
+                // Poll the exit value
+                process.exitValue();
+                return true;
+            } catch (IllegalThreadStateException ex) {
+                Thread.sleep(Math.min(remaining + 1, 100));
+            }
+            remaining = TIMEOUT - (System.currentTimeMillis() - startTime);
+        }
+        return false;
     }
 }
