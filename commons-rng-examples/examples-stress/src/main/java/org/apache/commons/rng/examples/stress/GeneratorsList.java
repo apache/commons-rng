@@ -18,6 +18,7 @@ package org.apache.commons.rng.examples.stress;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.Iterator;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -27,28 +28,44 @@ import org.apache.commons.rng.simple.RandomSource;
  * List of generators.
  */
 public class GeneratorsList implements Iterable<UniformRandomProvider> {
-    /** List. */
-    private final List<UniformRandomProvider> list = new ArrayList<UniformRandomProvider>();
+    /**
+     * The RandomSource values to ignore when auto generating the list
+     * from the enumeration.
+     */
+    private static final EnumSet<RandomSource> toIgnore =
+            EnumSet.of(RandomSource.TWO_CMRES_SELECT);
+
+    /** List of generators. */
+    private final List<UniformRandomProvider> list = new ArrayList<>();
 
     /**
-     * Creates list.
+     * Creates the list.
      */
     public GeneratorsList() {
-        list.add(RandomSource.create(RandomSource.JDK));
-        list.add(RandomSource.create(RandomSource.MT));
-        list.add(RandomSource.create(RandomSource.WELL_512_A));
-        list.add(RandomSource.create(RandomSource.WELL_1024_A));
-        list.add(RandomSource.create(RandomSource.WELL_19937_A));
-        list.add(RandomSource.create(RandomSource.WELL_19937_C));
-        list.add(RandomSource.create(RandomSource.WELL_44497_A));
-        list.add(RandomSource.create(RandomSource.WELL_44497_B));
-        list.add(RandomSource.create(RandomSource.ISAAC));
-        list.add(RandomSource.create(RandomSource.MT_64));
-        list.add(RandomSource.create(RandomSource.SPLIT_MIX_64));
-        list.add(RandomSource.create(RandomSource.XOR_SHIFT_1024_S));
-        list.add(RandomSource.create(RandomSource.TWO_CMRES));
-        list.add(RandomSource.create(RandomSource.MWC_256));
-        list.add(RandomSource.create(RandomSource.KISS));
+        // Auto-generate using the order of the RandomSource enum
+        for (final RandomSource source : RandomSource.values()) {
+            // Ignore those generators known to take arguments
+            if (toIgnore.contains(source)) {
+                continue;
+            }
+            // Currently we cannot detect if the source requires arguments,
+            // e.g. RandomSource.TWO_CMRES_SELECT. So try and create
+            // using no arguments and allow this to throw
+            // IllegalStateException if it cannot be created.
+            //
+            // Implementation note:
+            // Handle such generators by adding to the ignore set and
+            // if they must be included add as a special case below.
+            list.add(RandomSource.create(source));
+        }
+
+        // --------------------------------------------------------------------
+        // Note:
+        // Add any special cases that cannot be created without arguments here.
+        // --------------------------------------------------------------------
+        // The list must then be sorted using the order defined by
+        // RandomSource.ordinal(). Currently this is not required so
+        // has not been implemented.
     }
 
     /** {@inheritDoc} */
