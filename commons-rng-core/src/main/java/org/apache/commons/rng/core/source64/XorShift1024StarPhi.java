@@ -20,9 +20,12 @@ package org.apache.commons.rng.core.source64;
 /**
  * A fast RNG implementing the {@code XorShift1024*} algorithm.
  *
- * <p>This supersedes {@link XorShift1024Star}. The generator differs only in the multiplier (a
- * fixed-point representation of the golden ratio), which eliminates linear dependencies from one of
- * the lowest bits.
+ * <p>Note: This supersedes {@link XorShift1024Star}. The sequences emitted by both
+ * generators are correlated.</p>
+ *
+ * <p>This generator differs only in the final multiplier (a fixed-point representation
+ * of the golden ratio), which eliminates linear dependencies from one of the lowest
+ * bits.</p>
  *
  * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
  * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
@@ -35,8 +38,7 @@ public class XorShift1024StarPhi extends XorShift1024Star {
      * @param seed Initial seed.
      * If the length is larger than 16, only the first 16 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XorShift1024StarPhi(long[] seed) {
         super(0x9e3779b97f4a7c13L, seed);

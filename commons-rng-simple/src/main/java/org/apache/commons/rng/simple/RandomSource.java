@@ -243,16 +243,15 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
      * </ul>
+     *
+     * @deprecated Since 1.3, where it is recommended to use {@code XOR_SHIFT_1024_S_PHI}
+     * instead due to its slightly better (more uniform) output. {@code XOR_SHIFT_1024_S}
+     * is still quite usable but both are variants of the same algorithm and maintain their
+     * internal state identically. Their outputs are correlated and the two should not be
+     * used together when independent sequences are assumed.
      */
+    @Deprecated
     XOR_SHIFT_1024_S(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S),
-    /**
-     * Source of randomness is {@link org.apache.commons.rng.core.source64.XorShift1024StarPhi}.
-     * <ul>
-     *  <li>Native seed type: {@code long[]}.</li>
-     *  <li>Native seed size: 16.</li>
-     * </ul>
-     */
-    XOR_SHIFT_1024_S_PHI(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S_PHI),
     /**
      * Source of randomness is {@link org.apache.commons.rng.core.source64.TwoCmres}.
      * This generator is equivalent to {@link #TWO_CMRES_SELECT} with the choice of the
@@ -299,7 +298,16 @@ public enum RandomSource {
      *  <li>Native seed size: 4.</li>
      * </ul>
      */
-    KISS(ProviderBuilder.RandomSourceInternal.KISS);
+    KISS(ProviderBuilder.RandomSourceInternal.KISS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XorShift1024StarPhi}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
+     */
+    XOR_SHIFT_1024_S_PHI(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S_PHI),
+    ;
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;

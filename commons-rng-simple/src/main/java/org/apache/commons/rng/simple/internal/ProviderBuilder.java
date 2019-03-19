@@ -291,9 +291,6 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link XorShift1024Star}. */
         XOR_SHIFT_1024_S(XorShift1024Star.class,
                          long[].class),
-        /** Source of randomness is {@link XorShift1024StarPhi}. */
-        XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
-                         long[].class),
         /** Source of randomness is {@link TwoCmres}. */
         TWO_CMRES(TwoCmres.class,
                   Integer.class),
@@ -313,7 +310,11 @@ public final class ProviderBuilder {
                 int[].class),
         /** Source of randomness is {@link KISSRandom}. */
         KISS(KISSRandom.class,
-             int[].class);
+             int[].class),
+        /** Source of randomness is {@link XorShift1024StarPhi}. */
+        XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
+                             long[].class),
+        ;
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
