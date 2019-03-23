@@ -32,7 +32,7 @@ public class GeneratorsList implements Iterable<UniformRandomProvider> {
      * The RandomSource values to ignore when auto generating the list
      * from the enumeration.
      */
-    private static final EnumSet<RandomSource> toIgnore =
+    private static final EnumSet<RandomSource> TO_IGNORE =
             EnumSet.of(RandomSource.TWO_CMRES_SELECT);
 
     /** List of generators. */
@@ -45,7 +45,7 @@ public class GeneratorsList implements Iterable<UniformRandomProvider> {
         // Auto-generate using the order of the RandomSource enum
         for (final RandomSource source : RandomSource.values()) {
             // Ignore those generators known to take arguments
-            if (toIgnore.contains(source)) {
+            if (TO_IGNORE.contains(source)) {
                 continue;
             }
             // Currently we cannot detect if the source requires arguments,
