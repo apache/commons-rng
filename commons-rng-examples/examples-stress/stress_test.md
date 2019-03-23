@@ -71,6 +71,21 @@ using the available packages:
 The `dieharder` executable can read integers from `stdin` for analysis so no additional steps are
 required.
 
+Test platform Endianness
+------------------------
+
+The **Dieharder** and **TestU01** test suites read raw binary data. This is done using the native
+platform byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness). The stress test
+application can support either big-endian or little-endian format. The application will
+auto-detect the platform and will default to output binary data using the native byte order.
+
+You can determine the required format for the `c` language using the provided utility program:
+
+        > gcc src/main/c/testendianness.c -o testendianness && ./testendianness
+        Little-endian
+
+More details are provided in the [endianness](./endianness.md) page.
+
 Running on Linux/MacOS
 ----------------------
 
@@ -80,30 +95,46 @@ Build the `examples-stress` jar file:
 
 This will create a single jar file with all the dependencies in the `target` directory.
 
-The jar file requires the following arguments:
+The jar file is executable and provides usage information with the `--help` or `-h` option:
+
+        > java -jar target/rng-utils.jar -h
+
+The list of generators that can be tested can be customised. The default is to use all known
+generators that do not require arguments in addition to a random seed. To create a template list
+use the `list` command:
+
+        > java -jar target/rng-utils.jar list
+
+        # ID   RandomSource           trials   [constructor arguments ...]
+        1      JDK                    1
+        2      WELL_512_A             1
+        ...
+
+Arguments can be specified for those generators that require them. Note that the identifier for
+each line, corresponding to a tested generator, must be unique. The identifier will be used to name
+the output results file for the generator.
+
+To run the stress test use the `stress` command and provide the following arguments:
 
 | Argument  | Description | Example |
 | --------- | ----------- | ------- |
-| path | Output filename prefix | target/dh_ |
-| n | Number of processors | 4 |
-| GeneratorsList class | Fully qualified class name of a provider for the supported random generators | org.apache.commons.rng.examples.stress.(GeneratorsList/IntGeneratorsList/LongGeneratorsList) |
 | executable | The test tool | dieharder, stdin2testu01 |
 | ... | Arguments for the test tool | dieharder: -a -g 200 -Y 1 -k 2 <br/> stdin2testu01: SmallCrush, Crush, BigCrush |
 
+The command sets defaults for other options that can be changed, for example the output results
+file prefix, the number of concurrent tasks, byte-order or the number of trials per generator.
+Use the `--help` option to show the available options.
+
 ### TestU01
 
-        > java -jar target/examples-stress.jar \
-              target/tu_ \
-              4 \
-              org.apache.commons.rng.examples.stress.GeneratorsList \
+        > java -jar target/rng-utils.jar stress \
+              --prefix target/tu_ \
               ./stdin2testu01 \
               BigCrush
 
 ### DieHarder
 
-        > java -jar target/examples-stress.jar \
-              target/dh_ \
-              4 \
-              org.apache.commons.rng.examples.stress.GeneratorsList \
+        > java -jar target/rng-utils.jar stress \
+              --prefix target/dh_ \
               /usr/bin/dieharder \
               -a -g 200 -Y 1 -k 2
