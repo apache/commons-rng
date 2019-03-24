@@ -582,6 +582,16 @@
               </execution>
             </executions>
           </plugin>
+          <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
+            unnamed module. See properties commons.javadoc.java.link, commons.javadoc.javaee.link in 
+            commons-parent. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <source>7</source>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
       <reporting>
@@ -604,6 +614,16 @@
                 </reports>
               </reportSet>
             </reportSets>
+          </plugin>
+          <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
+            unnamed module. See properties commons.javadoc.java.link, commons.javadoc.javaee.link in 
+            commons-parent. -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <source>7</source>
+            </configuration>
           </plugin>
         </plugins>
       </reporting>

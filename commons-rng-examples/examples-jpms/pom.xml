@@ -45,6 +45,32 @@
     <maven.compiler.release>9</maven.compiler.release>
   </properties>
 
+  <build>
+    <plugins>
+      <!--  Revert javadoc fix in parent -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <!--  Revert javadoc fix in parent -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <modules>
     <module>jpms-lib</module>
     <module>jpms-app</module>

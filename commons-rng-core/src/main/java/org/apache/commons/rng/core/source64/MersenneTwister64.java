@@ -35,11 +35,12 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * Here is their original copyright:
  * </p>
  *
- * <table border="0" width="80%" cellpadding="10" style="background-color: #E0E0E0" summary="Mersenne Twister licence">
- * <tr><td>Copyright (C) 2004, Makoto Matsumoto and Takuji Nishimura,
+ * <table style="background-color: #E0E0E0; width: 80%">
+ * <caption>Mersenne Twister licence</caption>
+ * <tr><td style="padding: 10px">Copyright (C) 2004, Makoto Matsumoto and Takuji Nishimura,
  *     All rights reserved.</td></tr>
  *
- * <tr><td>Redistribution and use in source and binary forms, with or without
+ * <tr><td style="padding: 10px">Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  * <ol>
@@ -53,7 +54,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *       permission.</li>
  * </ol></td></tr>
  *
- * <tr><td><strong>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * <tr><td style="padding: 10px"><strong>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
  * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
