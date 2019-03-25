@@ -57,6 +57,7 @@ public class ProvidersList {
             // "long"-based RNGs.
             add(LIST64, RandomSource.SPLIT_MIX_64, -988777666655555L);
             add(LIST64, RandomSource.XOR_SHIFT_1024_S, new long[] { 123456L, 234567L, -345678L });
+            add(LIST64, RandomSource.XOR_SHIFT_1024_S_PHI, new long[] { -234567L, -345678L, 3456789L });
             add(LIST64, RandomSource.TWO_CMRES, 55443322);
             add(LIST64, RandomSource.TWO_CMRES_SELECT, -987654321, 5, 8);
             add(LIST64, RandomSource.MT_64, new long[] { 1234567L, 2345678L, -3456789L });

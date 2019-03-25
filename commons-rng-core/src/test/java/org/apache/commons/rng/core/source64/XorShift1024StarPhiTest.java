@@ -16,11 +16,13 @@
  */
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class XorShift1024StarTest {
+public class XorShift1024StarPhiTest {
     @Test
     public void testReferenceCode() {
         /*
@@ -35,26 +37,26 @@ public class XorShift1024StarTest {
         };
 
         final long[] expectedSequence = {
-            0xd85e9fc0855614cdL, 0xaf4965c9c1ac6a3dL, 0x067da398791111d8L, 0x2771c41db58d7644L,
-            0xf71a471e1ac2b03eL, 0x953449ae275f7409L, 0x8aa570c72de0af5eL, 0xae59db2acdae32beL,
-            0x3d46f316b8f97301L, 0x72dc8399b7a70957L, 0xf5624d788b3b6f4eL, 0xb7a79275f6c0e7b1L,
-            0xf79354208377d498L, 0x0e5d2f2ac2b4f28fL, 0x0f8f57edc8aa802fL, 0x5e918ea72ece0c36L,
-            0xeeb8dbdb00ac7a5aL, 0xf16f88dfef0d6047L, 0x1244c29e0e0d8d2dL, 0xaa94f1cc42691eb7L,
-            0xd06425dd329e5de5L, 0x968b1c2e016f159cL, 0x6aadff7055065295L, 0x3bce2efcb0d00876L,
-            0xb28d5b69ad8fb719L, 0x1e4040c451376920L, 0x6b0801a8a00de7d7L, 0x891ba2cbe2a4675bL,
-            0x6355008481852527L, 0x7a47bcd9960126f3L, 0x07f72fcd4ebe3580L, 0x4658b29c126840ccL,
-            0xdc7b36d3037c7539L, 0x9e30aab0410122e8L, 0x7215126e0fce932aL, 0xda63f12a489fc8deL,
-            0x769997671b2a0158L, 0xfa9cd84e0ffc174dL, 0x34df1cd959dca211L, 0xccea41a33ec1f763L,
+            0xc9351be6ae9af4bbL, 0x2696a1a51e3040cbL, 0xdcbbc38b838b4be8L, 0xc989eee03351a25cL,
+            0xc4ad829b653ada72L, 0x1cff4000cc0118dfL, 0x988f3aaf7bfb2852L, 0x3a621d4d5fb27bf2L,
+            0x0153d81cf33ff4a7L, 0x8a1b5adb974750c1L, 0x182799e238df6de2L, 0x92d9bda951cd6377L,
+            0x601f077d2a659728L, 0x90536cc64ad5bc49L, 0x5d99d9e84e3d7fa9L, 0xfc66f4610240613aL,
+            0x0ff67da640cdd6b6L, 0x973c7a6afbb41751L, 0x5089cb5236ac1b5bL, 0x7ed6edc1e4d7e261L,
+            0x3e37630df0c00b63L, 0x49ec234a0d03bcc4L, 0x2bcbe2fa4b80fa33L, 0xbaafc47b960baefaL,
+            0x1855fa47be98c84fL, 0x8d59cb57e34a73e0L, 0x256b15bb001bf641L, 0x28ad378895f5615dL,
+            0x865547335ba2a571L, 0xfefe4c356e154585L, 0xeb87f7a74e076680L, 0x990d2f5d1e60b914L,
+            0x3bf0f6864688af2fL, 0x8c6304df9b945d58L, 0x63bc09c335b63666L, 0x1038139f53734ad2L,
+            0xf41b58faf5680868L, 0xa50ba830813c163bL, 0x7dc1ca503ae39817L, 0xea3d0f2f37f5ce95L,
         };
 
-        RandomAssert.assertEquals(expectedSequence, new XorShift1024Star(seed));
+        RandomAssert.assertEquals(expectedSequence, new XorShift1024StarPhi(seed));
     }
 
     @Test
     public void testConstructorWithZeroSeed() {
         // This is allowed even though the generator is non-functional
         final int size = 16;
-        final XorShift1024Star rng = new XorShift1024Star(new long[size]);
+        final XorShift1024StarPhi rng = new XorShift1024StarPhi(new long[size]);
         for (int i = size * 2; i-- != 0; ) {
             Assert.assertEquals("Expected the generator to be broken", 0L, rng.nextLong());
         }

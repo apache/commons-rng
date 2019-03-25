@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.core;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +34,7 @@ import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
+import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
@@ -81,6 +81,7 @@ public class ProvidersList {
             // "long"-based RNGs.
             add(LIST64, new SplitMix64(g.nextLong()));
             add(LIST64, new XorShift1024Star(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XorShift1024StarPhi(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
             add(LIST64, new TwoCmres(g.nextInt()));
             add(LIST64, new TwoCmres(g.nextInt(), 5, 8));
             add(LIST64, new MersenneTwister64(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));

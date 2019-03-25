@@ -21,11 +21,12 @@ import java.util.Arrays;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * A fast RNG.
+ * A fast RNG implementing the {@code XorShift1024*} algorithm.
  *
- * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">
- * Original source code</a>
+ * <p>Note: This has been superseded by {@link XorShift1024StarPhi}. The sequences emitted
+ * by both generators are correlated.</p>
  *
+ * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
  * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
  * @since 1.0
  */
@@ -34,6 +35,8 @@ public class XorShift1024Star extends LongProvider {
     private static final int SEED_SIZE = 16;
     /** State. */
     private final long[] state = new long[SEED_SIZE];
+    /** The multiplier for the XorShift1024 algorithm. */
+    private final long multiplier;
     /** Index in "state" array. */
     private int index;
 
@@ -43,9 +46,23 @@ public class XorShift1024Star extends LongProvider {
      * @param seed Initial seed.
      * If the length is larger than 16, only the first 16 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XorShift1024Star(long[] seed) {
+        this(1181783497276652981L, seed);
+    }
+
+    /**
+     * Creates a new instance.
+     *
+     * @param multiplier The multiplier for the XorShift1024 algorithm.
+     * @param seed Initial seed.
+     * If the length is larger than 16, only the first 16 elements will
+     * be used; if smaller, the remaining elements will be automatically
+     * set. A seed containing all zeros will create a non-functional generator.
+     */
+    protected XorShift1024Star(long multiplier, long[] seed) {
+        this.multiplier = multiplier;
         setSeedInternal(seed);
     }
 
@@ -90,6 +107,6 @@ public class XorShift1024Star extends LongProvider {
         long s1 = state[index = (index + 1) & 15];
         s1 ^= s1 << 31; // a
         state[index] = s1 ^ s0 ^ (s1 >>> 11) ^ (s0 >>> 30); // b,c
-        return state[index] * 1181783497276652981L;
+        return state[index] * multiplier;
     }
 }
