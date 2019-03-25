@@ -566,7 +566,7 @@
               <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
               <logViolationsToConsole>false</logViolationsToConsole>
               <failOnViolation>false</failOnViolation>
-              <resourceExcludes>NOTICE.txt,LICENSE.txt</resourceExcludes>
+              <resourceExcludes>NOTICE.txt,LICENSE.txt,**/maven-archiver/pom.properties</resourceExcludes>
               <excludes>**/module-info.java</excludes>
             </configuration>
             <executions>

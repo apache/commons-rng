@@ -54,14 +54,14 @@ public class ThreadLocalPerformance {
      */
     @State(Scope.Benchmark)
     public static class Sources {
+        /** The random source. */
+        protected RandomSource randomSource;
+
         /**
          * RNG providers.
          */
         @Param({"SPLIT_MIX_64"})
         private String randomSourceName;
-
-        /** The random source. */
-        protected RandomSource randomSource;
 
         /**
          * @return the random source
