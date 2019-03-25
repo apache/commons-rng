@@ -48,8 +48,7 @@ abstract class AbstractXoShiRo128 extends IntProvider {
      * @param seed Initial seed.
      * If the length is larger than 4, only the first 4 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     AbstractXoShiRo128(int[] seed) {
         if (seed.length < SEED_SIZE) {

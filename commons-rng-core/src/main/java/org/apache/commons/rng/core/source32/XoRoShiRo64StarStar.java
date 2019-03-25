@@ -35,8 +35,7 @@ public class XoRoShiRo64StarStar extends AbstractXoRoShiRo64 {
      * @param seed Initial seed.
      * If the length is larger than 2, only the first 2 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XoRoShiRo64StarStar(int[] seed) {
         super(seed);
@@ -51,17 +50,6 @@ public class XoRoShiRo64StarStar extends AbstractXoRoShiRo64 {
      */
     public XoRoShiRo64StarStar(int seed0, int seed1) {
         super(seed0, seed1);
-    }
-
-    /**
-     * Creates a new instance using the upper and lower bits from the {@code long}
-     * to create a 2 element {@code int} seed.
-     * A seed containing all zeros will create a non-functional generator.
-     *
-     * @param seed Initial seed.
-     */
-    public XoRoShiRo64StarStar(long seed) {
-        super(seed);
     }
 
     /** {@inheritDoc} */

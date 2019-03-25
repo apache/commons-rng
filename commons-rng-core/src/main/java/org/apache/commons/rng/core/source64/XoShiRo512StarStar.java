@@ -36,8 +36,7 @@ public class XoShiRo512StarStar extends AbstractXoShiRo512 {
      * @param seed Initial seed.
      * If the length is larger than 8, only the first 8 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XoShiRo512StarStar(long[] seed) {
         super(seed);

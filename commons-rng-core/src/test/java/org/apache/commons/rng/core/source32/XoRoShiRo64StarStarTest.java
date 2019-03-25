@@ -75,16 +75,4 @@ public class XoRoShiRo64StarStarTest {
             Assert.assertEquals(rng1.nextInt(), rng2.nextInt());
         }
     }
-
-    @Test
-    public void testLongElementConstructor() {
-        final int[] seed = {
-            0x012de1ba, 0xa5a818b8,
-        };
-        final XoRoShiRo64StarStar rng1 = new XoRoShiRo64StarStar(seed);
-        final XoRoShiRo64StarStar rng2 = new XoRoShiRo64StarStar(NumberFactory.makeLong(seed[0], seed[1]));
-        for (int i = seed.length * 2; i-- != 0; ) {
-            Assert.assertEquals(rng1.nextInt(), rng2.nextInt());
-        }
-    }
 }

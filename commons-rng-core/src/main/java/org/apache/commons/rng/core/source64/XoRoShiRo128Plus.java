@@ -37,8 +37,7 @@ public class XoRoShiRo128Plus extends AbstractXoRoShiRo128 {
      * @param seed Initial seed.
      * If the length is larger than 2, only the first 2 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XoRoShiRo128Plus(long[] seed) {
         super(seed);

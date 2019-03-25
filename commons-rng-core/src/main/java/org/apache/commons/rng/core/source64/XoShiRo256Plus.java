@@ -36,8 +36,7 @@ public class XoShiRo256Plus extends AbstractXoShiRo256 {
      * @param seed Initial seed.
      * If the length is larger than 4, only the first 4 elements will
      * be used; if smaller, the remaining elements will be automatically
-     * set.
-     * A seed containing all zeros will create a non-functional generator.
+     * set. A seed containing all zeros will create a non-functional generator.
      */
     public XoShiRo256Plus(long[] seed) {
         super(seed);
