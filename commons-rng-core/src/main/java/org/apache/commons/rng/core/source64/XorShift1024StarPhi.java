@@ -41,6 +41,6 @@ public class XorShift1024StarPhi extends XorShift1024Star {
      * set. A seed containing all zeros will create a non-functional generator.
      */
     public XorShift1024StarPhi(long[] seed) {
-        super(0x9e3779b97f4a7c13L, seed);
+        super(seed, 0x9e3779b97f4a7c13L);
     }
 }

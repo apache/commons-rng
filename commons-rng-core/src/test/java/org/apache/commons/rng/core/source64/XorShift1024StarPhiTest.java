@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng.core.source64;
 
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
-import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Assert;
 import org.junit.Test;

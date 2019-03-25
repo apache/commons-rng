@@ -49,21 +49,21 @@ public class XorShift1024Star extends LongProvider {
      * set. A seed containing all zeros will create a non-functional generator.
      */
     public XorShift1024Star(long[] seed) {
-        this(1181783497276652981L, seed);
+        this(seed, 1181783497276652981L);
     }
 
     /**
      * Creates a new instance.
      *
-     * @param multiplier The multiplier for the XorShift1024 algorithm.
      * @param seed Initial seed.
      * If the length is larger than 16, only the first 16 elements will
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
+     * @param multiplier The multiplier for the XorShift1024 algorithm.
      */
-    protected XorShift1024Star(long multiplier, long[] seed) {
-        this.multiplier = multiplier;
+    protected XorShift1024Star(long[] seed, long multiplier) {
         setSeedInternal(seed);
+        this.multiplier = multiplier;
     }
 
     /** {@inheritDoc} */
