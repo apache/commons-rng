@@ -32,7 +32,7 @@
   * The {{{https://en.wikipedia.org/wiki/Linear_congruential_generator}LCG}}
     algorithm used by <<<java.util.Random>>>
 
-      ** has a serious {{{http://www.ics.uci.edu/~fowlkes/class/cs177/marsaglia.pdf}defect}}, and
+      ** has a serious {{{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC285899/pdf/pnas00123-0038.pdf}defect}}, and
 
       ** is not as efficient as some of the alternatives that do not suffer from this problem.
 
