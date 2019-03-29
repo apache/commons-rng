@@ -583,13 +583,13 @@
             </executions>
           </plugin>
           <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
-            unnamed module. See properties commons.javadoc.java.link, commons.javadoc.javaee.link in 
-            commons-parent. -->
+            unnamed module: use the <source> tag. See properties commons.javadoc.java.link, 
+            commons.javadoc.javaee.link in commons-parent. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
-              <source>7</source>
+              <source>${maven.compiler.source}</source>
             </configuration>
           </plugin>
         </plugins>
@@ -616,13 +616,13 @@
             </reportSets>
           </plugin>
           <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
-            unnamed module. See properties commons.javadoc.java.link, commons.javadoc.javaee.link in 
-            commons-parent. -->
+            unnamed module: use the <source> tag. See properties commons.javadoc.java.link, 
+            commons.javadoc.javaee.link in commons-parent. -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
-              <source>7</source>
+              <source>${maven.compiler.source}</source>
             </configuration>
           </plugin>
         </plugins>

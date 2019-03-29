@@ -47,12 +47,11 @@
 
   <build>
     <plugins>
-      <!--  Revert javadoc fix in parent -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <source>9</source>
+          <!-- Reset API links since these refer to java 1.6 and 1.7 -->
+          <links combine.self="override" />
         </configuration>
       </plugin>
     </plugins>
@@ -60,12 +59,11 @@
 
   <reporting>
     <plugins>
-      <!--  Revert javadoc fix in parent -->
+      <!--  Fix as per the <build> section -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <source>9</source>
+          <links combine.self="override" />
         </configuration>
       </plugin>
     </plugins>
