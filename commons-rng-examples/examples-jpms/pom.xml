@@ -45,6 +45,30 @@
     <maven.compiler.release>9</maven.compiler.release>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <!-- Reset API links since these refer to java 1.6 and 1.7 -->
+          <links combine.self="override" />
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <!--  Fix as per the <build> section -->
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <links combine.self="override" />
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <modules>
     <module>jpms-lib</module>
     <module>jpms-app</module>
