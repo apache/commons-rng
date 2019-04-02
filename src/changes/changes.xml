@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-87">
+        "MultiplyWithCarry256": Performance improvement by advancing state one step per sample.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-82">
         New "XorShift1024StarPhi" generator. This is a modified implementation of XorShift1024Star
         that improves randomness of the output sequence. The XOR_SHIFT_1024_S enum has been marked
