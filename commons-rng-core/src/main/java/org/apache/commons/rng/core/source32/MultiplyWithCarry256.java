@@ -109,18 +109,10 @@ public class MultiplyWithCarry256 extends IntProvider {
     /** {@inheritDoc} */
     @Override
     public int next() {
-        if (index == Q_SIZE) { // Whole state used up.
-            // Refill.
-            for (int i = 0; i < Q_SIZE; i++) {
-                final long t = A * (state[i] & 0xffffffffL) + carry;
-                carry = (int) (t >> 32);
-                state[i] = (int) t;
-            }
-
-            // Reset current index.
-            index = 0;
-        }
-
-        return state[index++];
+        // Produce an index in the range 0-255
+        index &= 0xff;
+        final long t = A * (state[index] & 0xffffffffL) + carry;
+        carry = (int) (t >> 32);
+        return state[index++] = (int) t;
     }
 }
