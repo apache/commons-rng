@@ -16,27 +16,34 @@
  */
 package org.apache.commons.rng.examples.stress;
 
-import org.apache.commons.rng.examples.stress.LogUtils.LogLevel;
-
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
+import picocli.CommandLine.Mixin;
+
+import java.nio.ByteOrder;
+import java.util.concurrent.Callable;
 
 /**
- * Standard options for all commands. This sets the formatting for usage messages and
- * adds common parameters (help, version, verbosity).
+ * Specification for the "endian" command.
+ *
+ * <p>This command prints the native byte order of the platform.</p>
+ *
+ * @see ByteOrder#nativeOrder()
  */
-@Command(sortOptions = true,
-         mixinStandardHelpOptions = true,
-         versionProvider      = ManifestVersionProvider.class,
-         synopsisHeading      = "%n",
-         descriptionHeading   = "%n",
-         parameterListHeading = "%nParameters:%n",
-         optionListHeading    = "%nOptions:%n",
-         commandListHeading   = "%nCommands:%n")
-class StandardOptions {
-    /** The log level. */
-    @Option(names = { "--logging" },
-        description = {"Specify the logging level (default: ${DEFAULT-VALUE}).",
-                       "Valid values: ${COMPLETION-CANDIDATES}"})
-    protected LogLevel logLevel = LogLevel.INFO;
+@Command(name = "endian",
+         description = "Show the platform native byte order.")
+class EndianessCommand implements Callable<Void> {
+    /** The standard options. */
+    @Mixin
+    private StandardOptions reusableOptions;
+
+    /**
+     * Prints a template generators list to stdout.
+     */
+    @Override
+    public Void call() throws Exception {
+        // Log level will be relevant for any exception logging
+        LogUtils.setLogLevel(reusableOptions.logLevel);
+        LogUtils.info(ByteOrder.nativeOrder().toString());
+        return null;
+    }
 }

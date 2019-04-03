@@ -17,7 +17,6 @@
 package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.core.source32.IntProvider;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -53,11 +52,11 @@ import java.util.concurrent.Future;
  * <p>This command loads a list of random generators and tests each generator by
  * piping the values returned by its {@link UniformRandomProvider#nextInt()}
  * method to a program that reads {@code int} values from its standard input and
- * writes an analysis report to standard output.
+ * writes an analysis report to standard output.</p>
  */
 @Command(name = "stress",
-         description = { "Run repeat trials of random data generators using a provided test application.",
-                         "Data is transferred to the application sub-process via standard input." })
+         description = {"Run repeat trials of random data generators using a provided test application.",
+                        "Data is transferred to the application sub-process via standard input."})
 class StressTestCommand implements Callable<Void> {
     /** The standard options. */
     @Mixin
@@ -72,23 +71,23 @@ class StressTestCommand implements Callable<Void> {
     @Parameters(index = "1..*",
                 description = "The arguments to pass to the executable.",
                 paramLabel = "<argument>")
-    private List<String> executableArguments;
+    private List<String> executableArguments = new ArrayList<>();
 
     /** The file output prefix. */
     @Option(names = {"--prefix"},
             description = "Results file prefix (default: ${DEFAULT-VALUE}).")
     private File fileOutputPrefix = new File("stress_");
 
-    /** The overwrite flag. */
+    /** The output mode for existing files. */
     @Option(names = {"-o", "--output-mode"},
             description = {"Output mode for existing files (default: ${DEFAULT-VALUE}).",
-                           "Valid values: ${COMPLETION-CANDIDATES}"})
+                           "Valid values: ${COMPLETION-CANDIDATES}."})
     private StressTestCommand.OutputMode outputMode = OutputMode.ERROR;
 
     /** The list of random generators. */
     @Option(names = {"-l", "--list"},
             description = {"List of random generators.",
-                           "The default list is all known generators." },
+                           "The default list is all known generators."},
             paramLabel = "<genList>")
     private File generatorsListFile;
 
@@ -101,20 +100,20 @@ class StressTestCommand implements Callable<Void> {
     /** The number of concurrent tasks. */
     @Option(names = {"-n", "--tasks"},
             description = {"Number of concurrent tasks (default: ${DEFAULT-VALUE}).",
-                           "Two threads are required per task." })
-    private int taskCount = 4;
+                           "Two threads are required per task."})
+    private int taskCount = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
 
     /** The output byte order of the binary data. */
     @Option(names = {"-b", "--byte-order"},
             description = {"Byte-order of the transferred data (default: ${DEFAULT-VALUE}).",
-                           "Valid values: BIG_ENDIAN, LITTLE_ENDIAN." })
+                           "Valid values: BIG_ENDIAN, LITTLE_ENDIAN."})
     private ByteOrder byteOrder = ByteOrder.nativeOrder();
 
     /** The output byte order of the binary data. */
     @Option(names = {"-r", "--reverse-bits"},
             description = {"Reverse the bits in the data (default: ${DEFAULT-VALUE}).",
                            "Note: Generators may fail tests for a reverse sequence " +
-                           "when passing using the standard sequence." })
+                           "when passing using the standard sequence."})
     private boolean reverseBits;
 
     /** The flag to indicate a dry run. */
@@ -144,40 +143,12 @@ class StressTestCommand implements Callable<Void> {
     @Override
     public Void call() {
         LogUtils.setLogLevel(reusableOptions.logLevel);
-        checkExecutable(executable);
-        checkOutputDirectory(fileOutputPrefix);
+        ProcessUtils.checkExecutable(executable);
+        ProcessUtils.checkOutputDirectory(fileOutputPrefix);
         final Iterable<StressTestData> stressTestData = createStressTestData();
         printStressTestData(stressTestData);
         runStressTest(stressTestData);
         return null;
-    }
-
-    /**
-     * Check the executable exists and has execute permissions.
-     *
-     * @param executable The executable.
-     * @throws ApplicationException If the executable is invalid.
-     */
-    private static void checkExecutable(File executable) {
-        if (!executable.exists() ||
-            !executable.canExecute()) {
-            throw new ApplicationException("Program is not executable: " + executable);
-        }
-    }
-
-    /**
-     * Check the output directory exists and has write permissions.
-     *
-     * @param fileOutputPrefix The file output prefix.
-     * @throws ApplicationException If the output directory is invalid.
-     */
-    private static void checkOutputDirectory(File fileOutputPrefix) {
-        final File reportDir = fileOutputPrefix.getAbsoluteFile().getParentFile();
-        if (!reportDir.exists() ||
-            !reportDir.isDirectory() ||
-            !reportDir.canWrite()) {
-            throw new ApplicationException("Invalid output directory: " + reportDir);
-        }
     }
 
     /**
@@ -226,7 +197,7 @@ class StressTestCommand implements Callable<Void> {
      * @param stressTestData List of generators to be tested.
      */
     private void runStressTest(Iterable<StressTestData> stressTestData) {
-        final ArrayList<String> command = buildSubProcessCommand(executable, executableArguments);
+        final ArrayList<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
 
         // Check existing output files before starting the tasks.
         final String basePath = fileOutputPrefix.getAbsolutePath();
@@ -261,27 +232,6 @@ class StressTestCommand implements Callable<Void> {
             // Terminate all threads.
             service.shutdown();
         }
-    }
-
-    /**
-     * Builds the command for the sub-process.
-     *
-     * @param executable The executable file.
-     * @param executableArguments The executable arguments.
-     * @return the command
-     * @throws ApplicationException If the executable path cannot be resolved
-     */
-    private static ArrayList<String> buildSubProcessCommand(File executable,
-                                                            List<String> executableArguments) {
-        final ArrayList<String> command = new ArrayList<>();
-        try {
-            command.add(executable.getCanonicalPath());
-        } catch (final IOException ex) {
-            // Not expected to happen as the file has been tested to exist
-           throw new ApplicationException("Cannot resolve executable path: " + ex.getMessage(), ex);
-        }
-        command.addAll(executableArguments);
-        return command;
     }
 
     /**
@@ -379,67 +329,15 @@ class StressTestCommand implements Callable<Void> {
             // Create the generator
             UniformRandomProvider rng = testData.createRNG();
             if (byteOrder.equals(ByteOrder.LITTLE_ENDIAN)) {
-                rng = createReverseBytesIntProvider(rng);
+                rng = RNGUtils.createReverseBytesIntProvider(rng);
             }
             if (reverseBits) {
-                rng = createReverseBitsIntProvider(rng);
+                rng = RNGUtils.createReverseBitsIntProvider(rng);
             }
             // Run the test
             final Runnable r = new StressTestTask(rng, output, command, this, progressTracker);
             taskList.add(service.submit(r));
         }
-    }
-
-    /**
-     * Wrap the random generator with an {@link IntProvider} that will reverse the byte order
-     * of the {@code int}.
-     *
-     * @param rng The random generator.
-     * @return the byte reversed random generator.
-     * @see Integer#reverseBytes(int)
-     */
-    private static UniformRandomProvider createReverseBytesIntProvider(final UniformRandomProvider rng) {
-        // Note:
-        // This always uses an IntProvider even if the underlying RNG is a LongProvider.
-        // A LongProvider will produce 2 ints from 8 bytes of a long: 76543210 -> 7654 3210.
-        // This will be reversed to output 2 ints as: 4567 0123.
-        // This is a different output order than if reversing the entire long: 0123 4567.
-        // The effect is to output the most significant bits from the long first, and
-        // the least significant bits second. Thus the output of ints will be the same
-        // on big-endian and little-endian platforms.
-        return new IntProvider() {
-            @Override
-            public int next() {
-                return Integer.reverseBytes(rng.nextInt());
-            }
-
-            @Override
-            public String toString() {
-                return "Byte-reversed " + rng.toString();
-            }
-        };
-    }
-
-    /**
-     * Wrap the random generator with an {@link IntProvider} that will reverse the bits
-     * of the {@code int}.
-     *
-     * @param rng The random generator.
-     * @return the bit reversed random generator.
-     * @see Integer#reverse(int)
-     */
-    private static UniformRandomProvider createReverseBitsIntProvider(final UniformRandomProvider rng) {
-        return new IntProvider() {
-            @Override
-            public int next() {
-                return Integer.reverse(rng.nextInt());
-            }
-
-            @Override
-            public String toString() {
-                return "Bit-reversed " + rng.toString();
-            }
-        };
     }
 
     /**
@@ -505,10 +403,6 @@ class StressTestCommand implements Callable<Void> {
         private static final String[] SI_UNITS = {"B", "kB", "MB", "GB", "TB", "PB", "EB"};
         /** The SI unit base for bytes (10^3). */
         private static final long SI_UNIT_BASE = 1000;
-        /** The timeout to wait for the process exit value in milliseconds. */
-        private static final long TIMEOUT = 1000L;
-        /** The default exit value to use when the process has not terminated. */
-        private static final int DEFAULT_EXIT_VALUE = -404;
 
         /** RNG to be tested. */
         private final UniformRandomProvider rng;
@@ -551,11 +445,11 @@ class StressTestCommand implements Callable<Void> {
             try {
                 printHeader(output, rng, command, cmd.outputMode == StressTestCommand.OutputMode.APPEND);
 
-                int exitValue;
+                Object exitValue;
                 long nanoTime;
                 if (cmd.dryRun) {
                     // Do not do anything
-                    exitValue = 0;
+                    exitValue = "N/A";
                     nanoTime = 0;
                 } else {
                     // Run the sub-process
@@ -579,7 +473,7 @@ class StressTestCommand implements Callable<Void> {
          * @return The exit value.
          * @throws IOException Signals that an I/O exception has occurred.
          */
-        private int runSubProcess() throws IOException {
+        private Integer runSubProcess() throws IOException {
             // Start test suite.
             final ProcessBuilder builder = new ProcessBuilder(command);
             builder.redirectOutput(ProcessBuilder.Redirect.appendTo(output));
@@ -599,40 +493,7 @@ class StressTestCommand implements Callable<Void> {
             }
 
             // Get the exit value
-            return getExitValue(testingProcess);
-        }
-
-        /**
-         * Get the exit value from the process, waiting at most for 1 second, otherwise kill the process
-         * and return a dummy value.
-         *
-         * @param process the process.
-         * @return the exit value.
-         * @see Process#destroy()
-         */
-        private static int getExitValue(Process process) {
-            final long startTime = System.currentTimeMillis();
-            long remaining = TIMEOUT;
-
-            while (remaining > 0) {
-                try {
-                    return process.exitValue();
-                } catch (final IllegalThreadStateException ex) {
-                    try {
-                        Thread.sleep(Math.min(remaining + 1, 100));
-                    } catch (final InterruptedException e) {
-                        // Reset interrupted status and stop waiting
-                        Thread.currentThread().interrupt();
-                        break;
-                    }
-                }
-                remaining = TIMEOUT - (System.currentTimeMillis() - startTime);
-            }
-
-            // Not finished so kill it
-            process.destroy();
-
-            return DEFAULT_EXIT_VALUE;
+            return ProcessUtils.getExitValue(testingProcess);
         }
 
         /**
@@ -654,10 +515,15 @@ class StressTestCommand implements Callable<Void> {
             sb.append(C).append(N);
             sb.append(C).append("RNG: ").append(rng.toString()).append(N);
             sb.append(C).append(N);
+
+            // Match the output of 'java -version', e.g.
+            // java version "1.8.0_131"
+            // Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
+            // Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
             sb.append(C).append("Java: ").append(System.getProperty("java.version")).append(N);
-            sb.append(C).append("Runtime: ").append(System.getProperty("java.runtime.version", "?")).append(N);
-            sb.append(C).append("JVM: ").append(System.getProperty("java.vm.name"))
-                .append(' ').append(System.getProperty("java.vm.version")).append(N);
+            appendNameAndVersion(sb, "Runtime", "java.runtime.name", "java.runtime.version");
+            appendNameAndVersion(sb, "JVM", "java.vm.name", "java.vm.version", "java.vm.info");
+
             sb.append(C).append("OS: ").append(System.getProperty("os.name"))
                 .append(' ').append(System.getProperty("os.version"))
                 .append(' ').append(System.getProperty("os.arch")).append(N);
@@ -670,7 +536,7 @@ class StressTestCommand implements Callable<Void> {
             sb.append(N);
             sb.append(C).append(N);
 
-            appendDate(sb, "Start");
+            appendDate(sb, "Start").append(C).append(N);
 
             write(sb, output, append);
         }
@@ -687,13 +553,13 @@ class StressTestCommand implements Callable<Void> {
          */
         private static void printFooter(File output,
                                         long nanoTime,
-                                        int exitValue,
+                                        Object exitValue,
                                         long numbersUsed)
             throws IOException {
             final StringBuilder sb = new StringBuilder();
             sb.append(C).append(N);
 
-            appendDate(sb, "End");
+            appendDate(sb, "End").append(C).append(N);
 
             sb.append(C).append("Exit value: ").append(exitValue).append(N);
             sb.append(C).append("Numbers used: ").append(numbersUsed)
@@ -727,22 +593,67 @@ class StressTestCommand implements Callable<Void> {
         }
 
         /**
+         * Append prefix and then name and version from System properties, finished with
+         * a new line. The format is:
+         *
+         * <pre>{@code # <prefix>: <name> (build <version>[, <info>, ...])}</pre>
+         *
+         * @param sb The string builder.
+         * @param prefix The prefix.
+         * @param nameKey The name key.
+         * @param versionKey The version key.
+         * @param infoKeys The additional information keys.
+         * @return the StringBuilder.
+         */
+        private static StringBuilder appendNameAndVersion(StringBuilder sb,
+                                                          String prefix,
+                                                          String nameKey,
+                                                          String versionKey,
+                                                          String... infoKeys) {
+            appendPrefix(sb, prefix)
+                .append(System.getProperty(nameKey, "?"))
+                .append(" (build ")
+                .append(System.getProperty(versionKey, "?"));
+            for (String key : infoKeys) {
+                final String value = System.getProperty(key, "");
+                if (!value.isEmpty()) {
+                    sb.append(", ").append(value);
+                }
+            }
+            return sb.append(')').append(N);
+        }
+
+        /**
+         * Append a comment with the current date to the {@link StringBuilder}, finished with
+         * a new line. The format is:
+         *
+         * <pre>{@code # <prefix>: yyyy-MM-dd HH:mm:ss}</pre>
+         *
+         * @param sb The StringBuilder.
+         * @param prefix The prefix used before the formatted date, e.g. "Start".
+         * @return the StringBuilder.
+         */
+        private static StringBuilder appendDate(StringBuilder sb,
+                                                String prefix) {
+            // Use local date format. It is not thread safe.
+            final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+            return appendPrefix(sb, prefix).append(dateFormat.format(new Date())).append(N);
+        }
+
+        /**
          * Append a comment with the current date to the {@link StringBuilder}.
          *
          * <pre>
-         * # [prefix]: yyyy-MM-dd HH:mm:ss
-         * #
+         * {@code # <prefix>: yyyy-MM-dd HH:mm:ss}
          * </pre>
          *
-         * @param sb the StringBuilder.
-         * @param prefix the prefix used before the formatted date, e.g. "Start".
+         * @param sb The StringBuilder.
+         * @param prefix The prefix used before the formatted date, e.g. "Start".
+         * @return the StringBuilder.
          */
-        private static void appendDate(StringBuilder sb,
-                                       String prefix) {
-            // Use local date format. It is not thread safe.
-            final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-            sb.append(C).append(prefix).append(": ").append(dateFormat.format(new Date())).append(N);
-            sb.append(C).append(N);
+        private static StringBuilder appendPrefix(StringBuilder sb,
+                                                  String prefix) {
+            return sb.append(C).append(prefix).append(": ");
         }
 
         /**

@@ -20,6 +20,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.RunLast;
@@ -38,9 +39,9 @@ import java.util.concurrent.Callable;
  * The <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">
  * "dieharder"</a> test suite is such a software.</p>
  *
- * <p>Example of command line, assuming that "rng-utils.jar" specifies this
+ * <p>Example of command line, assuming that "examples-stress.jar" specifies this
  * class as the "main" class (see {@link #main(String[]) main} method):
- * <pre>{@code $ java -jar rng-utils.jar stress /usr/bin/dieharder -a -g 200 -Y 1 -k 2}</pre>
+ * <pre>{@code $ java -jar examples-stress.jar stress /usr/bin/dieharder -a -g 200 -Y 1 -k 2}</pre>
  * </p>
  *
  * <p>Other functionality includes:</p>
@@ -50,9 +51,9 @@ import java.util.concurrent.Callable;
  *   <li>...
  * </ul>
  */
-@Command(name = "rng-utils",
-         description = "Apache Commons Random Number Generators Utilities.")
-class RNGUtilsCommand implements Callable<Void> {
+@Command(name = "examples-stress",
+         description = "Apache Commons RNG Examples Stress Utilities.")
+class ExamplesStressCommand implements Callable<Void> {
     /** The command specification. Used to print the usage built by Picocli. */
     @Spec
     private CommandSpec spec;
@@ -67,13 +68,25 @@ class RNGUtilsCommand implements Callable<Void> {
      * @param args Application's arguments.
      */
     public static void main(String[] args) {
-        final RNGUtilsCommand tester = new RNGUtilsCommand();
+        // Allow the input seed to be specified using hex (starting 0x, 0X, #) or
+        // octal (starting with 0)
+        final ITypeConverter<Long> longConverter = new ITypeConverter<Long>() {
+            @Override
+            public Long convert(String s) {
+                return Long.decode(s);
+            }
+        };
 
         // Build the command line manually so we can configure options.
-        final CommandLine cmd = new CommandLine(tester)
+        final CommandLine cmd = new CommandLine(new ExamplesStressCommand())
+                .addSubcommand("bridge", new CommandLine(new BridgeTestCommand())
+                                                         .setStopAtPositional(true))
+                .addSubcommand("endian", new EndianessCommand())
+                .addSubcommand("list",   new ListCommand())
+                .addSubcommand("output", new CommandLine(new OutputCommand())
+                                                         .registerConverter(Long.class, longConverter))
                 .addSubcommand("stress", new CommandLine(new StressTestCommand())
                                                          .setStopAtPositional(true))
-                .addSubcommand("list",   new ListCommand())
                 // Call last to apply to all sub-commands
                 .setCaseInsensitiveEnumValuesAllowed(true);
 

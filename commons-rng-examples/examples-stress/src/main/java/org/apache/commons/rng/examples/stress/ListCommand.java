@@ -37,7 +37,7 @@ import java.util.concurrent.Callable;
 /**
  * Specification for the "list" command.
  *
- * <p>This command prints a list of available random generators to the console.
+ * <p>This command prints a list of available random generators to the console.</p>
  */
 @Command(name = "list",
          description = "List random generators.")
@@ -49,7 +49,7 @@ class ListCommand implements Callable<Void> {
     /** The list format. */
     @Option(names = {"-f", "--format"},
             description = {"The list format (default: ${DEFAULT-VALUE}).",
-                           "Valid values: ${COMPLETION-CANDIDATES}" },
+                           "Valid values: ${COMPLETION-CANDIDATES}."},
             paramLabel = "<format>")
     private ListFormat listFormat = ListFormat.STRESS_TEST;
 
@@ -255,25 +255,8 @@ class ListCommand implements Callable<Void> {
         final String[] tokens = arguments.substring(1, len - 1).split(", *");
         final ArrayList<Object> args = new ArrayList<>();
         for (final String token : tokens) {
-            args.add(parseArgument(token));
+            args.add(RNGUtils.parseArgument(token));
         }
         return args.toArray();
-    }
-
-    /**
-     * Parses the argument into an object suitable for the RandomSource constructor.
-     *
-     * @param argument the argument
-     * @return the object
-     */
-    private static Object parseArgument(String argument) {
-        try {
-            // Currently just support TWO_CMRES_SELECT which uses a pair of integers.
-            // Future RandomSource implementations may require other parsing, for example
-            // recognising a long by the suffix 'L'.
-            return Integer.parseInt(argument);
-        } catch (final NumberFormatException ex) {
-            throw new ApplicationException("Failed to parse RandomSource argument: " + argument, ex);
-        }
     }
 }

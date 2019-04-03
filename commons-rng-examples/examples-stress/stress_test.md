@@ -16,7 +16,7 @@
 -->
 
 Apache Commons RNG Stress Test Example
-===================
+======================================
 
 The stress test module contains an application for calling external tools that perform stringent
 uniformity tests. The following shows an example of how to run **DieHarder** and **TestU01**.
@@ -74,17 +74,18 @@ required.
 Test platform Endianness
 ------------------------
 
-The **Dieharder** and **TestU01** test suites read raw binary data. This is done using the native
-platform byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness). The stress test
-application can support either big-endian or little-endian format. The application will
-auto-detect the platform and will default to output binary data using the native byte order.
+The stress test application will output raw binary data for generated integers. An integer is 4
+bytes and thus the byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness) of the data
+must be correct for the test application. The stress test application can support either big-endian
+or little-endian format. The application will auto-detect the platform and will default to output
+binary data using the native byte order.
 
-You can determine the required format for the `c` language using the provided utility program:
+The **Dieharder** application and `stdin2testu01` bridge application for the **TestU01**
+test suites read binary data using a c-library function that requires the data to be in the native
+byte order. These test suites will be supported automatically.
 
-        > gcc src/main/c/testendianness.c -o testendianness && ./testendianness
-        Little-endian
-
-More details are provided in the [endianness](./endianness.md) page.
+If using a alternative test suite the endian format expected by the test suite must be verified.
+More details of how to do this are provided in the [endianness](./endianness.md) page.
 
 Running on Linux/MacOS
 ----------------------
@@ -97,13 +98,13 @@ This will create a single jar file with all the dependencies in the `target` dir
 
 The jar file is executable and provides usage information with the `--help` or `-h` option:
 
-        > java -jar target/rng-utils.jar -h
+        > java -jar target/examples-stress.jar -h
 
 The list of generators that can be tested can be customised. The default is to use all known
 generators that do not require arguments in addition to a random seed. To create a template list
 use the `list` command:
 
-        > java -jar target/rng-utils.jar list
+        > java -jar target/examples-stress.jar list
 
         # ID   RandomSource           trials   [constructor arguments ...]
         1      JDK                    1
@@ -127,14 +128,14 @@ Use the `--help` option to show the available options.
 
 ### TestU01
 
-        > java -jar target/rng-utils.jar stress \
+        > java -jar target/examples-stress.jar stress \
               --prefix target/tu_ \
               ./stdin2testu01 \
               BigCrush
 
 ### DieHarder
 
-        > java -jar target/rng-utils.jar stress \
+        > java -jar target/examples-stress.jar stress \
               --prefix target/dh_ \
               /usr/bin/dieharder \
               -a -g 200 -Y 1 -k 2
