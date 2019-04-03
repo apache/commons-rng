@@ -17,90 +17,90 @@
 
 package org.apache.commons.rng.examples.jmh.distribution;
 
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.infra.Blackhole;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.sampling.distribution.DiscreteInverseCumulativeProbabilityFunction;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.GeometricSampler;
 import org.apache.commons.rng.sampling.distribution.InverseTransformDiscreteSampler;
+import org.apache.commons.rng.simple.RandomSource;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Executes a benchmark to compare the speed of generation of Geometric random numbers
  * using different methods.
  */
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class GeometricSamplersPerformance {
-    /** Number of samples per run. */
-    private static final int NUM_SAMPLES = 10000000;
-
     /**
-     * The RandomSource's to use for testing.
+     * The samplers's to use for testing. Defines the RandomSource, probability of success
+     * and the type of Geometric sampler.
      */
     @State(Scope.Benchmark)
     public static class Sources {
         /**
          * RNG providers.
+         *
+         * <p>Use different speeds.
+         *
+         * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
+         *      Commons RNG user guide</a>
          */
         @Param({"SPLIT_MIX_64",
                 "MWC_256",
-                "JDK" })
+                "JDK"})
         private String randomSourceName;
 
-        /** RNG. */
-        private UniformRandomProvider generator;
+        /**
+         * The probability of success.
+         */
+        @Param({"0.1", "0.3"})
+        private double probabilityOfSuccess;
 
         /**
-         * @return the RNG.
+         * The sampler type.
          */
-        public UniformRandomProvider getGenerator() {
-            return generator;
+        @Param({"GeometricSampler", "InverseTransformDiscreteSampler"})
+        private String samplerType;
+
+        /** The sampler. */
+        private DiscreteSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public DiscreteSampler getSampler() {
+            return sampler;
         }
 
-        /** Instantiates generator. */
+        /** Instantiates sampler. */
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            generator = RandomSource.create(randomSource);
-        }
-    }
-
-    /**
-     * The probability of success for testing.
-     */
-    @State(Scope.Benchmark)
-    public static class ProbabilityOfSuccess {
-        /**
-         * The probability.
-         */
-        @Param({ "0.1", "0.3"})
-        private double probability;
-
-        /**
-         * Gets the probability of success.
-         *
-         * @return the probability of success
-         */
-        public double getProbability() {
-            return probability;
+            final UniformRandomProvider rng = RandomSource.create(randomSource);
+            if ("GeometricSampler".equals(samplerType)) {
+                sampler = new GeometricSampler(rng, probabilityOfSuccess);
+            } else {
+                final DiscreteInverseCumulativeProbabilityFunction geometricFunction =
+                    new GeometricDiscreteInverseCumulativeProbabilityFunction(probabilityOfSuccess);
+                sampler = new InverseTransformDiscreteSampler(rng, geometricFunction);
+            }
         }
     }
 
@@ -142,50 +142,30 @@ public class GeometricSamplersPerformance {
     }
 
     /**
-     * Exercises a discrete sampler.
+     * The value.
      *
-     * @param sampler Sampler.
-     * @param bh Data sink.
+     * <p>This must NOT be final!</p>
      */
-    private static void runSample(DiscreteSampler sampler,
-                                  Blackhole bh) {
-        for (int i = 0; i < NUM_SAMPLES; i++) {
-            bh.consume(sampler.sample());
-        }
-    }
-
-    // Benchmarks methods below.
+    private int value;
 
     /**
-     * Run geometric sampler.
+     * Baseline for the JMH timing overhead for production of an {@code int} value.
      *
-     * @param sources Source of randomness.
-     * @param success The probability of success.
-     * @param bh Data sink.
+     * @return the {@code int} value
      */
     @Benchmark
-    public void runGeometricSampler(Sources sources,
-                                    ProbabilityOfSuccess success,
-                                    Blackhole bh) {
-        runSample(new GeometricSampler(sources.getGenerator(), success.getProbability()), bh);
+    public int baseline() {
+        return value;
     }
 
     /**
-     * Run geometric sampler.
+     * Run the sampler.
      *
      * @param sources Source of randomness.
-     * @param success The probability of success.
-     * @param bh Data sink.
+     * @return the sample value
      */
     @Benchmark
-    public void runGeometricInverseTranformSampler(Sources sources,
-                                                   ProbabilityOfSuccess success,
-                                                   Blackhole bh) {
-        final DiscreteInverseCumulativeProbabilityFunction geometricFunction =
-                new GeometricDiscreteInverseCumulativeProbabilityFunction(success.getProbability());
-        final DiscreteSampler inverseMethodSampler =
-                new InverseTransformDiscreteSampler(sources.getGenerator(),
-                                                    geometricFunction);
-        runSample(inverseMethodSampler, bh);
+    public int sample(Sources sources) {
+        return sources.getSampler().sample();
     }
 }
