@@ -127,7 +127,7 @@ public class BaselineGenerationPerformance {
      *
      * <p>Note: Following the convention in the JMH Blackhole::consumCPU(long) method
      * the loops are constructed to count down (although since there is no consumption
-     * of the loop counter the loop construct may be rewritten anyway).
+     * of the loop counter the loop construct may be rewritten anyway).</p>
      */
     @Param({"50000", "100000", "150000", "200000", "250000"})
     private int numValues;
@@ -137,7 +137,7 @@ public class BaselineGenerationPerformance {
      *
      * <p>Note: Currently there is not a test for
      * {@link UniformRandomProvider#nextBytes(byte[], int, int)} since the two methods are
-     * implemented by the base Int/LongProvider class using the same code.
+     * implemented by the base Int/LongProvider class using the same code.</p>
      *
      * @param bh Data sink.
      */

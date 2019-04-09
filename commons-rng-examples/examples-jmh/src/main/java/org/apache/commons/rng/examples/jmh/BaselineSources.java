@@ -29,7 +29,7 @@ import org.openjdk.jmh.annotations.State;
  * Defines the benchmark state to retrieve the various "RandomSource"s.
  *
  * <p>A baseline implementation for the {@link UniformRandomProvider} must be provided by
- * implementing classes.
+ * implementing classes.</p>
  */
 @State(Scope.Benchmark)
 public abstract class BaselineSources {

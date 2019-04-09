@@ -38,7 +38,7 @@ public class NextDoubleGenerationPerformance extends AbstractBenchmark {
         }
     }
 
-    /** The value. */
+    /** The value. Must NOT be final to prevent JVM optimisation! */
     private double value;
 
     /**

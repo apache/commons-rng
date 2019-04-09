@@ -31,7 +31,7 @@ public final class BaselineUtils {
      *
      * <p>Note: This is not a good baseline as the JVM can optimise the predictable result
      * of the method calls. This is here for convenience when implementing
-     * UniformRandomProvider.
+     * UniformRandomProvider.</p>
      */
     private abstract static class DefaultProvider implements UniformRandomProvider {
         @Override
@@ -62,14 +62,6 @@ public final class BaselineUtils {
         public double nextDouble() { return 0; }
     }
 
-    // The baseline implementation of nextBytes has 2 options:
-    //
-    // 1. Copy the same value into each positions.
-    // 2. Increment a counter and copy into each position.
-    //
-    // Option 1 provides the opportunity for the JVM to inline the copy through the array.
-    // Option 2 introduces a counter overhead.
-
     /**
      * Baseline implementation for {@link UniformRandomProvider#nextBytes(byte[])} and
      * {@link UniformRandomProvider#nextBytes(byte[], int, int)}.
@@ -79,7 +71,7 @@ public final class BaselineUtils {
          * The fixed value to fill the byte array.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private byte value;
 
@@ -107,7 +99,7 @@ public final class BaselineUtils {
          * The fixed value to return.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private int value;
 
@@ -131,7 +123,7 @@ public final class BaselineUtils {
          * The fixed value to return.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private long value;
 
@@ -154,7 +146,7 @@ public final class BaselineUtils {
          * The fixed value to return.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private boolean value;
 
@@ -172,7 +164,7 @@ public final class BaselineUtils {
          * The fixed value to return.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private float value;
 
@@ -190,7 +182,7 @@ public final class BaselineUtils {
          * The fixed value to return.
          *
          * <p><strong>DON'T</strong> make this final!
-         * This must be a viewed by the JVM as something that cannot be optimised away.
+         * This must be a viewed by the JVM as something that cannot be optimised away.</p>
          */
         private double value;
 

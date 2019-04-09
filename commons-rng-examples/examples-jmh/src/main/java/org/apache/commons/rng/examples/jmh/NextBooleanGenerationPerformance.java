@@ -38,7 +38,7 @@ public class NextBooleanGenerationPerformance extends AbstractBenchmark {
         }
     }
 
-    /** The value. */
+    /** The value. Must NOT be final to prevent JVM optimisation! */
     private boolean value;
 
     /**

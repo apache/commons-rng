@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  *
  * <p>Note: Implementing this as an {@code @interface} annotation results in errors as the
  * meta-annotation is not expanded by the JMH annotation processor. The processor does however
- * allow all annotations to be inherited from abstract classes.
+ * allow all annotations to be inherited from abstract classes.</p>
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)

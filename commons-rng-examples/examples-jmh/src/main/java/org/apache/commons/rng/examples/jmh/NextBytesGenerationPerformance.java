@@ -38,7 +38,10 @@ public class NextBytesGenerationPerformance extends AbstractBenchmark {
         }
     }
 
-    /** The value. This is a pre-allocated array. */
+    /**
+     * The value. This is a pre-allocated array. Must NOT be final to prevent JVM
+     * optimisation!
+     */
     private byte[] value = new byte[BaselineGenerationPerformance.NEXT_BYTES_SIZE];
 
     /**

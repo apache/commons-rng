@@ -45,7 +45,7 @@ public class FloatingPointGenerationPerformance {
      * Mimic the generation of the SplitMix64 algorithm.
      *
      * <p>The final mixing step must be included otherwise the output numbers are sequential
-     * and the test may run with a lack of numbers with higher order bits.
+     * and the test may run with a lack of numbers with higher order bits.</p>
      */
     @State(Scope.Benchmark)
     public static class LongSource {
