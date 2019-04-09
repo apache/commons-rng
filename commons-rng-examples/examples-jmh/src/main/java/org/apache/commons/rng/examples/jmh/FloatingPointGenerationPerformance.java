@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = { "-server", "-Xms128M", "-Xmx128M" })
-public class NextDoublePerformance {
+public class FloatingPointGenerationPerformance {
     /**
      * Mimic the generation of the SplitMix64 algorithm.
      *
