@@ -26,7 +26,6 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.infra.Blackhole;
 import java.util.concurrent.TimeUnit;
 import java.util.Random;
 
@@ -35,34 +34,39 @@ import java.util.Random;
  * the speed of generation of normally-distributed random numbers.
  */
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class NextGaussianPerformance {
-    /** Number of samples per run. */
-    private static final int NUM_SAMPLES = 10000000;
     /** JDK's generator. */
     private final Random random = new Random();
+
     /**
-     * Exercises the JDK's Gaussian sampler.
+     * The value.
      *
-     * @param bh Data sink.
+     * <p>This must NOT be final!
      */
-    private void runSample(Blackhole bh) {
-        for (int i = 0; i < NUM_SAMPLES; i++) {
-            bh.consume(random.nextGaussian());
-        }
-    }
-
-    // Benchmarks methods below.
+    private double value;
 
     /**
-     * @param bh Data sink.
+     * Baseline for the JMH timing overhead for production of an {@code double} value.
+     *
+     * @return the {@code double} value
      */
     @Benchmark
-    public void runJDKRandomGaussianSampler(Blackhole bh) {
-        runSample(bh);
+    public double baseline() {
+        return value;
+    }
+
+    /**
+     * Run JDK random gaussian sampler.
+     *
+     * @return the double
+     */
+    @Benchmark
+    public double runJDKRandomGaussianSampler() {
+        return random.nextGaussian();
     }
 }
