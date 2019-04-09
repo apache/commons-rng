@@ -21,7 +21,8 @@ package org.apache.commons.rng.core.source32;
  * A fast 32-bit generator suitable for {@code float} generation. This is slightly faster than the
  * all-purpose generator {@link XoRoShiRo64StarStar}.
  *
- * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 64 bits.
+ * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 64
+ * bits.</p>
  *
  * @see <a href="http://xoshiro.di.unimi.it/xoroshiro64star.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>

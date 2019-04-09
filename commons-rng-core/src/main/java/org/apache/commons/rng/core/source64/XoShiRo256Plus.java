@@ -22,7 +22,7 @@ package org.apache.commons.rng.core.source64;
  * all-purpose generator {@link XoShiRo256StarStar}.
  *
  * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 256 bits
- * and the period is 2<sup>256</sup>-1.
+ * and the period is 2<sup>256</sup>-1.</p>
  *
  * @see <a href="http://xoshiro.di.unimi.it/xoshiro256plus.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
