@@ -22,6 +22,18 @@
  * This package contains code to perform a
  * <a href="http://openjdk.java.net/projects/code-tools/jmh">JMH</a> run.
  * </p>
+ *
+ * <p>
+ * Support for a new {@link org.apache.commons.rng.UniformRandomProvider UniformRandomProvider}
+ * with a defined enum value in {@link org.apache.commons.rng.simple.RandomSource RandomSource}
+ * can be added by updating:
+ * </p>
+ *
+ * <ul>
+ *   <li>The {@link org.apache.commons.rng.examples.jmh.RandomSourceValues RandomSourceValues} class
+ *   <li>The {@link org.apache.commons.rng.examples.jmh.BaselineSources BaselineSources} class
+ *   <li>The {@link org.apache.commons.rng.examples.jmh.ConstructionPerformance
+ *       ConstructionPerformance} class
+ * </ul>
  */
-
 package org.apache.commons.rng.examples.jmh;

@@ -24,7 +24,8 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 /**
- * A benchmark state that can retrieve the various {@link RandomSource} generators.
+ * A benchmark state that can retrieve the various generators defined by {@link RandomSource}
+ * values.
  *
  * <p>The state will include only those that do not require additional constructor arguments.</p>
  */

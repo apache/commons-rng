@@ -26,10 +26,28 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 /**
- * Defines the benchmark state to retrieve the various "RandomSource"s.
+ * A benchmark state that can retrieve the various generators defined by {@link RandomSource}
+ * values.
  *
- * <p>A baseline implementation for the {@link UniformRandomProvider} must be provided by
- * implementing classes.</p>
+ * <p>The state will include only those that do not require additional constructor arguments.</p>
+ *
+ * <p>This class is abstract since it adds a special {@code RandomSource} named
+ * {@code BASELINE}. A baseline implementation for the {@link UniformRandomProvider}
+ * interface must be provided by implementing classes. For example to baseline methods
+ * using {@link UniformRandomProvider#nextInt()} use the following code:</p>
+ *
+ * <pre>
+ * &#64;State(Scope.Benchmark)
+ * public static class Sources extends BaselineSources {
+ *     &#64;Override
+ *     protected UniformRandomProvider createBaseline() {
+ *         return BaselineUtils.getNextInt();
+ *     }
+ * }
+ * </pre>
+ *
+ * <p>Note: It is left to the implementation to ensure the baseline is suitable for the method
+ * being tested.</p>
  */
 @State(Scope.Benchmark)
 public abstract class BaselineSources {
