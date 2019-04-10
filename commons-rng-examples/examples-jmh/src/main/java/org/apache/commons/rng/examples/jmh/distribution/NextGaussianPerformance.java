@@ -46,7 +46,7 @@ public class NextGaussianPerformance {
     /**
      * The value.
      *
-     * <p>This must NOT be final!
+     * <p>This must NOT be final!</p>
      */
     private double value;
 

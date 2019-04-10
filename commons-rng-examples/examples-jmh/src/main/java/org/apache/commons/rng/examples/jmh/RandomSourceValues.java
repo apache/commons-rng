@@ -17,33 +17,29 @@
 
 package org.apache.commons.rng.examples.jmh;
 
-import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
-import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 /**
- * Defines the benchmark state to retrieve the various "RandomSource"s.
+ * A benchmark state that can retrieve the various {@link RandomSource} values.
  *
- * <p>A baseline implementation for the {@link UniformRandomProvider} must be provided by
- * implementing classes.</p>
+ * <p>The state will include only those that do not require additional constructor arguments.</p>
  */
 @State(Scope.Benchmark)
-public abstract class BaselineSources {
-    /** The keyword identifying the baseline implementation. */
-    private static final String BASELINE = "BASELINE";
-
+public class RandomSourceValues {
     /**
-     * RNG providers.
+     * RNG providers. This list is maintained in the order of the {@link RandomSource} enum.
      *
-     * <p>List all providers that do not require additional constructor arguments. This list
-     * is in the declared order of {@link RandomSource}.</p>
+     * <p>Include only those that do not require additional constructor arguments.</p>
+     *
+     * <p>Note: JMH does support using an Enum for the {@code @Param} annotation. However
+     * the default set will encompass all the enum values, including those that require
+     * additional constructor arguments. So this list is maintained manually.</p>
      */
-    @Param({BASELINE,
-            "JDK",
+    @Param({"JDK",
             "WELL_512_A",
             "WELL_1024_A",
             "WELL_19937_A",
@@ -72,36 +68,23 @@ public abstract class BaselineSources {
             })
     private String randomSourceName;
 
-    /** RNG. */
-    private UniformRandomProvider provider;
+    /** The RandomSource. */
+    private RandomSource randomSource;
 
     /**
-     * Gets the generator.
+     * Gets the random source.
      *
-     * @return the RNG.
+     * @return the random source
      */
-    public UniformRandomProvider getGenerator() {
-        return provider;
+    public RandomSource getRandomSource() {
+        return randomSource;
     }
 
-    /** Instantiates generator. This need only be done once per set of iterations. */
-    @Setup(value = Level.Trial)
+    /**
+     * Look-up the {@link RandomSource} from the name.
+     */
+    @Setup
     public void setup() {
-        if (BASELINE.equals(randomSourceName)) {
-            provider = createBaseline();
-        } else {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            provider = RandomSource.create(randomSource);
-        }
+        randomSource = RandomSource.valueOf(randomSourceName);
     }
-
-    /**
-     * Creates the baseline {@link UniformRandomProvider}.
-     *
-     * <p>This should implement the method(s) that will be tested. The speed of this RNG is expected
-     * to create a baseline against which all other generators will be compared.</p>
-     *
-     * @return the baseline RNG.
-     */
-    protected abstract UniformRandomProvider createBaseline();
 }

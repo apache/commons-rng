@@ -24,7 +24,6 @@ import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -47,10 +46,21 @@ import org.apache.commons.rng.core.source32.Well19937c;
 import org.apache.commons.rng.core.source32.Well44497a;
 import org.apache.commons.rng.core.source32.Well44497b;
 import org.apache.commons.rng.core.source32.Well512a;
+import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
+import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
+import org.apache.commons.rng.core.source32.XoShiRo128Plus;
+import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.TwoCmres;
+import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
+import org.apache.commons.rng.core.source64.XoRoShiRo128StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo256Plus;
+import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
+import org.apache.commons.rng.core.source64.XoShiRo512Plus;
+import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
+import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
@@ -103,7 +113,7 @@ public class ConstructionPerformance {
         LONG_ARRAY_SEEDS = new long[SEEDS][];
         INT_ARRAY_SEEDS = new int[SEEDS][];
         BYTE_ARRAY_SEEDS = new byte[SEEDS][];
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S);
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
         for (int i = 0; i < SEEDS; i++) {
             final long[] longArray = new long[MAX_SEED_SIZE];
             final int[] intArray = new int[MAX_SEED_SIZE];
@@ -123,31 +133,7 @@ public class ConstructionPerformance {
      * The benchmark state (retrieve the various "RandomSource"s).
      */
     @State(Scope.Benchmark)
-    public static class Sources {
-        /**
-         * RNG providers.
-         */
-        @Param({"JDK",
-                "WELL_512_A",
-                "WELL_1024_A",
-                "WELL_19937_A",
-                "WELL_19937_C",
-                "WELL_44497_A",
-                "WELL_44497_B",
-                "MT",
-                "ISAAC",
-                "SPLIT_MIX_64",
-                "XOR_SHIFT_1024_S",
-                "TWO_CMRES",
-                "MT_64",
-                "MWC_256",
-                "KISS",
-                })
-        private String randomSourceName;
-
-        /** The RandomSource. */
-        private RandomSource randomSource;
-
+    public static class Sources extends RandomSourceValues {
         /** The native seeds. */
         private Object[] nativeSeeds;
 
@@ -162,15 +148,6 @@ public class ConstructionPerformance {
 
         /** The constructor. */
         private Constructor<Object> constructor;
-
-        /**
-         * Gets the random source.
-         *
-         * @return the random source
-         */
-        public RandomSource getRandomSource() {
-            return randomSource;
-        }
 
         /**
          * Gets the native seeds for the RandomSource.
@@ -219,13 +196,13 @@ public class ConstructionPerformance {
 
         /**
          * Create the random source and the test seeds.
-         *
-         * @throws NoSuchMethodException If the constructor cannot be found
          */
+        @Override
         @SuppressWarnings("unchecked")
         @Setup(value=Level.Trial)
-        public void setup() throws NoSuchMethodException {
-            randomSource = RandomSource.valueOf(randomSourceName);
+        public void setup() {
+            super.setup();
+            RandomSource randomSource = getRandomSource();
             nativeSeeds = findNativeSeeds(randomSource);
 
             // Truncate array seeds to length 1
@@ -249,7 +226,11 @@ public class ConstructionPerformance {
 
             // Cache the class type and constructor
             implementingClass = getRandomSourceInternal(randomSource).getRng();
-            constructor = (Constructor<Object>) implementingClass.getConstructor(nativeSeeds[0].getClass());
+            try {
+                constructor = (Constructor<Object>) implementingClass.getConstructor(nativeSeeds[0].getClass());
+            } catch (NoSuchMethodException ex) {
+                throw new IllegalStateException("Failed to find the constructor", ex);
+            }
         }
 
         /**
@@ -293,9 +274,20 @@ public class ConstructionPerformance {
             case ISAAC:
             case MWC_256:
             case KISS:
+            case XO_RO_SHI_RO_64_S:
+            case XO_RO_SHI_RO_64_SS:
+            case XO_SHI_RO_128_PLUS:
+            case XO_SHI_RO_128_SS:
                 return INT_ARRAY_SEEDS;
             case XOR_SHIFT_1024_S:
+            case XOR_SHIFT_1024_S_PHI:
             case MT_64:
+            case XO_RO_SHI_RO_128_PLUS:
+            case XO_RO_SHI_RO_128_SS:
+            case XO_SHI_RO_256_PLUS:
+            case XO_SHI_RO_256_SS:
+            case XO_SHI_RO_512_PLUS:
+            case XO_SHI_RO_512_SS:
                 return LONG_ARRAY_SEEDS;
             default:
                 throw new AssertionError("Unknown native seed");
@@ -330,6 +322,7 @@ public class ConstructionPerformance {
             case ISAAC:
                 return 256;
             case XOR_SHIFT_1024_S:
+            case XOR_SHIFT_1024_S_PHI:
                 return 16;
             case MT_64:
                 return 312;
@@ -337,6 +330,21 @@ public class ConstructionPerformance {
                 return 257;
             case KISS:
                 return 4;
+            case XO_RO_SHI_RO_64_S:
+            case XO_RO_SHI_RO_64_SS:
+                return 2;
+            case XO_SHI_RO_128_PLUS:
+            case XO_SHI_RO_128_SS:
+                return 4;
+            case XO_RO_SHI_RO_128_PLUS:
+            case XO_RO_SHI_RO_128_SS:
+                return 2;
+            case XO_SHI_RO_256_PLUS:
+            case XO_SHI_RO_256_SS:
+                return 4;
+            case XO_SHI_RO_512_PLUS:
+            case XO_SHI_RO_512_SS:
+                return 8;
             default:
                 throw new AssertionError("Unknown native seed size");
             }
@@ -363,10 +371,21 @@ public class ConstructionPerformance {
             case TWO_CMRES_SELECT:
             case MWC_256:
             case KISS:
+            case XO_RO_SHI_RO_64_S:
+            case XO_RO_SHI_RO_64_SS:
+            case XO_SHI_RO_128_PLUS:
+            case XO_SHI_RO_128_SS:
                 return 4; // int
             case SPLIT_MIX_64:
             case XOR_SHIFT_1024_S:
+            case XOR_SHIFT_1024_S_PHI:
             case MT_64:
+            case XO_RO_SHI_RO_128_PLUS:
+            case XO_RO_SHI_RO_128_SS:
+            case XO_SHI_RO_256_PLUS:
+            case XO_SHI_RO_256_SS:
+            case XO_SHI_RO_512_PLUS:
+            case XO_SHI_RO_512_SS:
                 return 8; // long
             default:
                 throw new AssertionError("Unknown native seed element byte size");
@@ -397,6 +416,17 @@ public class ConstructionPerformance {
             case SPLIT_MIX_64: return RandomSourceInternal.SPLIT_MIX_64;
             case XOR_SHIFT_1024_S: return RandomSourceInternal.XOR_SHIFT_1024_S;
             case MT_64: return RandomSourceInternal.MT_64;
+            case XOR_SHIFT_1024_S_PHI: return RandomSourceInternal.XOR_SHIFT_1024_S_PHI;
+            case XO_RO_SHI_RO_64_S: return RandomSourceInternal.XO_RO_SHI_RO_64_S;
+            case XO_RO_SHI_RO_64_SS: return RandomSourceInternal.XO_RO_SHI_RO_64_SS;
+            case XO_SHI_RO_128_PLUS: return RandomSourceInternal.XO_SHI_RO_128_PLUS;
+            case XO_SHI_RO_128_SS: return RandomSourceInternal.XO_SHI_RO_128_SS;
+            case XO_RO_SHI_RO_128_PLUS: return RandomSourceInternal.XO_RO_SHI_RO_128_PLUS;
+            case XO_RO_SHI_RO_128_SS: return RandomSourceInternal.XO_RO_SHI_RO_128_SS;
+            case XO_SHI_RO_256_PLUS: return RandomSourceInternal.XO_SHI_RO_256_PLUS;
+            case XO_SHI_RO_256_SS: return RandomSourceInternal.XO_SHI_RO_256_SS;
+            case XO_SHI_RO_512_PLUS: return RandomSourceInternal.XO_SHI_RO_512_PLUS;
+            case XO_SHI_RO_512_SS: return RandomSourceInternal.XO_SHI_RO_512_SS;
             default:
                 throw new AssertionError("Unknown random source internal");
             }
@@ -550,6 +580,116 @@ public class ConstructionPerformance {
     public void newKISSRandom(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             bh.consume(new KISSRandom(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXorShift1024StarPhi(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XorShift1024StarPhi(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoRoShiRo64Star(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoRoShiRo64Star(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoRoShiRo64StarStar(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoRoShiRo64StarStar(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo128Plus(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo128Plus(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo128StarStar(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo128StarStar(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoRoShiRo128Plus(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoRoShiRo128Plus(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoRoShiRo128StarStar(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoRoShiRo128StarStar(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo256Plus(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo256Plus(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo256StarStar(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo256StarStar(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo512Plus(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo512Plus(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newXoShiRo512StarStar(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new XoShiRo512StarStar(LONG_ARRAY_SEEDS[i]));
         }
     }
 

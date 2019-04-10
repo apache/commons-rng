@@ -57,7 +57,7 @@ public class GeometricSamplersPerformance {
         /**
          * RNG providers.
          *
-         * <p>Use different speeds.
+         * <p>Use different speeds.</p>
          *
          * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
          *      Commons RNG user guide</a>

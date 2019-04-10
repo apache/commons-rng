@@ -19,7 +19,6 @@ package org.apache.commons.rng.examples.jmh;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
-import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -30,35 +29,7 @@ import org.openjdk.jmh.annotations.State;
  * <p>The state will include only those that do not require additional constructor arguments.</p>
  */
 @State(Scope.Benchmark)
-public class RandomSources {
-    /**
-     * RNG providers. This list is maintained in the order of the {@link RandomSource} enum.
-     *
-     * <p>Include only those that do not require additional constructor arguments.</p>
-     *
-     * <p>Note: JMH does support using an Enum for the {@code @Param} annotation. However
-     * the default set will encompass all the enum values, including those that require
-     * additional constructor arguments. So this list is maintained manually.</p>
-     */
-    @Param({"JDK",
-            "WELL_512_A",
-            "WELL_1024_A",
-            "WELL_19937_A",
-            "WELL_19937_C",
-            "WELL_44497_A",
-            "WELL_44497_B",
-            "MT",
-            "ISAAC",
-            "SPLIT_MIX_64",
-            "XOR_SHIFT_1024_S",
-            "TWO_CMRES",
-            "MT_64",
-            "MWC_256",
-            "KISS",
-            "XOR_SHIFT_1024_S_PHI",
-            })
-    private String randomSourceName;
-
+public class RandomSources extends RandomSourceValues {
     /** RNG. */
     private UniformRandomProvider generator;
 
@@ -71,10 +42,13 @@ public class RandomSources {
         return generator;
     }
 
-    /** Instantiates generator. */
+    /**
+     * Look-up the {@link RandomSource} from the name and instantiates the generator.
+     */
+    @Override
     @Setup
     public void setup() {
-        final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-        generator = RandomSource.create(randomSource);
+        super.setup();
+        generator = RandomSource.create(getRandomSource());
     }
 }

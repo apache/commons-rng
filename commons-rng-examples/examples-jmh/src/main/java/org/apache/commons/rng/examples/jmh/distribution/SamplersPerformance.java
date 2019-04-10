@@ -25,14 +25,11 @@ import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.infra.Blackhole;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.examples.jmh.RandomSources;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
@@ -61,49 +58,6 @@ import org.apache.commons.rng.sampling.distribution.PoissonSampler;
 public class SamplersPerformance {
     /** Number of samples per run. */
     private static final int NUM_SAMPLES = 10000000;
-
-    /**
-     * The benchmark state (retrieve the various "RandomSource"s).
-     */
-    @State(Scope.Benchmark)
-    public static class Sources {
-        /**
-         * RNG providers.
-         */
-        @Param({"JDK",
-                "WELL_512_A",
-                "WELL_1024_A",
-                "WELL_19937_A",
-                "WELL_19937_C",
-                "WELL_44497_A",
-                "WELL_44497_B",
-                "MT",
-                "ISAAC",
-                "SPLIT_MIX_64",
-                "MWC_256",
-                "KISS",
-                "XOR_SHIFT_1024_S",
-                "TWO_CMRES",
-                "MT_64" })
-        private String randomSourceName;
-
-        /** RNG. */
-        private UniformRandomProvider generator;
-
-        /**
-         * @return the RNG.
-         */
-        public UniformRandomProvider getGenerator() {
-            return generator;
-        }
-
-        /** Intantiates generator. */
-        @Setup
-        public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            generator = RandomSource.create(randomSource);
-        }
-    }
 
     /**
      * Exercises a continuous sampler.
@@ -138,7 +92,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runBoxMullerNormalizedGaussianSampler(Sources sources,
+    public void runBoxMullerNormalizedGaussianSampler(RandomSources sources,
                                                       Blackhole bh) {
         runSample(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), bh);
     }
@@ -148,7 +102,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runMarsagliaNormalizedGaussianSampler(Sources sources,
+    public void runMarsagliaNormalizedGaussianSampler(RandomSources sources,
                                                       Blackhole bh) {
         runSample(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), bh);
     }
@@ -158,7 +112,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runZigguratNormalizedGaussianSampler(Sources sources,
+    public void runZigguratNormalizedGaussianSampler(RandomSources sources,
                                                      Blackhole bh) {
         runSample(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), bh);
     }
@@ -168,7 +122,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runAhrensDieterExponentialSampler(Sources sources,
+    public void runAhrensDieterExponentialSampler(RandomSources sources,
                                                   Blackhole bh) {
         runSample(new AhrensDieterExponentialSampler(sources.getGenerator(), 4.56), bh);
     }
@@ -178,7 +132,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runAhrensDieterMarsagliaTsangGammaSampler(Sources sources,
+    public void runAhrensDieterMarsagliaTsangGammaSampler(RandomSources sources,
                                                           Blackhole bh) {
         runSample(new AhrensDieterMarsagliaTsangGammaSampler(sources.getGenerator(), 9.8, 0.76), bh);
     }
@@ -188,7 +142,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runBoxMullerLogNormalSampler(Sources sources,
+    public void runBoxMullerLogNormalSampler(RandomSources sources,
                                              Blackhole bh) {
         runSample(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
     }
@@ -198,7 +152,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runMarsagliaLogNormalSampler(Sources sources,
+    public void runMarsagliaLogNormalSampler(RandomSources sources,
                                              Blackhole bh) {
         runSample(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
     }
@@ -208,7 +162,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runZigguratLogNormalSampler(Sources sources,
+    public void runZigguratLogNormalSampler(RandomSources sources,
                                             Blackhole bh) {
         runSample(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
     }
@@ -218,7 +172,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runChengBetaSampler(Sources sources,
+    public void runChengBetaSampler(RandomSources sources,
                                     Blackhole bh) {
         runSample(new ChengBetaSampler(sources.getGenerator(), 0.45, 6.7), bh);
     }
@@ -228,7 +182,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runContinuousUniformSampler(Sources sources,
+    public void runContinuousUniformSampler(RandomSources sources,
                                             Blackhole bh) {
         runSample(new ContinuousUniformSampler(sources.getGenerator(), 123.4, 5678.9), bh);
     }
@@ -238,7 +192,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runDiscreteUniformSampler(Sources sources,
+    public void runDiscreteUniformSampler(RandomSources sources,
                                           Blackhole bh) {
         runSample(new DiscreteUniformSampler(sources.getGenerator(), -98, 76), bh);
     }
@@ -248,7 +202,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runRejectionInversionZipfSampler(Sources sources,
+    public void runRejectionInversionZipfSampler(RandomSources sources,
                                                  Blackhole bh) {
         runSample(new RejectionInversionZipfSampler(sources.getGenerator(), 43, 2.1), bh);
     }
@@ -258,7 +212,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runPoissonSampler(Sources sources,
+    public void runPoissonSampler(RandomSources sources,
                                   Blackhole bh) {
         runSample(new PoissonSampler(sources.getGenerator(), 8.9), bh);
     }
@@ -268,7 +222,7 @@ public class SamplersPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void runGeometricSampler(Sources sources,
+    public void runGeometricSampler(RandomSources sources,
                                     Blackhole bh) {
         runSample(new GeometricSampler(sources.getGenerator(), 0.21), bh);
     }

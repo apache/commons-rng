@@ -26,13 +26,9 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.infra.Blackhole;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers
@@ -46,49 +42,6 @@ import org.apache.commons.rng.simple.RandomSource;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class GenerationPerformance {
     /**
-     * The benchmark state (retrieve the various "RandomSource"s).
-     */
-    @State(Scope.Benchmark)
-    public static class Sources {
-        /**
-         * RNG providers.
-         */
-        @Param({"JDK",
-                "WELL_512_A",
-                "WELL_1024_A",
-                "WELL_19937_A",
-                "WELL_19937_C",
-                "WELL_44497_A",
-                "WELL_44497_B",
-                "MT",
-                "ISAAC",
-                "SPLIT_MIX_64",
-                "MWC_256",
-                "KISS",
-                "XOR_SHIFT_1024_S",
-                "TWO_CMRES",
-                "MT_64" })
-        private String randomSourceName;
-
-        /** RNG. */
-        private UniformRandomProvider provider;
-
-        /**
-         * @return the RNG.
-         */
-        public UniformRandomProvider getGenerator() {
-            return provider;
-        }
-
-        /** Instantiates generator. */
-        @Setup
-        public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            provider = RandomSource.create(randomSource);
-        }
-    }
-
-    /**
      * Number of random values to generate.
      */
     @Param({"1", "100", "10000", "1000000"})
@@ -99,7 +52,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextBoolean(Sources sources,
+    public void nextBoolean(RandomSources sources,
                             Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
             bh.consume(sources.getGenerator().nextBoolean());
@@ -111,7 +64,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextInt(Sources sources,
+    public void nextInt(RandomSources sources,
                         Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
             bh.consume(sources.getGenerator().nextInt());
@@ -123,7 +76,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextIntN(Sources sources,
+    public void nextIntN(RandomSources sources,
                          Blackhole bh) {
         final int n = 10;
         for (int i = 0; i < numValues; i++) {
@@ -136,7 +89,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextLong(Sources sources,
+    public void nextLong(RandomSources sources,
                          Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
             bh.consume(sources.getGenerator().nextLong());
@@ -148,7 +101,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextLongN(Sources sources,
+    public void nextLongN(RandomSources sources,
                           Blackhole bh) {
         final long n = 2L * Integer.MAX_VALUE;
         for (int i = 0; i < numValues; i++) {
@@ -161,7 +114,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextFloat(Sources sources,
+    public void nextFloat(RandomSources sources,
                           Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
             bh.consume(sources.getGenerator().nextFloat());
@@ -173,7 +126,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextDouble(Sources sources,
+    public void nextDouble(RandomSources sources,
                            Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
             bh.consume(sources.getGenerator().nextDouble());
@@ -185,7 +138,7 @@ public class GenerationPerformance {
      * @param bh Data sink.
      */
     @Benchmark
-    public void nextBytes(Sources sources,
+    public void nextBytes(RandomSources sources,
                           Blackhole bh) {
         final byte[] result = new byte[numValues];
         sources.getGenerator().nextBytes(result);
