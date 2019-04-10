@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.examples.jmh;
 
-import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Warmup;
@@ -33,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Executes benchmark to compare the speed of generation of random numbers
  * from the various source providers.
+ *
+ * @deprecated Replaced by benchmarks for each method, for example
+ * {@link NextDoubleGenerationPerformance}.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
+@Deprecated
 public class GenerationPerformance {
     /**
      * Number of random values to generate.
@@ -51,7 +54,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextBoolean(RandomSources sources,
                             Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
@@ -63,7 +66,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextInt(RandomSources sources,
                         Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
@@ -75,7 +78,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextIntN(RandomSources sources,
                          Blackhole bh) {
         final int n = 10;
@@ -88,7 +91,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextLong(RandomSources sources,
                          Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
@@ -100,7 +103,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextLongN(RandomSources sources,
                           Blackhole bh) {
         final long n = 2L * Integer.MAX_VALUE;
@@ -113,7 +116,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextFloat(RandomSources sources,
                           Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
@@ -125,7 +128,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextDouble(RandomSources sources,
                            Blackhole bh) {
         for (int i = 0; i < numValues; i++) {
@@ -137,7 +140,7 @@ public class GenerationPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void nextBytes(RandomSources sources,
                           Blackhole bh) {
         final byte[] result = new byte[numValues];

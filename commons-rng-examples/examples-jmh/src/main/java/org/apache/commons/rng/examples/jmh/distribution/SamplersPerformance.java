@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.examples.jmh.distribution;
 
-import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Warmup;
@@ -48,6 +47,9 @@ import org.apache.commons.rng.sampling.distribution.PoissonSampler;
 /**
  * Executes benchmark to compare the speed of generation of random numbers
  * from the various source providers.
+ *
+ * @deprecated Replaced by {@link ContinuousSamplersPerformance} and
+ * {@link DiscreteSamplersPerformance}.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
@@ -55,6 +57,7 @@ import org.apache.commons.rng.sampling.distribution.PoissonSampler;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
+@Deprecated
 public class SamplersPerformance {
     /** Number of samples per run. */
     private static final int NUM_SAMPLES = 10000000;
@@ -91,7 +94,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runBoxMullerNormalizedGaussianSampler(RandomSources sources,
                                                       Blackhole bh) {
         runSample(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), bh);
@@ -101,7 +104,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runMarsagliaNormalizedGaussianSampler(RandomSources sources,
                                                       Blackhole bh) {
         runSample(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), bh);
@@ -111,7 +114,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runZigguratNormalizedGaussianSampler(RandomSources sources,
                                                      Blackhole bh) {
         runSample(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), bh);
@@ -121,7 +124,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runAhrensDieterExponentialSampler(RandomSources sources,
                                                   Blackhole bh) {
         runSample(new AhrensDieterExponentialSampler(sources.getGenerator(), 4.56), bh);
@@ -131,7 +134,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runAhrensDieterMarsagliaTsangGammaSampler(RandomSources sources,
                                                           Blackhole bh) {
         runSample(new AhrensDieterMarsagliaTsangGammaSampler(sources.getGenerator(), 9.8, 0.76), bh);
@@ -141,7 +144,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runBoxMullerLogNormalSampler(RandomSources sources,
                                              Blackhole bh) {
         runSample(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
@@ -151,7 +154,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runMarsagliaLogNormalSampler(RandomSources sources,
                                              Blackhole bh) {
         runSample(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
@@ -161,7 +164,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runZigguratLogNormalSampler(RandomSources sources,
                                             Blackhole bh) {
         runSample(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(sources.getGenerator()), 12.3, 4.6), bh);
@@ -171,7 +174,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runChengBetaSampler(RandomSources sources,
                                     Blackhole bh) {
         runSample(new ChengBetaSampler(sources.getGenerator(), 0.45, 6.7), bh);
@@ -181,7 +184,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runContinuousUniformSampler(RandomSources sources,
                                             Blackhole bh) {
         runSample(new ContinuousUniformSampler(sources.getGenerator(), 123.4, 5678.9), bh);
@@ -191,7 +194,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runDiscreteUniformSampler(RandomSources sources,
                                           Blackhole bh) {
         runSample(new DiscreteUniformSampler(sources.getGenerator(), -98, 76), bh);
@@ -201,7 +204,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runRejectionInversionZipfSampler(RandomSources sources,
                                                  Blackhole bh) {
         runSample(new RejectionInversionZipfSampler(sources.getGenerator(), 43, 2.1), bh);
@@ -211,7 +214,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runPoissonSampler(RandomSources sources,
                                   Blackhole bh) {
         runSample(new PoissonSampler(sources.getGenerator(), 8.9), bh);
@@ -221,7 +224,7 @@ public class SamplersPerformance {
      * @param sources Source of randomness.
      * @param bh Data sink.
      */
-    @Benchmark
+    //@org.openjdk.jmh.annotations.Benchmark
     public void runGeometricSampler(RandomSources sources,
                                     Blackhole bh) {
         runSample(new GeometricSampler(sources.getGenerator(), 0.21), bh);
