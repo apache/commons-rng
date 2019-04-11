@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng.core.util;
 
-import java.util.Arrays;
-
 /**
  * Utility for creating number types from one or two {@code int} values
  * or one {@code long} value, or a sequence of bytes.
@@ -52,6 +50,8 @@ public final class NumberFactory {
     private NumberFactory() {}
 
     /**
+     * Creates a {@code boolean} from an {@code int} value.
+     *
      * @param v Number.
      * @return a boolean.
      *
@@ -64,6 +64,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Creates a {@code boolean} from a {@code long} value.
+     *
      * @param v Number.
      * @return a boolean.
      *
@@ -76,6 +78,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Creates a {@code double} from a {@code long} value.
+     *
      * @param v Number.
      * @return a {@code double} value in the interval {@code [0, 1]}.
      */
@@ -85,6 +89,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Creates a {@code double} from two {@code int} values.
+     *
      * @param v Number (high order bits).
      * @param w Number (low order bits).
      * @return a {@code double} value in the interval {@code [0, 1]}.
@@ -99,6 +105,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Creates a {@code float} from an {@code int} value.
+     *
      * @param v Number.
      * @return a {@code float} value in the interval {@code [0, 1]}.
      */
@@ -108,6 +116,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Creates a {@code long} from two {@code int} values.
+     *
      * @param v Number (high order bits).
      * @param w Number (low order bits).
      * @return a {@code long} value.
@@ -181,13 +191,29 @@ public final class NumberFactory {
      */
     public static byte[] makeByteArray(long v) {
         final byte[] b = new byte[LONG_SIZE];
-
-        for (int i = 0; i < LONG_SIZE; i++) {
-            final int shift = i * 8;
-            b[i] = (byte) ((v >>> shift) & LONG_LOWEST_BYTE_MASK);
-        }
-
+        putLong(v, b, 0);
         return b;
+    }
+
+    /**
+     * Puts the {@code long} into the buffer starting at the given position.
+     * Adds 8 bytes (least-significant first).
+     *
+     * @param v      Value.
+     * @param buffer the buffer.
+     * @param index  the index.
+     */
+    private static void putLong(long v,
+                                byte[] buffer,
+                                int index) {
+        buffer[index    ] = (byte)( v         & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 1] = (byte)((v >>>  8) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 2] = (byte)((v >>> 16) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 3] = (byte)((v >>> 24) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 4] = (byte)((v >>> 32) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 5] = (byte)((v >>> 40) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 6] = (byte)((v >>> 48) & LONG_LOWEST_BYTE_MASK);
+        buffer[index + 7] = (byte)( v >>> 56                         );
     }
 
     /**
@@ -195,20 +221,35 @@ public final class NumberFactory {
      *
      * @param input Input.
      * @return the value that correspond to the given bytes assuming
-     * that the is ordered in increasing byte significance (i.e. the
-     * first byte in the array is the least-siginficant).
+     * that the order is in increasing byte significance (i.e. the
+     * first byte in the array is the least-significant).
      * @throws IllegalArgumentException if {@code input.length != 8}.
      */
     public static long makeLong(byte[] input) {
         checkSize(LONG_SIZE, input.length);
+        return getLong(input, 0);
+    }
 
-        long v = 0;
-        for (int i = 0; i < LONG_SIZE; i++) {
-            final int shift = i * 8;
-            v |= (((long) input[i]) & LONG_LOWEST_BYTE_MASK) << shift;
-        }
-
-        return v;
+    /**
+     * Gets the {@code long} from the buffer starting at the given position.
+     * Uses 8 bytes (least-significant first).
+     *
+     * @param input the input bytes.
+     * @param index the index.
+     * @return the value that correspond to the given bytes assuming
+     * that the order is in increasing byte significance (i.e. the
+     * first byte in the array is the least-significant).
+     */
+    private static long getLong(byte[] input,
+                                int index) {
+        return (input[index    ] & LONG_LOWEST_BYTE_MASK)       |
+               (input[index + 1] & LONG_LOWEST_BYTE_MASK) <<  8 |
+               (input[index + 2] & LONG_LOWEST_BYTE_MASK) << 16 |
+               (input[index + 3] & LONG_LOWEST_BYTE_MASK) << 24 |
+               (input[index + 4] & LONG_LOWEST_BYTE_MASK) << 32 |
+               (input[index + 5] & LONG_LOWEST_BYTE_MASK) << 40 |
+               (input[index + 6] & LONG_LOWEST_BYTE_MASK) << 48 |
+               (input[index + 7] & LONG_LOWEST_BYTE_MASK) << 56;
     }
 
     /**
@@ -224,8 +265,7 @@ public final class NumberFactory {
         final byte[] b = new byte[size];
 
         for (int i = 0; i < input.length; i++) {
-            final byte[] current = makeByteArray(input[i]);
-            System.arraycopy(current, 0, b, i * LONG_SIZE, LONG_SIZE);
+            putLong(input[i], b, i * LONG_SIZE);
         }
 
         return b;
@@ -248,9 +288,7 @@ public final class NumberFactory {
 
         final long[] output = new long[num];
         for (int i = 0; i < num; i++) {
-            final int from = i * LONG_SIZE;
-            final byte[] current = Arrays.copyOfRange(input, from, from + LONG_SIZE);
-            output[i] = makeLong(current);
+            output[i] = getLong(input, i * LONG_SIZE);
         }
 
         return output;
@@ -265,34 +303,56 @@ public final class NumberFactory {
      */
     public static byte[] makeByteArray(int v) {
         final byte[] b = new byte[INT_SIZE];
-
-        for (int i = 0; i < INT_SIZE; i++) {
-            final int shift = i * 8;
-            b[i] = (byte) ((v >>> shift) & INT_LOWEST_BYTE_MASK);
-        }
-
+        putInt(v, b, 0);
         return b;
     }
 
+    /**
+     * Puts the {@code int} into the buffer starting at the given position.
+     * Adds 4 bytes (least-significant first).
+     *
+     * @param v      the value.
+     * @param buffer the buffer.
+     * @param index  the index.
+     */
+    private static void putInt(int v,
+                               byte[] buffer,
+                               int index) {
+        buffer[index    ] = (byte)( v         & INT_LOWEST_BYTE_MASK);
+        buffer[index + 1] = (byte)((v >>>  8) & INT_LOWEST_BYTE_MASK);
+        buffer[index + 2] = (byte)((v >>> 16) & INT_LOWEST_BYTE_MASK);
+        buffer[index + 3] = (byte)( v >>> 24                        );
+    }
     /**
      * Creates an {@code int} from 4 bytes.
      *
      * @param input Input.
      * @return the value that correspond to the given bytes assuming
-     * that the is ordered in increasing byte significance (i.e. the
-     * first byte in the array is the least-siginficant).
+     * that the order is in increasing byte significance (i.e. the
+     * first byte in the array is the least-significant).
      * @throws IllegalArgumentException if {@code input.length != 4}.
      */
     public static int makeInt(byte[] input) {
         checkSize(INT_SIZE, input.length);
+        return getInt(input, 0);
+    }
 
-        int v = 0;
-        for (int i = 0; i < INT_SIZE; i++) {
-            final int shift = i * 8;
-            v |= (((int) input[i]) & INT_LOWEST_BYTE_MASK) << shift;
-        }
-
-        return v;
+    /**
+     * Gets the {@code int} from the buffer starting at the given position.
+     * Uses 4 bytes (least-significant first).
+     *
+     * @param input the input bytes.
+     * @param index the index.
+     * @return the value that correspond to the given bytes assuming
+     * that the order is in increasing byte significance (i.e. the
+     * first byte in the array is the least-significant).
+     */
+    private static int getInt(byte[] input,
+                              int index) {
+        return (input[index    ] & INT_LOWEST_BYTE_MASK)       |
+               (input[index + 1] & INT_LOWEST_BYTE_MASK) <<  8 |
+               (input[index + 2] & INT_LOWEST_BYTE_MASK) << 16 |
+               (input[index + 3] & INT_LOWEST_BYTE_MASK) << 24;
     }
 
     /**
@@ -308,8 +368,7 @@ public final class NumberFactory {
         final byte[] b = new byte[size];
 
         for (int i = 0; i < input.length; i++) {
-            final byte[] current = makeByteArray(input[i]);
-            System.arraycopy(current, 0, b, i * INT_SIZE, INT_SIZE);
+            putInt(input[i], b, i * INT_SIZE);
         }
 
         return b;
@@ -332,9 +391,7 @@ public final class NumberFactory {
 
         final int[] output = new int[num];
         for (int i = 0; i < num; i++) {
-            final int from = i * INT_SIZE;
-            final byte[] current = Arrays.copyOfRange(input, from, from + INT_SIZE);
-            output[i] = makeInt(current);
+            output[i] = getInt(input, i * INT_SIZE);
         }
 
         return output;

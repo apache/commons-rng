@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-77">
+        "NumberFactory": Improve performance of int and long array to/from byte array conversions.
+      </action>
       <action dev="aherbert" type="add" issue="101">
         New "MarsagliaTsangWangDiscreteSampler" that provides samples from a discrete
         distribution stored as a look-up table using a single random integer deviate. Computes
