@@ -69,8 +69,8 @@ import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceIntern
  * Executes a benchmark to compare the speed of construction of random number providers.
  *
  * <p>Note that random number providers are created and then used. Thus the construction time must
- * be analysed together with the run time performance benchmark (see
- * {@link GenerationPerformance}).
+ * be analysed together with the run time performance benchmark (see for example
+ * {@link NextIntGenerationPerformance} and {@link NextLongGenerationPerformance}).
  *
  * <pre>
  * [Total time] = [Construction time] + [Run time]
