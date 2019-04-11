@@ -30,8 +30,8 @@ public class InverseTransformParetoSampler
     implements ContinuousSampler {
     /** Scale. */
     private final double scale;
-    /** Shape. */
-    private final double shape;
+    /** 1 / Shape. */
+    private final double oneOverShape;
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
 
@@ -53,13 +53,13 @@ public class InverseTransformParetoSampler
         }
         this.rng = rng;
         this.scale = scale;
-        this.shape = shape;
+        this.oneOverShape = 1 / shape;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return scale / Math.pow(rng.nextDouble(), 1 / shape);
+        return scale / Math.pow(rng.nextDouble(), oneOverShape);
     }
 
     /** {@inheritDoc} */
