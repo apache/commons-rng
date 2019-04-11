@@ -45,6 +45,10 @@ public final class NumberFactory {
     private static final int INT_LOWEST_BYTE_MASK = 0xff;
     /** Number of bytes in a {@code int}. */
     private static final int INT_SIZE = 4;
+    /** A mask to convert an {@code int} to an unsigned integer stored as a {@code long}. */
+    private static final long INT_TO_UNSIGNED_BYTE_MASK = 0xffffffffL;
+    /** The exception message prefix when a number is not strictly positive. */
+    private static final String NOT_STRICTLY_POSITIVE = "Must be strictly positive: ";
 
     /**
      * Class contains only static methods.
@@ -338,6 +342,144 @@ public final class NumberFactory {
         }
 
         return output;
+    }
+
+    /**
+     * Generates an {@code int} value between 0 (inclusive) and the
+     * specified value (exclusive) using a bit source of randomness.
+     *
+     * <p>This is equivalent to {@code floor(n * u)} where floor rounds down to the nearest
+     * integer and {@code u} is a uniform random deviate in the range {@code [0,1)}. The
+     * equivalent unsigned integer arithmetic is:</p>
+     *
+     * <pre>{@code (int) (n * (v & 0xffffffffL) / 2^32)}</pre>
+     *
+     * @param v Value to use as a source of randomness.
+     * @param n Bound on the random number to be returned. Must be positive.
+     * @return a random {@code int} value between 0 (inclusive) and {@code n}
+     * (exclusive).
+     * @throws IllegalArgumentException if {@code n} is negative.
+     * @since 1.3
+     */
+    public static int makeIntInRange(int v, int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException(NOT_STRICTLY_POSITIVE + n);
+        }
+        // This computes the rounded fraction n * v / 2^32.
+        // If v is an unsigned integer in the range 0 to 2^32 -1 then v / 2^32
+        // is a uniform deviate in the range [0,1).
+        // This is possible using unsigned integer arithmetic with long.
+        // A division by 2^32 is a bit shift of 32.
+        return (int) ((n * (v & INT_TO_UNSIGNED_BYTE_MASK)) >>> 32);
+    }
+
+    /**
+     * Generates an {@code long} value between 0 (inclusive) and the
+     * specified value (exclusive) using a bit source of randomness.
+     *
+     * <p>This is equivalent to {@code floor(n * u)} where floor rounds down to the nearest
+     * long integer and {@code u} is a uniform random deviate in the range {@code [0,1)}. The
+     * equivalent {@link java.math.BigInteger BigInteger} arithmetic is:</p>
+     *
+     * <pre><code>
+     * // Construct big-endian byte representation from the long
+     * byte[] bytes = new byte[8];
+     * for(int i = 0; i &lt; 8; i++) {
+     *     bytes[7 - i] = (byte)((v >>> (i * 8)) & 0xff);
+     * }
+     * BigInteger unsignedValue = new BigInteger(1, bytes);
+     * return BigInteger.valueOf(n).multiply(unsignedValue).shiftRight(64).longValue();
+     * </code></pre>
+     *
+     * <p>Notes:<p/>
+     *
+     * <ul>
+     *  <li>The algorithm does not use {@link java.math.BigInteger BigInteger} and is optimised for
+     *      128-bit arithmetic.
+     *  <li>The algorithm uses the most significant bits of the source of randomness to construct
+     *      the output.
+     * </ul>
+     *
+     * @param v Value to use as a source of randomness.
+     * @param n Bound on the random number to be returned. Must be positive.
+     * @return a random {@code long} value between 0 (inclusive) and {@code n}
+     * (exclusive).
+     * @throws IllegalArgumentException if {@code n} is negative.
+     * @since 1.3
+     */
+    public static long makeLongInRange(long v, long n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException(NOT_STRICTLY_POSITIVE + n);
+        }
+
+        // This computes the rounded fraction n * v / 2^64.
+        // If v is an unsigned integer in the range 0 to 2^64 -1 then v / 2^64
+        // is a uniform deviate in the range [0,1).
+        // This computation is possible using the 2s-complement integer arithmetic in Java
+        // which is unsigned.
+        //
+        // Note: This adapts the multiply and carry idea in BigInteger arithmetic.
+        // This is based on the following observation about the upper and lower bits of an
+        // unsigned big-endian integer:
+        //   ab * xy
+        // =  b *  y
+        // +  b * x0
+        // + a0 *  y
+        // + a0 * x0
+        // = b * y
+        // + b * x * 2^32
+        // + a * y * 2^32
+        // + a * x * 2^64
+        //
+        // A division by 2^64 is a bit shift of 64. So we must compute the equivalent of the
+        // 128-bit results of multiplying two unsigned 64-bit numbers and return only the upper
+        // 64-bits.
+        final long a = n >>> 32;
+        final long b = n & INT_TO_UNSIGNED_BYTE_MASK;
+        final long x = v >>> 32;
+        if (a == 0) {
+            // Fast computation with long.
+            // Use the upper bits from the source of randomness so the result is the same
+            // as the full computation.
+            return (b * x) >>> 32;
+        }
+        final long y = v & INT_TO_UNSIGNED_BYTE_MASK;
+        if (b == 0) {
+            // Fast computation with long.
+            // Note: This will catch power of 2 edge cases with large n but ensure the most
+            // significant bits are used rather than returning: v & (n - 1)
+            // Cannot overflow at the maximum values.
+            return ((a * y) >>> 32) +
+                    (a * x);
+        }
+
+        // Note:
+        // The result of two unsigned 32-bit integers multiplied together cannot overflow 64 bits.
+        // The carry is the upper 32-bits of the 64-bit result; this is obtained by bit shift.
+        // This algorithm thus computes the small numbers multiplied together and then sums
+        // the carry on to the result for the next power 2^32.
+        // This is a diagram of the bit cascade (using a 4 byte representation):
+        //           byby byby
+        //      bxbx bxbx 0000
+        //      ayay ayay 0000
+        // axax axax 0000 0000
+
+        // First step cannot overflow since:
+        // (0xffffffff * 0xffffffffl) >>> 32) + (0xffffffff * 0xffffffffL)
+        // ((2^32-1) * (2^32-1) / 2^32) + (2^32-1) * (2^32-1)
+        // ~ 2^32-1                     + (2^64 - 2^33 + 1)
+        final long bx = ((b * y) >>> 32) +
+                         (b * x);
+        final long ay = a * y;
+
+        // Sum the lower and upper 32-bits separately to control overflow
+        final long carry = ((bx & INT_TO_UNSIGNED_BYTE_MASK) +
+                            (ay & INT_TO_UNSIGNED_BYTE_MASK)) >>> 32;
+
+        return carry +
+              (bx >>> 32) +
+              (ay >>> 32) +
+               a * x;
     }
 
     /**

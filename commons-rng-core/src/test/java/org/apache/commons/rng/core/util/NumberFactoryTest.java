@@ -20,6 +20,9 @@ import org.apache.commons.math3.util.Precision;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
+import java.util.Random;
+
 /**
  * Tests for the {@link NumberFactory}.
  */
@@ -207,6 +210,139 @@ public class NumberFactoryTest {
         Assert.assertEquals(0.0f, NumberFactory.makeFloat(noBits), 0);
     }
 
+    @Test(expected=IllegalArgumentException.class)
+    public void testMakeIntInRangeWithRangeZeroThrows() {
+        NumberFactory.makeIntInRange(0, 0);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testMakeIntInRangeWithNegativeRangeThrows() {
+        NumberFactory.makeIntInRange(0, -1);
+    }
+
+    @Test
+    public void testMakeIntInRange() {
+        final int allBits = 0xffffffff;
+        final int noBits = 0;
+        for (int i = 0; i < 31; i++) {
+            final int n = 1 << i;
+            Assert.assertEquals(0, NumberFactory.makeIntInRange(noBits, n));
+            assertMakeIntInRange(allBits, n);
+        }
+        assertMakeIntInRange(allBits, Integer.MAX_VALUE);
+        for (int i = 1; i <= 31; i++) {
+            assertMakeIntInRange(allBits << i, Integer.MAX_VALUE);
+        }
+
+        // Check some random values
+        final Random rng = new Random();
+        for (int i = 0; i < 31; i++) {
+            final int n = 1 << i;
+            assertMakeIntInRange(rng.nextInt(), n);
+        }
+        for (int i = 0; i < 100; i++) {
+            assertMakeIntInRange(rng.nextInt(), rng.nextInt(Integer.MAX_VALUE));
+        }
+    }
+
+    @Test
+    public void testMakeIntInRangeIsUniform() {
+        final int bins = 37; // prime
+        final int[] h = new int[bins];
+
+        final int binWidth = Integer.MAX_VALUE / bins;
+        final int n = binWidth * bins;
+
+        // Weyl sequence using George Marsaglia’s increment from:
+        // Marsaglia, G (July 2003). "Xorshift RNGs". Journal of Statistical Software. 8 (14).
+        // https://en.wikipedia.org/wiki/Weyl_sequence
+        final int increment = 362437;
+        final int start = Integer.MIN_VALUE - increment;
+        int bits = start;
+        // Loop until the first wrap. The entire sequence will be uniform.
+        // Note this is not the full period of the sequence.
+        // Expect (1L << 32) / increment numbers = 11850
+        while ((bits += increment) < start) {
+            h[NumberFactory.makeIntInRange(bits, n) / binWidth]++;
+        }
+
+        // The bins should all be the same within a value of 1 (i.e. uniform)
+        int min = h[0];
+        int max = h[0];
+        for (int value : h) {
+            min = Math.min(min, value);
+            max = Math.max(max, value);
+        }
+        Assert.assertTrue("Not uniform, max = " + max + ", min=" + min, max - min <= 1);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testMakeLongInRangeWithRangeZeroThrows() {
+        NumberFactory.makeLongInRange(0L, 0L);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testMakeLongInRangeWithNegativeRangeThrows() {
+        NumberFactory.makeLongInRange(0L, -1L);
+    }
+
+    @Test
+    public void testMakeLongInRange() {
+        final long allBits = 0xffffffffffffffffL;
+        final long noBits = 0;
+        for (int i = 0; i < 63; i++) {
+            final long n = 1L << i;
+            Assert.assertEquals(0, NumberFactory.makeLongInRange(noBits, n));
+            assertMakeLongInRange(allBits, n);
+        }
+        assertMakeLongInRange(allBits, Long.MAX_VALUE);
+        for (int i = 1; i <= 63; i++) {
+            assertMakeLongInRange(allBits << 1, Long.MAX_VALUE);
+        }
+ 
+        // Check some random values
+        final Random rng = new Random();
+        for (int i = 0; i < 63; i++) {
+            final long n = 1L << i;
+            assertMakeLongInRange(rng.nextLong(), n);
+        }
+        for (int i = 0; i < 100; i++) {
+            assertMakeLongInRange(rng.nextLong(), Long.MAX_VALUE);
+        }
+    }
+
+    @Test
+    public void testMakeLongInRangeIsUniform() {
+        final long bins = 37; // prime
+        final int[] h = new int[(int) bins];
+
+        final long binWidth = Long.MAX_VALUE / bins;
+        final long n = binWidth * bins;
+
+        Assert.assertNotEquals("Require upper limit to have bits set in the lower 32-bits", 
+                               0, NumberFactory.extractLo(n));
+
+        // Weyl sequence using an increment to approximate the same number of samples
+        // as the integer test for uniformity.
+        final long increment = BigInteger.ONE.shiftLeft(64).divide(BigInteger.valueOf(11850)).longValue();
+        final long start = Long.MIN_VALUE - increment;
+        long bits = start;
+        // Loop until the first wrap. The entire sequence will be uniform.
+        // Note this is not the full period of the sequence.
+        while ((bits += increment) < start) {
+            h[(int) (NumberFactory.makeLongInRange(bits, n) / binWidth)]++;
+        }
+
+        // The bins should all be the same within a value of 1 (i.e. uniform)
+        long min = h[0];
+        long max = h[0];
+        for (long value : h) {
+            min = Math.min(min, value);
+            max = Math.max(max, value);
+        }
+        Assert.assertTrue("Not uniform, max = " + max + ", min=" + min, max - min <= 1);
+    }
+
     /**
      * Assert that the value is close to but <strong>not above</strong> 1. This is used to test
      * the output from methods that produce a {@code float} value that must be in the range
@@ -235,5 +371,69 @@ public class NumberFactoryTest {
         Assert.assertTrue("Not <= 1.0", value <= 1.0);
         Assert.assertTrue("Not equal to 1.0 within units of least precision: " + maxUlps,
                           Precision.equals(1.0, value, maxUlps));
+    }
+
+    /**
+     * Assert that the {@link NumberFactory#makeIntInRange(int, int)} method matches the
+     * arithmetic of {@link BigInteger}.
+     *
+     * <p>This test is included to match the corresponding {@link #assertMakeLongInRange(long, long)}.
+     * It should demonstrate that the use of BigInteger is unnecessary and the unsigned integer 
+     * arithmetic using {@code long} in the {@link NumberFactory} is correct.</p>
+     *
+     * @param v Value to use as a source of randomness.
+     * @param n Bound on the random number to be returned. Must be positive.
+     */
+    private static void assertMakeIntInRange(int v, int n) {
+        final long unsignedValue = v & 0xffffffffL;
+        // Use long to ensure the int can fit unsigned
+        final long expected = BigInteger.valueOf(n)
+                                        .multiply(BigInteger.valueOf(unsignedValue))
+                                        .shiftRight(32).longValue();
+        final long actual = NumberFactory.makeIntInRange(v, n);
+        if (expected != actual) {
+            Assert.assertEquals("v=" + unsignedValue + ",n=" + n,
+                                expected, actual);
+        }
+    }
+
+    /**
+     * Assert that the {@link NumberFactory#makeLongInRange(long, long)} method matches the
+     * arithmetic of {@link BigInteger}.
+     *
+     * @param v Value to use as a source of randomness.
+     * @param n Bound on the random number to be returned. Must be positive.
+     */
+    private static void assertMakeLongInRange(long v, long n) {
+        // Compute using BigInteger.
+        // Construct big-endian byte representation from the long.
+        final byte[] bytes = new byte[8];
+        for(int i = 0; i < 8; i++) {
+           bytes[7 - i] = (byte)((v >>> (i * 8)) & 0xff);
+        }
+        final BigInteger unsignedValue = new BigInteger(1, bytes);
+        final long expected = longValueExact(BigInteger.valueOf(n)
+                                                       .multiply(unsignedValue)
+                                                       .shiftRight(64));
+        final long actual = NumberFactory.makeLongInRange(v, n);
+        if (expected != actual) {
+            Assert.assertEquals("v=" + unsignedValue + ",n=" + n,
+                                expected, actual);
+        }
+    }
+
+    /**
+     * Get the exact long value of the BigInteger without loss of information.
+     *
+     * <p>This is like BigInteger::longValueExact added in Java 1.8.</p>
+     *
+     * @param value the value
+     * @return the long
+     */
+    private static long longValueExact(BigInteger value) {
+        if (value.bitLength() <= 63) {
+            return value.longValue();
+        }
+        throw new ArithmeticException("BigInteger out of long range");
     }
 }

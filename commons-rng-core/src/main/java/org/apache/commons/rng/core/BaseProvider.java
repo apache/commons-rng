@@ -19,6 +19,7 @@ package org.apache.commons.rng.core;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
+import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
  * Base class with default implementation for common methods.
@@ -28,34 +29,12 @@ public abstract class BaseProvider
     /** {@inheritDoc} */
     @Override
     public int nextInt(int n) {
-        checkStrictlyPositive(n);
-
-        if ((n & -n) == n) {
-            return (int) ((n * (long) (nextInt() >>> 1)) >> 31);
-        }
-        int bits;
-        int val;
-        do {
-            bits = nextInt() >>> 1;
-            val = bits % n;
-        } while (bits - val + (n - 1) < 0);
-
-        return val;
+        return NumberFactory.makeIntInRange(nextInt(), n);
     }
 
-    /** {@inheritDoc} */
     @Override
     public long nextLong(long n) {
-        checkStrictlyPositive(n);
-
-        long bits;
-        long val;
-        do {
-            bits = nextLong() >>> 1;
-            val  = bits % n;
-        } while (bits - val + (n - 1) < 0);
-
-        return val;
+        return NumberFactory.makeLongInRange(nextLong(), n);
     }
 
     /** {@inheritDoc} */
@@ -274,18 +253,6 @@ public abstract class BaseProvider
             throw new IndexOutOfBoundsException(index + " is out of interval [" +
                                                 min + ", " +
                                                 max + "]");
-        }
-    }
-
-    /**
-     * Checks that the argument is strictly positive.
-     *
-     * @param n Number to check.
-     * @throws IllegalArgumentException if {@code n <= 0}.
-     */
-    private void checkStrictlyPositive(long n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("Must be strictly positive: " + n);
         }
     }
 
