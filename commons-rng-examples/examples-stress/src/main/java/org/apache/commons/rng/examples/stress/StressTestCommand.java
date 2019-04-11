@@ -17,6 +17,7 @@
 package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
@@ -335,7 +336,8 @@ class StressTestCommand implements Callable<Void> {
                 rng = RNGUtils.createReverseBitsIntProvider(rng);
             }
             // Run the test
-            final Runnable r = new StressTestTask(rng, output, command, this, progressTracker);
+            final Runnable r = new StressTestTask(testData.getRandomSource(), rng, output, command,
+                                                  this, progressTracker);
             taskList.add(service.submit(r));
         }
     }
@@ -404,6 +406,8 @@ class StressTestCommand implements Callable<Void> {
         /** The SI unit base for bytes (10^3). */
         private static final long SI_UNIT_BASE = 1000;
 
+        /** The random source. */
+        private final RandomSource randomSource;
         /** RNG to be tested. */
         private final UniformRandomProvider rng;
         /** Output report file of the sub-process. */
@@ -421,17 +425,20 @@ class StressTestCommand implements Callable<Void> {
         /**
          * Creates the task.
          *
+         * @param randomSource The random source.
          * @param rng RNG to be tested.
          * @param output Output report file.
          * @param command The sub-process command to run.
          * @param cmd The run command.
          * @param progressTracker The progress tracker.
          */
-        StressTestTask(UniformRandomProvider rng,
-             File output,
-             List<String> command,
-             StressTestCommand cmd,
-             ProgressTracker progressTracker) {
+        StressTestTask(RandomSource randomSource,
+                       UniformRandomProvider rng,
+                       File output,
+                       List<String> command,
+                       StressTestCommand cmd,
+                       ProgressTracker progressTracker) {
+            this.randomSource = randomSource;
             this.rng = rng;
             this.output = output;
             this.command = command;
@@ -443,7 +450,7 @@ class StressTestCommand implements Callable<Void> {
         @Override
         public void run() {
             try {
-                printHeader(output, rng, command, cmd.outputMode == StressTestCommand.OutputMode.APPEND);
+                printHeader();
 
                 Object exitValue;
                 long nanoTime;
@@ -458,7 +465,7 @@ class StressTestCommand implements Callable<Void> {
                     nanoTime = System.nanoTime() - startTime;
                 }
 
-                printFooter(output, nanoTime, exitValue, numbersUsed);
+                printFooter(nanoTime, exitValue);
 
             } catch (final IOException ex) {
                 throw new ApplicationException("Failed to run task: " + ex.getMessage(), ex);
@@ -499,20 +506,13 @@ class StressTestCommand implements Callable<Void> {
         /**
          * Prints the header.
          *
-         * @param output File.
-         * @param rng Generator being tested.
-         * @param command The analyzer command.
-         * @param append Set to true to append to the output file.
          * @throws IOException if there was a problem opening or writing to the
          * {@code output} file.
          */
-        private static void printHeader(File output,
-                                        UniformRandomProvider rng,
-                                        List<String> command,
-                                        boolean append)
-            throws IOException {
+        private void printHeader() throws IOException {
             final StringBuilder sb = new StringBuilder();
             sb.append(C).append(N);
+            sb.append(C).append("RandomSource: ").append(randomSource.name()).append(N);
             sb.append(C).append("RNG: ").append(rng.toString()).append(N);
             sb.append(C).append(N);
 
@@ -538,24 +538,19 @@ class StressTestCommand implements Callable<Void> {
 
             appendDate(sb, "Start").append(C).append(N);
 
-            write(sb, output, append);
+            write(sb, output, cmd.outputMode == StressTestCommand.OutputMode.APPEND);
         }
 
         /**
          * Prints the footer.
          *
-         * @param output File.
          * @param nanoTime Duration of the run.
          * @param exitValue The process exit value.
-         * @param numbersUsed The count of numbers piped to the executable.
          * @throws IOException if there was a problem opening or writing to the
          * {@code output} file.
          */
-        private static void printFooter(File output,
-                                        long nanoTime,
-                                        Object exitValue,
-                                        long numbersUsed)
-            throws IOException {
+        private void printFooter(long nanoTime,
+                                 Object exitValue) throws IOException {
             final StringBuilder sb = new StringBuilder();
             sb.append(C).append(N);
 
