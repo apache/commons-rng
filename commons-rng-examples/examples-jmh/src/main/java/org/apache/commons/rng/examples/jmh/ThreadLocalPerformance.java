@@ -135,9 +135,9 @@ public class ThreadLocalPerformance {
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
         final UniformRandomProvider rng = new UniformRandomProvider() {
             @Override
-            public void nextBytes(byte[] bytes) {}
+            public void nextBytes(byte[] bytes) { /* Ignore this. */ }
             @Override
-            public void nextBytes(byte[] bytes, int start, int len) {}
+            public void nextBytes(byte[] bytes, int start, int len) { /* Ignore this. */ }
             @Override
             public int nextInt() { return rand.nextInt(); }
             @Override
