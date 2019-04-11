@@ -29,7 +29,8 @@
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-stress</artifactId>
   <version>1.3-SNAPSHOT</version>
-  <name>Stress test example</name>
+  <!-- This name is used in the shaded jar to provide the application title for the version information. -->
+  <name>Apache Commons RNG Examples Stress Utilities</name>
 
   <description>Application for calling external tools that perform stringent uniformity tests.
   Code in this module is not part of the public API.</description>
@@ -47,7 +48,9 @@
     <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 
     <uberjar.name>examples-stress</uberjar.name>
-    <project.mainClass>org.apache.commons.rng.examples.stress.RandomStressTester</project.mainClass>
+    <project.mainClass>org.apache.commons.rng.examples.stress.ExamplesStressCommand</project.mainClass>
+
+    <rng.picocli.version>3.9.5</rng.picocli.version>
   </properties>
 
   <dependencies>
@@ -55,10 +58,14 @@
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-simple</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-sampling</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>${rng.picocli.version}</version>
     </dependency>
   </dependencies>
 
@@ -78,6 +85,7 @@
                 </goals>
                 <configuration>
                   <finalName>${uberjar.name}</finalName>
+                  <minimizeJar>true</minimizeJar>
                   <transformers>
                     <transformer
                       implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
@@ -95,44 +103,6 @@
                       </excludes>
                     </filter>
                   </filters>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>bridge</id>
-      <properties>
-        <skipTests>true</skipTests>
-        <java.cmd>java</java.cmd>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>benchmark</id>
-                <phase>test</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <classpathScope>test</classpathScope>
-                  <executable>${java.cmd}</executable>
-                  <arguments>
-                    <argument>-classpath</argument>
-                    <classpath/>
-                    <argument>org.apache.commons.rng.examples.stress.BridgeTester</argument>
-                    <argument>target/bridge</argument>
-                    <argument>./stdin2testu01</argument>
-                    <argument>stdout</argument>
-                  </arguments>
                 </configuration>
               </execution>
             </executions>
