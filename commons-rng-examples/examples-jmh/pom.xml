@@ -69,11 +69,16 @@
 
     <!-- JMH Benchmark related properties: version, name of the benchmarking uber jar. -->
     <jmh.version>1.21</jmh.version>
-    <uberjar.name>benchmarks</uberjar.name>
+    <uberjar.name>examples-jmh</uberjar.name>
+    <project.mainClass>org.openjdk.jmh.Main</project.mainClass>
   </properties>
 
   <profiles>
     <profile>
+      <!-- Run a named benchmark from maven. The class to run can be specified as a property
+           using -Dbenchmark=[XXX], for example:
+           mvn test -Pbenchmark -Dbenchmark=NextDoubleGenerationPerformance
+      -->
       <id>benchmark</id>
       <properties>
         <skipTests>true</skipTests>
@@ -108,13 +113,68 @@
                   <arguments>
                     <argument>-classpath</argument>
                     <classpath/>
-                    <argument>org.openjdk.jmh.Main</argument>
+                    <argument>${project.mainClass}</argument>
                     <argument>-rf</argument>
                     <argument>json</argument>
                     <argument>-rff</argument>
                     <argument>target/jmh-result.${benchmark}.json</argument>
                     <argument>${benchmark}</argument>
                   </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- Build an executable jar that runs JMH:
+           mvn package -Pexamples-jmh
+
+           java -jar target/examples-jmh.jar -h
+           java -jar target/examples-jmh.jar NextDoubleGenerationPerformance -rf json -rff out.json
+      -->
+      <id>examples-jmh</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerVersion>${maven.compiler.target}</compilerVersion>
+              <source>${maven.compiler.target}</source>
+              <target>${maven.compiler.target}</target>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>${uberjar.name}</finalName>
+                  <transformers>
+                    <transformer
+                      implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <mainClass>${project.mainClass}</mainClass>
+                    </transformer>
+                  </transformers>
+                  <filters>
+                    <filter>
+                      <!-- Shading signed JARs will fail without this. http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar -->
+                      <artifact>*:*</artifact>
+                      <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                      </excludes>
+                    </filter>
+                  </filters>
                 </configuration>
               </execution>
             </executions>
