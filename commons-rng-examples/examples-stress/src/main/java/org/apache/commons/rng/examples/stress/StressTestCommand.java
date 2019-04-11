@@ -77,7 +77,7 @@ class StressTestCommand implements Callable<Void> {
     /** The file output prefix. */
     @Option(names = {"--prefix"},
             description = "Results file prefix (default: ${DEFAULT-VALUE}).")
-    private File fileOutputPrefix = new File("stress_");
+    private File fileOutputPrefix = new File("test_");
 
     /** The output mode for existing files. */
     @Option(names = {"-o", "--output-mode"},
