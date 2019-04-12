@@ -22,6 +22,7 @@ import org.apache.commons.rng.examples.jmh.RandomSources;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
 import org.apache.commons.rng.sampling.distribution.GeometricSampler;
+import org.apache.commons.rng.sampling.distribution.KempSmallMeanPoissonSampler;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
 import org.apache.commons.rng.sampling.distribution.SmallMeanPoissonSampler;
@@ -64,6 +65,7 @@ public class DiscreteSamplersPerformance {
         @Param({"DiscreteUniformSampler",
                 "RejectionInversionZipfSampler",
                 "SmallMeanPoissonSampler",
+                "KempSmallMeanPoissonSampler",
                 "LargeMeanPoissonSampler",
                 "GeometricSampler",
                 })
@@ -91,6 +93,8 @@ public class DiscreteSamplersPerformance {
                 sampler = new RejectionInversionZipfSampler(rng, 43, 2.1);
             } else if ("SmallMeanPoissonSampler".equals(samplerType)) {
                 sampler = new SmallMeanPoissonSampler(rng, 8.9);
+            } else if ("KempSmallMeanPoissonSampler".equals(samplerType)) {
+                sampler = new KempSmallMeanPoissonSampler(rng, 8.9);
             } else if ("LargeMeanPoissonSampler".equals(samplerType)) {
                 // Note: Use with a fractional part to the mean includes a small mean sample
                 sampler = new LargeMeanPoissonSampler(rng, 41.7);
