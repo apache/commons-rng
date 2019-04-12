@@ -166,7 +166,7 @@ public class PoissonSamplersPerformance {
         public int sample() {
             // Note on the algorithm:
             // - X is the unknown sample deviate (the output of the algorithm)
-            // - x is the current value from distribution
+            // - x is the current value from the distribution
             // - p is the probability of the current value x, p(X=x)
             // - u is effectively the cumulative probability that the sample X
             //   is equal or above the current value x, p(X>=x)

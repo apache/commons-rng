@@ -77,7 +77,7 @@ public class KempSmallMeanPoissonSampler
      */
     private final int x1;
     /**
-     * Store the probability value p(x+1), allowing the algorithm to start from the point n+1.
+     * Store the probability value p(x+1), allowing the algorithm to start from the point x+1.
      */
     private final double px1;
 
@@ -137,7 +137,7 @@ public class KempSmallMeanPoissonSampler
     public int sample() {
         // Note on the algorithm:
         // - X is the unknown sample deviate (the output of the algorithm)
-        // - x is the current value from distribution
+        // - x is the current value from the distribution
         // - p is the probability of the current value x, p(X=x)
         // - u is effectively the cumulative probability that the sample X
         //   is equal or above the current value x, p(X>=x)
