@@ -25,12 +25,10 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -108,8 +106,7 @@ class BridgeTestCommand implements Callable<Void> {
                 DataOutputStream dataOutput = new DataOutputStream(
                     new BufferedOutputStream(testingProcess.getOutputStream()));
                 // Open the file for Java int data
-                BufferedWriter textOutput = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(dataFile), StandardCharsets.UTF_8))) {
+                BufferedWriter textOutput = Files.newBufferedWriter(dataFile.toPath())) {
 
                 final boolean littleEndian = byteOrder == ByteOrder.LITTLE_ENDIAN;
                 // Write int data using a single bit in all possible positions

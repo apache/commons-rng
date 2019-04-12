@@ -20,7 +20,6 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.ITypeConverter;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.RunLast;
@@ -68,15 +67,6 @@ class ExamplesStressCommand implements Callable<Void> {
      * @param args Application's arguments.
      */
     public static void main(String[] args) {
-        // Allow the input seed to be specified using hex (starting 0x, 0X, #) or
-        // octal (starting with 0)
-        final ITypeConverter<Long> longConverter = new ITypeConverter<Long>() {
-            @Override
-            public Long convert(String s) {
-                return Long.decode(s);
-            }
-        };
-
         // Build the command line manually so we can configure options.
         final CommandLine cmd = new CommandLine(new ExamplesStressCommand())
                 .addSubcommand("bridge", new CommandLine(new BridgeTestCommand())
@@ -84,7 +74,9 @@ class ExamplesStressCommand implements Callable<Void> {
                 .addSubcommand("endian", new EndianessCommand())
                 .addSubcommand("list",   new ListCommand())
                 .addSubcommand("output", new CommandLine(new OutputCommand())
-                                                         .registerConverter(Long.class, longConverter))
+                                                         // Allow the input seed using hex (0x, 0X, #)
+                                                         // or octal (starting with 0)
+                                                         .registerConverter(Long.class, Long::decode))
                 .addSubcommand("stress", new CommandLine(new StressTestCommand())
                                                          .setStopAtPositional(true))
                 // Call last to apply to all sub-commands

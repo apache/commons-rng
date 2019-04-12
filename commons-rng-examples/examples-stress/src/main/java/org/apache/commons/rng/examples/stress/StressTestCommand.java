@@ -29,13 +29,10 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +43,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Specification for the "stress" command.
@@ -78,6 +76,13 @@ class StressTestCommand implements Callable<Void> {
     @Option(names = {"--prefix"},
             description = "Results file prefix (default: ${DEFAULT-VALUE}).")
     private File fileOutputPrefix = new File("test_");
+
+    /** The file output prefix. */
+    @Option(names = {"--stop-file"},
+            description = {"Stop file (default: <Results file prefix>.stop).",
+                           "When created it will prevent new tasks from starting " +
+                           "but running tasks will complete."})
+    private File stopFile;
 
     /** The output mode for existing files. */
     @Option(names = {"-o", "--output-mode"},
@@ -123,6 +128,11 @@ class StressTestCommand implements Callable<Void> {
                           "but the stress test is not executed.")
     private boolean dryRun = false;
 
+    /** The stop file exists flag. This is set in a synchronised method. */
+    private boolean stopFileExists;
+    /** The timestamp when the stop file was last checked. */
+    private long stopFileTimestamp;
+
     /**
      * The output mode for existing files.
      */
@@ -146,10 +156,51 @@ class StressTestCommand implements Callable<Void> {
         LogUtils.setLogLevel(reusableOptions.logLevel);
         ProcessUtils.checkExecutable(executable);
         ProcessUtils.checkOutputDirectory(fileOutputPrefix);
+        checkStopFileDoesNotExist();
         final Iterable<StressTestData> stressTestData = createStressTestData();
         printStressTestData(stressTestData);
         runStressTest(stressTestData);
         return null;
+    }
+
+    /**
+     * Initialise the stop file to a default unless specified by the user, then check it
+     * does not currently exist.
+     *
+     * @throws ApplicationException If the stop file exists
+     */
+    private void checkStopFileDoesNotExist() {
+        if (stopFile == null) {
+            stopFile = new File(fileOutputPrefix + ".stop");
+        }
+        if (stopFile.exists()) {
+            throw new ApplicationException("Stop file exists: " + stopFile);
+        }
+    }
+
+    /**
+     * Check if the stop file exists.
+     *
+     * <p>This method is synchronized. It will log a message if the file exists one time only.
+     *
+     * @return true if the stop file exists
+     */
+    private synchronized boolean stopFileExists() {
+        if (!stopFileExists) {
+            // This should hit the filesystem each time it is called.
+            // To prevent this happening a lot when all the first set of tasks run use
+            // a timestamp to limit the check to 1 time each interval.
+            final long timestamp = System.currentTimeMillis();
+            if (timestamp > stopFileTimestamp) {
+                stopFileTimestamp = timestamp + TimeUnit.SECONDS.toMillis(2);
+                stopFileExists = stopFile.exists();
+                if (stopFileExists) {
+                    LogUtils.info("Stop file detected: " + stopFile);
+                    LogUtils.info("No further tasks will start");
+                }
+            }
+        }
+        return stopFileExists;
     }
 
     /**
@@ -165,8 +216,7 @@ class StressTestCommand implements Callable<Void> {
             return new StressTestDataList("", trials);
         }
         // Read data into a list
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(generatorsListFile), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = Files.newBufferedReader(generatorsListFile.toPath())) {
             return ListCommand.readStressTestData(reader);
         } catch (final IOException ex) {
             throw new ApplicationException("Failed to read generators list: " + generatorsListFile, ex);
@@ -205,6 +255,7 @@ class StressTestCommand implements Callable<Void> {
         checkExistingOutputFiles(basePath, stressTestData);
 
         LogUtils.info("Running stress test ...");
+        LogUtils.info("Shutdown by creating stop file: " + stopFile);
         final ProgressTracker progressTracker = new ProgressTracker(countTrials(stressTestData));
 
         // Run tasks with parallel execution.
@@ -233,6 +284,8 @@ class StressTestCommand implements Callable<Void> {
             // Terminate all threads.
             service.shutdown();
         }
+
+        LogUtils.info("Finished stress test");
     }
 
     /**
@@ -324,6 +377,7 @@ class StressTestCommand implements Callable<Void> {
                 // Log the decision
                 LogUtils.info("%s existing output file: %s", outputMode, output);
                 if (outputMode == StressTestCommand.OutputMode.SKIP) {
+                    progressTracker.incrementProgress();
                     continue;
                 }
             }
@@ -347,7 +401,7 @@ class StressTestCommand implements Callable<Void> {
      */
     static class ProgressTracker {
         /** The reporting interval. */
-        private static final long REPORT_INTERVAL= 100;
+        private static final long REPORT_INTERVAL = 100;
         /** The total. */
         private final int total;
         /** The count. */
@@ -449,6 +503,11 @@ class StressTestCommand implements Callable<Void> {
         /** {@inheritDoc} */
         @Override
         public void run() {
+            if (cmd.stopFileExists()) {
+                // Do nothing
+                return;
+            }
+
             try {
                 printHeader();
 
@@ -581,8 +640,9 @@ class StressTestCommand implements Callable<Void> {
         private static void write(StringBuilder sb,
                                   File output,
                                   boolean append) throws IOException {
-            try (BufferedWriter w = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(output, append), StandardCharsets.UTF_8))) {
+            try (BufferedWriter w = append ?
+                    Files.newBufferedWriter(output.toPath(), StandardOpenOption.APPEND) :
+                    Files.newBufferedWriter(output.toPath())) {
                 w.write(sb.toString());
             }
         }
