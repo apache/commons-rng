@@ -44,22 +44,22 @@ public class LargeMeanPoissonSamplerTest {
     }
 
     /**
-     * Test the constructor with a bad mean.
+     * Test the constructor with a mean below 1.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroMean() {
+    public void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = 0;
+        final double mean = Math.nextDown(1);
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
     }
 
     /**
-     * Test the constructor with a negative fractional mean.
+     * Test the constructor using the state with a negative fractional mean.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNegativeFractionalMean() {
+    public void testConstructorThrowsWithStateAndNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
@@ -71,7 +71,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with a non-fractional mean.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNonFractionalMean() {
+    public void testConstructorThrowsWithStateAndNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
@@ -83,7 +83,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with fractional mean of 1.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithFractionalMeanOne() {
+    public void testConstructorThrowsWithStateAndFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();

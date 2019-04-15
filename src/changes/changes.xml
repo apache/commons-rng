@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="fix" issue="RNG-92">
+        "LargeMeanPoissonSampler": Requires mean >= 1.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-70">
         New "XorShiRo" family of generators. This adds 6 new general purpose generators with
         different periods and 4 related generators with improved performance for floating-point

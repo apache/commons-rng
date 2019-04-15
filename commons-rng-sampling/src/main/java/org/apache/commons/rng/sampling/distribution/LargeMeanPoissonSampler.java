@@ -105,13 +105,13 @@ public class LargeMeanPoissonSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or
+     * @throws IllegalArgumentException if {@code mean < 1} or
      * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
-        if (mean <= 0) {
-            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
+        if (mean < 1) {
+            throw new IllegalArgumentException("mean is not >= 1: " + mean);
         }
         // The algorithm is not valid if Math.floor(mean) is not an integer.
         if (mean > MAX_MEAN) {
