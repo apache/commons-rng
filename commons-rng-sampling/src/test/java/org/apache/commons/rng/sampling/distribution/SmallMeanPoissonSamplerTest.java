@@ -29,10 +29,13 @@ public class SmallMeanPoissonSamplerTest {
      * Test the constructor with a bad mean.
      */
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    public void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Integer.MAX_VALUE / 2 + 1;
+        final double p0 = Double.MIN_VALUE;
+        // Note: p0 = Math.exp(-mean) => mean = -Math.log(p0).
+        // Add to the limit on the mean to cause p0 to be zero.
+        final double mean = -Math.log(p0) + 1;
         @SuppressWarnings("unused")
         SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
     }

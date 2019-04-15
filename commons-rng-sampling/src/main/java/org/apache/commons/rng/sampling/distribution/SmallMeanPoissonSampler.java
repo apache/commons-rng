@@ -38,8 +38,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class SmallMeanPoissonSampler
     implements DiscreteSampler {
-    /** Upper bound to avoid truncation. */
-    private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /**
      * Pre-compute {@code Math.exp(-mean)}.
      * Note: This is the probability of the Poisson sample {@code P(n=0)}.
@@ -53,8 +51,7 @@ public class SmallMeanPoissonSampler
     /**
      * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean)} is not positive.
      */
     public SmallMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
@@ -62,13 +59,14 @@ public class SmallMeanPoissonSampler
         if (mean <= 0) {
             throw new IllegalArgumentException("mean is not strictly positive: " + mean);
         }
-        if (mean > MAX_MEAN) {
-            throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
-        }
-
         p0 = Math.exp(-mean);
-        // The returned sample is bounded by 1000 * mean or Integer.MAX_VALUE
-        limit = (int) Math.ceil(Math.min(1000 * mean, Integer.MAX_VALUE));
+        if (p0 > 0) {
+            // The returned sample is bounded by 1000 * mean
+            limit = (int) Math.ceil(1000 * mean);
+        } else {
+            // This excludes NaN values for the mean
+            throw new IllegalArgumentException("No p(x=0) probability for mean: " + mean);
+        }
     }
 
     /** {@inheritDoc} */
