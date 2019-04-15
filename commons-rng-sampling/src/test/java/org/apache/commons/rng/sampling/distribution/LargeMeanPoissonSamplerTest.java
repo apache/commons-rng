@@ -50,7 +50,7 @@ public class LargeMeanPoissonSamplerTest {
     public void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double mean = Math.nextDown(1);
+        final double mean = Math.nextAfter(1, -1);
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, mean);
     }
