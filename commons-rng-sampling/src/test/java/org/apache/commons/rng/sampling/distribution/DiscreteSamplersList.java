@@ -91,7 +91,7 @@ public final class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiUniform),
                 MathArrays.sequence(8, -3, 1),
                 RandomSource.create(RandomSource.SPLIT_MIX_64));
-            // Uniform.
+            // Uniform (power of 2 range).
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiUniform),
                 MathArrays.sequence(8, -3, 1),
                 DiscreteUniformSampler.of(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
@@ -102,6 +102,12 @@ public final class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loLargeUniform, hiLargeUniform),
                 MathArrays.sequence(20, -halfMax, halfMax / 10),
                 DiscreteUniformSampler.of(RandomSource.create(RandomSource.WELL_1024_A), loLargeUniform, hiLargeUniform));
+            // Uniform (non-power of 2 range).
+            final int rangeNonPowerOf2Uniform = 11;
+            final int hiNonPowerOf2Uniform = loUniform + rangeNonPowerOf2Uniform;
+            add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiNonPowerOf2Uniform),
+                MathArrays.sequence(rangeNonPowerOf2Uniform, -3, 1),
+                DiscreteUniformSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_256_SS), loUniform, hiNonPowerOf2Uniform));
 
             // Zipf ("inverse method").
             final int numElementsZipf = 5;
