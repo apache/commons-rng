@@ -227,16 +227,16 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
 
         final double gammaMin = 0;
         final double gammaMax1 = 40;
-        final double alphaGamma = 3.456;
+        final double thetaGamma = 3.456;
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase1)) {
-            final double thetaGammaSmallerThanOne = 0.1234;
-            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaSmallerThanOne),
+            final double alphaGammaSmallerThanOne = 0.1234;
+            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGammaSmallerThanOne, thetaGamma),
                           gammaMin, gammaMax1, "gamma.case1.txt");
         }
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase2)) {
-            final double thetaGammaLargerThanOne = 2.345;
+            final double alphaGammaLargerThanOne = 2.345;
             final double gammaMax2 = 70;
-            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaLargerThanOne),
+            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGammaLargerThanOne, thetaGamma),
                           gammaMin, gammaMax2, "gamma.case2.txt");
         }
 

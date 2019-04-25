@@ -69,7 +69,8 @@ public class ContinuousSamplersPerformance {
                 "MarsagliaNormalizedGaussianSampler",
                 "ZigguratNormalizedGaussianSampler",
                 "AhrensDieterExponentialSampler",
-                "AhrensDieterMarsagliaTsangGammaSampler",
+                "AhrensDieterGammaSampler",
+                "MarsagliaTsangGammaSampler",
                 "LogNormalBoxMullerNormalizedGaussianSampler",
                 "LogNormalMarsagliaNormalizedGaussianSampler",
                 "LogNormalZigguratNormalizedGaussianSampler",
@@ -103,8 +104,12 @@ public class ContinuousSamplersPerformance {
                 sampler = new ZigguratNormalizedGaussianSampler(rng);
             } else if ("AhrensDieterExponentialSampler".equals(samplerType)) {
                 sampler = new AhrensDieterExponentialSampler(rng, 4.56);
-            } else if ("AhrensDieterMarsagliaTsangGammaSampler".equals(samplerType)) {
-                sampler = new AhrensDieterMarsagliaTsangGammaSampler(rng, 9.8, 0.76);
+            } else if ("AhrensDieterGammaSampler".equals(samplerType)) {
+                // This tests the Ahrens-Dieter algorithm since alpha < 1
+                sampler = new AhrensDieterMarsagliaTsangGammaSampler(rng, 0.76, 9.8);
+            } else if ("MarsagliaTsangGammaSampler".equals(samplerType)) {
+                // This tests the Marsaglia-Tsang algorithm since alpha > 1
+                sampler = new AhrensDieterMarsagliaTsangGammaSampler(rng, 12.34, 9.8);
             } else if ("LogNormalBoxMullerNormalizedGaussianSampler".equals(samplerType)) {
                 sampler = new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng), 12.3, 4.6);
             } else if ("LogNormalMarsagliaNormalizedGaussianSampler".equals(samplerType)) {

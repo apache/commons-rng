@@ -107,19 +107,19 @@ public class ContinuousSamplersList {
                 RandomSource.create(RandomSource.MT_64));
 
             // Gamma ("inverse method").
-            final double thetaGammaSmallerThanOne = 0.1234;
-            final double thetaGammaLargerThanOne = 2.345;
-            final double alphaGamma = 3.456;
-            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, thetaGammaLargerThanOne, alphaGamma),
+            final double alphaGammaSmallerThanOne = 0.1234;
+            final double alphaGammaLargerThanOne = 2.345;
+            final double thetaGamma = 3.456;
+            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
                 RandomSource.create(RandomSource.SPLIT_MIX_64));
-            // Gamma (theta < 1).
-            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, thetaGammaSmallerThanOne, alphaGamma),
+            // Gamma (alpha < 1).
+            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaSmallerThanOne, thetaGamma),
                 new AhrensDieterMarsagliaTsangGammaSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S),
-                                                           alphaGamma, thetaGammaSmallerThanOne));
-            // Gamma (theta > 1).
-            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, thetaGammaLargerThanOne, alphaGamma),
+                                                           alphaGammaSmallerThanOne, thetaGamma));
+            // Gamma (alpha > 1).
+            add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
                 new AhrensDieterMarsagliaTsangGammaSampler(RandomSource.create(RandomSource.WELL_44497_B),
-                                                           alphaGamma, thetaGammaLargerThanOne));
+                                                           alphaGammaLargerThanOne, thetaGamma));
 
             // Gumbel ("inverse method").
             final double muGumbel = -4.56;
