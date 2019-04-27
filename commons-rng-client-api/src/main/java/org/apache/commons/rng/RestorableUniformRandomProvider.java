@@ -43,7 +43,7 @@ public interface RestorableUniformRandomProvider extends UniformRandomProvider {
      * @throws UnsupportedOperationException if the underlying source of
      * randomness does not support this functionality.
      * @throws IllegalArgumentException if it was detected that the
-     * {@code state} argument is incompatible with this intance.
+     * {@code state} argument is incompatible with this instance.
      */
     void restoreState(RandomProviderState state);
 }
