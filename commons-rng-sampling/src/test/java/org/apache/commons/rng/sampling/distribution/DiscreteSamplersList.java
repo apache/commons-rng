@@ -50,6 +50,15 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 MathArrays.sequence(8, 9, 1),
                 RandomSource.create(RandomSource.KISS));
+            add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
+                // range [9,16]
+                MathArrays.sequence(8, 9, 1),
+                new MarsagliaTsangWangBinomialSampler(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
+            // Inverted
+            add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, 1 - probSuccessBinomial),
+                // range [4,11] = [20-16, 20-9]
+                MathArrays.sequence(8, 4, 1),
+                new MarsagliaTsangWangBinomialSampler(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
@@ -146,6 +155,11 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
+
+            // Any discrete distribution
+            double[] discreteProbabilities = new double[] { 0.1, 0.2, 0.3, 0.4 };
+            add(LIST, discreteProbabilities,
+                new MarsagliaTsangWangDiscreteSampler(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
@@ -198,6 +212,19 @@ public class DiscreteSamplersList {
         list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
                                                                              points,
                                                                              getProbabilities(dist, points)) });
+    }
+
+    /**
+     * @param list List of data (one the "parameters" tested by the Junit parametric test).
+     * @param probabilities Probability distribution to which the samples are supposed to conform.
+     * @param sampler Sampler.
+     */
+    private static void add(List<DiscreteSamplerTestData[]> list,
+                            final double[] probabilities,
+                            final DiscreteSampler sampler) {
+        list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
+                                                                             MathArrays.natural(probabilities.length),
+                                                                             probabilities) });
     }
 
     /**
