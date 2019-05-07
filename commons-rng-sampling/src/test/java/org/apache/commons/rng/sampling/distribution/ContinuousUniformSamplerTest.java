@@ -30,7 +30,6 @@ public class ContinuousUniformSamplerTest {
      */
     @Test
     public void testNoRestrictionOnOrderOfLowAndHighParameters() {
-        // Note: This 
         final double low = 3.18;
         final double high = 5.23;
         final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
