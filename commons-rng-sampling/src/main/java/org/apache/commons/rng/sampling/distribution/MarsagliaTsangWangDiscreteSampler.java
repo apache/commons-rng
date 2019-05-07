@@ -626,7 +626,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
      * probabilities is not strictly positive.
      */
     private static int[] normaliseProbabilities(double[] probabilities) {
-        final double sumProb = validateProbabilities(probabilities);
+        final double sumProb = InternalUtils.validateProbabilities(probabilities);
 
         // Compute the normalisation: 2^30 / sum
         final double normalisation = INT_30 / sumProb;
@@ -651,32 +651,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
         prob[mode] += INT_30 - sum;
 
         return prob;
-    }
-
-    /**
-     * Validate the probabilities sum to a finite positive number.
-     *
-     * @param probabilities the probabilities
-     * @return the sum
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, or the sum of all
-     * probabilities is not strictly positive.
-     */
-    private static double validateProbabilities(double[] probabilities) {
-        if (probabilities == null || probabilities.length == 0) {
-            throw new IllegalArgumentException("Probabilities must not be empty.");
-        }
-
-        double sumProb = 0;
-        for (final double prob : probabilities) {
-            InternalUtils.validateProbability(prob);
-            sumProb += prob;
-        }
-
-        if (Double.isInfinite(sumProb) || sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
-        }
-        return sumProb;
     }
 
     /**

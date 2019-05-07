@@ -73,7 +73,8 @@
   <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
     <properties>
       <!-- Array is generated internally in this case. -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache']"/>
+      <property name="violationSuppressXPath"
+      value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache' or @Image='AliasMethodDiscreteSampler']"/>
     </properties>
   </rule>
 
@@ -112,6 +113,12 @@
   <rule ref="category/java/design.xml/CouplingBetweenObjects">
     <properties>
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessiveMethodLength">
+    <properties>
+      <!-- The length is due to comments -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='AliasMethodDiscreteSampler']"/>
     </properties>
   </rule>
 
