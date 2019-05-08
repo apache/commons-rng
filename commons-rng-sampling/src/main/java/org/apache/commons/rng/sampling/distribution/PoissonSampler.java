@@ -23,9 +23,13 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <ul>
  *  <li>
- *   For small means, a Poisson process is simulated using uniform deviates, as
- *   described <a href="http://mathaa.epfl.ch/cours/PMMI2001/interactive/rng7.htm">here</a>.
- *   The Poisson process (and hence, the returned value) is bounded by 1000 * mean.
+ *   For small means, a Poisson process is simulated using uniform deviates, as described in
+ *   <blockquote>
+ *    Knuth (1969). <i>Seminumerical Algorithms</i>. The Art of Computer Programming,
+ *    Volume 2. Chapter 3.4.1.F.3 Important integer-valued distributions: The Poisson distribution.
+ *    Addison Wesley.
+ *   </blockquote>
+ *   The Poisson process (and hence, the returned value) is bounded by {@code 1000 * mean}.
  *  </li>
  *  <li>
  *   For large means, we use the rejection algorithm described in
