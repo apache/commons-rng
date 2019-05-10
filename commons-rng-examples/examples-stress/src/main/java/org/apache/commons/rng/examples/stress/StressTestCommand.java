@@ -77,7 +77,7 @@ class StressTestCommand implements Callable<Void> {
             description = "Results file prefix (default: ${DEFAULT-VALUE}).")
     private File fileOutputPrefix = new File("test_");
 
-    /** The file output prefix. */
+    /** The stop file. */
     @Option(names = {"--stop-file"},
             description = {"Stop file (default: <Results file prefix>.stop).",
                            "When created it will prevent new tasks from starting " +
@@ -102,6 +102,12 @@ class StressTestCommand implements Callable<Void> {
             description = {"The number of trials for each random generator.",
                            "Used only for the default list (default: ${DEFAULT-VALUE})."})
     private int trials = 1;
+
+    /** The trial offset. */
+    @Option(names = {"--trial-offset"},
+            description = {"Offset to add to the trial number for output files (default: ${DEFAULT-VALUE}).",
+                           "Use for parallel tests with the same output prefix."})
+    private int trialOffset;
 
     /** The number of concurrent tasks. */
     @Option(names = {"-n", "--tasks"},
@@ -313,15 +319,17 @@ class StressTestCommand implements Callable<Void> {
     /**
      * Creates the named output file.
      *
+     * <p>Note: The trial will be combined with the trial offset to create the filename.
+     *
      * @param basePath The base path to the output results files.
      * @param testData The test data.
      * @param trial The trial.
      * @return the file
      */
-    private static File createOutputFile(final String basePath,
-                                         final StressTestData testData,
-                                         final int trial) {
-        return new File(String.format("%s%s_%d", basePath, testData.getId(), trial));
+    private File createOutputFile(final String basePath,
+                                  final StressTestData testData,
+                                  final int trial) {
+        return new File(String.format("%s%s_%d", basePath, testData.getId(), trial + trialOffset));
     }
 
     /**
