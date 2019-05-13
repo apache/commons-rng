@@ -26,100 +26,67 @@ import org.junit.Test;
 
 /**
  * Test for the {@link MarsagliaTsangWangDiscreteSampler}. The tests hit edge cases for
- * the sampler.
+ * the sampler factory methods that build the normalised probability distribution.
+ *
+ * <p>Statistical testing of the sampler is performed using entries in {@link DiscreteSamplersList}.</p>
  */
 public class MarsagliaTsangWangDiscreteSamplerTest {
-    // Tests for the package-private constructor using int[] + offset
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
+        createDiscreteDistributionSampler(null);
+    }
 
-    /**
-     * Test constructor throws with max index above integer max.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorThrowsWithMaxIndexAboveIntegerMax() {
-        final int[] prob = new int[1];
-        final int offset = Integer.MAX_VALUE;
-        createSampler(prob, offset);
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
+        createDiscreteDistributionSampler(new double[0]);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
+        createDiscreteDistributionSampler(new double[] { -1, 0.1, 0.2 });
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
+        createDiscreteDistributionSampler(new double[] { 0.1, Double.NaN, 0.2 });
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
+        createDiscreteDistributionSampler(new double[] { 0.1, Double.POSITIVE_INFINITY, 0.2 });
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
+        createDiscreteDistributionSampler(new double[] { Double.MAX_VALUE, Double.MAX_VALUE });
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
+        createDiscreteDistributionSampler(new double[4]);
     }
 
     /**
-     * Test constructor throws with negative offset.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructorThrowsWithNegativeOffset() {
-        final int[] prob = new int[1];
-        final int offset = -1;
-        createSampler(prob, offset);
-    }
-
-    /**
-     * Test construction is allowed or when max index equals integer max.
+     * Test the {@link Object#toString()} method contains the algorithm author names.
      */
     @Test
-    public void testConstructorWhenMaxIndexEqualsIntegerMax() {
-        final int[] prob = new int[1];
-        prob[0] = 1 << 30; // So the total probability is 2^30
-        final int offset = Integer.MAX_VALUE - 1;
-        createSampler(prob, offset);
+    public void testToString() {
+        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] { 0.5, 0.5 });
+        String text = sampler.toString();
+        for (String item : new String[] { "Marsaglia", "Tsang", "Wang" }) {
+            Assert.assertTrue("toString missing: " + item, text.contains(item));
+        }
     }
 
     /**
      * Creates the sampler.
      *
-     * @param prob the probabilities
-     * @param offset the offset
+     * @param probabilities Probabilities.
      * @return the sampler
      */
-    private static MarsagliaTsangWangDiscreteSampler createSampler(final int[] probabilities, int offset) {
+    private static MarsagliaTsangWangDiscreteSampler createDiscreteDistributionSampler(double[] probabilities) {
         final UniformRandomProvider rng = new SplitMix64(0L);
-        return new MarsagliaTsangWangDiscreteSampler(rng, probabilities, offset);
-    }
-
-    // Tests for the public constructor using double[]
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNullProbabilites() {
-        createSampler(null);
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroLengthProbabilites() {
-        createSampler(new double[0]);
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNegativeProbabilites() {
-        createSampler(new double[] { -1, 0.1, 0.2 });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithNaNProbabilites() {
-        createSampler(new double[] { 0.1, Double.NaN, 0.2 });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithInfiniteProbabilites() {
-        createSampler(new double[] { 0.1, Double.POSITIVE_INFINITY, 0.2 });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithInfiniteSumProbabilites() {
-        createSampler(new double[] { Double.MAX_VALUE, Double.MAX_VALUE });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testConstructorThrowsWithZeroSumProbabilites() {
-        createSampler(new double[4]);
-    }
-
-    /**
-     * Creates the sampler.
-     *
-     * @param probabilities the probabilities
-     * @return the sampler
-     */
-    private static MarsagliaTsangWangDiscreteSampler createSampler(double[] probabilities) {
-        final UniformRandomProvider rng = new SplitMix64(0L);
-        return new MarsagliaTsangWangDiscreteSampler(rng, probabilities);
+        return MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, probabilities);
     }
 
     // Sampling tests
@@ -174,9 +141,13 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int offset2 = 1 << 8;
         final int offset3 = 1 << 16;
 
-        final MarsagliaTsangWangDiscreteSampler sampler1 = new MarsagliaTsangWangDiscreteSampler(rng1, prob, offset1);
-        final MarsagliaTsangWangDiscreteSampler sampler2 = new MarsagliaTsangWangDiscreteSampler(rng2, prob, offset2);
-        final MarsagliaTsangWangDiscreteSampler sampler3 = new MarsagliaTsangWangDiscreteSampler(rng3, prob, offset3);
+        final double[] p1 = createProbabilities(offset1, prob);
+        final double[] p2 = createProbabilities(offset2, prob);
+        final double[] p3 = createProbabilities(offset3, prob);
+
+        final MarsagliaTsangWangDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng1, p1);
+        final MarsagliaTsangWangDiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng2, p2);
+        final MarsagliaTsangWangDiscreteSampler sampler3 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng3, p3);
 
         for (int i = 0; i < values.length; i++) {
             // Remove offsets
@@ -186,6 +157,21 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
             Assert.assertEquals("Offset sample 1 and 2 do not match", s1, s2);
             Assert.assertEquals("Offset Sample 1 and 3 do not match", s1, s3);
         }
+    }
+
+    /**
+     * Creates the probabilities using zero padding below the values.
+     *
+     * @param offset the offset
+     * @param prob the probability values
+     * @return the zero-padded probabilities
+     */
+    private static double[] createProbabilities(int offset, int[] prob) {
+        double[] probabilities = new double[offset + prob.length];
+        for (int i = 0; i < prob.length; i++) {
+            probabilities[i + offset] = prob[i];
+        }
+        return probabilities;
     }
 
     /**
@@ -202,12 +188,12 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
 
         // First test the table is completely filled to 2^30
         final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] { 0xffffffff});
-        final MarsagliaTsangWangDiscreteSampler dummySampler = new MarsagliaTsangWangDiscreteSampler(dummyRng, probabilities);
+        final MarsagliaTsangWangDiscreteSampler dummySampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(dummyRng, probabilities);
         // This will throw if the table is incomplete as it hits the upper limit
         dummySampler.sample();
 
         // Do a test of the actual sampler
-        final MarsagliaTsangWangDiscreteSampler sampler = new MarsagliaTsangWangDiscreteSampler(rng, probabilities);
+        final MarsagliaTsangWangDiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, probabilities);
 
         final int numberOfSamples = 10000;
         final long[] samples = new long[probabilities.length];
@@ -306,9 +292,292 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     }
 
     /**
+     * Test the constructor with a bad mean.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreatePoissonDistributionThrowsWithMeanLargerThanUpperBound() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final double mean = 1025;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+    }
+
+    /**
+     * Test the Poisson distribution with a bad mean.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreatePoissonDistributionThrowsWithZeroMean() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final double mean = 0;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+    }
+
+    /**
+     * Test the Poisson distribution with the maximum mean.
+     */
+    @Test
+    public void testCreatePoissonDistributionWithMaximumMean() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final double mean = 1024;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+    }
+
+    /**
+     * Test the Poisson distribution with a small mean that hits the edge case where the
+     * probability sum is not 2^30.
+     */
+    @Test
+    public void testCreatePoissonDistributionWithSmallMean() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final double mean = 0.25;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        // This will throw if the table does not sum to 2^30
+        sampler.sample();
+    }
+
+    /**
+     * Test the Poisson distribution with a medium mean that is at the switch point
+     * for how the probability distribution is computed. This hits the edge case
+     * where the loop from the mean decrements to reach zero.
+     */
+    @Test
+    public void testCreatePoissonDistributionWithMediumMean() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final double mean = 21.4;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        // This will throw if the table does not sum to 2^30
+        sampler.sample();
+    }
+
+    /**
+     * Test the Binomial distribution with a bad number of trials.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBinomialDistributionThrowsWithTrialsBelow0() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = -1;
+        final double p = 0.5;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+    }
+
+    /**
+     * Test the Binomial distribution with an unsupported number of trials.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBinomialDistributionThrowsWithTrialsAboveMax() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 1 << 16; // 2^16
+        final double p = 0.5;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+    }
+
+    /**
+     * Test the Binomial distribution with probability {@code < 0}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBinomialDistributionThrowsWithProbabilityBelow0() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 1;
+        final double p = -0.5;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+    }
+
+    /**
+     * Test the Binomial distribution with probability {@code > 1}.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBinomialDistributionThrowsWithProbabilityAbove1() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 1;
+        final double p = 1.5;
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+    }
+
+    /**
+     * Test the Binomial distribution with distribution parameters that create a very small p(0)
+     * with a high probability of success.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithSmallestP0ValueAndHighestProbabilityOfSuccess() {
+        final UniformRandomProvider rng = new FixedRNG();
+        // p(0) = Math.exp(trials * Math.log(1-p))
+        // p(0) will be smaller as Math.log(1-p) is more negative, which occurs when p is
+        // larger.
+        // Since the sampler uses inversion the largest value for p is 0.5.
+        // At the extreme for p = 0.5:
+        // trials = Math.log(p(0)) / Math.log(1-p)
+        // = Math.log(Double.MIN_VALUE) / Math.log(0.5)
+        // = 1074
+        final int trials = (int) Math.floor(Math.log(Double.MIN_VALUE) / Math.log(0.5));
+        final double p = 0.5;
+        // Validate set-up
+        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
+        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials + 1, p), 0);
+
+        // This will throw if the table does not sum to 2^30
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        sampler.sample();
+    }
+
+    /**
+     * Test the Binomial distribution with distribution parameters that create a p(0)
+     * that is zero (thus the distribution cannot be computed).
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBinomialDistributionThrowsWhenP0IsZero() {
+        final UniformRandomProvider rng = new FixedRNG();
+        // As above but increase the trials so p(0) should be zero
+        final int trials = 1 + (int) Math.floor(Math.log(Double.MIN_VALUE) / Math.log(0.5));
+        final double p = 0.5;
+        // Validate set-up
+        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, p), 0);
+        @SuppressWarnings("unused")
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+    }
+
+    /**
+     * Test the Binomial distribution with distribution parameters that create a very small p(0)
+     * with a high number of trials.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithLargestTrialsAndSmallestProbabilityOfSuccess() {
+        final UniformRandomProvider rng = new FixedRNG();
+        // p(0) = Math.exp(trials * Math.log(1-p))
+        // p(0) will be smaller as Math.log(1-p) is more negative, which occurs when p is
+        // larger.
+        // Since the sampler uses inversion the largest value for p is 0.5.
+        // At the extreme for trials = 2^16-1:
+        // p = 1 - Math.exp(Math.log(p(0)) / trials)
+        // = 1 - Math.exp(Math.log(Double.MIN_VALUE) / trials)
+        // = 0.011295152668039599
+        final int trials = (1 << 16) - 1;
+        double p = 1 - Math.exp(Math.log(Double.MIN_VALUE) / trials);
+
+        // Validate set-up
+        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
+
+        // Search for larger p until Math.nextAfter(p, 1) produces 0
+        double upper = p * 2;
+        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, upper), 0);
+
+        double lower = p;
+        while (Double.doubleToRawLongBits(lower) + 1 < Double.doubleToRawLongBits(upper)) {
+            final double mid = (upper + lower) / 2;
+            if (getBinomialP0(trials, mid) == 0) {
+                upper = mid;
+            } else {
+                lower = mid;
+            }
+        }
+        p = lower;
+
+        // Re-validate
+        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
+        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, Math.nextAfter(p, 1)), 0);
+
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        // This will throw if the table does not sum to 2^30
+        sampler.sample();
+    }
+
+    /**
+     * Gets the p(0) value for the Binomial distribution.
+     *
+     * @param trials the trials
+     * @param probabilityOfSuccess the probability of success
+     * @return the p(0) value
+     */
+    private static double getBinomialP0(int trials, double probabilityOfSuccess) {
+        return Math.exp(trials * Math.log(1 - probabilityOfSuccess));
+    }
+
+    /**
+     * Test the Binomial distribution with a probability of 0 where the sampler should equal 0.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithProbability0() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 1000000;
+        final double p = 0;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        for (int i = 0; i < 5; i++) {
+            Assert.assertEquals(0, sampler.sample());
+        }
+        // Hit the toString() method
+        Assert.assertTrue(sampler.toString().contains("Binomial"));
+    }
+
+    /**
+     * Test the Binomial distribution with a probability of 1 where the sampler should equal
+     * the number of trials.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithProbability1() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 1000000;
+        final double p = 1;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        for (int i = 0; i < 5; i++) {
+            Assert.assertEquals(trials, sampler.sample());
+        }
+        // Hit the toString() method
+        Assert.assertTrue(sampler.toString().contains("Binomial"));
+    }
+
+    /**
+     * Test the sampler with a large number of trials. This tests the sampler can create the
+     * Binomial distribution for a large size when a limiting distribution (e.g. the Normal distribution)
+     * could be used instead.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithLargeNumberOfTrials() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 65000;
+        final double p = 0.01;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        // This will throw if the table does not sum to 2^30
+        sampler.sample();
+    }
+
+    /**
+     * Test the sampler with a probability of 0.5. This should hit the edge case in the loop to
+     * search for the last probability of the Binomial distribution.
+     */
+    @Test
+    public void testCreateBinomialDistributionWithProbability0_5() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 10;
+        final double p = 0.5;
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        // This will throw if the table does not sum to 2^30
+        sampler.sample();
+    }
+
+    /**
+     * Test the sampler with a probability that requires inversion has the same name for 
+     * {@link Object#toString()}.
+     */
+    @Test
+    public void testBinomialSamplerToString() {
+        final UniformRandomProvider rng = new FixedRNG();
+        final int trials = 10;
+        final double p1 = 0.4;
+        final double p2 = 1 - p1;
+        final DiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p1);
+        final DiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p2);
+        Assert.assertEquals(sampler1.toString(), sampler2.toString());
+    }
+
+    /**
      * Return a fixed sequence of {@code int} output.
      */
-    private class FixedSequenceIntProvider extends IntProvider {
+    private static class FixedSequenceIntProvider extends IntProvider {
         /** The count of values output. */
         private int count;
         /** The values. */
@@ -327,6 +596,16 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         public int next() {
             // This should not be called enough to overflow count
             return values[count++ % values.length];
+        }
+    }
+
+    /**
+     * A RNG returning a fixed {@code int} value with all the bits set.
+     */
+    private static class FixedRNG extends IntProvider {
+        @Override
+        public int next() {
+            return 0xffffffff;
         }
     }
 }

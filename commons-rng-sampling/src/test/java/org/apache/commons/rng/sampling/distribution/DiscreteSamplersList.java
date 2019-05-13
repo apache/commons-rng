@@ -53,12 +53,12 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 // range [9,16]
                 MathArrays.sequence(8, 9, 1),
-                new MarsagliaTsangWangBinomialSampler(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
             // Inverted
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, 1 - probSuccessBinomial),
                 // range [4,11] = [20-16, 20-9]
                 MathArrays.sequence(8, 4, 1),
-                new MarsagliaTsangWangBinomialSampler(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
@@ -139,7 +139,7 @@ public class DiscreteSamplersList {
                 new KempSmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                     MathArrays.sequence(10, 0, 1),
-                    new MarsagliaTsangWangSmallMeanPoissonSampler(RandomSource.create(RandomSource.MT), meanPoisson));
+                    MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -151,7 +151,7 @@ public class DiscreteSamplersList {
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
-                new MarsagliaTsangWangSmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
             // Poisson (mean >> 40).
             final double veryLargeMeanPoisson = 543.21;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -163,12 +163,12 @@ public class DiscreteSamplersList {
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
-                new MarsagliaTsangWangSmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
 
             // Any discrete distribution
-            double[] discreteProbabilities = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
+            final double[] discreteProbabilities = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
             add(LIST, discreteProbabilities,
-                new MarsagliaTsangWangDiscreteSampler(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
+                MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
