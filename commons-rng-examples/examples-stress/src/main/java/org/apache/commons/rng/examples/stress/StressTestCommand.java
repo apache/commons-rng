@@ -301,7 +301,7 @@ class StressTestCommand implements Callable<Void> {
      * @param stressTestData List of generators to be tested.
      * @throws ApplicationException If an output file exists and the output mode is error
      */
-    private void checkExistingOutputFiles(final String basePath,
+    private void checkExistingOutputFiles(String basePath,
                                           Iterable<StressTestData> stressTestData) {
         if (outputMode == StressTestCommand.OutputMode.ERROR) {
             for (final StressTestData testData : stressTestData) {
@@ -326,9 +326,9 @@ class StressTestCommand implements Callable<Void> {
      * @param trial The trial.
      * @return the file
      */
-    private File createOutputFile(final String basePath,
-                                  final StressTestData testData,
-                                  final int trial) {
+    private File createOutputFile(String basePath,
+                                  StressTestData testData,
+                                  int trial) {
         return new File(String.format("%s%s_%d", basePath, testData.getId(), trial + trialOffset));
     }
 
@@ -368,11 +368,11 @@ class StressTestCommand implements Callable<Void> {
      * @param testData The test data.
      * @param progressTracker The progress tracker.
      */
-    private void submitTasks(final ExecutorService service,
-                             final List<Future<?>> taskList,
-                             final ArrayList<String> command,
-                             final String basePath,
-                             final StressTestData testData,
+    private void submitTasks(ExecutorService service,
+                             List<Future<?>> taskList,
+                             ArrayList<String> command,
+                             String basePath,
+                             StressTestData testData,
                              ProgressTracker progressTracker) {
         for (int trial = 1; trial <= testData.getTrials(); trial++) {
             // Create the output file
@@ -745,7 +745,7 @@ class StressTestCommand implements Callable<Void> {
          * href="https://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java">How
          *      to convert byte size into human readable format in java?</a>
          */
-        static String bytesToString(final long bytes) {
+        static String bytesToString(long bytes) {
           // When using the smallest unit no decimal point is needed, because it's the exact number.
           if (bytes < 1000) {
             return bytes + " " + SI_UNITS[0];
