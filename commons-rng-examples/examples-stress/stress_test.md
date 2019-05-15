@@ -19,7 +19,7 @@ Apache Commons RNG Stress Test Example
 ======================================
 
 The stress test module contains an application for calling external tools that perform stringent
-uniformity tests. The following shows an example of how to run **DieHarder** and **TestU01**.
+uniformity tests. The following shows an example of how to run **Dieharder** and **TestU01**.
 
 Installation on Linux/MacOS
 ---------------------------
@@ -60,9 +60,9 @@ Then compile with the `<install directory>/include` and `lib` directories:
               -L/usr/local/testu01/lib \
               -ltestu01 -lprobdist -lmylib -lm
 
-### DieHarder
+### Dieharder
 
-This can be installed from [DieHarder](http://webhome.phy.duke.edu/~rgb/General/dieharder.php) or
+This can be installed from [Dieharder](http://webhome.phy.duke.edu/~rgb/General/dieharder.php) or
 using the available packages:
 
         > apt-get install dieharder
@@ -133,9 +133,17 @@ Use the `--help` option to show the available options.
               ./stdin2testu01 \
               BigCrush
 
-### DieHarder
+### Dieharder
 
         > java -jar target/examples-stress.jar stress \
               --prefix target/dh_ \
               /usr/bin/dieharder \
               -a -g 200 -Y 1 -k 2
+
+The output results can be viewed using the `results` command:
+
+        > java -jar target/examples-stress.jar results \
+              target/tu_* \
+              target/dh_* --ignore-sums
+
+Various formats are available. Use the `--help` option to show the available options.

@@ -69,16 +69,17 @@ class ExamplesStressCommand implements Callable<Void> {
     public static void main(String[] args) {
         // Build the command line manually so we can configure options.
         final CommandLine cmd = new CommandLine(new ExamplesStressCommand())
-                .addSubcommand("bridge", new CommandLine(new BridgeTestCommand())
-                                                         .setStopAtPositional(true))
-                .addSubcommand("endian", new EndianessCommand())
-                .addSubcommand("list",   new ListCommand())
-                .addSubcommand("output", new CommandLine(new OutputCommand())
-                                                         // Allow the input seed using hex (0x, 0X, #)
-                                                         // or octal (starting with 0)
-                                                         .registerConverter(Long.class, Long::decode))
-                .addSubcommand("stress", new CommandLine(new StressTestCommand())
-                                                         .setStopAtPositional(true))
+                .addSubcommand("bridge",  new CommandLine(new BridgeTestCommand())
+                                                          .setStopAtPositional(true))
+                .addSubcommand("endian",  new EndianessCommand())
+                .addSubcommand("list",    new ListCommand())
+                .addSubcommand("output",  new CommandLine(new OutputCommand())
+                                                          // Allow the input seed using hex (0x, 0X, #)
+                                                          // or octal (starting with 0)
+                                                          .registerConverter(Long.class, Long::decode))
+                .addSubcommand("results", new ResultsCommand())
+                .addSubcommand("stress",  new CommandLine(new StressTestCommand())
+                                                          .setStopAtPositional(true))
                 // Call last to apply to all sub-commands
                 .setCaseInsensitiveEnumValuesAllowed(true);
 
