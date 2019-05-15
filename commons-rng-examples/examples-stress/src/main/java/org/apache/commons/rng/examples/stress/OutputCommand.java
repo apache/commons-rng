@@ -30,6 +30,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -221,7 +222,12 @@ class OutputCommand implements Callable<Void> {
                 throw new ApplicationException("Failed to create output: " + fileOutput, ex);
             }
         }
-        return System.out;
+        return new FilterOutputStream(System.out) {
+            @Override
+            public void close() throws IOException {
+                // Do not close stdout
+            }
+        };
     }
 
     /**
