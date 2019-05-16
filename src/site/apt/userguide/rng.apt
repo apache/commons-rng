@@ -721,45 +721,67 @@ String word = sampler.sample();
   respectively reported as below the accepted threshold for considering the sequence as
   uniformly random; hence, in this table, <lower> is <better>.
 
-  For each the two test suites, three runs were performed (using random seeds): Click on one
+  For each of the two test suites, five runs were performed (using random seeds): Click on one
   of the numbers of the comma-separated list in order to see the text report of the
   corresponding run.
-  Note: For <Dieharder>, a failure on the "Diehard Sums Test" can be {{{http://www.phy.duke.edu/~rgb/General/dieharder.php}ignored}}.
+  Note: For <Dieharder> the "Diehard Sums Test" is {{{http://www.phy.duke.edu/~rgb/General/dieharder.php}ignored}} from the failure counts.
 
 
-*---------------------------------*----------------*---------------------*
-|| RNG identifier             || Dieharder     || TestU01 (BigCrush) |
-*----------------*----------------*----------------*---------------------*
-| JDK         | {{{../txt/userguide/stress/dh/run_1/dh_1}11}}, {{{../txt/userguide/stress/dh/run_2/dh_1}12}}, {{{../txt/userguide/stress/dh/run_3/dh_1}13}} | {{{../txt/userguide/stress/tu/run_1/tu_1}74}}, {{{../txt/userguide/stress/tu/run_2/tu_1}72}}, {{{../txt/userguide/stress/tu/run_3/tu_1}75}} |
-*---------------------------------*----------------*----------------*
-| MT   | {{{../txt/userguide/stress/dh/run_1/dh_2}0}}, {{{../txt/userguide/stress/dh/run_2/dh_2}1}}, {{{../txt/userguide/stress/dh/run_3/dh_2}0}} | {{{../txt/userguide/stress/tu/run_1/tu_2}3}}, {{{../txt/userguide/stress/tu/run_2/tu_2}2}}, {{{../txt/userguide/stress/tu/run_3/tu_2}2}} |
-*---------------------------------*----------------*----------------*
-| WELL_512_A          | {{{../txt/userguide/stress/dh/run_1/dh_3}0}}, {{{../txt/userguide/stress/dh/run_2/dh_3}0}}, {{{../txt/userguide/stress/dh/run_3/dh_3}0}} | {{{../txt/userguide/stress/tu/run_1/tu_3}7}}, {{{../txt/userguide/stress/tu/run_2/tu_3}6}}, {{{../txt/userguide/stress/tu/run_3/tu_3}6}} |
-*---------------------------------*----------------*----------------*
-| WELL_1024_A         | {{{../txt/userguide/stress/dh/run_1/dh_4}0}}, {{{../txt/userguide/stress/dh/run_2/dh_4}0}}, {{{../txt/userguide/stress/dh/run_3/dh_4}0}}| {{{../txt/userguide/stress/tu/run_1/tu_4}4}}, {{{../txt/userguide/stress/tu/run_2/tu_4}4}}, {{{../txt/userguide/stress/tu/run_3/tu_4}5}} |
-*---------------------------------*----------------*----------------*
-| WELL_19937_A        | {{{../txt/userguide/stress/dh/run_1/dh_5}0}}, {{{../txt/userguide/stress/dh/run_2/dh_5}0}}, {{{../txt/userguide/stress/dh/run_3/dh_5}0}} | {{{../txt/userguide/stress/tu/run_1/tu_5}3}}, {{{../txt/userguide/stress/tu/run_2/tu_5}2}}, {{{../txt/userguide/stress/tu/run_3/tu_5}2}} |
-*---------------------------------*----------------*----------------*
-| WELL_19937_C        | {{{../txt/userguide/stress/dh/run_1/dh_6}0}}, {{{../txt/userguide/stress/dh/run_2/dh_6}1}}, {{{../txt/userguide/stress/dh/run_3/dh_6}0}} | {{{../txt/userguide/stress/tu/run_1/tu_6}2}}, {{{../txt/userguide/stress/tu/run_2/tu_6}2}}, {{{../txt/userguide/stress/tu/run_3/tu_6}3}} |
-*---------------------------------*----------------*----------------*
-| WELL_44497_A        | {{{../txt/userguide/stress/dh/run_1/dh_7}0}}, {{{../txt/userguide/stress/dh/run_2/dh_7}0}}, {{{../txt/userguide/stress/dh/run_3/dh_7}0}} | {{{../txt/userguide/stress/tu/run_1/tu_7}2}}, {{{../txt/userguide/stress/tu/run_2/tu_7}3}}, {{{../txt/userguide/stress/tu/run_3/tu_7}3}} |
-*---------------------------------*----------------*----------------*
-| WELL_44497_B        | {{{../txt/userguide/stress/dh/run_1/dh_8}0}}, {{{../txt/userguide/stress/dh/run_2/dh_8}0}}, {{{../txt/userguide/stress/dh/run_3/dh_8}0}} | {{{../txt/userguide/stress/tu/run_1/tu_8}2}}, {{{../txt/userguide/stress/tu/run_2/tu_8}2}}, {{{../txt/userguide/stress/tu/run_3/tu_8}2}} |
-*---------------------------------*----------------*----------------*
-| ISAAC       | {{{../txt/userguide/stress/dh/run_1/dh_9}0}}, {{{../txt/userguide/stress/dh/run_2/dh_9}0}}, {{{../txt/userguide/stress/dh/run_3/dh_9}1}} | {{{../txt/userguide/stress/tu/run_1/tu_9}0}}, {{{../txt/userguide/stress/tu/run_2/tu_9}1}}, {{{../txt/userguide/stress/tu/run_3/tu_9}0}} |
-*---------------------------------*----------------*----------------*
-| MT_64 | {{{../txt/userguide/stress/dh/run_1/dh_10}0}}, {{{../txt/userguide/stress/dh/run_2/dh_10}0}}, {{{../txt/userguide/stress/dh/run_3/dh_10}1}} | {{{../txt/userguide/stress/tu/run_1/tu_10}3}}, {{{../txt/userguide/stress/tu/run_2/tu_10}2}}, {{{../txt/userguide/stress/tu/run_3/tu_10}3}} |
-*---------------------------------*----------------*----------------*
-| SPLIT_MIX_64        | {{{../txt/userguide/stress/dh/run_1/dh_11}0}}, {{{../txt/userguide/stress/dh/run_2/dh_11}0}}, {{{../txt/userguide/stress/dh/run_3/dh_11}0}} | {{{../txt/userguide/stress/tu/run_1/tu_11}2}}, {{{../txt/userguide/stress/tu/run_2/tu_11}0}}, {{{../txt/userguide/stress/tu/run_3/tu_11}0}} |
-*---------------------------------*----------------*----------------*
-| XOR_SHIFT_1024_S  | {{{../txt/userguide/stress/dh/run_1/dh_12}0}}, {{{../txt/userguide/stress/dh/run_2/dh_12}0}}, {{{../txt/userguide/stress/dh/run_3/dh_12}0}} | {{{../txt/userguide/stress/tu/run_1/tu_12}2}}, {{{../txt/userguide/stress/tu/run_2/tu_12}0}}, {{{../txt/userguide/stress/tu/run_3/tu_12}0}} |
-*---------------------------------*----------------*----------------*
-| TWO_CMRES          | {{{../txt/userguide/stress/dh/run_1/dh_13}1}}, {{{../txt/userguide/stress/dh/run_2/dh_13}1}}, {{{../txt/userguide/stress/dh/run_3/dh_13}1}} | {{{../txt/userguide/stress/tu/run_1/tu_13}0}}, {{{../txt/userguide/stress/tu/run_2/tu_13}0}}, {{{../txt/userguide/stress/tu/run_3/tu_13}1}} |
-*---------------------------------*----------------*----------------*
-| MWC_256          | {{{../txt/userguide/stress/dh/run_1/dh_14}0}}, {{{../txt/userguide/stress/dh/run_2/dh_14}0}}, {{{../txt/userguide/stress/dh/run_3/dh_14}0}} | {{{../txt/userguide/stress/tu/run_1/tu_14}0}}, {{{../txt/userguide/stress/tu/run_2/tu_14}0}}, {{{../txt/userguide/stress/tu/run_3/tu_14}0}} |
-*---------------------------------*----------------*----------------*
-| KISS          | {{{../txt/userguide/stress/dh/run_1/dh_15}0}}, {{{../txt/userguide/stress/dh/run_2/dh_15}0}}, {{{../txt/userguide/stress/dh/run_3/dh_15}0}} | {{{../txt/userguide/stress/tu/run_1/tu_15}1}}, {{{../txt/userguide/stress/tu/run_2/tu_15}2}}, {{{../txt/userguide/stress/tu/run_3/tu_15}0}} |
-*---------------------------------*----------------*----------------*
+*-----------------*------------*----------------------*
+|| RNG identifier || Dieharder || TestU01 (BigCrush) ||
+*-----------------*------------*----------------------*
+| JDK | {{{../txt/userguide/stress/dh_1_1}4}}, {{{../txt/userguide/stress/dh_1_2}4}}, {{{../txt/userguide/stress/dh_1_3}4}}, {{{../txt/userguide/stress/dh_1_4}4}}, {{{../txt/userguide/stress/dh_1_5}4}} | {{{../txt/userguide/stress/tu_1_1}74}}, {{{../txt/userguide/stress/tu_1_2}72}}, {{{../txt/userguide/stress/tu_1_3}74}}, {{{../txt/userguide/stress/tu_1_4}73}}, {{{../txt/userguide/stress/tu_1_5}74}} |
+*-----------------*------------*----------------------*
+| WELL_512_A | {{{../txt/userguide/stress/dh_2_1}0}}, {{{../txt/userguide/stress/dh_2_2}0}}, {{{../txt/userguide/stress/dh_2_3}0}}, {{{../txt/userguide/stress/dh_2_4}0}}, {{{../txt/userguide/stress/dh_2_5}0}} | {{{../txt/userguide/stress/tu_2_1}7}}, {{{../txt/userguide/stress/tu_2_2}6}}, {{{../txt/userguide/stress/tu_2_3}6}}, {{{../txt/userguide/stress/tu_2_4}6}}, {{{../txt/userguide/stress/tu_2_5}6}} |
+*-----------------*------------*----------------------*
+| WELL_1024_A | {{{../txt/userguide/stress/dh_3_1}0}}, {{{../txt/userguide/stress/dh_3_2}0}}, {{{../txt/userguide/stress/dh_3_3}0}}, {{{../txt/userguide/stress/dh_3_4}0}}, {{{../txt/userguide/stress/dh_3_5}0}} | {{{../txt/userguide/stress/tu_3_1}4}}, {{{../txt/userguide/stress/tu_3_2}4}}, {{{../txt/userguide/stress/tu_3_3}5}}, {{{../txt/userguide/stress/tu_3_4}4}}, {{{../txt/userguide/stress/tu_3_5}4}} |
+*-----------------*------------*----------------------*
+| WELL_19937_A | {{{../txt/userguide/stress/dh_4_1}0}}, {{{../txt/userguide/stress/dh_4_2}1}}, {{{../txt/userguide/stress/dh_4_3}0}}, {{{../txt/userguide/stress/dh_4_4}0}}, {{{../txt/userguide/stress/dh_4_5}0}} | {{{../txt/userguide/stress/tu_4_1}3}}, {{{../txt/userguide/stress/tu_4_2}3}}, {{{../txt/userguide/stress/tu_4_3}2}}, {{{../txt/userguide/stress/tu_4_4}2}}, {{{../txt/userguide/stress/tu_4_5}2}} |
+*-----------------*------------*----------------------*
+| WELL_19937_C | {{{../txt/userguide/stress/dh_5_1}0}}, {{{../txt/userguide/stress/dh_5_2}0}}, {{{../txt/userguide/stress/dh_5_3}0}}, {{{../txt/userguide/stress/dh_5_4}0}}, {{{../txt/userguide/stress/dh_5_5}0}} | {{{../txt/userguide/stress/tu_5_1}2}}, {{{../txt/userguide/stress/tu_5_2}2}}, {{{../txt/userguide/stress/tu_5_3}3}}, {{{../txt/userguide/stress/tu_5_4}2}}, {{{../txt/userguide/stress/tu_5_5}2}} |
+*-----------------*------------*----------------------*
+| WELL_44497_A | {{{../txt/userguide/stress/dh_6_1}0}}, {{{../txt/userguide/stress/dh_6_2}0}}, {{{../txt/userguide/stress/dh_6_3}0}}, {{{../txt/userguide/stress/dh_6_4}0}}, {{{../txt/userguide/stress/dh_6_5}0}} | {{{../txt/userguide/stress/tu_6_1}2}}, {{{../txt/userguide/stress/tu_6_2}2}}, {{{../txt/userguide/stress/tu_6_3}2}}, {{{../txt/userguide/stress/tu_6_4}2}}, {{{../txt/userguide/stress/tu_6_5}3}} |
+*-----------------*------------*----------------------*
+| WELL_44497_B | {{{../txt/userguide/stress/dh_7_1}0}}, {{{../txt/userguide/stress/dh_7_2}0}}, {{{../txt/userguide/stress/dh_7_3}0}}, {{{../txt/userguide/stress/dh_7_4}0}}, {{{../txt/userguide/stress/dh_7_5}0}} | {{{../txt/userguide/stress/tu_7_1}2}}, {{{../txt/userguide/stress/tu_7_2}3}}, {{{../txt/userguide/stress/tu_7_3}2}}, {{{../txt/userguide/stress/tu_7_4}2}}, {{{../txt/userguide/stress/tu_7_5}2}} |
+*-----------------*------------*----------------------*
+| MT | {{{../txt/userguide/stress/dh_8_1}0}}, {{{../txt/userguide/stress/dh_8_2}0}}, {{{../txt/userguide/stress/dh_8_3}0}}, {{{../txt/userguide/stress/dh_8_4}0}}, {{{../txt/userguide/stress/dh_8_5}0}} | {{{../txt/userguide/stress/tu_8_1}2}}, {{{../txt/userguide/stress/tu_8_2}3}}, {{{../txt/userguide/stress/tu_8_3}2}}, {{{../txt/userguide/stress/tu_8_4}2}}, {{{../txt/userguide/stress/tu_8_5}2}} |
+*-----------------*------------*----------------------*
+| ISAAC | {{{../txt/userguide/stress/dh_9_1}0}}, {{{../txt/userguide/stress/dh_9_2}0}}, {{{../txt/userguide/stress/dh_9_3}0}}, {{{../txt/userguide/stress/dh_9_4}0}}, {{{../txt/userguide/stress/dh_9_5}0}} | {{{../txt/userguide/stress/tu_9_1}0}}, {{{../txt/userguide/stress/tu_9_2}1}}, {{{../txt/userguide/stress/tu_9_3}2}}, {{{../txt/userguide/stress/tu_9_4}0}}, {{{../txt/userguide/stress/tu_9_5}0}} |
+*-----------------*------------*----------------------*
+| SPLIT_MIX_64 | {{{../txt/userguide/stress/dh_10_1}0}}, {{{../txt/userguide/stress/dh_10_2}0}}, {{{../txt/userguide/stress/dh_10_3}0}}, {{{../txt/userguide/stress/dh_10_4}0}}, {{{../txt/userguide/stress/dh_10_5}0}} | {{{../txt/userguide/stress/tu_10_1}1}}, {{{../txt/userguide/stress/tu_10_2}0}}, {{{../txt/userguide/stress/tu_10_3}0}}, {{{../txt/userguide/stress/tu_10_4}0}}, {{{../txt/userguide/stress/tu_10_5}0}} |
+*-----------------*------------*----------------------*
+| XOR_SHIFT_1024_S | {{{../txt/userguide/stress/dh_11_1}0}}, {{{../txt/userguide/stress/dh_11_2}0}}, {{{../txt/userguide/stress/dh_11_3}0}}, {{{../txt/userguide/stress/dh_11_4}0}}, {{{../txt/userguide/stress/dh_11_5}0}} | {{{../txt/userguide/stress/tu_11_1}0}}, {{{../txt/userguide/stress/tu_11_2}0}}, {{{../txt/userguide/stress/tu_11_3}0}}, {{{../txt/userguide/stress/tu_11_4}0}}, {{{../txt/userguide/stress/tu_11_5}0}} |
+*-----------------*------------*----------------------*
+| TWO_CMRES | {{{../txt/userguide/stress/dh_12_1}2}}, {{{../txt/userguide/stress/dh_12_2}2}}, {{{../txt/userguide/stress/dh_12_3}2}}, {{{../txt/userguide/stress/dh_12_4}2}}, {{{../txt/userguide/stress/dh_12_5}2}} | {{{../txt/userguide/stress/tu_12_1}4}}, {{{../txt/userguide/stress/tu_12_2}3}}, {{{../txt/userguide/stress/tu_12_3}3}}, {{{../txt/userguide/stress/tu_12_4}5}}, {{{../txt/userguide/stress/tu_12_5}4}} |
+*-----------------*------------*----------------------*
+| MT_64 | {{{../txt/userguide/stress/dh_14_1}0}}, {{{../txt/userguide/stress/dh_14_2}0}}, {{{../txt/userguide/stress/dh_14_3}0}}, {{{../txt/userguide/stress/dh_14_4}0}}, {{{../txt/userguide/stress/dh_14_5}0}} | {{{../txt/userguide/stress/tu_14_1}2}}, {{{../txt/userguide/stress/tu_14_2}3}}, {{{../txt/userguide/stress/tu_14_3}2}}, {{{../txt/userguide/stress/tu_14_4}2}}, {{{../txt/userguide/stress/tu_14_5}2}} |
+*-----------------*------------*----------------------*
+| MWC_256 | {{{../txt/userguide/stress/dh_15_1}0}}, {{{../txt/userguide/stress/dh_15_2}0}}, {{{../txt/userguide/stress/dh_15_3}0}}, {{{../txt/userguide/stress/dh_15_4}0}}, {{{../txt/userguide/stress/dh_15_5}0}} | {{{../txt/userguide/stress/tu_15_1}0}}, {{{../txt/userguide/stress/tu_15_2}0}}, {{{../txt/userguide/stress/tu_15_3}0}}, {{{../txt/userguide/stress/tu_15_4}2}}, {{{../txt/userguide/stress/tu_15_5}0}} |
+*-----------------*------------*----------------------*
+| KISS | {{{../txt/userguide/stress/dh_16_1}0}}, {{{../txt/userguide/stress/dh_16_2}0}}, {{{../txt/userguide/stress/dh_16_3}0}}, {{{../txt/userguide/stress/dh_16_4}0}}, {{{../txt/userguide/stress/dh_16_5}0}} | {{{../txt/userguide/stress/tu_16_1}0}}, {{{../txt/userguide/stress/tu_16_2}0}}, {{{../txt/userguide/stress/tu_16_3}0}}, {{{../txt/userguide/stress/tu_16_4}0}}, {{{../txt/userguide/stress/tu_16_5}0}} |
+*-----------------*------------*----------------------*
+| XOR_SHIFT_1024_S_PHI | {{{../txt/userguide/stress/dh_17_1}0}}, {{{../txt/userguide/stress/dh_17_2}0}}, {{{../txt/userguide/stress/dh_17_3}0}}, {{{../txt/userguide/stress/dh_17_4}0}}, {{{../txt/userguide/stress/dh_17_5}0}} | {{{../txt/userguide/stress/tu_17_1}0}}, {{{../txt/userguide/stress/tu_17_2}0}}, {{{../txt/userguide/stress/tu_17_3}0}}, {{{../txt/userguide/stress/tu_17_4}0}}, {{{../txt/userguide/stress/tu_17_5}0}} |
+*-----------------*------------*----------------------*
+| XO_RO_SHI_RO_64_S | {{{../txt/userguide/stress/dh_18_1}0}}, {{{../txt/userguide/stress/dh_18_2}0}}, {{{../txt/userguide/stress/dh_18_3}0}}, {{{../txt/userguide/stress/dh_18_4}0}}, {{{../txt/userguide/stress/dh_18_5}0}} | {{{../txt/userguide/stress/tu_18_1}1}}, {{{../txt/userguide/stress/tu_18_2}1}}, {{{../txt/userguide/stress/tu_18_3}2}}, {{{../txt/userguide/stress/tu_18_4}1}}, {{{../txt/userguide/stress/tu_18_5}3}} |
+*-----------------*------------*----------------------*
+| XO_RO_SHI_RO_64_SS | {{{../txt/userguide/stress/dh_19_1}0}}, {{{../txt/userguide/stress/dh_19_2}0}}, {{{../txt/userguide/stress/dh_19_3}0}}, {{{../txt/userguide/stress/dh_19_4}0}}, {{{../txt/userguide/stress/dh_19_5}0}} | {{{../txt/userguide/stress/tu_19_1}0}}, {{{../txt/userguide/stress/tu_19_2}0}}, {{{../txt/userguide/stress/tu_19_3}0}}, {{{../txt/userguide/stress/tu_19_4}0}}, {{{../txt/userguide/stress/tu_19_5}0}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_128_PLUS | {{{../txt/userguide/stress/dh_20_1}0}}, {{{../txt/userguide/stress/dh_20_2}0}}, {{{../txt/userguide/stress/dh_20_3}0}}, {{{../txt/userguide/stress/dh_20_4}0}}, {{{../txt/userguide/stress/dh_20_5}0}} | {{{../txt/userguide/stress/tu_20_1}1}}, {{{../txt/userguide/stress/tu_20_2}2}}, {{{../txt/userguide/stress/tu_20_3}2}}, {{{../txt/userguide/stress/tu_20_4}1}}, {{{../txt/userguide/stress/tu_20_5}1}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_128_SS | {{{../txt/userguide/stress/dh_21_1}0}}, {{{../txt/userguide/stress/dh_21_2}0}}, {{{../txt/userguide/stress/dh_21_3}0}}, {{{../txt/userguide/stress/dh_21_4}0}}, {{{../txt/userguide/stress/dh_21_5}0}} | {{{../txt/userguide/stress/tu_21_1}0}}, {{{../txt/userguide/stress/tu_21_2}1}}, {{{../txt/userguide/stress/tu_21_3}0}}, {{{../txt/userguide/stress/tu_21_4}0}}, {{{../txt/userguide/stress/tu_21_5}0}} |
+*-----------------*------------*----------------------*
+| XO_RO_SHI_RO_128_PLUS | {{{../txt/userguide/stress/dh_22_1}0}}, {{{../txt/userguide/stress/dh_22_2}0}}, {{{../txt/userguide/stress/dh_22_3}0}}, {{{../txt/userguide/stress/dh_22_4}0}}, {{{../txt/userguide/stress/dh_22_5}0}} | {{{../txt/userguide/stress/tu_22_1}0}}, {{{../txt/userguide/stress/tu_22_2}1}}, {{{../txt/userguide/stress/tu_22_3}0}}, {{{../txt/userguide/stress/tu_22_4}0}}, {{{../txt/userguide/stress/tu_22_5}0}} |
+*-----------------*------------*----------------------*
+| XO_RO_SHI_RO_128_SS | {{{../txt/userguide/stress/dh_23_1}0}}, {{{../txt/userguide/stress/dh_23_2}0}}, {{{../txt/userguide/stress/dh_23_3}0}}, {{{../txt/userguide/stress/dh_23_4}0}}, {{{../txt/userguide/stress/dh_23_5}0}} | {{{../txt/userguide/stress/tu_23_1}1}}, {{{../txt/userguide/stress/tu_23_2}0}}, {{{../txt/userguide/stress/tu_23_3}1}}, {{{../txt/userguide/stress/tu_23_4}0}}, {{{../txt/userguide/stress/tu_23_5}0}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_256_PLUS | {{{../txt/userguide/stress/dh_24_1}0}}, {{{../txt/userguide/stress/dh_24_2}0}}, {{{../txt/userguide/stress/dh_24_3}0}}, {{{../txt/userguide/stress/dh_24_4}0}}, {{{../txt/userguide/stress/dh_24_5}0}} | {{{../txt/userguide/stress/tu_24_1}0}}, {{{../txt/userguide/stress/tu_24_2}0}}, {{{../txt/userguide/stress/tu_24_3}0}}, {{{../txt/userguide/stress/tu_24_4}0}}, {{{../txt/userguide/stress/tu_24_5}0}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_256_SS | {{{../txt/userguide/stress/dh_25_1}0}}, {{{../txt/userguide/stress/dh_25_2}0}}, {{{../txt/userguide/stress/dh_25_3}0}}, {{{../txt/userguide/stress/dh_25_4}0}}, {{{../txt/userguide/stress/dh_25_5}0}} | {{{../txt/userguide/stress/tu_25_1}0}}, {{{../txt/userguide/stress/tu_25_2}1}}, {{{../txt/userguide/stress/tu_25_3}0}}, {{{../txt/userguide/stress/tu_25_4}2}}, {{{../txt/userguide/stress/tu_25_5}1}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_512_PLUS | {{{../txt/userguide/stress/dh_26_1}0}}, {{{../txt/userguide/stress/dh_26_2}0}}, {{{../txt/userguide/stress/dh_26_3}0}}, {{{../txt/userguide/stress/dh_26_4}0}}, {{{../txt/userguide/stress/dh_26_5}0}} | {{{../txt/userguide/stress/tu_26_1}0}}, {{{../txt/userguide/stress/tu_26_2}0}}, {{{../txt/userguide/stress/tu_26_3}0}}, {{{../txt/userguide/stress/tu_26_4}2}}, {{{../txt/userguide/stress/tu_26_5}2}} |
+*-----------------*------------*----------------------*
+| XO_SHI_RO_512_SS | {{{../txt/userguide/stress/dh_27_1}0}}, {{{../txt/userguide/stress/dh_27_2}0}}, {{{../txt/userguide/stress/dh_27_3}0}}, {{{../txt/userguide/stress/dh_27_4}0}}, {{{../txt/userguide/stress/dh_27_5}0}} | {{{../txt/userguide/stress/tu_27_1}0}}, {{{../txt/userguide/stress/tu_27_2}1}}, {{{../txt/userguide/stress/tu_27_3}0}}, {{{../txt/userguide/stress/tu_27_4}1}}, {{{../txt/userguide/stress/tu_27_5}0}} |
+*-----------------*------------*----------------------*
 
 
 6. Dependencies
