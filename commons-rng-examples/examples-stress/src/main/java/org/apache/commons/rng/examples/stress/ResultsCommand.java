@@ -106,10 +106,10 @@ class ResultsCommand implements Callable<Void> {
             description = "Output failed tests (not all formats).")
     private boolean showFailedTests;
 
-    /** The flag to ignore the diehard sums test. */
-    @Option(names = {"--ignore-sums"},
-            description = "Ignore diehard sums test.")
-    private boolean ignoreDiehardSums;
+    /** The flag to include the Dieharder sums test. */
+    @Option(names = {"--include-sums"},
+            description = "Include Dieharder sums test.")
+    private boolean includeDiehardSums;
 
     /**
      * The output mode for the results.
@@ -500,8 +500,8 @@ class ResultsCommand implements Callable<Void> {
         while (iter.hasNext()) {
             final String line = iter.next();
             if (DIEHARDER_FAILED_PATTERN.matcher(line).find()) {
-                // Option to ignore the flawed Dieharder sums test
-                if (ignoreDiehardSums && line.contains(DIEHARDER_SUMS)) {
+                // Optionally include the flawed Dieharder sums test
+                if (!includeDiehardSums && line.contains(DIEHARDER_SUMS)) {
                     continue;
                 }
                 final int index1 = line.indexOf('|');
