@@ -42,6 +42,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -110,6 +111,13 @@ class ResultsCommand implements Callable<Void> {
     @Option(names = {"--include-sums"},
             description = "Include Dieharder sums test.")
     private boolean includeDiehardSums;
+
+    /** The common file path prefix used when outputting file paths. */
+    @Option(names = {"--path-prefix"},
+            description = {"Common path prefix.",
+                           "If specified this will replace the common prefix from all " +
+                           "files when the path is output, e.g. for the APT report."})
+    private String pathPrefix = "";
 
     /**
      * The output mode for the results.
@@ -274,18 +282,6 @@ class ResultsCommand implements Callable<Void> {
          */
         void setComplete(boolean complete) {
             this.complete = complete;
-        }
-
-        /**
-         * Return the Almost-Plain-Text (APT) string representation of this result. This
-         * is a link for the relative path to the result file and the failure count.
-         *
-         * @return the string
-         */
-        String toAPTString() {
-            final String text = "{{{" + getResultFile().getPath() + "}" + getFailureCountString() + "}}";
-            // Convert to web-link name separators
-            return text.replace('\\', '/');
         }
     }
 
@@ -655,13 +651,35 @@ class ResultsCommand implements Callable<Void> {
      * @param results Results.
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private static void writeAPT(OutputStream out,
-                                 List<TestResult> results) throws IOException {
+    private void writeAPT(OutputStream out,
+                          List<TestResult> results) throws IOException {
         // Identify all:
         // RandomSources, bit-reversed, test names,
         final List<RandomSource> randomSources = getRandomSources(results);
         final List<Boolean> bitReversed = getBitReversed(results);
         final List<String> testNames = getTestNames(results);
+
+        // Identify the common path prefix to be replaced
+        final int prefixLength = (pathPrefix.isEmpty()) ? 0 : findCommonPathPrefixLength(results);
+
+        // Create a function to update the file path and then output the failure count
+        // as a link to the file using the APT format.
+        final Function<TestResult, String> toAPTString = result -> {
+            String path = result.getResultFile().getPath();
+            // Remove common path prefix
+            path = path.substring(prefixLength);
+            // Build the APT relative link
+            final StringBuilder sb = new StringBuilder()
+                .append("{{{").append(pathPrefix).append(path).append('}')
+                .append(result.getFailureCountString()).append("}}");
+            // Convert to web-link name separators
+            for (int i = 0; i < sb.length(); i++) {
+                if (sb.charAt(i) == '\\') {
+                    sb.setCharAt(i, '/');
+                }
+            }
+            return sb.toString();
+        };
 
         // Create columns for RandomSource, bit-reversed, each test name.
         // Make bit-reversed column optional if no generators are bit reversed.
@@ -688,7 +706,7 @@ class ResultsCommand implements Callable<Void> {
                     for (String testName : testNames) {
                         final List<TestResult> testResults = getTestResults(results, randomSource, reversed, testName);
                         writeAPTColumn(output, testResults.stream()
-                                                          .map(TestResult::toAPTString)
+                                                          .map(toAPTString)
                                                           .collect(Collectors.joining(", ")));
                     }
                     output.newLine();
@@ -753,6 +771,43 @@ class ResultsCommand implements Callable<Void> {
         final ArrayList<String> list = new ArrayList<>(set);
         Collections.sort(list);
         return list;
+    }
+
+    /**
+     * Find the common path prefix for all result files. This is returned as the length of the
+     * common prefix.
+     *
+     * @param results Results.
+     * @return the length
+     */
+    private static int findCommonPathPrefixLength(List<TestResult> results) {
+        if (results.isEmpty()) {
+            return 0;
+        }
+        // Find the first prefix
+        final String prefix1 = getPathPrefix(results.get(0));
+        int length = prefix1.length();
+        for (int i = 1; i < results.size() && length != 0; i++) {
+            final String prefix2 = getPathPrefix(results.get(i));
+            // Update
+            final int size = Math.min(prefix2.length(), length);
+            length = 0;
+            while (length < size && prefix1.charAt(length) == prefix2.charAt(length)) {
+                length++;
+            }
+        }
+        return length;
+    }
+
+    /**
+     * Gets the path prefix.
+     *
+     * @param testResult Test result.
+     * @return the path prefix (or the empty string)
+     */
+    private static String getPathPrefix(TestResult testResult) {
+        final String parent = testResult.getResultFile().getParent();
+        return parent != null ? parent : "";
     }
 
     /**
