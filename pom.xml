@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>47</version>
+    <version>48</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -117,11 +117,13 @@
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
-    <!-- Version fix to support Java 11 site generation using parent-47 -->
+    <!-- Version fix to support Java 11 site generation using parent-48 -->
     <commons.spotbugs.version>3.1.11</commons.spotbugs.version>
+    <!-- Fix to avoid JXR 3.0.0 forking the lifecycle phase 'compile' during site report
+       jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
+       depend on other packages. -->
+    <commons.jxr.version>2.5</commons.jxr.version>
 
-    <!-- Jacoco version fix to support Java 8 & 11 using parent-47 -->
-    <commons.jacoco.version>0.8.3</commons.jacoco.version>
     <commons.jacoco.classRatio>0.96</commons.jacoco.classRatio>
     <commons.jacoco.instructionRatio>0.8</commons.jacoco.instructionRatio>
     <commons.jacoco.methodRatio>0.8</commons.jacoco.methodRatio>
@@ -278,7 +280,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.4</version>
         <configuration>
           <skipAssembly>true</skipAssembly>
         </configuration>
