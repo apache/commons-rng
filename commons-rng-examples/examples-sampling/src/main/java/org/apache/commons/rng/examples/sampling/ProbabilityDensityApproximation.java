@@ -96,22 +96,22 @@ public class ProbabilityDensityApproximation {
         final double binHalfSize = 0.5 * binSize;
         final double norm = 1 / (binSize * numSamples);
 
-        final PrintWriter out = new PrintWriter(outputFile);
-        // CHECKSTYLE: stop MultipleStringLiteralsCheck
-        out.println("# Sampler: " + sampler);
-        out.println("# Number of bins: " + numBins);
-        out.println("# Min: " + min + " (fraction of samples below: " + (belowMin / (double) numSamples) + ")");
-        out.println("# Max: " + max + " (fraction of samples above: " + (aboveMax / (double) numSamples) + ")");
-        out.println("# Bin width: " + binSize);
-        out.println("# Histogram normalization factor: " + norm);
-        out.println("#");
-        out.println("# " + (min - binHalfSize) + " " + (belowMin * norm));
-        for (int i = 0; i < numBins; i++) {
-            out.println((min + (i + 1) * binSize - binHalfSize) + " " + (histogram[i] * norm));
+        try (PrintWriter out = new PrintWriter(outputFile)) {
+            // CHECKSTYLE: stop MultipleStringLiteralsCheck
+            out.println("# Sampler: " + sampler);
+            out.println("# Number of bins: " + numBins);
+            out.println("# Min: " + min + " (fraction of samples below: " + (belowMin / (double) numSamples) + ")");
+            out.println("# Max: " + max + " (fraction of samples above: " + (aboveMax / (double) numSamples) + ")");
+            out.println("# Bin width: " + binSize);
+            out.println("# Histogram normalization factor: " + norm);
+            out.println("#");
+            out.println("# " + (min - binHalfSize) + " " + (belowMin * norm));
+            for (int i = 0; i < numBins; i++) {
+                out.println((min + (i + 1) * binSize - binHalfSize) + " " + (histogram[i] * norm));
+            }
+            out.println("# " + (max + binHalfSize) + " " + (aboveMax * norm));
+            // CHECKSTYLE: resume MultipleStringLiteralsCheck
         }
-        out.println("# " + (max + binHalfSize) + " " + (aboveMax * norm));
-        out.close();
-        // CHECKSTYLE: resume MultipleStringLiteralsCheck
     }
 
     /**
@@ -126,11 +126,11 @@ public class ProbabilityDensityApproximation {
      */
     public static void main(String[] args)
         throws IOException {
-        final int numBins = Integer.valueOf(args[0]);
-        final long numSamples = Long.valueOf(args[1]);
+        final int numBins = Integer.parseInt(args[0]);
+        final long numSamples = Long.parseLong(args[1]);
         final ProbabilityDensityApproximation app = new ProbabilityDensityApproximation(numBins, numSamples);
 
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S);
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
 
         final double gaussMean = 1;
         final double gaussSigma = 2;
