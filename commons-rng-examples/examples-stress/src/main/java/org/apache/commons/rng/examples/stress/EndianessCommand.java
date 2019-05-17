@@ -40,7 +40,7 @@ class EndianessCommand implements Callable<Void> {
      * Prints a template generators list to stdout.
      */
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         // Log level will be relevant for any exception logging
         LogUtils.setLogLevel(reusableOptions.logLevel);
         LogUtils.info(ByteOrder.nativeOrder().toString());

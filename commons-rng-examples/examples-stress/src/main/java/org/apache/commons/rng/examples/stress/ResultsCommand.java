@@ -587,7 +587,7 @@ class ResultsCommand implements Callable<Void> {
         }
         return new FilterOutputStream(System.out) {
             @Override
-            public void close() throws IOException {
+            public void close() {
                 // Do not close stdout
             }
         };
