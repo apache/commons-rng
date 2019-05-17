@@ -125,6 +125,9 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
                 new SmallMeanPoissonSampler(RandomSource.create(RandomSource.KISS), meanPoisson));
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
+                MathArrays.sequence(10, 0, 1),
+                new KempSmallMeanPoissonSampler(RandomSource.create(RandomSource.MT), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
