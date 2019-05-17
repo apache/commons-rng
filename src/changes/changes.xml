@@ -75,6 +75,11 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-91">
+        New "KempSmallMeanPoissonSampler" that provides Poisson samples using only 1 random
+        deviate per sample. This algorithm outperforms the SmallMeanPoissonSampler
+        when the generator is slow.
+      </action>
       <action dev="aherbert" type="fix" issue="RNG-93">
         "SmallMeanPoissonSampler": Requires the Poisson probability for p(x=0) to be positive
         setting an upper bound on the mean of approximately 744.44.
