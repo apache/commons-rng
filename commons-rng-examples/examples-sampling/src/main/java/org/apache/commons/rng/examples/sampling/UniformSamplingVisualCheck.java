@@ -26,14 +26,14 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 
 /**
  * Creates 2D plot of sampling output.
- * It is a "manual" check that could help ensure that no artefacts
+ * It is a "manual" check that could help ensure that no artifacts
  * exist in some tiny region of the expected range, due to loss of
  * accuracy, e.g. when porting C code based on 32-bits "float" to
  * "Commons RNG" that uses Java "double" (64-bits).
  */
 public class UniformSamplingVisualCheck {
     /** RNG. */
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S);
+    private final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
     /** Samplers. */
     private final ContinuousSampler[] samplers = new ContinuousSampler[] {
         new ZigguratNormalizedGaussianSampler(rng),
