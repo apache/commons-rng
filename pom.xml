@@ -576,7 +576,7 @@
               <logViolationsToConsole>false</logViolationsToConsole>
               <failOnViolation>false</failOnViolation>
               <resourceExcludes>NOTICE.txt,LICENSE.txt,**/maven-archiver/pom.properties</resourceExcludes>
-              <excludes>**/module-info.java</excludes>
+              <excludes>**/module-info.java,**/generated/**.java</excludes>
             </configuration>
             <executions>
               <execution>
@@ -611,7 +611,7 @@
               <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
               <enableRulesSummary>false</enableRulesSummary>
               <includeResources>false</includeResources>
-              <excludes>**/module-info.java</excludes>
+              <excludes>**/module-info.java,**/generated/**.java</excludes>
             </configuration>
             <reportSets>
               <reportSet>
