@@ -17,10 +17,12 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class XorShift1024StarPhiTest {
+    /** The size of the array seed. */
+    private static final int SEED_SIZE = 16;
+
     @Test
     public void testReferenceCode() {
         /*
@@ -51,12 +53,12 @@ public class XorShift1024StarPhiTest {
     }
 
     @Test
-    public void testConstructorWithZeroSeed() {
-        // This is allowed even though the generator is non-functional
-        final int size = 16;
-        final XorShift1024StarPhi rng = new XorShift1024StarPhi(new long[size]);
-        for (int i = size * 2; i-- != 0; ) {
-            Assert.assertEquals("Expected the generator to be broken", 0L, rng.nextLong());
-        }
+    public void testConstructorWithZeroSeedIsNonFunctional() {
+        RandomAssert.assertNextIntZeroOutput(new XorShift1024StarPhi(new long[SEED_SIZE]), 2 * SEED_SIZE);
+    }
+
+    @Test
+    public void testConstructorWithSingleBitSeedIsFunctional() {
+        RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XorShift1024StarPhi.class, SEED_SIZE);
     }
 }

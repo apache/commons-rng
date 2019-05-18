@@ -17,10 +17,12 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class XoRoShiRo128PlusTest {
+    /** The size of the array seed. */
+    private static final int SEED_SIZE = 2;
+
     @Test
     public void testReferenceCode() {
         /*
@@ -48,13 +50,13 @@ public class XoRoShiRo128PlusTest {
     }
 
     @Test
-    public void testConstructorWithZeroSeed() {
-        // This is allowed even though the generator is non-functional
-        final int size = 2;
-        final XoRoShiRo128Plus rng = new XoRoShiRo128Plus(new long[size]);
-        for (int i = size * 2; i-- != 0; ) {
-            Assert.assertEquals("Expected the generator to be broken", 0L, rng.nextLong());
-        }
+    public void testConstructorWithZeroSeedIsNonFunctional() {
+        RandomAssert.assertNextIntZeroOutput(new XoRoShiRo128Plus(new long[SEED_SIZE]), 2 * SEED_SIZE);
+    }
+
+    @Test
+    public void testConstructorWithSingleBitSeedIsFunctional() {
+        RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XoRoShiRo128Plus.class, SEED_SIZE);
     }
 
     @Test
@@ -70,8 +72,6 @@ public class XoRoShiRo128PlusTest {
         };
         final XoRoShiRo128Plus rng1 = new XoRoShiRo128Plus(seed);
         final XoRoShiRo128Plus rng2 = new XoRoShiRo128Plus(seed[0], seed[1]);
-        for (int i = seed.length * 2; i-- != 0; ) {
-            Assert.assertEquals(rng1.nextLong(), rng2.nextLong());
-        }
+        RandomAssert.assertNextLongEquals(seed.length * 2, rng1, rng2);
     }
 }
