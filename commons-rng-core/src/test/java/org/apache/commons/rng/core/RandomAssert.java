@@ -53,7 +53,7 @@ public class RandomAssert {
     }
 
     /**
-     * Assert that the two random generators produce the same output for 
+     * Assert that the two random generators produce the same output for
      * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
      *
      * @param cycles Number of cycles.
@@ -67,7 +67,7 @@ public class RandomAssert {
     }
 
     /**
-     * Assert that the two random generators produce the same output for 
+     * Assert that the two random generators produce the same output for
      * {@link UniformRandomProvider#nextLong()} over the given number of cycles.
      *
      * @param cycles Number of cycles.
@@ -82,7 +82,7 @@ public class RandomAssert {
 
     /**
      * Assert that the random generator produces zero output for
-     * {@link UniformRandomProvider#nextInt()} over the given number of cycles. 
+     * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
      * This is used to test a poorly seeded generator cannot generate random output.
      *
      * @param rng Random generator.
@@ -96,7 +96,7 @@ public class RandomAssert {
 
     /**
      * Assert that the random generator produces zero output for
-     * {@link UniformRandomProvider#nextLong()} over the given number of cycles. 
+     * {@link UniformRandomProvider#nextLong()} over the given number of cycles.
      * This is used to test a poorly seeded generator cannot generate random output.
      *
      * @param rng Random generator.
@@ -140,7 +140,7 @@ public class RandomAssert {
      * @param type Class of the generator.
      * @param size Seed size.
      */
-    public static <T extends UniformRandomProvider> void 
+    public static <T extends UniformRandomProvider> void
         assertIntArrayConstructorWithSingleBitSeedIsFunctional(Class<T> type, int size) {
         try {
             // Find the int[] constructor
@@ -176,7 +176,7 @@ public class RandomAssert {
      * @param type Class of the generator.
      * @param size Seed size.
      */
-    public static <T extends UniformRandomProvider> void 
+    public static <T extends UniformRandomProvider> void
         assertLongArrayConstructorWithSingleBitSeedIsFunctional(Class<T> type, int size) {
         try {
             // Find the long[] constructor
