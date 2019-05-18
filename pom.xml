@@ -123,6 +123,8 @@
        jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
        depend on other packages. -->
     <commons.jxr.version>2.5</commons.jxr.version>
+    <!-- Fix to build on JDK 7: version 4.0.0 requires Java 8. -->
+    <commons.felix.version>3.5.1</commons.felix.version>
 
     <commons.jacoco.classRatio>0.96</commons.jacoco.classRatio>
     <commons.jacoco.instructionRatio>0.8</commons.jacoco.instructionRatio>
