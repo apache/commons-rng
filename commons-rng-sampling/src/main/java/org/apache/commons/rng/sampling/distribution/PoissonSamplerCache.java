@@ -125,8 +125,7 @@ public class PoissonSamplerCache {
      * @param maxMean The maximum mean covered by the cache.
      * @throws IllegalArgumentException if {@code maxMean < minMean}
      */
-    private static void checkMeanRange(double minMean, double maxMean)
-    {
+    private static void checkMeanRange(double minMean, double maxMean) {
         // Note:
         // Although a mean of 0 is invalid for a Poisson sampler this case
         // is handled to make the cache user friendly. Any low means will
@@ -253,8 +252,7 @@ public class PoissonSamplerCache {
      *
      * @return The minimum mean covered by the cache.
      */
-    public double getMinMean()
-    {
+    public double getMinMean() {
         return minN;
     }
 
@@ -281,8 +279,7 @@ public class PoissonSamplerCache {
      *
      * @return The maximum mean covered by the cache.
      */
-    public double getMaxMean()
-    {
+    public double getMaxMean() {
         if (isValidRange()) {
             return Math.nextAfter(maxN + 1.0, -1);
         }

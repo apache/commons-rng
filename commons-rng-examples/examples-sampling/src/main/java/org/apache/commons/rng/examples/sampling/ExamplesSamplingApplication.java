@@ -37,8 +37,7 @@ public class ExamplesSamplingApplication {
      *
      * @param args Application's arguments.
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         // Build the command line manually so we can configure options.
         final CommandLine cmd = new CommandLine(new ExamplesSamplingCommand())
                 .addSubcommand("density", new ProbabilityDensityApproximationCommand())

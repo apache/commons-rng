@@ -30,7 +30,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </li>
  * </ul>
  *
- * <p>This sampler is suitable for {@code mean < 40}. For large means, 
+ * <p>This sampler is suitable for {@code mean < 40}. For large means,
  * {@link LargeMeanPoissonSampler} should be used instead.</p>
  *
  * <p>Note: The algorithm uses a recurrence relation to compute the Poisson probability
