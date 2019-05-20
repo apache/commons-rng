@@ -49,8 +49,6 @@
 
     <uberjar.name>examples-stress</uberjar.name>
     <project.mainClass>org.apache.commons.rng.examples.stress.ExamplesStressApplication</project.mainClass>
-
-    <rng.picocli.version>3.9.5</rng.picocli.version>
   </properties>
 
   <dependencies>
@@ -65,7 +63,6 @@
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
-      <version>${rng.picocli.version}</version>
     </dependency>
   </dependencies>
 

@@ -19,6 +19,13 @@ package org.apache.commons.rng.examples.sampling;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
+
+import java.util.concurrent.Callable;
+
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
@@ -31,7 +38,28 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
  * accuracy, e.g. when porting C code based on 32-bits "float" to
  * "Commons RNG" that uses Java "double" (64-bits).
  */
-public class UniformSamplingVisualCheck {
+@Command(name = "visual",
+         description = "Show output from a tiny region of the sampler.")
+class UniformSamplingVisualCheckCommand implements Callable<Void> {
+    /** The standard options. */
+    @Mixin
+    private StandardOptions reusableOptions;
+
+    /** The lower bound of the tiny range. */
+    @Option(names = {"-l", "--low"},
+            description = "The lower bound (default: ${DEFAULT-VALUE}).")
+    private float lo = 0.1f;
+
+    /** The number of bands of the tiny range. */
+    @Option(names = {"-b", "--bands"},
+            description = "The number of bands for the range (default: ${DEFAULT-VALUE}).")
+    private int bands = 2;
+
+    /** Number of samples to be generated. */
+    @Option(names = {"-s", "--samples"},
+        description = "The number of samples in the tiny range (default: ${DEFAULT-VALUE}).")
+    private int numSamples = 50;
+
     /** RNG. */
     private final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
     /** Samplers. */
@@ -45,40 +73,42 @@ public class UniformSamplingVisualCheck {
     // CHECKSTYLE: stop RegexpCheck
 
     /**
-     * Program entry point.
-     *
-     * @param args Unused.
+     * Prints a template generators list to stdout.
      */
-    public static void main(String[] args) {
-        final float lo = 0.1f;
-        final int bands = 2;
+    @Override
+    public Void call() {
         float hi = lo;
         for (int i = 0; i < bands; i++) {
             hi = Math.nextUp(hi);
         }
-        System.out.printf("# lo=%.10e hi=%.10e", lo, hi);
-        System.out.println();
+        System.out.printf("# lower=%.16e%n", lo);
+        System.out.printf("# upper=%.16e%n", hi);
 
-        final UniformSamplingVisualCheck app = new UniformSamplingVisualCheck();
+        for (int i = 0; i < samplers.length; i++) {
+            System.out.printf("# [%d] %s%n", i, samplers[i].getClass().getSimpleName());
+        }
 
-        while (true) {
-            System.out.printf("%.16e\t", app.rng.nextDouble());
+        int n = 0;
+        while (++n < numSamples) {
+            System.out.printf("[%d]", n, rng.nextDouble());
 
-            for (ContinuousSampler s : app.samplers) {
+            for (ContinuousSampler s : samplers) {
                 while (true) {
                     final double r = s.sample();
                     if (r < lo ||
                         r > hi) {
                         // Discard numbers outside the tiny region.
-                         continue;
-                     }
+                        continue;
+                    }
 
-                    System.out.printf("%.16e ", r);
+                    System.out.printf("\t%.16e", r);
                     break;
                 }
             }
 
             System.out.println();
         }
+
+        return null;
     }
 }

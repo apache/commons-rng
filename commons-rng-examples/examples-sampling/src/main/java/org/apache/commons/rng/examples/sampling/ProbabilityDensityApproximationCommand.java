@@ -18,9 +18,16 @@
 package org.apache.commons.rng.examples.sampling;
 
 import java.io.PrintWriter;
+import java.util.EnumSet;
+import java.util.concurrent.Callable;
 import java.io.IOException;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
+
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
@@ -36,22 +43,65 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 /**
  * Approximation of the probability density by the histogram of the sampler output.
  */
-public class ProbabilityDensityApproximation {
+@Command(name = "density",
+         description = {"Approximate the probability density of samplers."})
+class ProbabilityDensityApproximationCommand  implements Callable<Void> {
+    /** The standard options. */
+    @Mixin
+    private StandardOptions reusableOptions;
+
     /** Number of (equal-width) bins in the histogram. */
-    private final int numBins;
+    @Option(names = {"-b", "--bins"},
+            description = "The number of bins in the histogram (default: ${DEFAULT-VALUE}).")
+    private int numBins = 25000;
+
     /** Number of samples to be generated. */
-    private final long numSamples;
+    @Option(names = {"-n", "--samples"},
+            description = "The number of samples in the histogram (default: ${DEFAULT-VALUE}).")
+    private long numSamples = 1000000000;
+
+    /** The samplers. */
+    @Option(names = {"-s", "--samplers"},
+            split = ",",
+            description = {"The samplers (comma-delimited for multiple options).",
+                          "Valid values: ${COMPLETION-CANDIDATES}."})
+    private EnumSet<Sampler> samplers = EnumSet.noneOf(Sampler.class);
+
+    /** Flag to output all samplers. */
+    @Option(names = {"-a", "--all"},
+            description = "Output all samplers")
+    private boolean allSamplers = false;
 
     /**
-     * Application.
-     *
-     * @param numBins Number of "equal-width" bins.
-     * @param numSamples Number of samples.
+     * The sampler. This enum uses lower case for clarity when matching the distribution name.
      */
-    private ProbabilityDensityApproximation(int numBins,
-                                            long numSamples) {
-        this.numBins = numBins;
-        this.numSamples = numSamples;
+    enum Sampler {
+        /** The Ziggurat gaussian sampler. */
+        ZigguratGaussianSampler,
+        /** The Marsaglia gaussian sampler. */
+        MarsagliaGaussianSampler,
+        /** The Box muller gaussian sampler. */
+        BoxMullerGaussianSampler,
+        /** The Cheng beta sampler case 1. */
+        ChengBetaSamplerCase1,
+        /** The Cheng beta sampler case 2. */
+        ChengBetaSamplerCase2,
+        /** The Ahrens dieter exponential sampler. */
+        AhrensDieterExponentialSampler,
+        /** The Ahrens dieter marsaglia tsang gamma sampler small gamma. */
+        AhrensDieterMarsagliaTsangGammaSamplerCase1,
+        /** The Ahrens dieter marsaglia tsang gamma sampler large gamma. */
+        AhrensDieterMarsagliaTsangGammaSamplerCase2,
+        /** The Inverse transform pareto sampler. */
+        InverseTransformParetoSampler,
+        /** The Continuous uniform sampler. */
+        ContinuousUniformSampler,
+        /** The Log normal ziggurat gaussian sampler. */
+        LogNormalZigguratGaussianSampler,
+        /** The Log normal marsaglia gaussian sampler. */
+        LogNormalMarsagliaGaussianSampler,
+        /** The Log normal box muller gaussian sampler. */
+        LogNormalBoxMullerGaussianSampler,
     }
 
     /**
@@ -117,18 +167,16 @@ public class ProbabilityDensityApproximation {
     /**
      * Program entry point.
      *
-     * @param args Argument. They must be provided, in the following order:
-     * <ol>
-     *  <li>Number of "equal-width" bins.</li>
-     *  <li>Number of samples.</li>
-     * </ol>
      * @throws IOException if failure occurred while writing to files.
      */
-    public static void main(String[] args)
-        throws IOException {
-        final int numBins = Integer.parseInt(args[0]);
-        final long numSamples = Long.parseLong(args[1]);
-        final ProbabilityDensityApproximation app = new ProbabilityDensityApproximation(numBins, numSamples);
+    @Override
+    public Void call() throws IOException {
+        if (allSamplers) {
+            samplers = EnumSet.allOf(Sampler.class);
+        } else if (samplers.isEmpty()) {
+            System.err.println("ERROR: No samplers specified");
+            System.exit(1);
+        }
 
         final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
 
@@ -136,68 +184,96 @@ public class ProbabilityDensityApproximation {
         final double gaussSigma = 2;
         final double gaussMin = -9;
         final double gaussMax = 11;
-        app.createDensity(new GaussianSampler(new ZigguratNormalizedGaussianSampler(rng),
+        if (samplers.contains(Sampler.ZigguratGaussianSampler)) {
+            createDensity(new GaussianSampler(new ZigguratNormalizedGaussianSampler(rng),
                                               gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.ziggurat.txt");
-        app.createDensity(new GaussianSampler(new MarsagliaNormalizedGaussianSampler(rng),
+        }
+        if (samplers.contains(Sampler.MarsagliaGaussianSampler)) {
+            createDensity(new GaussianSampler(new MarsagliaNormalizedGaussianSampler(rng),
                                               gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.marsaglia.txt");
-        app.createDensity(new GaussianSampler(new BoxMullerNormalizedGaussianSampler(rng),
+        }
+        if (samplers.contains(Sampler.BoxMullerGaussianSampler)) {
+            createDensity(new GaussianSampler(new BoxMullerNormalizedGaussianSampler(rng),
                                               gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.boxmuller.txt");
+        }
 
-        final double alphaBeta = 4.3;
-        final double betaBeta = 2.1;
         final double betaMin = 0;
         final double betaMax = 1;
-        app.createDensity(new ChengBetaSampler(rng, alphaBeta, betaBeta),
+        if (samplers.contains(Sampler.ChengBetaSamplerCase1)) {
+            final double alphaBeta = 4.3;
+            final double betaBeta = 2.1;
+            createDensity(new ChengBetaSampler(rng, alphaBeta, betaBeta),
                           betaMin, betaMax, "beta.case1.txt");
-        final double alphaBetaAlt = 0.5678;
-        final double betaBetaAlt = 0.1234;
-        app.createDensity(new ChengBetaSampler(rng, alphaBetaAlt, betaBetaAlt),
+        }
+        if (samplers.contains(Sampler.ChengBetaSamplerCase2)) {
+            final double alphaBetaAlt = 0.5678;
+            final double betaBetaAlt = 0.1234;
+            createDensity(new ChengBetaSampler(rng, alphaBetaAlt, betaBetaAlt),
                           betaMin, betaMax, "beta.case2.txt");
+        }
 
-        final double meanExp = 3.45;
-        final double expMin = 0;
-        final double expMax = 60;
-        app.createDensity(new AhrensDieterExponentialSampler(rng, meanExp),
+        if (samplers.contains(Sampler.AhrensDieterExponentialSampler)) {
+            final double meanExp = 3.45;
+            final double expMin = 0;
+            final double expMax = 60;
+            createDensity(new AhrensDieterExponentialSampler(rng, meanExp),
                           expMin, expMax, "exp.txt");
+        }
 
-        final double thetaGammaSmallerThanOne = 0.1234;
-        final double alphaGamma = 3.456;
         final double gammaMin = 0;
         final double gammaMax1 = 40;
-        app.createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaSmallerThanOne),
+        final double alphaGamma = 3.456;
+        if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase1)) {
+            final double thetaGammaSmallerThanOne = 0.1234;
+            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaSmallerThanOne),
                           gammaMin, gammaMax1, "gamma.case1.txt");
-        final double thetaGammaLargerThanOne = 2.345;
-        final double gammaMax2 = 70;
-        app.createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaLargerThanOne),
+        }
+        if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase2)) {
+            final double thetaGammaLargerThanOne = 2.345;
+            final double gammaMax2 = 70;
+            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGamma, thetaGammaLargerThanOne),
                           gammaMin, gammaMax2, "gamma.case2.txt");
+        }
 
         final double scalePareto = 23.45;
         final double shapePareto = 0.789;
         final double paretoMin = 23;
         final double paretoMax = 400;
-        app.createDensity(new InverseTransformParetoSampler(rng, scalePareto, shapePareto),
+        if (samplers.contains(Sampler.InverseTransformParetoSampler)) {
+            createDensity(new InverseTransformParetoSampler(rng, scalePareto, shapePareto),
                           paretoMin, paretoMax, "pareto.txt");
+        }
 
         final double loUniform = -9.876;
         final double hiUniform = 5.432;
-        app.createDensity(new ContinuousUniformSampler(rng, loUniform, hiUniform),
+        if (samplers.contains(Sampler.ContinuousUniformSampler)) {
+            createDensity(new ContinuousUniformSampler(rng, loUniform, hiUniform),
                           loUniform, hiUniform, "uniform.txt");
+        }
 
         final double scaleLogNormal = 2.345;
         final double shapeLogNormal = 0.1234;
         final double logNormalMin = 5;
         final double logNormalMax = 25;
-        app.createDensity(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(rng),
+        if (samplers.contains(Sampler.LogNormalZigguratGaussianSampler)) {
+            createDensity(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(rng),
                                                scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.ziggurat.txt");
-        app.createDensity(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(rng),
+        }
+        if (samplers.contains(Sampler.LogNormalMarsagliaGaussianSampler)) {
+            createDensity(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(rng),
                                                scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.marsaglia.txt");
-        app.createDensity(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng),
+        }
+        if (samplers.contains(Sampler.LogNormalBoxMullerGaussianSampler)) {
+            createDensity(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng),
                                                scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.boxmuller.txt");
+        }
+
+        return null;
     }
 }

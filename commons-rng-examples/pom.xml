@@ -48,6 +48,8 @@
     <commons.automatic.module.name>org.apache.commons.rng.examples</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
+
+    <rng.picocli.version>3.9.5</rng.picocli.version>
   </properties>
 
   <dependencyManagement>
@@ -57,17 +59,20 @@
         <artifactId>commons-rng-simple</artifactId>
         <version>1.3-SNAPSHOT</version>
       </dependency>
-
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-sampling</artifactId>
         <version>1.3-SNAPSHOT</version>
       </dependency>
-
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-client-api</artifactId>
         <version>1.3-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${rng.picocli.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
