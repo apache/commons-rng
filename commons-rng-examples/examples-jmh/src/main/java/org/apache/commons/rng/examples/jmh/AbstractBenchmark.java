@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.examples.jmh;
 
-import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
@@ -31,7 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Declares the JMH annotations for the benchmarks to compare the speed of generation of
- * random numbers from the various source providers for {@link UniformRandomProvider}.
+ * random numbers from the various source providers for
+ * {@link org.apache.commons.rng.UniformRandomProvider UniformRandomProvider}.
  *
  * <p>Note: Implementing this as an {@code @interface} annotation results in errors as the
  * meta-annotation is not expanded by the JMH annotation processor. The processor does however

@@ -746,24 +746,24 @@ class StressTestCommand implements Callable<Void> {
          *      to convert byte size into human readable format in java?</a>
          */
         static String bytesToString(long bytes) {
-          // When using the smallest unit no decimal point is needed, because it's the exact number.
-          if (bytes < 1000) {
-            return bytes + " " + SI_UNITS[0];
-          }
+            // When using the smallest unit no decimal point is needed, because it's the exact number.
+            if (bytes < 1000) {
+                return bytes + " " + SI_UNITS[0];
+            }
 
-          final int exponent = (int) (Math.log(bytes) / Math.log(SI_UNIT_BASE));
-          final String unit = SI_UNITS[exponent];
-          return String.format(Locale.US, "%.1f %s", bytes / Math.pow(SI_UNIT_BASE, exponent), unit);
+            final int exponent = (int) (Math.log(bytes) / Math.log(SI_UNIT_BASE));
+            final String unit = SI_UNITS[exponent];
+            return String.format(Locale.US, "%.1f %s", bytes / Math.pow(SI_UNIT_BASE, exponent), unit);
         }
 
         /**
-         * Return the log2 of a {@code long} value rounded down to a power of 2:
+         * Return the log2 of a {@code long} value rounded down to a power of 2.
          *
          * @param x the value
          * @return {@code floor(log2(x))}
          */
         static int log2(long x) {
-          return 63 - Long.numberOfLeadingZeros(x);
+            return 63 - Long.numberOfLeadingZeros(x);
         }
     }
 }

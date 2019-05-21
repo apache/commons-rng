@@ -38,7 +38,7 @@ import org.openjdk.jmh.annotations.State;
  *
  * <pre>
  * &#64;State(Scope.Benchmark)
- * public static class Sources extends BaselineSources {
+ * public static final class Sources extends BaselineSources {
  *     &#64;Override
  *     protected UniformRandomProvider createBaseline() {
  *         return BaselineUtils.getNextInt();

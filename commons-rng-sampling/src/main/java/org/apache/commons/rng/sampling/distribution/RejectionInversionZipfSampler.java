@@ -31,11 +31,11 @@ public class RejectionInversionZipfSampler
     implements DiscreteSampler {
     /** Threshold below which Taylor series will be used. */
     private static final double TAYLOR_THRESHOLD = 1e-8;
-    /** 1/2 */
+    /** 1/2. */
     private static final double F_1_2 = 0.5;
-    /** 1/3 */
+    /** 1/3. */
     private static final double F_1_3 = 1d / 3;
-    /** 1/4 */
+    /** 1/4. */
     private static final double F_1_4 = 0.25;
     /** Number of elements. */
     private final int numberOfElements;
@@ -106,7 +106,7 @@ public class RejectionInversionZipfSampler
         // be positive and numbers are taken from [0, i_max].
         // This explains why the implementation looks slightly different.
 
-        while(true) {
+        while (true) {
             final double u = hIntegralNumberOfElements + rng.nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
@@ -194,7 +194,7 @@ public class RejectionInversionZipfSampler
     }
 
     /**
-     * {@code h(x) = 1 / x^exponent}
+     * {@code h(x) = 1 / x^exponent}.
      *
      * @param x Free parameter.
      * @return {@code h(x)}.

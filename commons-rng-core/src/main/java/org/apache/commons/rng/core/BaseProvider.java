@@ -146,7 +146,7 @@ public abstract class BaseProvider
         final byte[] parent = new byte[parentLength];
         System.arraycopy(state, localStateLength, parent, 0, parentLength);
 
-        return new byte[][] { local, parent };
+        return new byte[][] {local, parent};
     }
 
     /**

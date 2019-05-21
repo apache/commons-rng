@@ -81,7 +81,7 @@ public class LargeMeanPoissonSampler
     /** Algorithm constant: {@code 2 * lambda + delta}. */
     private final double twolpd;
     /**
-     * Algorithm constant: {@code a1 / aSum} with
+     * Algorithm constant: {@code a1 / aSum}.
      * <ul>
      *  <li>{@code a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(c1)}</li>
      *  <li>{@code aSum = a1 + a2 + 1}</li>
@@ -89,7 +89,7 @@ public class LargeMeanPoissonSampler
      */
     private final double p1;
     /**
-     * Algorithm constant: {@code a2 / aSum} with
+     * Algorithm constant: {@code a2 / aSum}.
      * <ul>
      *  <li>{@code a2 = (twolpd / delta) * Math.exp(-delta * (1 + delta) / twolpd)}</li>
      *  <li>{@code aSum = a1 + a2 + 1}</li>
@@ -326,15 +326,15 @@ public class LargeMeanPoissonSampler
         private LargeMeanPoissonSamplerState(double lambda, double logLambda,
                 double logLambdaFactorial, double delta, double halfDelta, double twolpd,
                 double p1, double p2, double c1) {
-          this.lambda = lambda;
-          this.logLambda = logLambda;
-          this.logLambdaFactorial = logLambdaFactorial;
-          this.delta = delta;
-          this.halfDelta = halfDelta;
-          this.twolpd = twolpd;
-          this.p1 = p1;
-          this.p2 = p2;
-          this.c1 = c1;
+            this.lambda = lambda;
+            this.logLambda = logLambda;
+            this.logLambdaFactorial = logLambdaFactorial;
+            this.delta = delta;
+            this.halfDelta = halfDelta;
+            this.twolpd = twolpd;
+            this.p1 = p1;
+            this.p2 = p2;
+            this.c1 = c1;
         }
 
         /**
@@ -351,63 +351,63 @@ public class LargeMeanPoissonSampler
          * @return algorithm constant {@code lambda}
          */
         double getLambdaRaw() {
-          return lambda;
+            return lambda;
         }
 
         /**
          * @return algorithm constant {@code logLambda}
          */
         double getLogLambda() {
-          return logLambda;
+            return logLambda;
         }
 
         /**
          * @return algorithm constant {@code logLambdaFactorial}
          */
         double getLogLambdaFactorial() {
-          return logLambdaFactorial;
+            return logLambdaFactorial;
         }
 
         /**
          * @return algorithm constant {@code delta}
          */
         double getDelta() {
-          return delta;
+            return delta;
         }
 
         /**
          * @return algorithm constant {@code halfDelta}
          */
         double getHalfDelta() {
-          return halfDelta;
+            return halfDelta;
         }
 
         /**
          * @return algorithm constant {@code twolpd}
          */
         double getTwolpd() {
-          return twolpd;
+            return twolpd;
         }
 
         /**
          * @return algorithm constant {@code p1}
          */
         double getP1() {
-          return p1;
+            return p1;
         }
 
         /**
          * @return algorithm constant {@code p2}
          */
         double getP2() {
-          return p2;
+            return p2;
         }
 
         /**
          * @return algorithm constant {@code c1}
          */
         double getC1() {
-          return c1;
+            return c1;
         }
     }
 }

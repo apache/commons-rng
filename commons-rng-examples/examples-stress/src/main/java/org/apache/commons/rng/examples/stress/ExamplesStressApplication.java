@@ -16,20 +16,18 @@
  */
 package org.apache.commons.rng.examples.stress;
 
-import org.apache.commons.rng.UniformRandomProvider;
-
 import picocli.CommandLine;
 import picocli.CommandLine.RunLast;
 
 /**
  * Executes testing utilities for the random number generators in the Commons RNG library.
  *
- * <p>The principle action is testing a generator by piping the values
- * returned by its {@link UniformRandomProvider#nextInt()} method to a
- * program that reads {@code int} values from its standard input and
- * writes an analysis report to standard output.
- * The <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">
- * "Dieharder"</a> test suite is such a software.</p>
+ * <p>The principle action is testing a generator by piping the values returned by its
+ * {@link org.apache.commons.rng.UniformRandomProvider#nextInt()
+ * UniformRandomProvider.nextInt()} method to a program that reads {@code int} values from
+ * its standard input and writes an analysis report to standard output. The <a
+ * href="http://www.phy.duke.edu/~rgb/General/dieharder.php"> "Dieharder"</a> test suite
+ * is such a software.</p>
  *
  * <p>Example of command line, assuming that "examples-stress.jar" specifies this
  * class as the "main" class (see {@link #main(String[]) main} method):</p>
@@ -46,7 +44,7 @@ import picocli.CommandLine.RunLast;
  *   <li>Testing data transfer to an application sub-process via its standard input
  * </ul>
  */
-public class ExamplesStressApplication {
+public final class ExamplesStressApplication {
     /** No public constructor. */
     private ExamplesStressApplication() {}
 

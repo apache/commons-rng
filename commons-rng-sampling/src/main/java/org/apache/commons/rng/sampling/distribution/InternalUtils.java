@@ -57,7 +57,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          * Precomputed values of the function:
          * {@code LOG_FACTORIALS[i] = log(i!)}.
          */
-        private final double[] LOG_FACTORIALS;
+        private final double[] logFactorials;
 
         /**
          * Creates an instance, reusing the already computed values if available.
@@ -68,7 +68,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          */
         private FactorialLog(int numValues,
                              double[] cache) {
-            LOG_FACTORIALS = new double[numValues];
+            logFactorials = new double[numValues];
 
             final int beginCopy = 2;
             final int endCopy = cache == null || cache.length <= beginCopy ?
@@ -77,12 +77,12 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
 
             // Copy available values.
             for (int i = beginCopy; i < endCopy; i++) {
-                LOG_FACTORIALS[i] = cache[i];
+                logFactorials[i] = cache[i];
             }
 
             // Precompute.
             for (int i = endCopy; i < numValues; i++) {
-                LOG_FACTORIALS[i] = LOG_FACTORIALS[i - 1] + Math.log(i);
+                logFactorials[i] = logFactorials[i - 1] + Math.log(i);
             }
         }
 
@@ -104,7 +104,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          * @throws IllegalArgumentException if {@code n < 0}.
          */
         public FactorialLog withCache(final int cacheSize) {
-            return new FactorialLog(cacheSize, LOG_FACTORIALS);
+            return new FactorialLog(cacheSize, logFactorials);
         }
 
         /**
@@ -116,8 +116,8 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
          */
         public double value(final int n) {
             // Use cache of precomputed values.
-            if (n < LOG_FACTORIALS.length) {
-                return LOG_FACTORIALS[n];
+            if (n < logFactorials.length) {
+                return logFactorials[n];
             }
 
             // Use cache of precomputed factorial values.

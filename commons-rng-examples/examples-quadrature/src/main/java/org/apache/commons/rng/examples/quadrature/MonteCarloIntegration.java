@@ -72,7 +72,7 @@ public abstract class MonteCarloIntegration {
      * distributed in the unit interval.
      * @return {@code true} if the {@code point} is inside.
      */
-    protected abstract boolean isInside(double ... point);
+    protected abstract boolean isInside(double... point);
 
     /**
      * @return a value from a random sequence uniformly distributed

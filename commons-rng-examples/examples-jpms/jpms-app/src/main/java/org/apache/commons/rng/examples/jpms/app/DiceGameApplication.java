@@ -26,7 +26,7 @@ import org.apache.commons.rng.examples.jpms.lib.DiceGame;
 /**
  * Test that "commons-rng-simple" can be used as a module in Java 9.
  */
-public class DiceGameApplication {
+public final class DiceGameApplication {
     /** Line separator. */
     private static final String LINE_SEP = System.getProperty("line.separator");
     /** Required functionality. */
@@ -106,8 +106,8 @@ public class DiceGameApplication {
     private void displayModuleInfo() {
         final StringBuilder str = new StringBuilder();
 
-        for (Module mod : new Module[] { DiceGame.class.getModule(),
-                                         DiceGameApplication.class.getModule() }) {
+        for (Module mod : new Module[] {DiceGame.class.getModule(),
+                                        DiceGameApplication.class.getModule()}) {
             System.out.println("--- " + mod + " ---");
             final ModuleDescriptor desc = mod.getDescriptor();
 

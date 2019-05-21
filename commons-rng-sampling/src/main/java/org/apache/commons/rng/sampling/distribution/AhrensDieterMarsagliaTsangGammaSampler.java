@@ -159,7 +159,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     private static class LargeThetaAhrensDieterMarsagliaTsangGammaSampler
         extends BaseAhrensDieterMarsagliaTsangGammaSampler {
 
-        /** 1/3 */
+        /** 1/3. */
         private static final double ONE_THIRD = 1d / 3;
 
         /** Optimization (see code). */

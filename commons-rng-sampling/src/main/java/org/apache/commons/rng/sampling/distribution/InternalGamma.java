@@ -35,7 +35,7 @@ class InternalGamma { // Class is package-private on purpose; do not make it pub
      */
     public static final double LANCZOS_G = 607.0 / 128.0;
 
-    /** Lanczos coefficients */
+    /** Lanczos coefficients. */
     private static final double[] LANCZOS = {
         0.99999999999999709182,
         57.156235665862923517,
@@ -54,7 +54,7 @@ class InternalGamma { // Class is package-private on purpose; do not make it pub
         .36899182659531622704e-5,
     };
 
-    /** Avoid repeated computation of log of 2 PI in logGamma */
+    /** Avoid repeated computation of log of 2 PI in logGamma. */
     private static final double HALF_LOG_2_PI = 0.5 * Math.log(2.0 * Math.PI);
 
     /**

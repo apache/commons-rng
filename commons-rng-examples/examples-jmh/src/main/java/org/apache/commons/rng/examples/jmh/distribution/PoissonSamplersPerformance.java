@@ -18,7 +18,6 @@
 package org.apache.commons.rng.examples.jmh.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.examples.jmh.RandomSources;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.KempSmallMeanPoissonSampler;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler;
@@ -81,7 +80,8 @@ public class PoissonSamplersPerformance {
 
     /**
      * The {@link DiscreteSampler} samplers to use for testing. Creates the sampler for each
-     * {@link RandomSource} in the default {@link RandomSources}.
+     * {@link RandomSource} in the default
+     * {@link org.apache.commons.rng.examples.jmh.RandomSources RandomSources}.
      */
     @State(Scope.Benchmark)
     public static class Sources {
@@ -527,7 +527,7 @@ public class PoissonSamplersPerformance {
          */
         private static final int[] TABLE_SIZE = {
             /* mean 1 to 10. */
-             8, 10, 12, 14, 16, 18, 20, 22, 24, 25,
+            8, 10, 12, 14, 16, 18, 20, 22, 24, 25,
             /* mean 11 to 20. */
             27, 29, 30, 32, 33, 35, 36, 38, 39, 41,
         };
@@ -784,7 +784,8 @@ public class PoissonSamplersPerformance {
                 // The supported mean where p(x=0) > 0 sets a limit of around 744 so the cast to int
                 // will always be possible.
                 final int upperMean = (int) Math.ceil(mean);
-                cumulativeProbability = new double[(upperMean < TABLE_SIZE.length) ? TABLE_SIZE[upperMean] : upperMean * 2];
+                final int size = (upperMean < TABLE_SIZE.length) ? TABLE_SIZE[upperMean] : upperMean * 2;
+                cumulativeProbability = new double[size];
                 cumulativeProbability[0] = probabilityX;
 
                 guideTable = new int[cumulativeProbability.length + 1];

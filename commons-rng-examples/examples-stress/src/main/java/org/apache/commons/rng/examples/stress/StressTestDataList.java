@@ -32,13 +32,13 @@ class StressTestDataList implements Iterable<StressTestData> {
      * The example arguments for RandomSource values that require them.
      */
     private static final EnumMap<RandomSource, Object[]> EXAMPLE_ARGUMENTS =
-            new EnumMap <>(RandomSource.class);
+            new EnumMap<>(RandomSource.class);
 
     static {
         // Currently we cannot detect if the source requires arguments,
         // e.g. RandomSource.TWO_CMRES_SELECT. So example arguments must
         // be manually added here.
-        EXAMPLE_ARGUMENTS.put(RandomSource.TWO_CMRES_SELECT, new Object[] { 1, 2 });
+        EXAMPLE_ARGUMENTS.put(RandomSource.TWO_CMRES_SELECT, new Object[] {1, 2});
     }
 
     /** List of generators. */

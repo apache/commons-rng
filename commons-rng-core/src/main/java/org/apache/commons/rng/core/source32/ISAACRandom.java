@@ -87,7 +87,7 @@ public class ISAACRandom extends IntProvider {
     protected byte[] getStateInternal() {
         final int[] sRsl = Arrays.copyOf(rsl, SIZE);
         final int[] sMem = Arrays.copyOf(mem, SIZE);
-        final int[] sRem = Arrays.copyOf(new int[] { count, isaacA, isaacB, isaacC }, 4);
+        final int[] sRem = Arrays.copyOf(new int[] {count, isaacA, isaacB, isaacC}, 4);
 
         final int[] s = new int[2 * SIZE + sRem.length];
         System.arraycopy(sRsl, 0, s, 0, SIZE);
@@ -143,7 +143,7 @@ public class ISAACRandom extends IntProvider {
         return rsl[count--];
     }
 
-    /** Generate 256 results */
+    /** Generate 256 results. */
     private void isaac() {
         isaacI = 0;
         isaacJ = H_SIZE;

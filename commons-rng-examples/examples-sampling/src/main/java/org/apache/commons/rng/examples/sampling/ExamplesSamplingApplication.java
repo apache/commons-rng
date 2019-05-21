@@ -28,7 +28,7 @@ import picocli.CommandLine.RunLast;
  *   <li>Outputting data from a random generator
  * </ul>
  */
-public class ExamplesSamplingApplication {
+public final class ExamplesSamplingApplication {
     /** No public constructor. */
     private ExamplesSamplingApplication() {}
 
