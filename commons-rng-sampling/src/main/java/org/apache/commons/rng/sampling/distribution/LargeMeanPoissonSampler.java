@@ -127,7 +127,7 @@ public class LargeMeanPoissonSampler
         // Cache values used in the algorithm
         lambda = Math.floor(mean);
         logLambda = Math.log(lambda);
-        logLambdaFactorial = factorialLog((int) lambda);
+        logLambdaFactorial = getFactorialLog((int) lambda);
         delta = Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1));
         halfDelta = delta / 2;
         twolpd = 2 * lambda + delta;
@@ -236,7 +236,7 @@ public class LargeMeanPoissonSampler
             if (v > qr) {
                 continue;
             }
-            if (v < y * logLambda - factorialLog((int) (y + lambda)) + logLambdaFactorial) {
+            if (v < y * logLambda - getFactorialLog((int) (y + lambda)) + logLambdaFactorial) {
                 y = lambda + y;
                 break;
             }
@@ -252,7 +252,7 @@ public class LargeMeanPoissonSampler
      * @return {@code log(n!)}
      * @throws IllegalArgumentException if {@code n < 0}.
      */
-    private double factorialLog(int n) {
+    private double getFactorialLog(int n) {
         return factorialLog.value(n);
     }
 
@@ -323,7 +323,7 @@ public class LargeMeanPoissonSampler
          * @param p2 the p2 constant
          * @param c1 the c1 constant
          */
-        private LargeMeanPoissonSamplerState(double lambda, double logLambda,
+        LargeMeanPoissonSamplerState(double lambda, double logLambda,
                 double logLambdaFactorial, double delta, double halfDelta, double twolpd,
                 double p1, double p2, double c1) {
             this.lambda = lambda;

@@ -126,7 +126,7 @@ public class ISAACRandom extends IntProvider {
         System.arraycopy(seed, 0, rsl, 0, Math.min(seedLen, rslLen));
         if (seedLen < rslLen) {
             for (int j = seedLen; j < rslLen; j++) {
-                long k = rsl[j - seedLen];
+                final long k = rsl[j - seedLen];
                 rsl[j] = (int) (0x6c078965L * (k ^ k >> 30) + j & 0xffffffffL);
             }
         }

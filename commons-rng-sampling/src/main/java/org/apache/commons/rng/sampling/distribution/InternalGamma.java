@@ -36,7 +36,7 @@ class InternalGamma { // Class is package-private on purpose; do not make it pub
     public static final double LANCZOS_G = 607.0 / 128.0;
 
     /** Lanczos coefficients. */
-    private static final double[] LANCZOS = {
+    private static final double[] LANCZOS_COEFFICIENTS = {
         0.99999999999999709182,
         57.156235665862923517,
         -59.597960355475491248,
@@ -118,9 +118,9 @@ class InternalGamma { // Class is package-private on purpose; do not make it pub
      */
     private static double lanczos(final double x) {
         double sum = 0.0;
-        for (int i = LANCZOS.length - 1; i > 0; --i) {
-            sum += LANCZOS[i] / (x + i);
+        for (int i = LANCZOS_COEFFICIENTS.length - 1; i > 0; --i) {
+            sum += LANCZOS_COEFFICIENTS[i] / (x + i);
         }
-        return sum + LANCZOS[0];
+        return sum + LANCZOS_COEFFICIENTS[0];
     }
 }

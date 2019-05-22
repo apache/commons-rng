@@ -158,14 +158,12 @@ public class MersenneTwister extends IntProvider {
      * of the algorithm.
      *
      * @param state State to be filled (must be allocated).
-     * @param seed Seed (cannot be {@code null}).
+     * @param inputSeed Seed (cannot be {@code null}).
      */
     private static void fillStateMersenneTwister(int[] state,
-                                                 int[] seed) {
-        if (seed.length == 0) {
-            // Accept empty seed.
-            seed = new int[1];
-        }
+                                                 int[] inputSeed) {
+        // Accept empty seed.
+        final int[] seed = (inputSeed.length == 0) ? new int[1] : inputSeed;
 
         final int stateSize = state.length;
 
@@ -218,13 +216,13 @@ public class MersenneTwister extends IntProvider {
         if (mti >= N) { // Generate N words at one time.
             int mtNext = mt[0];
             for (int k = 0; k < N - M; ++k) {
-                int mtCurr = mtNext;
+                final int mtCurr = mtNext;
                 mtNext = mt[k + 1];
                 y = (mtCurr & UPPER_MASK) | (mtNext & LOWER_MASK);
                 mt[k] = mt[k + M] ^ (y >>> 1) ^ MAG01[y & 1];
             }
             for (int k = N - M; k < N - 1; ++k) {
-                int mtCurr = mtNext;
+                final int mtCurr = mtNext;
                 mtNext = mt[k + 1];
                 y = (mtCurr & UPPER_MASK) | (mtNext & LOWER_MASK);
                 mt[k] = mt[k + (M - N)] ^ (y >>> 1) ^ MAG01[y & 1];

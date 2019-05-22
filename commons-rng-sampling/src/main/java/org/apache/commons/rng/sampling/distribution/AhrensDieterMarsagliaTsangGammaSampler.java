@@ -144,11 +144,10 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                 final double x = -Math.log((bGSOptim - p) * oneOverTheta);
                 final double u2 = rng.nextDouble();
 
-                if (u2 > Math.pow(x, theta - 1)) {
-                    // Reject.
-                    continue;
+                if (u2 <= Math.pow(x, theta - 1)) {
+                    return alpha * x;
                 }
-                return alpha * x;
+                // Reject and continue.
             }
         }
     }

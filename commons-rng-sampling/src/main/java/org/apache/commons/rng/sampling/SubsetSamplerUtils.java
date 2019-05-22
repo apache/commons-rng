@@ -72,7 +72,8 @@ final class SubsetSamplerUtils {
                                UniformRandomProvider rng,
                                boolean upper) {
         // Shuffle from the end but limit to a number of steps.
-        for (int i = domain.length - 1, j = 0; i > 0 && j < steps; i--, j++) {
+        for (int i = domain.length - 1,
+            j = 0; i > 0 && j < steps; i--, j++) {
             // Swap index i with any position down to 0 (including itself)
             swap(domain, i, rng.nextInt(i + 1));
         }
