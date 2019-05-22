@@ -130,7 +130,7 @@ public class PoissonSamplerCachePerformance {
      *
      * <p>To avoid this use a prime number above the maximum range
      * (currently 4096). Any number (n/RANGE_SAMPLES) * range will not be integer
-     * with n<RANGE_SAMPLES and range<RANGE_SAMPLES (unless n==0).
+     * with {@code n < RANGE_SAMPLES} and {@code range < RANGE_SAMPLES} (unless n==0).
      */
     private static final int RANGE_SAMPLE_SIZE = 4099;
     /** The size of the seed. */

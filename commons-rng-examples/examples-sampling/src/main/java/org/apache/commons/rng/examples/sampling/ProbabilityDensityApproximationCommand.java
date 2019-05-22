@@ -174,7 +174,9 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         if (allSamplers) {
             samplers = EnumSet.allOf(Sampler.class);
         } else if (samplers.isEmpty()) {
+            // CHECKSTYLE: stop regexp
             System.err.println("ERROR: No samplers specified");
+            // CHECKSTYLE: resume regexp
             System.exit(1);
         }
 

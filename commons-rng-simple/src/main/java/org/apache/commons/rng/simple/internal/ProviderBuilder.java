@@ -86,20 +86,20 @@ public final class ProviderBuilder {
     /** Seed converter. */
     private static final ByteArray2LongArray BYTE_ARRAY_TO_LONG_ARRAY = new ByteArray2LongArray();
     /** Map to convert "Integer" seeds. */
-    private static final Map<Class<?>, SeedConverter<Integer,?>> CONV_INT =
-        new ConcurrentHashMap<Class<?>, SeedConverter<Integer,?>>();
+    private static final Map<Class<?>, SeedConverter<Integer, ?>> CONV_INT =
+        new ConcurrentHashMap<Class<?>, SeedConverter<Integer, ?>>();
     /** Map to convert "int[]" seeds. */
-    private static final Map<Class<?>, SeedConverter<int[],?>> CONV_INT_ARRAY =
-        new ConcurrentHashMap<Class<?>, SeedConverter<int[],?>>();
+    private static final Map<Class<?>, SeedConverter<int[], ?>> CONV_INT_ARRAY =
+        new ConcurrentHashMap<Class<?>, SeedConverter<int[], ?>>();
     /** Map to convert "Long" seeds. */
-    private static final Map<Class<?>, SeedConverter<Long,?>> CONV_LONG =
-        new ConcurrentHashMap<Class<?>, SeedConverter<Long,?>>();
+    private static final Map<Class<?>, SeedConverter<Long, ?>> CONV_LONG =
+        new ConcurrentHashMap<Class<?>, SeedConverter<Long, ?>>();
     /** Map to convert "long[]" seeds. */
-    private static final Map<Class<?>, SeedConverter<long[],?>> CONV_LONG_ARRAY =
-        new ConcurrentHashMap<Class<?>, SeedConverter<long[],?>>();
+    private static final Map<Class<?>, SeedConverter<long[], ?>> CONV_LONG_ARRAY =
+        new ConcurrentHashMap<Class<?>, SeedConverter<long[], ?>>();
     /** Map to convert "byte[]" seeds. */
-    private static final Map<Class<?>, SeedConverter<byte[],?>> CONV_BYTE_ARRAY =
-        new ConcurrentHashMap<Class<?>, SeedConverter<byte[],?>>();
+    private static final Map<Class<?>, SeedConverter<byte[], ?>> CONV_BYTE_ARRAY =
+        new ConcurrentHashMap<Class<?>, SeedConverter<byte[], ?>>();
 
     static {
         // Input seed type is "Long".
@@ -113,27 +113,33 @@ public final class ProviderBuilder {
         // Key is the implementation's "native" seed type.
         CONV_INT.put(Integer.class, new NoOpConverter<Integer>());
         CONV_INT.put(Long.class, INT_TO_LONG);
-        CONV_INT.put(int[].class, new SeedConverterComposer<Integer,Long,int[]>(INT_TO_LONG, LONG_TO_INT_ARRAY));
-        CONV_INT.put(long[].class, new SeedConverterComposer<Integer,Long,long[]>(INT_TO_LONG, LONG_TO_LONG_ARRAY));
+        CONV_INT.put(int[].class, new SeedConverterComposer<Integer, Long, int[]>(
+                                      INT_TO_LONG, LONG_TO_INT_ARRAY));
+        CONV_INT.put(long[].class, new SeedConverterComposer<Integer, Long, long[]>(
+                                       INT_TO_LONG, LONG_TO_LONG_ARRAY));
 
         // Input seed type is "int[]".
         // Key is the implementation's "native" seed type.
         CONV_INT_ARRAY.put(Integer.class, INT_ARRAY_TO_INT);
-        CONV_INT_ARRAY.put(Long.class, new SeedConverterComposer<int[],Integer,Long>(INT_ARRAY_TO_INT, INT_TO_LONG));
+        CONV_INT_ARRAY.put(Long.class, new SeedConverterComposer<int[], Integer, Long>(
+                                           INT_ARRAY_TO_INT, INT_TO_LONG));
         CONV_INT_ARRAY.put(int[].class, new NoOpConverter<int[]>());
         CONV_INT_ARRAY.put(long[].class, INT_ARRAY_TO_LONG_ARRAY);
 
         // Input seed type is "long[]".
         // Key is the implementation's "native" seed type.
-        CONV_LONG_ARRAY.put(Integer.class, new SeedConverterComposer<long[],Long,Integer>(LONG_ARRAY_TO_LONG, LONG_TO_INT));
+        CONV_LONG_ARRAY.put(Integer.class, new SeedConverterComposer<long[], Long, Integer>(
+                                               LONG_ARRAY_TO_LONG, LONG_TO_INT));
         CONV_LONG_ARRAY.put(Long.class, LONG_ARRAY_TO_LONG);
         CONV_LONG_ARRAY.put(int[].class, LONG_ARRAY_TO_INT_ARRAY);
         CONV_LONG_ARRAY.put(long[].class, new NoOpConverter<long[]>());
 
         // Input seed type is "byte[]".
         // Key is the implementation's "native" seed type.
-        CONV_BYTE_ARRAY.put(Integer.class, new SeedConverterComposer<byte[],int[],Integer>(BYTE_ARRAY_TO_INT_ARRAY, INT_ARRAY_TO_INT));
-        CONV_BYTE_ARRAY.put(Long.class, new SeedConverterComposer<byte[],long[],Long>(BYTE_ARRAY_TO_LONG_ARRAY, LONG_ARRAY_TO_LONG));
+        CONV_BYTE_ARRAY.put(Integer.class, new SeedConverterComposer<byte[], int[], Integer>(
+                                               BYTE_ARRAY_TO_INT_ARRAY, INT_ARRAY_TO_INT));
+        CONV_BYTE_ARRAY.put(Long.class, new SeedConverterComposer<byte[], long[], Long>(
+                                            BYTE_ARRAY_TO_LONG_ARRAY, LONG_ARRAY_TO_LONG));
         CONV_BYTE_ARRAY.put(int[].class, BYTE_ARRAY_TO_INT_ARRAY);
         CONV_BYTE_ARRAY.put(long[].class, BYTE_ARRAY_TO_LONG_ARRAY);
     }
@@ -353,8 +359,7 @@ public final class ProviderBuilder {
                            long[].class),
         /** Source of randomness is {@link XoShiRo512StarStar}. */
         XO_SHI_RO_512_SS(XoShiRo512StarStar.class,
-                         long[].class),
-        ;
+                         long[].class);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
@@ -367,7 +372,7 @@ public final class ProviderBuilder {
          * The first element must be the native seed type.
          */
         RandomSourceInternal(Class<? extends UniformRandomProvider> rng,
-                             Class<?> ... args) {
+                             Class<?>... args) {
             this.rng = rng;
             this.args = Arrays.copyOf(args, args.length);
         }

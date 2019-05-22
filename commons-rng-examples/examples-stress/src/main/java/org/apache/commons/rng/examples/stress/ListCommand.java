@@ -22,9 +22,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -93,15 +91,17 @@ class ListCommand implements Callable<Void> {
             writeStressTestData(sb, list);
             break;
         }
+        // CHECKSTYLE: stop regexp
         System.out.append(sb);
+        // CHECKSTYLE: resume regexp
         return null;
     }
 
     /**
      * Write the test data.
      *
-     * <p>Note: If the {@link Appendable} implements {@link Closeable} it is <strong>not</strong>
-     * closed by this method.
+     * <p>Note: If the {@link Appendable} implements {@link java.io.Closeable Closeable} it
+     * is <strong>not</strong> closed by this method.
      *
      * @param appendable The appendable.
      * @param testData The test data.
@@ -134,8 +134,8 @@ class ListCommand implements Callable<Void> {
      * <p>This allows the output to contain a configurable number of trials for the
      * list of data.
      *
-     * <p>Note: If the {@link Appendable} implements {@link Closeable} it is <strong>not</strong>
-     * closed by this method.
+     * <p>Note: If the {@link Appendable} implements {@link java.io.Closeable Closeable} it
+     * is <strong>not</strong> closed by this method.
      *
      * @param appendable The appendable.
      * @param testData The test data.
@@ -184,7 +184,7 @@ class ListCommand implements Callable<Void> {
      * @return The test data.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ApplicationException If there was an error parsing the expected format.
-     * @see Reader#close()
+     * @see java.io.Reader#close() Reader.close()
      */
     static Iterable<StressTestData> readStressTestData(Readable readable) throws IOException {
         final List<StressTestData> list = new ArrayList<>();

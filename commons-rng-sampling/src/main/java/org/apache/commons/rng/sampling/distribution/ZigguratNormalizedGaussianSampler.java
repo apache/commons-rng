@@ -45,9 +45,9 @@ public class ZigguratNormalizedGaussianSampler
     private static final double ONE_OVER_R = 1 / R;
     /** Rectangle area. */
     private static final double V = 9.91256303526217e-3;
-    /** 2^63 */
+    /** 2^63. */
     private static final double MAX = Math.pow(2, 63);
-    /** 2^-63 */
+    /** 2^-63. */
     private static final double ONE_OVER_MAX = 1d / MAX;
     /** Number of entries. */
     private static final int LEN = 128;

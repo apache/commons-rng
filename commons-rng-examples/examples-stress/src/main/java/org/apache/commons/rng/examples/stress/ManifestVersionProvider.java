@@ -36,18 +36,19 @@ class ManifestVersionProvider implements IVersionProvider {
     /** {@inheritDoc} */
     @Override
     public String[] getVersion() throws Exception {
-        final Enumeration<URL> resources = ManifestVersionProvider.class.getClassLoader().getResources("META-INF/MANIFEST.MF");
+        final Enumeration<URL> resources = ManifestVersionProvider.class.getClassLoader()
+                                           .getResources("META-INF/MANIFEST.MF");
         while (resources.hasMoreElements()) {
             final URL url = resources.nextElement();
             try {
                 final Manifest manifest = new Manifest(url.openStream());
                 if (isApplicableManifest(manifest)) {
                     final Attributes attr = manifest.getMainAttributes();
-                    return new String[] { get(attr, "Implementation-Title") + " version \"" +
-                            get(attr, "Implementation-Version") + "\"" };
+                    return new String[] {get(attr, "Implementation-Title") + " version \"" +
+                            get(attr, "Implementation-Version") + "\""};
                 }
             } catch (final IOException ex) {
-                return new String[] { "Unable to read from " + url + ". " + ex };
+                return new String[] {"Unable to read from " + url + ". " + ex};
             }
         }
         return new String[0];

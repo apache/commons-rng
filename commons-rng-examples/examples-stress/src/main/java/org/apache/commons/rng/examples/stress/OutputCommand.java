@@ -298,7 +298,7 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
-     * Write a header line to the output
+     * Write a header line to the output.
      *
      * @param output the output
      * @throws IOException Signals that an I/O exception has occurred.

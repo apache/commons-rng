@@ -199,7 +199,7 @@ public class ConstructionPerformance {
          */
         @Override
         @SuppressWarnings("unchecked")
-        @Setup(value=Level.Trial)
+        @Setup(value = Level.Trial)
         public void setup() {
             super.setup();
             RandomSource randomSource = getRandomSource();
@@ -234,7 +234,7 @@ public class ConstructionPerformance {
         }
 
         /**
-         * Copy the specified length of the provided array object
+         * Copy the specified length of the provided array object.
          *
          * @param object the object
          * @param length the length
@@ -793,4 +793,4 @@ public class ConstructionPerformance {
             bh.consume(RandomSource.create(randomSource, byteSeeds[i]));
         }
     }
- }
+}

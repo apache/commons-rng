@@ -35,31 +35,49 @@ public final class BaselineUtils {
      */
     private abstract static class DefaultProvider implements UniformRandomProvider {
         @Override
-        public void nextBytes(byte[] bytes) {}
+        public void nextBytes(byte[] bytes) {
+            // Do nothing
+        }
 
         @Override
-        public void nextBytes(byte[] bytes, int start, int len) {}
+        public void nextBytes(byte[] bytes, int start, int len) {
+            // Do nothing
+        }
 
         @Override
-        public int nextInt() { return 0; }
+        public int nextInt() {
+            return 0;
+        }
 
         @Override
-        public int nextInt(int n) { return 0; }
+        public int nextInt(int n) {
+            return 0;
+        }
 
         @Override
-        public long nextLong() { return 0; }
+        public long nextLong() {
+            return 0;
+        }
 
         @Override
-        public long nextLong(long n) { return 0; }
+        public long nextLong(long n) {
+            return 0;
+        }
 
         @Override
-        public boolean nextBoolean() { return false; }
+        public boolean nextBoolean() {
+            return false;
+        }
 
         @Override
-        public float nextFloat() { return 0; }
+        public float nextFloat() {
+            return 0;
+        }
 
         @Override
-        public double nextDouble() { return 0; }
+        public double nextDouble() {
+            return 0;
+        }
     }
 
     /**

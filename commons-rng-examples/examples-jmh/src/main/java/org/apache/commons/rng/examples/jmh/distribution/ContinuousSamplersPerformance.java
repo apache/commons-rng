@@ -29,7 +29,6 @@ import org.apache.commons.rng.sampling.distribution.InverseTransformParetoSample
 import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
-import org.apache.commons.rng.simple.RandomSource;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -58,7 +57,8 @@ import java.util.concurrent.TimeUnit;
 public class ContinuousSamplersPerformance {
     /**
      * The {@link ContinuousSampler} samplers to use for testing. Creates the sampler for each
-     * {@link RandomSource} in the default {@link RandomSources}.
+     * {@link org.apache.commons.rng.simple.RandomSource RandomSource} in the default
+     * {@link RandomSources}.
      */
     @State(Scope.Benchmark)
     public static class Sources extends RandomSources {

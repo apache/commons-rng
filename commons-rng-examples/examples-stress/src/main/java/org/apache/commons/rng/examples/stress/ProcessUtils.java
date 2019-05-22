@@ -74,7 +74,7 @@ final class ProcessUtils {
             command.add(executable.getCanonicalPath());
         } catch (final IOException ex) {
             // Not expected to happen as the file has been tested to exist
-           throw new ApplicationException("Cannot resolve executable path: " + ex.getMessage(), ex);
+            throw new ApplicationException("Cannot resolve executable path: " + ex.getMessage(), ex);
         }
         command.addAll(executableArguments);
         return command;

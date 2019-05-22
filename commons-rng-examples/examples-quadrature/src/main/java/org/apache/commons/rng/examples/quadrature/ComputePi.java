@@ -84,7 +84,7 @@ public class ComputePi extends MonteCarloIntegration {
 
     /** {@inheritDoc} */
     @Override
-    protected boolean isInside(double ... rand) {
+    protected boolean isInside(double... rand) {
         final double r2 = rand[0] * rand[0] + rand[1] * rand[1];
         return r2 <= 1;
     }

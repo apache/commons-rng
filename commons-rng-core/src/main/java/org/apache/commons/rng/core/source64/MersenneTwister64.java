@@ -78,7 +78,7 @@ public class MersenneTwister64 extends LongProvider {
     /** Period second parameter. */
     private static final int MM = 156;
     /** X * MATRIX_A for X = {0, 1}. */
-    private static final long[] MAG01 = { 0x0, 0xb5026f5aa96619e9L };
+    private static final long[] MAG01 = {0x0L, 0xb5026f5aa96619e9L};
     /** Most significant 33 bits. */
     private static final long UM = 0xffffffff80000000L;
     /** Least significant 31 bits. */

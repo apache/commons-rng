@@ -386,8 +386,7 @@ public enum RandomSource {
      *  <li>Native seed size: 8.</li>
      * </ul>
      */
-    XO_SHI_RO_512_SS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_SS),
-    ;
+    XO_SHI_RO_512_SS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_SS);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
@@ -490,7 +489,7 @@ public enum RandomSource {
      */
     public static RestorableUniformRandomProvider create(RandomSource source,
                                                          Object seed,
-                                                         Object ... data) {
+                                                         Object... data) {
         return ProviderBuilder.create(source.getInternalIdentifier(), seed, data);
     }
 

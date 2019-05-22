@@ -47,7 +47,7 @@ public final class JDKRandomBridge extends Random {
     private final RandomSource source;
     /** Delegate. */
     private transient RestorableUniformRandomProvider delegate;
-    /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225 */
+    /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225. */
     private final transient boolean isInitialized;
 
     /**
@@ -105,7 +105,7 @@ public final class JDKRandomBridge extends Random {
 
         // Save current state.
         out.writeObject(((RandomProviderDefaultState) delegate.saveState()).getState());
-   }
+    }
 
     /**
      * @param in Input stream.

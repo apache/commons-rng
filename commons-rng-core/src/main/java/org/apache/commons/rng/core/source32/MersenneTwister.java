@@ -102,7 +102,7 @@ public class MersenneTwister extends IntProvider {
     /** Period second parameter. */
     private static final int M = 397;
     /** X * MATRIX_A for X = {0, 1}. */
-    private static final int[] MAG01 = { 0x0, 0x9908b0df };
+    private static final int[] MAG01 = {0x0, 0x9908b0df};
     /** Bytes pool. */
     private int[] mt = new int[N];
     /** Current index in the bytes pool. */

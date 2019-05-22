@@ -134,6 +134,7 @@ public class ThreadLocalPerformance {
     public long threadLocalRandomWrapped() {
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
         final UniformRandomProvider rng = new UniformRandomProvider() {
+            // CHECKSTYLE: stop all
             @Override
             public void nextBytes(byte[] bytes) { /* Ignore this. */ }
             @Override
@@ -152,6 +153,7 @@ public class ThreadLocalPerformance {
             public float nextFloat() { return rand.nextFloat(); }
             @Override
             public double nextDouble() { return rand.nextDouble(); }
+            // CHECKSTYLE: resume all
         };
         long result = 0;
         for (int i = 0; i < numValues; i++) {

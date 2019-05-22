@@ -111,7 +111,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <rng.pmd.version>3.9.0</rng.pmd.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
-    <rng.checkstyle.dep.version>8.18</rng.checkstyle.dep.version>
+    <rng.checkstyle.dep.version>8.20</rng.checkstyle.dep.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -573,10 +573,12 @@
               <includeTestSourceDirectory>false</includeTestSourceDirectory>
               <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
               <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+              <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+              <enableRulesSummary>false</enableRulesSummary>
               <logViolationsToConsole>false</logViolationsToConsole>
               <failOnViolation>false</failOnViolation>
               <resourceExcludes>NOTICE.txt,LICENSE.txt,**/maven-archiver/pom.properties</resourceExcludes>
-              <excludes>**/module-info.java,**/generated/**.java</excludes>
+              <excludes>**/generated/**.java</excludes>
             </configuration>
             <executions>
               <execution>
@@ -609,9 +611,10 @@
             <configuration>
               <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
               <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+              <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
               <enableRulesSummary>false</enableRulesSummary>
               <includeResources>false</includeResources>
-              <excludes>**/module-info.java,**/generated/**.java</excludes>
+              <excludes>**/generated/**.java</excludes>
             </configuration>
             <reportSets>
               <reportSet>
