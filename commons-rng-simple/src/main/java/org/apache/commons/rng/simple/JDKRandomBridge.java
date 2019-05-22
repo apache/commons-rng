@@ -65,14 +65,16 @@ public final class JDKRandomBridge extends Random {
 
     /** {@inheritDoc} */
     @Override
-    public synchronized void setSeed(long seed) {
-        if (isInitialized) {
-            delegate = RandomSource.create(source, seed);
+    public void setSeed(long seed) {
+        synchronized (this) {
+            if (isInitialized) {
+                delegate = RandomSource.create(source, seed);
 
-            // Force the clearing of the "haveNextNextGaussian" flag
-            // (cf. Javadoc of the base class); the value passed here
-            // is irrelevant (since it will not be used).
-            super.setSeed(0L);
+                // Force the clearing of the "haveNextNextGaussian" flag
+                // (cf. Javadoc of the base class); the value passed here
+                // is irrelevant (since it will not be used).
+                super.setSeed(0L);
+            }
         }
     }
 
@@ -90,37 +92,41 @@ public final class JDKRandomBridge extends Random {
      * pseudo-random 32-bits integer.
      */
     @Override
-    protected synchronized int next(int n) {
-        return delegate.nextInt() >>> (32 - n);
+    protected int next(int n) {
+        synchronized (this) {
+            return delegate.nextInt() >>> (32 - n);
+        }
     }
 
     /**
-     * @param out Output stream.
+     * @param output Output stream.
      * @throws IOException if an error occurs.
      */
-    private synchronized void writeObject(ObjectOutputStream out)
+    private void writeObject(ObjectOutputStream output)
         throws IOException {
-        // Write non-transient fields.
-        out.defaultWriteObject();
+        synchronized (this) {
+            // Write non-transient fields.
+            output.defaultWriteObject();
 
-        // Save current state.
-        out.writeObject(((RandomProviderDefaultState) delegate.saveState()).getState());
+            // Save current state.
+            output.writeObject(((RandomProviderDefaultState) delegate.saveState()).getState());
+        }
     }
 
     /**
-     * @param in Input stream.
+     * @param input Input stream.
      * @throws IOException if an error occurs.
      * @throws ClassNotFoundException if an error occurs.
      */
-    private void readObject(ObjectInputStream in)
+    private void readObject(ObjectInputStream input)
         throws IOException,
                ClassNotFoundException {
         // Read non-transient fields.
-        in.defaultReadObject();
+        input.defaultReadObject();
 
         // Recreate the "delegate" from serialized info.
         delegate = RandomSource.create(source);
         // And restore its state.
-        delegate.restoreState(new RandomProviderDefaultState((byte[]) in.readObject()));
+        delegate.restoreState(new RandomProviderDefaultState((byte[]) input.readObject()));
     }
 }
