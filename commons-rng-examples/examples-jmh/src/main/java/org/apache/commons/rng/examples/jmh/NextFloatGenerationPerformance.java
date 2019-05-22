@@ -32,6 +32,7 @@ public class NextFloatGenerationPerformance extends AbstractBenchmark {
      */
     @State(Scope.Benchmark)
     public static class Sources extends BaselineSources {
+        /** {@inheritDoc} */
         @Override
         protected UniformRandomProvider createBaseline() {
             return BaselineUtils.getNextFloat();
