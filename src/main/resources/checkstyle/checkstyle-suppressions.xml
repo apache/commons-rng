@@ -20,8 +20,10 @@
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
   <!-- Making these final would break API compatibility. -->
-  <suppress checks="FinalClass" files="[\\/](ListSampler|InternalGamma|InternalUtils)\.java" />
+  <suppress checks="FinalClass" files="[\\/](ListSampler|InternalGamma|InternalUtils)\.java$" />
   <!-- Special cases with many parameters for the constructor. -->
-  <suppress checks="ParameterNumber" files="[\\/]LargeMeanPoissonSampler\.java" />
-  <suppress checks="ParameterNumber" files="source64[\\/].*XoShiRo512.*\.java" />
+  <suppress checks="ParameterNumber" files="[\\/]LargeMeanPoissonSampler\.java$" />
+  <suppress checks="ParameterNumber" files="source64[\\/].*XoShiRo512.*\.java$" />
+  <!-- JMH annotated classes cannot be final. -->
+  <suppress checks="DesignForExtensionCheck" files="[\\/]Next.*GenerationPerformance\.java$" />
 </suppressions>

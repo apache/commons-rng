@@ -32,7 +32,7 @@ public class NextLongGenerationPerformance extends AbstractBenchmark {
      * The benchmark state (retrieve the various "RandomSource"s).
      */
     @State(Scope.Benchmark)
-    public static final class Sources extends BaselineSources {
+    public static class Sources extends BaselineSources {
         @Override
         protected UniformRandomProvider createBaseline() {
             return BaselineUtils.getNextLong();
