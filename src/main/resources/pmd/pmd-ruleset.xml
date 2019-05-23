@@ -113,13 +113,6 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
     </properties>
   </rule>
-  <!-- These must remain final until 2.0 for binary compatibility. -->
-  <rule ref="category/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal">
-    <properties>
-      <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='InternalGamma' or @Image='InternalUtils' or @Image='ListSampler']"/>
-    </properties>
-  </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>

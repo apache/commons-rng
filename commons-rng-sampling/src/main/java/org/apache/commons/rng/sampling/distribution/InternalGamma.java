@@ -29,7 +29,7 @@ package org.apache.commons.rng.sampling.distribution;
  * &Gamma; (Gamma) family of functions.
  * </p>
  */
-class InternalGamma { // Class is package-private on purpose; do not make it public.
+final class InternalGamma { // Class is package-private on purpose; do not make it public.
     /**
      * Constant \( g = \frac{607}{128} \) in the Lanczos approximation.
      */

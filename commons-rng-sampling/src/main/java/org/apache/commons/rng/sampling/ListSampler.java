@@ -29,7 +29,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.0
  */
-public class ListSampler {
+public final class ListSampler {
     /**
      * Class contains only static methods.
      */

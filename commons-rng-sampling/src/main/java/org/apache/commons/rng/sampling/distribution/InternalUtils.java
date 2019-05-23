@@ -22,7 +22,7 @@ package org.apache.commons.rng.sampling.distribution;
  * This class is not part of the public API, as it would be
  * better to group these utilities in a dedicated components.
  */
-class InternalUtils { // Class is package-private on purpose; do not make it public.
+final class InternalUtils { // Class is package-private on purpose; do not make it public.
     /** All long-representable factorials. */
     private static final long[] FACTORIALS = new long[] {
         1L,                1L,                  2L,

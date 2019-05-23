@@ -19,8 +19,6 @@
     "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
     "https://checkstyle.org/dtds/suppressions_1_2.dtd">
 <suppressions>
-  <!-- Making these final would break API compatibility. -->
-  <suppress checks="FinalClass" files="[\\/](ListSampler|InternalGamma|InternalUtils)\.java$" />
   <!-- Special cases with many parameters for the constructor. -->
   <suppress checks="ParameterNumber" files="[\\/]LargeMeanPoissonSampler\.java$" />
   <suppress checks="ParameterNumber" files="source64[\\/].*XoShiRo512.*\.java$" />
