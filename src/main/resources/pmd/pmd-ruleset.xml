@@ -70,12 +70,6 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
     </properties>
   </rule>
-  <rule ref="category/java/bestpractices.xml/ForLoopVariableCount">
-    <properties>
-      <!-- Allow double loop control variables. -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='SubsetSamplerUtils']"/>
-    </properties>
-  </rule>
   <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
     <properties>
       <!-- Array is generated internally in this case. -->
