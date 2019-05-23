@@ -122,13 +122,11 @@ public class MersenneTwister64 extends LongProvider {
     /**
      * Initializes the generator with the given seed.
      *
-     * @param seed Initial seed.
+     * @param inputSeed Initial seed.
      */
-    private void setSeedInternal(long[] seed) {
-        if (seed.length == 0) {
-            // Accept empty seed.
-            seed = new long[1];
-        }
+    private void setSeedInternal(long[] inputSeed) {
+        // Accept empty seed.
+        final long[] seed = (inputSeed.length == 0) ? new long[1] : inputSeed;
 
         initState(19650218L);
         int i = 1;

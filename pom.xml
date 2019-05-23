@@ -109,7 +109,8 @@
     <commons.encoding>UTF-8</commons.encoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
-    <rng.pmd.version>3.9.0</rng.pmd.version>
+    <rng.pmd.version>3.12.0</rng.pmd.version>
+    <rng.pmd.dep.version>6.14.0</rng.pmd.dep.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.20</rng.checkstyle.dep.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
@@ -217,6 +218,18 @@
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${rng.pmd.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>net.sourceforge.pmd</groupId>
+            <artifactId>pmd-core</artifactId>
+            <version>${rng.pmd.dep.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>net.sourceforge.pmd</groupId>
+            <artifactId>pmd-java</artifactId>
+            <version>${rng.pmd.dep.version}</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>

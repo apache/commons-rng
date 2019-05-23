@@ -73,7 +73,7 @@ public class DiscreteProbabilityCollectionSampler<T> {
 
         double sumProb = 0;
         int count = 0;
-        for (Map.Entry<T, Double> e : collection.entrySet()) {
+        for (final Map.Entry<T, Double> e : collection.entrySet()) {
             items.add(e.getKey());
 
             final double prob = e.getValue();
@@ -89,7 +89,7 @@ public class DiscreteProbabilityCollectionSampler<T> {
             sumProb += prob;
         }
 
-        if (!(sumProb > 0)) {
+        if (sumProb <= 0) {
             throw new IllegalArgumentException("Invalid sum of probabilities");
         }
 

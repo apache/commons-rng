@@ -45,6 +45,8 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 public final class SeedFactory {
     /** Generator with a long period. */
     private static final RandomIntSource SEED_GENERATOR;
+    /** Size of the state array of "Well44497b". */
+    private static final int WELL_44497_BLOCK_COUNT = 1391;
 
     static {
         // Use a secure RNG so that different instances (e.g. in multiple JVM
@@ -53,8 +55,7 @@ public final class SeedFactory {
         final long initSeed = NumberFactory.makeLong(seedGen.generateSeed(8));
         final SplitMix64 rng = new SplitMix64(initSeed);
 
-        final int blockCount = 1391; // Size of the state array of "Well44497b".
-        SEED_GENERATOR = new Well44497b(createIntArray(blockCount, rng));
+        SEED_GENERATOR = new Well44497b(createIntArray(WELL_44497_BLOCK_COUNT, rng));
     }
 
     /**

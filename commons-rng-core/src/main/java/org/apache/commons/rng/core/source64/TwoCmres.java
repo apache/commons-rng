@@ -59,7 +59,7 @@ public class TwoCmres extends LongProvider {
     private TwoCmres(int seed,
                      Cmres x,
                      Cmres y) {
-        if (x == y) {
+        if (x.equals(y)) {
             throw new IllegalArgumentException("Subcycle generators must be different");
         }
         this.x = x;
@@ -312,7 +312,7 @@ public class TwoCmres extends LongProvider {
              * @param multiply the multiply parameter
              */
             static void checkUnique(List<Cmres> table, long multiply) {
-                for (Cmres sg : table) {
+                for (final Cmres sg : table) {
                     if (multiply == sg.getMultiply()) {
                         throw new IllegalStateException(INTERNAL_ERROR_MSG);
                     }

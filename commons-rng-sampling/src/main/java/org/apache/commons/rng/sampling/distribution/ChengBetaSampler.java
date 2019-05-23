@@ -36,6 +36,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class ChengBetaSampler
     extends SamplerBase
     implements ContinuousSampler {
+    /** 1/2. */
+    private static final double ONE_HALF = 1d / 2;
+    /** 1/4. */
+    private static final double ONE_QUARTER = 1d / 4;
+
     /** First shape parameter. */
     private final double alphaShape;
     /** Second shape parameter. */
@@ -147,12 +152,12 @@ public class ChengBetaSampler
             final double u2 = rng.nextDouble();
             final double y = u1 * u2;
             final double z = u1 * y;
-            if (u1 < 0.5) {
+            if (u1 < ONE_HALF) {
                 if (0.25 * u2 + z - y >= k1) {
                     continue;
                 }
             } else {
-                if (z <= 0.25) {
+                if (z <= ONE_QUARTER) {
                     final double v = beta * (Math.log(u1) - Math.log1p(-u1));
                     w = a * Math.exp(v);
                     break;

@@ -26,7 +26,7 @@ public class IntArray2Int implements SeedConverter<int[], Integer> {
     @Override
     public Integer convert(int[] seed) {
         int out = 0;
-        for (int s : seed) {
+        for (final int s : seed) {
             out ^= s;
         }
 

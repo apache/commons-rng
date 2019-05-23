@@ -44,7 +44,7 @@ public class BoxMullerNormalizedGaussianSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double random;
+        double random;
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 

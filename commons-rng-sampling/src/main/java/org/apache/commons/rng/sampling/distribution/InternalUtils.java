@@ -33,6 +33,9 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
         1307674368000L,    20922789888000L,     355687428096000L,
         6402373705728000L, 121645100408832000L, 2432902008176640000L };
 
+    /** The first array index with a non-zero log factorial. */
+    private static final int BEGIN_LOG_FACTORIALS = 2;
+
     /** Utility class. */
     private InternalUtils() {}
 
@@ -70,19 +73,24 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
                              double[] cache) {
             logFactorials = new double[numValues];
 
-            final int beginCopy = 2;
-            final int endCopy = cache == null || cache.length <= beginCopy ?
-                beginCopy : cache.length <= numValues ?
-                cache.length : numValues;
-
-            // Copy available values.
-            for (int i = beginCopy; i < endCopy; i++) {
-                logFactorials[i] = cache[i];
+            int endCopy;
+            if (cache != null && cache.length > BEGIN_LOG_FACTORIALS) {
+                // Copy available values.
+                endCopy = Math.min(cache.length, numValues);
+                System.arraycopy(cache, BEGIN_LOG_FACTORIALS, logFactorials, BEGIN_LOG_FACTORIALS,
+                    endCopy - BEGIN_LOG_FACTORIALS);
+            } else {
+                // All values to be computed
+                endCopy = BEGIN_LOG_FACTORIALS;
             }
 
-            // Precompute.
+            // Compute remaining values.
             for (int i = endCopy; i < numValues; i++) {
-                logFactorials[i] = logFactorials[i - 1] + Math.log(i);
+                if (i < FACTORIALS.length) {
+                    logFactorials[i] = Math.log(FACTORIALS[i]);
+                } else {
+                    logFactorials[i] = logFactorials[i - 1] + Math.log(i);
+                }
             }
         }
 
@@ -126,7 +134,7 @@ class InternalUtils { // Class is package-private on purpose; do not make it pub
             }
 
             // Delegate.
-            return InternalGamma.logGamma(n + 1);
+            return InternalGamma.logGamma(n + 1.0);
         }
     }
 }

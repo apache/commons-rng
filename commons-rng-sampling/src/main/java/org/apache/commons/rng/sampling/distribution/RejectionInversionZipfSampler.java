@@ -110,7 +110,7 @@ public class RejectionInversionZipfSampler
             final double u = hIntegralNumberOfElements + rng.nextDouble() * (hIntegralX1 - hIntegralNumberOfElements);
             // u is uniformly distributed in (hIntegralX1, hIntegralNumberOfElements]
 
-            double x = hIntegralInverse(u);
+            final double x = hIntegralInverse(u);
             int k = (int) (x + F_1_2);
 
             // Limit k to the range [1, numberOfElements] if it would be outside
