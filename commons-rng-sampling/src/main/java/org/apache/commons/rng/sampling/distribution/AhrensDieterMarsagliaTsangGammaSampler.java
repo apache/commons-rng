@@ -22,7 +22,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
  * <ul>
  *  <li>
- *   For {@code 0 < theta < 1}:
+ *   For {@code 0 < alpha < 1}:
  *   <blockquote>
  *    Ahrens, J. H. and Dieter, U.,
  *    <i>Computer methods for sampling from gamma, beta, Poisson and binomial distributions,</i>
@@ -30,7 +30,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   </blockquote>
  *  </li>
  *  <li>
- *  For {@code theta >= 1}:
+ *  For {@code alpha >= 1}:
  *   <blockquote>
  *   Marsaglia and Tsang, <i>A Simple Method for Generating
  *   Gamma Variables.</i> ACM Transactions on Mathematical Software,
@@ -43,10 +43,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <ul>
  *   <li>{@link UniformRandomProvider#nextDouble()} (both algorithms)
- *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code theta >= 1})
+ *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code alpha >= 1})
  * </ul>
  *
  * @since 1.0
+ * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">MathWorld Gamma distribution</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Wikipedia Gamma distribution</a>
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
@@ -57,25 +59,25 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     /**
      * Base class for a sampler from the Gamma distribution.
      */
-    private abstract static class BaseAhrensDieterMarsagliaTsangGammaSampler
+    private abstract static class BaseGammaSampler
         implements ContinuousSampler {
 
         /** Underlying source of randomness. */
         protected final UniformRandomProvider rng;
-        /** The shape parameter. */
-        protected final double theta;
-        /** The alpha parameter. */
+        /** The alpha parameter. This is a shape parameter. */
         protected final double alpha;
+        /** The theta parameter. This is a scale parameter. */
+        protected final double theta;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
-         * @param alpha Alpha shape parameter of the distribution.
-         * @param theta Theta scale parameter of the distribution.
+         * @param alpha Alpha parameter of the distribution.
+         * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        BaseAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                   double alpha,
-                                                   double theta) {
+        BaseGammaSampler(UniformRandomProvider rng,
+                         double alpha,
+                         double theta) {
             if (alpha <= 0) {
                 throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
             }
@@ -95,28 +97,34 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     }
 
     /**
-     * Class to sample from the Gamma distribution when {@code 0 < theta < 1}.
+     * Class to sample from the Gamma distribution when {@code 0 < alpha < 1}.
+     *
+     * <blockquote>
+     *  Ahrens, J. H. and Dieter, U.,
+     *  <i>Computer methods for sampling from gamma, beta, Poisson and binomial distributions,</i>
+     *  Computing, 12, 223-246, 1974.
+     * </blockquote>
      */
-    private static class SmallThetaAhrensDieterMarsagliaTsangGammaSampler
-        extends BaseAhrensDieterMarsagliaTsangGammaSampler {
+    private static class AhrensDieterGammaSampler
+        extends BaseGammaSampler {
 
-        /** Inverse of "theta". */
-        private final double oneOverTheta;
+        /** Inverse of "alpha". */
+        private final double oneOverAlpha;
         /** Optimization (see code). */
         private final double bGSOptim;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
-         * @param alpha Alpha shape parameter of the distribution.
-         * @param theta Theta scale parameter of the distribution.
+         * @param alpha Alpha parameter of the distribution.
+         * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        SmallThetaAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                         double alpha,
-                                                         double theta) {
+        AhrensDieterGammaSampler(UniformRandomProvider rng,
+                                 double alpha,
+                                 double theta) {
             super(rng, alpha, theta);
-            oneOverTheta = 1 / theta;
-            bGSOptim = 1 + theta / Math.E;
+            oneOverAlpha = 1 / alpha;
+            bGSOptim = 1 + alpha / Math.E;
         }
 
         @Override
@@ -130,22 +138,22 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
                 if (p <= 1) {
                     // Step 2:
-                    final double x = Math.pow(p, oneOverTheta);
+                    final double x = Math.pow(p, oneOverAlpha);
                     final double u2 = rng.nextDouble();
 
                     if (u2 > Math.exp(-x)) {
                         // Reject.
                         continue;
                     }
-                    return alpha * x;
+                    return theta * x;
                 }
 
                 // Step 3:
-                final double x = -Math.log((bGSOptim - p) * oneOverTheta);
+                final double x = -Math.log((bGSOptim - p) * oneOverAlpha);
                 final double u2 = rng.nextDouble();
 
-                if (u2 <= Math.pow(x, theta - 1)) {
-                    return alpha * x;
+                if (u2 <= Math.pow(x, alpha - 1)) {
+                    return theta * x;
                 }
                 // Reject and continue.
             }
@@ -153,10 +161,16 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     }
 
     /**
-     * Class to sample from the Gamma distribution when the {@code theta >= 1}.
+     * Class to sample from the Gamma distribution when the {@code alpha >= 1}.
+     *
+     * <blockquote>
+     *  Marsaglia and Tsang, <i>A Simple Method for Generating
+     *  Gamma Variables.</i> ACM Transactions on Mathematical Software,
+     *  Volume 26 Issue 3, September, 2000.
+     * </blockquote>
      */
-    private static class LargeThetaAhrensDieterMarsagliaTsangGammaSampler
-        extends BaseAhrensDieterMarsagliaTsangGammaSampler {
+    private static class MarsagliaTsangGammaSampler
+        extends BaseGammaSampler {
 
         /** 1/3. */
         private static final double ONE_THIRD = 1d / 3;
@@ -170,16 +184,16 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
-         * @param alpha Alpha shape parameter of the distribution.
-         * @param theta Theta scale parameter of the distribution.
+         * @param alpha Alpha parameter of the distribution.
+         * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        LargeThetaAhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
+        MarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                          double alpha,
                                                          double theta) {
             super(rng, alpha, theta);
             gaussian = new ZigguratNormalizedGaussianSampler(rng);
-            dOptim = theta - ONE_THIRD;
+            dOptim = alpha - ONE_THIRD;
             cOptim = ONE_THIRD / Math.sqrt(dOptim);
         }
 
@@ -199,11 +213,11 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
                 // Squeeze.
                 if (u < 1 - 0.0331 * x2 * x2) {
-                    return alpha * dOptim * v;
+                    return theta * dOptim * v;
                 }
 
                 if (Math.log(u) < 0.5 * x2 + dOptim * (1 - v + Math.log(v))) {
-                    return alpha * dOptim * v;
+                    return theta * dOptim * v;
                 }
             }
         }
@@ -211,17 +225,17 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
-     * @param alpha Alpha shape parameter of the distribution.
-     * @param theta Theta scale parameter of the distribution.
+     * @param alpha Alpha parameter of the distribution (this is a shape parameter).
+     * @param theta Theta parameter of the distribution (this is a scale parameter).
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
      */
     public AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                   double alpha,
                                                   double theta) {
         super(null);
-        delegate = theta < 1 ?
-            new SmallThetaAhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta) :
-            new LargeThetaAhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
+        delegate = alpha < 1 ?
+            new AhrensDieterGammaSampler(rng, alpha, theta) :
+            new MarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 
     /** {@inheritDoc} */
