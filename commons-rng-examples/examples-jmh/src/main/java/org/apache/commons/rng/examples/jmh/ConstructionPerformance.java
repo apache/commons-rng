@@ -24,6 +24,7 @@ import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -64,6 +65,7 @@ import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
+import org.apache.commons.rng.simple.internal.SeedFactory;
 
 /**
  * Executes a benchmark to compare the speed of construction of random number providers.
@@ -434,6 +436,60 @@ public class ConstructionPerformance {
     }
 
     /**
+     * The number of {@code int} values that are required to seed a generator.
+     */
+    @State(Scope.Benchmark)
+    public static class IntSizes {
+        /** The number of values. */
+        @Param({"1",
+                "2",
+                "4",
+                "32",
+                "128", // Legacy limit on array size generation
+                "256",
+                "257",
+                "624",
+                "1391",
+            })
+        private int size;
+
+        /**
+         * Gets the number of {@code int} values required.
+         *
+         * @return the size
+         */
+        public int getSize() {
+            return size;
+        }
+    }
+
+    /**
+     * The number of {@code long} values that are required to seed a generator.
+     */
+    @State(Scope.Benchmark)
+    public static class LongSizes {
+        /** The number of values. */
+        @Param({"1",
+                "2",
+                "4",
+                "8",
+                "16",
+                "128", // Legacy limit on array size generation
+                "312",
+            })
+        private int size;
+
+        /**
+         * Gets the number of {@code long} values required.
+         *
+         * @return the size
+         */
+        public int getSize() {
+            return size;
+        }
+    }
+
+    /**
      * @param bh Data sink.
      */
     @Benchmark
@@ -791,6 +847,28 @@ public class ConstructionPerformance {
         final byte[][] byteSeeds = sources.getByteSeeds();
         for (int i = 0; i < SEEDS; i++) {
             bh.consume(RandomSource.create(randomSource, byteSeeds[i]));
+        }
+    }
+
+    /**
+     * @param sizes   Size of {@code int} seed.
+     * @param bh      Data sink.
+     */
+    @Benchmark
+    public void generateIntSeed(IntSizes sizes, Blackhole bh) {
+        for (int i = sizes.getSize(); i-- > 0; ) {
+            bh.consume(SeedFactory.createInt());
+        }
+    }
+
+    /**
+     * @param sizes   Size of {@code long} seed.
+     * @param bh      Data sink.
+     */
+    @Benchmark
+    public void generateLongSeed(LongSizes sizes, Blackhole bh) {
+        for (int i = sizes.getSize(); i-- > 0; ) {
+            bh.consume(SeedFactory.createLong());
         }
     }
 }
