@@ -183,7 +183,9 @@ public final class ProviderBuilder {
         INT_ARRAY {
             @Override
             public Object createSeed(int size) {
-                return SeedFactory.createIntArray(size);
+                // Limit the number of calls to the synchronized method. The generator
+                // will support self-seeding.
+                return SeedFactory.createIntArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
             }
             @Override
             protected int[] convert(Integer seed, int size) {
@@ -210,7 +212,9 @@ public final class ProviderBuilder {
         LONG_ARRAY {
             @Override
             public Object createSeed(int size) {
-                return SeedFactory.createLongArray(size);
+                // Limit the number of calls to the synchronized method. The generator
+                // will support self-seeding.
+                return SeedFactory.createLongArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
             }
             @Override
             protected long[] convert(Integer seed, int size) {
@@ -234,6 +238,8 @@ public final class ProviderBuilder {
             }
         };
 
+        /** Maximum length of the seed array (for creating array seeds). */
+        private static final int RANDOM_SEED_ARRAY_SIZE = 128;
         /** Convert {@code Long} to {@code Integer}. */
         private static final Long2Int LONG_TO_INT = new Long2Int();
         /** Convert {@code Integer} to {@code Long}. */
