@@ -110,7 +110,7 @@ public class ConstructionPerformance {
     private static final byte[][] BYTE_ARRAY_SEEDS;
 
     /**
-     * The values. Must NOT be final to prevent JVM optimisation! 
+     * The values. Must NOT be final to prevent JVM optimisation!
      * This is used to test the speed of the BlackHole consuming an object.
      */
     private Object[] values;
