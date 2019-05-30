@@ -126,4 +126,11 @@
     </properties>
   </rule>
 
+  <rule ref="category/java/performance.xml/AvoidUsingShortType">
+     <properties>
+     <!-- Short datatype is used to optimise 16-bit storage. -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
+    </properties>
+  </rule>
+
 </ruleset>

@@ -50,6 +50,15 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 MathArrays.sequence(8, 9, 1),
                 RandomSource.create(RandomSource.KISS));
+            add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
+                // range [9,16]
+                MathArrays.sequence(8, 9, 1),
+                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
+            // Inverted
+            add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, 1 - probSuccessBinomial),
+                // range [4,11] = [20-16, 20-9]
+                MathArrays.sequence(8, 4, 1),
+                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
@@ -124,10 +133,13 @@ public class DiscreteSamplersList {
             // Dedicated small mean poisson sampler
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                new SmallMeanPoissonSampler(RandomSource.create(RandomSource.KISS), meanPoisson));
+                new SmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_SHI_RO_256_PLUS), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                new KempSmallMeanPoissonSampler(RandomSource.create(RandomSource.MT), meanPoisson));
+                new KempSmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
+                    MathArrays.sequence(10, 0, 1),
+                    MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -137,6 +149,9 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
+                MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
+                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
             // Poisson (mean >> 40).
             final double veryLargeMeanPoisson = 543.21;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -146,6 +161,14 @@ public class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
+                MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
+                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
+
+            // Any discrete distribution
+            final double[] discreteProbabilities = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
+            add(LIST, discreteProbabilities,
+                MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
@@ -198,6 +221,19 @@ public class DiscreteSamplersList {
         list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
                                                                              points,
                                                                              getProbabilities(dist, points)) });
+    }
+
+    /**
+     * @param list List of data (one the "parameters" tested by the Junit parametric test).
+     * @param probabilities Probability distribution to which the samples are supposed to conform.
+     * @param sampler Sampler.
+     */
+    private static void add(List<DiscreteSamplerTestData[]> list,
+                            final double[] probabilities,
+                            final DiscreteSampler sampler) {
+        list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
+                                                                             MathArrays.natural(probabilities.length),
+                                                                             probabilities) });
     }
 
     /**
