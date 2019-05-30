@@ -319,7 +319,7 @@ class StressTestCommand implements Callable<Void> {
     /**
      * Creates the named output file.
      *
-     * <p>Note: The trial will be combined with the trial offset to create the filename.
+     * <p>Note: The trial will be combined with the trial offset to create the file name.
      *
      * @param basePath The base path to the output results files.
      * @param testData The test data.
