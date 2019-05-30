@@ -109,6 +109,12 @@ public class ConstructionPerformance {
     /** The {@code byte[]} seeds. */
     private static final byte[][] BYTE_ARRAY_SEEDS;
 
+    /**
+     * The values. Must NOT be final to prevent JVM optimisation! 
+     * This is used to test the speed of the BlackHole consuming an object.
+     */
+    private Object[] values;
+
     static {
         LONG_SEEDS = new Long[SEEDS];
         INTEGER_SEEDS = new Integer[SEEDS];
@@ -128,6 +134,16 @@ public class ConstructionPerformance {
             LONG_ARRAY_SEEDS[i] = longArray;
             INT_ARRAY_SEEDS[i] = intArray;
             BYTE_ARRAY_SEEDS[i] = NumberFactory.makeByteArray(longArray);
+        }
+    }
+
+    /**
+     * Default constructor to initialise state.
+     */
+    public ConstructionPerformance() {
+        values = new Object[SEEDS];
+        for (int i = 0; i < SEEDS; i++) {
+            values[i] = new Object();
         }
     }
 
@@ -486,6 +502,31 @@ public class ConstructionPerformance {
          */
         public int getSize() {
             return size;
+        }
+    }
+
+    /**
+     * Baseline for JMH consuming a number of constructed objects.
+     * This shows the JMH timing overhead for all the construction benchmarks.
+     *
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void baselineConsumeObject(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(values[i]);
+        }
+    }
+
+    /**
+     * Baseline for JMH consuming a number of new objects.
+     *
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newObject(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new Object());
         }
     }
 
