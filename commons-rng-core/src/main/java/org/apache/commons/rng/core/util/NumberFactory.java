@@ -206,14 +206,14 @@ public final class NumberFactory {
     private static void putLong(long v,
                                 byte[] buffer,
                                 int index) {
-        buffer[index    ] = (byte)( v         & LONG_LOWEST_BYTE_MASK);
+        buffer[index    ] = (byte) (v         & LONG_LOWEST_BYTE_MASK);
         buffer[index + 1] = (byte)((v >>>  8) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 2] = (byte)((v >>> 16) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 3] = (byte)((v >>> 24) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 4] = (byte)((v >>> 32) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 5] = (byte)((v >>> 40) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 6] = (byte)((v >>> 48) & LONG_LOWEST_BYTE_MASK);
-        buffer[index + 7] = (byte)( v >>> 56                         );
+        buffer[index + 7] = (byte) (v >>> 56);
     }
 
     /**
@@ -318,10 +318,10 @@ public final class NumberFactory {
     private static void putInt(int v,
                                byte[] buffer,
                                int index) {
-        buffer[index    ] = (byte)( v         & INT_LOWEST_BYTE_MASK);
+        buffer[index    ] = (byte) (v         & INT_LOWEST_BYTE_MASK);
         buffer[index + 1] = (byte)((v >>>  8) & INT_LOWEST_BYTE_MASK);
         buffer[index + 2] = (byte)((v >>> 16) & INT_LOWEST_BYTE_MASK);
-        buffer[index + 3] = (byte)( v >>> 24                        );
+        buffer[index + 3] = (byte) (v >>> 24);
     }
     /**
      * Creates an {@code int} from 4 bytes.
