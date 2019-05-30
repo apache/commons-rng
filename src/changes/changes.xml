@@ -75,6 +75,12 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="101">
+        New "MarsagliaTsangWangDiscreteSampler" that provides samples from a discrete
+        distribution stored as a look-up table using a single random integer deviate. Computes
+        tables for the Poisson or Binomial distributions, and generically any provided discrete
+        probability distribution.
+      </action>
       <action dev="aherbert" type="fix" issue="RNG-96">
         "AhrensDieterMarsagliaTsangGammaSampler": Fix parameter interpretation so that alpha
         is a 'shape' parameter and theta is a 'scale' parameter. This reverses the functionality
