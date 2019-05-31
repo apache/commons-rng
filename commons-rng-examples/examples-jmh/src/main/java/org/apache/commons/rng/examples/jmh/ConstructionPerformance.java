@@ -892,24 +892,24 @@ public class ConstructionPerformance {
     }
 
     /**
-     * @param sizes   Size of {@code int} seed.
+     * @param sizes   Size of {@code int[]} seed.
      * @param bh      Data sink.
      */
     @Benchmark
-    public void generateIntSeed(IntSizes sizes, Blackhole bh) {
-        for (int i = sizes.getSize(); i-- > 0; ) {
-            bh.consume(SeedFactory.createInt());
+    public void createIntArraySeed(IntSizes sizes, Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(SeedFactory.createIntArray(sizes.getSize()));
         }
     }
 
     /**
-     * @param sizes   Size of {@code long} seed.
+     * @param sizes   Size of {@code long[]} seed.
      * @param bh      Data sink.
      */
     @Benchmark
-    public void generateLongSeed(LongSizes sizes, Blackhole bh) {
-        for (int i = sizes.getSize(); i-- > 0; ) {
-            bh.consume(SeedFactory.createLong());
+    public void createLongArraySeed(LongSizes sizes, Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(SeedFactory.createLongArray(sizes.getSize()));
         }
     }
 }
