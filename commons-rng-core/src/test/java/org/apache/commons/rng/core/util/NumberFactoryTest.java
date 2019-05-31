@@ -25,20 +25,49 @@ import org.junit.Test;
  */
 public class NumberFactoryTest {
     /** sizeof(int). */
-    final int INT_SIZE = 4;
+    private static final int INT_SIZE = 4;
     /** sizeof(long). */
-    final int LONG_SIZE = 8;
+    private static final int LONG_SIZE = 8;
 
     /** Test values. */
     private static final long[] LONG_TEST_VALUES = new long[] { 0L, 1L, -1L, 19337L, 1234567891011213L,
             -11109876543211L, Long.valueOf(Integer.MAX_VALUE), Long.valueOf(Integer.MIN_VALUE), Long.MAX_VALUE,
-            Long.MIN_VALUE, };
+            Long.MIN_VALUE, 0x9e3779b97f4a7c13L };
     /** Test values. */
     private static final int[] INT_TEST_VALUES = new int[] { 0, 1, -1, 19337, 1234567891, -1110987656,
-            Integer.MAX_VALUE, Integer.MIN_VALUE, };
+            Integer.MAX_VALUE, Integer.MIN_VALUE, 0x9e3779b9 };
+
+    @Test
+    public void testMakeBooleanFromInt() {
+        // Test if the bit is set differently then the booleans are opposite
+        final boolean b1 = NumberFactory.makeBoolean(0);
+        final boolean b2 = NumberFactory.makeBoolean(0xffffffff);
+        Assert.assertNotEquals(b1, b2);
+    }
+
+    @Test
+    public void testMakeBooleanFromLong() {
+        // Test if the bit is set differently then the booleans are opposite
+        final boolean b1 = NumberFactory.makeBoolean(0L);
+        final boolean b2 = NumberFactory.makeBoolean(0xffffffffffffffffL);
+        Assert.assertNotEquals(b1, b2);
+    }
 
     @Test
     public void testMakeIntFromLong() {
+        // Test the high order bits and low order bits are xor'd together
+        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0xffffffff00000000L));
+        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0xffffffffffffffffL));
+        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0x00000000ffffffffL));
+        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0x0000000000000000L));
+        Assert.assertEquals(0x0f0f0f0f, NumberFactory.makeInt(0x0f0f0f0f00000000L));
+        Assert.assertEquals(0xf0f0f0f0, NumberFactory.makeInt(0x00000000f0f0f0f0L));
+        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0x0f0f0f0f0f0f0f0fL));
+        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0x0f0f0f0ff0f0f0f0L));
+    }
+
+    @Test
+    public void testExtractLoExtractHi() {
         for (long v : LONG_TEST_VALUES) {
             final int vL = NumberFactory.extractLo(v);
             final int vH = NumberFactory.extractHi(v);
@@ -59,6 +88,21 @@ public class NumberFactoryTest {
     }
 
     @Test
+    public void testLongToByteArraySignificanceOrder() {
+        // Start at the least significant bit
+        long value = 1;
+        for (int i = 0; i < LONG_SIZE; i++) {
+            final byte[] b = NumberFactory.makeByteArray(value);
+            for (int j = 0; j < LONG_SIZE; j++) {
+                // Only one byte should be non zero
+                Assert.assertEquals(b[j] != 0, j == i);
+            }
+            // Shift to the next byte
+            value <<= 8;
+        }
+    }
+
+    @Test
     public void testLongFromByteArray2Long() {
         for (long expected : LONG_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
@@ -73,6 +117,31 @@ public class NumberFactoryTest {
     }
 
     @Test
+    public void testLongArrayToByteArrayMatchesLongToByteArray() {
+        // Test individually the bytes are the same as the array conversion
+        for (int i = 0; i < LONG_TEST_VALUES.length; i++) {
+            final byte[] b1 = NumberFactory.makeByteArray(LONG_TEST_VALUES[i]);
+            final byte[] b2 = NumberFactory.makeByteArray(new long[] { LONG_TEST_VALUES[i] });
+            Assert.assertArrayEquals(b1, b2);
+        }
+    }
+
+    @Test
+    public void testIntToByteArraySignificanceOrder() {
+        // Start at the least significant bit
+        int value = 1;
+        for (int i = 0; i < INT_SIZE; i++) {
+            final byte[] b = NumberFactory.makeByteArray(value);
+            for (int j = 0; j < INT_SIZE; j++) {
+                // Only one byte should be non zero
+                Assert.assertEquals(b[j] != 0, j == i);
+            }
+            // Shift to the next byte
+            value <<= 8;
+        }
+    }
+
+    @Test
     public void testIntFromByteArray2Int() {
         for (int expected : INT_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
@@ -84,6 +153,16 @@ public class NumberFactoryTest {
     public void testIntArrayFromByteArray2IntArray() {
         final byte[] b = NumberFactory.makeByteArray(INT_TEST_VALUES);
         Assert.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
+    }
+
+    @Test
+    public void testIntArrayToByteArrayMatchesIntToByteArray() {
+        // Test individually the bytes are the same as the array conversion
+        for (int i = 0; i < INT_TEST_VALUES.length; i++) {
+            final byte[] b1 = NumberFactory.makeByteArray(INT_TEST_VALUES[i]);
+            final byte[] b2 = NumberFactory.makeByteArray(new int[] { INT_TEST_VALUES[i] });
+            Assert.assertArrayEquals(b1, b2);
+        }
     }
 
     @Test
