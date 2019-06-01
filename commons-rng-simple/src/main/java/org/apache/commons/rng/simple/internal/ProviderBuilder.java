@@ -568,7 +568,6 @@ public final class ProviderBuilder {
         RestorableUniformRandomProvider create() {
             // Create a seed.
             final Object nativeSeed = createSeed();
-            checkSeed(nativeSeed);
             // Instantiate.
             return create(getConstructor(), new Object[] {nativeSeed});
         }
@@ -586,7 +585,6 @@ public final class ProviderBuilder {
         RestorableUniformRandomProvider create(Object seed) {
             // Convert seed to native type.
             final Object nativeSeed = convertSeed(seed);
-            checkSeed(nativeSeed);
             // Instantiate.
             return create(getConstructor(), new Object[] {nativeSeed});
         }
@@ -648,31 +646,9 @@ public final class ProviderBuilder {
          * @throw UnsupportedOperationException if the {@code seed} type cannot be converted.
          */
         private Object createNativeSeed(Object seed) {
-            // Convert to native type.
-            Object nativeSeed;
-
-            if (seed == null) {
-                nativeSeed = createSeed();
-            } else {
-                nativeSeed = convertSeed(seed);
-            }
-
-            checkSeed(nativeSeed);
-
-            return nativeSeed;
-        }
-
-        /**
-         * Check the seed is a native seed.
-         *
-         * @param seed the seed
-         * @throws IllegalStateException if not a native seed.
-         */
-        private void checkSeed(Object seed) {
-            if (!isNativeSeed(seed)) {
-                // Conversion setup is wrong.
-                throw new IllegalStateException(INTERNAL_ERROR_MSG);
-            }
+            return seed == null ?
+                createSeed() :
+                convertSeed(seed);
         }
 
         /**
