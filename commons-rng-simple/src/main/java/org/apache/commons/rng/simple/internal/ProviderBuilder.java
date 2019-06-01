@@ -124,7 +124,7 @@ public final class ProviderBuilder {
      *  <li>{@code byte[]}</li>
      * </ul>
      */
-    private enum NativeSeedType {
+    enum NativeSeedType {
         /** The seed type is {@code Integer}. */
         INT {
             @Override
