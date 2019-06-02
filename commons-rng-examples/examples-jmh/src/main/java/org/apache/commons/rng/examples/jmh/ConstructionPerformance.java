@@ -912,11 +912,10 @@ public class ConstructionPerformance {
     }
 
     /**
-     * @param sizes   Size of {@code int[]} seed.
      * @param bh      Data sink.
      */
     @Benchmark
-    public void createIntegerSeed(IntSizes sizes, Blackhole bh) {
+    public void createIntegerSeed(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             // This has to be boxed to an object
             bh.consume(Integer.valueOf(SeedFactory.createInt()));
@@ -924,11 +923,10 @@ public class ConstructionPerformance {
     }
 
     /**
-     * @param sizes   Size of {@code long[]} seed.
      * @param bh      Data sink.
      */
     @Benchmark
-    public void createLongSeed(LongSizes sizes, Blackhole bh) {
+    public void createLongSeed(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             // This has to be boxed to an object
             bh.consume(Long.valueOf(SeedFactory.createLong()));
