@@ -457,8 +457,7 @@ public class ConstructionPerformance {
     @State(Scope.Benchmark)
     public static class IntSizes {
         /** The number of values. */
-        @Param({"1",
-                "2",
+        @Param({"2",
                 "4",
                 "32",
                 "128", // Legacy limit on array size generation
@@ -485,8 +484,7 @@ public class ConstructionPerformance {
     @State(Scope.Benchmark)
     public static class LongSizes {
         /** The number of values. */
-        @Param({"1",
-                "2",
+        @Param({"2",
                 "4",
                 "8",
                 "16",
@@ -910,6 +908,30 @@ public class ConstructionPerformance {
     public void createLongArraySeed(LongSizes sizes, Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             bh.consume(SeedFactory.createLongArray(sizes.getSize()));
+        }
+    }
+
+    /**
+     * @param sizes   Size of {@code int[]} seed.
+     * @param bh      Data sink.
+     */
+    @Benchmark
+    public void createIntegerSeed(IntSizes sizes, Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            // This has to be boxed to an object
+            bh.consume(Integer.valueOf(SeedFactory.createInt()));
+        }
+    }
+
+    /**
+     * @param sizes   Size of {@code long[]} seed.
+     * @param bh      Data sink.
+     */
+    @Benchmark
+    public void createLongSeed(LongSizes sizes, Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            // This has to be boxed to an object
+            bh.consume(Long.valueOf(SeedFactory.createLong()));
         }
     }
 }
