@@ -915,7 +915,7 @@ public class ConstructionPerformance {
      * @param bh      Data sink.
      */
     @Benchmark
-    public void createIntegerSeed(Blackhole bh) {
+    public void createSingleIntegerSeed(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             // This has to be boxed to an object
             bh.consume(Integer.valueOf(SeedFactory.createInt()));
@@ -926,7 +926,7 @@ public class ConstructionPerformance {
      * @param bh      Data sink.
      */
     @Benchmark
-    public void createLongSeed(Blackhole bh) {
+    public void createSingleLongSeed(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             // This has to be boxed to an object
             bh.consume(Long.valueOf(SeedFactory.createLong()));
