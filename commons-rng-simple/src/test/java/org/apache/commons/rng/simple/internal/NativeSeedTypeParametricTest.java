@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.simple.internal.ProviderBuilder.NativeSeedType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,13 +25,20 @@ import org.junit.runners.Parameterized.Parameters;
 import java.lang.reflect.Array;
 
 /**
- * Tests for the {@link ProviderBuilder.NativeSeedType} seed conversions. This test
+ * Tests for the {@link NativeSeedType} seed conversions. This test
  * ensures that a seed can be created or converted from any supported input seed to each
  * supported native seed type.
  */
 @RunWith(value=Parameterized.class)
 public class NativeSeedTypeParametricTest {
-    /** The supported seeds for conversion to a native seed type. */
+    /** This is a list of the class types that are supported native seeds. */
+    private static final Object[] SUPPORTED_NATIVE_TYPES = {
+        Integer.class,
+        Long.class,
+        int[].class,
+        long[].class
+    };
+    /** Example supported seeds for conversion to a native seed type. */
     private static final Object[] SUPPORTED_SEEDS = {
         Integer.valueOf(1),
         Long.valueOf(2),
@@ -46,20 +52,10 @@ public class NativeSeedTypeParametricTest {
         Double.valueOf(Math.PI),
     };
 
-    /** The class type of the native seed. */
-    private final Class<?> type;
     /** The native seed type enum instance. */
     private final NativeSeedType nativeSeedType;
-
-    /**
-     * Initializes the test instance.
-     *
-     * @param type The type of the native seed.
-     */
-    public NativeSeedTypeParametricTest(Class<?> type) {
-        this.type = type;
-        nativeSeedType = NativeSeedType.createNativeSeedType(type);
-    }
+    /** The class type of the native seed. */
+    private final Class<?> type;
 
     /**
      * Gets the supported native seed types.
@@ -68,13 +64,37 @@ public class NativeSeedTypeParametricTest {
      */
     @Parameters
     public static Object[] getTypes() {
-        // This is a list of the class types that are supported native seeds.
-        return new Object[] {
-            Integer.class,
-            Long.class,
-            int[].class,
-            long[].class
-        };
+        // Check that there are enum values for all supported types.
+        // This ensures the test is maintained to correspond to the enum.
+        Assert.assertEquals("Incorrect number of enum values for the supported native types",
+            SUPPORTED_NATIVE_TYPES.length, NativeSeedType.values().length);
+
+        return SUPPORTED_NATIVE_TYPES;
+    }
+
+    /**
+     * Initializes the test instance.
+     *
+     * @param type The type of the native seed.
+     */
+    public NativeSeedTypeParametricTest(Class<?> type) {
+        this.type = type;
+        nativeSeedType = findNativeSeedType(type);
+    }
+
+    /**
+     * Creates the native seed type.
+     *
+     * @param type Class of the native seed.
+     * @return the native seed type
+     */
+    private static NativeSeedType findNativeSeedType(Class<?> type) {
+        for (final NativeSeedType nativeSeedType : NativeSeedType.values()) {
+            if (type.equals(nativeSeedType.getType())) {
+                return nativeSeedType;
+            }
+        }
+        throw new AssertionError("No enum matching the type: " + type);
     }
 
     /**

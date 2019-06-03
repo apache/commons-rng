@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -104,385 +104,122 @@ public final class ProviderBuilder {
     }
 
     /**
-     * The native seed type. Contains values for all native seed types and methods
-     * to convert supported seed types to the native seed type.
-     *
-     * <p>Valid native seed types are:</p>
-     * <ul>
-     *  <li>{@code Integer}</li>
-     *  <li>{@code Long}</li>
-     *  <li>{@code int[]}</li>
-     *  <li>{@code long[]}</li>
-     * </ul>
-     *
-     * <p>Valid types for seed conversion are:</p>
-     * <ul>
-     *  <li>{@code Integer} (or {@code int})</li>
-     *  <li>{@code Long} (or {@code long})</li>
-     *  <li>{@code int[]}</li>
-     *  <li>{@code long[]}</li>
-     *  <li>{@code byte[]}</li>
-     * </ul>
-     */
-    enum NativeSeedType {
-        /** The seed type is {@code Integer}. */
-        INT {
-            @Override
-            public Integer createSeed(int size) {
-                return SeedFactory.createInt();
-            }
-            @Override
-            protected Integer convert(Integer seed, int size) {
-                return seed;
-            }
-            @Override
-            protected Integer convert(Long seed, int size) {
-                return LONG_TO_INT.convert(seed);
-            }
-            @Override
-            protected Integer convert(int[] seed, int size) {
-                return INT_ARRAY_TO_INT.convert(seed);
-            }
-            @Override
-            protected Integer convert(long[] seed, int size) {
-                return LONG_TO_INT.convert(LONG_ARRAY_TO_LONG.convert(seed));
-            }
-            @Override
-            protected Integer convert(byte[] seed, int size) {
-                return INT_ARRAY_TO_INT.convert(BYTE_ARRAY_TO_INT_ARRAY.convert(seed));
-            }
-        },
-        /** The seed type is {@code Long}. */
-        LONG {
-            @Override
-            public Long createSeed(int size) {
-                return SeedFactory.createLong();
-            }
-            @Override
-            protected Long convert(Integer seed, int size) {
-                return INT_TO_LONG.convert(seed);
-            }
-            @Override
-            protected Long convert(Long seed, int size) {
-                return seed;
-            }
-            @Override
-            protected Long convert(int[] seed, int size) {
-                return INT_TO_LONG.convert(INT_ARRAY_TO_INT.convert(seed));
-            }
-            @Override
-            protected Long convert(long[] seed, int size) {
-                return LONG_ARRAY_TO_LONG.convert(seed);
-            }
-            @Override
-            protected Long convert(byte[] seed, int size) {
-                return LONG_ARRAY_TO_LONG.convert(BYTE_ARRAY_TO_LONG_ARRAY.convert(seed));
-            }
-        },
-        /** The seed type is {@code int[]}. */
-        INT_ARRAY {
-            @Override
-            public int[] createSeed(int size) {
-                // Limit the number of calls to the synchronized method. The generator
-                // will support self-seeding.
-                return SeedFactory.createIntArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
-            }
-            @Override
-            protected int[] convert(Integer seed, int size) {
-                return LONG_TO_INT_ARRAY.convert(INT_TO_LONG.convert(seed), size);
-            }
-            @Override
-            protected int[] convert(Long seed, int size) {
-                return LONG_TO_INT_ARRAY.convert(seed, size);
-            }
-            @Override
-            protected int[] convert(int[] seed, int size) {
-                return seed;
-            }
-            @Override
-            protected int[] convert(long[] seed, int size) {
-                return LONG_ARRAY_TO_INT_ARRAY.convert(seed);
-            }
-            @Override
-            protected int[] convert(byte[] seed, int size) {
-                return BYTE_ARRAY_TO_INT_ARRAY.convert(seed);
-            }
-        },
-        /** The seed type is {@code long[]}. */
-        LONG_ARRAY {
-            @Override
-            public long[] createSeed(int size) {
-                // Limit the number of calls to the synchronized method. The generator
-                // will support self-seeding.
-                return SeedFactory.createLongArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
-            }
-            @Override
-            protected long[] convert(Integer seed, int size) {
-                return LONG_TO_LONG_ARRAY.convert(INT_TO_LONG.convert(seed), size);
-            }
-            @Override
-            protected long[] convert(Long seed, int size) {
-                return LONG_TO_LONG_ARRAY.convert(seed, size);
-            }
-            @Override
-            protected long[] convert(int[] seed, int size) {
-                return INT_ARRAY_TO_LONG_ARRAY.convert(seed);
-            }
-            @Override
-            protected long[] convert(long[] seed, int size) {
-                return seed;
-            }
-            @Override
-            protected long[] convert(byte[] seed, int size) {
-                return BYTE_ARRAY_TO_LONG_ARRAY.convert(seed);
-            }
-        };
-
-        /** Maximum length of the seed array (for creating array seeds). */
-        private static final int RANDOM_SEED_ARRAY_SIZE = 128;
-        /** Convert {@code Long} to {@code Integer}. */
-        private static final Long2Int LONG_TO_INT = new Long2Int();
-        /** Convert {@code Integer} to {@code Long}. */
-        private static final Int2Long INT_TO_LONG = new Int2Long();
-        /** Convert {@code Long} to {@code int[]}. */
-        private static final Long2IntArray LONG_TO_INT_ARRAY = new Long2IntArray(0);
-        /** Convert {@code Long} to {@code long[]}. */
-        private static final Long2LongArray LONG_TO_LONG_ARRAY = new Long2LongArray(0);
-        /** Convert {@code long[]} to {@code Long}. */
-        private static final LongArray2Long LONG_ARRAY_TO_LONG = new LongArray2Long();
-        /** Convert {@code int[]} to {@code Integer}. */
-        private static final IntArray2Int INT_ARRAY_TO_INT = new IntArray2Int();
-        /** Convert {@code long[]} to {@code int[]}. */
-        private static final LongArray2IntArray LONG_ARRAY_TO_INT_ARRAY = new LongArray2IntArray();
-        /** Convert {@code Long} to {@code long[]}. */
-        private static final IntArray2LongArray INT_ARRAY_TO_LONG_ARRAY = new IntArray2LongArray();
-        /** Convert {@code byte[]} to {@code int[]}. */
-        private static final ByteArray2IntArray BYTE_ARRAY_TO_INT_ARRAY = new ByteArray2IntArray();
-        /** Convert {@code byte[]} to {@code long[]}. */
-        private static final ByteArray2LongArray BYTE_ARRAY_TO_LONG_ARRAY = new ByteArray2LongArray();
-
-        /**
-         * Creates the seed. The output seed type is determined by the native seed type. If the
-         * output is an array the required size of the array can be specified.
-         *
-         * @param size The size of the seed (array types only).
-         * @return the seed
-         */
-        public abstract Object createSeed(int size);
-
-        /**
-         * Converts the input seed from any of the supported seed types to the native seed type.
-         * If the output is an array the required size of the array can be specified.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         * @throw UnsupportedOperationException if the {@code seed} type is invalid.
-         */
-        public Object convertSeed(Object seed,
-                                  int size) {
-            // Convert to native type.
-            // Each method must be overridden by specific implementations.
-
-            if (seed instanceof Integer) {
-                return convert((Integer) seed, size);
-            } else if (seed instanceof Long) {
-                return convert((Long) seed, size);
-            } else if (seed instanceof int[]) {
-                return convert((int[]) seed, size);
-            } else if (seed instanceof long[]) {
-                return convert((long[]) seed, size);
-            } else if (seed instanceof byte[]) {
-                return convert((byte[]) seed, size);
-            }
-
-            throw new UnsupportedOperationException("Unrecognized seed type");
-        }
-
-        /**
-         * Convert the input {@code Integer} seed to the native seed type.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         */
-        protected abstract Object convert(Integer seed, int size);
-
-        /**
-         * Convert the input {@code Long} seed to the native seed type.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         */
-        protected abstract Object convert(Long seed, int size);
-
-        /**
-         * Convert the input {@code int[]} seed to the native seed type.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         */
-        protected abstract Object convert(int[] seed, int size);
-
-        /**
-         * Convert the input {@code long[]} seed to the native seed type.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         */
-        protected abstract Object convert(long[] seed, int size);
-
-        /**
-         * Convert the input {@code byte[]} seed to the native seed type.
-         *
-         * @param seed Input seed.
-         * @param size The size of the output seed (array types only).
-         * @return the native seed.
-         */
-        protected abstract Object convert(byte[] seed, int size);
-
-        /**
-         * Creates the native seed type.
-         *
-         * @param type Class of the native seed.
-         * @return the native seed type
-         */
-        public static NativeSeedType createNativeSeedType(Class<?> type) {
-            if (type.equals(Integer.class)) {
-                return NativeSeedType.INT;
-            } else if (type.equals(Long.class)) {
-                return NativeSeedType.LONG;
-            } else if (type.equals(int[].class)) {
-                return NativeSeedType.INT_ARRAY;
-            } else if (type.equals(long[].class)) {
-                return NativeSeedType.LONG_ARRAY;
-            } else {
-                // Unsupported seed type
-                throw new IllegalStateException(INTERNAL_ERROR_MSG);
-            }
-        }
-    }
-
-    /**
      * Identifiers of the generators.
      */
     public enum RandomSourceInternal {
         /** Source of randomness is {@link JDKRandom}. */
         JDK(JDKRandom.class,
             1,
-            Long.class),
+            NativeSeedType.LONG),
         /** Source of randomness is {@link Well512a}. */
         WELL_512_A(Well512a.class,
                    16,
-                   int[].class),
+                   NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well1024a}. */
         WELL_1024_A(Well1024a.class,
                     32,
-                    int[].class),
+                    NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well19937a}. */
         WELL_19937_A(Well19937a.class,
                      624,
-                     int[].class),
+                     NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well19937c}. */
         WELL_19937_C(Well19937c.class,
                      624,
-                     int[].class),
+                     NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well44497a}. */
         WELL_44497_A(Well44497a.class,
                      1391,
-                     int[].class),
+                     NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well44497b}. */
         WELL_44497_B(Well44497b.class,
                      1391,
-                     int[].class),
+                     NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link MersenneTwister}. */
         MT(MersenneTwister.class,
            624,
-           int[].class),
+           NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link ISAACRandom}. */
         ISAAC(ISAACRandom.class,
               256,
-              int[].class),
+              NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link SplitMix64}. */
         SPLIT_MIX_64(SplitMix64.class,
                      1,
-                     Long.class),
+                     NativeSeedType.LONG),
         /** Source of randomness is {@link XorShift1024Star}. */
         XOR_SHIFT_1024_S(XorShift1024Star.class,
                          16,
-                         long[].class),
+                         NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link TwoCmres}. */
         TWO_CMRES(TwoCmres.class,
                   1,
-                  Integer.class),
+                  NativeSeedType.INT),
         /**
          * Source of randomness is {@link TwoCmres} with explicit selection
          * of the two subcycle generators.
          */
         TWO_CMRES_SELECT(TwoCmres.class,
                          1,
-                         Integer.class,
+                         NativeSeedType.INT,
                          Integer.TYPE,
                          Integer.TYPE),
         /** Source of randomness is {@link MersenneTwister64}. */
         MT_64(MersenneTwister64.class,
               312,
-              long[].class),
+              NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link MultiplyWithCarry256}. */
         MWC_256(MultiplyWithCarry256.class,
                 257,
-                int[].class),
+                NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link KISSRandom}. */
         KISS(KISSRandom.class,
              4,
-             int[].class),
+             NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XorShift1024StarPhi}. */
         XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
                              16,
-                             long[].class),
+                             NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo64Star}. */
         XO_RO_SHI_RO_64_S(XoRoShiRo64Star.class,
                           2,
-                          int[].class),
+                          NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoRoShiRo64StarStar}. */
         XO_RO_SHI_RO_64_SS(XoRoShiRo64StarStar.class,
                            2,
-                           int[].class),
+                           NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoShiRo128Plus}. */
         XO_SHI_RO_128_PLUS(XoShiRo128Plus.class,
                            4,
-                           int[].class),
+                           NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoShiRo128StarStar}. */
         XO_SHI_RO_128_SS(XoShiRo128StarStar.class,
                          4,
-                         int[].class),
+                         NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoRoShiRo128Plus}. */
         XO_RO_SHI_RO_128_PLUS(XoRoShiRo128Plus.class,
                               2,
-                              long[].class),
+                              NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo128StarStar}. */
         XO_RO_SHI_RO_128_SS(XoRoShiRo128StarStar.class,
                             2,
-                            long[].class),
+                            NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo256Plus}. */
         XO_SHI_RO_256_PLUS(XoShiRo256Plus.class,
                            4,
-                           long[].class),
+                           NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo256StarStar}. */
         XO_SHI_RO_256_SS(XoShiRo256StarStar.class,
                          4,
-                         long[].class),
+                         NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo512Plus}. */
         XO_SHI_RO_512_PLUS(XoShiRo512Plus.class,
                            8,
-                           long[].class),
+                           NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo512StarStar}. */
         XO_SHI_RO_512_SS(XoShiRo512StarStar.class,
                          8,
-                         long[].class);
+                         NativeSeedType.LONG_ARRAY);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
@@ -503,17 +240,20 @@ public final class ProviderBuilder {
          *
          * @param rng Source type.
          * @param nativeSeedSize Native seed size (array types only).
-         * @param args Data needed to create a generator instance. The first element
-         * must be the native seed type.
+         * @param nativeSeedType Native seed type.
+         * @param args Additional data needed to create a generator instance.
          */
         RandomSourceInternal(Class<? extends UniformRandomProvider> rng,
                              int nativeSeedSize,
+                             NativeSeedType nativeSeedType,
                              Class<?>... args) {
             this.rng = rng;
             this.nativeSeedSize = nativeSeedSize;
-            this.args = Arrays.copyOf(args, args.length);
-            // Look-up the native seed type from the class of the seed
-            nativeSeedType = NativeSeedType.createNativeSeedType(args[0]);
+            this.nativeSeedType = nativeSeedType;
+            // Build the complete list of class types for the constructor
+            this.args = (Class<?>[]) Array.newInstance(args.getClass().getComponentType(), 1 + args.length);
+            this.args[0] = nativeSeedType.getType();
+            System.arraycopy(args, 0, this.args, 1, args.length);
         }
 
         /**
