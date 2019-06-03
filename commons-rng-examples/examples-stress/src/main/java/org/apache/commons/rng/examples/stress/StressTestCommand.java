@@ -121,12 +121,23 @@ class StressTestCommand implements Callable<Void> {
                            "Valid values: BIG_ENDIAN, LITTLE_ENDIAN."})
     private ByteOrder byteOrder = ByteOrder.nativeOrder();
 
-    /** The output byte order of the binary data. */
+    /** Flag to indicate the output should be bit-reversed. */
     @Option(names = {"-r", "--reverse-bits"},
             description = {"Reverse the bits in the data (default: ${DEFAULT-VALUE}).",
                            "Note: Generators may fail tests for a reverse sequence " +
                            "when passing using the standard sequence."})
     private boolean reverseBits;
+
+    /**
+     * Flag to indicate the output should be combined with a hashcode from a new object.
+     * This is a method used in the {@link org.apache.commons.rng.simple.internal.SeedFactory SeedFactory}.
+     *
+     * @see System#identityHashCode(Object)
+     */
+    @Option(names = {"--hashcode"},
+            description = {"Combine the bits with a hashcode (default: ${DEFAULT-VALUE}).",
+                           "System.identityHashCode(new Object()) ^ rng.nextInt()."})
+    private boolean xorHashCode;
 
     /** The flag to indicate a dry run. */
     @Option(names = {"--dry-run"},
@@ -396,6 +407,9 @@ class StressTestCommand implements Callable<Void> {
             }
             if (reverseBits) {
                 rng = RNGUtils.createReverseBitsIntProvider(rng);
+            }
+            if (xorHashCode) {
+                rng = RNGUtils.createHashCodeIntProvider(rng);
             }
             // Run the test
             final Runnable r = new StressTestTask(testData.getRandomSource(), rng, output, command,

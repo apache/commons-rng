@@ -79,6 +79,34 @@ final class RNGUtils {
     }
 
     /**
+     * Wrap the random generator with an {@link IntProvider} that will combine the bits
+     * using a {@code xor} operation with a generated hash code.
+     *
+     * <pre>{@code
+     * System.identityHashCode(new Object()) ^ rng.nextInt()
+     * }</pre>
+     *
+     * Note: This generator will be slow.
+     *
+     * @param rng The random generator.
+     * @return the hash code combined random generator.
+     * @see System#identityHashCode(Object)
+     */
+    static UniformRandomProvider createHashCodeIntProvider(final UniformRandomProvider rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return System.identityHashCode(new Object()) ^ rng.nextInt();
+            }
+
+            @Override
+            public String toString() {
+                return "HashCode ^ " + rng.toString();
+            }
+        };
+    }
+
+    /**
      * Parses the argument into an object suitable for the RandomSource constructor. Supports:
      *
      * <ul>
