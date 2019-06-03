@@ -101,7 +101,8 @@ public class DiscreteSamplersPerformance {
             } else if ("GeometricSampler".equals(samplerType)) {
                 sampler = new GeometricSampler(rng, 0.21);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {
-                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, new double[] {0.1, 0.2, 0.3, 0.4});
+                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng,
+                        new double[] {0.1, 0.2, 0.3, 0.4});
             } else if ("MarsagliaTsangWangPoissonSampler".equals(samplerType)) {
                 sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, 8.9);
             } else if ("MarsagliaTsangWangBinomialSampler".equals(samplerType)) {
