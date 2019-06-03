@@ -36,6 +36,8 @@ package org.apache.commons.rng.simple.internal;
  *  <li>{@code long[]}</li>
  *  <li>{@code byte[]}</li>
  * </ul>
+ *
+ * @since 1.3
  */
 public enum NativeSeedType {
     /** The seed type is {@code Integer}. */

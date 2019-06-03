@@ -72,6 +72,7 @@ public final class ProviderBuilder {
      * @return a new RNG instance.
      * @throws IllegalStateException if data is missing to initialize the
      * generator implemented by the given {@code source}.
+     * @since 1.3
      */
     public static RestorableUniformRandomProvider create(RandomSourceInternal source) {
         // Delegate to the random source allowing generator specific implementations.

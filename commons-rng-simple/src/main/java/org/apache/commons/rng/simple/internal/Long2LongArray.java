@@ -43,7 +43,11 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
         return convertSeed(seed, size);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public long[] convert(Long seed, int outputSize) {
         return convertSeed(seed, outputSize);
