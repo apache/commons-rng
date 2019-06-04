@@ -141,12 +141,11 @@ class StressTestCommand implements Callable<Void> {
 
     /**
      * Flag to indicate the output should be combined with output from ThreadLocalRandom.
-     *
-     * @see System#identityHashCode(Object)
      */
     @Option(names = {"--local-random"},
-            description = {"Combine the bits with ThreadLocalRandom (default: ${DEFAULT-VALUE})."})
-    private boolean xorLocalRandom;
+            description = {"Combine the bits with ThreadLocalRandom (default: ${DEFAULT-VALUE}).",
+                           "ThreadLocalRandom.current().nextInt() ^ rng.nextInt()."})
+    private boolean xorThreadLocalRandom;
 
     /** The flag to indicate a dry run. */
     @Option(names = {"--dry-run"},
@@ -415,7 +414,7 @@ class StressTestCommand implements Callable<Void> {
             if (xorHashCode) {
                 rng = RNGUtils.createHashCodeIntProvider(rng);
             }
-            if (xorLocalRandom) {
+            if (xorThreadLocalRandom) {
                 rng = RNGUtils.createThreadLocalRandomIntProvider(rng);
             }
             if (reverseBits) {
