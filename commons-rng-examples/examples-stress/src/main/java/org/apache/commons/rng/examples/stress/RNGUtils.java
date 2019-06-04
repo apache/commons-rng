@@ -19,6 +19,8 @@ package org.apache.commons.rng.examples.stress;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Utility methods for a {@link UniformRandomProvider}.
  */
@@ -89,7 +91,7 @@ final class RNGUtils {
      * Note: This generator will be slow.
      *
      * @param rng The random generator.
-     * @return the hash code combined random generator.
+     * @return the combined random generator.
      * @see System#identityHashCode(Object)
      */
     static UniformRandomProvider createHashCodeIntProvider(final UniformRandomProvider rng) {
@@ -102,6 +104,31 @@ final class RNGUtils {
             @Override
             public String toString() {
                 return "HashCode ^ " + rng.toString();
+            }
+        };
+    }
+
+    /**
+     * Wrap the random generator with an {@link IntProvider} that will combine the bits
+     * using a {@code xor} operation with the output from {@link ThreadLocalRandom}.
+     *
+     * <pre>{@code
+     * ThreadLocalRandom.current().nextInt() ^ rng.nextInt()
+     * }</pre>
+     *
+     * @param rng The random generator.
+     * @return the combined random generator.
+     */
+    static UniformRandomProvider createThreadLocalRandomIntProvider(final UniformRandomProvider rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return ThreadLocalRandom.current().nextInt() ^ rng.nextInt();
+            }
+
+            @Override
+            public String toString() {
+                return "ThreadLocalRandom ^ " + rng.toString();
             }
         };
     }

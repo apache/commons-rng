@@ -139,6 +139,15 @@ class StressTestCommand implements Callable<Void> {
                            "System.identityHashCode(new Object()) ^ rng.nextInt()."})
     private boolean xorHashCode;
 
+    /**
+     * Flag to indicate the output should be combined with output from ThreadLocalRandom.
+     *
+     * @see System#identityHashCode(Object)
+     */
+    @Option(names = {"--local-random"},
+            description = {"Combine the bits with ThreadLocalRandom (default: ${DEFAULT-VALUE})."})
+    private boolean xorLocalRandom;
+
     /** The flag to indicate a dry run. */
     @Option(names = {"--dry-run"},
             description = "Perform a dry run where the generators and output files are created " +
@@ -402,14 +411,19 @@ class StressTestCommand implements Callable<Void> {
             }
             // Create the generator
             UniformRandomProvider rng = testData.createRNG();
-            if (byteOrder.equals(ByteOrder.LITTLE_ENDIAN)) {
-                rng = RNGUtils.createReverseBytesIntProvider(rng);
+            // Combined generators must be created first
+            if (xorHashCode) {
+                rng = RNGUtils.createHashCodeIntProvider(rng);
+            }
+            if (xorLocalRandom) {
+                rng = RNGUtils.createThreadLocalRandomIntProvider(rng);
             }
             if (reverseBits) {
                 rng = RNGUtils.createReverseBitsIntProvider(rng);
             }
-            if (xorHashCode) {
-                rng = RNGUtils.createHashCodeIntProvider(rng);
+            // Manipulation of the bytes for the platform is done on the entire generator
+            if (byteOrder.equals(ByteOrder.LITTLE_ENDIAN)) {
+                rng = RNGUtils.createReverseBytesIntProvider(rng);
             }
             // Run the test
             final Runnable r = new StressTestTask(testData.getRandomSource(), rng, output, command,
