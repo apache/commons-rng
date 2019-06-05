@@ -232,9 +232,9 @@ public final class ProviderBuilder {
         private final NativeSeedType nativeSeedType;
         /**
          * The constructor.
-         * This is discovered using the constructor parameter types and cached.
+         * This is discovered using the constructor parameter types and stored for re-use.
          */
-        private Constructor<?> constructor;
+        private Constructor<?> rngConstructor;
 
         /**
          * Create a new instance.
@@ -367,7 +367,6 @@ public final class ProviderBuilder {
             return nativeSeedType.createSeed(nativeSeedSize);
         }
 
-
         /**
          * Converts a seed from any of the supported seed types to a native seed.
          *
@@ -398,12 +397,16 @@ public final class ProviderBuilder {
          * @return the RNG constructor.
          */
         private Constructor<?> getConstructor() {
-            Constructor<?> con = constructor;
-            if (con == null) {
-                con = createConstructor();
-                constructor = con;
+            // The constructor never changes so it is stored for re-use.
+            Constructor<?> constructor = rngConstructor;
+            if (constructor == null) {
+                // If null this is either the first attempt to find it or
+                // look-up previously failed and this method will throw
+                // upon each invocation.
+                constructor = createConstructor();
+                rngConstructor = constructor;
             }
-            return con;
+            return constructor;
         }
         /**
          * Creates a constructor.
