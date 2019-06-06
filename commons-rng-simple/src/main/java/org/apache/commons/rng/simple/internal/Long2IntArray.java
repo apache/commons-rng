@@ -66,11 +66,11 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
         int i = 0;
         // Handle an odd size
         if ((size & 1) == 1) {
-            out[i++] = NumberFactory.extractHi(rng.next());
+            out[i++] = NumberFactory.extractHi(rng.nextLong());
         }
         // Fill the remaining pairs
         while (i < size) {
-            final long v = rng.next();
+            final long v = rng.nextLong();
             out[i] = NumberFactory.extractHi(v);
             out[i + 1] = NumberFactory.extractLo(v);
             i += 2;
