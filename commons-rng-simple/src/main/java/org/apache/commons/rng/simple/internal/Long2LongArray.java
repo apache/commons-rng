@@ -25,7 +25,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
  *
  * @since 1.0
  */
-public class Long2LongArray implements SeedConverter<Long, long[]> {
+public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
     /** Size of the output array. */
     private final int size;
 
@@ -36,9 +36,31 @@ public class Long2LongArray implements SeedConverter<Long, long[]> {
         this.size = size;
     }
 
+
     /** {@inheritDoc} */
     @Override
     public long[] convert(Long seed) {
+        return convertSeed(seed, size);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
+    @Override
+    public long[] convert(Long seed, int outputSize) {
+        return convertSeed(seed, outputSize);
+    }
+
+    /**
+     * Convert the seed.
+     *
+     * @param seed Input seed.
+     * @param size Output array size.
+     * @return the converted seed.
+     */
+    private static long[] convertSeed(Long seed, int size) {
         final long[] out = new long[size];
         final SplitMix64 rng = new SplitMix64(seed);
         for (int i = 0; i < size; i++) {
