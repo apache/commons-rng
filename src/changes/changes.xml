@@ -75,6 +75,11 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-75">
+        "RandomSource.create(...)": Refactor internal components to allow custom seeding routines
+        per random source. Improvements were made to the speed of creating generators with small
+        seeds.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-77">
         "NumberFactory": Improve performance of int and long array to/from byte array conversions.
       </action>
