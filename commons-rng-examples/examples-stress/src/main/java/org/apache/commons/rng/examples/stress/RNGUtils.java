@@ -134,6 +134,31 @@ final class RNGUtils {
     }
 
     /**
+     * Combine the two random generators using a {@code xor} operations.
+     *
+     * <pre>{@code
+     * rng1.nextInt() ^ rng2.nextInt()
+     * }</pre>
+     *
+     * @param rng1 The first random generator.
+     * @param rng2 The second random generator.
+     * @return the combined random generator.
+     */
+    static UniformRandomProvider createXorIntProvider(final UniformRandomProvider rng1,
+                                                      final UniformRandomProvider rng2) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return rng1.nextInt() ^ rng2.nextInt();
+            }
+
+            @Override
+            public String toString() {
+                return rng1.toString() + " ^ " + rng2.toString();
+            }
+        };
+    }
+    /**
      * Parses the argument into an object suitable for the RandomSource constructor. Supports:
      *
      * <ul>

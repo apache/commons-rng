@@ -147,6 +147,15 @@ class StressTestCommand implements Callable<Void> {
                            "ThreadLocalRandom.current().nextInt() ^ rng.nextInt()."})
     private boolean xorThreadLocalRandom;
 
+    /**
+     * Flag to indicate the output should be combined with output from a second generator.
+     */
+    @Option(names = {"--xor-rng"},
+            description = {"Combine the bits with a second generator.",
+                           "xorRng.nextInt() ^ rng.nextInt().",
+                           "Valid values: Any known RandomSource enum value."})
+    private RandomSource xorRandomSource;
+
     /** The flag to indicate a dry run. */
     @Option(names = {"--dry-run"},
             description = "Perform a dry run where the generators and output files are created " +
@@ -416,6 +425,11 @@ class StressTestCommand implements Callable<Void> {
             }
             if (xorThreadLocalRandom) {
                 rng = RNGUtils.createThreadLocalRandomIntProvider(rng);
+            }
+            if (xorRandomSource != null) {
+                rng = RNGUtils.createXorIntProvider(
+                        RandomSource.create(xorRandomSource),
+                        rng);
             }
             if (reverseBits) {
                 rng = RNGUtils.createReverseBitsIntProvider(rng);
