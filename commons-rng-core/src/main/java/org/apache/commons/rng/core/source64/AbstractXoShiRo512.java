@@ -17,6 +17,8 @@
 
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
@@ -27,9 +29,14 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoShiRo512 extends LongProvider {
+abstract class AbstractXoShiRo512 extends LongProvider implements JumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 8;
+    /** The coefficients for the jump function. */
+    private static final long[] JUMP_COEFFICIENTS = {
+        0x33ed89b6e7a353f9L, 0x760083d7955323beL, 0x2837f2fbb5f22faeL, 0x4b8c5674d309511cL,
+        0xb11ac47a7ba28c25L, 0xf1be7667092bcc1cL, 0x53851efdb6df0aafL, 0x1ebbc8b23eaf25dbL
+    };
 
     // State is maintained using variables rather than an array for performance
 
@@ -82,7 +89,7 @@ abstract class AbstractXoShiRo512 extends LongProvider {
      * @param seed7 Initial seed element 7.
      */
     AbstractXoShiRo512(long seed0, long seed1, long seed2, long seed3,
-                              long seed4, long seed5, long seed6, long seed7) {
+                       long seed4, long seed5, long seed6, long seed7) {
         state0 = seed0;
         state1 = seed1;
         state2 = seed2;
@@ -91,6 +98,23 @@ abstract class AbstractXoShiRo512 extends LongProvider {
         state5 = seed5;
         state6 = seed6;
         state7 = seed7;
+    }
+
+    /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected AbstractXoShiRo512(AbstractXoShiRo512 source) {
+        super(source);
+        state0 = source.state0;
+        state1 = source.state1;
+        state2 = source.state2;
+        state3 = source.state3;
+        state4 = source.state4;
+        state5 = source.state5;
+        state6 = source.state6;
+        state7 = source.state7;
     }
 
     /**
@@ -126,5 +150,64 @@ abstract class AbstractXoShiRo512 extends LongProvider {
         setState(NumberFactory.makeLongArray(c[0]));
 
         super.setStateInternal(c[1]);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>256</sup>
+     * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
+     * up to 2<sup>256</sup> non-overlapping subsequences.</p>
+     */
+    @Override
+    public UniformRandomProvider jump() {
+        final UniformRandomProvider copy = copy();
+        performJump();
+        return copy;
+    }
+
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
+    protected abstract AbstractXoShiRo512 copy();
+
+    /**
+     * Perform the jump to advance the generator state. Resets the cached state of the generator.
+     */
+    private void performJump() {
+        long s0 = 0;
+        long s1 = 0;
+        long s2 = 0;
+        long s3 = 0;
+        long s4 = 0;
+        long s5 = 0;
+        long s6 = 0;
+        long s7 = 0;
+        for (final long jc : JUMP_COEFFICIENTS) {
+            for (int b = 0; b < 64; b++) {
+                if ((jc & (1L << b)) != 0) {
+                    s0 ^= state0;
+                    s1 ^= state1;
+                    s2 ^= state2;
+                    s3 ^= state3;
+                    s4 ^= state4;
+                    s5 ^= state5;
+                    s6 ^= state6;
+                    s7 ^= state7;
+                }
+                next();
+            }
+        }
+        state0 = s0;
+        state1 = s1;
+        state2 = s2;
+        state3 = s3;
+        state4 = s4;
+        state5 = s5;
+        state6 = s6;
+        state7 = s7;
+        resetCachedState();
     }
 }

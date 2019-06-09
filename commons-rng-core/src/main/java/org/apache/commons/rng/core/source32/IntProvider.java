@@ -46,6 +46,39 @@ public abstract class IntProvider
      */
     private int booleanBitMask; // Initialised as 0
 
+    /**
+     * Creates a new instance.
+     */
+    public IntProvider() {
+        super();
+    }
+
+    /**
+     * Creates a new instance copying the state from the source.
+     *
+     * <p>This provides base functionality to allow a generator to create a copy, for example
+     * for use in the {@link org.apache.commons.rng.JumpableUniformRandomProvider
+     * JumpableUniformRandomProvider} interface.
+     *
+     * @param source Source to copy.
+     */
+    protected IntProvider(IntProvider source) {
+        booleanSource = source.booleanSource;
+        booleanBitMask = source.booleanBitMask;
+    }
+
+    /**
+     * Reset the cached state used in the default implementation of {@link #nextBoolean()}.
+     *
+     * <p>This should be used when the state is no longer valid, for example after a jump
+     * performed for the {@link org.apache.commons.rng.JumpableUniformRandomProvider
+     * JumpableUniformRandomProvider} interface.</p>
+     */
+    protected void resetCachedState() {
+        booleanSource = 0;
+        booleanBitMask = 0;
+    }
+
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {

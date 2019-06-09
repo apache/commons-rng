@@ -56,6 +56,44 @@ public abstract class LongProvider
     /** Flag to indicate an int source has been cached. */
     private boolean cachedIntSource; // Initialised as false
 
+    /**
+     * Creates a new instance.
+     */
+    public LongProvider() {
+        super();
+    }
+
+    /**
+     * Creates a new instance copying the state from the source.
+     *
+     * <p>This provides base functionality to allow a generator to create a copy, for example
+     * for use in the {@link org.apache.commons.rng.JumpableUniformRandomProvider
+     * JumpableUniformRandomProvider} interface.
+     *
+     * @param source Source to copy.
+     */
+    protected LongProvider(LongProvider source) {
+        booleanSource = source.booleanSource;
+        booleanBitMask = source.booleanBitMask;
+        intSource = source.intSource;
+        cachedIntSource = source.cachedIntSource;
+    }
+
+    /**
+     * Reset the cached state used in the default implementation of {@link #nextBoolean()}
+     * and {@link #nextInt()}.
+     *
+     * <p>This should be used when the state is no longer valid, for example after a jump
+     * performed for the {@link org.apache.commons.rng.JumpableUniformRandomProvider
+     * JumpableUniformRandomProvider} interface.</p>
+     */
+    protected void resetCachedState() {
+        booleanSource = 0L;
+        booleanBitMask = 0L;
+        intSource = 0L;
+        cachedIntSource = false;
+    }
+
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {

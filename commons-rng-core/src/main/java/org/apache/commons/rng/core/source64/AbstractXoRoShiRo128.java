@@ -17,6 +17,8 @@
 
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
@@ -27,9 +29,13 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoRoShiRo128 extends LongProvider {
+abstract class AbstractXoRoShiRo128 extends LongProvider implements JumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 2;
+    /** The coefficients for the jump function. */
+    private static final long[] JUMP_COEFFICIENTS = {
+        0xdf900294d8f554a5L, 0x170865df4b3201fcL
+    };
 
     // State is maintained using variables rather than an array for performance
 
@@ -69,6 +75,17 @@ abstract class AbstractXoRoShiRo128 extends LongProvider {
     }
 
     /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected AbstractXoRoShiRo128(AbstractXoRoShiRo128 source) {
+        super(source);
+        state0 = source.state0;
+        state1 = source.state1;
+    }
+
+    /**
      * Copies the state from the array into the generator state.
      *
      * @param state the new state
@@ -93,5 +110,48 @@ abstract class AbstractXoRoShiRo128 extends LongProvider {
         setState(NumberFactory.makeLongArray(c[0]));
 
         super.setStateInternal(c[1]);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>64</sup>
+     * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
+     * up to 2<sup>64</sup> non-overlapping subsequences.</p>
+     */
+    @Override
+    public UniformRandomProvider jump() {
+        final UniformRandomProvider copy = copy();
+        performJump(JUMP_COEFFICIENTS);
+        return copy;
+    }
+
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
+    protected abstract AbstractXoRoShiRo128 copy();
+
+    /**
+     * Perform the jump to advance the generator state. Resets the cached state of the generator.
+     *
+     * @param jumpCoefficients Jump coefficients.
+     */
+    private void performJump(long[] jumpCoefficients) {
+        long s0 = 0;
+        long s1 = 0;
+        for (final long jc : jumpCoefficients) {
+            for (int b = 0; b < 64; b++) {
+                if ((jc & (1L << b)) != 0) {
+                    s0 ^= state0;
+                    s1 ^= state1;
+                }
+                next();
+            }
+        }
+        state0 = s0;
+        state1 = s1;
+        resetCachedState();
     }
 }
