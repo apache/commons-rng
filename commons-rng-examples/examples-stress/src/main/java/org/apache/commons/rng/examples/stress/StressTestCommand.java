@@ -148,7 +148,7 @@ class StressTestCommand implements Callable<Void> {
     private boolean xorThreadLocalRandom;
 
     /**
-     * Flag to indicate the output should be combined with output from a second generator.
+     * Optional second generator to be combined with the primary generator.
      */
     @Option(names = {"--xor-rng"},
             description = {"Combine the bits with a second generator.",
