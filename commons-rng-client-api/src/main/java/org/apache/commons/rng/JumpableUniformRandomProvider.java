@@ -29,7 +29,7 @@ public interface JumpableUniformRandomProvider extends UniformRandomProvider {
      *
      * <p>The current state will be advanced in a single operation by the equivalent of a
      * number of sequential calls to a method that updates the state of the provider. The
-     * size of the jump is implementation-dependent.</p>
+     * size of the jump is implementation dependent.</p>
      *
      * <p>Repeat invocations of this method will create a series of generators
      * that are uniformly spaced at intervals of the output sequence. Each generator provides
