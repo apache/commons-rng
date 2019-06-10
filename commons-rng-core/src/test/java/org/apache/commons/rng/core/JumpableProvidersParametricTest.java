@@ -26,6 +26,7 @@ import org.junit.runners.Parameterized.Parameters;
 import java.util.Arrays;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
@@ -70,17 +71,83 @@ public class JumpableProvidersParametricTest {
     }
 
     /**
+     * Gets the function using the {@link JumpableUniformRandomProvider#jump()} method.
+     *
+     * @return the jump function
+     */
+    private TestJumpFunction getJumpFunction() {
+        return new TestJumpFunction() {
+            @Override
+            public UniformRandomProvider jump() {
+                return generator.jump();
+            }
+        };
+    }
+
+    /**
+     * Gets the function using the {@link LongJumpableUniformRandomProvider#longJump()} method.
+     *
+     * @return the jump function
+     */
+    private TestJumpFunction getLongJumpFunction() {
+        Assume.assumeTrue("No long jump function", generator instanceof LongJumpableUniformRandomProvider);
+
+        final LongJumpableUniformRandomProvider rng = (LongJumpableUniformRandomProvider) generator;
+        return new TestJumpFunction() {
+            @Override
+            public UniformRandomProvider jump() {
+                return rng.longJump();
+            }
+        };
+    }
+
+    /**
      * Test that the random generator returned from the jump is a new instance of the same class.
      */
     @Test
     public void testJumpReturnsACopy() {
-        final UniformRandomProvider copy = generator.jump();
+        assertJumpReturnsACopy(getJumpFunction());
+    }
+
+    /**
+     * Test that the random generator returned from the long jump is a new instance of the same class.
+     */
+    @Test
+    public void testLongJumpReturnsACopy() {
+        assertJumpReturnsACopy(getLongJumpFunction());
+    }
+
+    /**
+     * Assert that the random generator returned from the jump function is a new instance of the same class.
+     *
+     * @param jumpFunction Jump function to test.
+     */
+    private void assertJumpReturnsACopy(TestJumpFunction jumpFunction) {
+        final UniformRandomProvider copy = jumpFunction.jump();
         Assert.assertNotSame("The copy instance should be a different object", generator, copy);
         Assert.assertEquals("The copy instance should be the same class", generator.getClass(), copy.getClass());
     }
 
     /**
      * Test that the random generator state of the copy instance returned from the jump
+     * matches the input state.
+     */
+    @Test
+    public void testJumpCopyMatchesPreJumpState() {
+        assertCopyMatchesPreJumpState(getJumpFunction());
+    }
+
+    /**
+     * Test that the random generator state of the copy instance returned from the long jump
+     * matches the input state.
+     */
+    @Test
+    public void testLongJumpCopyMatchesPreJumpState() {
+        assertCopyMatchesPreJumpState(getLongJumpFunction());
+    }
+
+    /**
+     * Assert that the random generator state of the copy instance returned from the jump
      * function matches the input state.
      *
      * <p>The generator must be a {@link RestorableUniformRandomProvider} and return an
@@ -94,9 +161,10 @@ public class JumpableProvidersParametricTest {
      * <p>This test targets any cached state of the default implementation of a generator
      * in {@link IntProvider} and {@link LongProvider} such as the state cached for the
      * nextBoolean() and nextInt() functions.</p>
+     *
+     * @param jumpFunction Jump function to test.
      */
-    @Test
-    public void testJumpCopyMatchesPreJumpState() {
+    private void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction) {
         Assume.assumeTrue("Not a restorable RNG", generator instanceof RestorableUniformRandomProvider);
 
         for (int repeats = 0; repeats < 2; repeats++) {
@@ -110,7 +178,7 @@ public class JumpableProvidersParametricTest {
             final RandomProviderState preJumpState = ((RestorableUniformRandomProvider) generator).saveState();
             Assume.assumeTrue("Not a recognised state", preJumpState instanceof RandomProviderDefaultState);
 
-            final UniformRandomProvider copy = generator.jump();
+            final UniformRandomProvider copy = jumpFunction.jump();
 
             final RandomProviderState copyState = ((RestorableUniformRandomProvider) copy).saveState();
             final RandomProviderDefaultState expected = (RandomProviderDefaultState) preJumpState;
@@ -127,9 +195,22 @@ public class JumpableProvidersParametricTest {
     @Test
     public void testJumpResetsDefaultState() {
         if (generator instanceof IntProvider) {
-            assertJumpResetsDefaultState(intProviderStateSize);
+            assertJumpResetsDefaultState(getJumpFunction(), intProviderStateSize);
         } else if (generator instanceof LongProvider) {
-            assertJumpResetsDefaultState(longProviderStateSize);
+            assertJumpResetsDefaultState(getJumpFunction(), longProviderStateSize);
+        }
+    }
+
+    /**
+     * Test that a long jump resets the state of the default implementation of a generator in
+     * {@link IntProvider} and {@link LongProvider}.
+     */
+    @Test
+    public void testLongJumpResetsDefaultState() {
+        if (generator instanceof IntProvider) {
+            assertJumpResetsDefaultState(getLongJumpFunction(), intProviderStateSize);
+        } else if (generator instanceof LongProvider) {
+            assertJumpResetsDefaultState(getLongJumpFunction(), longProviderStateSize);
         }
     }
 
@@ -140,9 +221,10 @@ public class JumpableProvidersParametricTest {
      * <p>This is intended to check the default state of the base implementation of
      * {@link IntProvider} and {@link LongProvider} is reset.</p>
      *
-     * @param stateSize the state size
+     * @param jumpFunction Jump function to test.
+     * @param stateSize State size.
      */
-    private void assertJumpResetsDefaultState(int stateSize) {
+    private void assertJumpResetsDefaultState(TestJumpFunction jumpFunction, int stateSize) {
         final byte[] expected = new byte[stateSize];
         for (int repeats = 0; repeats < 2; repeats++) {
             // Exercise the generator.
@@ -152,7 +234,7 @@ public class JumpableProvidersParametricTest {
             generator.nextInt();
             generator.nextBoolean();
 
-            generator.jump();
+            jumpFunction.jump();
 
             // An Int/LongProvider so must be a RestorableUniformRandomProvider
             final RandomProviderState postJumpState = ((RestorableUniformRandomProvider) generator).saveState();
@@ -205,5 +287,20 @@ public class JumpableProvidersParametricTest {
         int getStateSize() {
             return getStateInternal().length;
         }
+    }
+
+    /**
+     * Specify the jump operation to test.
+     * 
+     * <p>This allows testing {@link JumpableUniformRandomProvider} or
+     * {@link LongJumpableUniformRandomProvider}.</p>
+     */
+    interface TestJumpFunction {
+        /**
+         * Perform the jump and return a pre-jump copy.
+         *
+         * @return the pre-jump copy.
+         */
+        UniformRandomProvider jump();
     }
 }
