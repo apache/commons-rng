@@ -17,25 +17,29 @@
 package org.apache.commons.rng;
 
 /**
- * Applies to generators that can be advanced a large number of
+ * Applies to generators that can be advanced a very large number of
  * steps of the output sequence in a single operation.
  *
  * @since 1.3
  */
-public interface JumpableUniformRandomProvider extends UniformRandomProvider {
+public interface LongJumpableUniformRandomProvider extends JumpableUniformRandomProvider {
     /**
-     * Creates a copy of the UniformRandomProvider and then advances the
+     * Creates a copy of the JumpableUniformRandomProvider and then advances the
      * state of the current instance. The copy is returned.
      *
      * <p>The current state will be advanced in a single operation by the equivalent of a
      * number of sequential calls to a method that updates the state of the provider. The
-     * size of the jump is implementation dependent.</p>
+     * size of the long jump is implementation dependent.</p>
      *
      * <p>Repeat invocations of this method will create a series of generators
      * that are uniformly spaced at intervals of the output sequence. Each generator provides
-     * non-overlapping output for the length of the jump for use in parallel computations.</p>
+     * non-overlapping output for the length of the long jump for use in parallel computations.</p>
+     *
+     * <p>The returned copy may be jumped {@code m / n} times before overlap with the current
+     * instance where {@code m} is the long jump length and {@code n}
+     * is the jump length of the {@link #jump()} method.
      *
      * @return A copy of the current state.
      */
-    UniformRandomProvider jump();
+    JumpableUniformRandomProvider longJump();
 }
