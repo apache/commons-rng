@@ -47,6 +47,7 @@ import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
+import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 
 /**
@@ -68,6 +69,9 @@ public class ProvidersList {
     /** List of 64-bits based RNGs. */
     private static final List<RestorableUniformRandomProvider[]> LIST64 =
         new ArrayList<RestorableUniformRandomProvider[]>();
+    /** List of {@link JumpableUniformRandomProvider} RNGs. */
+    private static final List<JumpableUniformRandomProvider[]> LIST_JUMP =
+        new ArrayList<JumpableUniformRandomProvider[]>();
 
     static {
         // External generator for creating a random seed.
@@ -111,6 +115,12 @@ public class ProvidersList {
             // Complete list.
             LIST.addAll(LIST32);
             LIST.addAll(LIST64);
+            // Dynamically identify the Jumpable RNGs
+            for (RestorableUniformRandomProvider[] rng : LIST) {
+                if (rng[0] instanceof JumpableUniformRandomProvider) {
+                    add(LIST_JUMP, (JumpableUniformRandomProvider) rng[0]);
+                }
+            }
         } catch (Exception e) {
             System.err.println("Unexpected exception while creating the list of generators: " + e);
             e.printStackTrace(System.err);
@@ -130,6 +140,15 @@ public class ProvidersList {
     private static void add(List<RestorableUniformRandomProvider[]> list,
                             RestorableUniformRandomProvider rng) {
         list.add(new RestorableUniformRandomProvider[] { rng });
+    }
+
+    /**
+     * Helper to statisfy Junit requirement that each parameter set contains
+     * the same number of objects.
+     */
+    private static void add(List<JumpableUniformRandomProvider[]> list,
+                            JumpableUniformRandomProvider rng) {
+        list.add(new JumpableUniformRandomProvider[] { rng });
     }
 
     /**
@@ -160,5 +179,15 @@ public class ProvidersList {
      */
     public static Iterable<RestorableUniformRandomProvider[]> list64() {
         return Collections.unmodifiableList(LIST64);
+    }
+
+    /**
+     * Subclasses that are "parametric" tests can forward the call to
+     * the "@Parameters"-annotated method to this method.
+     *
+     * @return the list of {@link JumpableUniformRandomProvider} generators.
+     */
+    public static Iterable<JumpableUniformRandomProvider[]> listJumpable() {
+        return Collections.unmodifiableList(LIST_JUMP);
     }
 }

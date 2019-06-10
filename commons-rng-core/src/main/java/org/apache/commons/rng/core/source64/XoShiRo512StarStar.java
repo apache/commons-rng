@@ -60,6 +60,15 @@ public class XoShiRo512StarStar extends AbstractXoShiRo512 {
         super(seed0, seed1, seed2, seed3, seed4, seed5, seed6, seed7);
     }
 
+    /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected XoShiRo512StarStar(XoShiRo512StarStar source) {
+        super(source);
+    }
+
     /** {@inheritDoc} */
     @Override
     public long next() {
@@ -81,5 +90,17 @@ public class XoShiRo512StarStar extends AbstractXoShiRo512 {
         state7 = Long.rotateLeft(state7, 21);
 
         return result;
+    }
+
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
+    @Override
+    protected XoShiRo512StarStar copy() {
+        // This exists to ensure the jump function performed in the super class returns
+        // the correct class type. It should not be public.
+        return new XoShiRo512StarStar(this);
     }
 }

@@ -18,10 +18,14 @@
 package org.apache.commons.rng.core;
 
 import org.junit.Assert;
+import org.junit.Assume;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.RandomProviderState;
+import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
@@ -35,9 +39,7 @@ public class RandomAssert {
      * @param rng Random generator.
      */
     public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextInt());
-        }
+        assertEquals("Value at position ", expected, rng);
     }
 
     /**
@@ -47,9 +49,89 @@ public class RandomAssert {
      * @param rng Random generator.
      */
     public static void assertEquals(long[] expected, UniformRandomProvider rng) {
+        assertEquals("Value at position ", expected, rng);
+    }
+
+    /**
+     * Assert that the random generator produces the expected output.
+     * The message prefix is prepended to the array index for the assertion message.
+     *
+     * @param messagePrefix Message prefix.
+     * @param expected Expected output.
+     * @param rng Random generator.
+     */
+    private static void assertEquals(String messagePrefix, int[] expected, UniformRandomProvider rng) {
         for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals("Value at position " + i, expected[i], rng.nextLong());
+            Assert.assertEquals(messagePrefix + i, expected[i], rng.nextInt());
         }
+    }
+
+    /**
+     * Assert that the random generator produces the expected output.
+     * The message prefix is prepended to the array index for the assertion message.
+     *
+     * @param messagePrefix Message prefix.
+     * @param expected Expected output.
+     * @param rng Random generator.
+     */
+    private static void assertEquals(String messagePrefix, long[] expected, UniformRandomProvider rng) {
+        for (int i = 0; i < expected.length; i++) {
+            Assert.assertEquals(messagePrefix + i, expected[i], rng.nextLong());
+        }
+    }
+
+    /**
+     * Assert that the random generator satisfies the contract of the
+     * {@link JumpableUniformRandomProvider#jump()} function.
+     *
+     * <ul>
+     *  <li>The jump returns a copy instance. This is asserted to be a different object
+     *      of the same class type as the input.
+     *  <li>The copy instance outputs the expected sequence for the current state of the input generator.
+     *      This is asserted using the {@code expectedBefore} sequence.
+     *  <li>The input instance outputs the expected sequence for an advanced state.
+     *      This is asserted using the {@code expectedAfter} sequence.
+     * <ul>
+     *
+     * @param expectedBefore Expected output before the jump.
+     * @param expectedAfter Expected output after the jump.
+     * @param rng Random generator.
+     */
+    public static void assertJumpEquals(int[] expectedBefore,
+                                        int[] expectedAfter,
+                                        JumpableUniformRandomProvider rng) {
+        final UniformRandomProvider copy = rng.jump();
+        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
+        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
+        assertEquals("Pre-jump value at position ", expectedBefore, copy);
+        assertEquals("Post-jump value at position ", expectedAfter, rng);
+    }
+
+    /**
+     * Assert that the random generator satisfies the contract of the
+     * {@link JumpableUniformRandomProvider#jump()} function.
+     *
+     * <ul>
+     *  <li>The jump returns a copy instance. This is asserted to be a different object
+     *      of the same class type as the input.
+     *  <li>The copy instance outputs the expected sequence for the current state of the input generator.
+     *      This is asserted using the {@code expectedBefore} sequence.
+     *  <li>The input instance outputs the expected sequence for an advanced state.
+     *      This is asserted using the {@code expectedAfter} sequence.
+     * <ul>
+     *
+     * @param expectedBefore Expected output before the jump.
+     * @param expectedAfter Expected output after the jump.
+     * @param rng Random generator.
+     */
+    public static void assertJumpEquals(long[] expectedBefore,
+                                        long[] expectedAfter,
+                                        JumpableUniformRandomProvider rng) {
+        final UniformRandomProvider copy = rng.jump();
+        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
+        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
+        assertEquals("Pre-jump value at position ", expectedBefore, copy);
+        assertEquals("Post-jump value at position ", expectedAfter, rng);
     }
 
     /**

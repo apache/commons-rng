@@ -43,4 +43,21 @@ public class XorShift1024StarPhi extends XorShift1024Star {
     public XorShift1024StarPhi(long[] seed) {
         super(seed, 0x9e3779b97f4a7c13L);
     }
+
+    /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected XorShift1024StarPhi(XorShift1024StarPhi source) {
+        super(source);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected XorShift1024StarPhi copy() {
+        // This exists to ensure the jump function performed in the super class returns
+        // the correct class type. It should not be public.
+        return new XorShift1024StarPhi(this);
+    }
 }

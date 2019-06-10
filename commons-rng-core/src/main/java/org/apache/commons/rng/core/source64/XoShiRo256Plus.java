@@ -55,6 +55,15 @@ public class XoShiRo256Plus extends AbstractXoShiRo256 {
         super(seed0, seed1, seed2, seed3);
     }
 
+    /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected XoShiRo256Plus(XoShiRo256Plus source) {
+        super(source);
+    }
+
     /** {@inheritDoc} */
     @Override
     public long next() {
@@ -72,5 +81,17 @@ public class XoShiRo256Plus extends AbstractXoShiRo256 {
         state3 = Long.rotateLeft(state3, 45);
 
         return result;
+    }
+
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
+    @Override
+    protected XoShiRo256Plus copy() {
+        // This exists to ensure the jump function performed in the super class returns
+        // the correct class type. It should not be public.
+        return new XoShiRo256Plus(this);
     }
 }

@@ -18,6 +18,9 @@
 package org.apache.commons.rng.core.source64;
 
 import java.util.Arrays;
+
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
@@ -30,9 +33,16 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
  * @since 1.0
  */
-public class XorShift1024Star extends LongProvider {
+public class XorShift1024Star extends LongProvider implements JumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 16;
+    /** The coefficients for the jump function. */
+    private static final long[] JUMP_COEFFICIENTS = {
+        0x84242f96eca9c41dL, 0xa3c65b8776f96855L, 0x5b34a39f070b5837L, 0x4489affce4f31a1eL,
+        0x2ffeeb0a48316f40L, 0xdc2d9891fe68c022L, 0x3659132bb12fea70L, 0xaac17d8efa43cab8L,
+        0xc4cb815590989b13L, 0x5ee975283d71c93bL, 0x691548c86c1bd540L, 0x7910c41d10a1e6a5L,
+        0x0b5fc64563b3e2a8L, 0x047f7684e9fc949dL, 0xb99181f2d8f685caL, 0x284600e3f30e38c3L
+    };
     /** State. */
     private final long[] state = new long[SEED_SIZE];
     /** The multiplier for the XorShift1024 algorithm. */
@@ -64,6 +74,18 @@ public class XorShift1024Star extends LongProvider {
     protected XorShift1024Star(long[] seed, long multiplier) {
         setSeedInternal(seed);
         this.multiplier = multiplier;
+    }
+
+    /**
+     * Creates a copy instance.
+     *
+     * @param source Source to copy.
+     */
+    protected XorShift1024Star(XorShift1024Star source) {
+        super(source);
+        System.arraycopy(source.state, 0, state, 0, SEED_SIZE);
+        multiplier = source.multiplier;
+        index = source.index;
     }
 
     /** {@inheritDoc} */
@@ -108,5 +130,51 @@ public class XorShift1024Star extends LongProvider {
         s1 ^= s1 << 31; // a
         state[index] = s1 ^ s0 ^ (s1 >>> 11) ^ (s0 >>> 30); // b,c
         return state[index] * multiplier;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>512</sup>
+     * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
+     * up to 2<sup>512</sup> non-overlapping subsequences.</p>
+     */
+    @Override
+    public UniformRandomProvider jump() {
+        final UniformRandomProvider copy = copy();
+        performJump();
+        return copy;
+    }
+
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
+    protected XorShift1024Star copy() {
+        // This exists to ensure the jump function returns
+        // the correct class type. It should not be public.
+        return new XorShift1024Star(this);
+    }
+
+    /**
+     * Perform the jump to advance the generator state. Resets the cached state of the generator.
+     */
+    private void performJump() {
+        final long[] newState = new long[SEED_SIZE];
+        for (final long jc : JUMP_COEFFICIENTS) {
+            for (int b = 0; b < 64; b++) {
+                if ((jc & (1L << b)) != 0) {
+                    for (int i = 0; i < SEED_SIZE; i++) {
+                        newState[i] ^= state[(i + index) & 15];
+                    }
+                }
+                next();
+            }
+        }
+        for (int j = 0; j < 16; j++) {
+            state[(j + index) & 15] = newState[j];
+        }
+        resetCachedState();
     }
 }
