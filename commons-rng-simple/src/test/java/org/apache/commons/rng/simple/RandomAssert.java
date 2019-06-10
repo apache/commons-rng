@@ -22,7 +22,12 @@ import org.junit.Assert;
 
 import org.apache.commons.rng.UniformRandomProvider;
 
-public class RandomAssert {
+public final class RandomAssert {
+    /**
+     * Class contains only static methods.
+     */
+    private RandomAssert() {}
+
     /**
      * Exercise all methods from the UniformRandomProvider interface, and
      * ensure that the two generators produce the same sequence.

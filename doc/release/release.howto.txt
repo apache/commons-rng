@@ -17,8 +17,8 @@
 This document is meant as a step-by-step recipe to achieve the release of
 the Commons RNG component. Note that more general instructions valid
 for all components, including [rng], are available on the Apache Commons
-main site: at "http://commons.apache.org/releases/prepare.html" and
-"http://commons.apache.org/releases/release.html".
+main site: at "https://commons.apache.org/releases/prepare.html" and
+"https://commons.apache.org/releases/release.html".
 
 The files "settings-security.xml" and "settings.xml" are minimal examples
 of files used by maven to pick up authentication credentials needed to
@@ -580,7 +580,7 @@ to work. This is done as follows:
 command (options are the svn revision and the component's new version).]
 
 Wait a few minutes for the live site to fully sync and then check
-  http://commons.apache.org/proper/commons-rng/
+  https://commons.apache.org/proper/commons-rng/
 to make sure that everything looks correct.
 
 

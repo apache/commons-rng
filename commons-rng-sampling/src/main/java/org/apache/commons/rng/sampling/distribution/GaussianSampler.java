@@ -16,13 +16,16 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
+
 /**
  * Sampling from a Gaussian distribution with given mean and
  * standard deviation.
  *
  * @since 1.1
  */
-public class GaussianSampler implements ContinuousSampler {
+public class GaussianSampler implements ContinuousSampler, SharedStateSampler<GaussianSampler> {
     /** Mean. */
     private final double mean;
     /** standardDeviation. */
@@ -48,6 +51,21 @@ public class GaussianSampler implements ContinuousSampler {
         this.standardDeviation = standardDeviation;
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private GaussianSampler(UniformRandomProvider rng,
+                            GaussianSampler source) {
+        if (!(source.normalized instanceof SharedStateSampler<?>)) {
+            throw new UnsupportedOperationException("The underlying sampler is not a SharedStateSampler");
+        }
+        this.mean = source.mean;
+        this.standardDeviation = source.standardDeviation;
+        this.normalized = (NormalizedGaussianSampler)
+            ((SharedStateSampler<?>)source.normalized).withUniformRandomProvider(rng);
+    }
+
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -58,5 +76,20 @@ public class GaussianSampler implements ContinuousSampler {
     @Override
     public String toString() {
         return "Gaussian deviate [" + normalized.toString() + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Note: This function is available if the underlying {@link NormalizedGaussianSampler}
+     * is a {@link SharedStateSampler}. Otherwise a run-time exception is thrown.</p>
+     *
+     * @throws UnsupportedOperationException if the underlying sampler is not a {@link SharedStateSampler}.
+     * @throws ClassCastException if the underlying {@link SharedStateSampler} does not return a
+     * {@link NormalizedGaussianSampler}.
+     */
+    @Override
+    public GaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new GaussianSampler(rng, this);
     }
 }

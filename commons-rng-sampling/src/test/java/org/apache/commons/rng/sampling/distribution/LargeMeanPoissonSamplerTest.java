@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.LargeMeanPoissonSamplerState;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
@@ -34,7 +36,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -46,7 +48,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a mean below 1.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -58,7 +60,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor using the state with a negative fractional mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -70,7 +72,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a non-fractional mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -82,7 +84,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with fractional mean of 1.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -140,5 +142,36 @@ public class LargeMeanPoissonSamplerTest {
         for (int j = 0; j < 10; j++) {
             Assert.assertEquals("Not the same sample", s1.sample(), s2.sample());
         }
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithFractionalMean() {
+        testSharedStateSampler(34.5);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the edge case when there is no
+     * small mean sampler (i.e. no fraction part to the mean).
+     */
+    @Test
+    public void testSharedStateSamplerWithIntegerMean() {
+        testSharedStateSampler(34.0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param mean Mean.
+     */
+    private static void testSharedStateSampler(double mean) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final LargeMeanPoissonSampler sampler1 =
+            new LargeMeanPoissonSampler(rng1, mean);
+        final LargeMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

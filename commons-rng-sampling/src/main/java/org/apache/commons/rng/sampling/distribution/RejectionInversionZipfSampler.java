@@ -18,6 +18,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Implementation of the <a href="https://en.wikipedia.org/wiki/Zipf's_law">Zipf distribution</a>.
@@ -28,7 +29,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class RejectionInversionZipfSampler
     extends SamplerBase
-    implements DiscreteSampler {
+    implements DiscreteSampler, SharedStateSampler<RejectionInversionZipfSampler> {
     /** Threshold below which Taylor series will be used. */
     private static final double TAYLOR_THRESHOLD = 1e-8;
     /** 1/2. */
@@ -74,6 +75,21 @@ public class RejectionInversionZipfSampler
         this.hIntegralX1 = hIntegral(1.5) - 1;
         this.hIntegralNumberOfElements = hIntegral(numberOfElements + F_1_2);
         this.s = 2 - hIntegralInverse(hIntegral(2.5) - h(2));
+    }
+
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private RejectionInversionZipfSampler(UniformRandomProvider rng,
+                                          RejectionInversionZipfSampler source) {
+        super(null);
+        this.rng = rng;
+        this.numberOfElements = source.numberOfElements;
+        this.exponent = source.exponent;
+        this.hIntegralX1 = source.hIntegralX1;
+        this.hIntegralNumberOfElements = source.hIntegralNumberOfElements;
+        this.s = source.s;
     }
 
     /**
@@ -175,6 +191,12 @@ public class RejectionInversionZipfSampler
     @Override
     public String toString() {
         return "Rejection inversion Zipf deviate [" + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public RejectionInversionZipfSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new RejectionInversionZipfSampler(rng, this);
     }
 
     /**

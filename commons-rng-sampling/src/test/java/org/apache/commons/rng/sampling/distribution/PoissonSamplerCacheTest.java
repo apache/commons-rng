@@ -38,6 +38,15 @@ public class PoissonSamplerCacheTest {
     /** The mid-point of the range of the mean */
     private final int midRange = (minRange + maxRange) / 2;
 
+    /**
+     * Test the cache reports the minimum mean that uses an algorithm that supports caching.
+     * This mean is the same level as the algorithm switch point in the PoissonSampler.
+     */
+    @Test
+    public void testMinimumCachedMean() {
+        Assert.assertEquals(PoissonSampler.PIVOT, PoissonSamplerCache.getMinimumCachedMean(), 0);
+    }
+
     // Edge cases for construction
 
     /**
@@ -90,7 +99,7 @@ public class PoissonSamplerCacheTest {
     /**
      * Test the cache requires a range with {@code max >= min}.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextAfter(min, -1);
@@ -176,7 +185,7 @@ public class PoissonSamplerCacheTest {
     /**
      * Test the cache requires a range with {@code max >= min}.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testWithRangeConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextAfter(min, -1);
@@ -236,7 +245,7 @@ public class PoissonSamplerCacheTest {
      *
      * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreatePoissonSamplerThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -247,7 +256,7 @@ public class PoissonSamplerCacheTest {
     /**
      * Test createPoissonSampler() with a mean that is too large.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreatePoissonSamplerThrowsWithNonIntegerMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -346,8 +355,7 @@ public class PoissonSamplerCacheTest {
      * @return the poisson sampler cache
      */
     private static PoissonSamplerCache createPoissonSamplerCache(double minMean,
-                                                          double maxMean)
-    {
+                                                          double maxMean) {
         return new PoissonSamplerCache(minMean, maxMean);
     }
 
@@ -356,8 +364,7 @@ public class PoissonSamplerCacheTest {
      *
      * @return the poisson sampler cache
      */
-    private static PoissonSamplerCache createPoissonSamplerCache()
-    {
+    private static PoissonSamplerCache createPoissonSamplerCache() {
         return new PoissonSamplerCache(PoissonSampler.PIVOT,
                                        PoissonSampler.PIVOT + 10);
     }
@@ -379,8 +386,9 @@ public class PoissonSamplerCacheTest {
             double mean) {
         final DiscreteSampler s1 = new PoissonSampler(rng1, mean);
         final DiscreteSampler s2 = cache.createPoissonSampler(rng2, mean);
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 10; j++) {
             Assert.assertEquals(s1.sample(), s2.sample());
+        }
     }
 
     /**

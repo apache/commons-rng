@@ -27,7 +27,7 @@ public class BoxMullerGaussianSamplerTest {
     /**
      * Test the constructor with a bad standard deviation.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);

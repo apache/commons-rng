@@ -14,8 +14,8 @@ site-content
 *.iws
 .idea
 .DS_Store
+/.repository/
 *~
 /.externalToolBuilders/
 /maven-eclipse.xml
 stdin2testu01
-testendianness

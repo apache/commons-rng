@@ -19,9 +19,11 @@ package org.apache.commons.rng.examples.jmh.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.examples.jmh.RandomSources;
+import org.apache.commons.rng.sampling.distribution.AliasMethodDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
 import org.apache.commons.rng.sampling.distribution.GeometricSampler;
+import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
@@ -59,6 +61,22 @@ public class DiscreteSamplersPerformance {
      */
     @State(Scope.Benchmark)
     public static class Sources extends RandomSources {
+        /** The probabilities for the discrete distribution. */
+        private static final double[] DISCRETE_PROBABILITIES;
+
+        static {
+            // The size of this distribution will effect the relative performance
+            // of the AliasMethodDiscreteSampler against the other samplers. The
+            // Alias sampler is optimised for power of 2 tables and will zero pad
+            // the distribution. Pick a midpoint value between a power of 2 size to
+            // baseline half of a possible speed advantage.
+            final int size = (32 + 64) / 2;
+            DISCRETE_PROBABILITIES = new double[size];
+            for (int i = 0; i < size; i++) {
+                DISCRETE_PROBABILITIES[i] = (i + 1.0) / size;
+            }
+        }
+
         /**
          * The sampler type.
          */
@@ -70,6 +88,8 @@ public class DiscreteSamplersPerformance {
                 "MarsagliaTsangWangDiscreteSampler",
                 "MarsagliaTsangWangPoissonSampler",
                 "MarsagliaTsangWangBinomialSampler",
+                "GuideTableDiscreteSampler",
+                "AliasMethodDiscreteSampler",
                 })
         private String samplerType;
 
@@ -101,12 +121,15 @@ public class DiscreteSamplersPerformance {
             } else if ("GeometricSampler".equals(samplerType)) {
                 sampler = new GeometricSampler(rng, 0.21);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {
-                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng,
-                        new double[] {0.1, 0.2, 0.3, 0.4});
+                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, DISCRETE_PROBABILITIES);
             } else if ("MarsagliaTsangWangPoissonSampler".equals(samplerType)) {
                 sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, 8.9);
             } else if ("MarsagliaTsangWangBinomialSampler".equals(samplerType)) {
                 sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, 20, 0.33);
+            } else if ("GuideTableDiscreteSampler".equals(samplerType)) {
+                sampler = new GuideTableDiscreteSampler(rng, DISCRETE_PROBABILITIES);
+            } else if ("AliasMethodDiscreteSampler".equals(samplerType)) {
+                sampler = AliasMethodDiscreteSampler.create(rng, DISCRETE_PROBABILITIES);
             }
         }
     }

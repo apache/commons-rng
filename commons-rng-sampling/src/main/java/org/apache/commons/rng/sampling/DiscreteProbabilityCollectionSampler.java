@@ -38,7 +38,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.1
  */
-public class DiscreteProbabilityCollectionSampler<T> {
+public class DiscreteProbabilityCollectionSampler<T>
+    implements SharedStateSampler<DiscreteProbabilityCollectionSampler<T>> {
     /** Collection to be sampled from. */
     private final List<T> items;
     /** RNG. */
@@ -125,6 +126,17 @@ public class DiscreteProbabilityCollectionSampler<T> {
     }
 
     /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
+                                                 DiscreteProbabilityCollectionSampler<T> source) {
+        this.rng = rng;
+        this.items = source.items;
+        this.cumulativeProbabilities = source.cumulativeProbabilities;
+    }
+
+    /**
      * Picks one of the items from the collection passed to the constructor.
      *
      * @return a random sample.
@@ -146,6 +158,12 @@ public class DiscreteProbabilityCollectionSampler<T> {
         // object in case there is some floating point inequality problem
         // wrt the cumulative probabilities.
         return items.get(items.size() - 1);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
+        return new DiscreteProbabilityCollectionSampler<T>(rng, this);
     }
 
     /**

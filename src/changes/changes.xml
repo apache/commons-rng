@@ -75,6 +75,29 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="102">
+        New "SharedStateSampler" interface to allow a sampler to create a new instance with
+        a new source of randomness. Any pre-computed state can be shared between the samplers.
+      </action>
+      <action dev="aherbert" type="add" issue="108">
+        Update "SeedFactory" to improve performance.
+      </action>
+      <action dev="aherbert" type="add" issue="99">
+        New "AliasMethodDiscreteSampler" that can sample from any discrete distribution defined
+        by an array of probabilities. Set-up is O(n) time and sampling is O(1) time.
+      </action>
+      <action dev="aherbert" type="add" issue="100">
+        New "GuideTableDiscreteSampler" that can sample from any discrete distribution defined
+        by an array of probabilities.
+      </action>
+      <action dev="aherbert" type="update" issue="106">
+        Ensure SeedFactory produces non-zero seed arrays. This avoids invalid seeding of
+        generators that cannot recover from a seed of zeros.
+      </action>
+      <action dev="aherbert" type="add" issue="98">
+        New "LongJumpableUniformRandomProvider" interface extends JumpableUniformRandomProvider
+        with a long jump method.
+      </action>
       <action dev="aherbert" type="add" issue="97">
         New "JumpableUniformRandomProvider" interface provides a jump method that advances
         the generator a large number of steps of the output sequence in a single operation. A

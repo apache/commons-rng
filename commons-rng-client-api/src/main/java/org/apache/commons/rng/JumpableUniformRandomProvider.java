@@ -17,7 +17,7 @@
 package org.apache.commons.rng;
 
 /**
- * Applies to generators that can be advanced a large number of 
+ * Applies to generators that can be advanced a large number of
  * steps of the output sequence in a single operation.
  *
  * @since 1.3

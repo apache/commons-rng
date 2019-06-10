@@ -34,7 +34,7 @@ import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSa
  *
  * @since 1.1
  */
-public class UnitSphereSampler {
+public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> {
     /** Sampler used for generating the individual components of the vectors. */
     private final NormalizedGaussianSampler sampler;
     /** Space dimension. */
@@ -54,6 +54,17 @@ public class UnitSphereSampler {
 
         this.dimension = dimension;
         sampler = new ZigguratNormalizedGaussianSampler(rng);
+    }
+
+    /**
+     * @param rng Generator for the individual components of the vectors.
+     * @param source Source to copy.
+     */
+    private UnitSphereSampler(UniformRandomProvider rng,
+                              UnitSphereSampler source) {
+        // The Gaussian sampler has no shared state so create a new instance
+        sampler = new ZigguratNormalizedGaussianSampler(rng);
+        dimension = source.dimension;
     }
 
     /**
@@ -86,5 +97,11 @@ public class UnitSphereSampler {
         }
 
         return v;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public UnitSphereSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new UnitSphereSampler(rng, this);
     }
 }

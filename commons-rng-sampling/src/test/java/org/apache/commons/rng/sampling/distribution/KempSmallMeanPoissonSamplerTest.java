@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -145,6 +147,20 @@ public class KempSmallMeanPoissonSamplerTest {
     }
 
     /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final double mean = 1.23;
+        final KempSmallMeanPoissonSampler sampler1 =
+            new KempSmallMeanPoissonSampler(rng1, mean);
+        final KempSmallMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
      * Test a sample from the Poisson distribution at the given cumulative probability.
      *
      * @param rng the fixed random generator backing the sampler
@@ -187,6 +203,7 @@ public class KempSmallMeanPoissonSamplerTest {
             this.value = value;
         }
 
+        // CHECKSTYLE: stop all
         public long nextLong(long n) { return 0; }
         public long nextLong() { return 0; }
         public int nextInt(int n) { return 0; }
@@ -195,5 +212,6 @@ public class KempSmallMeanPoissonSamplerTest {
         public void nextBytes(byte[] bytes, int start, int len) {}
         public void nextBytes(byte[] bytes) {}
         public boolean nextBoolean() { return false; }
+        // CHECKSTYLE: resume all
     }
 }

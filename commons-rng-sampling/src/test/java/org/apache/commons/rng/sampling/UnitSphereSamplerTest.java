@@ -66,6 +66,7 @@ public class UnitSphereSamplerTest {
     @Test(expected = StackOverflowError.class)
     public void testBadProvider1() {
         final UniformRandomProvider bad = new UniformRandomProvider() {
+                // CHECKSTYLE: stop all
                 public long nextLong(long n) { return 0; }
                 public long nextLong() { return 0; }
                 public int nextInt(int n) { return 0; }
@@ -75,6 +76,7 @@ public class UnitSphereSamplerTest {
                 public void nextBytes(byte[] bytes, int start, int len) {}
                 public void nextBytes(byte[] bytes) {}
                 public boolean nextBoolean() { return false; }
+                // CHECKSTYLE: resume all
             };
 
         new UnitSphereSampler(1, bad).nextVector();
@@ -86,9 +88,11 @@ public class UnitSphereSamplerTest {
         // Create a provider that will create a bad first sample but then recover.
         // This checks recursion will return a good value.
         final UniformRandomProvider bad = new SplitMix64(0L) {
-                int count;
+                private int count;
+                // CHECKSTYLE: stop all
                 public long nextLong() { return (count++ == 0) ? 0 : super.nextLong(); }
                 public double nextDouble() { return (count++ == 0) ? 0 : super.nextDouble(); }
+                // CHECKSTYLE: resume all
             };
 
         final double[] vector = new UnitSphereSampler(1, bad).nextVector();
@@ -108,6 +112,32 @@ public class UnitSphereSamplerTest {
         final double f = 1 / Math.sqrt(normSq);
         // As long as this is finite positive then the sampler is valid
         Assert.assertTrue(f > 0 && f <= Double.MAX_VALUE);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final int n = 3;
+        final UnitSphereSampler sampler1 =
+            new UnitSphereSampler(n, rng1);
+        final UnitSphereSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<double[]>() {
+                @Override
+                public double[] sample() {
+                    return sampler1.nextVector();
+                }
+            },
+            new RandomAssert.Sampler<double[]>() {
+                @Override
+                public double[] sample() {
+                    return sampler2.nextVector();
+                }
+            });
     }
 
     /**

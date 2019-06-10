@@ -18,20 +18,23 @@
 package org.apache.commons.rng.core;
 
 import org.junit.Assert;
-import org.junit.Assume;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
-import org.apache.commons.rng.RandomProviderState;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Utility class for testing random generators.
  */
-public class RandomAssert {
+public final class RandomAssert {
+    /**
+     * Class contains only static methods.
+     */
+    private RandomAssert() {}
+
     /**
      * Assert that the random generator produces the expected output.
      *
@@ -135,6 +138,33 @@ public class RandomAssert {
     }
 
     /**
+     * Assert that the random generator satisfies the contract of the
+     * {@link LongJumpableUniformRandomProvider#longJump()} function.
+     *
+     * <ul>
+     *  <li>The long jump returns a copy instance. This is asserted to be a different object
+     *      of the same class type as the input.
+     *  <li>The copy instance outputs the expected sequence for the current state of the input generator.
+     *      This is asserted using the {@code expectedBefore} sequence.
+     *  <li>The input instance outputs the expected sequence for an advanced state.
+     *      This is asserted using the {@code expectedAfter} sequence.
+     * <ul>
+     *
+     * @param expectedBefore Expected output before the long jump.
+     * @param expectedAfter Expected output after the long jump.
+     * @param rng Random generator.
+     */
+    public static void assertLongJumpEquals(long[] expectedBefore,
+                                            long[] expectedAfter,
+                                            LongJumpableUniformRandomProvider rng) {
+        final UniformRandomProvider copy = rng.longJump();
+        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
+        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
+        assertEquals("Pre-jump value at position ", expectedBefore, copy);
+        assertEquals("Post-jump value at position ", expectedAfter, rng);
+    }
+
+    /**
      * Assert that the two random generators produce the same output for
      * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
      *
@@ -217,7 +247,7 @@ public class RandomAssert {
      * Assert that following a set number of warm-up cycles the random generator produces
      * at least one non-zero output for {@link UniformRandomProvider#nextLong()} over the
      * given number of test cycles.
-     * 
+     *
      * <p>Helper function to add the seed element and bit that was non zero to the fail message.
      *
      * @param rng Random generator.

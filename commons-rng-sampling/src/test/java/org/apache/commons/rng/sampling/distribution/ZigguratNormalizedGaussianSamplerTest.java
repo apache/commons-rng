@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Test for {@link ZigguratNormalizedGaussianSampler}.
@@ -29,6 +31,7 @@ public class ZigguratNormalizedGaussianSamplerTest {
         // A bad implementation whose only purpose is to force access
         // to the rarest branch.
         final UniformRandomProvider bad = new UniformRandomProvider() {
+                // CHECKSTYLE: stop all
                 public long nextLong(long n) { return 0; }
                 public long nextLong() { return Long.MAX_VALUE; }
                 public int nextInt(int n) { return 0; }
@@ -38,9 +41,23 @@ public class ZigguratNormalizedGaussianSamplerTest {
                 public void nextBytes(byte[] bytes, int start, int len) {}
                 public void nextBytes(byte[] bytes) {}
                 public boolean nextBoolean() { return false; }
+                // CHECKSTYLE: resume all
             };
 
         // Infinite loop (in v1.1).
         new ZigguratNormalizedGaussianSampler(bad).sample();
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final ZigguratNormalizedGaussianSampler sampler1 =
+            new ZigguratNormalizedGaussianSampler(rng1);
+        final ZigguratNormalizedGaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

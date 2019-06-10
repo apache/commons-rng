@@ -20,7 +20,7 @@
  *
  * <p>
  * This package contains usage examples of the samplers provided in the
- * <a href="http://commons.apache.org/rng">Commons RNG</a> library.
+ * <a href="https://commons.apache.org/rng">Commons RNG</a> library.
  * </p>
  */
 

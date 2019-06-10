@@ -44,12 +44,12 @@ public class ThreadLocalRandomSourceTest {
         toIgnore = EnumSet.of(RandomSource.TWO_CMRES_SELECT);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCurrentThrowsForNullRandomSource() {
         ThreadLocalRandomSource.current(null);
     }
 
-    //@Test(expected=IllegalArgumentException.class)
+    //@Test(expected = IllegalArgumentException.class)
     public void testCurrentThrowsForRandomSourceWithDataArguments() {
         ThreadLocalRandomSource.current(RandomSource.TWO_CMRES_SELECT);
     }

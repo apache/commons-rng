@@ -22,4 +22,13 @@
   <!-- Special cases with many parameters for the constructor. -->
   <suppress checks="ParameterNumber" files="[\\/]LargeMeanPoissonSampler\.java$" />
   <suppress checks="ParameterNumber" files="source64[\\/].*XoShiRo512.*\.java$" />
+  <!-- Special to allow withUniformRandomProvider to act as a constructor. -->
+  <suppress checks="HiddenField" files=".*Sampler\.java$" message="'rng' hides a field." />
+  <!-- Be more lenient on tests. -->
+  <suppress checks="Javadoc" files=".*[/\\]test[/\\].*" />
+  <suppress checks="MultipleStringLiterals" files=".*[/\\]test[/\\].*" />
+  <suppress checks="DesignForExtension" files=".*[/\\]test[/\\].*" />
+  <suppress checks="LineLength" files=".*[/\\]test[/\\].*" />
+  <suppress checks="IllegalCatch" files=".*[/\\]test[/\\].*" />
+  <suppress checks="MethodLength" files="(MersenneTwister64|Well44497[ab]|MultiplyWithCarry256)Test" />
 </suppressions>

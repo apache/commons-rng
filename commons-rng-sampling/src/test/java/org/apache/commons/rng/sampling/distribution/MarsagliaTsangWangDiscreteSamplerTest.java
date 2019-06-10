@@ -20,6 +20,7 @@ import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,37 +32,37 @@ import org.junit.Test;
  * <p>Statistical testing of the sampler is performed using entries in {@link DiscreteSamplersList}.</p>
  */
 public class MarsagliaTsangWangDiscreteSamplerTest {
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
         createDiscreteDistributionSampler(null);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
         createDiscreteDistributionSampler(new double[0]);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
-        createDiscreteDistributionSampler(new double[] { -1, 0.1, 0.2 });
+        createDiscreteDistributionSampler(new double[] {-1, 0.1, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
-        createDiscreteDistributionSampler(new double[] { 0.1, Double.NaN, 0.2 });
+        createDiscreteDistributionSampler(new double[] {0.1, Double.NaN, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
-        createDiscreteDistributionSampler(new double[] { 0.1, Double.POSITIVE_INFINITY, 0.2 });
+        createDiscreteDistributionSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
-        createDiscreteDistributionSampler(new double[] { Double.MAX_VALUE, Double.MAX_VALUE });
+        createDiscreteDistributionSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
         createDiscreteDistributionSampler(new double[4]);
     }
@@ -71,9 +72,9 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      */
     @Test
     public void testToString() {
-        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] { 0.5, 0.5 });
+        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] {0.5, 0.5});
         String text = sampler.toString();
-        for (String item : new String[] { "Marsaglia", "Tsang", "Wang" }) {
+        for (String item : new String[] {"Marsaglia", "Tsang", "Wang"}) {
             Assert.assertTrue("toString missing: " + item, text.contains(item));
         }
     }
@@ -127,7 +128,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int t4 = t3 + (n4 << 6);
 
         // Create values under the limits and bit shift by 2 to reverse what the sampler does.
-        final int[] values = new int[] { 0, t1, t2, t3, t4, 0xffffffff };
+        final int[] values = new int[] {0, t1, t2, t3, t4, 0xffffffff};
         for (int i = 0; i < values.length; i++) {
             values[i] <<= 2;
         }
@@ -162,8 +163,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Creates the probabilities using zero padding below the values.
      *
-     * @param offset the offset
-     * @param prob the probability values
+     * @param offset Offset for first given probability (i.e. the zero padding size).
+     * @param prob Probability values.
      * @return the zero-padded probabilities
      */
     private static double[] createProbabilities(int offset, int[] prob) {
@@ -187,7 +188,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         }
 
         // First test the table is completely filled to 2^30
-        final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] { 0xffffffff});
+        final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] {0xffffffff});
         final MarsagliaTsangWangDiscreteSampler dummySampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(dummyRng, probabilities);
         // This will throw if the table is incomplete as it hits the upper limit
         dummySampler.sample();
@@ -241,13 +242,13 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * tests the limits described in the class Javadoc is correct.
      *
      * @param k Base is 2^k.
-     * @param expectedLimitMB the expected limit in MB
+     * @param expectedLimitMB Expected limit in MB.
      */
     private static void checkStorageRequirements(int k, double expectedLimitMB) {
         // Worst case scenario is a uniform distribution of 2^k samples each with the highest
         // mask set for base 64 digits.
         // The max number of samples: 2^k
-        final int maxSamples = (1 << k);
+        final int maxSamples = 1 << k;
 
         // The highest value for each sample:
         // 2^30 / 2^k = 2^(30-k)
@@ -283,8 +284,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Gets the k<sup>th</sup> base 64 digit of {@code m}.
      *
-     * @param m the value m.
-     * @param k the digit.
+     * @param m Value m.
+     * @param k Digit.
      * @return the base 64 digit
      */
     private static int getBase64Digit(int m, int k) {
@@ -489,8 +490,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Gets the p(0) value for the Binomial distribution.
      *
-     * @param trials the trials
-     * @param probabilityOfSuccess the probability of success
+     * @param trials Number of trials.
+     * @param probabilityOfSuccess Probability of success.
      * @return the p(0) value
      */
     private static double getBinomialP0(int trials, double probabilityOfSuccess) {
@@ -550,7 +551,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * search for the last probability of the Binomial distribution.
      */
     @Test
-    public void testCreateBinomialDistributionWithProbability0_5() {
+    public void testCreateBinomialDistributionWithProbability50Percent() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 10;
         final double p = 0.5;
@@ -560,7 +561,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     }
 
     /**
-     * Test the sampler with a probability that requires inversion has the same name for 
+     * Test the sampler with a probability that requires inversion has the same name for
      * {@link Object#toString()}.
      */
     @Test
@@ -572,6 +573,80 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final DiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p1);
         final DiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p2);
         Assert.assertEquals(sampler1.toString(), sampler2.toString());
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the 8-bit storage implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWith8bitStorage() {
+        testSharedStateSampler(0, new int[] {1, 2, 3, 4, 5});
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the 16-bit storage implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWith16bitStorage() {
+        testSharedStateSampler(1 << 8, new int[] {1, 2, 3, 4, 5});
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the 32-bit storage implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWith32bitStorage() {
+        testSharedStateSampler(1 << 16, new int[] {1, 2, 3, 4, 5});
+    }
+
+    /**
+     * Test the SharedStateSampler implementation using zero padded probabilities to force
+     * different storage implementations.
+     *
+     * @param offset Offset for first given probability (i.e. the zero padding size).
+     * @param prob Probability values.
+     */
+    private static void testSharedStateSampler(int offset, int[] prob) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        double[] probabilities = createProbabilities(offset, prob);
+        final MarsagliaTsangWangDiscreteSampler sampler1 =
+                MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng1, probabilities);
+        final MarsagliaTsangWangDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with a Binomial distribution with a fixed result.
+     */
+    @Test
+    public void testSharedStateSamplerWithFixedBinomialDistribution() {
+        testSharedStateSampler(10, 1.0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with a Binomial distribution that requires
+     * inversion (probability of success > 0.5).
+     */
+    @Test
+    public void testSharedStateSamplerWithInvertedBinomialDistribution() {
+        testSharedStateSampler(10, 0.999);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation using a binomial distribution to exercise
+     * special implementations.
+     *
+     * @param trials Number of trials.
+     * @param probabilityOfSuccess Probability of success.
+     */
+    private static void testSharedStateSampler(int trials, double probabilityOfSuccess) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final MarsagliaTsangWangDiscreteSampler sampler1 =
+                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng1, trials, probabilityOfSuccess);
+        final MarsagliaTsangWangDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampler for a discrete distribution using an optimised look-up table.
@@ -49,7 +50,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @see <a href="http://dx.doi.org/10.18637/jss.v011.i03">Margsglia, et al (2004) JSS Vol.
  * 11, Issue 3</a>
  */
-public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampler {
+public abstract class MarsagliaTsangWangDiscreteSampler
+    implements DiscreteSampler, SharedStateSampler<MarsagliaTsangWangDiscreteSampler> {
     /** The value 2<sup>8</sup> as an {@code int}. */
     private static final int INT_8 = 1 << 8;
     /** The value 2<sup>16</sup> as an {@code int}. */
@@ -193,6 +195,24 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
         }
 
         /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        private MarsagliaTsangWangBase64Int8DiscreteSampler(UniformRandomProvider rng,
+                MarsagliaTsangWangBase64Int8DiscreteSampler source) {
+            super(rng, source);
+            t1 = source.t1;
+            t2 = source.t2;
+            t3 = source.t3;
+            t4 = source.t4;
+            table1 = source.table1;
+            table2 = source.table2;
+            table3 = source.table3;
+            table4 = source.table4;
+            table5 = source.table5;
+        }
+
+        /**
          * Fill the table with the value.
          *
          * @param table Table.
@@ -206,7 +226,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             }
         }
 
-        /** {@inheritDoc} */
         @Override
         public int sample() {
             final int j = rng.nextInt() >>> 2;
@@ -226,6 +245,11 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             // is >=2^30. If this is not true then the final table table5 will be smaller by the
             // difference. So the tables *must* be constructed correctly.
             return table5[j - t4] & MASK;
+        }
+
+        @Override
+        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new MarsagliaTsangWangBase64Int8DiscreteSampler(rng, this);
         }
     }
 
@@ -311,6 +335,24 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
         }
 
         /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        private MarsagliaTsangWangBase64Int16DiscreteSampler(UniformRandomProvider rng,
+                MarsagliaTsangWangBase64Int16DiscreteSampler source) {
+            super(rng, source);
+            t1 = source.t1;
+            t2 = source.t2;
+            t3 = source.t3;
+            t4 = source.t4;
+            table1 = source.table1;
+            table2 = source.table2;
+            table3 = source.table3;
+            table4 = source.table4;
+            table5 = source.table5;
+        }
+
+        /**
          * Fill the table with the value.
          *
          * @param table Table.
@@ -324,7 +366,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             }
         }
 
-        /** {@inheritDoc} */
         @Override
         public int sample() {
             final int j = rng.nextInt() >>> 2;
@@ -345,6 +386,11 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             // difference. So the tables *must* be constructed correctly.
             return table5[j - t4] & MASK;
         }
+
+        @Override
+        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new MarsagliaTsangWangBase64Int16DiscreteSampler(rng, this);
+        }
     }
 
     /**
@@ -353,7 +399,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
      */
     private static class MarsagliaTsangWangBase64Int32DiscreteSampler
         extends MarsagliaTsangWangDiscreteSampler {
-
         /** Limit for look-up table 1. */
         private final int t1;
         /** Limit for look-up table 2. */
@@ -426,6 +471,24 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
         }
 
         /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        private MarsagliaTsangWangBase64Int32DiscreteSampler(UniformRandomProvider rng,
+                MarsagliaTsangWangBase64Int32DiscreteSampler source) {
+            super(rng, source);
+            t1 = source.t1;
+            t2 = source.t2;
+            t3 = source.t3;
+            t4 = source.t4;
+            table1 = source.table1;
+            table2 = source.table2;
+            table3 = source.table3;
+            table4 = source.table4;
+            table5 = source.table5;
+        }
+
+        /**
          * Fill the table with the value.
          *
          * @param table Table.
@@ -439,7 +502,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             }
         }
 
-        /** {@inheritDoc} */
         @Override
         public int sample() {
             final int j = rng.nextInt() >>> 2;
@@ -459,6 +521,11 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             // is >=2^30. If this is not true then the final table table5 will be smaller by the
             // difference. So the tables *must* be constructed correctly.
             return table5[j - t4];
+        }
+
+        @Override
+        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new MarsagliaTsangWangBase64Int32DiscreteSampler(rng, this);
         }
     }
 
@@ -484,10 +551,15 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             return result;
         }
 
-        /** {@inheritDoc} */
         @Override
         public String toString() {
             return BINOMIAL_NAME + " deviate";
+        }
+
+        @Override
+        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            // No shared state
+            return this;
         }
     }
 
@@ -522,10 +594,15 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
             return trials - sampler.sample();
         }
 
-        /** {@inheritDoc} */
         @Override
         public String toString() {
             return sampler.toString();
+        }
+
+        @Override
+        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new MarsagliaTsangWangInversionBinomialSampler(this.trials,
+                this.sampler.withUniformRandomProvider(rng));
         }
     }
 
@@ -537,6 +614,16 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
                                       String distributionName) {
         this.rng = rng;
         this.distributionName = distributionName;
+    }
+
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    MarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
+                                      MarsagliaTsangWangDiscreteSampler source) {
+        this.rng = rng;
+        this.distributionName = source.distributionName;
     }
 
     /** {@inheritDoc} */
@@ -626,7 +713,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
      * probabilities is not strictly positive.
      */
     private static int[] normaliseProbabilities(double[] probabilities) {
-        final double sumProb = validateProbabilities(probabilities);
+        final double sumProb = InternalUtils.validateProbabilities(probabilities);
 
         // Compute the normalisation: 2^30 / sum
         final double normalisation = INT_30 / sumProb;
@@ -651,37 +738,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
         prob[mode] += INT_30 - sum;
 
         return prob;
-    }
-
-    /**
-     * Validate the probabilities sum to a finite positive number.
-     *
-     * @param probabilities the probabilities
-     * @return the sum
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, or the sum of all
-     * probabilities is not strictly positive.
-     */
-    private static double validateProbabilities(double[] probabilities) {
-        if (probabilities == null || probabilities.length == 0) {
-            throw new IllegalArgumentException("Probabilities must not be empty.");
-        }
-
-        double sumProb = 0;
-        for (final double prob : probabilities) {
-            if (prob < 0 ||
-                Double.isInfinite(prob) ||
-                Double.isNaN(prob)) {
-                throw new IllegalArgumentException("Invalid probability: " +
-                                                   prob);
-            }
-            sumProb += prob;
-        }
-
-        if (Double.isInfinite(sumProb) || sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
-        }
-        return sumProb;
     }
 
     /**

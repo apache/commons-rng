@@ -36,7 +36,7 @@ public class IntProviderTest {
         /**
          * @param value the value
          */
-        public FlipIntProvider(int value) {
+        FlipIntProvider(int value) {
             // Flip the bits so the first call to next() returns to the same state
             this.value = ~value;
         }
@@ -63,12 +63,12 @@ public class IntProviderTest {
             final IntProvider provider = new FlipIntProvider(value);
             // Test the result for a single pass over the long
             for (int j = 0; j < Integer.SIZE; j++) {
-                final boolean expected = (i == j);
+                final boolean expected = i == j;
                 Assert.assertEquals("Pass 1, bit " + j, expected, provider.nextBoolean());
             }
             // The second pass should use the opposite bits
             for (int j = 0; j < Integer.SIZE; j++) {
-                final boolean expected = (i != j);
+                final boolean expected = i != j;
                 Assert.assertEquals("Pass 2, bit " + j, expected, provider.nextBoolean());
             }
         }

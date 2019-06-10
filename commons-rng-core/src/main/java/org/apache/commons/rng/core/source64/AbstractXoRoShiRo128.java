@@ -18,6 +18,7 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
@@ -29,12 +30,16 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoRoShiRo128 extends LongProvider implements JumpableUniformRandomProvider {
+abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 2;
     /** The coefficients for the jump function. */
     private static final long[] JUMP_COEFFICIENTS = {
         0xdf900294d8f554a5L, 0x170865df4b3201fcL
+    };
+    /** The coefficients for the long jump function. */
+    private static final long[] LONG_JUMP_COEFFICIENTS = {
+        0xd2a98b26625eee7bL, 0xdddf9b1090aa7ac1L
     };
 
     // State is maintained using variables rather than an array for performance
@@ -123,6 +128,22 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements JumpableUnif
     public UniformRandomProvider jump() {
         final UniformRandomProvider copy = copy();
         performJump(JUMP_COEFFICIENTS);
+        return copy;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>96</sup> calls to
+     * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
+     * 2<sup>32</sup> non-overlapping subsequences of length 2<sup>96</sup>; each
+     * subsequence can provide up to 2<sup>32</sup> non-overlapping subsequences of
+     * length 2<sup>64</sup>using the {@link #jump()} method.</p>
+     */
+    @Override
+    public JumpableUniformRandomProvider longJump() {
+        final JumpableUniformRandomProvider copy = copy();
+        performJump(LONG_JUMP_COEFFICIENTS);
         return copy;
     }
 

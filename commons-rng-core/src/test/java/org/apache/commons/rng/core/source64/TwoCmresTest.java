@@ -69,7 +69,7 @@ public class TwoCmresTest {
             }
         }
 
-        for (int wrongIndex : new int[] { -1, max }) {
+        for (int wrongIndex : new int[] {-1, max}) {
             try {
                 new TwoCmres(seed, wrongIndex, 1);
                 Assert.fail("Exception expected for index=" + wrongIndex);
@@ -86,7 +86,7 @@ public class TwoCmresTest {
         }
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testCmresFactoryThrowsWithDuplicateMultiplier() {
         ArrayList<Cmres> list = new ArrayList<Cmres>();
         final long multiply = 0;

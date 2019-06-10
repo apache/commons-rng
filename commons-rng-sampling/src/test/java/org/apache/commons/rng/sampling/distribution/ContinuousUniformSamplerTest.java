@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class ContinuousUniformSamplerTest {
         testSampleInRange(rng, high, low);
     }
 
-    private static void testSampleInRange(UniformRandomProvider rng, 
+    private static void testSampleInRange(UniformRandomProvider rng,
                                           double low, double high) {
         ContinuousUniformSampler sampler = new ContinuousUniformSampler(rng, low, high);
         final double min = Math.min(low,  high);
@@ -46,5 +47,20 @@ public class ContinuousUniformSamplerTest {
             final double value = sampler.sample();
             Assert.assertTrue("Value not in range", value >= min && value <= max);
         }
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final double low = 1.23;
+        final double high = 4.56;
+        final ContinuousUniformSampler sampler1 =
+            new ContinuousUniformSampler(rng1, low, high);
+        final ContinuousUniformSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

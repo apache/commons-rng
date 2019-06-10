@@ -17,11 +17,13 @@
 package org.apache.commons.rng.simple.internal;
 
 import java.security.SecureRandom;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.apache.commons.rng.core.util.NumberFactory;
-import org.apache.commons.rng.core.source32.RandomIntSource;
-import org.apache.commons.rng.core.source32.Well44497b;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.core.source64.SplitMix64;
+import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 
 /**
  * Utilities related to seeding.
@@ -43,19 +45,42 @@ import org.apache.commons.rng.core.source64.SplitMix64;
  * @since 1.0
  */
 public final class SeedFactory {
+    /** Size of the state array of "XorShift1024StarPhi". */
+    private static final int XOR_SHIFT_1024_STATE_SIZE = 16;
+    /** Size of block to fill in an {@code int[]} seed per synchronized operation. */
+    private static final int INT_ARRAY_BLOCK_SIZE = 8;
+    /** Size of block to fill in a {@code long[]} seed per synchronized operation. */
+    private static final int LONG_ARRAY_BLOCK_SIZE = 4;
+
+    /**
+     * The lock to own when using the seed generator. This lock is unfair and there is no
+     * particular access order for waiting threads.
+     *
+     * <p>This is used as an alternative to {@code synchronized} statements to guard access
+     * to the seed generator.</p>
+     */
+    private static final ReentrantLock LOCK = new ReentrantLock(false);
+
     /** Generator with a long period. */
-    private static final RandomIntSource SEED_GENERATOR;
-    /** Size of the state array of "Well44497b". */
-    private static final int WELL_44497_BLOCK_COUNT = 1391;
+    private static final UniformRandomProvider SEED_GENERATOR;
 
     static {
         // Use a secure RNG so that different instances (e.g. in multiple JVM
         // instances started in rapid succession) will have different seeds.
         final SecureRandom seedGen = new SecureRandom();
-        final long initSeed = NumberFactory.makeLong(seedGen.generateSeed(8));
-        final SplitMix64 rng = new SplitMix64(initSeed);
+        final byte[] bytes = new byte[8 * XOR_SHIFT_1024_STATE_SIZE];
+        seedGen.nextBytes(bytes);
+        final long[] seed = NumberFactory.makeLongArray(bytes);
+        // The XorShift1024StarPhi generator cannot recover from an all zero seed and
+        // will produce low quality initial output if initialised with some zeros.
+        // Ensure it is non zero at all array positions using a SplitMix64
+        // generator (this is insensitive to a zero seed so can use the first seed value).
+        final SplitMix64 rng = new SplitMix64(seed[0]);
+        for (int i = 0; i < seed.length; i++) {
+            seed[i] = ensureNonZero(rng, seed[i]);
+        }
 
-        SEED_GENERATOR = new Well44497b(createIntArray(WELL_44497_BLOCK_COUNT, rng));
+        SEED_GENERATOR = new XorShift1024StarPhi(seed);
     }
 
     /**
@@ -64,203 +89,174 @@ public final class SeedFactory {
     private SeedFactory() {}
 
     /**
-     * Creates a number for use as a seed.
+     * Creates an {@code int} number for use as a seed.
      *
      * @return a random number.
      */
     public static int createInt() {
-        return createInt(SEED_GENERATOR, System.identityHashCode(new Object()));
+        LOCK.lock();
+        try {
+            return SEED_GENERATOR.nextInt();
+        } finally {
+            LOCK.unlock();
+        }
     }
 
     /**
-     * Creates a number for use as a seed.
+     * Creates a {@code long} number for use as a seed.
      *
      * @return a random number.
      */
     public static long createLong() {
-        return createLong(SEED_GENERATOR, System.identityHashCode(new Object()));
+        LOCK.lock();
+        try {
+            return SEED_GENERATOR.nextLong();
+        } finally {
+            LOCK.unlock();
+        }
     }
 
     /**
-     * Creates an array of numbers for use as a seed.
+     * Creates an array of {@code int} numbers for use as a seed.
      *
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
     public static int[] createIntArray(int n) {
-        return createIntArray(n, SEED_GENERATOR, new Object());
+        final int[] seed = new int[n];
+        // Compute the size that can be filled with complete blocks
+        final int blockSize = INT_ARRAY_BLOCK_SIZE * (n / INT_ARRAY_BLOCK_SIZE);
+        int i = 0;
+        while (i < blockSize) {
+            final int end = i + INT_ARRAY_BLOCK_SIZE;
+            fillIntArray(seed, i, end);
+            i = end;
+        }
+        // Final fill only if required
+        if (i != n) {
+            fillIntArray(seed, i, n);
+        }
+        ensureNonZero(seed);
+        return seed;
     }
 
     /**
-     * Creates an array of numbers for use as a seed.
+     * Creates an array of {@code long} numbers for use as a seed.
      *
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
     public static long[] createLongArray(int n) {
-        return createLongArray(n, SEED_GENERATOR, new Object());
-    }
-
-    /**
-     * Creates an array of numbers for use as a seed.
-     *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @return an array of {@code n} random numbers drawn from the
-     * {@code source}.
-     */
-    static long[] createLongArray(int n,
-                                  RandomIntSource source) {
-        return createLongArray(n, source, null);
-    }
-
-    /**
-     * Creates an array of numbers for use as a seed.
-     *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @return an array of {@code n} random numbers drawn from the
-     * {@code source}.
-     */
-    static int[] createIntArray(int n,
-                                RandomLongSource source) {
-        return createIntArray(n, source, null);
-    }
-
-    /**
-     * Creates an array of numbers for use as a seed.
-     *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @return an array of {@code n} random numbers drawn from the
-     * {@code source}.
-     */
-    static int[] createIntArray(int n,
-                                RandomIntSource source) {
-        return createIntArray(n, source, null);
-    }
-
-    /**
-     * Creates an array of numbers for use as a seed.
-     *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @param h Arbitrary object whose {@link System#identityHashCode(Object)
-     * hash code} will be combined with the next number drawn from
-     * the {@code source}.
-     * @return an array of {@code n} random numbers.
-     */
-    private static long[] createLongArray(int n,
-                                          RandomIntSource source,
-                                          Object h) {
-        final long[] array = new long[n];
-
-        final int hash = System.identityHashCode(h);
-        for (int i = 0; i < n; i++) {
-            array[i] = createLong(source, hash);
+        final long[] seed = new long[n];
+        // Compute the size that can be filled with complete blocks
+        final int blockSize = LONG_ARRAY_BLOCK_SIZE * (n / LONG_ARRAY_BLOCK_SIZE);
+        int i = 0;
+        while (i < blockSize) {
+            final int end = i + LONG_ARRAY_BLOCK_SIZE;
+            fillLongArray(seed, i, end);
+            i = end;
         }
-
-        return array;
+        // Final fill only if required
+        if (i != n) {
+            fillLongArray(seed, i, n);
+        }
+        ensureNonZero(seed);
+        return seed;
     }
 
     /**
-     * Creates an array of numbers for use as a seed.
+     * Fill the array between {@code start} inclusive and {@code end} exclusive from the
+     * seed generator. The lock is used to guard access to the generator.
      *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @param h Arbitrary object whose {@link System#identityHashCode(Object)
-     * hash code} will be combined with the next number drawn from
-     * the {@code source}.
-     * @return an array of {@code n} random numbers.
+     * @param array Array data.
+     * @param start Start (inclusive).
+     * @param end End (exclusive).
      */
-    private static int[] createIntArray(int n,
-                                        RandomLongSource source,
-                                        Object h) {
-        final int[] array = new int[n];
-
-        final int hash = System.identityHashCode(h);
-        for (int i = 0; i < n; i += 2) {
-            final long v = createLong(source, hash);
-
-            array[i] = NumberFactory.extractHi(v);
-
-            if (i + 1 < n) {
-                array[i + 1] = NumberFactory.extractLo(v);
+    private static void fillIntArray(int[] array, int start, int end) {
+        LOCK.lock();
+        try {
+            for (int i = start; i < end; i++) {
+                array[i] = SEED_GENERATOR.nextInt();
             }
-        }
-
-        return array;
-    }
-
-    /**
-     * Creates an array of numbers for use as a seed.
-     *
-     * @param n Size of the array to create.
-     * @param source Source of randomness.
-     * @param h Arbitrary object whose {@link System#identityHashCode(Object)
-     * hash code} will be combined with the next number drawn from
-     * the {@code source}.
-     * @return an array of {@code n} random numbers.
-     */
-    private static int[] createIntArray(int n,
-                                        RandomIntSource source,
-                                        Object h) {
-        final int[] array = new int[n];
-
-        final int hash = System.identityHashCode(h);
-        for (int i = 0; i < n; i++) {
-            array[i] = createInt(source, hash);
-        }
-
-        return array;
-    }
-
-    /**
-     * Creates a random number by performing an "xor" between the
-     * next value in the sequence of the {@code source} and the
-     * given {@code number}.
-     *
-     * @param source Source of randomness.
-     * @param number Arbitrary number.
-     * @return a random number.
-     */
-    private static long createLong(RandomLongSource source,
-                                   int number) {
-        synchronized (source) {
-            return source.next() ^ NumberFactory.makeLong(number, number);
+        } finally {
+            LOCK.unlock();
         }
     }
 
     /**
-     * Creates a random number by performing an "xor" between the
-     * the next value in the sequence of the {@code source} and the
-     * given {@code number}.
+     * Fill the array between {@code start} inclusive and {@code end} exclusive from the
+     * seed generator. The lock is used to guard access to the generator.
      *
-     * @param source Source of randomness.
-     * @param number Arbitrary number.
-     * @return a random number.
+     * @param array Array data.
+     * @param start Start (inclusive).
+     * @param end End (exclusive).
      */
-    private static long createLong(RandomIntSource source,
-                                   int number) {
-        synchronized (source) {
-            return NumberFactory.makeLong(source.next() ^ number,
-                                          source.next() ^ number);
+    private static void fillLongArray(long[] array, int start, int end) {
+        LOCK.lock();
+        try {
+            for (int i = start; i < end; i++) {
+                array[i] = SEED_GENERATOR.nextLong();
+            }
+        } finally {
+            LOCK.unlock();
         }
     }
 
     /**
-     * Creates a random number by performing an "xor" between the
-     * next value in the sequence of the {@code source} and the
-     * given {@code number}.
+     * Ensure the seed is non-zero at the first position in the array.
+     *
+     * <p>This method will replace a zero at index 0 in the array with
+     * a non-zero random number. The method ensures any length seed
+     * contains non-zero bits. The output seed is suitable for generators
+     * that cannot be seeded with all zeros.</p>
+     *
+     * @param seed Seed array (modified in place).
+     * @see #createInt()
+     */
+    static void ensureNonZero(int[] seed) {
+        // Zero occurs 1 in 2^32
+        if (seed.length != 0 && seed[0] == 0) {
+            do {
+                seed[0] = createInt();
+            } while (seed[0] == 0);
+        }
+    }
+
+    /**
+     * Ensure the seed is non-zero at the first position in the array.
+     *
+     * <p>This method will replace a zero at index 0 in the array with
+     * a non-zero random number. The method ensures any length seed
+     * contains non-zero bits. The output seed is suitable for generators
+     * that cannot be seeded with all zeros.</p>
+     *
+     * @param seed Seed array (modified in place).
+     * @see #createLong()
+     */
+    static void ensureNonZero(long[] seed) {
+        // Zero occurs 1 in 2^64
+        if (seed.length != 0 && seed[0] == 0) {
+            do {
+                seed[0] = createLong();
+            } while (seed[0] == 0);
+        }
+    }
+
+    /**
+     * Ensure the value is non-zero.
+     *
+     * <p>This method will replace a zero with a non-zero random number from the random source.</p>
      *
      * @param source Source of randomness.
-     * @param number Arbitrary number.
-     * @return a random number.
+     * @param value Value.
+     * @return {@code value} if non-zero; else a new random number
      */
-    private static int createInt(RandomIntSource source,
-                                 int number) {
-        synchronized (source) {
-            return source.next() ^ number;
+    static long ensureNonZero(RandomLongSource source,
+                              long value) {
+        long result = value;
+        while (result == 0) {
+            result = source.next();
         }
+        return result;
     }
 }

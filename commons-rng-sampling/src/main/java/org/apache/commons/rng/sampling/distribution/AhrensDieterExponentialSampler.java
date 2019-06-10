@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from an <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
@@ -27,7 +28,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class AhrensDieterExponentialSampler
     extends SamplerBase
-    implements ContinuousSampler {
+    implements ContinuousSampler, SharedStateSampler<AhrensDieterExponentialSampler> {
     /**
      * Table containing the constants
      * \( q_i = sum_{j=1}^i (\ln 2)^j / j! = \ln 2 + (\ln 2)^2 / 2 + ... + (\ln 2)^i / i! \)
@@ -78,6 +79,17 @@ public class AhrensDieterExponentialSampler
         this.mean = mean;
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private AhrensDieterExponentialSampler(UniformRandomProvider rng,
+                                           AhrensDieterExponentialSampler source) {
+        super(null);
+        this.rng = rng;
+        this.mean = source.mean;
+    }
+
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -123,5 +135,11 @@ public class AhrensDieterExponentialSampler
     @Override
     public String toString() {
         return "Ahrens-Dieter Exponential deviate [" + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AhrensDieterExponentialSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new AhrensDieterExponentialSampler(rng, this);
     }
 }

@@ -27,7 +27,7 @@ import org.junit.Assert;
 public class RandomProviderDefaultStateTest {
     @Test
     public void testConsistency() {
-        final byte[] internalState = { 1, 0, -23, 67, -128, 54, 100, 127 };
+        final byte[] internalState = {1, 0, -23, 67, -128, 54, 100, 127};
         final RandomProviderDefaultState state = new RandomProviderDefaultState(internalState);
 
         Assert.assertTrue(Arrays.equals(internalState, state.getState()));

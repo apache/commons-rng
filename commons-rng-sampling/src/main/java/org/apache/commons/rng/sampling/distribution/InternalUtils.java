@@ -20,7 +20,7 @@ package org.apache.commons.rng.sampling.distribution;
 /**
  * Functions used by some of the samplers.
  * This class is not part of the public API, as it would be
- * better to group these utilities in a dedicated components.
+ * better to group these utilities in a dedicated component.
  */
 final class InternalUtils { // Class is package-private on purpose; do not make it public.
     /** All long-representable factorials. */
@@ -47,6 +47,47 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      */
     public static long factorial(int n)  {
         return FACTORIALS[n];
+    }
+
+    /**
+     * Validate the probabilities sum to a finite positive number.
+     *
+     * @param probabilities the probabilities
+     * @return the sum
+     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
+     * probability is negative, infinite or {@code NaN}, or the sum of all
+     * probabilities is not strictly positive.
+     */
+    public static double validateProbabilities(double[] probabilities) {
+        if (probabilities == null || probabilities.length == 0) {
+            throw new IllegalArgumentException("Probabilities must not be empty.");
+        }
+
+        double sumProb = 0;
+        for (final double prob : probabilities) {
+            validateProbability(prob);
+            sumProb += prob;
+        }
+
+        if (Double.isInfinite(sumProb) || sumProb <= 0) {
+            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
+        }
+        return sumProb;
+    }
+
+    /**
+     * Validate the probability is a finite positive number.
+     *
+     * @param probability Probability.
+     * @throws IllegalArgumentException if {@code probability} is negative, infinite or {@code NaN}.
+     */
+    public static void validateProbability(double probability) {
+        if (probability < 0 ||
+            Double.isInfinite(probability) ||
+            Double.isNaN(probability)) {
+            throw new IllegalArgumentException("Invalid probability: " +
+                                               probability);
+        }
     }
 
     /**

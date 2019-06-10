@@ -36,7 +36,7 @@ public class LongProviderTest {
         /**
          * @param value the value
          */
-        public FixedLongProvider(long value) {
+        FixedLongProvider(long value) {
             this.value = value;
         }
 
@@ -57,7 +57,7 @@ public class LongProviderTest {
         /**
          * @param value the value
          */
-        public FlipLongProvider(long value) {
+        FlipLongProvider(long value) {
             // Flip the bits so the first call to next() returns to the same state
             this.value = ~value;
         }
@@ -76,9 +76,9 @@ public class LongProviderTest {
      */
     @Test
     public void testNextInt() {
-        final int MAX = 5;
-        for (int i = 0; i < MAX; i++) {
-            for (int j = 0; j < MAX; j++) {
+        final int max = 5;
+        for (int i = 0; i < max; i++) {
+            for (int j = 0; j < max; j++) {
                 // Pack into upper then lower bits
                 final long value = (((long) i) << 32) | (j & 0xffffffffL);
                 final LongProvider provider = new FixedLongProvider(value);
@@ -104,12 +104,12 @@ public class LongProviderTest {
             final LongProvider provider = new FlipLongProvider(value);
             // Test the result for a single pass over the long
             for (int j = 0; j < Long.SIZE; j++) {
-                final boolean expected = (i == j);
+                final boolean expected = i == j;
                 Assert.assertEquals("Pass 1, bit " + j, expected, provider.nextBoolean());
             }
             // The second pass should use the opposite bits
             for (int j = 0; j < Long.SIZE; j++) {
-                final boolean expected = (i != j);
+                final boolean expected = i != j;
                 Assert.assertEquals("Pass 2, bit " + j, expected, provider.nextBoolean());
             }
         }

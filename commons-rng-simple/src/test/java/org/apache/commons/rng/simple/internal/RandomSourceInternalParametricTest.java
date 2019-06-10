@@ -28,15 +28,15 @@ import org.junit.runners.Parameterized.Parameters;
  * ensures that all random sources can create a seed or convert any supported seed to the
  * correct type for the constructor.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class RandomSourceInternalParametricTest {
     /** The supported seeds for conversion to a native seed type. */
     private static final Object[] SUPPORTED_SEEDS = {
         Integer.valueOf(1),
         Long.valueOf(2),
-        new int[] { 3, 4, 5 },
-        new long[] { 6, 7, 8 },
-        new byte[] { 9, 10, 11 },
+        new int[] {3, 4, 5},
+        new long[] {6, 7, 8},
+        new byte[] {9, 10, 11},
     };
     /** Example unsupported seeds for conversion to a native seed type. */
     private static final Object[] UNSUPPORTED_SEEDS = {

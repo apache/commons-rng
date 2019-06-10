@@ -28,7 +28,7 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * List of samplers.
  */
-public class DiscreteSamplersList {
+public final class DiscreteSamplersList {
     /** List of all RNGs implemented in the library. */
     private static final List<DiscreteSamplerTestData[]> LIST =
         new ArrayList<DiscreteSamplerTestData[]>();
@@ -166,12 +166,18 @@ public class DiscreteSamplersList {
                 MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
 
             // Any discrete distribution
-            final double[] discreteProbabilities = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
+            final double[] discreteProbabilities = new double[] {0.1, 0.2, 0.3, 0.4, 0.5};
             add(LIST, discreteProbabilities,
                 MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
+            add(LIST, discreteProbabilities,
+                new GuideTableDiscreteSampler(RandomSource.create(RandomSource.XO_SHI_RO_512_SS), discreteProbabilities));
+            add(LIST, discreteProbabilities,
+                    AliasMethodDiscreteSampler.create(RandomSource.create(RandomSource.KISS), discreteProbabilities));
         } catch (Exception e) {
+            // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
+            // CHECKSTYLE: resume Regexp
             throw new RuntimeException(e);
         }
     }
@@ -193,20 +199,20 @@ public class DiscreteSamplersList {
                             UniformRandomProvider rng) {
         final DiscreteSampler inverseMethodSampler =
             new InverseTransformDiscreteSampler(rng,
-                                                new DiscreteInverseCumulativeProbabilityFunction() {
-                                                    @Override
-                                                    public int inverseCumulativeProbability(double p) {
-                                                        return dist.inverseCumulativeProbability(p);
-                                                    }
-                                                    @Override
-                                                    public String toString() {
-                                                        return dist.toString();
-                                                    }
-                                                });
-        list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(inverseMethodSampler,
-                                                                             points,
-                                                                             getProbabilities(dist, points)) });
-     }
+                new DiscreteInverseCumulativeProbabilityFunction() {
+                    @Override
+                    public int inverseCumulativeProbability(double p) {
+                        return dist.inverseCumulativeProbability(p);
+                    }
+                    @Override
+                    public String toString() {
+                        return dist.toString();
+                    }
+                });
+        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(inverseMethodSampler,
+                                                                            points,
+                                                                            getProbabilities(dist, points))});
+    }
 
     /**
      * @param list List of data (one the "parameters" tested by the Junit parametric test).
@@ -218,9 +224,9 @@ public class DiscreteSamplersList {
                             final org.apache.commons.math3.distribution.IntegerDistribution dist,
                             int[] points,
                             final DiscreteSampler sampler) {
-        list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
-                                                                             points,
-                                                                             getProbabilities(dist, points)) });
+        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(sampler,
+                                                                            points,
+                                                                            getProbabilities(dist, points))});
     }
 
     /**
@@ -231,9 +237,9 @@ public class DiscreteSamplersList {
     private static void add(List<DiscreteSamplerTestData[]> list,
                             final double[] probabilities,
                             final DiscreteSampler sampler) {
-        list.add(new DiscreteSamplerTestData[] { new DiscreteSamplerTestData(sampler,
-                                                                             MathArrays.natural(probabilities.length),
-                                                                             probabilities) });
+        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(sampler,
+                                                                            MathArrays.natural(probabilities.length),
+                                                                            probabilities)});
     }
 
     /**

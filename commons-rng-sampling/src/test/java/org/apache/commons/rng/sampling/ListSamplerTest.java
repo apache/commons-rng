@@ -39,12 +39,12 @@ public class ListSamplerTest {
 
     @Test
     public void testSample() {
-        final String[][] c = { { "0", "1" }, { "0", "2" }, { "0", "3" }, { "0", "4" },
-                               { "1", "2" }, { "1", "3" }, { "1", "4" },
-                               { "2", "3" }, { "2", "4" },
-                               { "3", "4" } };
-        final long[] observed = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        final double[] expected = { 100, 100, 100, 100, 100, 100, 100, 100, 100, 100 };
+        final String[][] c = {{"0", "1"}, {"0", "2"}, {"0", "3"}, {"0", "4"},
+                              {"1", "2"}, {"1", "3"}, {"1", "4"},
+                              {"2", "3"}, {"2", "4"},
+                              {"3", "4"}};
+        final long[] observed = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        final double[] expected = {100, 100, 100, 100, 100, 100, 100, 100, 100, 100};
 
         final HashSet<String> cPop = new HashSet<String>(); // {0, 1, 2, 3, 4}.
         for (int i = 0; i < 5; i++) {
@@ -78,7 +78,7 @@ public class ListSamplerTest {
         Assert.assertTrue(one.contains("one"));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition1() {
         // Must fail for sample size > collection size.
         final List<String> list = new ArrayList<String>();
@@ -86,7 +86,7 @@ public class ListSamplerTest {
         ListSampler.sample(rng, list, 2);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition2() {
         // Must fail for empty collection.
         final List<String> list = new ArrayList<String>();

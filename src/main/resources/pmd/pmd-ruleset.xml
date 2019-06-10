@@ -73,7 +73,8 @@
   <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
     <properties>
       <!-- Array is generated internally in this case. -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache']"/>
+      <property name="violationSuppressXPath"
+      value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache' or @Image='AliasMethodDiscreteSampler']"/>
     </properties>
   </rule>
 
@@ -81,7 +82,8 @@
     <properties>
       <!-- Do not require Utils/Helper suffix -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder' or @Image='ThreadLocalRandomSource']"/>
+        value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder'
+          or @Image='ThreadLocalRandomSource' or @Image='SeedFactory']"/>
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/ShortMethodName">
@@ -111,6 +113,18 @@
   <rule ref="category/java/design.xml/CouplingBetweenObjects">
     <properties>
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessiveMethodLength">
+    <properties>
+      <!-- The length is due to comments -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='AliasMethodDiscreteSampler']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ExcessiveClassLength">
+    <properties>
+      <!-- The length is due to multiple implementations as inner classes -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
 

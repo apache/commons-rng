@@ -54,9 +54,9 @@ public class PermutationSamplerTest {
     public void testSampleChiSquareTest() {
         final int n = 3;
         final int k = 3;
-        final int[][] p = { { 0, 1, 2 }, { 0, 2, 1 },
-                            { 1, 0, 2 }, { 1, 2, 0 },
-                            { 2, 0, 1 }, { 2, 1, 0 } };
+        final int[][] p = {{0, 1, 2}, {0, 2, 1},
+                           {1, 0, 2}, {1, 2, 0},
+                           {2, 0, 1}, {2, 1, 0}};
         runSampleChiSquareTest(n, k, p);
     }
 
@@ -64,12 +64,12 @@ public class PermutationSamplerTest {
     public void testSubSampleChiSquareTest() {
         final int n = 4;
         final int k = 2;
-        final int[][] p = { { 0, 1 }, { 1, 0 },
-                            { 0, 2 }, { 2, 0 },
-                            { 0, 3 }, { 3, 0 },
-                            { 1, 2 }, { 2, 1 },
-                            { 1, 3 }, { 3, 1 },
-                            { 2, 3 }, { 3, 2 } };
+        final int[][] p = {{0, 1}, {1, 0},
+                           {0, 2}, {2, 0},
+                           {0, 3}, {3, 0},
+                           {1, 2}, {2, 1},
+                           {1, 3}, {3, 1},
+                           {2, 3}, {3, 2}};
         runSampleChiSquareTest(n, k, p);
     }
 
@@ -82,25 +82,25 @@ public class PermutationSamplerTest {
         Assert.assertEquals(0, perm[0]);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition1() {
         // Must fail for k > n.
         new PermutationSampler(rng, 2, 3);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition2() {
         // Must fail for n = 0.
         new PermutationSampler(rng, 0, 0);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition3() {
         // Must fail for k < n < 0.
         new PermutationSampler(rng, -1, 0);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition4() {
         // Must fail for k < n < 0.
         new PermutationSampler(rng, 1, -1);
@@ -142,7 +142,7 @@ public class PermutationSamplerTest {
 
     @Test
     public void testShuffleTail() {
-        final int[] orig = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
         PermutationSampler.shuffle(rng, list, start, false);
@@ -165,7 +165,7 @@ public class PermutationSamplerTest {
 
     @Test
     public void testShuffleHead() {
-        final int[] orig = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
         PermutationSampler.shuffle(rng, list, start, true);
@@ -184,6 +184,33 @@ public class PermutationSamplerTest {
             }
         }
         Assert.assertTrue(ok);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final int n = 17;
+        final int k = 13;
+        final PermutationSampler sampler1 =
+            new PermutationSampler(rng1, n, k);
+        final PermutationSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<int[]>() {
+                @Override
+                public int[] sample() {
+                    return sampler1.sample();
+                }
+            },
+            new RandomAssert.Sampler<int[]>() {
+                @Override
+                public int[] sample() {
+                    return sampler2.sample();
+                }
+            });
     }
 
     //// Support methods.

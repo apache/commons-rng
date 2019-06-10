@@ -18,6 +18,7 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
@@ -29,12 +30,16 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoShiRo256 extends LongProvider implements JumpableUniformRandomProvider {
+abstract class AbstractXoShiRo256 extends LongProvider implements LongJumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 4;
     /** The coefficients for the jump function. */
     private static final long[] JUMP_COEFFICIENTS = {
         0x180ec6d33cfd0abaL, 0xd5a61266f0c9392cL, 0xa9582618e03fc9aaL, 0x39abdc4529b1661cL
+    };
+    /** The coefficients for the long jump function. */
+    private static final long[] LONG_JUMP_COEFFICIENTS = {
+        0x76e15d3efefdcbbfL, 0xc5004e441c522fb3L, 0x77710069854ee241L, 0x39109bb02acbe635L
     };
 
     // State is maintained using variables rather than an array for performance
@@ -136,6 +141,22 @@ abstract class AbstractXoShiRo256 extends LongProvider implements JumpableUnifor
     public UniformRandomProvider jump() {
         final UniformRandomProvider copy = copy();
         performJump(JUMP_COEFFICIENTS);
+        return copy;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>192</sup> calls to
+     * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
+     * 2<sup>64</sup> non-overlapping subsequences of length 2<sup>192</sup>; each
+     * subsequence can provide up to 2<sup>64</sup> non-overlapping subsequences of
+     * length 2<sup>128</sup>using the {@link #jump()} method.</p>
+     */
+    @Override
+    public JumpableUniformRandomProvider longJump() {
+        final JumpableUniformRandomProvider copy = copy();
+        performJump(LONG_JUMP_COEFFICIENTS);
         return copy;
     }
 

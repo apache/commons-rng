@@ -19,4 +19,4 @@ No changes defined in this version.
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
-http://commons.apache.org/proper/commons-rng/
+https://commons.apache.org/proper/commons-rng/

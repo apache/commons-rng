@@ -29,7 +29,7 @@ import org.junit.Assume;
  * tests too).
  */
 public class BaseProviderTest {
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testStateSizeTooSmall() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
@@ -37,7 +37,7 @@ public class BaseProviderTest {
         dummy.restoreState(new RandomProviderDefaultState(new byte[size - 1]));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testStateSizeTooLarge() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
@@ -81,7 +81,7 @@ public class BaseProviderTest {
     }
 
     /**
-     * Dummy class for checking the behaviour of
+     * Dummy class for checking the behaviour of the IntProvider. Tests:
      * <ul>
      *  <li>an incomplete implementation</li>
      *  <li>{@code fillState} methods with "protected" access</li>
