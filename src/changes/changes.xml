@@ -75,6 +75,12 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="97">
+        New "JumpableUniformRandomProvider" interface provides a jump method that advances
+        the generator a large number of steps of the output sequence in a single operation. A
+        copy is returned allowing repeat invocations to create a series of generators
+        for use in parallel computations.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-103">
         "LargeMeanPoissonSampler: Switch from SmallMeanPoissonSampler to use
         KempSmallMeanPoissonSampler for the fractional mean sample.
