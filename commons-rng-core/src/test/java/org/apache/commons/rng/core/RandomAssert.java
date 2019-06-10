@@ -135,49 +135,6 @@ public class RandomAssert {
     }
 
     /**
-     * Assert that the random generator state of the copy instance returned from the
-     * jump function matches the input state.
-     *
-     * <p>The generator must be a {@link RestorableUniformRandomProvider} and return
-     * an instance of {@link RandomProviderDefaultState}.</p>
-     *
-     * <p>The input generator is sampled using methods in the
-     * {@link UniformRandomProvider} interface, the state is saved and a jump is
-     * performed. The states from the pre-jump generator and the returned copy
-     * instance must match.</p>
-     *
-     * <p>This test targets any cached state of the default implementation of a generator
-     * in {@link org.apache.commons.rng.core.source32.IntProvider IntProvider} and
-     * {@link org.apache.commons.rng.core.source64.LongProvider LongProvider}
-     * such as the state cached for the nextBoolean() and nextInt() functions.</p>
-     *
-     * @param rng Random generator.
-     */
-    public static void assertJumpUsingState(JumpableUniformRandomProvider rng) {
-        Assume.assumeTrue("Not a restorable RNG", rng instanceof RestorableUniformRandomProvider);
-
-        // Exercise the generator. 
-        // This calls nextInt() an odd number of times so the default
-        // implementation of LongProvider should have cached a state for nextInt().
-        for (int i = 0; i < 3; i++) {
-            rng.nextInt();
-            rng.nextLong();
-            rng.nextBoolean();
-        }
-
-        final RandomProviderState preJumpState = ((RestorableUniformRandomProvider) rng).saveState();
-        Assume.assumeTrue("Not a recognised state", preJumpState instanceof RandomProviderDefaultState);
-
-        final UniformRandomProvider copy = rng.jump();
-        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
-
-        final RandomProviderState copyState = ((RestorableUniformRandomProvider)copy).saveState();
-        final RandomProviderDefaultState expected = (RandomProviderDefaultState) preJumpState;
-        final RandomProviderDefaultState actual = (RandomProviderDefaultState) copyState;
-        Assert.assertArrayEquals(expected.getState(), actual.getState());
-    }
-
-    /**
      * Assert that the two random generators produce the same output for
      * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
      *

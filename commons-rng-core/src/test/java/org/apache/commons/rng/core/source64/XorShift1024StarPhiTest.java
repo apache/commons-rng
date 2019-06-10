@@ -80,9 +80,4 @@ public class XorShift1024StarPhiTest {
     public void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XorShift1024StarPhi(SEED));
     }
-
-    @Test
-    public void testJumpUsingState() {
-        RandomAssert.assertJumpUsingState(new XorShift1024StarPhi(SEED));
-    }
 }

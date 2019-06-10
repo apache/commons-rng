@@ -90,9 +90,4 @@ public class XoRoShiRo128PlusTest {
     public void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoRoShiRo128Plus(SEED));
     }
-
-    @Test
-    public void testJumpUsingState() {
-        RandomAssert.assertJumpUsingState(new XoRoShiRo128Plus(SEED));
-    }
 }
