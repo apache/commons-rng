@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="98">
+        New "LongJumpableUniformRandomProvider" interface extends JumpableUniformRandomProvider
+        with a long jump method.
+      </action>
       <action dev="aherbert" type="add" issue="97">
         New "JumpableUniformRandomProvider" interface provides a jump method that advances
         the generator a large number of steps of the output sequence in a single operation. A
