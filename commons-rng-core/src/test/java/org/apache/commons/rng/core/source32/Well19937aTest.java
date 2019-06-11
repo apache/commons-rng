@@ -20,6 +20,9 @@ import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
 public class Well19937aTest {
+    /** The size of the array seed. */
+    private static final int SEED_SIZE = 624;
+
     @Test
     public void testReferenceCode() {
         final int[] base = {
@@ -167,5 +170,15 @@ public class Well19937aTest {
         };
 
         RandomAssert.assertEquals(expectedSequence, rng);
+    }
+
+    @Test
+    public void testConstructorWithZeroSeedIsNonFunctional() {
+        RandomAssert.assertNextIntZeroOutput(new Well19937a(new int[SEED_SIZE]), 2 * SEED_SIZE);
+    }
+
+    @Test
+    public void testConstructorWithSingleBitSeedIsFunctional() {
+        RandomAssert.assertIntArrayConstructorWithSingleBitInPoolIsFunctional(Well19937a.class, 19937);
     }
 }

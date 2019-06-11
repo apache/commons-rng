@@ -20,6 +20,9 @@ import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
 public class MultiplyWithCarry256Test {
+    /** The size of the array seed. */
+    private static final int SEED_SIZE = 257;
+
     @Test
     public void testMarsaglia() {
         final int[] seed = {
@@ -191,5 +194,15 @@ public class MultiplyWithCarry256Test {
         };
 
         RandomAssert.assertEquals(expectedSequence, new MultiplyWithCarry256(seed));
+    }
+
+    @Test
+    public void testConstructorWithZeroSeedIsNonFunctional() {
+        RandomAssert.assertNextIntZeroOutput(new MultiplyWithCarry256(new int[SEED_SIZE]), 2 * SEED_SIZE);
+    }
+
+    @Test
+    public void testConstructorWithSingleBitSeedIsFunctional() {
+        RandomAssert.assertIntArrayConstructorWithSingleBitSeedIsFunctional(MultiplyWithCarry256.class, SEED_SIZE);
     }
 }
