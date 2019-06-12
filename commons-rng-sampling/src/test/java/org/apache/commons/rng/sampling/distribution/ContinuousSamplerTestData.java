@@ -25,8 +25,8 @@ class ContinuousSamplerTestData {
     private final ContinuousSampler sampler;
     private final double[] deciles;
 
-    public ContinuousSamplerTestData(ContinuousSampler sampler,
-                                     double[] deciles) {
+    ContinuousSamplerTestData(ContinuousSampler sampler,
+                              double[] deciles) {
         this.sampler = sampler;
         this.deciles = deciles.clone();
     }

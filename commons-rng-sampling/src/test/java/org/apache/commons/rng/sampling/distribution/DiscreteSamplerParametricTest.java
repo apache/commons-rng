@@ -31,7 +31,7 @@ import org.apache.commons.math3.stat.inference.ChiSquareTest;
 /**
  * Tests for random deviates generators.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class DiscreteSamplerParametricTest {
     /** Sampler under test. */
     private final DiscreteSamplerTestData sampler;
@@ -77,10 +77,10 @@ public class DiscreteSamplerParametricTest {
      * @param points Outcomes.
      * @param expected Expected counts of the given outcomes.
      */
-    private void check(long sampleSize,
-                       DiscreteSampler sampler,
-                       int[] points,
-                       double[] expected) {
+    private static void check(long sampleSize,
+                              DiscreteSampler sampler,
+                              int[] points,
+                              double[] expected) {
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         final int numTests = 50;
 

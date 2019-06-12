@@ -23,7 +23,7 @@ import org.junit.Test;
 public class MersenneTwisterTest {
     @Test
     public void testMakotoNishimura() {
-        final MersenneTwister rng = new MersenneTwister(new int[] { 0x123, 0x234, 0x345, 0x456 });
+        final MersenneTwister rng = new MersenneTwister(new int[] {0x123, 0x234, 0x345, 0x456});
 
         /*
          * Data from

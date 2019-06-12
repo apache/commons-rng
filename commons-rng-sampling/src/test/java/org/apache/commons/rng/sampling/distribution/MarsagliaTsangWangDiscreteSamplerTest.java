@@ -31,37 +31,37 @@ import org.junit.Test;
  * <p>Statistical testing of the sampler is performed using entries in {@link DiscreteSamplersList}.</p>
  */
 public class MarsagliaTsangWangDiscreteSamplerTest {
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
         createDiscreteDistributionSampler(null);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
         createDiscreteDistributionSampler(new double[0]);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
-        createDiscreteDistributionSampler(new double[] { -1, 0.1, 0.2 });
+        createDiscreteDistributionSampler(new double[] {-1, 0.1, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
-        createDiscreteDistributionSampler(new double[] { 0.1, Double.NaN, 0.2 });
+        createDiscreteDistributionSampler(new double[] {0.1, Double.NaN, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
-        createDiscreteDistributionSampler(new double[] { 0.1, Double.POSITIVE_INFINITY, 0.2 });
+        createDiscreteDistributionSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
-        createDiscreteDistributionSampler(new double[] { Double.MAX_VALUE, Double.MAX_VALUE });
+        createDiscreteDistributionSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
         createDiscreteDistributionSampler(new double[4]);
     }
@@ -71,9 +71,9 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      */
     @Test
     public void testToString() {
-        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] { 0.5, 0.5 });
+        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] {0.5, 0.5});
         String text = sampler.toString();
-        for (String item : new String[] { "Marsaglia", "Tsang", "Wang" }) {
+        for (String item : new String[] {"Marsaglia", "Tsang", "Wang"}) {
             Assert.assertTrue("toString missing: " + item, text.contains(item));
         }
     }
@@ -127,7 +127,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int t4 = t3 + (n4 << 6);
 
         // Create values under the limits and bit shift by 2 to reverse what the sampler does.
-        final int[] values = new int[] { 0, t1, t2, t3, t4, 0xffffffff };
+        final int[] values = new int[] {0, t1, t2, t3, t4, 0xffffffff};
         for (int i = 0; i < values.length; i++) {
             values[i] <<= 2;
         }
@@ -187,7 +187,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         }
 
         // First test the table is completely filled to 2^30
-        final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] { 0xffffffff});
+        final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] {0xffffffff});
         final MarsagliaTsangWangDiscreteSampler dummySampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(dummyRng, probabilities);
         // This will throw if the table is incomplete as it hits the upper limit
         dummySampler.sample();
@@ -247,7 +247,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         // Worst case scenario is a uniform distribution of 2^k samples each with the highest
         // mask set for base 64 digits.
         // The max number of samples: 2^k
-        final int maxSamples = (1 << k);
+        final int maxSamples = 1 << k;
 
         // The highest value for each sample:
         // 2^30 / 2^k = 2^(30-k)
@@ -550,7 +550,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * search for the last probability of the Binomial distribution.
      */
     @Test
-    public void testCreateBinomialDistributionWithProbability0_5() {
+    public void testCreateBinomialDistributionWithProbability50Percent() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 10;
         final double p = 0.5;
@@ -560,7 +560,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     }
 
     /**
-     * Test the sampler with a probability that requires inversion has the same name for 
+     * Test the sampler with a probability that requires inversion has the same name for
      * {@link Object#toString()}.
      */
     @Test

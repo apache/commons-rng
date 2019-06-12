@@ -39,13 +39,13 @@ import org.apache.commons.rng.core.source64.LongProvider;
 @RunWith(value = Parameterized.class)
 public class JumpableProvidersParametricTest {
     /** The size of the state for the IntProvider. */
-    private static final int intProviderStateSize;
+    private static final int INT_PROVIDER_STATE_SIZE;
     /** The size of the state for the LongProvider. */
-    private static final int longProviderStateSize;
+    private static final int LONG_PROVIDER_STATE_SIZE;
 
     static {
-        intProviderStateSize = new State32Generator().getStateSize();
-        longProviderStateSize = new State64Generator().getStateSize();
+        INT_PROVIDER_STATE_SIZE = new State32Generator().getStateSize();
+        LONG_PROVIDER_STATE_SIZE = new State64Generator().getStateSize();
     }
 
     /** RNG under test. */
@@ -195,9 +195,9 @@ public class JumpableProvidersParametricTest {
     @Test
     public void testJumpResetsDefaultState() {
         if (generator instanceof IntProvider) {
-            assertJumpResetsDefaultState(getJumpFunction(), intProviderStateSize);
+            assertJumpResetsDefaultState(getJumpFunction(), INT_PROVIDER_STATE_SIZE);
         } else if (generator instanceof LongProvider) {
-            assertJumpResetsDefaultState(getJumpFunction(), longProviderStateSize);
+            assertJumpResetsDefaultState(getJumpFunction(), LONG_PROVIDER_STATE_SIZE);
         }
     }
 
@@ -208,9 +208,9 @@ public class JumpableProvidersParametricTest {
     @Test
     public void testLongJumpResetsDefaultState() {
         if (generator instanceof IntProvider) {
-            assertJumpResetsDefaultState(getLongJumpFunction(), intProviderStateSize);
+            assertJumpResetsDefaultState(getLongJumpFunction(), INT_PROVIDER_STATE_SIZE);
         } else if (generator instanceof LongProvider) {
-            assertJumpResetsDefaultState(getLongJumpFunction(), longProviderStateSize);
+            assertJumpResetsDefaultState(getLongJumpFunction(), LONG_PROVIDER_STATE_SIZE);
         }
     }
 
@@ -291,7 +291,7 @@ public class JumpableProvidersParametricTest {
 
     /**
      * Specify the jump operation to test.
-     * 
+     *
      * <p>This allows testing {@link JumpableUniformRandomProvider} or
      * {@link LongJumpableUniformRandomProvider}.</p>
      */

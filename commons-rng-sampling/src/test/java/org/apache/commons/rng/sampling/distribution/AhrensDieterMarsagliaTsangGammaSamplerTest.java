@@ -27,7 +27,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     /**
      * Test the constructor with a bad alpha.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -41,7 +41,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     /**
      * Test the constructor with a bad theta.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);

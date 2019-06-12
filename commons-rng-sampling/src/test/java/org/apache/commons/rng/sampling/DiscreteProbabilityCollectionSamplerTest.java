@@ -24,7 +24,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
@@ -32,48 +31,48 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 public class DiscreteProbabilityCollectionSamplerTest {
     /** RNG. */
-    private static final UniformRandomProvider rng = RandomSource.create(RandomSource.WELL_1024_A);
+    private final UniformRandomProvider rng = RandomSource.create(RandomSource.WELL_1024_A);
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition1() {
         // Size mismatch
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d});
     }
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition2() {
         // Negative probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, -1d});
     }
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition3() {
         // Probabilities do not sum above 0
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, 0d});
     }
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition4() {
         // NaN probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, Double.NaN});
     }
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition5() {
         // Infinite probability
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          Arrays.asList(new Double[] {1d, 2d}),
                                                          new double[] {0d, Double.POSITIVE_INFINITY});
     }
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPrecondition6() {
         // Empty Map<T, Double> not allowed
         new DiscreteProbabilityCollectionSampler<Double>(rng,
-                                                         new HashMap<Double,Double>());
+                                                         new HashMap<Double, Double>());
     }
 
     @Test
@@ -125,7 +124,8 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // a probability (for the second item) that hits an edge case.
         final double probability = pastLast ? 1.1 : 1;
         final UniformRandomProvider dummyRng = new UniformRandomProvider() {
-            int count;
+            private int count;
+            // CHECKSTYLE: stop all
             public long nextLong(long n) { return 0; }
             public long nextLong() { return 0; }
             public int nextInt(int n) { return 0; }
@@ -136,6 +136,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
             public void nextBytes(byte[] bytes, int start, int len) {}
             public void nextBytes(byte[] bytes) {}
             public boolean nextBoolean() { return false; }
+            // CHECKSTYLE: resume all
         };
 
         final List<Double> items = Arrays.asList(new Double[] {1d, 2d});

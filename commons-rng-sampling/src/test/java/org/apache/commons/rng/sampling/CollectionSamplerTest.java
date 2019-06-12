@@ -47,7 +47,7 @@ public class CollectionSamplerTest {
         Assert.fail(word + " not in list");
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition() {
         // Must fail for empty collection.
         new CollectionSampler<String>(RandomSource.create(RandomSource.MT),

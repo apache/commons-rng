@@ -187,6 +187,7 @@ public class KempSmallMeanPoissonSamplerTest {
             this.value = value;
         }
 
+        // CHECKSTYLE: stop all
         public long nextLong(long n) { return 0; }
         public long nextLong() { return 0; }
         public int nextInt(int n) { return 0; }
@@ -195,5 +196,6 @@ public class KempSmallMeanPoissonSamplerTest {
         public void nextBytes(byte[] bytes, int start, int len) {}
         public void nextBytes(byte[] bytes) {}
         public boolean nextBoolean() { return false; }
+        // CHECKSTYLE: resume all
     }
 }

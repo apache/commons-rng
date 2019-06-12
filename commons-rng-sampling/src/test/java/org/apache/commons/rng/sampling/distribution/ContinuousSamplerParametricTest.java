@@ -29,7 +29,7 @@ import org.junit.runners.Parameterized.Parameters;
 /**
  * Tests for random deviates generators.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class ContinuousSamplerParametricTest {
     /** Sampler under test. */
     private final ContinuousSamplerTestData sampler;
@@ -63,9 +63,9 @@ public class ContinuousSamplerParametricTest {
      * @param sampleSize Number of random values to generate.
      * @param deciles Deciles.
      */
-    private void check(long sampleSize,
-                       ContinuousSampler sampler,
-                       double[] deciles) {
+    private static void check(long sampleSize,
+                              ContinuousSampler sampler,
+                              double[] deciles) {
         final int numTests = 50;
 
         // Do not change (statistical test assumes that dof = 9).
@@ -107,9 +107,6 @@ public class ContinuousSamplerParametricTest {
                 for (int k = 0; k < numBins; k++) {
                     final double diff = observed[k] - expected[k];
                     chi2 += diff * diff / expected[k];
-                    // System.out.println("bin[" + k + "]" +
-                    //                    " obs=" + observed[k] +
-                    //                    " exp=" + expected[k]);
                 }
 
                 // Statistics check.

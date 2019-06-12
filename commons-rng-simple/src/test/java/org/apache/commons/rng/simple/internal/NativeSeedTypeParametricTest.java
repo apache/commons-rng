@@ -29,7 +29,7 @@ import java.lang.reflect.Array;
  * ensures that a seed can be created or converted from any supported input seed to each
  * supported native seed type.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class NativeSeedTypeParametricTest {
     /** This is a list of the class types that are supported native seeds. */
     private static final Object[] SUPPORTED_NATIVE_TYPES = {
@@ -42,9 +42,9 @@ public class NativeSeedTypeParametricTest {
     private static final Object[] SUPPORTED_SEEDS = {
         Integer.valueOf(1),
         Long.valueOf(2),
-        new int[] { 3, 4, 5 },
-        new long[] { 6, 7, 8 },
-        new byte[] { 9, 10, 11 },
+        new int[] {3, 4, 5},
+        new long[] {6, 7, 8},
+        new byte[] {9, 10, 11},
     };
     /** Example unsupported seeds for conversion to a native seed type. */
     private static final Object[] UNSUPPORTED_SEEDS = {
@@ -56,6 +56,16 @@ public class NativeSeedTypeParametricTest {
     private final NativeSeedType nativeSeedType;
     /** The class type of the native seed. */
     private final Class<?> type;
+
+    /**
+     * Initializes the test instance.
+     *
+     * @param type The type of the native seed.
+     */
+    public NativeSeedTypeParametricTest(Class<?> type) {
+        this.type = type;
+        nativeSeedType = findNativeSeedType(type);
+    }
 
     /**
      * Gets the supported native seed types.
@@ -70,16 +80,6 @@ public class NativeSeedTypeParametricTest {
             SUPPORTED_NATIVE_TYPES.length, NativeSeedType.values().length);
 
         return SUPPORTED_NATIVE_TYPES;
-    }
-
-    /**
-     * Initializes the test instance.
-     *
-     * @param type The type of the native seed.
-     */
-    public NativeSeedTypeParametricTest(Class<?> type) {
-        this.type = type;
-        nativeSeedType = findNativeSeedType(type);
     }
 
     /**

@@ -34,7 +34,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -46,7 +46,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a mean below 1.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -58,7 +58,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor using the state with a negative fractional mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -70,7 +70,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with a non-fractional mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -82,7 +82,7 @@ public class LargeMeanPoissonSamplerTest {
     /**
      * Test the constructor with fractional mean of 1.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);

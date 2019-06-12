@@ -27,7 +27,7 @@ public class DiscreteUniformSamplerTest {
     /**
      * Test the constructor with a bad range.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithLowerAboveUpper() {
         final int upper = 55;
         final int lower = upper + 1;

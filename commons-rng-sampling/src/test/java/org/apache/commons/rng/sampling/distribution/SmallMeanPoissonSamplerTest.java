@@ -28,7 +28,7 @@ public class SmallMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -43,7 +43,7 @@ public class SmallMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroMean() {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -59,6 +59,7 @@ public class SmallMeanPoissonSamplerTest {
     public void testSampleUpperBounds() {
         // If the nextDouble() is always 1 then the sample will hit the upper bounds
         final UniformRandomProvider rng = new UniformRandomProvider() {
+            // CHECKSTYLE: stop all
             public long nextLong(long n) { return 0; }
             public long nextLong() { return 0; }
             public int nextInt(int n) { return 0; }
@@ -68,8 +69,9 @@ public class SmallMeanPoissonSamplerTest {
             public void nextBytes(byte[] bytes, int start, int len) {}
             public void nextBytes(byte[] bytes) {}
             public boolean nextBoolean() { return false; }
+            // CHECKSTYLE: resume all
         };
-        for (double mean : new double[] { 0.5, 1, 1.5, 2.2 }) {
+        for (double mean : new double[] {0.5, 1, 1.5, 2.2}) {
             final SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
             final int expected = (int) Math.ceil(1000 * mean);
             Assert.assertEquals(expected, sampler.sample());

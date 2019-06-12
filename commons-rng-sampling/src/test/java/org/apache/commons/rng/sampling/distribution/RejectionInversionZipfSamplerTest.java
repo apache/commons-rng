@@ -27,7 +27,7 @@ public class RejectionInversionZipfSamplerTest {
     /**
      * Test the constructor with a bad number of elements.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroNumberOfElements() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -41,7 +41,7 @@ public class RejectionInversionZipfSamplerTest {
     /**
      * Test the constructor with a bad exponent.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroExponent() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);

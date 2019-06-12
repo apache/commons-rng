@@ -26,9 +26,9 @@ class DiscreteSamplerTestData {
     private final int[] points;
     private final double[] probabilities;
 
-    public DiscreteSamplerTestData(DiscreteSampler sampler,
-                                   int[] points,
-                                   double[] probabilities) {
+    DiscreteSamplerTestData(DiscreteSampler sampler,
+                            int[] points,
+                            double[] probabilities) {
         this.sampler = sampler;
         this.points = points.clone();
         this.probabilities = probabilities.clone();

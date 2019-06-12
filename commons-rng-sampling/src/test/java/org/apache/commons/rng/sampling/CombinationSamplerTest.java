@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing sampleissions and
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package org.apache.commons.rng.sampling;
@@ -121,7 +121,7 @@ public class CombinationSamplerTest {
      * @param n     the n
      * @param value the sample value
      */
-    private static final void assertIsInDomain(int n, int value) {
+    private static void assertIsInDomain(int n, int value) {
         if (value < 0 || value >= n) {
             Assert.fail("sample " + value + " not in the domain " + n);
         }
@@ -172,7 +172,7 @@ public class CombinationSamplerTest {
         for (int s : sample) {
             // This shift will be from 0 to n-1 since it is from the
             // domain of size n.
-            bits |= (1 << s);
+            bits |= 1 << s;
         }
         if (bits >= codeLookup.length) {
             Assert.fail("Bad bit combination: " + Arrays.toString(sample));

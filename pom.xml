@@ -584,7 +584,7 @@
               </dependency>
             </dependencies>
             <configuration>
-              <includeTestSourceDirectory>false</includeTestSourceDirectory>
+              <includeTestSourceDirectory>true</includeTestSourceDirectory>
               <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
               <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
               <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>

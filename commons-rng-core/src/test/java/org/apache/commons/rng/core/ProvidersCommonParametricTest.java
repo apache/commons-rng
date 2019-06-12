@@ -34,7 +34,7 @@ import org.apache.commons.rng.RandomProviderState;
 /**
  * Tests which all generators must pass.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class ProvidersCommonParametricTest {
     /** RNG under test. */
     private final RestorableUniformRandomProvider generator;
@@ -56,47 +56,47 @@ public class ProvidersCommonParametricTest {
 
     // Precondition tests
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPreconditionNextInt1() {
         generator.nextInt(-1);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPreconditionNextInt2() {
         generator.nextInt(0);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPreconditionNextLong1() {
         generator.nextLong(-1);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testPreconditionNextLong2() {
         generator.nextLong(0);
     }
 
-    @Test(expected=IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testPreconditionNextBytes1() {
         final int size = 10;
         final int num = 1;
         final byte[] buf = new byte[size];
         generator.nextBytes(buf, -1, num);
     }
-    @Test(expected=IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testPreconditionNextBytes2() {
         final int size = 10;
         final byte[] buf = new byte[size];
         generator.nextBytes(buf, size, 0);
     }
-    @Test(expected=IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testPreconditionNextBytes3() {
         final int size = 10;
         final int offset = 2;
         final byte[] buf = new byte[size];
         generator.nextBytes(buf, offset, size - offset + 1);
     }
-    @Test(expected=IndexOutOfBoundsException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testPreconditionNextBytes4() {
         final int size = 10;
         final int offset = 1;
@@ -245,14 +245,14 @@ public class ProvidersCommonParametricTest {
         Assert.assertTrue(listOrig.equals(listReplay));
     }
 
-    @Test(expected=IllegalStateException.class)
+    @Test(expected = IllegalStateException.class)
     public void testStateWrongSize() {
         final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
         generator.restoreState(state);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testRestoreForeignState() {
         generator.restoreState(new RandomProviderState() {});
     }

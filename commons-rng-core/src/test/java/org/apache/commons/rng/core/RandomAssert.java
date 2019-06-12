@@ -18,21 +18,23 @@
 package org.apache.commons.rng.core;
 
 import org.junit.Assert;
-import org.junit.Assume;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
-import org.apache.commons.rng.RandomProviderState;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Utility class for testing random generators.
  */
-public class RandomAssert {
+public final class RandomAssert {
+    /**
+     * Class contains only static methods.
+     */
+    private RandomAssert() {}
+
     /**
      * Assert that the random generator produces the expected output.
      *
@@ -245,7 +247,7 @@ public class RandomAssert {
      * Assert that following a set number of warm-up cycles the random generator produces
      * at least one non-zero output for {@link UniformRandomProvider#nextLong()} over the
      * given number of test cycles.
-     * 
+     *
      * <p>Helper function to add the seed element and bit that was non zero to the fail message.
      *
      * @param rng Random generator.

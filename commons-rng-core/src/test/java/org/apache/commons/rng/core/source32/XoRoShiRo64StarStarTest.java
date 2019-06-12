@@ -62,7 +62,7 @@ public class XoRoShiRo64StarStarTest {
     @Test
     public void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
-        new XoRoShiRo64StarStar(new int[] { 0x012de1ba });
+        new XoRoShiRo64StarStar(new int[] {0x012de1ba});
     }
 
     @Test

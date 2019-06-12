@@ -26,7 +26,7 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * List of samplers.
  */
-public class ContinuousSamplersList {
+public final class ContinuousSamplersList {
     /** List of all RNGs implemented in the library. */
     private static final List<ContinuousSamplerTestData[]> LIST =
         new ArrayList<ContinuousSamplerTestData[]>();
@@ -209,8 +209,10 @@ public class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.WeibullDistribution(unusedRng, alphaWeibull, betaWeibull),
                 RandomSource.create(RandomSource.WELL_44497_B));
         } catch (Exception e) {
+            // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
             e.printStackTrace(System.err);
+            // CHECKSTYLE: resume Regexp
             throw new RuntimeException(e);
         }
     }
@@ -230,19 +232,19 @@ public class ContinuousSamplersList {
                             UniformRandomProvider rng) {
         final ContinuousSampler inverseMethodSampler =
             new InverseTransformContinuousSampler(rng,
-                                                  new ContinuousInverseCumulativeProbabilityFunction() {
-                                                      @Override
-                                                      public double inverseCumulativeProbability(double p) {
-                                                          return dist.inverseCumulativeProbability(p);
-                                                      }
-                                                      @Override
-                                                      public String toString() {
-                                                          return dist.toString();
-                                                      }
-                                                  });
-        list.add(new ContinuousSamplerTestData[] { new ContinuousSamplerTestData(inverseMethodSampler,
-                                                                                 getDeciles(dist)) });
-     }
+                new ContinuousInverseCumulativeProbabilityFunction() {
+                    @Override
+                    public double inverseCumulativeProbability(double p) {
+                        return dist.inverseCumulativeProbability(p);
+                    }
+                    @Override
+                    public String toString() {
+                        return dist.toString();
+                    }
+                });
+        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(inverseMethodSampler,
+                                                                                getDeciles(dist))});
+    }
 
     /**
      * @param list List of data (one the "parameters" tested by the Junit parametric test).
@@ -252,8 +254,8 @@ public class ContinuousSamplersList {
     private static void add(List<ContinuousSamplerTestData[]> list,
                             final org.apache.commons.math3.distribution.RealDistribution dist,
                             final ContinuousSampler sampler) {
-        list.add(new ContinuousSamplerTestData[] { new ContinuousSamplerTestData(sampler,
-                                                                                 getDeciles(dist)) });
+        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(sampler,
+                                                                                getDeciles(dist))});
     }
 
     /**

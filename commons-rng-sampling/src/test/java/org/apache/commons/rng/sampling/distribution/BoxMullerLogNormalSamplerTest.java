@@ -27,7 +27,7 @@ public class BoxMullerLogNormalSamplerTest {
     /**
      * Test the constructor with a bad scale.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
@@ -41,7 +41,7 @@ public class BoxMullerLogNormalSamplerTest {
     /**
      * Test the constructor with a bad shape.
      */
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);

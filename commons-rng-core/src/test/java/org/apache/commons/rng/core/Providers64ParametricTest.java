@@ -26,7 +26,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 /**
  * Tests which all 64-bits based generators must pass.
  */
-@RunWith(value=Parameterized.class)
+@RunWith(value = Parameterized.class)
 public class Providers64ParametricTest {
     /** RNG under test. */
     private final RestorableUniformRandomProvider generator;
@@ -47,8 +47,8 @@ public class Providers64ParametricTest {
 
     @Test
     public void testNextBytesChunks() {
-        final int[] chunkSizes = { 8, 16, 24 };
-        final int[] chunks = { 1, 2, 3, 4, 5 };
+        final int[] chunkSizes = {8, 16, 24};
+        final int[] chunks = {1, 2, 3, 4, 5};
         for (int chunkSize : chunkSizes) {
             for (int numChunks : chunks) {
                 ProvidersCommonParametricTest.checkNextBytesChunks(generator,

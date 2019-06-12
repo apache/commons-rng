@@ -30,12 +30,12 @@ public class NumberFactoryTest {
     private static final int LONG_SIZE = 8;
 
     /** Test values. */
-    private static final long[] LONG_TEST_VALUES = new long[] { 0L, 1L, -1L, 19337L, 1234567891011213L,
-            -11109876543211L, Long.valueOf(Integer.MAX_VALUE), Long.valueOf(Integer.MIN_VALUE), Long.MAX_VALUE,
-            Long.MIN_VALUE, 0x9e3779b97f4a7c13L };
+    private static final long[] LONG_TEST_VALUES = new long[] {0L, 1L, -1L, 19337L, 1234567891011213L,
+        -11109876543211L, Long.valueOf(Integer.MAX_VALUE), Long.valueOf(Integer.MIN_VALUE), Long.MAX_VALUE,
+        Long.MIN_VALUE, 0x9e3779b97f4a7c13L};
     /** Test values. */
-    private static final int[] INT_TEST_VALUES = new int[] { 0, 1, -1, 19337, 1234567891, -1110987656,
-            Integer.MAX_VALUE, Integer.MIN_VALUE, 0x9e3779b9 };
+    private static final int[] INT_TEST_VALUES = new int[] {0, 1, -1, 19337, 1234567891, -1110987656,
+        Integer.MAX_VALUE, Integer.MIN_VALUE, 0x9e3779b9};
 
     @Test
     public void testMakeBooleanFromInt() {
@@ -121,7 +121,7 @@ public class NumberFactoryTest {
         // Test individually the bytes are the same as the array conversion
         for (int i = 0; i < LONG_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(LONG_TEST_VALUES[i]);
-            final byte[] b2 = NumberFactory.makeByteArray(new long[] { LONG_TEST_VALUES[i] });
+            final byte[] b2 = NumberFactory.makeByteArray(new long[] {LONG_TEST_VALUES[i]});
             Assert.assertArrayEquals(b1, b2);
         }
     }
@@ -160,7 +160,7 @@ public class NumberFactoryTest {
         // Test individually the bytes are the same as the array conversion
         for (int i = 0; i < INT_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(INT_TEST_VALUES[i]);
-            final byte[] b2 = NumberFactory.makeByteArray(new int[] { INT_TEST_VALUES[i] });
+            final byte[] b2 = NumberFactory.makeByteArray(new int[] {INT_TEST_VALUES[i]});
             Assert.assertArrayEquals(b1, b2);
         }
     }

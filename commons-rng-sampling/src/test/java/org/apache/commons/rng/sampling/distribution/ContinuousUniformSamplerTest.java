@@ -37,7 +37,7 @@ public class ContinuousUniformSamplerTest {
         testSampleInRange(rng, high, low);
     }
 
-    private static void testSampleInRange(UniformRandomProvider rng, 
+    private static void testSampleInRange(UniformRandomProvider rng,
                                           double low, double high) {
         ContinuousUniformSampler sampler = new ContinuousUniformSampler(rng, low, high);
         final double min = Math.min(low,  high);

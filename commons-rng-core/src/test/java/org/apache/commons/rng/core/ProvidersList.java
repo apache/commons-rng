@@ -59,7 +59,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
  * @see #list32()
  * @see #list64()
  */
-public class ProvidersList {
+public final class ProvidersList {
     /** List of all RNGs implemented in the library. */
     private static final List<RestorableUniformRandomProvider[]> LIST =
         new ArrayList<RestorableUniformRandomProvider[]>();
@@ -80,35 +80,35 @@ public class ProvidersList {
         try {
             // "int"-based RNGs.
             add(LIST32, new JDKRandom(g.nextLong()));
-            add(LIST32, new MersenneTwister(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well512a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well1024a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well19937a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well19937c(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well44497a(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new Well44497b(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new ISAACRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new MultiplyWithCarry256(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new KISSRandom(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new XoRoShiRo64Star(new int[] { g.nextInt(), g.nextInt() }));
-            add(LIST32, new XoRoShiRo64StarStar(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new XoShiRo128Plus(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
-            add(LIST32, new XoShiRo128StarStar(new int[] { g.nextInt(), g.nextInt(), g.nextInt() }));
+            add(LIST32, new MersenneTwister(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well512a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well1024a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well19937a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well19937c(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well44497a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new Well44497b(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new ISAACRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new MultiplyWithCarry256(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new KISSRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new XoRoShiRo64Star(new int[] {g.nextInt(), g.nextInt()}));
+            add(LIST32, new XoRoShiRo64StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new XoShiRo128Plus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            add(LIST32, new XoShiRo128StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
             add(LIST64, new SplitMix64(g.nextLong()));
-            add(LIST64, new XorShift1024Star(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
-            add(LIST64, new XorShift1024StarPhi(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new XorShift1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XorShift1024StarPhi(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new TwoCmres(g.nextInt()));
             add(LIST64, new TwoCmres(g.nextInt(), 5, 8));
-            add(LIST64, new MersenneTwister64(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoRoShiRo128Plus(new long[] { g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoRoShiRo128StarStar(new long[] { g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoShiRo256Plus(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoShiRo256StarStar(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoShiRo512Plus(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
-            add(LIST64, new XoShiRo512StarStar(new long[] { g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong() }));
+            add(LIST64, new MersenneTwister64(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoRoShiRo128Plus(new long[] {g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoRoShiRo128StarStar(new long[] {g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo256Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo256StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo512Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.
@@ -122,8 +122,10 @@ public class ProvidersList {
                 }
             }
         } catch (Exception e) {
+            // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
             e.printStackTrace(System.err);
+            // CHECKSTYLE: resume Regexp
             throw new RuntimeException(e);
         }
     }
@@ -139,7 +141,7 @@ public class ProvidersList {
      */
     private static void add(List<RestorableUniformRandomProvider[]> list,
                             RestorableUniformRandomProvider rng) {
-        list.add(new RestorableUniformRandomProvider[] { rng });
+        list.add(new RestorableUniformRandomProvider[] {rng});
     }
 
     /**
@@ -148,7 +150,7 @@ public class ProvidersList {
      */
     private static void add(List<JumpableUniformRandomProvider[]> list,
                             JumpableUniformRandomProvider rng) {
-        list.add(new JumpableUniformRandomProvider[] { rng });
+        list.add(new JumpableUniformRandomProvider[] {rng});
     }
 
     /**
