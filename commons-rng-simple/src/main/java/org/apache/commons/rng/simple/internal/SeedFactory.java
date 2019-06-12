@@ -88,7 +88,9 @@ public final class SeedFactory {
      * @return an array of {@code n} random numbers.
      */
     public static int[] createIntArray(int n) {
-        return createIntArray(n, SEED_GENERATOR, new Object());
+        final int[] seed = createIntArray(n, SEED_GENERATOR, new Object());
+        ensureNonZero(seed);
+        return seed;
     }
 
     /**
@@ -98,7 +100,9 @@ public final class SeedFactory {
      * @return an array of {@code n} random numbers.
      */
     public static long[] createLongArray(int n) {
-        return createLongArray(n, SEED_GENERATOR, new Object());
+        final long[] seed = createLongArray(n, SEED_GENERATOR, new Object());
+        ensureNonZero(seed);
+        return seed;
     }
 
     /**
@@ -261,6 +265,46 @@ public final class SeedFactory {
                                  int number) {
         synchronized (source) {
             return source.next() ^ number;
+        }
+    }
+
+    /**
+     * Ensure the seed is non-zero at the first position in the array.
+     *
+     * <p>This method will replace a zero at index 0 in the array with
+     * a non-zero random number. The method ensures any length seed
+     * contains non-zero bits. The output seed is suitable for generators
+     * that cannot be seeded with all zeros.</p>
+     *
+     * @param seed Seed array (modified in place).
+     * @see #createInt()
+     */
+    static void ensureNonZero(int[] seed) {
+        // Zero occurs 1 in 2^32
+        if (seed.length != 0 && seed[0] == 0) {
+            do {
+                seed[0] = createInt();
+            } while (seed[0] == 0);
+        }
+    }
+
+    /**
+     * Ensure the seed is non-zero at the first position in the array.
+     *
+     * <p>This method will replace a zero at index 0 in the array with
+     * a non-zero random number. The method ensures any length seed
+     * contains non-zero bits. The output seed is suitable for generators
+     * that cannot be seeded with all zeros.</p>
+     *
+     * @param seed Seed array (modified in place).
+     * @see #createLong()
+     */
+    static void ensureNonZero(long[] seed) {
+        // Zero occurs 1 in 2^64
+        if (seed.length != 0 && seed[0] == 0) {
+            do {
+                seed[0] = createLong();
+            } while (seed[0] == 0);
         }
     }
 }

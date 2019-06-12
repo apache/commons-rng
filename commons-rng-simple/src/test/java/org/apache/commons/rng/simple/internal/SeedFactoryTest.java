@@ -110,4 +110,64 @@ public class SeedFactoryTest {
             Assert.fail(duplicates + " duplicates\n" + sb);
         }
     }
+
+    @Test
+    public void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
+        final int[] seed = new int[0];
+        SeedFactory.ensureNonZero(seed);
+    }
+
+    @Test
+    public void testEnsureNonZeroIntArrayIgnoresNonZeroPosition0() {
+        final int position0 = 123;
+        final int[] seed = new int[] {position0, 0, 0, 0};
+        final int[] before = seed.clone();
+        SeedFactory.ensureNonZero(seed);
+        Assert.assertEquals("Non-zero at position 0 should be unmodified", position0, seed[0]);
+        for (int i = 1; i < seed.length; i++) {
+            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+        }
+    }
+
+    @Test
+    public void testEnsureNonZeroIntArrayUpdatesZeroPosition0() {
+        // Test the method replaces position 0 even if the rest of the array is non-zero
+        final int[] seed = new int[] {0, 123, 456, 789};
+        final int[] before = seed.clone();
+        SeedFactory.ensureNonZero(seed);
+        Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
+        for (int i = 1; i < seed.length; i++) {
+            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+        }
+    }
+
+    @Test
+    public void testEnsureNonZeroLongArrayIgnoresEmptySeed() {
+        final long[] seed = new long[0];
+        SeedFactory.ensureNonZero(seed);
+    }
+
+    @Test
+    public void testEnsureNonZeroLongArrayIgnoresNonZeroPosition0() {
+        final long position0 = 123;
+        final long[] seed = new long[] {position0, 0, 0, 0};
+        final long[] before = seed.clone();
+        SeedFactory.ensureNonZero(seed);
+        Assert.assertEquals("Non-zero at position 0 should be unmodified", position0, seed[0]);
+        for (int i = 1; i < seed.length; i++) {
+            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+        }
+    }
+
+    @Test
+    public void testEnsureNonZeroLongArrayUpdatesZeroPosition0() {
+        // Test the method replaces position 0 even if the rest of the array is non-zero
+        final long[] seed = new long[] {0, 123, 456, 789};
+        final long[] before = seed.clone();
+        SeedFactory.ensureNonZero(seed);
+        Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
+        for (int i = 1; i < seed.length; i++) {
+            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+        }
+    }
 }
