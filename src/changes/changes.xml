@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="106">
+        Ensure SeedFactory produces non-zero seed arrays. This avoids invalid seeding of
+        generators that cannot recover from a seed of zeros.
+      </action>
       <action dev="aherbert" type="add" issue="98">
         New "LongJumpableUniformRandomProvider" interface extends JumpableUniformRandomProvider
         with a long jump method.
