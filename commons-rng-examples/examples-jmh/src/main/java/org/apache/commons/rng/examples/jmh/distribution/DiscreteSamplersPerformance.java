@@ -22,6 +22,7 @@ import org.apache.commons.rng.examples.jmh.RandomSources;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteUniformSampler;
 import org.apache.commons.rng.sampling.distribution.GeometricSampler;
+import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
@@ -59,6 +60,17 @@ public class DiscreteSamplersPerformance {
      */
     @State(Scope.Benchmark)
     public static class Sources extends RandomSources {
+        /** The probabilities for the discrete distribution. */
+        private static final double[] DISCRETE_PROBABILITIES;
+
+        static {
+            // This is not normalised to sum to 1. The samplers should handle this.
+            DISCRETE_PROBABILITIES = new double[25];
+            for (int i = 0; i < DISCRETE_PROBABILITIES.length; i++) {
+                DISCRETE_PROBABILITIES[i] = (i + 1.0) / DISCRETE_PROBABILITIES.length;
+            }
+        }
+
         /**
          * The sampler type.
          */
@@ -70,6 +82,7 @@ public class DiscreteSamplersPerformance {
                 "MarsagliaTsangWangDiscreteSampler",
                 "MarsagliaTsangWangPoissonSampler",
                 "MarsagliaTsangWangBinomialSampler",
+                "GuideTableDiscreteSampler",
                 })
         private String samplerType;
 
@@ -101,12 +114,13 @@ public class DiscreteSamplersPerformance {
             } else if ("GeometricSampler".equals(samplerType)) {
                 sampler = new GeometricSampler(rng, 0.21);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {
-                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng,
-                        new double[] {0.1, 0.2, 0.3, 0.4});
+                sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, DISCRETE_PROBABILITIES);
             } else if ("MarsagliaTsangWangPoissonSampler".equals(samplerType)) {
                 sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, 8.9);
             } else if ("MarsagliaTsangWangBinomialSampler".equals(samplerType)) {
                 sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, 20, 0.33);
+            } else if ("GuideTableDiscreteSampler".equals(samplerType)) {
+                sampler = new GuideTableDiscreteSampler(rng, DISCRETE_PROBABILITIES);
             }
         }
     }

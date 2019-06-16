@@ -669,12 +669,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler implements DiscreteSampl
 
         double sumProb = 0;
         for (final double prob : probabilities) {
-            if (prob < 0 ||
-                Double.isInfinite(prob) ||
-                Double.isNaN(prob)) {
-                throw new IllegalArgumentException("Invalid probability: " +
-                                                   prob);
-            }
+            InternalUtils.validateProbability(prob);
             sumProb += prob;
         }
 

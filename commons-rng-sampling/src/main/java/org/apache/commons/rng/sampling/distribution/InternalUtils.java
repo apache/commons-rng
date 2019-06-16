@@ -20,7 +20,7 @@ package org.apache.commons.rng.sampling.distribution;
 /**
  * Functions used by some of the samplers.
  * This class is not part of the public API, as it would be
- * better to group these utilities in a dedicated components.
+ * better to group these utilities in a dedicated component.
  */
 final class InternalUtils { // Class is package-private on purpose; do not make it public.
     /** All long-representable factorials. */
@@ -47,6 +47,21 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      */
     public static long factorial(int n)  {
         return FACTORIALS[n];
+    }
+
+    /**
+     * Validate the probability is a finite positive number.
+     *
+     * @param probability Probability.
+     * @throws IllegalArgumentException if {@code probability} is negative, infinite or {@code NaN}.
+     */
+    public static void validateProbability(double probability) {
+        if (probability < 0 ||
+            Double.isInfinite(probability) ||
+            Double.isNaN(probability)) {
+            throw new IllegalArgumentException("Invalid probability: " +
+                                               probability);
+        }
     }
 
     /**
