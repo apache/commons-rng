@@ -81,7 +81,8 @@
     <properties>
       <!-- Do not require Utils/Helper suffix -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder' or @Image='ThreadLocalRandomSource']"/>
+        value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder'
+          or @Image='ThreadLocalRandomSource' or @Image='SeedFactory']"/>
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/ShortMethodName">
