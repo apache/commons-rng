@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
@@ -112,6 +112,98 @@ public class SeedFactoryTest {
     }
 
     @Test
+    public void testCreateIntArrayWithCompleteBlockSize() {
+        // Block size is 8 for int
+        assertCreateIntArray(8);
+    }
+
+    @Test
+    public void testCreateIntArrayWithIncompleteBlockSize() {
+        // Block size is 8 for int
+        assertCreateIntArray(8 + 1);
+    }
+
+    /**
+     * Checks that the int array values can be placed into 2 bins with
+     * approximately equal number of counts.
+     * The test uses the expectation from a fixed-step "random walk".
+     *
+     * @param n The size of the array.
+     */
+    private static void assertCreateIntArray(int n) {
+        final int[] array = SeedFactory.createIntArray(n);
+        Assert.assertEquals("Incorrect array length", n, array.length);
+        // The bit count should be 50%.
+        int bitCount = 0;
+        for (final int i : array) {
+            bitCount += Integer.bitCount(i);
+        }
+        final int numberOfBits = n * Integer.SIZE;
+        assertMonobit(bitCount, numberOfBits);
+    }
+
+    @Test
+    public void testCreateLongArrayWithCompleteBlockSize() {
+        // Block size is 4 for long
+        assertCreateLongArray(4);
+    }
+
+    @Test
+    public void testCreateLongArrayWithIncompleteBlockSize() {
+        // Block size is 4 for long
+        assertCreateLongArray(4 + 1);
+    }
+
+    /**
+     * Checks that the long array values can be placed into 2 bins with
+     * approximately equal number of counts.
+     * The test uses the expectation from a fixed-step "random walk".
+     *
+     * @param n The size of the array.
+     */
+    private static void assertCreateLongArray(int n) {
+        final long[] array = SeedFactory.createLongArray(n);
+        Assert.assertEquals("Incorrect array length", n, array.length);
+        // The bit count should be 50%.
+        int bitCount = 0;
+        for (final long i : array) {
+            bitCount += Long.bitCount(i);
+        }
+        final int numberOfBits = n * Long.SIZE;
+        assertMonobit(bitCount, numberOfBits);
+    }
+
+    /**
+     * Assert that the number of 1 bits is approximately 50%. This is based upon a
+     * fixed-step "random walk" of +1/-1 from zero.
+     *
+     * <p>The test is equivalent to the NIST Monobit test with a fixed p-value of 0.01.
+     * The number of bits is recommended to be above 100.</p>
+     *
+     * @see <A
+     * href="https://csrc.nist.gov/publications/detail/sp/800-22/rev-1a/final">Bassham, et
+     * al (2010) NIST SP 800-22: A Statistical Test Suite for Random and Pseudorandom
+     * Number Generators for Cryptographic Applications. Section 2.1.</a>
+     *
+     * @param bitCount The bit count.
+     * @param numberOfBits Number of bits.
+     */
+    private static void assertMonobit(int bitCount, int numberOfBits) {
+        // Convert the bit count into a number of +1/-1 steps.
+        final double sum = 2.0 * bitCount - numberOfBits;
+        // The reference distribution is Normal with a standard deviation of sqrt(n).
+        // Check the absolute position is not too far from the mean of 0 with a fixed
+        // p-value of 0.01 taken from a 2-tailed Normal distribution. Computation of
+        // true p-value requires the complimentary error function.
+        final double absSum = Math.abs(sum);
+        final double max = Math.sqrt(numberOfBits) * 2.576;
+        Assert.assertTrue("Walked too far astray: " + absSum +
+                          " > " + max +
+                          " (test will fail randomly about 1 in 100 times)",
+                          absSum <= max);
+    }
+
+    @Test
     public void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
         final int[] seed = new int[0];
         SeedFactory.ensureNonZero(seed);
@@ -168,6 +260,23 @@ public class SeedFactoryTest {
         Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
         for (int i = 1; i < seed.length; i++) {
             Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+        }
+    }
+
+    @Test
+    public void testEnsureNonZeroValue() {
+        final long expected = 345;
+        RandomLongSource source = new RandomLongSource() {
+            @Override
+            public long next() {
+                return expected;
+            }
+        };
+        Assert.assertEquals("Zero should be replaced using the random source",
+                expected, SeedFactory.ensureNonZero(source, 0));
+        for (final long nonZero : new long[] {Long.MIN_VALUE, -1, 1, 9876654321L, Long.MAX_VALUE}) {
+            Assert.assertEquals("Non-zero should be unmodified",
+                    nonZero, SeedFactory.ensureNonZero(source, nonZero));
         }
     }
 }
