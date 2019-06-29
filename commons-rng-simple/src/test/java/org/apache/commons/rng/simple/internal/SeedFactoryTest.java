@@ -194,7 +194,7 @@ public class SeedFactoryTest {
         // The reference distribution is Normal with a standard deviation of sqrt(n).
         // Check the absolute position is not too far from the mean of 0 with a fixed
         // p-value of 0.01 taken from a 2-tailed Normal distribution. Computation of
-        // true p-value requires the complimentary error function.
+        // the p-value requires the complimentary error function.
         final double absSum = Math.abs(sum);
         final double max = Math.sqrt(numberOfBits) * 2.576;
         Assert.assertTrue("Walked too far astray: " + absSum +
