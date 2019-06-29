@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="108">
+        Update "SeedFactory" to improve performance.
+      </action>
       <action dev="aherbert" type="add" issue="99">
         New "AliasMethodDiscreteSampler" that can sample from any discrete distribution defined
         by an array of probabilities. Set-up is O(n) time and sampling is O(1) time.
