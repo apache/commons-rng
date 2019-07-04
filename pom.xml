@@ -31,7 +31,7 @@
 
   <inceptionYear>2016</inceptionYear>
   <description>The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.</description>
-  <url>http://commons.apache.org/proper/commons-rng/</url>
+  <url>https://commons.apache.org/proper/commons-rng/</url>
 
   <issueManagement>
     <system>jira</system>

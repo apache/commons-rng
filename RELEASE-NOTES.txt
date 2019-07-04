@@ -41,6 +41,6 @@ o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert.
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
-http://commons.apache.org/proper/commons-rng/
+https://commons.apache.org/proper/commons-rng/
 
 

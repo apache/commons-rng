@@ -21,7 +21,7 @@
 
   The "Apache Commons RNG" project started off from code originally in the
   "Apache Commons Math" project; there, the code in package
-  {{{http://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/org/apache/commons/math3/random/package-summary.html}org.apache.commons.math3.random}}
+  {{{https://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/org/apache/commons/math3/random/package-summary.html}org.apache.commons.math3.random}}
   had its design prominently based on the JDK's
   {{{https://docs.oracle.com/javase/7/docs/api/java/util/Random.html}Random}}
   class.
