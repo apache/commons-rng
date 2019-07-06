@@ -97,7 +97,8 @@ public final class RandomAssert {
             final T value1 = sampler1.sample();
             final T value2 = sampler2.sample();
             if (isArray(value1) && isArray(value2)) {
-                Assert.assertArrayEquals((Object[]) value1, (Object[]) value2);
+                // JUnit assertArrayEquals will handle nested primitive arrays
+                Assert.assertArrayEquals(new Object[] {value1}, new Object[] {value2});
             } else {
                 Assert.assertEquals(value1, value2);
             }

@@ -115,6 +115,32 @@ public class UnitSphereSamplerTest {
     }
 
     /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final int n = 3;
+        final UnitSphereSampler sampler1 =
+            new UnitSphereSampler(n, rng1);
+        final UnitSphereSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<double[]>() {
+                @Override
+                public double[] sample() {
+                    return sampler1.nextVector();
+                }
+            },
+            new RandomAssert.Sampler<double[]>() {
+                @Override
+                public double[] sample() {
+                    return sampler2.nextVector();
+                }
+            });
+    }
+
+    /**
      * @return the length (L2-norm) of given vector.
      */
     private static double length(double[] vector) {

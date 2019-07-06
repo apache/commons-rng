@@ -19,36 +19,12 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Test for the {@link ContinuousUniformSampler}.
+ * Test for the {@link MarsagliaNormalizedGaussianSampler}.
  */
-public class ContinuousUniformSamplerTest {
-    /**
-     * Test that the sampler algorithm does not require high to be above low.
-     */
-    @Test
-    public void testNoRestrictionOnOrderOfLowAndHighParameters() {
-        final double low = 3.18;
-        final double high = 5.23;
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-        testSampleInRange(rng, low, high);
-        testSampleInRange(rng, high, low);
-    }
-
-    private static void testSampleInRange(UniformRandomProvider rng,
-                                          double low, double high) {
-        ContinuousUniformSampler sampler = new ContinuousUniformSampler(rng, low, high);
-        final double min = Math.min(low,  high);
-        final double max = Math.max(low,  high);
-        for (int i = 0; i < 10; i++) {
-            final double value = sampler.sample();
-            Assert.assertTrue("Value not in range", value >= min && value <= max);
-        }
-    }
-
+public class MarsagliaNormalisedGaussianSamplerTest {
     /**
      * Test the SharedStateSampler implementation.
      */
@@ -56,11 +32,9 @@ public class ContinuousUniformSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final double low = 1.23;
-        final double high = 4.56;
-        final ContinuousUniformSampler sampler1 =
-            new ContinuousUniformSampler(rng1, low, high);
-        final ContinuousUniformSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final MarsagliaNormalizedGaussianSampler sampler1 =
+            new MarsagliaNormalizedGaussianSampler(rng1);
+        final MarsagliaNormalizedGaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

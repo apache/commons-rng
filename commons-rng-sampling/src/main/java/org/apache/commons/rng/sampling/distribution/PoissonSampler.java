@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
@@ -51,7 +52,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class PoissonSampler
     extends SamplerBase
-    implements DiscreteSampler {
+    implements DiscreteSampler, SharedStateSampler<PoissonSampler> {
 
     /**
      * Value for switching sampling algorithm.
@@ -79,6 +80,23 @@ public class PoissonSampler
             new LargeMeanPoissonSampler(rng, mean);
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private PoissonSampler(UniformRandomProvider rng,
+            PoissonSampler source) {
+        super(null);
+
+        if (source.poissonSamplerDelegate instanceof SmallMeanPoissonSampler) {
+            poissonSamplerDelegate =
+                ((SmallMeanPoissonSampler)source.poissonSamplerDelegate).withUniformRandomProvider(rng);
+        } else {
+            poissonSamplerDelegate =
+                ((LargeMeanPoissonSampler)source.poissonSamplerDelegate).withUniformRandomProvider(rng);
+        }
+    }
+
     /** {@inheritDoc} */
     @Override
     public int sample() {
@@ -89,5 +107,11 @@ public class PoissonSampler
     @Override
     public String toString() {
         return poissonSamplerDelegate.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PoissonSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new PoissonSampler(rng, this);
     }
 }

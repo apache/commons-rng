@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -110,5 +111,36 @@ public class GeometricSamplerTest {
         final double probabilityOfSuccess = 0;
         @SuppressWarnings("unused")
         final GeometricSampler sampler = new GeometricSampler(unusedRng, probabilityOfSuccess);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        testSharedStateSampler(0.5);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the edge case when the probability of
+     * success is {@code 1.0}.
+     */
+    @Test
+    public void testSharedStateSamplerWithProbabilityOfSuccessOne() {
+        testSharedStateSampler(1.0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param probabilityOfSuccess Probability of success.
+     */
+    private static void testSharedStateSampler(double probabilityOfSuccess) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final GeometricSampler sampler1 =
+            new GeometricSampler(rng1, probabilityOfSuccess);
+        final GeometricSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
@@ -52,7 +53,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
-    implements ContinuousSampler {
+    implements ContinuousSampler, SharedStateSampler<AhrensDieterMarsagliaTsangGammaSampler> {
     /** The appropriate gamma sampler for the parameters. */
     private final ContinuousSampler delegate;
 
@@ -60,7 +61,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * Base class for a sampler from the Gamma distribution.
      */
     private abstract static class BaseGammaSampler
-        implements ContinuousSampler {
+        implements ContinuousSampler, SharedStateSampler<ContinuousSampler> {
 
         /** Underlying source of randomness. */
         protected final UniformRandomProvider rng;
@@ -87,6 +88,17 @@ public class AhrensDieterMarsagliaTsangGammaSampler
             this.rng = rng;
             this.alpha = alpha;
             this.theta = theta;
+        }
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        BaseGammaSampler(UniformRandomProvider rng,
+                         BaseGammaSampler source) {
+            this.rng = rng;
+            this.alpha = source.alpha;
+            this.theta = source.theta;
         }
 
         /** {@inheritDoc} */
@@ -127,6 +139,17 @@ public class AhrensDieterMarsagliaTsangGammaSampler
             bGSOptim = 1 + alpha / Math.E;
         }
 
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        AhrensDieterGammaSampler(UniformRandomProvider rng,
+                                 AhrensDieterGammaSampler source) {
+            super(rng, source);
+            oneOverAlpha = source.oneOverAlpha;
+            bGSOptim = source.bGSOptim;
+        }
+
         @Override
         public double sample() {
             // [1]: p. 228, Algorithm GS.
@@ -157,6 +180,11 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                 }
                 // Reject and continue.
             }
+        }
+
+        @Override
+        public ContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new AhrensDieterGammaSampler(rng, this);
         }
     }
 
@@ -189,12 +217,24 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
         MarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                         double alpha,
-                                                         double theta) {
+                                   double alpha,
+                                   double theta) {
             super(rng, alpha, theta);
             gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = alpha - ONE_THIRD;
             cOptim = ONE_THIRD / Math.sqrt(dOptim);
+        }
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        MarsagliaTsangGammaSampler(UniformRandomProvider rng,
+                                   MarsagliaTsangGammaSampler source) {
+            super(rng, source);
+            gaussian = new ZigguratNormalizedGaussianSampler(rng);
+            dOptim = source.dOptim;
+            cOptim = source.cOptim;
         }
 
         @Override
@@ -221,6 +261,11 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                 }
             }
         }
+
+        @Override
+        public ContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new MarsagliaTsangGammaSampler(rng, this);
+        }
     }
 
     /**
@@ -238,6 +283,17 @@ public class AhrensDieterMarsagliaTsangGammaSampler
             new MarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    @SuppressWarnings("unchecked")
+    private AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
+                                                   AhrensDieterMarsagliaTsangGammaSampler source) {
+        super(null);
+        delegate = ((SharedStateSampler<ContinuousSampler>)(source.delegate)).withUniformRandomProvider(rng);
+    }
+
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -248,5 +304,11 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     @Override
     public String toString() {
         return delegate.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AhrensDieterMarsagliaTsangGammaSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new AhrensDieterMarsagliaTsangGammaSampler(rng, this);
     }
 }

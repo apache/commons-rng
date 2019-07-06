@@ -20,6 +20,7 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -247,5 +248,36 @@ public class AliasMethodDiscreteSamplerTest {
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
         Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+    }
+
+    /**
+     * Test the SharedStateSampler implementation for the specialised power-of-2 table size.
+     */
+    @Test
+    public void testSharedStateSamplerWithPowerOf2TableSize() {
+        testSharedStateSampler(new double[] {0.1, 0.2, 0.3, 0.4});
+    }
+
+    /**
+     * Test the SharedStateSampler implementation for the generic non power-of-2 table size.
+     */
+    @Test
+    public void testSharedStateSamplerWithNonPowerOf2TableSize() {
+        testSharedStateSampler(new double[] {0.1, 0.2, 0.3});
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param probabilities The probabilities
+     */
+    private static void testSharedStateSampler(double[] probabilities) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        // Use negative alpha to disable padding
+        final AliasMethodDiscreteSampler sampler1 =
+            AliasMethodDiscreteSampler.create(rng1, probabilities, -1);
+        final AliasMethodDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

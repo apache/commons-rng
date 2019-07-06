@@ -17,6 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
@@ -31,11 +33,11 @@ public class InverseTransformParetoSamplerTest {
     public void testConstructorThrowsWithZeroScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double shape = 1;
         final double scale = 0;
+        final double shape = 1;
         @SuppressWarnings("unused")
         final InverseTransformParetoSampler sampler =
-            new InverseTransformParetoSampler(rng, shape, scale);
+            new InverseTransformParetoSampler(rng, scale, shape);
     }
 
     /**
@@ -45,10 +47,25 @@ public class InverseTransformParetoSamplerTest {
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final double shape = 0;
         final double scale = 1;
+        final double shape = 0;
         @SuppressWarnings("unused")
         final InverseTransformParetoSampler sampler =
-            new InverseTransformParetoSampler(rng, shape, scale);
+            new InverseTransformParetoSampler(rng, scale, shape);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final double scale = 1.23;
+        final double shape = 4.56;
+        final InverseTransformParetoSampler sampler1 =
+            new InverseTransformParetoSampler(rng1, scale, shape);
+        final InverseTransformParetoSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 import java.util.Arrays;
 
@@ -69,7 +70,8 @@ import java.util.Arrays;
  * @see <a href="https://ieeexplore.ieee.org/document/92917">Vose (1991) IEEE Transactions
  * on Software Engineering 17, 972-975.</a>
  */
-public class AliasMethodDiscreteSampler implements DiscreteSampler {
+public class AliasMethodDiscreteSampler
+    implements DiscreteSampler, SharedStateSampler<AliasMethodDiscreteSampler> {
     /**
      * The default alpha factor for zero-padding an input probability table. The default
      * value will pad the probabilities by to the next power-of-2.
@@ -182,8 +184,8 @@ public class AliasMethodDiscreteSampler implements DiscreteSampler {
          * @param alias Alias table.
          */
         SmallTableAliasMethodDiscreteSampler(final UniformRandomProvider rng,
-                                       final long[] probability,
-                                       final int[] alias) {
+                                             final long[] probability,
+                                             final int[] alias) {
             super(rng, probability, alias);
             // Assume the table size is a power of 2 and create the mask
             mask = alias.length - 1;
@@ -207,6 +209,12 @@ public class AliasMethodDiscreteSampler implements DiscreteSampler {
 
             // Choose between the two. Use a 53-bit long for the probability.
             return (longBits >>> 11) < probability[j] ? j : alias[j];
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public SmallTableAliasMethodDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new SmallTableAliasMethodDiscreteSampler(rng, probability, alias);
         }
     }
 
@@ -268,6 +276,12 @@ public class AliasMethodDiscreteSampler implements DiscreteSampler {
     @Override
     public String toString() {
         return "Alias method [" + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AliasMethodDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new AliasMethodDiscreteSampler(rng, probability, alias);
     }
 
     /**

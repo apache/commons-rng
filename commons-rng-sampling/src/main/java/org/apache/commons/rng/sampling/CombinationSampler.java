@@ -39,7 +39,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @see PermutationSampler
  */
-public class CombinationSampler {
+public class CombinationSampler implements SharedStateSampler<CombinationSampler> {
     /** Domain of the combination. */
     private final int[] domain;
     /** The number of steps of a full shuffle to perform. */
@@ -90,6 +90,25 @@ public class CombinationSampler {
     }
 
     /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private CombinationSampler(UniformRandomProvider rng,
+                               CombinationSampler source) {
+        // Do not clone the domain. This ensures:
+        // 1. Thread safety as the domain may be shuffled during the clone
+        //    and a shuffle swap step can result in duplicates and missing elements
+        //    in the array.
+        // 2. If the argument RNG is an exact match for the RNG in the source
+        //    then the output sequence will differ unless the domain is currently
+        //    in natural order.
+        domain = PermutationSampler.natural(source.domain.length);
+        steps = source.steps;
+        upper = source.upper;
+        this.rng = rng;
+    }
+
+    /**
      * Return a combination of {@code k} whose entries are selected randomly,
      * without repetition, from the integers 0, 1, ..., {@code n}-1 (inclusive).
      *
@@ -100,5 +119,11 @@ public class CombinationSampler {
      */
     public int[] sample() {
         return SubsetSamplerUtils.partialSample(domain, steps, rng, upper);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public CombinationSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new CombinationSampler(rng, this);
     }
 }

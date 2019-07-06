@@ -17,6 +17,9 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
@@ -52,5 +55,76 @@ public class LogNormalSamplerTest {
         @SuppressWarnings("unused")
         final LogNormalSampler sampler =
             new LogNormalSampler(gauss, scale, shape);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng1);
+        final double scale = 1.23;
+        final double shape = 4.56;
+        final LogNormalSampler sampler1 =
+            new LogNormalSampler(gauss, scale, shape);
+        final LogNormalSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation throws if the underlying sampler is
+     * not a SharedStateSampler.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
+            @Override
+            public double sample() {
+                return 0;
+            }
+        };
+        final double scale = 1.23;
+        final double shape = 4.56;
+        final LogNormalSampler sampler1 =
+            new LogNormalSampler(gauss, scale, shape);
+        sampler1.withUniformRandomProvider(rng2);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation throws if the underlying sampler is
+     * a SharedStateSampler that returns an incorrect type.
+     */
+    @Test(expected = ClassCastException.class)
+    public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
+        final double scale = 1.23;
+        final double shape = 4.56;
+        final LogNormalSampler sampler1 =
+            new LogNormalSampler(gauss, scale, shape);
+        sampler1.withUniformRandomProvider(rng2);
+    }
+
+    /**
+     * Test class to return an incorrect sampler from the SharedStateSampler method.
+     *
+     * <p>Note that due to type erasure the type returned by the SharedStateSampler is not
+     * available at run-time and the LogNormalSampler has to assume it is the correct type.</p>
+     */
+    private static class BadSharedStateNormalizedGaussianSampler
+            implements NormalizedGaussianSampler, SharedStateSampler<Integer> {
+        @Override
+        public double sample() {
+            return 0;
+        }
+
+        @Override
+        public Integer withUniformRandomProvider(UniformRandomProvider rng) {
+            // Something that is not a NormalizedGaussianSampler
+            return Integer.valueOf(44);
+        }
     }
 }

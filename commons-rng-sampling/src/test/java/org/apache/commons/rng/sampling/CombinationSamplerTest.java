@@ -113,6 +113,33 @@ public class CombinationSamplerTest {
         new CombinationSampler(rng, n, k);
     }
 
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final int n = 17;
+        final int k = 3;
+        final CombinationSampler sampler1 =
+            new CombinationSampler(rng1, n, k);
+        final CombinationSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<int[]>() {
+                @Override
+                public int[] sample() {
+                    return sampler1.sample();
+                }
+            },
+            new RandomAssert.Sampler<int[]>() {
+                @Override
+                public int[] sample() {
+                    return sampler2.sample();
+                }
+            });
+    }
+
     //// Support methods.
 
     /**

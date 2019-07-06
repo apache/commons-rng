@@ -16,12 +16,15 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
+
 /**
  * Sampling from a log-normal distribution.
  *
  * @since 1.1
  */
-public class LogNormalSampler implements ContinuousSampler {
+public class LogNormalSampler implements ContinuousSampler, SharedStateSampler<LogNormalSampler> {
     /** Scale. */
     private final double scale;
     /** Shape. */
@@ -49,6 +52,21 @@ public class LogNormalSampler implements ContinuousSampler {
         this.gaussian = gaussian;
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private LogNormalSampler(UniformRandomProvider rng,
+                             LogNormalSampler source) {
+        if (!(source.gaussian instanceof SharedStateSampler<?>)) {
+            throw new UnsupportedOperationException("The underlying sampler is not a SharedStateSampler");
+        }
+        this.scale = source.scale;
+        this.shape = source.shape;
+        this.gaussian = (NormalizedGaussianSampler)
+            ((SharedStateSampler<?>)source.gaussian).withUniformRandomProvider(rng);
+    }
+
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -59,5 +77,20 @@ public class LogNormalSampler implements ContinuousSampler {
     @Override
     public String toString() {
         return "Log-normal deviate [" + gaussian.toString() + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Note: This function is available if the underlying {@link NormalizedGaussianSampler}
+     * is a {@link SharedStateSampler}. Otherwise a run-time exception is thrown.</p>
+     *
+     * @throws UnsupportedOperationException if the underlying sampler is not a {@link SharedStateSampler}.
+     * @throws ClassCastException if the underlying {@link SharedStateSampler} does not return a
+     * {@link NormalizedGaussianSampler}.
+     */
+    @Override
+    public LogNormalSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new LogNormalSampler(rng, this);
     }
 }

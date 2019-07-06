@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Test for {@link ZigguratNormalizedGaussianSampler}.
@@ -44,5 +46,18 @@ public class ZigguratNormalizedGaussianSamplerTest {
 
         // Infinite loop (in v1.1).
         new ZigguratNormalizedGaussianSampler(bad).sample();
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final ZigguratNormalizedGaussianSampler sampler1 =
+            new ZigguratNormalizedGaussianSampler(rng1);
+        final ZigguratNormalizedGaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

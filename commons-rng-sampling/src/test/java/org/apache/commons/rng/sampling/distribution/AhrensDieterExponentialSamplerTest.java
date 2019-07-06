@@ -17,6 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
@@ -35,5 +37,19 @@ public class AhrensDieterExponentialSamplerTest {
         @SuppressWarnings("unused")
         final AhrensDieterExponentialSampler sampler =
             new AhrensDieterExponentialSampler(rng, mean);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final double mean = 1.23;
+        final AhrensDieterExponentialSampler sampler1 =
+            new AhrensDieterExponentialSampler(rng1, mean);
+        final AhrensDieterExponentialSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

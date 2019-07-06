@@ -152,4 +152,32 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // Test the two samples are different items
         Assert.assertNotSame("Item1 and 2 should be different", item1, item2);
     }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final List<Double> items = Arrays.asList(new Double[] {1d, 2d, 3d, 4d});
+        final DiscreteProbabilityCollectionSampler<Double> sampler1 =
+            new DiscreteProbabilityCollectionSampler<Double>(rng1,
+                                                             items,
+                                                             new double[] {0.1, 0.2, 0.3, 04});
+        final DiscreteProbabilityCollectionSampler<Double> sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<Double>() {
+                @Override
+                public Double sample() {
+                    return sampler1.sample();
+                }
+            },
+            new RandomAssert.Sampler<Double>() {
+                @Override
+                public Double sample() {
+                    return sampler2.sample();
+                }
+            });
+    }
 }

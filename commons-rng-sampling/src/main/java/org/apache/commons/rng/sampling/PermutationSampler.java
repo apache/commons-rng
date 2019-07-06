@@ -27,7 +27,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <p>This class also contains utilities for shuffling an {@code int[]} array in-place.</p>
  */
-public class PermutationSampler {
+public class PermutationSampler implements SharedStateSampler<PermutationSampler> {
     /** Domain of the permutation. */
     private final int[] domain;
     /** Size of the permutation. */
@@ -60,12 +60,36 @@ public class PermutationSampler {
     }
 
     /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private PermutationSampler(UniformRandomProvider rng,
+                               PermutationSampler source) {
+        // Do not clone the domain. This ensures:
+        // 1. Thread safety as the domain may be shuffled during the clone
+        //    and an incomplete shuffle swap step can result in duplicates and
+        //    missing elements in the array.
+        // 2. If the argument RNG is an exact match for the RNG in the source
+        //    then the output sequence will differ unless the domain is currently
+        //    in natural order.
+        domain = PermutationSampler.natural(source.domain.length);
+        size = source.size;
+        this.rng = rng;
+    }
+
+    /**
      * @return a random permutation.
      *
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
     public int[] sample() {
         return SubsetSamplerUtils.partialSample(domain, size, rng, true);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public PermutationSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new PermutationSampler(rng, this);
     }
 
     /**

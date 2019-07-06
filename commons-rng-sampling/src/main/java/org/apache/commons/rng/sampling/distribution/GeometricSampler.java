@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Geometric_distribution">geometric
@@ -45,14 +46,15 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.3
  */
-public class GeometricSampler implements DiscreteSampler {
+public class GeometricSampler implements DiscreteSampler, SharedStateSampler<GeometricSampler> {
     /** The appropriate geometric sampler for the parameters. */
     private final DiscreteSampler delegate;
 
     /**
      * Sample from the geometric distribution when the probability of success is 1.
      */
-    private static class GeometricP1Sampler implements DiscreteSampler {
+    private static class GeometricP1Sampler
+        implements DiscreteSampler, SharedStateSampler<DiscreteSampler> {
         /** The single instance. */
         static final GeometricP1Sampler INSTANCE = new GeometricP1Sampler();
 
@@ -62,17 +64,23 @@ public class GeometricSampler implements DiscreteSampler {
             return 0;
         }
 
-        /** {@inheritDoc} */
         @Override
         public String toString() {
             return "Geometric(p=1) deviate";
+        }
+
+        @Override
+        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            // No requirement for a new instance
+            return this;
         }
     }
 
     /**
      * Sample from the geometric distribution by using a related exponential distribution.
      */
-    private static class GeometricExponentialSampler implements DiscreteSampler {
+    private static class GeometricExponentialSampler
+        implements DiscreteSampler, SharedStateSampler<DiscreteSampler> {
         /** Underlying source of randomness. Used only for the {@link #toString()} method. */
         private final UniformRandomProvider rng;
         /** The related exponential sampler for the geometric distribution. */
@@ -99,16 +107,29 @@ public class GeometricSampler implements DiscreteSampler {
             exponentialSampler = new AhrensDieterExponentialSampler(rng, exponentialMean);
         }
 
+        /**
+         * @param rng Generator of uniformly distributed random numbers
+         * @param source Source to copy.
+         */
+        GeometricExponentialSampler(UniformRandomProvider rng, GeometricExponentialSampler source) {
+            this.rng = rng;
+            exponentialSampler = source.exponentialSampler.withUniformRandomProvider(rng);
+        }
+
         @Override
         public int sample() {
             // Return the floor of the exponential sample
             return (int) Math.floor(exponentialSampler.sample());
         }
 
-        /** {@inheritDoc} */
         @Override
         public String toString() {
             return "Geometric deviate [" + rng.toString() + "]";
+        }
+
+        @Override
+        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new GeometricExponentialSampler(rng, this);
         }
     }
 
@@ -134,6 +155,15 @@ public class GeometricSampler implements DiscreteSampler {
     }
 
     /**
+     * @param rng Generator of uniformly distributed random numbers
+     * @param source Source to copy.
+     */
+    @SuppressWarnings("unchecked")
+    private GeometricSampler(UniformRandomProvider rng, GeometricSampler source) {
+        delegate = ((SharedStateSampler<DiscreteSampler>)(source.delegate)).withUniformRandomProvider(rng);
+    }
+
+    /**
      * Create a sample from a geometric distribution.
      *
      * <p>The sample will take the values in the set {@code [0, 1, 2, ...]}, equivalent to the
@@ -148,5 +178,11 @@ public class GeometricSampler implements DiscreteSampler {
     @Override
     public String toString() {
         return delegate.toString();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public GeometricSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new GeometricSampler(rng, this);
     }
 }

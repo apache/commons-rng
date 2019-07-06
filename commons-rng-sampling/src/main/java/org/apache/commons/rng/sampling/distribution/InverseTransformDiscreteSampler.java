@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Distribution sampler that uses the
@@ -57,7 +58,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class InverseTransformDiscreteSampler
     extends SamplerBase
-    implements DiscreteSampler {
+    implements DiscreteSampler, SharedStateSampler<InverseTransformDiscreteSampler> {
     /** Inverse cumulative probability function. */
     private final DiscreteInverseCumulativeProbabilityFunction function;
     /** Underlying source of randomness. */
@@ -84,5 +85,16 @@ public class InverseTransformDiscreteSampler
     @Override
     public String toString() {
         return function.toString() + " (inverse method) [" + rng.toString() + "]";
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Note: The new sampler will share the inverse cumulative probability function. This
+     * must be suitable for concurrent use to ensure thread safety.</p>
+     */
+    @Override
+    public InverseTransformDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new InverseTransformDiscreteSampler(rng, function);
     }
 }

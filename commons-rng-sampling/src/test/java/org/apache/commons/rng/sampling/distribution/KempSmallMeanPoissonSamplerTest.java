@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -142,6 +144,20 @@ public class KempSmallMeanPoissonSamplerTest {
             final int upper = pd.inverseCumulativeProbability(p + 0.01);
             testSample(rng, sampler, p, lower, upper);
         }
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final double mean = 1.23;
+        final KempSmallMeanPoissonSampler sampler1 =
+            new KempSmallMeanPoissonSampler(rng1, mean);
+        final KempSmallMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

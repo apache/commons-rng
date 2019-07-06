@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.
@@ -27,7 +28,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class InverseTransformParetoSampler
     extends SamplerBase
-    implements ContinuousSampler {
+    implements ContinuousSampler, SharedStateSampler<InverseTransformParetoSampler> {
     /** Scale. */
     private final double scale;
     /** 1 / Shape. */
@@ -56,6 +57,18 @@ public class InverseTransformParetoSampler
         this.oneOverShape = 1 / shape;
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private InverseTransformParetoSampler(UniformRandomProvider rng,
+                                          InverseTransformParetoSampler source) {
+        super(null);
+        this.rng = rng;
+        scale = source.scale;
+        oneOverShape = source.oneOverShape;
+    }
+
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -66,5 +79,11 @@ public class InverseTransformParetoSampler
     @Override
     public String toString() {
         return "[Inverse method for Pareto distribution " + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public InverseTransformParetoSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new InverseTransformParetoSampler(rng, this);
     }
 }

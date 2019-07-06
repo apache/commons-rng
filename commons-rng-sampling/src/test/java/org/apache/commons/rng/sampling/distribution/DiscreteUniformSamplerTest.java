@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
@@ -34,5 +35,36 @@ public class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
         @SuppressWarnings("unused")
         DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithSmallRange() {
+        testSharedStateSampler(5, 67);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithLargeRange() {
+        testSharedStateSampler(-99999999, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param lower Lower.
+     * @param upper Upper.
+     */
+    private static void testSharedStateSampler(int lower, int upper) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final DiscreteUniformSampler sampler1 =
+            new DiscreteUniformSampler(rng1, lower, upper);
+        final DiscreteUniformSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

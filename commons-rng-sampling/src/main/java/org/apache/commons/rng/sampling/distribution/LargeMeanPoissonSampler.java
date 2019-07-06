@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 
 /**
@@ -44,13 +45,13 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  * @since 1.1
  */
 public class LargeMeanPoissonSampler
-    implements DiscreteSampler {
+    implements DiscreteSampler, SharedStateSampler<LargeMeanPoissonSampler> {
     /** Upper bound to avoid truncation. */
     private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /** Class to compute {@code log(n!)}. This has no cached values. */
     private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
     /** Used when there is no requirement for a small mean Poisson sampler. */
-    private static final DiscreteSampler NO_SMALL_MEAN_POISSON_SAMPLER = null;
+    private static final KempSmallMeanPoissonSampler NO_SMALL_MEAN_POISSON_SAMPLER = null;
 
     static {
         // Create without a cache.
@@ -60,7 +61,7 @@ public class LargeMeanPoissonSampler
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
     /** Exponential. */
-    private final ContinuousSampler exponential;
+    private final AhrensDieterExponentialSampler exponential;
     /** Gaussian. */
     private final ContinuousSampler gaussian;
     /** Local class to compute {@code log(n!)}. This may have cached values. */
@@ -100,7 +101,7 @@ public class LargeMeanPoissonSampler
     private final double c1;
 
     /** The internal Poisson sampler for the lambda fraction. */
-    private final DiscreteSampler smallMeanPoissonSampler;
+    private final KempSmallMeanPoissonSampler smallMeanPoissonSampler;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -186,6 +187,36 @@ public class LargeMeanPoissonSampler
             new KempSmallMeanPoissonSampler(rng, lambdaFractional);
     }
 
+    /**
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param source Source to copy.
+     */
+    private LargeMeanPoissonSampler(UniformRandomProvider rng,
+                                    LargeMeanPoissonSampler source) {
+        this.rng = rng;
+
+        // The Gaussian sampler has no shared state
+        gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        exponential = source.exponential.withUniformRandomProvider(rng);
+        // Reuse the cache
+        factorialLog = source.factorialLog;
+
+        lambda = source.lambda;
+        logLambda = source.logLambda;
+        logLambdaFactorial = source.logLambdaFactorial;
+        delta = source.delta;
+        halfDelta = source.halfDelta;
+        twolpd = source.twolpd;
+        p1 = source.p1;
+        p2 = source.p2;
+        c1 = source.c1;
+
+        // Share the state of the small sampler
+        smallMeanPoissonSampler = source.smallMeanPoissonSampler == null ?
+            NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
+            source.smallMeanPoissonSampler.withUniformRandomProvider(rng);
+    }
+
     /** {@inheritDoc} */
     @Override
     public int sample() {
@@ -260,6 +291,12 @@ public class LargeMeanPoissonSampler
     @Override
     public String toString() {
         return "Large Mean Poisson deviate [" + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public LargeMeanPoissonSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new LargeMeanPoissonSampler(rng, this);
     }
 
     /**

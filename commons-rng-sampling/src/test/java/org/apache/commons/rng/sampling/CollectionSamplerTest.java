@@ -17,10 +17,12 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
@@ -52,5 +54,31 @@ public class CollectionSamplerTest {
         // Must fail for empty collection.
         new CollectionSampler<String>(RandomSource.create(RandomSource.MT),
                                       new ArrayList<String>());
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSampler() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final List<String> list = Arrays.asList("Apache", "Commons", "RNG");
+        final CollectionSampler<String> sampler1 =
+            new CollectionSampler<String>(rng1, list);
+        final CollectionSampler<String> sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(
+            new RandomAssert.Sampler<String>() {
+                @Override
+                public String sample() {
+                    return sampler1.sample();
+                }
+            },
+            new RandomAssert.Sampler<String>() {
+                @Override
+                public String sample() {
+                    return sampler2.sample();
+                }
+            });
     }
 }

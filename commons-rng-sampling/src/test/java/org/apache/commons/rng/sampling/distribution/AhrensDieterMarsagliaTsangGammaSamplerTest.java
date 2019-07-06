@@ -17,6 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
 
@@ -50,5 +52,36 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
         @SuppressWarnings("unused")
         final AhrensDieterMarsagliaTsangGammaSampler sampler =
             new AhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithAlphaBelowOne() {
+        testSharedStateSampler(0.5, 3.456);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithAlphaAboveOne() {
+        testSharedStateSampler(3.5, 3.456);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param alpha Alpha.
+     * @param theta Theta.
+     */
+    private static void testSharedStateSampler(double alpha, double theta) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final AhrensDieterMarsagliaTsangGammaSampler sampler1 =
+            new AhrensDieterMarsagliaTsangGammaSampler(rng1, alpha, theta);
+        final AhrensDieterMarsagliaTsangGammaSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

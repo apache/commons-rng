@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Marsaglia_polar_method">
@@ -30,7 +31,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 public class MarsagliaNormalizedGaussianSampler
-    implements NormalizedGaussianSampler {
+    implements NormalizedGaussianSampler, SharedStateSampler<MarsagliaNormalizedGaussianSampler> {
     /** Next gaussian. */
     private double nextGaussian = Double.NaN;
     /** Underlying source of randomness. */
@@ -83,5 +84,11 @@ public class MarsagliaNormalizedGaussianSampler
     @Override
     public String toString() {
         return "Box-Muller (with rejection) normalized Gaussian deviate [" + rng.toString() + "]";
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public MarsagliaNormalizedGaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new MarsagliaNormalizedGaussianSampler(rng);
     }
 }

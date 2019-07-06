@@ -18,6 +18,8 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.LargeMeanPoissonSamplerState;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
@@ -140,5 +142,36 @@ public class LargeMeanPoissonSamplerTest {
         for (int j = 0; j < 10; j++) {
             Assert.assertEquals("Not the same sample", s1.sample(), s2.sample());
         }
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithFractionalMean() {
+        testSharedStateSampler(34.5);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the edge case when there is no
+     * small mean sampler (i.e. no fraction part to the mean).
+     */
+    @Test
+    public void testSharedStateSamplerWithIntegerMean() {
+        testSharedStateSampler(34.0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param mean Mean.
+     */
+    private static void testSharedStateSampler(double mean) {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final LargeMeanPoissonSampler sampler1 =
+            new LargeMeanPoissonSampler(rng1, mean);
+        final LargeMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }
