@@ -121,6 +121,12 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='AliasMethodDiscreteSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/ExcessiveClassLength">
+    <properties>
+      <!-- The length is due to multiple implementations as inner classes -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
