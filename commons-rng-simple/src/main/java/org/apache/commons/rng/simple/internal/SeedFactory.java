@@ -68,8 +68,9 @@ public final class SeedFactory {
         // Use a secure RNG so that different instances (e.g. in multiple JVM
         // instances started in rapid succession) will have different seeds.
         final SecureRandom seedGen = new SecureRandom();
-        final long[] seed = NumberFactory.makeLongArray(
-                seedGen.generateSeed(8 * XOR_SHIFT_1024_STATE_SIZE));
+        final byte[] bytes = new byte[8 * XOR_SHIFT_1024_STATE_SIZE];
+        seedGen.nextBytes(bytes);
+        final long[] seed = NumberFactory.makeLongArray(bytes);
         // The XorShift1024StarPhi generator cannot recover from an all zero seed and
         // will produce low quality initial output if initialised with some zeros.
         // Ensure it is non zero at all array positions using a SplitMix64
