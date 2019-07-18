@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="102">
+        New "SharedStateSampler" interface to allow a sampler to create a new instance with
+        a new source of randomness. Any pre-computed state can be shared between the samplers.
+      </action>
       <action dev="aherbert" type="add" issue="108">
         Update "SeedFactory" to improve performance.
       </action>
