@@ -76,7 +76,7 @@ public class GuideTableDiscreteSamplerTest {
 
     @Test
     public void testToString() {
-        final GuideTableDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5}, 1.0);
+        final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5}, 1.0);
         Assert.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
     }
 
@@ -86,9 +86,9 @@ public class GuideTableDiscreteSamplerTest {
      * @param probabilities the probabilities
      * @return the alias method discrete sampler
      */
-    private static GuideTableDiscreteSampler createSampler(double[] probabilities, double alpha) {
+    private static SharedStateDiscreteSampler createSampler(double[] probabilities, double alpha) {
         final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-        return new GuideTableDiscreteSampler(rng, probabilities, alpha);
+        return GuideTableDiscreteSampler.of(rng, probabilities, alpha);
     }
 
     /**
@@ -201,7 +201,7 @@ public class GuideTableDiscreteSamplerTest {
      * @param alpha the alpha
      */
     private static void checkSamples(double[] probabilies, double alpha) {
-        final GuideTableDiscreteSampler sampler = createSampler(probabilies, alpha);
+        final SharedStateDiscreteSampler sampler = createSampler(probabilies, alpha);
 
         final int numberOfSamples = 10000;
         final long[] samples = new long[probabilies.length];
@@ -244,8 +244,8 @@ public class GuideTableDiscreteSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double[] probabilities = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};
-        final GuideTableDiscreteSampler sampler1 =
-            new GuideTableDiscreteSampler(rng1, probabilities);
+        final SharedStateDiscreteSampler sampler1 =
+            GuideTableDiscreteSampler.of(rng1, probabilities);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

@@ -46,7 +46,7 @@ public class KempSmallMeanPoissonSamplerTest {
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final double mean = SUPPORTED_UPPER_BOUND + 1;
         @SuppressWarnings("unused")
-        KempSmallMeanPoissonSampler sampler = new KempSmallMeanPoissonSampler(dummyRng, mean);
+        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
     }
 
     /**
@@ -56,7 +56,7 @@ public class KempSmallMeanPoissonSamplerTest {
     public void testConstructorThrowsWithZeroMean() {
         final double mean = 0;
         @SuppressWarnings("unused")
-        KempSmallMeanPoissonSampler sampler = new KempSmallMeanPoissonSampler(dummyRng, mean);
+        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
     }
 
     /**
@@ -66,7 +66,7 @@ public class KempSmallMeanPoissonSamplerTest {
     public void testConstructorThrowsWithNegativeMean() {
         final double mean = -1;
         @SuppressWarnings("unused")
-        KempSmallMeanPoissonSampler sampler = new KempSmallMeanPoissonSampler(dummyRng, mean);
+        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
     }
 
     /**
@@ -76,7 +76,7 @@ public class KempSmallMeanPoissonSamplerTest {
     public void testConstructorWithNaNMean() {
         final double mean = Double.NaN;
         @SuppressWarnings("unused")
-        KempSmallMeanPoissonSampler sampler = new KempSmallMeanPoissonSampler(dummyRng, mean);
+        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
     }
 
     /**
@@ -129,7 +129,7 @@ public class KempSmallMeanPoissonSamplerTest {
             PoissonDistribution.DEFAULT_EPSILON, PoissonDistribution.DEFAULT_MAX_ITERATIONS);
 
         final FixedRNG rng = new FixedRNG(0);
-        final KempSmallMeanPoissonSampler sampler = new KempSmallMeanPoissonSampler(rng, mean);
+        final SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(rng, mean);
 
         // Lower bound should be zero
         testSample(rng, sampler, 0, 0, 0);
@@ -154,8 +154,8 @@ public class KempSmallMeanPoissonSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double mean = 1.23;
-        final KempSmallMeanPoissonSampler sampler1 =
-            new KempSmallMeanPoissonSampler(rng1, mean);
+        final SharedStateDiscreteSampler sampler1 =
+            KempSmallMeanPoissonSampler.of(rng1, mean);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -169,7 +169,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * @param lower the expected lower limit
      * @param upper the expected upper limit
      */
-    private static void testSample(FixedRNG rng, KempSmallMeanPoissonSampler sampler, double cumulativeProbability,
+    private static void testSample(FixedRNG rng, SharedStateDiscreteSampler sampler, double cumulativeProbability,
         int lower, int upper) {
         rng.setValue(cumulativeProbability);
         final int sample = sampler.sample();

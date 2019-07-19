@@ -74,7 +74,8 @@
     <properties>
       <!-- Array is generated internally in this case. -->
       <property name="violationSuppressXPath"
-      value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache' or @Image='AliasMethodDiscreteSampler']"/>
+        value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache' or @Image='AliasMethodDiscreteSampler'
+          or @Image='GuideTableDiscreteSampler']"/>
     </properties>
   </rule>
 

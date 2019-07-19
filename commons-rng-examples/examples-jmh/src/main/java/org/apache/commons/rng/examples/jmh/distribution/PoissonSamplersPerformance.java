@@ -185,7 +185,7 @@ public class PoissonSamplersPerformance {
                 factory = new DiscreteSamplerFactory() {
                     @Override
                     public DiscreteSampler create() {
-                        return new KempSmallMeanPoissonSampler(generator, mean);
+                        return KempSmallMeanPoissonSampler.of(generator, mean);
                     }
                 };
             } else if ("BoundedKempSmallMeanPoissonSampler".equals(samplerType)) {

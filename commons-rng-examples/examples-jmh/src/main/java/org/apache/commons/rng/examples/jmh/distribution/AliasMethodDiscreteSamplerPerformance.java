@@ -96,7 +96,7 @@ public class AliasMethodDiscreteSamplerPerformance {
         public void setup() {
             probabilities = createProbabilities(size);
             UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-            sampler = AliasMethodDiscreteSampler.create(rng, probabilities, alpha);
+            sampler = AliasMethodDiscreteSampler.of(rng, probabilities, alpha);
         }
 
         /**
@@ -155,6 +155,6 @@ public class AliasMethodDiscreteSamplerPerformance {
     @Benchmark
     public Object createSampler(DistributionData dist) {
         // For the construction the RNG can be null
-        return AliasMethodDiscreteSampler.create(null, dist.getProbabilities(), dist.getAlpha());
+        return AliasMethodDiscreteSampler.of(null, dist.getProbabilities(), dist.getAlpha());
     }
 }

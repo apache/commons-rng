@@ -41,11 +41,11 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>Sampling uses 1 call to {@link UniformRandomProvider#nextDouble()}. This method provides
  * an alternative to the {@link SmallMeanPoissonSampler} for slow generators of {@code double}.</p>
  *
- * @since 1.3
  * @see <a href="https://www.jstor.org/stable/2346348">Kemp, A.W. (1981) JRSS Vol. 30, pp.
  * 249-253</a>
+ * @since 1.3
  */
-public class KempSmallMeanPoissonSampler
+public final class KempSmallMeanPoissonSampler
     implements SharedStateDiscreteSampler {
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
@@ -61,35 +61,15 @@ public class KempSmallMeanPoissonSampler
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
+     * @param p0 Probability of the Poisson sample {@code p(x=0)}.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code Math.exp(-mean) == 0}.
-     */
-    public KempSmallMeanPoissonSampler(UniformRandomProvider rng,
-                                       double mean) {
-        if (mean <= 0) {
-            throw new IllegalArgumentException("Mean is not strictly positive: " + mean);
-        }
-
-        p0 = Math.exp(-mean);
-        if (p0 > 0) {
-            this.rng = rng;
-            this.mean = mean;
-        } else {
-            // This catches the edge case of a NaN mean
-            throw new IllegalArgumentException("No probability for mean " + mean);
-        }
-    }
-
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
      */
     private KempSmallMeanPoissonSampler(UniformRandomProvider rng,
-                                        KempSmallMeanPoissonSampler source) {
+                                        double p0,
+                                        double mean) {
         this.rng = rng;
-        p0 = source.p0;
-        mean = source.mean;
+        this.p0 = p0;
+        this.mean = mean;
     }
 
     /** {@inheritDoc} */
@@ -129,6 +109,32 @@ public class KempSmallMeanPoissonSampler
     /** {@inheritDoc} */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new KempSmallMeanPoissonSampler(rng, this);
+        return new KempSmallMeanPoissonSampler(rng, p0, mean);
+    }
+
+    /**
+     * Creates a new sampler for the Poisson distribution.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param mean Mean of the distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code mean <= 0} or
+     * {@code Math.exp(-mean) == 0}.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double mean) {
+        if (mean <= 0) {
+            throw new IllegalArgumentException("Mean is not strictly positive: " + mean);
+        }
+
+        final double p0 = Math.exp(-mean);
+
+        // Probability must be positive. As mean increases then p(0) decreases.
+        if (p0 > 0) {
+            return new KempSmallMeanPoissonSampler(rng, p0, mean);
+        }
+
+        // This catches the edge case of a NaN mean
+        throw new IllegalArgumentException("No probability for mean: " + mean);
     }
 }

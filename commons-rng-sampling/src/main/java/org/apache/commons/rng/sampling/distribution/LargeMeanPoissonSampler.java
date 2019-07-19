@@ -155,7 +155,7 @@ public class LargeMeanPoissonSampler
         final double lambdaFractional = mean - lambda;
         smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
             NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
-            new KempSmallMeanPoissonSampler(rng, lambdaFractional);
+            KempSmallMeanPoissonSampler.of(rng, lambdaFractional);
     }
 
     /**
@@ -196,7 +196,7 @@ public class LargeMeanPoissonSampler
         // The algorithm requires a Poisson sample from the remaining lambda fraction.
         smallMeanPoissonSampler = (lambdaFractional < Double.MIN_VALUE) ?
             NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
-            new KempSmallMeanPoissonSampler(rng, lambdaFractional);
+            KempSmallMeanPoissonSampler.of(rng, lambdaFractional);
     }
 
     /**

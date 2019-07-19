@@ -68,7 +68,7 @@ public class AliasMethodDiscreteSamplerTest {
 
     @Test
     public void testToString() {
-        final AliasMethodDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5});
+        final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5});
         Assert.assertTrue(sampler.toString().toLowerCase().contains("alias method"));
     }
 
@@ -78,9 +78,9 @@ public class AliasMethodDiscreteSamplerTest {
      * @param probabilities the probabilities
      * @return the alias method discrete sampler
      */
-    private static AliasMethodDiscreteSampler createSampler(double[] probabilities) {
+    private static SharedStateDiscreteSampler createSampler(double[] probabilities) {
         final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-        return AliasMethodDiscreteSampler.create(rng, probabilities, -1);
+        return AliasMethodDiscreteSampler.of(rng, probabilities, -1);
     }
 
     /**
@@ -130,7 +130,7 @@ public class AliasMethodDiscreteSamplerTest {
     @Test
     public void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
-        checkSamples(AliasMethodDiscreteSampler.create(RandomSource.create(RandomSource.SPLIT_MIX_64), expected), expected);
+        checkSamples(AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), expected), expected);
     }
 
     /**
@@ -218,7 +218,7 @@ public class AliasMethodDiscreteSamplerTest {
      *
      * @param expected the expected probabilities
      */
-    private static void checkSamples(AliasMethodDiscreteSampler sampler, double[] probabilies) {
+    private static void checkSamples(SharedStateDiscreteSampler sampler, double[] probabilies) {
         final int numberOfSamples = 10000;
         final long[] samples = new long[probabilies.length];
         for (int i = 0; i < numberOfSamples; i++) {
@@ -275,8 +275,8 @@ public class AliasMethodDiscreteSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         // Use negative alpha to disable padding
-        final AliasMethodDiscreteSampler sampler1 =
-            AliasMethodDiscreteSampler.create(rng1, probabilities, -1);
+        final SharedStateDiscreteSampler sampler1 =
+            AliasMethodDiscreteSampler.of(rng1, probabilities, -1);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

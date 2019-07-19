@@ -19,27 +19,27 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Compute a sample from a discrete probability distribution. The cumulative probability
- * distribution is searched using a guide table to set an initial start point. This implementation
- * is based on:
+ * Compute a sample from {@code n} values each with an associated probability. If all unique items
+ * are assigned the same probability it is more efficient to use the {@link DiscreteUniformSampler}.
  *
- * <ul>
- *  <li>
- *   <blockquote>
- *    Devroye, Luc (1986). Non-Uniform Random Variate Generation.
- *    New York: Springer-Verlag. Chapter 3.2.4 "The method of guide tables" p. 96.
- *   </blockquote>
- *  </li>
- * </ul>
+ * <p>The cumulative probability distribution is searched using a guide table to set an
+ * initial start point. This implementation is based on:</p>
+ *
+ * <blockquote>
+ *  Devroye, Luc (1986). Non-Uniform Random Variate Generation.
+ *  New York: Springer-Verlag. Chapter 3.2.4 "The method of guide tables" p. 96.
+ * </blockquote>
  *
  * <p>The size of the guide table can be controlled using a parameter. A larger guide table
  * will improve performance at the cost of storage space.</p>
  *
  * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
  *
+ * @see <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
+ * Discrete probability distribution (Wikipedia)</a>
  * @since 1.3
  */
-public class GuideTableDiscreteSampler
+public final class GuideTableDiscreteSampler
     implements SharedStateDiscreteSampler {
     /** The default value for {@code alpha}. */
     private static final double DEFAULT_ALPHA = 1.0;
@@ -63,123 +63,16 @@ public class GuideTableDiscreteSampler
     private final int[] guideTable;
 
     /**
-     * Create a new instance using the default guide table size.
-     *
      * @param rng Generator of uniformly distributed random numbers.
-     * @param probabilities The probabilities.
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, or the sum of all
-     * probabilities is not strictly positive.
-     */
-    public GuideTableDiscreteSampler(UniformRandomProvider rng,
-                                     double[] probabilities) {
-        this(rng, probabilities, DEFAULT_ALPHA);
-    }
-
-    /**
-     * Create a new instance.
-     *
-     * <p>The size of the guide table is {@code alpha * probabilities.length}.
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param probabilities The probabilities.
-     * @param alpha The alpha factor used to set the guide table size.
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, the sum of all
-     * probabilities is not strictly positive, or {@code alpha} is not strictly positive.
-     */
-    public GuideTableDiscreteSampler(UniformRandomProvider rng,
-                                     double[] probabilities,
-                                     double alpha) {
-        validateParameters(probabilities, alpha);
-
-        final int size = probabilities.length;
-        cumulativeProbabilities = new double[size];
-
-        double sumProb = 0;
-        int count = 0;
-        for (final double prob : probabilities) {
-            InternalUtils.validateProbability(prob);
-
-            // Compute and store cumulative probability.
-            sumProb += prob;
-            cumulativeProbabilities[count++] = sumProb;
-        }
-
-        if (Double.isInfinite(sumProb) || sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
-        }
-
-        this.rng = rng;
-
-        // Note: The guide table is at least length 1. Compute the size avoiding overflow
-        // in case (alpha * size) is too large.
-        final int guideTableSize = (int) Math.ceil(alpha * size);
-        guideTable = new int[Math.max(guideTableSize, guideTableSize + 1)];
-
-        // Compute and store cumulative probability.
-        for (int x = 0; x < size; x++) {
-            final double norm = cumulativeProbabilities[x] / sumProb;
-            cumulativeProbabilities[x] = (norm < 1) ? norm : 1.0;
-
-            // Set the guide table value as an exclusive upper bound (x + 1)
-            guideTable[getGuideTableIndex(cumulativeProbabilities[x])] = x + 1;
-        }
-
-        // Edge case for round-off
-        cumulativeProbabilities[size - 1] = 1.0;
-        // The final guide table entry is (maximum value of x + 1)
-        guideTable[guideTable.length - 1] = size;
-
-        // The first non-zero value in the guide table is from f(x=0).
-        // Any probabilities mapped below this must be sample x=0 so the
-        // table may initially be filled with zeros.
-
-        // Fill missing values in the guide table.
-        for (int i = 1; i < guideTable.length; i++) {
-            guideTable[i] = Math.max(guideTable[i - 1], guideTable[i]);
-        }
-    }
-
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
+     * @param cumulativeProbabilities The cumulative probability table ({@code f(x)}).
+     * @param guideTable The inverse cumulative probability guide table.
      */
     private GuideTableDiscreteSampler(UniformRandomProvider rng,
-                                      GuideTableDiscreteSampler source) {
+                                      double[] cumulativeProbabilities,
+                                      int[] guideTable) {
         this.rng = rng;
-        cumulativeProbabilities = source.cumulativeProbabilities;
-        guideTable = source.guideTable;
-    }
-
-    /**
-     * Validate the parameters.
-     *
-     * @param probabilities The probabilities.
-     * @param alpha The alpha factor used to set the guide table size.
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, or
-     * {@code alpha} is not strictly positive.
-     */
-    private static void validateParameters(double[] probabilities, double alpha) {
-        if (probabilities == null || probabilities.length == 0) {
-            throw new IllegalArgumentException("Probabilities must not be empty.");
-        }
-        if (alpha <= 0) {
-            throw new IllegalArgumentException("Alpha must be strictly positive.");
-        }
-    }
-
-    /**
-     * Gets the guide table index for the probability. This is obtained using
-     * {@code p * (guideTable.length - 1)} so is inside the length of the table.
-     *
-     * @param p Cumulative probability.
-     * @return the guide table index.
-     */
-    private int getGuideTableIndex(double p) {
-        // Note: This is only ever called when p is in the range of the cumulative
-        // probability table. So assume 0 <= p <= 1.
-        return (int) (p * (guideTable.length - 1));
+        this.cumulativeProbabilities = cumulativeProbabilities;
+        this.guideTable = guideTable;
     }
 
     /** {@inheritDoc} */
@@ -191,7 +84,7 @@ public class GuideTableDiscreteSampler
         // Initialise the search using the guide table to find an initial guess.
         // The table provides an upper bound on the sample (x+1) for a known
         // cumulative probability (f(x)).
-        int x = guideTable[getGuideTableIndex(u)];
+        int x = guideTable[getGuideTableIndex(u, guideTable.length)];
         // Search down.
         // In the edge case where u is 1.0 then 'x' will be 1 outside the range of the
         // cumulative probability table and this will decrement to a valid range.
@@ -213,6 +106,125 @@ public class GuideTableDiscreteSampler
     /** {@inheritDoc} */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new GuideTableDiscreteSampler(rng, this);
+        return new GuideTableDiscreteSampler(rng, cumulativeProbabilities, guideTable);
+    }
+
+    /**
+     * Create a new sampler for an enumerated distribution using the given {@code probabilities}.
+     * The samples corresponding to each probability are assumed to be a natural sequence
+     * starting at zero.
+     *
+     * <p>The size of the guide table is {@code probabilities.length}.</p>
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param probabilities The probabilities.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
+     * probability is negative, infinite or {@code NaN}, or the sum of all
+     * probabilities is not strictly positive.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double[] probabilities) {
+        return of(rng, probabilities, DEFAULT_ALPHA);
+    }
+
+    /**
+     * Create a new sampler for an enumerated distribution using the given {@code probabilities}.
+     * The samples corresponding to each probability are assumed to be a natural sequence
+     * starting at zero.
+     *
+     * <p>The size of the guide table is {@code alpha * probabilities.length}.</p>
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param probabilities The probabilities.
+     * @param alpha The alpha factor used to set the guide table size.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
+     * probability is negative, infinite or {@code NaN}, the sum of all
+     * probabilities is not strictly positive, or {@code alpha} is not strictly positive.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double[] probabilities,
+                                                double alpha) {
+        validateParameters(probabilities, alpha);
+
+        final int size = probabilities.length;
+        final double[] cumulativeProbabilities = new double[size];
+
+        double sumProb = 0;
+        int count = 0;
+        for (final double prob : probabilities) {
+            InternalUtils.validateProbability(prob);
+
+            // Compute and store cumulative probability.
+            sumProb += prob;
+            cumulativeProbabilities[count++] = sumProb;
+        }
+
+        if (Double.isInfinite(sumProb) || sumProb <= 0) {
+            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
+        }
+
+        // Note: The guide table is at least length 1. Compute the size avoiding overflow
+        // in case (alpha * size) is too large.
+        final int guideTableSize = (int) Math.ceil(alpha * size);
+        final int[] guideTable = new int[Math.max(guideTableSize, guideTableSize + 1)];
+
+        // Compute and store cumulative probability.
+        for (int x = 0; x < size; x++) {
+            final double norm = cumulativeProbabilities[x] / sumProb;
+            cumulativeProbabilities[x] = (norm < 1) ? norm : 1.0;
+
+            // Set the guide table value as an exclusive upper bound (x + 1)
+            final int index = getGuideTableIndex(cumulativeProbabilities[x], guideTable.length);
+            guideTable[index] = x + 1;
+        }
+
+        // Edge case for round-off
+        cumulativeProbabilities[size - 1] = 1.0;
+        // The final guide table entry is (maximum value of x + 1)
+        guideTable[guideTable.length - 1] = size;
+
+        // The first non-zero value in the guide table is from f(x=0).
+        // Any probabilities mapped below this must be sample x=0 so the
+        // table may initially be filled with zeros.
+
+        // Fill missing values in the guide table.
+        for (int i = 1; i < guideTable.length; i++) {
+            guideTable[i] = Math.max(guideTable[i - 1], guideTable[i]);
+        }
+
+        return new GuideTableDiscreteSampler(rng, cumulativeProbabilities, guideTable);
+    }
+
+    /**
+     * Validate the parameters.
+     *
+     * @param probabilities The probabilities.
+     * @param alpha The alpha factor used to set the guide table size.
+     * @throws IllegalArgumentException if {@code probabilities} is null or empty, or
+     * {@code alpha} is not strictly positive.
+     */
+    private static void validateParameters(double[] probabilities, double alpha) {
+        if (probabilities == null || probabilities.length == 0) {
+            throw new IllegalArgumentException("Probabilities must not be empty.");
+        }
+        if (alpha <= 0) {
+            throw new IllegalArgumentException("Alpha must be strictly positive.");
+        }
+    }
+
+    /**
+     * Gets the guide table index for the probability. This is obtained using
+     * {@code p * (tableLength - 1)} so is inside the length of the table.
+     *
+     * @param p Cumulative probability.
+     * @param tableLength Table length.
+     * @return the guide table index.
+     */
+    private static int getGuideTableIndex(double p, int tableLength) {
+        // Note: This is only ever called when p is in the range of the cumulative
+        // probability table. So assume 0 <= p <= 1.
+        return (int) (p * (tableLength - 1));
     }
 }

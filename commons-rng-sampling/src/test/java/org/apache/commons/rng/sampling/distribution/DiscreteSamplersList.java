@@ -53,12 +53,12 @@ public final class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 // range [9,16]
                 MathArrays.sequence(8, 9, 1),
-                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
             // Inverted
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, 1 - probSuccessBinomial),
                 // range [4,11] = [20-16, 20-9]
                 MathArrays.sequence(8, 4, 1),
-                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
@@ -68,7 +68,7 @@ public final class DiscreteSamplersList {
             // Geometric.
             add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(unusedRng, probSuccessGeometric),
                 MathArrays.sequence(10, 0, 1),
-                new GeometricSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), probSuccessGeometric));
+                GeometricSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), probSuccessGeometric));
 
             // Hypergeometric ("inverse method").
             final int popSizeHyper = 34;
@@ -136,10 +136,10 @@ public final class DiscreteSamplersList {
                 new SmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_SHI_RO_256_PLUS), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                new KempSmallMeanPoissonSampler(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+                KempSmallMeanPoissonSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                     MathArrays.sequence(10, 0, 1),
-                    MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+                    MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -151,7 +151,7 @@ public final class DiscreteSamplersList {
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
-                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
             // Poisson (mean >> 40).
             final double veryLargeMeanPoisson = 543.21;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
@@ -163,16 +163,16 @@ public final class DiscreteSamplersList {
                 new LargeMeanPoissonSampler(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
-                MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
 
             // Any discrete distribution
             final double[] discreteProbabilities = new double[] {0.1, 0.2, 0.3, 0.4, 0.5};
             add(LIST, discreteProbabilities,
-                MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
+                MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
             add(LIST, discreteProbabilities,
-                new GuideTableDiscreteSampler(RandomSource.create(RandomSource.XO_SHI_RO_512_SS), discreteProbabilities));
+                GuideTableDiscreteSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_512_SS), discreteProbabilities));
             add(LIST, discreteProbabilities,
-                    AliasMethodDiscreteSampler.create(RandomSource.create(RandomSource.KISS), discreteProbabilities));
+                    AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.KISS), discreteProbabilities));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);

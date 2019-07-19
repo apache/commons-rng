@@ -95,7 +95,7 @@ public class GeometricSamplersPerformance {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = RandomSource.create(randomSource);
             if ("GeometricSampler".equals(samplerType)) {
-                sampler = new GeometricSampler(rng, probabilityOfSuccess);
+                sampler = GeometricSampler.of(rng, probabilityOfSuccess);
             } else {
                 final DiscreteInverseCumulativeProbabilityFunction geometricFunction =
                     new GeometricDiscreteInverseCumulativeProbabilityFunction(probabilityOfSuccess);

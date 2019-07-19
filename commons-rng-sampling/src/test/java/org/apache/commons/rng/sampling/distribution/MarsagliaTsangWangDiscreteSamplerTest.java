@@ -85,9 +85,9 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * @param probabilities Probabilities.
      * @return the sampler
      */
-    private static MarsagliaTsangWangDiscreteSampler createDiscreteDistributionSampler(double[] probabilities) {
+    private static SharedStateDiscreteSampler createDiscreteDistributionSampler(double[] probabilities) {
         final UniformRandomProvider rng = new SplitMix64(0L);
-        return MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, probabilities);
+        return MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
     }
 
     // Sampling tests
@@ -146,9 +146,9 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final double[] p2 = createProbabilities(offset2, prob);
         final double[] p3 = createProbabilities(offset3, prob);
 
-        final MarsagliaTsangWangDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng1, p1);
-        final MarsagliaTsangWangDiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng2, p2);
-        final MarsagliaTsangWangDiscreteSampler sampler3 = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng3, p3);
+        final SharedStateDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng1, p1);
+        final SharedStateDiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng2, p2);
+        final SharedStateDiscreteSampler sampler3 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng3, p3);
 
         for (int i = 0; i < values.length; i++) {
             // Remove offsets
@@ -189,12 +189,12 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
 
         // First test the table is completely filled to 2^30
         final UniformRandomProvider dummyRng = new FixedSequenceIntProvider(new int[] {0xffffffff});
-        final MarsagliaTsangWangDiscreteSampler dummySampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(dummyRng, probabilities);
+        final SharedStateDiscreteSampler dummySampler = MarsagliaTsangWangDiscreteSampler.Enumerated.of(dummyRng, probabilities);
         // This will throw if the table is incomplete as it hits the upper limit
         dummySampler.sample();
 
         // Do a test of the actual sampler
-        final MarsagliaTsangWangDiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng, probabilities);
+        final SharedStateDiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
 
         final int numberOfSamples = 10000;
         final long[] samples = new long[probabilities.length];
@@ -300,7 +300,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1025;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
     }
 
     /**
@@ -311,7 +311,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
     }
 
     /**
@@ -322,7 +322,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1024;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
     }
 
     /**
@@ -333,7 +333,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     public void testCreatePoissonDistributionWithSmallMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0.25;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
         // This will throw if the table does not sum to 2^30
         sampler.sample();
     }
@@ -347,7 +347,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     public void testCreatePoissonDistributionWithMediumMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 21.4;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createPoissonDistribution(rng, mean);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
         // This will throw if the table does not sum to 2^30
         sampler.sample();
     }
@@ -361,7 +361,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = -1;
         final double p = 0.5;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
 
     /**
@@ -373,7 +373,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 1 << 16; // 2^16
         final double p = 0.5;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
 
     /**
@@ -385,7 +385,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 1;
         final double p = -0.5;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
 
     /**
@@ -397,7 +397,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 1;
         final double p = 1.5;
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
 
     /**
@@ -422,7 +422,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials + 1, p), 0);
 
         // This will throw if the table does not sum to 2^30
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         sampler.sample();
     }
 
@@ -439,7 +439,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         // Validate set-up
         Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, p), 0);
         @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
 
     /**
@@ -482,7 +482,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
         Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, Math.nextAfter(p, 1)), 0);
 
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         // This will throw if the table does not sum to 2^30
         sampler.sample();
     }
@@ -506,7 +506,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1000000;
         final double p = 0;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         for (int i = 0; i < 5; i++) {
             Assert.assertEquals(0, sampler.sample());
         }
@@ -523,7 +523,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1000000;
         final double p = 1;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         for (int i = 0; i < 5; i++) {
             Assert.assertEquals(trials, sampler.sample());
         }
@@ -541,7 +541,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 65000;
         final double p = 0.01;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         // This will throw if the table does not sum to 2^30
         sampler.sample();
     }
@@ -555,7 +555,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 10;
         final double p = 0.5;
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         // This will throw if the table does not sum to 2^30
         sampler.sample();
     }
@@ -570,8 +570,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 10;
         final double p1 = 0.4;
         final double p2 = 1 - p1;
-        final DiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p1);
-        final DiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng, trials, p2);
+        final DiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p1);
+        final DiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p2);
         Assert.assertEquals(sampler1.toString(), sampler2.toString());
     }
 
@@ -610,8 +610,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         double[] probabilities = createProbabilities(offset, prob);
-        final MarsagliaTsangWangDiscreteSampler sampler1 =
-                MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng1, probabilities);
+        final SharedStateDiscreteSampler sampler1 =
+                MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng1, probabilities);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -643,8 +643,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     private static void testSharedStateSampler(int trials, double probabilityOfSuccess) {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final MarsagliaTsangWangDiscreteSampler sampler1 =
-                MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng1, trials, probabilityOfSuccess);
+        final SharedStateDiscreteSampler sampler1 =
+                MarsagliaTsangWangDiscreteSampler.Binomial.of(rng1, trials, probabilityOfSuccess);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

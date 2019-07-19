@@ -45,10 +45,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.3
  */
-public class GeometricSampler implements SharedStateDiscreteSampler {
-    /** The appropriate geometric sampler for the parameters. */
-    private final SharedStateDiscreteSampler delegate;
-
+public final class GeometricSampler {
     /**
      * Sample from the geometric distribution when the probability of success is 1.
      */
@@ -132,48 +129,29 @@ public class GeometricSampler implements SharedStateDiscreteSampler {
         }
     }
 
+    /** Class contains only static methods. */
+    private GeometricSampler() {}
+
     /**
-     * Creates a new geometric distribution sampler. The samples will be provided in the set
-     * {@code k=[0, 1, 2, ...]} where {@code k} indicates the number of failures before the first
-     * success.
+     * Creates a new geometric distribution sampler. The samples will be provided in
+     * the set {@code k=[0, 1, 2, ...]} where {@code k} indicates the number of
+     * failures before the first success.
      *
-     * @param rng Generator of uniformly distributed random numbers
-     * @param probabilityOfSuccess The probability of success
-     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in the range
-     * {@code [0 < probabilityOfSuccess <= 1]})
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param probabilityOfSuccess The probability of success.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in
+     * the range {@code [0 < probabilityOfSuccess <= 1]})
      */
-    public GeometricSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double probabilityOfSuccess) {
         if (probabilityOfSuccess <= 0 || probabilityOfSuccess > 1) {
             throw new IllegalArgumentException(
                 "Probability of success (p) must be in the range [0 < p <= 1]: " +
                     probabilityOfSuccess);
         }
-        delegate = probabilityOfSuccess == 1 ?
+        return probabilityOfSuccess == 1 ?
             GeometricP1Sampler.INSTANCE :
             new GeometricExponentialSampler(rng, probabilityOfSuccess);
-    }
-
-    /**
-     * Create a sample from a geometric distribution.
-     *
-     * <p>The sample will take the values in the set {@code [0, 1, 2, ...]}, equivalent to the
-     * number of failures before the first success.
-     */
-    @Override
-    public int sample() {
-        return delegate.sample();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return delegate.toString();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        // Direct return of the optimised sampler
-        return delegate.withUniformRandomProvider(rng);
     }
 }

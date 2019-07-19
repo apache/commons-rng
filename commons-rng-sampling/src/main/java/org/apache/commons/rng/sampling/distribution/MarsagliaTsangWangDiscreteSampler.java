@@ -40,17 +40,16 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>The sampler supports the following distributions:</p>
  *
  * <ul>
- *  <li>Any discrete probability distribution (probabilities must be provided)
+ *  <li>Enumerated distribution (probabilities must be provided for each sample)
  *  <li>Poisson distribution up to {@code mean = 1024}
  *  <li>Binomial distribution up to {@code trials = 65535}
  * </ul>
  *
- * @since 1.3
  * @see <a href="http://dx.doi.org/10.18637/jss.v011.i03">Margsglia, et al (2004) JSS Vol.
  * 11, Issue 3</a>
+ * @since 1.3
  */
-public abstract class MarsagliaTsangWangDiscreteSampler
-    implements SharedStateDiscreteSampler {
+public final class MarsagliaTsangWangDiscreteSampler {
     /** The value 2<sup>8</sup> as an {@code int}. */
     private static final int INT_8 = 1 << 8;
     /** The value 2<sup>16</sup> as an {@code int}. */
@@ -59,34 +58,6 @@ public abstract class MarsagliaTsangWangDiscreteSampler
     private static final int INT_30 = 1 << 30;
     /** The value 2<sup>31</sup> as a {@code double}. */
     private static final double DOUBLE_31 = 1L << 31;
-
-    /** The general name of any discrete probability distribution. */
-    private static final String DISCRETE_NAME = "discrete";
-    /** The name of the Poisson distribution. */
-    private static final String POISSON_NAME = "Poisson";
-    /** The name of the Binomial distribution. */
-    private static final String BINOMIAL_NAME = "Binomial";
-
-    /**
-     * Upper bound on the mean for the Poisson distribution.
-     *
-     * <p>The original source code provided in Marsaglia, et al (2004) has no explicit
-     * limit but the code fails at mean >= 1941 as the transform to compute p(x=mode)
-     * produces infinity. Use a conservative limit of 1024.</p>
-     */
-    private static final double MAX_POISSON_MEAN = 1024;
-    /**
-     * The threshold for the mean of the Poisson distribution to switch the method used
-     * to compute the probabilities. This is taken from the example software provided by
-     * Marsaglia, et al (2004).
-     */
-    private static final double POISSON_MEAN_THRESHOLD = 21.4;
-
-    /** Underlying source of randomness. */
-    protected final UniformRandomProvider rng;
-
-    /** The name of the distribution. */
-    private final String distributionName;
 
     // =========================================================================
     // Implementation note:
@@ -109,15 +80,55 @@ public abstract class MarsagliaTsangWangDiscreteSampler
     // when provided via an array of probabilities and the Poisson and Binomial
     // distributions for a restricted set of parameters. The restrictions are
     // imposed by the requirement to compute the entire probability distribution
-    // from the controlling parameter(s) using a recursive method.
+    // from the controlling parameter(s) using a recursive method. Factory
+    // constructors return a SharedStateDiscreteSampler instance. Each distribution
+    // type is contained in an inner class.
     // =========================================================================
+
+    /**
+     * The base class for Marsaglia-Tsang-Wang samplers.
+     */
+    private abstract static class AbstractMarsagliaTsangWangDiscreteSampler
+            implements SharedStateDiscreteSampler {
+        /** Underlying source of randomness. */
+        protected final UniformRandomProvider rng;
+
+        /** The name of the distribution. */
+        private final String distributionName;
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param distributionName Distribution name.
+         */
+        AbstractMarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
+                                                  String distributionName) {
+            this.rng = rng;
+            this.distributionName = distributionName;
+        }
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        AbstractMarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
+                                                  AbstractMarsagliaTsangWangDiscreteSampler source) {
+            this.rng = rng;
+            this.distributionName = source.distributionName;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public String toString() {
+            return "Marsaglia Tsang Wang " + distributionName + " deviate [" + rng.toString() + "]";
+        }
+    }
 
     /**
      * An implementation for the sample algorithm based on the decomposition of the
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 8-bit backing storage.
      */
     private static class MarsagliaTsangWangBase64Int8DiscreteSampler
-        extends MarsagliaTsangWangDiscreteSampler {
+        extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** The mask to convert a {@code byte} to an unsigned 8-bit integer. */
         private static final int MASK = 0xff;
 
@@ -257,7 +268,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 16-bit backing storage.
      */
     private static class MarsagliaTsangWangBase64Int16DiscreteSampler
-        extends MarsagliaTsangWangDiscreteSampler {
+        extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** The mask to convert a {@code byte} to an unsigned 16-bit integer. */
         private static final int MASK = 0xffff;
 
@@ -397,7 +408,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 32-bit backing storage.
      */
     private static class MarsagliaTsangWangBase64Int32DiscreteSampler
-        extends MarsagliaTsangWangDiscreteSampler {
+        extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** Limit for look-up table 1. */
         private final int t1;
         /** Limit for look-up table 2. */
@@ -528,108 +539,10 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
     }
 
-    /**
-     * Return a fixed result for the Binomial distribution. This is a special class to handle
-     * an edge case of probability of success equal to 0 or 1.
-     */
-    private static class MarsagliaTsangWangFixedResultBinomialSampler
-        extends MarsagliaTsangWangDiscreteSampler {
-        /** The result. */
-        private final int result;
 
-        /**
-         * @param result Result.
-         */
-        MarsagliaTsangWangFixedResultBinomialSampler(int result) {
-            super(null, BINOMIAL_NAME);
-            this.result = result;
-        }
 
-        @Override
-        public int sample() {
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return BINOMIAL_NAME + " deviate";
-        }
-
-        @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-            // No shared state
-            return this;
-        }
-    }
-
-    /**
-     * Return an inversion result for the Binomial distribution. This assumes the
-     * following:
-     *
-     * <pre>
-     * Binomial(n, p) = 1 - Binomial(n, 1 - p)
-     * </pre>
-     */
-    private static class MarsagliaTsangWangInversionBinomialSampler
-        extends MarsagliaTsangWangDiscreteSampler {
-        /** The number of trials. */
-        private final int trials;
-        /** The Binomial distribution sampler. */
-        private final SharedStateDiscreteSampler sampler;
-
-        /**
-         * @param trials Number of trials.
-         * @param sampler Binomial distribution sampler.
-         */
-        MarsagliaTsangWangInversionBinomialSampler(int trials,
-                                                   SharedStateDiscreteSampler sampler) {
-            super(null, BINOMIAL_NAME);
-            this.trials = trials;
-            this.sampler = sampler;
-        }
-
-        @Override
-        public int sample() {
-            return trials - sampler.sample();
-        }
-
-        @Override
-        public String toString() {
-            return sampler.toString();
-        }
-
-        @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-            return new MarsagliaTsangWangInversionBinomialSampler(this.trials,
-                this.sampler.withUniformRandomProvider(rng));
-        }
-    }
-
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param distributionName Distribution name.
-     */
-    MarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
-                                      String distributionName) {
-        this.rng = rng;
-        this.distributionName = distributionName;
-    }
-
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
-     */
-    MarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
-                                      MarsagliaTsangWangDiscreteSampler source) {
-        this.rng = rng;
-        this.distributionName = source.distributionName;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public String toString() {
-        return "Marsaglia Tsang Wang " + distributionName + " deviate [" + rng.toString() + "]";
-    }
+    /** Class contains only static methods. */
+    private MarsagliaTsangWangDiscreteSampler() {}
 
     /**
      * Gets the k<sup>th</sup> base 64 digit of {@code m}.
@@ -640,6 +553,17 @@ public abstract class MarsagliaTsangWangDiscreteSampler
      */
     private static int getBase64Digit(int m, int k) {
         return (m >>> (30 - 6 * k)) & 63;
+    }
+
+    /**
+     * Convert the probability to an integer in the range [0,2^30]. This is the numerator of
+     * a fraction with assumed denominator 2<sup>30</sup>.
+     *
+     * @param p Probability.
+     * @return the fraction numerator
+     */
+    private static int toUnsignedInt30(double p) {
+        return (int) (p * INT_30 + 0.5);
     }
 
     /**
@@ -655,10 +579,10 @@ public abstract class MarsagliaTsangWangDiscreteSampler
      * @param offset The offset (must be positive).
      * @return Sampler.
      */
-    private static MarsagliaTsangWangDiscreteSampler createSampler(UniformRandomProvider rng,
-                                                                   String distributionName,
-                                                                   int[] prob,
-                                                                   int offset) {
+    private static SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
+                                                            String distributionName,
+                                                            int[] prob,
+                                                            int offset) {
         // Note: No argument checks for private method.
 
         // Choose implementation based on the maximum index
@@ -673,426 +597,545 @@ public abstract class MarsagliaTsangWangDiscreteSampler
     }
 
     // =========================================================================
-    // The following factory methods are the public API to construct a sampler for:
-    // - Any discrete probability distribution (from provided double[] probabilities)
+    // The following public classes provide factory methods to construct a sampler for:
+    // - Enumerated probability distribution (from provided double[] probabilities)
     // - Poisson distribution for mean <= 1024
     // - Binomial distribution for trials <= 65535
     // =========================================================================
 
     /**
-     * Creates a sampler for a given probability distribution.
-     *
-     * <p>The probabilities will be normalised using their sum. The only requirement
-     * is the sum is positive.</p>
-     *
-     * <p>The sum of the probabilities is normalised to 2<sup>30</sup>. Note that
-     * probabilities are adjusted to the nearest 1<sup>-30</sup> due to round-off during
-     * the normalisation conversion. Consequently any probability less than 2<sup>-31</sup>
-     * will not be observed in samples.</p>
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param probabilities The list of probabilities.
-     * @return Sampler.
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, or the sum of all
-     * probabilities is not strictly positive.
+     * Create a sampler for an enumerated distribution of {@code n} values each with an
+     * associated probability.
+     * The samples corresponding to each probability are assumed to be a natural sequence
+     * starting at zero.
      */
-    public static MarsagliaTsangWangDiscreteSampler createDiscreteDistribution(UniformRandomProvider rng,
-                                                                               double[] probabilities) {
-        return createSampler(rng, DISCRETE_NAME, normaliseProbabilities(probabilities), 0);
-    }
+    public static final class Enumerated {
+        /** The name of the enumerated probability distribution. */
+        private static final String ENUMERATED_NAME = "Enumerated";
 
-    /**
-     * Normalise the probabilities to integers that sum to 2<sup>30</sup>.
-     *
-     * @param probabilities The list of probabilities.
-     * @return the normalised probabilities.
-     * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
-     * probability is negative, infinite or {@code NaN}, or the sum of all
-     * probabilities is not strictly positive.
-     */
-    private static int[] normaliseProbabilities(double[] probabilities) {
-        final double sumProb = InternalUtils.validateProbabilities(probabilities);
+        /** Class contains only static methods. */
+        private Enumerated() {}
 
-        // Compute the normalisation: 2^30 / sum
-        final double normalisation = INT_30 / sumProb;
-        final int[] prob = new int[probabilities.length];
-        int sum = 0;
-        int max = 0;
-        int mode = 0;
-        for (int i = 0; i < prob.length; i++) {
-            // Add 0.5 for rounding
-            final int p = (int) (probabilities[i] * normalisation + 0.5);
-            sum += p;
-            // Find the mode (maximum probability)
-            if (max < p) {
-                max = p;
-                mode = i;
+        /**
+         * Creates a sampler for an enumerated distribution of {@code n} values each with an
+         * associated probability.
+         *
+         * <p>The probabilities will be normalised using their sum. The only requirement
+         * is the sum is positive.</p>
+         *
+         * <p>The sum of the probabilities is normalised to 2<sup>30</sup>. Note that
+         * probabilities are adjusted to the nearest 1<sup>-30</sup> due to round-off during
+         * the normalisation conversion. Consequently any probability less than 2<sup>-31</sup>
+         * will not be observed in samples.</p>
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param probabilities The list of probabilities.
+         * @return Sampler.
+         * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
+         * probability is negative, infinite or {@code NaN}, or the sum of all
+         * probabilities is not strictly positive.
+         */
+        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                    double[] probabilities) {
+            return createSampler(rng, ENUMERATED_NAME, normaliseProbabilities(probabilities), 0);
+        }
+
+        /**
+         * Normalise the probabilities to integers that sum to 2<sup>30</sup>.
+         *
+         * @param probabilities The list of probabilities.
+         * @return the normalised probabilities.
+         * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
+         * probability is negative, infinite or {@code NaN}, or the sum of all
+         * probabilities is not strictly positive.
+         */
+        private static int[] normaliseProbabilities(double[] probabilities) {
+            final double sumProb = InternalUtils.validateProbabilities(probabilities);
+
+            // Compute the normalisation: 2^30 / sum
+            final double normalisation = INT_30 / sumProb;
+            final int[] prob = new int[probabilities.length];
+            int sum = 0;
+            int max = 0;
+            int mode = 0;
+            for (int i = 0; i < prob.length; i++) {
+                // Add 0.5 for rounding
+                final int p = (int) (probabilities[i] * normalisation + 0.5);
+                sum += p;
+                // Find the mode (maximum probability)
+                if (max < p) {
+                    max = p;
+                    mode = i;
+                }
+                prob[i] = p;
             }
-            prob[i] = p;
-        }
 
-        // The sum must be >= 2^30.
-        // Here just compensate the difference onto the highest probability.
-        prob[mode] += INT_30 - sum;
+            // The sum must be >= 2^30.
+            // Here just compensate the difference onto the highest probability.
+            prob[mode] += INT_30 - sum;
 
-        return prob;
-    }
-
-    /**
-     * Creates a sampler for the Poisson distribution.
-     *
-     * <p>Any probability less than 2<sup>-31</sup> will not be observed in samples.</p>
-     *
-     * <p>Storage requirements depend on the tabulated probability values. Example storage
-     * requirements are listed below.</p>
-     *
-     * <pre>
-     * mean      table size     kB
-     * 0.25      882            0.88
-     * 0.5       1135           1.14
-     * 1         1200           1.20
-     * 2         1451           1.45
-     * 4         1955           1.96
-     * 8         2961           2.96
-     * 16        4410           4.41
-     * 32        6115           6.11
-     * 64        8499           8.50
-     * 128       11528          11.53
-     * 256       15935          31.87
-     * 512       20912          41.82
-     * 1024      30614          61.23
-     * </pre>
-     *
-     * <p>Note: Storage changes to 2 bytes per index between {@code mean=128} and {@code mean=256}.</p>
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param mean Mean.
-     * @return Sampler.
-     * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
-     */
-    public static MarsagliaTsangWangDiscreteSampler createPoissonDistribution(UniformRandomProvider rng,
-                                                                              double mean) {
-        validatePoissonDistributionParameters(mean);
-
-        // Create the distribution either from X=0 or from X=mode when the mean is high.
-        return mean < POISSON_MEAN_THRESHOLD ?
-            createPoissonDistributionFromX0(rng, mean) :
-            createPoissonDistributionFromXMode(rng, mean);
-    }
-
-    /**
-     * Validate the Poisson distribution parameters.
-     *
-     * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
-     */
-    private static void validatePoissonDistributionParameters(double mean) {
-        if (mean <= 0) {
-            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
-        }
-        if (mean > MAX_POISSON_MEAN) {
-            throw new IllegalArgumentException("mean " + mean + " > " + MAX_POISSON_MEAN);
+            return prob;
         }
     }
 
     /**
-     * Creates the Poisson distribution by computing probabilities recursively from {@code X=0}.
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param mean Mean.
-     * @return Sampler.
+     * Create a sampler for the Poisson distribution.
      */
-    private static MarsagliaTsangWangDiscreteSampler createPoissonDistributionFromX0(
-            UniformRandomProvider rng, double mean) {
-        final double p0 = Math.exp(-mean);
+    public static final class Poisson {
+        /** The name of the Poisson distribution. */
+        private static final String POISSON_NAME = "Poisson";
 
-        // Recursive update of Poisson probability until the value is too small
-        // p(x + 1) = p(x) * mean / (x + 1)
-        double p = p0;
-        int i;
-        for (i = 1; p * DOUBLE_31 >= 1; i++) {
-            p *= mean / i;
+        /**
+         * Upper bound on the mean for the Poisson distribution.
+         *
+         * <p>The original source code provided in Marsaglia, et al (2004) has no explicit
+         * limit but the code fails at mean >= 1941 as the transform to compute p(x=mode)
+         * produces infinity. Use a conservative limit of 1024.</p>
+         */
+
+        private static final double MAX_MEAN = 1024;
+        /**
+         * The threshold for the mean of the Poisson distribution to switch the method used
+         * to compute the probabilities. This is taken from the example software provided by
+         * Marsaglia, et al (2004).
+         */
+        private static final double MEAN_THRESHOLD = 21.4;
+
+        /** Class contains only static methods. */
+        private Poisson() {}
+
+        /**
+         * Creates a sampler for the Poisson distribution.
+         *
+         * <p>Any probability less than 2<sup>-31</sup> will not be observed in samples.</p>
+         *
+         * <p>Storage requirements depend on the tabulated probability values. Example storage
+         * requirements are listed below.</p>
+         *
+         * <pre>
+         * mean      table size     kB
+         * 0.25      882            0.88
+         * 0.5       1135           1.14
+         * 1         1200           1.20
+         * 2         1451           1.45
+         * 4         1955           1.96
+         * 8         2961           2.96
+         * 16        4410           4.41
+         * 32        6115           6.11
+         * 64        8499           8.50
+         * 128       11528          11.53
+         * 256       15935          31.87
+         * 512       20912          41.82
+         * 1024      30614          61.23
+         * </pre>
+         *
+         * <p>Note: Storage changes to 2 bytes per index between {@code mean=128} and {@code mean=256}.</p>
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param mean Mean.
+         * @return Sampler.
+         * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
+         */
+        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                    double mean) {
+            validatePoissonDistributionParameters(mean);
+
+            // Create the distribution either from X=0 or from X=mode when the mean is high.
+            return mean < MEAN_THRESHOLD ?
+                createPoissonDistributionFromX0(rng, mean) :
+                createPoissonDistributionFromXMode(rng, mean);
         }
 
-        // Probabilities are 30-bit integers, assumed denominator 2^30
-        final int size = i - 1;
-        final int[] prob = new int[size];
-
-        p = p0;
-        prob[0] = toUnsignedInt30(p);
-        // The sum must exceed 2^30. In edges cases this is false due to round-off.
-        int sum = prob[0];
-        for (i = 1; i < prob.length; i++) {
-            p *= mean / i;
-            prob[i] = toUnsignedInt30(p);
-            sum += prob[i];
-        }
-
-        // If the sum is < 2^30 add the remaining sum to the mode (floor(mean)).
-        prob[(int) mean] += Math.max(0, INT_30 - sum);
-
-        // Note: offset = 0
-        return createSampler(rng, POISSON_NAME, prob, 0);
-    }
-
-    /**
-     * Creates the Poisson distribution by computing probabilities recursively upward and downward
-     * from {@code X=mode}, the location of the largest p-value.
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param mean Mean.
-     * @return Sampler.
-     */
-    private static MarsagliaTsangWangDiscreteSampler createPoissonDistributionFromXMode(
-            UniformRandomProvider rng, double mean) {
-        // If mean >= 21.4, generate from largest p-value up, then largest down.
-        // The largest p-value will be at the mode (floor(mean)).
-
-        // Find p(x=mode)
-        final int mode = (int) mean;
-        // This transform is stable until mean >= 1941 where p will result in Infinity
-        // before the divisor i is large enough to start reducing the product (i.e. i > c).
-        final double c = mean * Math.exp(-mean / mode);
-        double p = 1.0;
-        int i;
-        for (i = 1; i <= mode; i++) {
-            p *= c / i;
-        }
-        final double pMode = p;
-
-        // Find the upper limit using recursive computation of the p-value.
-        // Note this will exit when i overflows to negative so no check on the range
-        for (i = mode + 1; p * DOUBLE_31 >= 1; i++) {
-            p *= mean / i;
-        }
-        final int last = i - 2;
-
-        // Find the lower limit using recursive computation of the p-value.
-        p = pMode;
-        int j = -1;
-        for (i = mode - 1; i >= 0; i--) {
-            p *= (i + 1) / mean;
-            if (p * DOUBLE_31 < 1) {
-                j = i;
-                break;
+        /**
+         * Validate the Poisson distribution parameters.
+         *
+         * @param mean Mean.
+         * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
+         */
+        private static void validatePoissonDistributionParameters(double mean) {
+            if (mean <= 0) {
+                throw new IllegalArgumentException("mean is not strictly positive: " + mean);
+            }
+            if (mean > MAX_MEAN) {
+                throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
             }
         }
 
-        // Probabilities are 30-bit integers, assumed denominator 2^30.
-        // This is the minimum sample value: prob[x - offset] = p(x)
-        final int offset = j + 1;
-        final int size = last - offset + 1;
-        final int[] prob = new int[size];
+        /**
+         * Creates the Poisson distribution by computing probabilities recursively from {@code X=0}.
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param mean Mean.
+         * @return Sampler.
+         */
+        private static SharedStateDiscreteSampler createPoissonDistributionFromX0(
+                UniformRandomProvider rng, double mean) {
+            final double p0 = Math.exp(-mean);
 
-        p = pMode;
-        prob[mode - offset] = toUnsignedInt30(p);
-        // The sum must exceed 2^30. In edges cases this is false due to round-off.
-        int sum = prob[mode - offset];
-        // From mode to upper limit
-        for (i = mode + 1; i <= last; i++) {
-            p *= mean / i;
-            prob[i - offset] = toUnsignedInt30(p);
-            sum += prob[i - offset];
-        }
-        // From mode to lower limit
-        p = pMode;
-        for (i = mode - 1; i >= offset; i--) {
-            p *= (i + 1) / mean;
-            prob[i - offset] = toUnsignedInt30(p);
-            sum += prob[i - offset];
-        }
+            // Recursive update of Poisson probability until the value is too small
+            // p(x + 1) = p(x) * mean / (x + 1)
+            double p = p0;
+            int i;
+            for (i = 1; p * DOUBLE_31 >= 1; i++) {
+                p *= mean / i;
+            }
 
-        // If the sum is < 2^30 add the remaining sum to the mode.
-        // If above 2^30 then the effect is truncation of the long tail of the distribution.
-        prob[mode - offset] += Math.max(0, INT_30 - sum);
+            // Probabilities are 30-bit integers, assumed denominator 2^30
+            final int size = i - 1;
+            final int[] prob = new int[size];
 
-        return createSampler(rng, POISSON_NAME, prob, offset);
-    }
+            p = p0;
+            prob[0] = toUnsignedInt30(p);
+            // The sum must exceed 2^30. In edges cases this is false due to round-off.
+            int sum = prob[0];
+            for (i = 1; i < prob.length; i++) {
+                p *= mean / i;
+                prob[i] = toUnsignedInt30(p);
+                sum += prob[i];
+            }
 
-    /**
-     * Creates a sampler for the Binomial distribution.
-     *
-     * <p>Any probability less than 2<sup>-31</sup> will not be observed in samples.</p>
-     *
-     * <p>Storage requirements depend on the tabulated probability values. Example storage
-     * requirements are listed below (in kB).</p>
-     *
-     * <pre>
-     *          p
-     * trials   0.5    0.1   0.01  0.001
-     *    4    0.06   0.63   0.44   0.44
-     *   16    0.69   1.14   0.76   0.44
-     *   64    4.73   2.40   1.14   0.51
-     *  256    8.63   5.17   1.89   0.82
-     * 1024   31.12   9.45   3.34   0.89
-     * </pre>
-     *
-     * <p>The method requires that the Binomial distribution probability at {@code x=0} can be computed.
-     * This will fail when {@code (1 - p)^trials == 0} which requires {@code trials} to be large
-     * and/or {@code p} to be small. In this case an exception is raised.</p>
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param trials Number of trials.
-     * @param probabilityOfSuccess Probability of success (p).
-     * @return Sampler.
-     * @throws IllegalArgumentException if {@code trials < 0} or {@code trials >= 2^16},
-     * {@code p} is not in the range {@code [0-1]}, or the probability distribution cannot
-     * be computed.
-     */
-    public static MarsagliaTsangWangDiscreteSampler createBinomialDistribution(UniformRandomProvider rng,
-                                                                               int trials,
-                                                                               double probabilityOfSuccess) {
-        validateBinomialDistributionParameters(trials, probabilityOfSuccess);
+            // If the sum is < 2^30 add the remaining sum to the mode (floor(mean)).
+            prob[(int) mean] += Math.max(0, INT_30 - sum);
 
-        // Handle edge cases
-        if (probabilityOfSuccess == 0) {
-            return new MarsagliaTsangWangFixedResultBinomialSampler(0);
-        }
-        if (probabilityOfSuccess == 1) {
-            return new MarsagliaTsangWangFixedResultBinomialSampler(trials);
+            // Note: offset = 0
+            return createSampler(rng, POISSON_NAME, prob, 0);
         }
 
-        // Check the supported size.
-        if (trials >= INT_16) {
-            throw new IllegalArgumentException("Unsupported number of trials: " + trials);
-        }
+        /**
+         * Creates the Poisson distribution by computing probabilities recursively upward and downward
+         * from {@code X=mode}, the location of the largest p-value.
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param mean Mean.
+         * @return Sampler.
+         */
+        private static SharedStateDiscreteSampler createPoissonDistributionFromXMode(
+                UniformRandomProvider rng, double mean) {
+            // If mean >= 21.4, generate from largest p-value up, then largest down.
+            // The largest p-value will be at the mode (floor(mean)).
 
-        return createBinomialDistributionSampler(rng, trials, probabilityOfSuccess);
-    }
+            // Find p(x=mode)
+            final int mode = (int) mean;
+            // This transform is stable until mean >= 1941 where p will result in Infinity
+            // before the divisor i is large enough to start reducing the product (i.e. i > c).
+            final double c = mean * Math.exp(-mean / mode);
+            double p = 1.0;
+            int i;
+            for (i = 1; i <= mode; i++) {
+                p *= c / i;
+            }
+            final double pMode = p;
 
-    /**
-     * Validate the Binomial distribution parameters.
-     *
-     * @param trials Number of trials.
-     * @param probabilityOfSuccess Probability of success (p).
-     * @throws IllegalArgumentException if {@code trials < 0} or
-     * {@code p} is not in the range {@code [0-1]}
-     */
-    private static void validateBinomialDistributionParameters(int trials, double probabilityOfSuccess) {
-        if (trials < 0) {
-            throw new IllegalArgumentException("Trials is not positive: " + trials);
-        }
-        if (probabilityOfSuccess < 0 || probabilityOfSuccess > 1) {
-            throw new IllegalArgumentException("Probability is not in range [0,1]: " + probabilityOfSuccess);
-        }
-    }
+            // Find the upper limit using recursive computation of the p-value.
+            // Note this will exit when i overflows to negative so no check on the range
+            for (i = mode + 1; p * DOUBLE_31 >= 1; i++) {
+                p *= mean / i;
+            }
+            final int last = i - 2;
 
-    /**
-     * Creates the Binomial distribution sampler.
-     *
-     * <p>This assumes the parameters for the distribution are valid. The method
-     * will only fail if the initial probability for {@code X=0} is zero.</p>
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param trials Number of trials.
-     * @param probabilityOfSuccess Probability of success (p).
-     * @return Sampler.
-     * @throws IllegalArgumentException if the probability distribution cannot be
-     * computed.
-     */
-    private static MarsagliaTsangWangDiscreteSampler createBinomialDistributionSampler(
-            UniformRandomProvider rng, int trials, double probabilityOfSuccess) {
-
-        // The maximum supported value for Math.exp is approximately -744.
-        // This occurs when trials is large and p is close to 1.
-        // Handle this by using an inversion: generate j=Binomial(n,1-p), return n-j
-        final boolean useInversion = probabilityOfSuccess > 0.5;
-        final double p = useInversion ? 1 - probabilityOfSuccess : probabilityOfSuccess;
-
-        // Check if the distribution can be computed
-        final double p0 = Math.exp(trials * Math.log(1 - p));
-        if (p0 < Double.MIN_VALUE) {
-            throw new IllegalArgumentException("Unable to compute distribution");
-        }
-
-        // First find size of probability array
-        double t = p0;
-        final double h = p / (1 - p);
-        // Find first probability above the threshold of 2^-31
-        int begin = 0;
-        if (t * DOUBLE_31 < 1) {
-            // Somewhere after p(0)
-            // Note:
-            // If this loop is entered p(0) is < 2^-31.
-            // This has been tested at the extreme for p(0)=Double.MIN_VALUE and either
-            // p=0.5 or trials=2^16-1 and does not fail to find the beginning.
-            for (int i = 1; i <= trials; i++) {
-                t *= (trials + 1 - i) * h / i;
-                if (t * DOUBLE_31 >= 1) {
-                    begin = i;
+            // Find the lower limit using recursive computation of the p-value.
+            p = pMode;
+            int j = -1;
+            for (i = mode - 1; i >= 0; i--) {
+                p *= (i + 1) / mean;
+                if (p * DOUBLE_31 < 1) {
+                    j = i;
                     break;
                 }
             }
+
+            // Probabilities are 30-bit integers, assumed denominator 2^30.
+            // This is the minimum sample value: prob[x - offset] = p(x)
+            final int offset = j + 1;
+            final int size = last - offset + 1;
+            final int[] prob = new int[size];
+
+            p = pMode;
+            prob[mode - offset] = toUnsignedInt30(p);
+            // The sum must exceed 2^30. In edges cases this is false due to round-off.
+            int sum = prob[mode - offset];
+            // From mode to upper limit
+            for (i = mode + 1; i <= last; i++) {
+                p *= mean / i;
+                prob[i - offset] = toUnsignedInt30(p);
+                sum += prob[i - offset];
+            }
+            // From mode to lower limit
+            p = pMode;
+            for (i = mode - 1; i >= offset; i--) {
+                p *= (i + 1) / mean;
+                prob[i - offset] = toUnsignedInt30(p);
+                sum += prob[i - offset];
+            }
+
+            // If the sum is < 2^30 add the remaining sum to the mode.
+            // If above 2^30 then the effect is truncation of the long tail of the distribution.
+            prob[mode - offset] += Math.max(0, INT_30 - sum);
+
+            return createSampler(rng, POISSON_NAME, prob, offset);
         }
-        // Find last probability
-        int end = trials;
-        for (int i = begin + 1; i <= trials; i++) {
-            t *= (trials + 1 - i) * h / i;
-            if (t * DOUBLE_31 < 1) {
-                end = i - 1;
-                break;
+    }
+
+    /**
+     * Create a sampler for the Binomial distribution.
+     */
+    public static final class Binomial {
+        /** The name of the Binomial distribution. */
+        private static final String BINOMIAL_NAME = "Binomial";
+
+        /**
+         * Return a fixed result for the Binomial distribution. This is a special class to handle
+         * an edge case of probability of success equal to 0 or 1.
+         */
+        private static class MarsagliaTsangWangFixedResultBinomialSampler
+            extends AbstractMarsagliaTsangWangDiscreteSampler {
+            /** The result. */
+            private final int result;
+
+            /**
+             * @param result Result.
+             */
+            MarsagliaTsangWangFixedResultBinomialSampler(int result) {
+                super(null, BINOMIAL_NAME);
+                this.result = result;
+            }
+
+            @Override
+            public int sample() {
+                return result;
+            }
+
+            @Override
+            public String toString() {
+                return BINOMIAL_NAME + " deviate";
+            }
+
+            @Override
+            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+                // No shared state
+                return this;
             }
         }
 
-        return createBinomialDistributionSamplerFromRange(rng, trials, p, useInversion,
-                p0, begin, end);
-    }
+        /**
+         * Return an inversion result for the Binomial distribution. This assumes the
+         * following:
+         *
+         * <pre>
+         * Binomial(n, p) = 1 - Binomial(n, 1 - p)
+         * </pre>
+         */
+        private static class MarsagliaTsangWangInversionBinomialSampler
+            extends AbstractMarsagliaTsangWangDiscreteSampler {
+            /** The number of trials. */
+            private final int trials;
+            /** The Binomial distribution sampler. */
+            private final SharedStateDiscreteSampler sampler;
 
-    /**
-     * Creates the Binomial distribution sampler using only the probability values for {@code X}
-     * between the begin and the end (inclusive).
-     *
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param trials Number of trials.
-     * @param p Probability of success (p).
-     * @param useInversion Set to {@code true} if the probability was inverted.
-     * @param p0 Probability at {@code X=0}
-     * @param begin Begin value {@code X} for the distribution.
-     * @param end End value {@code X} for the distribution.
-     * @return Sampler.
-     */
-    private static MarsagliaTsangWangDiscreteSampler createBinomialDistributionSamplerFromRange(
-            UniformRandomProvider rng, int trials, double p,
-            boolean useInversion, double p0, int begin, int end) {
+            /**
+             * @param trials Number of trials.
+             * @param sampler Binomial distribution sampler.
+             */
+            MarsagliaTsangWangInversionBinomialSampler(int trials,
+                                                       SharedStateDiscreteSampler sampler) {
+                super(null, BINOMIAL_NAME);
+                this.trials = trials;
+                this.sampler = sampler;
+            }
 
-        // Assign probability values as 30-bit integers
-        final int size = end - begin + 1;
-        final int[] prob = new int[size];
-        double t = p0;
-        final double h = p / (1 - p);
-        for (int i = 1; i <= begin; i++) {
-            t *= (trials + 1 - i) * h / i;
+            @Override
+            public int sample() {
+                return trials - sampler.sample();
+            }
+
+            @Override
+            public String toString() {
+                return sampler.toString();
+            }
+
+            @Override
+            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+                return new MarsagliaTsangWangInversionBinomialSampler(this.trials,
+                    this.sampler.withUniformRandomProvider(rng));
+            }
         }
-        int sum = toUnsignedInt30(t);
-        prob[0] = sum;
-        for (int i = begin + 1; i <= end; i++) {
-            t *= (trials + 1 - i) * h / i;
-            prob[i - begin] = toUnsignedInt30(t);
-            sum += prob[i - begin];
+
+        /** Class contains only static methods. */
+        private Binomial() {}
+
+        /**
+         * Creates a sampler for the Binomial distribution.
+         *
+         * <p>Any probability less than 2<sup>-31</sup> will not be observed in samples.</p>
+         *
+         * <p>Storage requirements depend on the tabulated probability values. Example storage
+         * requirements are listed below (in kB).</p>
+         *
+         * <pre>
+         *          p
+         * trials   0.5    0.1   0.01  0.001
+         *    4    0.06   0.63   0.44   0.44
+         *   16    0.69   1.14   0.76   0.44
+         *   64    4.73   2.40   1.14   0.51
+         *  256    8.63   5.17   1.89   0.82
+         * 1024   31.12   9.45   3.34   0.89
+         * </pre>
+         *
+         * <p>The method requires that the Binomial distribution probability at {@code x=0} can be computed.
+         * This will fail when {@code (1 - p)^trials == 0} which requires {@code trials} to be large
+         * and/or {@code p} to be small. In this case an exception is raised.</p>
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param trials Number of trials.
+         * @param probabilityOfSuccess Probability of success (p).
+         * @return Sampler.
+         * @throws IllegalArgumentException if {@code trials < 0} or {@code trials >= 2^16},
+         * {@code p} is not in the range {@code [0-1]}, or the probability distribution cannot
+         * be computed.
+         */
+        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                    int trials,
+                                                    double probabilityOfSuccess) {
+            validateBinomialDistributionParameters(trials, probabilityOfSuccess);
+
+            // Handle edge cases
+            if (probabilityOfSuccess == 0) {
+                return new MarsagliaTsangWangFixedResultBinomialSampler(0);
+            }
+            if (probabilityOfSuccess == 1) {
+                return new MarsagliaTsangWangFixedResultBinomialSampler(trials);
+            }
+
+            // Check the supported size.
+            if (trials >= INT_16) {
+                throw new IllegalArgumentException("Unsupported number of trials: " + trials);
+            }
+
+            return createBinomialDistributionSampler(rng, trials, probabilityOfSuccess);
         }
 
-        // If the sum is < 2^30 add the remaining sum to the mode (floor((n+1)p))).
-        // If above 2^30 then the effect is truncation of the long tail of the distribution.
-        final int mode = (int) ((trials + 1) * p) - begin;
-        prob[mode] += Math.max(0, INT_30 - sum);
+        /**
+         * Validate the Binomial distribution parameters.
+         *
+         * @param trials Number of trials.
+         * @param probabilityOfSuccess Probability of success (p).
+         * @throws IllegalArgumentException if {@code trials < 0} or
+         * {@code p} is not in the range {@code [0-1]}
+         */
+        private static void validateBinomialDistributionParameters(int trials, double probabilityOfSuccess) {
+            if (trials < 0) {
+                throw new IllegalArgumentException("Trials is not positive: " + trials);
+            }
+            if (probabilityOfSuccess < 0 || probabilityOfSuccess > 1) {
+                throw new IllegalArgumentException("Probability is not in range [0,1]: " + probabilityOfSuccess);
+            }
+        }
 
-        final MarsagliaTsangWangDiscreteSampler sampler = createSampler(rng, BINOMIAL_NAME, prob, begin);
+        /**
+         * Creates the Binomial distribution sampler.
+         *
+         * <p>This assumes the parameters for the distribution are valid. The method
+         * will only fail if the initial probability for {@code X=0} is zero.</p>
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param trials Number of trials.
+         * @param probabilityOfSuccess Probability of success (p).
+         * @return Sampler.
+         * @throws IllegalArgumentException if the probability distribution cannot be
+         * computed.
+         */
+        private static SharedStateDiscreteSampler createBinomialDistributionSampler(
+                UniformRandomProvider rng, int trials, double probabilityOfSuccess) {
 
-        // Check if an inversion was made
-        return useInversion ?
-               new MarsagliaTsangWangInversionBinomialSampler(trials, sampler) :
-               sampler;
-    }
+            // The maximum supported value for Math.exp is approximately -744.
+            // This occurs when trials is large and p is close to 1.
+            // Handle this by using an inversion: generate j=Binomial(n,1-p), return n-j
+            final boolean useInversion = probabilityOfSuccess > 0.5;
+            final double p = useInversion ? 1 - probabilityOfSuccess : probabilityOfSuccess;
 
-    /**
-     * Convert the probability to an integer in the range [0,2^30]. This is the numerator of
-     * a fraction with assumed denominator 2<sup>30</sup>.
-     *
-     * @param p Probability.
-     * @return the fraction numerator
-     */
-    private static int toUnsignedInt30(double p) {
-        return (int) (p * INT_30 + 0.5);
+            // Check if the distribution can be computed
+            final double p0 = Math.exp(trials * Math.log(1 - p));
+            if (p0 < Double.MIN_VALUE) {
+                throw new IllegalArgumentException("Unable to compute distribution");
+            }
+
+            // First find size of probability array
+            double t = p0;
+            final double h = p / (1 - p);
+            // Find first probability above the threshold of 2^-31
+            int begin = 0;
+            if (t * DOUBLE_31 < 1) {
+                // Somewhere after p(0)
+                // Note:
+                // If this loop is entered p(0) is < 2^-31.
+                // This has been tested at the extreme for p(0)=Double.MIN_VALUE and either
+                // p=0.5 or trials=2^16-1 and does not fail to find the beginning.
+                for (int i = 1; i <= trials; i++) {
+                    t *= (trials + 1 - i) * h / i;
+                    if (t * DOUBLE_31 >= 1) {
+                        begin = i;
+                        break;
+                    }
+                }
+            }
+            // Find last probability
+            int end = trials;
+            for (int i = begin + 1; i <= trials; i++) {
+                t *= (trials + 1 - i) * h / i;
+                if (t * DOUBLE_31 < 1) {
+                    end = i - 1;
+                    break;
+                }
+            }
+
+            return createBinomialDistributionSamplerFromRange(rng, trials, p, useInversion,
+                    p0, begin, end);
+        }
+
+        /**
+         * Creates the Binomial distribution sampler using only the probability values for {@code X}
+         * between the begin and the end (inclusive).
+         *
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param trials Number of trials.
+         * @param p Probability of success (p).
+         * @param useInversion Set to {@code true} if the probability was inverted.
+         * @param p0 Probability at {@code X=0}
+         * @param begin Begin value {@code X} for the distribution.
+         * @param end End value {@code X} for the distribution.
+         * @return Sampler.
+         */
+        private static SharedStateDiscreteSampler createBinomialDistributionSamplerFromRange(
+                UniformRandomProvider rng, int trials, double p,
+                boolean useInversion, double p0, int begin, int end) {
+
+            // Assign probability values as 30-bit integers
+            final int size = end - begin + 1;
+            final int[] prob = new int[size];
+            double t = p0;
+            final double h = p / (1 - p);
+            for (int i = 1; i <= begin; i++) {
+                t *= (trials + 1 - i) * h / i;
+            }
+            int sum = toUnsignedInt30(t);
+            prob[0] = sum;
+            for (int i = begin + 1; i <= end; i++) {
+                t *= (trials + 1 - i) * h / i;
+                prob[i - begin] = toUnsignedInt30(t);
+                sum += prob[i - begin];
+            }
+
+            // If the sum is < 2^30 add the remaining sum to the mode (floor((n+1)p))).
+            // If above 2^30 then the effect is truncation of the long tail of the distribution.
+            final int mode = (int) ((trials + 1) * p) - begin;
+            prob[mode] += Math.max(0, INT_30 - sum);
+
+            final SharedStateDiscreteSampler sampler = createSampler(rng, BINOMIAL_NAME, prob, begin);
+
+            // Check if an inversion was made
+            return useInversion ?
+                   new MarsagliaTsangWangInversionBinomialSampler(trials, sampler) :
+                   sampler;
+        }
     }
 }

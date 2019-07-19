@@ -52,7 +52,7 @@ import java.util.Arrays;
  * approximately 12 bytes of storage per input probability, that is {@code n * 12} for size
  * {@code n}. Zero-padding only requires 4 bytes of storage per padded value as the probability is
  * known to be zero. A table can be padded to a power of 2 using the utility function
- * {@link #create(UniformRandomProvider, double[], int)} to construct the sampler.</p>
+ * {@link #of(UniformRandomProvider, double[], int)} to construct the sampler.</p>
  *
  * <p>An optimisation is performed for small table sizes that are a power of 2. In this case the
  * sampling uses 1 or 2 calls from {@link UniformRandomProvider#nextInt()} to generate up to
@@ -293,7 +293,7 @@ public class AliasMethodDiscreteSampler
      * power-of-two. Padding is bounded by the upper limit on the size of an array.</p>
      *
      * <p>To avoid zero-padding use the
-     * {@link #create(UniformRandomProvider, double[], int)} method with a negative
+     * {@link #of(UniformRandomProvider, double[], int)} method with a negative
      * {@code alpha} factor.</p>
      *
      * @param rng Generator of uniformly distributed random numbers.
@@ -302,11 +302,11 @@ public class AliasMethodDiscreteSampler
      * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
-     * @see #create(UniformRandomProvider, double[], int)
+     * @see #of(UniformRandomProvider, double[], int)
      */
-    public static AliasMethodDiscreteSampler create(final UniformRandomProvider rng,
-                                                    final double[] probabilities) {
-        return create(rng, probabilities, DEFAULT_ALPHA);
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double[] probabilities) {
+        return of(rng, probabilities, DEFAULT_ALPHA);
     }
 
     /**
@@ -348,9 +348,9 @@ public class AliasMethodDiscreteSampler
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
      */
-    public static AliasMethodDiscreteSampler create(final UniformRandomProvider rng,
-                                                    final double[] probabilities,
-                                                    int alpha) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double[] probabilities,
+                                                int alpha) {
         // The Alias method balances N categories with counts around the mean into N sections,
         // each allocated 'mean' observations.
         //
