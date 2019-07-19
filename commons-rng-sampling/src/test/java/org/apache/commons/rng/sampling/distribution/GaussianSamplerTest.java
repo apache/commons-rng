@@ -54,7 +54,7 @@ public class GaussianSamplerTest {
         final double standardDeviation = 4.56;
         final GaussianSampler sampler1 =
             new GaussianSampler(gauss, mean, standardDeviation);
-        final GaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 

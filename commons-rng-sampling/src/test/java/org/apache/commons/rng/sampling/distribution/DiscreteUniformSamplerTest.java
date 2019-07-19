@@ -64,7 +64,7 @@ public class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final DiscreteUniformSampler sampler1 =
             new DiscreteUniformSampler(rng1, lower, upper);
-        final DiscreteUniformSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

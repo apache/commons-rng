@@ -65,7 +65,7 @@ public class ChengBetaSamplerTest {
         final double beta = 4.56;
         final ChengBetaSampler sampler1 =
             new ChengBetaSampler(rng1, alpha, beta);
-        final ChengBetaSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

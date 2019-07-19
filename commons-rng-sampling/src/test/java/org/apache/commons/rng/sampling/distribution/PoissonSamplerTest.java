@@ -52,7 +52,7 @@ public class PoissonSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final PoissonSampler sampler1 =
             new PoissonSampler(rng1, mean);
-        final PoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

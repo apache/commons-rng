@@ -57,7 +57,7 @@ public class ZigguratNormalizedGaussianSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final ZigguratNormalizedGaussianSampler sampler1 =
             new ZigguratNormalizedGaussianSampler(rng1);
-        final ZigguratNormalizedGaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

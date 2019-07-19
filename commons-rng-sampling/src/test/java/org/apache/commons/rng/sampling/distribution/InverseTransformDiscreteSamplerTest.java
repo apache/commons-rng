@@ -41,7 +41,7 @@ public class InverseTransformDiscreteSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final InverseTransformDiscreteSampler sampler1 =
             new InverseTransformDiscreteSampler(rng1, function);
-        final InverseTransformDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

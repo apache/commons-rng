@@ -60,7 +60,7 @@ public class ContinuousUniformSamplerTest {
         final double high = 4.56;
         final ContinuousUniformSampler sampler1 =
             new ContinuousUniformSampler(rng1, low, high);
-        final ContinuousUniformSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

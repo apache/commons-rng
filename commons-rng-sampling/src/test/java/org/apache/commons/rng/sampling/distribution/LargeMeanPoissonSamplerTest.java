@@ -171,7 +171,7 @@ public class LargeMeanPoissonSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final LargeMeanPoissonSampler sampler1 =
             new LargeMeanPoissonSampler(rng1, mean);
-        final LargeMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

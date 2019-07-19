@@ -24,7 +24,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *
  * @since 1.1
  */
-public class LogNormalSampler implements ContinuousSampler, SharedStateSampler<LogNormalSampler> {
+public class LogNormalSampler implements SharedStateContinuousSampler {
     /** Scale. */
     private final double scale;
     /** Shape. */
@@ -86,7 +86,7 @@ public class LogNormalSampler implements ContinuousSampler, SharedStateSampler<L
      * sharing state.
      */
     @Override
-    public LogNormalSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new LogNormalSampler(rng, this);
     }
 }

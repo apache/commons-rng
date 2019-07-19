@@ -246,7 +246,7 @@ public class GuideTableDiscreteSamplerTest {
         final double[] probabilities = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};
         final GuideTableDiscreteSampler sampler1 =
             new GuideTableDiscreteSampler(rng1, probabilities);
-        final GuideTableDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

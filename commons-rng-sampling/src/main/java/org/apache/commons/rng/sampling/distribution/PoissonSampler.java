@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
@@ -52,7 +51,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class PoissonSampler
     extends SamplerBase
-    implements DiscreteSampler, SharedStateSampler<PoissonSampler> {
+    implements SharedStateDiscreteSampler {
 
     /**
      * Value for switching sampling algorithm.
@@ -61,7 +60,7 @@ public class PoissonSampler
      */
     static final double PIVOT = 40;
     /** The internal Poisson sampler. */
-    private final DiscreteSampler poissonSamplerDelegate;
+    private final SharedStateDiscreteSampler poissonSamplerDelegate;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -85,16 +84,9 @@ public class PoissonSampler
      * @param source Source to copy.
      */
     private PoissonSampler(UniformRandomProvider rng,
-            PoissonSampler source) {
+                           PoissonSampler source) {
         super(null);
-
-        if (source.poissonSamplerDelegate instanceof SmallMeanPoissonSampler) {
-            poissonSamplerDelegate =
-                ((SmallMeanPoissonSampler)source.poissonSamplerDelegate).withUniformRandomProvider(rng);
-        } else {
-            poissonSamplerDelegate =
-                ((LargeMeanPoissonSampler)source.poissonSamplerDelegate).withUniformRandomProvider(rng);
-        }
+        poissonSamplerDelegate = source.poissonSamplerDelegate.withUniformRandomProvider(rng);
     }
 
     /** {@inheritDoc} */
@@ -111,7 +103,7 @@ public class PoissonSampler
 
     /** {@inheritDoc} */
     @Override
-    public PoissonSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new PoissonSampler(rng, this);
     }
 }

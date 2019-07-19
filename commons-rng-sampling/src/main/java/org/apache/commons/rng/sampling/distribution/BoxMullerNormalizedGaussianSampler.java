@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
@@ -29,7 +28,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * @since 1.1
  */
 public class BoxMullerNormalizedGaussianSampler
-    implements NormalizedGaussianSampler, SharedStateSampler<BoxMullerNormalizedGaussianSampler> {
+    implements NormalizedGaussianSampler, SharedStateContinuousSampler {
     /** Next gaussian. */
     private double nextGaussian = Double.NaN;
     /** Underlying source of randomness. */
@@ -79,7 +78,7 @@ public class BoxMullerNormalizedGaussianSampler
 
     /** {@inheritDoc} */
     @Override
-    public BoxMullerNormalizedGaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new BoxMullerNormalizedGaussianSampler(rng);
     }
 }

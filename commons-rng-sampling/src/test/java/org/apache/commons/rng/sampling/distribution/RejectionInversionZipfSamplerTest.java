@@ -65,7 +65,7 @@ public class RejectionInversionZipfSamplerTest {
         final double exponent = 1.23;
         final RejectionInversionZipfSampler sampler1 =
             new RejectionInversionZipfSampler(rng1, numberOfElements, exponent);
-        final RejectionInversionZipfSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
@@ -53,15 +52,15 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
-    implements ContinuousSampler, SharedStateSampler<AhrensDieterMarsagliaTsangGammaSampler> {
+    implements SharedStateContinuousSampler {
     /** The appropriate gamma sampler for the parameters. */
-    private final ContinuousSampler delegate;
+    private final SharedStateContinuousSampler delegate;
 
     /**
      * Base class for a sampler from the Gamma distribution.
      */
     private abstract static class BaseGammaSampler
-        implements ContinuousSampler, SharedStateSampler<ContinuousSampler> {
+        implements SharedStateContinuousSampler {
 
         /** Underlying source of randomness. */
         protected final UniformRandomProvider rng;
@@ -183,7 +182,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         @Override
-        public ContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new AhrensDieterGammaSampler(rng, this);
         }
     }
@@ -263,7 +262,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         @Override
-        public ContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new MarsagliaTsangGammaSampler(rng, this);
         }
     }
@@ -291,7 +290,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     private AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                    AhrensDieterMarsagliaTsangGammaSampler source) {
         super(null);
-        delegate = ((SharedStateSampler<ContinuousSampler>)(source.delegate)).withUniformRandomProvider(rng);
+        delegate = source.delegate.withUniformRandomProvider(rng);
     }
 
     /** {@inheritDoc} */
@@ -308,7 +307,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
 
     /** {@inheritDoc} */
     @Override
-    public AhrensDieterMarsagliaTsangGammaSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new AhrensDieterMarsagliaTsangGammaSampler(rng, this);
     }
 }

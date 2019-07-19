@@ -49,7 +49,7 @@ public class AhrensDieterExponentialSamplerTest {
         final double mean = 1.23;
         final AhrensDieterExponentialSampler sampler1 =
             new AhrensDieterExponentialSampler(rng1, mean);
-        final AhrensDieterExponentialSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

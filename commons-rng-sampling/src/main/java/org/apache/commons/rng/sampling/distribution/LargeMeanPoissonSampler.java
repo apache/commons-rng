@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 
 /**
@@ -45,13 +44,26 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  * @since 1.1
  */
 public class LargeMeanPoissonSampler
-    implements DiscreteSampler, SharedStateSampler<LargeMeanPoissonSampler> {
+    implements SharedStateDiscreteSampler {
     /** Upper bound to avoid truncation. */
     private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /** Class to compute {@code log(n!)}. This has no cached values. */
     private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
     /** Used when there is no requirement for a small mean Poisson sampler. */
-    private static final KempSmallMeanPoissonSampler NO_SMALL_MEAN_POISSON_SAMPLER = null;
+    private static final SharedStateDiscreteSampler NO_SMALL_MEAN_POISSON_SAMPLER =
+        new SharedStateDiscreteSampler() {
+            @Override
+            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+                // No requirement for RNG
+                return this;
+            }
+
+            @Override
+            public int sample() {
+                // No Poisson sample
+                return 0;
+            }
+        };
 
     static {
         // Create without a cache.
@@ -61,9 +73,9 @@ public class LargeMeanPoissonSampler
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
     /** Exponential. */
-    private final AhrensDieterExponentialSampler exponential;
+    private final SharedStateContinuousSampler exponential;
     /** Gaussian. */
-    private final ContinuousSampler gaussian;
+    private final SharedStateContinuousSampler gaussian;
     /** Local class to compute {@code log(n!)}. This may have cached values. */
     private final InternalUtils.FactorialLog factorialLog;
 
@@ -101,7 +113,7 @@ public class LargeMeanPoissonSampler
     private final double c1;
 
     /** The internal Poisson sampler for the lambda fraction. */
-    private final KempSmallMeanPoissonSampler smallMeanPoissonSampler;
+    private final SharedStateDiscreteSampler smallMeanPoissonSampler;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -195,8 +207,7 @@ public class LargeMeanPoissonSampler
                                     LargeMeanPoissonSampler source) {
         this.rng = rng;
 
-        // The Gaussian sampler has no shared state
-        gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        gaussian = source.gaussian.withUniformRandomProvider(rng);
         exponential = source.exponential.withUniformRandomProvider(rng);
         // Reuse the cache
         factorialLog = source.factorialLog;
@@ -212,18 +223,14 @@ public class LargeMeanPoissonSampler
         c1 = source.c1;
 
         // Share the state of the small sampler
-        smallMeanPoissonSampler = source.smallMeanPoissonSampler == null ?
-            NO_SMALL_MEAN_POISSON_SAMPLER : // Not used.
-            source.smallMeanPoissonSampler.withUniformRandomProvider(rng);
+        smallMeanPoissonSampler = source.smallMeanPoissonSampler.withUniformRandomProvider(rng);
     }
 
     /** {@inheritDoc} */
     @Override
     public int sample() {
-
-        final int y2 = (smallMeanPoissonSampler == null) ?
-            0 : // No lambda fraction
-            smallMeanPoissonSampler.sample();
+        // This will never be null. It may be a no-op delegate that returns zero.
+        final int y2 = smallMeanPoissonSampler.sample();
 
         double x;
         double y;
@@ -295,7 +302,7 @@ public class LargeMeanPoissonSampler
 
     /** {@inheritDoc} */
     @Override
-    public LargeMeanPoissonSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new LargeMeanPoissonSampler(rng, this);
     }
 

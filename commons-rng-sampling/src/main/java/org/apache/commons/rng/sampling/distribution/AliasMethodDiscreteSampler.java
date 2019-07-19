@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 import java.util.Arrays;
 
@@ -63,15 +62,15 @@ import java.util.Arrays;
  * <p>Larger table sizes that are a power of 2 will benefit from fast algorithms for
  * {@link UniformRandomProvider#nextInt(int)} that exploit the power of 2.</p>
  *
- * @since 1.3
  * @see <a href="https://en.wikipedia.org/wiki/Alias_method">Alias Method</a>
  * @see <a href="http://www.keithschwarz.com/darts-dice-coins/">Darts, Dice, and Coins:
  * Sampling from a Discrete Distribution by Keith Schwartz</a>
  * @see <a href="https://ieeexplore.ieee.org/document/92917">Vose (1991) IEEE Transactions
  * on Software Engineering 17, 972-975.</a>
+ * @since 1.3
  */
 public class AliasMethodDiscreteSampler
-    implements DiscreteSampler, SharedStateSampler<AliasMethodDiscreteSampler> {
+    implements SharedStateDiscreteSampler {
     /**
      * The default alpha factor for zero-padding an input probability table. The default
      * value will pad the probabilities by to the next power-of-2.
@@ -213,7 +212,7 @@ public class AliasMethodDiscreteSampler
 
         /** {@inheritDoc} */
         @Override
-        public SmallTableAliasMethodDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new SmallTableAliasMethodDiscreteSampler(rng, probability, alias);
         }
     }
@@ -280,7 +279,7 @@ public class AliasMethodDiscreteSampler
 
     /** {@inheritDoc} */
     @Override
-    public AliasMethodDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new AliasMethodDiscreteSampler(rng, probability, alias);
     }
 

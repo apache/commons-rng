@@ -89,7 +89,7 @@ public class SmallMeanPoissonSamplerTest {
         final double mean = 1.23;
         final SmallMeanPoissonSampler sampler1 =
             new SmallMeanPoissonSampler(rng1, mean);
-        final SmallMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

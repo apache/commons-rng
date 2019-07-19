@@ -18,7 +18,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Discrete uniform distribution sampler.
@@ -31,16 +30,16 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class DiscreteUniformSampler
     extends SamplerBase
-    implements DiscreteSampler, SharedStateSampler<DiscreteUniformSampler> {
+    implements SharedStateDiscreteSampler {
 
     /** The appropriate uniform sampler for the parameters. */
-    private final DiscreteSampler delegate;
+    private final SharedStateDiscreteSampler delegate;
 
     /**
      * Base class for a sampler from a discrete uniform distribution.
      */
     private abstract static class AbstractDiscreteUniformSampler
-        implements DiscreteSampler, SharedStateSampler<DiscreteSampler> {
+        implements SharedStateDiscreteSampler {
 
         /** Underlying source of randomness. */
         protected final UniformRandomProvider rng;
@@ -91,7 +90,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new SmallRangeDiscreteUniformSampler(rng, lower, range);
         }
     }
@@ -134,7 +133,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new LargeRangeDiscreteUniformSampler(rng, lower, upper);
         }
     }
@@ -170,7 +169,7 @@ public class DiscreteUniformSampler
     private DiscreteUniformSampler(UniformRandomProvider rng,
                                    DiscreteUniformSampler source) {
         super(null);
-        delegate = ((SharedStateSampler<DiscreteSampler>)(source.delegate)).withUniformRandomProvider(rng);
+        delegate = source.delegate.withUniformRandomProvider(rng);
     }
 
     /** {@inheritDoc} */
@@ -187,7 +186,7 @@ public class DiscreteUniformSampler
 
     /** {@inheritDoc} */
     @Override
-    public DiscreteUniformSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new DiscreteUniformSampler(rng, this);
     }
 }

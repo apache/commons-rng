@@ -18,7 +18,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Implementation of the <a href="https://en.wikipedia.org/wiki/Zipf's_law">Zipf distribution</a>.
@@ -29,7 +28,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class RejectionInversionZipfSampler
     extends SamplerBase
-    implements DiscreteSampler, SharedStateSampler<RejectionInversionZipfSampler> {
+    implements SharedStateDiscreteSampler {
     /** Threshold below which Taylor series will be used. */
     private static final double TAYLOR_THRESHOLD = 1e-8;
     /** 1/2. */
@@ -195,7 +194,7 @@ public class RejectionInversionZipfSampler
 
     /** {@inheritDoc} */
     @Override
-    public RejectionInversionZipfSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new RejectionInversionZipfSampler(rng, this);
     }
 

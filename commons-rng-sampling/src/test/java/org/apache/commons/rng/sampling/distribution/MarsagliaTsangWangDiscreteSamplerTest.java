@@ -612,7 +612,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         double[] probabilities = createProbabilities(offset, prob);
         final MarsagliaTsangWangDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.createDiscreteDistribution(rng1, probabilities);
-        final MarsagliaTsangWangDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
@@ -645,7 +645,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final MarsagliaTsangWangDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.createBinomialDistribution(rng1, trials, probabilityOfSuccess);
-        final MarsagliaTsangWangDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 

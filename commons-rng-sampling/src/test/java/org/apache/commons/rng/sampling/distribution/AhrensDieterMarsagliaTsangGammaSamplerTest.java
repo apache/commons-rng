@@ -81,7 +81,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final AhrensDieterMarsagliaTsangGammaSampler sampler1 =
             new AhrensDieterMarsagliaTsangGammaSampler(rng1, alpha, theta);
-        final AhrensDieterMarsagliaTsangGammaSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

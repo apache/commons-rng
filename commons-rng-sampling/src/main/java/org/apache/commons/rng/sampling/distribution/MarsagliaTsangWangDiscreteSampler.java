@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampler for a discrete distribution using an optimised look-up table.
@@ -51,7 +50,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * 11, Issue 3</a>
  */
 public abstract class MarsagliaTsangWangDiscreteSampler
-    implements DiscreteSampler, SharedStateSampler<MarsagliaTsangWangDiscreteSampler> {
+    implements SharedStateDiscreteSampler {
     /** The value 2<sup>8</sup> as an {@code int}. */
     private static final int INT_8 = 1 << 8;
     /** The value 2<sup>16</sup> as an {@code int}. */
@@ -248,7 +247,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
 
         @Override
-        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int8DiscreteSampler(rng, this);
         }
     }
@@ -388,7 +387,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
 
         @Override
-        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int16DiscreteSampler(rng, this);
         }
     }
@@ -524,7 +523,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
 
         @Override
-        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int32DiscreteSampler(rng, this);
         }
     }
@@ -557,7 +556,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
 
         @Override
-        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             // No shared state
             return this;
         }
@@ -576,14 +575,14 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         /** The number of trials. */
         private final int trials;
         /** The Binomial distribution sampler. */
-        private final MarsagliaTsangWangDiscreteSampler sampler;
+        private final SharedStateDiscreteSampler sampler;
 
         /**
          * @param trials Number of trials.
          * @param sampler Binomial distribution sampler.
          */
         MarsagliaTsangWangInversionBinomialSampler(int trials,
-                                                   MarsagliaTsangWangDiscreteSampler sampler) {
+                                                   SharedStateDiscreteSampler sampler) {
             super(null, BINOMIAL_NAME);
             this.trials = trials;
             this.sampler = sampler;
@@ -600,7 +599,7 @@ public abstract class MarsagliaTsangWangDiscreteSampler
         }
 
         @Override
-        public MarsagliaTsangWangDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new MarsagliaTsangWangInversionBinomialSampler(this.trials,
                 this.sampler.withUniformRandomProvider(rng));
         }

@@ -25,7 +25,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *
  * @since 1.1
  */
-public class GaussianSampler implements ContinuousSampler, SharedStateSampler<GaussianSampler> {
+public class GaussianSampler implements SharedStateContinuousSampler {
     /** Mean. */
     private final double mean;
     /** standardDeviation. */
@@ -85,7 +85,7 @@ public class GaussianSampler implements ContinuousSampler, SharedStateSampler<Ga
      * sharing state.
      */
     @Override
-    public GaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new GaussianSampler(rng, this);
     }
 }

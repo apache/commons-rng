@@ -65,7 +65,7 @@ public class InverseTransformParetoSamplerTest {
         final double shape = 4.56;
         final InverseTransformParetoSampler sampler1 =
             new InverseTransformParetoSampler(rng1, scale, shape);
-        final InverseTransformParetoSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

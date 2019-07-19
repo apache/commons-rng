@@ -156,7 +156,7 @@ public class KempSmallMeanPoissonSamplerTest {
         final double mean = 1.23;
         final KempSmallMeanPoissonSampler sampler1 =
             new KempSmallMeanPoissonSampler(rng1, mean);
-        final KempSmallMeanPoissonSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 

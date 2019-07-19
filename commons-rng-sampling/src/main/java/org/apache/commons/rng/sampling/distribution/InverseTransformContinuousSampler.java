@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Distribution sampler that uses the
@@ -58,7 +57,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class InverseTransformContinuousSampler
     extends SamplerBase
-    implements ContinuousSampler, SharedStateSampler<InverseTransformContinuousSampler> {
+    implements SharedStateContinuousSampler {
     /** Inverse cumulative probability function. */
     private final ContinuousInverseCumulativeProbabilityFunction function;
     /** Underlying source of randomness. */
@@ -94,7 +93,7 @@ public class InverseTransformContinuousSampler
      * must be suitable for concurrent use to ensure thread safety.</p>
      */
     @Override
-    public InverseTransformContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new InverseTransformContinuousSampler(rng, function);
     }
 }

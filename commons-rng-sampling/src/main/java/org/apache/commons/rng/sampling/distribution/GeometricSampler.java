@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Geometric_distribution">geometric
@@ -46,15 +45,15 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *
  * @since 1.3
  */
-public class GeometricSampler implements DiscreteSampler, SharedStateSampler<GeometricSampler> {
+public class GeometricSampler implements SharedStateDiscreteSampler {
     /** The appropriate geometric sampler for the parameters. */
-    private final DiscreteSampler delegate;
+    private final SharedStateDiscreteSampler delegate;
 
     /**
      * Sample from the geometric distribution when the probability of success is 1.
      */
     private static class GeometricP1Sampler
-        implements DiscreteSampler, SharedStateSampler<DiscreteSampler> {
+        implements SharedStateDiscreteSampler {
         /** The single instance. */
         static final GeometricP1Sampler INSTANCE = new GeometricP1Sampler();
 
@@ -70,7 +69,7 @@ public class GeometricSampler implements DiscreteSampler, SharedStateSampler<Geo
         }
 
         @Override
-        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             // No requirement for a new instance
             return this;
         }
@@ -80,11 +79,11 @@ public class GeometricSampler implements DiscreteSampler, SharedStateSampler<Geo
      * Sample from the geometric distribution by using a related exponential distribution.
      */
     private static class GeometricExponentialSampler
-        implements DiscreteSampler, SharedStateSampler<DiscreteSampler> {
+        implements SharedStateDiscreteSampler {
         /** Underlying source of randomness. Used only for the {@link #toString()} method. */
         private final UniformRandomProvider rng;
         /** The related exponential sampler for the geometric distribution. */
-        private final AhrensDieterExponentialSampler exponentialSampler;
+        private final SharedStateContinuousSampler exponentialSampler;
 
         /**
          * @param rng Generator of uniformly distributed random numbers
@@ -128,7 +127,7 @@ public class GeometricSampler implements DiscreteSampler, SharedStateSampler<Geo
         }
 
         @Override
-        public DiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new GeometricExponentialSampler(rng, this);
         }
     }
@@ -158,9 +157,8 @@ public class GeometricSampler implements DiscreteSampler, SharedStateSampler<Geo
      * @param rng Generator of uniformly distributed random numbers
      * @param source Source to copy.
      */
-    @SuppressWarnings("unchecked")
     private GeometricSampler(UniformRandomProvider rng, GeometricSampler source) {
-        delegate = ((SharedStateSampler<DiscreteSampler>)(source.delegate)).withUniformRandomProvider(rng);
+        delegate = source.delegate.withUniformRandomProvider(rng);
     }
 
     /**
@@ -182,7 +180,7 @@ public class GeometricSampler implements DiscreteSampler, SharedStateSampler<Geo
 
     /** {@inheritDoc} */
     @Override
-    public GeometricSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new GeometricSampler(rng, this);
     }
 }

@@ -69,7 +69,7 @@ public class LogNormalSamplerTest {
         final double shape = 4.56;
         final LogNormalSampler sampler1 =
             new LogNormalSampler(gauss, scale, shape);
-        final LogNormalSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 

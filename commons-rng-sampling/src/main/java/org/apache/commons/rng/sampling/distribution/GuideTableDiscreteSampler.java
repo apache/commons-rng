@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Compute a sample from a discrete probability distribution. The cumulative probability
@@ -41,7 +40,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * @since 1.3
  */
 public class GuideTableDiscreteSampler
-    implements DiscreteSampler, SharedStateSampler<GuideTableDiscreteSampler> {
+    implements SharedStateDiscreteSampler {
     /** The default value for {@code alpha}. */
     private static final double DEFAULT_ALPHA = 1.0;
     /** Underlying source of randomness. */
@@ -213,7 +212,7 @@ public class GuideTableDiscreteSampler
 
     /** {@inheritDoc} */
     @Override
-    public GuideTableDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new GuideTableDiscreteSampler(rng, this);
     }
 }

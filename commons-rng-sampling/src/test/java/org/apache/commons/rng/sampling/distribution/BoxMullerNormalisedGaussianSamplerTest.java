@@ -34,7 +34,7 @@ public class BoxMullerNormalisedGaussianSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final BoxMullerNormalizedGaussianSampler sampler1 =
             new BoxMullerNormalizedGaussianSampler(rng1);
-        final BoxMullerNormalizedGaussianSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

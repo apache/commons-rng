@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson
@@ -47,7 +46,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * 249-253</a>
  */
 public class KempSmallMeanPoissonSampler
-    implements DiscreteSampler, SharedStateSampler<KempSmallMeanPoissonSampler> {
+    implements SharedStateDiscreteSampler {
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
     /**
@@ -129,7 +128,7 @@ public class KempSmallMeanPoissonSampler
 
     /** {@inheritDoc} */
     @Override
-    public KempSmallMeanPoissonSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new KempSmallMeanPoissonSampler(rng, this);
     }
 }

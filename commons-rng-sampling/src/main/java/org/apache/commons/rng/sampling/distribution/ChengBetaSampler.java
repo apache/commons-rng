@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Utility class implementing Cheng's algorithms for beta distribution sampling.
@@ -36,7 +35,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 public class ChengBetaSampler
     extends SamplerBase
-    implements ContinuousSampler, SharedStateSampler<ChengBetaSampler> {
+    implements SharedStateContinuousSampler {
     /** 1/2. */
     private static final double ONE_HALF = 1d / 2;
     /** 1/4. */
@@ -105,7 +104,7 @@ public class ChengBetaSampler
 
     /** {@inheritDoc} */
     @Override
-    public ChengBetaSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new ChengBetaSampler(rng, this);
     }
 

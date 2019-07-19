@@ -277,7 +277,7 @@ public class AliasMethodDiscreteSamplerTest {
         // Use negative alpha to disable padding
         final AliasMethodDiscreteSampler sampler1 =
             AliasMethodDiscreteSampler.create(rng1, probabilities, -1);
-        final AliasMethodDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

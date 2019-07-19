@@ -18,7 +18,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Ziggurat_algorithm">
@@ -39,7 +38,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * @since 1.1
  */
 public class ZigguratNormalizedGaussianSampler
-    implements NormalizedGaussianSampler, SharedStateSampler<ZigguratNormalizedGaussianSampler> {
+    implements NormalizedGaussianSampler, SharedStateContinuousSampler {
     /** Start of tail. */
     private static final double R = 3.442619855899;
     /** Inverse of R. */
@@ -164,7 +163,7 @@ public class ZigguratNormalizedGaussianSampler
 
     /** {@inheritDoc} */
     @Override
-    public ZigguratNormalizedGaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new ZigguratNormalizedGaussianSampler(rng);
     }
 }
