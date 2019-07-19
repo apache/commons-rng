@@ -84,11 +84,14 @@
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder'
           or @Image='ThreadLocalRandomSource' or @Image='SeedFactory']"/>
+      <!-- Allow samplers to have only factory constructors -->
+      <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/ShortMethodName">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='RejectionInversionZipfSampler']"/>
+      <!-- Allow samplers to have factory constructor method 'of' -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@Image, '^.*Sampler$')]"/>
     </properties>
   </rule>
 
