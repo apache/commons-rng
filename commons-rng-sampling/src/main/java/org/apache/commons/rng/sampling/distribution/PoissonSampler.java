@@ -79,16 +79,6 @@ public class PoissonSampler
             new LargeMeanPoissonSampler(rng, mean);
     }
 
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
-     */
-    private PoissonSampler(UniformRandomProvider rng,
-                           PoissonSampler source) {
-        super(null);
-        poissonSamplerDelegate = source.poissonSamplerDelegate.withUniformRandomProvider(rng);
-    }
-
     /** {@inheritDoc} */
     @Override
     public int sample() {
@@ -104,6 +94,7 @@ public class PoissonSampler
     /** {@inheritDoc} */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new PoissonSampler(rng, this);
+        // Direct return of the optimised sampler
+        return poissonSamplerDelegate.withUniformRandomProvider(rng);
     }
 }

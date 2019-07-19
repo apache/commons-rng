@@ -161,17 +161,6 @@ public class DiscreteUniformSampler
             new SmallRangeDiscreteUniformSampler(rng, lower, range);
     }
 
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
-     */
-    @SuppressWarnings("unchecked")
-    private DiscreteUniformSampler(UniformRandomProvider rng,
-                                   DiscreteUniformSampler source) {
-        super(null);
-        delegate = source.delegate.withUniformRandomProvider(rng);
-    }
-
     /** {@inheritDoc} */
     @Override
     public int sample() {
@@ -187,6 +176,7 @@ public class DiscreteUniformSampler
     /** {@inheritDoc} */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new DiscreteUniformSampler(rng, this);
+        // Direct return of the optimised sampler
+        return delegate.withUniformRandomProvider(rng);
     }
 }

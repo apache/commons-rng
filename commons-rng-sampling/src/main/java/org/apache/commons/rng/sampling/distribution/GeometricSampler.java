@@ -154,14 +154,6 @@ public class GeometricSampler implements SharedStateDiscreteSampler {
     }
 
     /**
-     * @param rng Generator of uniformly distributed random numbers
-     * @param source Source to copy.
-     */
-    private GeometricSampler(UniformRandomProvider rng, GeometricSampler source) {
-        delegate = source.delegate.withUniformRandomProvider(rng);
-    }
-
-    /**
      * Create a sample from a geometric distribution.
      *
      * <p>The sample will take the values in the set {@code [0, 1, 2, ...]}, equivalent to the
@@ -181,6 +173,7 @@ public class GeometricSampler implements SharedStateDiscreteSampler {
     /** {@inheritDoc} */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new GeometricSampler(rng, this);
+        // Direct return of the optimised sampler
+        return delegate.withUniformRandomProvider(rng);
     }
 }

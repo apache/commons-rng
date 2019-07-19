@@ -282,17 +282,6 @@ public class AhrensDieterMarsagliaTsangGammaSampler
             new MarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 
-    /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
-     */
-    @SuppressWarnings("unchecked")
-    private AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                   AhrensDieterMarsagliaTsangGammaSampler source) {
-        super(null);
-        delegate = source.delegate.withUniformRandomProvider(rng);
-    }
-
     /** {@inheritDoc} */
     @Override
     public double sample() {
@@ -308,6 +297,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     /** {@inheritDoc} */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new AhrensDieterMarsagliaTsangGammaSampler(rng, this);
+        // Direct return of the optimised sampler
+        return delegate.withUniformRandomProvider(rng);
     }
 }
