@@ -110,14 +110,14 @@ public class DiscreteSamplersPerformance {
             super.setup();
             final UniformRandomProvider rng = getGenerator();
             if ("DiscreteUniformSampler".equals(samplerType)) {
-                sampler = new DiscreteUniformSampler(rng, -98, 76);
+                sampler = DiscreteUniformSampler.of(rng, -98, 76);
             } else if ("RejectionInversionZipfSampler".equals(samplerType)) {
-                sampler = new RejectionInversionZipfSampler(rng, 43, 2.1);
+                sampler = RejectionInversionZipfSampler.of(rng, 43, 2.1);
             } else if ("SmallMeanPoissonSampler".equals(samplerType)) {
-                sampler = new SmallMeanPoissonSampler(rng, 8.9);
+                sampler = SmallMeanPoissonSampler.of(rng, 8.9);
             } else if ("LargeMeanPoissonSampler".equals(samplerType)) {
                 // Note: Use with a fractional part to the mean includes a small mean sample
-                sampler = new LargeMeanPoissonSampler(rng, 41.7);
+                sampler = LargeMeanPoissonSampler.of(rng, 41.7);
             } else if ("GeometricSampler".equals(samplerType)) {
                 sampler = GeometricSampler.of(rng, 0.21);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {

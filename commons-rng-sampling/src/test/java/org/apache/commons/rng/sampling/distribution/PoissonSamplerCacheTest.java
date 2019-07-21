@@ -384,7 +384,7 @@ public class PoissonSamplerCacheTest {
             final RestorableUniformRandomProvider rng2,
             PoissonSamplerCache cache,
             double mean) {
-        final DiscreteSampler s1 = new PoissonSampler(rng1, mean);
+        final DiscreteSampler s1 = PoissonSampler.of(rng1, mean);
         final DiscreteSampler s2 = cache.createPoissonSampler(rng2, mean);
         for (int j = 0; j < 10; j++) {
             Assert.assertEquals(s1.sample(), s2.sample());

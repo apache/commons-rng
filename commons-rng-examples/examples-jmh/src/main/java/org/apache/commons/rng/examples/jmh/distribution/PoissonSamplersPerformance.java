@@ -178,7 +178,7 @@ public class PoissonSamplersPerformance {
                 factory = new DiscreteSamplerFactory() {
                     @Override
                     public DiscreteSampler create() {
-                        return new SmallMeanPoissonSampler(generator, mean);
+                        return SmallMeanPoissonSampler.of(generator, mean);
                     }
                 };
             } else if ("KempSmallMeanPoissonSampler".equals(samplerType)) {
@@ -221,7 +221,7 @@ public class PoissonSamplersPerformance {
                     @Override
                     public DiscreteSampler create() {
                         // Note this is not valid when mean < 1
-                        return new LargeMeanPoissonSampler(generator, mean);
+                        return LargeMeanPoissonSampler.of(generator, mean);
                     }
                 };
             } else if ("TinyMeanPoissonSampler".equals(samplerType)) {

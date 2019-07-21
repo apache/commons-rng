@@ -96,4 +96,21 @@ public class InverseTransformDiscreteSampler
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new InverseTransformDiscreteSampler(rng, function);
     }
+
+    /**
+     * Create a new inverse-transform discrete sampler.
+     *
+     * <p>To use the sampler to
+     * {@link org.apache.commons.rng.sampling.SharedStateSampler share state} the function must be
+     * suitable for concurrent use.</p>
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param function Inverse cumulative probability function.
+     * @return the sampler
+     * @see #withUniformRandomProvider(UniformRandomProvider)
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                DiscreteInverseCumulativeProbabilityFunction function) {
+        return new InverseTransformDiscreteSampler(rng, function);
+    }
 }

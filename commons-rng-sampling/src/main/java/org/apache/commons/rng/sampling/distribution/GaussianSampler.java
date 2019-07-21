@@ -88,4 +88,24 @@ public class GaussianSampler implements SharedStateContinuousSampler {
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new GaussianSampler(rng, this);
     }
+
+    /**
+     * Create a new normalised Gaussian sampler.
+     *
+     * <p>Note: The shared-state functionality is available if the {@link NormalizedGaussianSampler}
+     * is a {@link SharedStateSampler}. Otherwise a run-time exception will be thrown when the
+     * sampler is used to share state.</p>
+     *
+     * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
+     * @param mean Mean of the Gaussian distribution.
+     * @param standardDeviation Standard deviation of the Gaussian distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
+     * @see #withUniformRandomProvider(UniformRandomProvider)
+     */
+    public static SharedStateContinuousSampler of(NormalizedGaussianSampler normalized,
+                                                  double mean,
+                                                  double standardDeviation) {
+        return new GaussianSampler(normalized, mean, standardDeviation);
+    }
 }

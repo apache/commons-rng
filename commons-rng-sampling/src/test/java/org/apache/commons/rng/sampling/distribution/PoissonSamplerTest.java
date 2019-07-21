@@ -19,7 +19,9 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Test;
+
 
 /**
  * This test checks the {@link PoissonSampler} can be created
@@ -50,9 +52,20 @@ public class PoissonSamplerTest {
     private static void testSharedStateSampler(double mean) {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final PoissonSampler sampler1 =
+        // Use instance constructor not factory constructor to exercise 1.X public API
+        final SharedStateDiscreteSampler sampler1 =
             new PoissonSampler(rng1, mean);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the toString method. This is added to ensure coverage as the factory constructor
+     * used in other tests does not create an instance of the wrapper class.
+     */
+    @Test
+    public void testToString() {
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        Assert.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
     }
 }

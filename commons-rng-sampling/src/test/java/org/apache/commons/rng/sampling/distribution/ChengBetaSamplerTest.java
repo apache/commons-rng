@@ -35,9 +35,7 @@ public class ChengBetaSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double alpha = 0;
         final double beta = 1;
-        @SuppressWarnings("unused")
-        final ChengBetaSampler sampler =
-            new ChengBetaSampler(rng, alpha, beta);
+        ChengBetaSampler.of(rng, alpha, beta);
     }
 
     /**
@@ -49,9 +47,7 @@ public class ChengBetaSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double alpha = 1;
         final double beta = 0;
-        @SuppressWarnings("unused")
-        final ChengBetaSampler sampler =
-            new ChengBetaSampler(rng, alpha, beta);
+        ChengBetaSampler.of(rng, alpha, beta);
     }
 
     /**
@@ -63,8 +59,8 @@ public class ChengBetaSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double alpha = 1.23;
         final double beta = 4.56;
-        final ChengBetaSampler sampler1 =
-            new ChengBetaSampler(rng1, alpha, beta);
+        final SharedStateContinuousSampler sampler1 =
+            ChengBetaSampler.of(rng1, alpha, beta);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

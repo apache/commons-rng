@@ -45,7 +45,7 @@ public class ZigguratNormalizedGaussianSamplerTest {
             };
 
         // Infinite loop (in v1.1).
-        new ZigguratNormalizedGaussianSampler(bad).sample();
+        ZigguratNormalizedGaussianSampler.of(bad).sample();
     }
 
     /**
@@ -55,8 +55,8 @@ public class ZigguratNormalizedGaussianSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final ZigguratNormalizedGaussianSampler sampler1 =
-            new ZigguratNormalizedGaussianSampler(rng1);
+        final SharedStateContinuousSampler sampler1 =
+            ZigguratNormalizedGaussianSampler.of(rng1);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

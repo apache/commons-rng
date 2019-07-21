@@ -141,4 +141,17 @@ public class AhrensDieterExponentialSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new AhrensDieterExponentialSampler(rng, this);
     }
+
+    /**
+     * Create a new Exponential distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param mean Mean of the distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code mean <= 0}
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  double mean) {
+        return new AhrensDieterExponentialSampler(rng, mean);
+    }
 }

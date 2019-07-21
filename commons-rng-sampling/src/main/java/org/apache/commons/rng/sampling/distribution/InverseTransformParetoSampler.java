@@ -85,4 +85,19 @@ public class InverseTransformParetoSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new InverseTransformParetoSampler(rng, this);
     }
+
+    /**
+     * Creates a new Pareto distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param scale Scale of the distribution.
+     * @param shape Shape of the distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  double scale,
+                                                  double shape) {
+        return new InverseTransformParetoSampler(rng, scale, shape);
+    }
 }

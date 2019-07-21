@@ -37,7 +37,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * // One-time Poisson sample
  * double mean = 12.3;
- * int counts = new PoissonSampler(rng, mean).sample();
+ * int counts = PoissonSampler.of(rng, mean).sample();
  * </code></pre>
  *
  * <p>Note if the {@link RandomSource} requires additional arguments then it is not
@@ -58,7 +58,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * // One-time Poisson sample using a thread-safe random number generator
  * double mean = 12.3;
- * int counts = new PoissonSampler(rng.get(), mean).sample();
+ * int counts = PoissonSampler.of(rng.get(), mean).sample();
  * </code></pre>
  *
  * @since 1.3

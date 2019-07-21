@@ -219,7 +219,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                                    double alpha,
                                    double theta) {
             super(rng, alpha, theta);
-            gaussian = new ZigguratNormalizedGaussianSampler(rng);
+            gaussian = ZigguratNormalizedGaussianSampler.of(rng);
             dOptim = alpha - ONE_THIRD;
             cOptim = ONE_THIRD / Math.sqrt(dOptim);
         }
@@ -231,7 +231,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         MarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                    MarsagliaTsangGammaSampler source) {
             super(rng, source);
-            gaussian = new ZigguratNormalizedGaussianSampler(rng);
+            gaussian = ZigguratNormalizedGaussianSampler.of(rng);
             dOptim = source.dOptim;
             cOptim = source.cOptim;
         }
@@ -268,6 +268,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     }
 
     /**
+     * This instance delegates sampling. Use the factory method
+     * {@link #of(UniformRandomProvider, double, double)} to create an optimal sampler.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Alpha parameter of the distribution (this is a shape parameter).
      * @param theta Theta parameter of the distribution (this is a scale parameter).
@@ -277,9 +280,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                                                   double alpha,
                                                   double theta) {
         super(null);
-        delegate = alpha < 1 ?
-            new AhrensDieterGammaSampler(rng, alpha, theta) :
-            new MarsagliaTsangGammaSampler(rng, alpha, theta);
+        delegate = of(rng, alpha, theta);
     }
 
     /** {@inheritDoc} */
@@ -299,5 +300,23 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         // Direct return of the optimised sampler
         return delegate.withUniformRandomProvider(rng);
+    }
+
+    /**
+     * Creates a new Gamma distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param alpha Alpha parameter of the distribution (this is a shape parameter).
+     * @param theta Theta parameter of the distribution (this is a scale parameter).
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                double alpha,
+                                                double theta) {
+        // Each sampler should check the input arguments.
+        return alpha < 1 ?
+                new AhrensDieterGammaSampler(rng, alpha, theta) :
+                new MarsagliaTsangGammaSampler(rng, alpha, theta);
     }
 }

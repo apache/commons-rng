@@ -96,4 +96,21 @@ public class InverseTransformContinuousSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new InverseTransformContinuousSampler(rng, function);
     }
+
+    /**
+     * Create a new inverse-transform continuous sampler.
+     *
+     * <p>To use the sampler to
+     * {@link org.apache.commons.rng.sampling.SharedStateSampler share state} the function must be
+     * suitable for concurrent use.</p>
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param function Inverse cumulative probability function.
+     * @return the sampler
+     * @see #withUniformRandomProvider(UniformRandomProvider)
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  ContinuousInverseCumulativeProbabilityFunction function) {
+        return new InverseTransformContinuousSampler(rng, function);
+    }
 }

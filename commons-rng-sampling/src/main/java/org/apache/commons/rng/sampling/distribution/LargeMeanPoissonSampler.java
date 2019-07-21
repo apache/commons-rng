@@ -132,8 +132,8 @@ public class LargeMeanPoissonSampler
         }
         this.rng = rng;
 
-        gaussian = new ZigguratNormalizedGaussianSampler(rng);
-        exponential = new AhrensDieterExponentialSampler(rng, 1);
+        gaussian = ZigguratNormalizedGaussianSampler.of(rng);
+        exponential = AhrensDieterExponentialSampler.of(rng, 1);
         // Plain constructor uses the uncached function.
         factorialLog = NO_CACHE_FACTORIAL_LOG;
 
@@ -177,8 +177,8 @@ public class LargeMeanPoissonSampler
         }
         this.rng = rng;
 
-        gaussian = new ZigguratNormalizedGaussianSampler(rng);
-        exponential = new AhrensDieterExponentialSampler(rng, 1);
+        gaussian = ZigguratNormalizedGaussianSampler.of(rng);
+        exponential = AhrensDieterExponentialSampler.of(rng, 1);
         // Plain constructor uses the uncached function.
         factorialLog = NO_CACHE_FACTORIAL_LOG;
 
@@ -306,6 +306,19 @@ public class LargeMeanPoissonSampler
         return new LargeMeanPoissonSampler(rng, this);
     }
 
+    /**
+     * Creates a new Poisson distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param mean Mean.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code mean < 1} or {@code mean > 0.5 *}
+     * {@link Integer#MAX_VALUE}.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double mean) {
+        return new LargeMeanPoissonSampler(rng, mean);
+    }
     /**
      * Gets the initialisation state of the sampler.
      *

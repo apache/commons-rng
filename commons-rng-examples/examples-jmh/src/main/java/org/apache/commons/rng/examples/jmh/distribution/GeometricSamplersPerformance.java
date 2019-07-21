@@ -99,7 +99,7 @@ public class GeometricSamplersPerformance {
             } else {
                 final DiscreteInverseCumulativeProbabilityFunction geometricFunction =
                     new GeometricDiscreteInverseCumulativeProbabilityFunction(probabilityOfSuccess);
-                sampler = new InverseTransformDiscreteSampler(rng, geometricFunction);
+                sampler = InverseTransformDiscreteSampler.of(rng, geometricFunction);
             }
         }
     }

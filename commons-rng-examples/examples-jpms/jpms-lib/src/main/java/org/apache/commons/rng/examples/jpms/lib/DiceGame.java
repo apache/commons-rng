@@ -50,7 +50,7 @@ public class DiceGame {
         this.rng = rng;
         this.rounds = rounds;
         this.players = players;
-        sampler = new GaussianSampler(new ZigguratNormalizedGaussianSampler(rng), mu, sigma);
+        sampler = GaussianSampler.of(ZigguratNormalizedGaussianSampler.of(rng), mu, sigma);
     }
 
     /**

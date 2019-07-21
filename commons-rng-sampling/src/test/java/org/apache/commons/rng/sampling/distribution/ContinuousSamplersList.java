@@ -52,16 +52,16 @@ public final class ContinuousSamplersList {
                 new BoxMullerGaussianSampler(RandomSource.create(RandomSource.MT), meanNormal, sigmaNormal));
             // Gaussian ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                new GaussianSampler(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
-                                    meanNormal, sigmaNormal));
+                GaussianSampler.of(BoxMullerNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT)),
+                                   meanNormal, sigmaNormal));
             // Gaussian ("Marsaglia").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
-                                    meanNormal, sigmaNormal));
+                GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT)),
+                                   meanNormal, sigmaNormal));
             // Gaussian ("Ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                new GaussianSampler(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
-                                    meanNormal, sigmaNormal));
+                GaussianSampler.of(ZigguratNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT)),
+                                   meanNormal, sigmaNormal));
 
             // Beta ("inverse method").
             final double alphaBeta = 4.3;
@@ -70,16 +70,16 @@ public final class ContinuousSamplersList {
                 RandomSource.create(RandomSource.ISAAC));
             // Beta ("Cheng").
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, alphaBeta, betaBeta),
-                new ChengBetaSampler(RandomSource.create(RandomSource.MWC_256), alphaBeta, betaBeta));
+                ChengBetaSampler.of(RandomSource.create(RandomSource.MWC_256), alphaBeta, betaBeta));
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, betaBeta, alphaBeta),
-                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_19937_A), betaBeta, alphaBeta));
+                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_19937_A), betaBeta, alphaBeta));
             // Beta ("Cheng", alternate algorithm).
             final double alphaBetaAlt = 0.5678;
             final double betaBetaAlt = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, alphaBetaAlt, betaBetaAlt),
-                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_512_A), alphaBetaAlt, betaBetaAlt));
+                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_512_A), alphaBetaAlt, betaBetaAlt));
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, betaBetaAlt, alphaBetaAlt),
-                new ChengBetaSampler(RandomSource.create(RandomSource.WELL_19937_C), betaBetaAlt, alphaBetaAlt));
+                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_19937_C), betaBetaAlt, alphaBetaAlt));
 
             // Cauchy ("inverse method").
             final double medianCauchy = 0.123;
@@ -98,7 +98,7 @@ public final class ContinuousSamplersList {
                 RandomSource.create(RandomSource.WELL_44497_A));
             // Exponential.
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
-                new AhrensDieterExponentialSampler(RandomSource.create(RandomSource.MT), meanExp));
+                AhrensDieterExponentialSampler.of(RandomSource.create(RandomSource.MT), meanExp));
 
             // F ("inverse method").
             final int numDofF = 4;
@@ -114,11 +114,11 @@ public final class ContinuousSamplersList {
                 RandomSource.create(RandomSource.SPLIT_MIX_64));
             // Gamma (alpha < 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaSmallerThanOne, thetaGamma),
-                new AhrensDieterMarsagliaTsangGammaSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S),
+                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S),
                                                            alphaGammaSmallerThanOne, thetaGamma));
             // Gamma (alpha > 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
-                new AhrensDieterMarsagliaTsangGammaSampler(RandomSource.create(RandomSource.WELL_44497_B),
+                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.WELL_44497_B),
                                                            alphaGammaLargerThanOne, thetaGamma));
 
             // Gumbel ("inverse method").
@@ -149,16 +149,16 @@ public final class ContinuousSamplersList {
                 new BoxMullerLogNormalSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scaleLogNormal, shapeLogNormal));
             // Log-normal ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S)),
-                                     scaleLogNormal, shapeLogNormal));
+                LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S)),
+                                    scaleLogNormal, shapeLogNormal));
             // Log-normal ("Marsaglia").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT_64)),
-                                     scaleLogNormal, shapeLogNormal));
+                LogNormalSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT_64)),
+                                    scaleLogNormal, shapeLogNormal));
             // Log-normal ("Ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                new LogNormalSampler(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MWC_256)),
-                                     scaleLogNormal, shapeLogNormal));
+                LogNormalSampler.of(ZigguratNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MWC_256)),
+                                    scaleLogNormal, shapeLogNormal));
 
             // Logistic ("inverse method").
             final double muLogistic = -123.456;
@@ -180,7 +180,7 @@ public final class ContinuousSamplersList {
                 RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 9, 11));
             // Pareto.
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto),
-                new InverseTransformParetoSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scalePareto, shapePareto));
+                InverseTransformParetoSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scalePareto, shapePareto));
 
             // T ("inverse method").
             final double dofT = 0.76543;
@@ -201,7 +201,7 @@ public final class ContinuousSamplersList {
                 RandomSource.create(RandomSource.TWO_CMRES));
             // Uniform.
             add(LIST, new org.apache.commons.math3.distribution.UniformRealDistribution(unusedRng, loUniform, hiUniform),
-                new ContinuousUniformSampler(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
+                ContinuousUniformSampler.of(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
 
             // Weibull ("inverse method").
             final double alphaWeibull = 678.9;
@@ -231,7 +231,7 @@ public final class ContinuousSamplersList {
                             final org.apache.commons.math3.distribution.RealDistribution dist,
                             UniformRandomProvider rng) {
         final ContinuousSampler inverseMethodSampler =
-            new InverseTransformContinuousSampler(rng,
+            InverseTransformContinuousSampler.of(rng,
                 new ContinuousInverseCumulativeProbabilityFunction() {
                     @Override
                     public double inverseCumulativeProbability(double p) {

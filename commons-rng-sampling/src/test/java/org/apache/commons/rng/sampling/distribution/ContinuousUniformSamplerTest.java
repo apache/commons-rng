@@ -40,7 +40,7 @@ public class ContinuousUniformSamplerTest {
 
     private static void testSampleInRange(UniformRandomProvider rng,
                                           double low, double high) {
-        ContinuousUniformSampler sampler = new ContinuousUniformSampler(rng, low, high);
+        final SharedStateContinuousSampler sampler = ContinuousUniformSampler.of(rng, low, high);
         final double min = Math.min(low,  high);
         final double max = Math.max(low,  high);
         for (int i = 0; i < 10; i++) {
@@ -58,8 +58,8 @@ public class ContinuousUniformSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double low = 1.23;
         final double high = 4.56;
-        final ContinuousUniformSampler sampler1 =
-            new ContinuousUniformSampler(rng1, low, high);
+        final SharedStateContinuousSampler sampler1 =
+            ContinuousUniformSampler.of(rng1, low, high);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

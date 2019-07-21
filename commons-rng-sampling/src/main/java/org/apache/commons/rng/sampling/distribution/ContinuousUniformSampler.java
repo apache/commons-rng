@@ -64,7 +64,21 @@ public class ContinuousUniformSampler
 
     /** {@inheritDoc} */
     @Override
-    public ContinuousUniformSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        return new ContinuousUniformSampler(rng, lo, hi);
+    }
+
+    /**
+     * Creates a new continuous uniform distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param lo Lower bound.
+     * @param hi Higher bound.
+     * @return the sampler
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  double lo,
+                                                  double hi) {
         return new ContinuousUniformSampler(rng, lo, hi);
     }
 }

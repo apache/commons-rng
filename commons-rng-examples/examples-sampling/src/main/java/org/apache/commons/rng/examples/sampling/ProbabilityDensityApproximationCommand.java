@@ -187,18 +187,18 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double gaussMin = -9;
         final double gaussMax = 11;
         if (samplers.contains(Sampler.ZigguratGaussianSampler)) {
-            createDensity(new GaussianSampler(new ZigguratNormalizedGaussianSampler(rng),
-                                              gaussMean, gaussSigma),
+            createDensity(GaussianSampler.of(ZigguratNormalizedGaussianSampler.of(rng),
+                                             gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.ziggurat.txt");
         }
         if (samplers.contains(Sampler.MarsagliaGaussianSampler)) {
-            createDensity(new GaussianSampler(new MarsagliaNormalizedGaussianSampler(rng),
-                                              gaussMean, gaussSigma),
+            createDensity(GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(rng),
+                                             gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.marsaglia.txt");
         }
         if (samplers.contains(Sampler.BoxMullerGaussianSampler)) {
-            createDensity(new GaussianSampler(new BoxMullerNormalizedGaussianSampler(rng),
-                                              gaussMean, gaussSigma),
+            createDensity(GaussianSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
+                                             gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.boxmuller.txt");
         }
 
@@ -207,13 +207,13 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         if (samplers.contains(Sampler.ChengBetaSamplerCase1)) {
             final double alphaBeta = 4.3;
             final double betaBeta = 2.1;
-            createDensity(new ChengBetaSampler(rng, alphaBeta, betaBeta),
+            createDensity(ChengBetaSampler.of(rng, alphaBeta, betaBeta),
                           betaMin, betaMax, "beta.case1.txt");
         }
         if (samplers.contains(Sampler.ChengBetaSamplerCase2)) {
             final double alphaBetaAlt = 0.5678;
             final double betaBetaAlt = 0.1234;
-            createDensity(new ChengBetaSampler(rng, alphaBetaAlt, betaBetaAlt),
+            createDensity(ChengBetaSampler.of(rng, alphaBetaAlt, betaBetaAlt),
                           betaMin, betaMax, "beta.case2.txt");
         }
 
@@ -221,7 +221,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             final double meanExp = 3.45;
             final double expMin = 0;
             final double expMax = 60;
-            createDensity(new AhrensDieterExponentialSampler(rng, meanExp),
+            createDensity(AhrensDieterExponentialSampler.of(rng, meanExp),
                           expMin, expMax, "exp.txt");
         }
 
@@ -230,13 +230,13 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double thetaGamma = 3.456;
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase1)) {
             final double alphaGammaSmallerThanOne = 0.1234;
-            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGammaSmallerThanOne, thetaGamma),
+            createDensity(AhrensDieterMarsagliaTsangGammaSampler.of(rng, alphaGammaSmallerThanOne, thetaGamma),
                           gammaMin, gammaMax1, "gamma.case1.txt");
         }
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase2)) {
             final double alphaGammaLargerThanOne = 2.345;
             final double gammaMax2 = 70;
-            createDensity(new AhrensDieterMarsagliaTsangGammaSampler(rng, alphaGammaLargerThanOne, thetaGamma),
+            createDensity(AhrensDieterMarsagliaTsangGammaSampler.of(rng, alphaGammaLargerThanOne, thetaGamma),
                           gammaMin, gammaMax2, "gamma.case2.txt");
         }
 
@@ -245,14 +245,14 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double paretoMin = 23;
         final double paretoMax = 400;
         if (samplers.contains(Sampler.InverseTransformParetoSampler)) {
-            createDensity(new InverseTransformParetoSampler(rng, scalePareto, shapePareto),
+            createDensity(InverseTransformParetoSampler.of(rng, scalePareto, shapePareto),
                           paretoMin, paretoMax, "pareto.txt");
         }
 
         final double loUniform = -9.876;
         final double hiUniform = 5.432;
         if (samplers.contains(Sampler.ContinuousUniformSampler)) {
-            createDensity(new ContinuousUniformSampler(rng, loUniform, hiUniform),
+            createDensity(ContinuousUniformSampler.of(rng, loUniform, hiUniform),
                           loUniform, hiUniform, "uniform.txt");
         }
 
@@ -261,18 +261,18 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double logNormalMin = 5;
         final double logNormalMax = 25;
         if (samplers.contains(Sampler.LogNormalZigguratGaussianSampler)) {
-            createDensity(new LogNormalSampler(new ZigguratNormalizedGaussianSampler(rng),
-                                               scaleLogNormal, shapeLogNormal),
+            createDensity(LogNormalSampler.of(ZigguratNormalizedGaussianSampler.of(rng),
+                                              scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.ziggurat.txt");
         }
         if (samplers.contains(Sampler.LogNormalMarsagliaGaussianSampler)) {
-            createDensity(new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(rng),
-                                               scaleLogNormal, shapeLogNormal),
+            createDensity(LogNormalSampler.of(MarsagliaNormalizedGaussianSampler.of(rng),
+                                              scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.marsaglia.txt");
         }
         if (samplers.contains(Sampler.LogNormalBoxMullerGaussianSampler)) {
-            createDensity(new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng),
-                                               scaleLogNormal, shapeLogNormal),
+            createDensity(LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
+                                              scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.boxmuller.txt");
         }
 

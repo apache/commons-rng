@@ -207,4 +207,19 @@ public class ChengBetaSampler
                            double b) {
         return Math.abs(a - b) <= Double.MIN_VALUE;
     }
+
+    /**
+     * Creates a new Beta distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param alpha Distribution first shape parameter.
+     * @param beta Distribution second shape parameter.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  double alpha,
+                                                  double beta) {
+        return new ChengBetaSampler(rng, alpha, beta);
+    }
 }

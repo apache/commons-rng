@@ -97,31 +97,31 @@ public class ContinuousSamplersPerformance {
             super.setup();
             final UniformRandomProvider rng = getGenerator();
             if ("BoxMullerNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new BoxMullerNormalizedGaussianSampler(rng);
+                sampler = BoxMullerNormalizedGaussianSampler.of(rng);
             } else if ("MarsagliaNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new MarsagliaNormalizedGaussianSampler(rng);
+                sampler = MarsagliaNormalizedGaussianSampler.of(rng);
             } else if ("ZigguratNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new ZigguratNormalizedGaussianSampler(rng);
+                sampler = ZigguratNormalizedGaussianSampler.of(rng);
             } else if ("AhrensDieterExponentialSampler".equals(samplerType)) {
-                sampler = new AhrensDieterExponentialSampler(rng, 4.56);
+                sampler = AhrensDieterExponentialSampler.of(rng, 4.56);
             } else if ("AhrensDieterGammaSampler".equals(samplerType)) {
                 // This tests the Ahrens-Dieter algorithm since alpha < 1
-                sampler = new AhrensDieterMarsagliaTsangGammaSampler(rng, 0.76, 9.8);
+                sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 0.76, 9.8);
             } else if ("MarsagliaTsangGammaSampler".equals(samplerType)) {
                 // This tests the Marsaglia-Tsang algorithm since alpha > 1
-                sampler = new AhrensDieterMarsagliaTsangGammaSampler(rng, 12.34, 9.8);
+                sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 12.34, 9.8);
             } else if ("LogNormalBoxMullerNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new LogNormalSampler(new BoxMullerNormalizedGaussianSampler(rng), 12.3, 4.6);
+                sampler = LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng), 12.3, 4.6);
             } else if ("LogNormalMarsagliaNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new LogNormalSampler(new MarsagliaNormalizedGaussianSampler(rng), 12.3, 4.6);
+                sampler = LogNormalSampler.of(MarsagliaNormalizedGaussianSampler.of(rng), 12.3, 4.6);
             } else if ("LogNormalZigguratNormalizedGaussianSampler".equals(samplerType)) {
-                sampler = new LogNormalSampler(new ZigguratNormalizedGaussianSampler(rng), 12.3, 4.6);
+                sampler = LogNormalSampler.of(ZigguratNormalizedGaussianSampler.of(rng), 12.3, 4.6);
             } else if ("ChengBetaSampler".equals(samplerType)) {
-                sampler = new ChengBetaSampler(rng, 0.45, 6.7);
+                sampler = ChengBetaSampler.of(rng, 0.45, 6.7);
             } else if ("ContinuousUniformSampler".equals(samplerType)) {
-                sampler = new ContinuousUniformSampler(rng, 123.4, 5678.9);
+                sampler = ContinuousUniformSampler.of(rng, 123.4, 5678.9);
             } else if ("InverseTransformParetoSampler".equals(samplerType)) {
-                sampler = new InverseTransformParetoSampler(rng, 23.45, 0.1234);
+                sampler = InverseTransformParetoSampler.of(rng, 23.45, 0.1234);
             }
         }
     }

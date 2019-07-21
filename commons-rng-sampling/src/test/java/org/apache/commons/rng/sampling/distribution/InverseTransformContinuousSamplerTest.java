@@ -39,8 +39,8 @@ public class InverseTransformContinuousSamplerTest {
         };
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final InverseTransformContinuousSampler sampler1 =
-            new InverseTransformContinuousSampler(rng1, function);
+        final SharedStateContinuousSampler sampler1 =
+            InverseTransformContinuousSampler.of(rng1, function);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

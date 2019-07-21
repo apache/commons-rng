@@ -19,6 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -32,9 +33,8 @@ public class DiscreteUniformSamplerTest {
     public void testConstructorThrowsWithLowerAboveUpper() {
         final int upper = 55;
         final int lower = upper + 1;
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
-        @SuppressWarnings("unused")
-        DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        DiscreteUniformSampler.of(rng, lower, upper);
     }
 
     /**
@@ -62,9 +62,20 @@ public class DiscreteUniformSamplerTest {
     private static void testSharedStateSampler(int lower, int upper) {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final DiscreteUniformSampler sampler1 =
+        // Use instance constructor not factory constructor to exercise 1.X public API
+        final SharedStateDiscreteSampler sampler1 =
             new DiscreteUniformSampler(rng1, lower, upper);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the toString method. This is added to ensure coverage as the factory constructor
+     * used in other tests does not create an instance of the wrapper class.
+     */
+    @Test
+    public void testToString() {
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        Assert.assertTrue(new DiscreteUniformSampler(rng, 1, 2).toString().toLowerCase().contains("uniform"));
     }
 }

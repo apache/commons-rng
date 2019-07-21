@@ -139,6 +139,9 @@ public class DiscreteUniformSampler
     }
 
     /**
+     * This instance delegates sampling. Use the factory method
+     * {@link #of(UniformRandomProvider, int, int)} to create an optimal sampler.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param lower Lower bound (inclusive) of the distribution.
      * @param upper Upper bound (inclusive) of the distribution.
@@ -148,17 +151,7 @@ public class DiscreteUniformSampler
                                   int lower,
                                   int upper) {
         super(null);
-        if (lower > upper) {
-            throw new IllegalArgumentException(lower  + " > " + upper);
-        }
-        // Choose the algorithm depending on the range
-        final int range = (upper - lower) + 1;
-        delegate = range <= 0 ?
-            // The range is too wide to fit in a positive int (larger
-            // than 2^31); use a simple rejection method.
-            new LargeRangeDiscreteUniformSampler(rng, lower, upper) :
-            // Use a sample from the range added to the lower bound.
-            new SmallRangeDiscreteUniformSampler(rng, lower, range);
+        delegate = of(rng, lower, upper);
     }
 
     /** {@inheritDoc} */
@@ -178,5 +171,30 @@ public class DiscreteUniformSampler
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         // Direct return of the optimised sampler
         return delegate.withUniformRandomProvider(rng);
+    }
+
+    /**
+     * Creates a new discrete uniform distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param lower Lower bound (inclusive) of the distribution.
+     * @param upper Upper bound (inclusive) of the distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code lower > upper}.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                int lower,
+                                                int upper) {
+        if (lower > upper) {
+            throw new IllegalArgumentException(lower  + " > " + upper);
+        }
+        // Choose the algorithm depending on the range
+        final int range = (upper - lower) + 1;
+        return range <= 0 ?
+            // The range is too wide to fit in a positive int (larger
+            // than 2^31); use a simple rejection method.
+            new LargeRangeDiscreteUniformSampler(rng, lower, upper) :
+            // Use a sample from the range added to the lower bound.
+            new SmallRangeDiscreteUniformSampler(rng, lower, range);
     }
 }

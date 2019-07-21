@@ -45,7 +45,7 @@ import org.openjdk.jmh.infra.Blackhole;
  * cache.
  *
  * <p>The benchmark is designed for a worse case scenario of Poisson means that are uniformly spread
- * over a range and non-integer. A single sample is required per mean, E.g.
+ * over a range and non-integer. A single sample is required per mean, E.g.</p>
  *
  * <pre>
  * int min = 40;
@@ -55,7 +55,7 @@ import org.openjdk.jmh.infra.Blackhole;
  *
  * // Compare ...
  * for (int i = 0; i &lt; 1000; i++) {
- *   new PoissonSampler(rng, min + rng.nextDouble() * range).sample();
+ *   PoissonSampler.of(rng, min + rng.nextDouble() * range).sample();
  * }
  *
  * // To ...
@@ -67,7 +67,7 @@ import org.openjdk.jmh.infra.Blackhole;
  *
  * <p>The alternative scenario where the means are integer is not considered as this could be easily
  * handled by creating an array to hold the PoissonSamplers for each mean. This does not require any
- * specialised caching of state and is simple enough to perform for single threaded applications:
+ * specialised caching of state and is simple enough to perform for single threaded applications:</p>
  *
  * <pre>
  * public class SimpleUnsafePoissonSamplerCache {
@@ -77,12 +77,12 @@ import org.openjdk.jmh.infra.Blackhole;
  *
  *   public PoissonSampler createPoissonSampler(UniformRandomProvider rng, int mean) {
  *     if (mean &lt; min || mean &gt; max) {
- *       return new PoissonSampler(rng, mean);
+ *       return PoissonSampler.of(rng, mean);
  *     }
  *     int index = mean - min;
  *     PoissonSampler sample = samplers[index];
  *     if (sampler == null) {
- *       sampler = new PoissonSampler(rng, mean);
+ *       sampler = PoissonSampler.of(rng, mean);
  *       samplers[index] = sampler;
  *     }
  *     return sampler;
@@ -90,8 +90,10 @@ import org.openjdk.jmh.infra.Blackhole;
  * }
  * </pre>
  *
- * Note that in this example the UniformRandomProvider is also cached and so this is only
- * applicable to a single threaded application.
+ * <p>Note that in this example the UniformRandomProvider is also cached and so this is only
+ * applicable to a single threaded application. Thread safety could be ensured using the
+ * {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler} functionality
+ * of the cached sampler.</p>
  *
  * <p>Re-written to use the PoissonSamplerCache would provide a new PoissonSampler per call in a
  * thread-safe manner:
@@ -308,7 +310,7 @@ public class PoissonSamplerCachePerformance {
         final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
             @Override
             public DiscreteSampler createPoissonSampler(double mean) {
-                return new PoissonSampler(r, mean);
+                return PoissonSampler.of(r, mean);
             }
         };
         runSample(factory, range, bh);

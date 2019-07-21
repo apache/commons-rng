@@ -35,9 +35,7 @@ public class RejectionInversionZipfSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final int numberOfElements = 0;
         final double exponent = 1;
-        @SuppressWarnings("unused")
-        final RejectionInversionZipfSampler sampler =
-            new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
+        RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
     }
 
     /**
@@ -49,9 +47,7 @@ public class RejectionInversionZipfSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final int numberOfElements = 1;
         final double exponent = 0;
-        @SuppressWarnings("unused")
-        final RejectionInversionZipfSampler sampler =
-            new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
+        RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
     }
 
     /**
@@ -63,8 +59,8 @@ public class RejectionInversionZipfSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final int numberOfElements = 7;
         final double exponent = 1.23;
-        final RejectionInversionZipfSampler sampler1 =
-            new RejectionInversionZipfSampler(rng1, numberOfElements, exponent);
+        final SharedStateDiscreteSampler sampler1 =
+            RejectionInversionZipfSampler.of(rng1, numberOfElements, exponent);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

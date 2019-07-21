@@ -20,6 +20,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -32,12 +33,10 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double alpha = 0;
         final double theta = 1;
-        @SuppressWarnings("unused")
-        final AhrensDieterMarsagliaTsangGammaSampler sampler =
-            new AhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
+        AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
     }
 
     /**
@@ -46,12 +45,10 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double alpha = 1;
         final double theta = 0;
-        @SuppressWarnings("unused")
-        final AhrensDieterMarsagliaTsangGammaSampler sampler =
-            new AhrensDieterMarsagliaTsangGammaSampler(rng, alpha, theta);
+        AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
     }
 
     /**
@@ -79,9 +76,21 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     private static void testSharedStateSampler(double alpha, double theta) {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        // Use instance constructor not factory constructor to exercise 1.X public API
         final AhrensDieterMarsagliaTsangGammaSampler sampler1 =
             new AhrensDieterMarsagliaTsangGammaSampler(rng1, alpha, theta);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the toString method. This is added to ensure coverage as the factory constructor
+     * used in other tests does not create an instance of the wrapper class.
+     */
+    @Test
+    public void testToString() {
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        Assert.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
+                .toLowerCase().contains("gamma"));
     }
 }

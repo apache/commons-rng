@@ -53,7 +53,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         }
 
         this.dimension = dimension;
-        sampler = new ZigguratNormalizedGaussianSampler(rng);
+        sampler = ZigguratNormalizedGaussianSampler.of(rng);
     }
 
     /**
@@ -63,7 +63,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
     private UnitSphereSampler(UniformRandomProvider rng,
                               UnitSphereSampler source) {
         // The Gaussian sampler has no shared state so create a new instance
-        sampler = new ZigguratNormalizedGaussianSampler(rng);
+        sampler = ZigguratNormalizedGaussianSampler.of(rng);
         dimension = source.dimension;
     }
 

@@ -90,4 +90,17 @@ public class MarsagliaNormalizedGaussianSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new MarsagliaNormalizedGaussianSampler(rng);
     }
+
+    /**
+     * Create a new normalised Gaussian sampler.
+     *
+     * @param <S> Sampler type.
+     * @param rng Generator of uniformly distributed random numbers.
+     * @return the sampler
+     */
+    @SuppressWarnings("unchecked")
+    public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S
+            of(UniformRandomProvider rng) {
+        return (S) new MarsagliaNormalizedGaussianSampler(rng);
+    }
 }

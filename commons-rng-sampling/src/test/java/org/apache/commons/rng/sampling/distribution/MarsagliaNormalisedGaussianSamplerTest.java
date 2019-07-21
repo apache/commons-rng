@@ -32,8 +32,8 @@ public class MarsagliaNormalisedGaussianSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final MarsagliaNormalizedGaussianSampler sampler1 =
-            new MarsagliaNormalizedGaussianSampler(rng1);
+        final SharedStateContinuousSampler sampler1 =
+            MarsagliaNormalizedGaussianSampler.of(rng1);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

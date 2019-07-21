@@ -100,7 +100,7 @@ public final class GeometricSampler {
             // is noted in the class Javadoc that the use of a small p leads to truncation so
             // no checks are made for this case.
             final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
-            exponentialSampler = new AhrensDieterExponentialSampler(rng, exponentialMean);
+            exponentialSampler = AhrensDieterExponentialSampler.of(rng, exponentialMean);
         }
 
         /**

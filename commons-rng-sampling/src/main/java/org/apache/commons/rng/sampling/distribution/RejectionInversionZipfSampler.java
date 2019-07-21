@@ -199,6 +199,22 @@ public class RejectionInversionZipfSampler
     }
 
     /**
+     * Creates a new Zipf distribution sampler.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param numberOfElements Number of elements.
+     * @param exponent Exponent.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code numberOfElements <= 0} or
+     * {@code exponent <= 0}.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                int numberOfElements,
+                                                double exponent) {
+        return new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
+    }
+
+    /**
      * {@code H(x)} is defined as
      * <ul>
      *  <li>{@code (x^(1 - exponent) - 1) / (1 - exponent)}, if {@code exponent != 1}</li>

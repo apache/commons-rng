@@ -35,9 +35,7 @@ public class InverseTransformParetoSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double scale = 0;
         final double shape = 1;
-        @SuppressWarnings("unused")
-        final InverseTransformParetoSampler sampler =
-            new InverseTransformParetoSampler(rng, scale, shape);
+        InverseTransformParetoSampler.of(rng, scale, shape);
     }
 
     /**
@@ -49,9 +47,7 @@ public class InverseTransformParetoSamplerTest {
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double scale = 1;
         final double shape = 0;
-        @SuppressWarnings("unused")
-        final InverseTransformParetoSampler sampler =
-            new InverseTransformParetoSampler(rng, scale, shape);
+        InverseTransformParetoSampler.of(rng, scale, shape);
     }
 
     /**
@@ -63,8 +59,8 @@ public class InverseTransformParetoSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double scale = 1.23;
         final double shape = 4.56;
-        final InverseTransformParetoSampler sampler1 =
-            new InverseTransformParetoSampler(rng1, scale, shape);
+        final SharedStateContinuousSampler sampler1 =
+            InverseTransformParetoSampler.of(rng1, scale, shape);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

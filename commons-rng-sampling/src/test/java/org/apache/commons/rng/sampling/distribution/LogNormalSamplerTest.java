@@ -34,12 +34,10 @@ public class LogNormalSamplerTest {
     public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final NormalizedGaussianSampler gauss = ZigguratNormalizedGaussianSampler.of(rng);
         final double scale = -1e-6;
         final double shape = 1;
-        @SuppressWarnings("unused")
-        final LogNormalSampler sampler =
-            new LogNormalSampler(gauss, scale, shape);
+        LogNormalSampler.of(gauss, scale, shape);
     }
 
     /**
@@ -49,12 +47,10 @@ public class LogNormalSamplerTest {
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final NormalizedGaussianSampler gauss = ZigguratNormalizedGaussianSampler.of(rng);
         final double scale = 1;
         final double shape = 0;
-        @SuppressWarnings("unused")
-        final LogNormalSampler sampler =
-            new LogNormalSampler(gauss, scale, shape);
+        LogNormalSampler.of(gauss, scale, shape);
     }
 
     /**
@@ -64,11 +60,11 @@ public class LogNormalSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng1);
+        final NormalizedGaussianSampler gauss = ZigguratNormalizedGaussianSampler.of(rng1);
         final double scale = 1.23;
         final double shape = 4.56;
-        final LogNormalSampler sampler1 =
-            new LogNormalSampler(gauss, scale, shape);
+        final SharedStateContinuousSampler sampler1 =
+            LogNormalSampler.of(gauss, scale, shape);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -88,8 +84,8 @@ public class LogNormalSamplerTest {
         };
         final double scale = 1.23;
         final double shape = 4.56;
-        final LogNormalSampler sampler1 =
-            new LogNormalSampler(gauss, scale, shape);
+        final SharedStateContinuousSampler sampler1 =
+            LogNormalSampler.of(gauss, scale, shape);
         sampler1.withUniformRandomProvider(rng2);
     }
 
@@ -103,8 +99,8 @@ public class LogNormalSamplerTest {
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double scale = 1.23;
         final double shape = 4.56;
-        final LogNormalSampler sampler1 =
-            new LogNormalSampler(gauss, scale, shape);
+        final SharedStateContinuousSampler sampler1 =
+            LogNormalSampler.of(gauss, scale, shape);
         sampler1.withUniformRandomProvider(rng2);
     }
 

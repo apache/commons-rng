@@ -81,4 +81,17 @@ public class BoxMullerNormalizedGaussianSampler
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new BoxMullerNormalizedGaussianSampler(rng);
     }
+
+    /**
+     * Create a new normalised Gaussian sampler.
+     *
+     * @param <S> Sampler type.
+     * @param rng Generator of uniformly distributed random numbers.
+     * @return the sampler
+     */
+    @SuppressWarnings("unchecked")
+    public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S
+            of(UniformRandomProvider rng) {
+        return (S) new BoxMullerNormalizedGaussianSampler(rng);
+    }
 }

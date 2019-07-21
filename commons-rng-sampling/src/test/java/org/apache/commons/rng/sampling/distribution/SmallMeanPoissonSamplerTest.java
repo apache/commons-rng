@@ -37,8 +37,7 @@ public class SmallMeanPoissonSamplerTest {
         // Note: p0 = Math.exp(-mean) => mean = -Math.log(p0).
         // Add to the limit on the mean to cause p0 to be zero.
         final double mean = -Math.log(p0) + 1;
-        @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        SmallMeanPoissonSampler.of(rng, mean);
     }
 
     /**
@@ -49,8 +48,7 @@ public class SmallMeanPoissonSamplerTest {
         final UniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double mean = 0;
-        @SuppressWarnings("unused")
-        SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+        SmallMeanPoissonSampler.of(rng, mean);
     }
 
     /**
@@ -73,7 +71,7 @@ public class SmallMeanPoissonSamplerTest {
             // CHECKSTYLE: resume all
         };
         for (double mean : new double[] {0.5, 1, 1.5, 2.2}) {
-            final SmallMeanPoissonSampler sampler = new SmallMeanPoissonSampler(rng, mean);
+            final SharedStateDiscreteSampler sampler = SmallMeanPoissonSampler.of(rng, mean);
             final int expected = (int) Math.ceil(1000 * mean);
             Assert.assertEquals(expected, sampler.sample());
         }
@@ -87,8 +85,8 @@ public class SmallMeanPoissonSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double mean = 1.23;
-        final SmallMeanPoissonSampler sampler1 =
-            new SmallMeanPoissonSampler(rng1, mean);
+        final SharedStateDiscreteSampler sampler1 =
+            SmallMeanPoissonSampler.of(rng1, mean);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

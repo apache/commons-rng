@@ -89,4 +89,24 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new LogNormalSampler(rng, this);
     }
+
+    /**
+     * Create a new log-normal distribution sampler.
+     *
+     * <p>Note: The shared-state functionality is available if the {@link NormalizedGaussianSampler}
+     * is a {@link SharedStateSampler}. Otherwise a run-time exception will be thrown when the
+     * sampler is used to share state.</p>
+     *
+     * @param gaussian N(0,1) generator.
+     * @param scale Scale of the log-normal distribution.
+     * @param shape Shape of the log-normal distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
+     * @see #withUniformRandomProvider(UniformRandomProvider)
+     */
+    public static SharedStateContinuousSampler of(NormalizedGaussianSampler gaussian,
+                                                  double scale,
+                                                  double shape) {
+        return new LogNormalSampler(gaussian, scale, shape);
+    }
 }

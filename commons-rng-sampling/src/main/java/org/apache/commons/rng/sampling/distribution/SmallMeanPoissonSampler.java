@@ -56,7 +56,7 @@ public class SmallMeanPoissonSampler
     /**
      * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean)} is not positive.
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}
      */
     public SmallMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
@@ -112,5 +112,18 @@ public class SmallMeanPoissonSampler
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new SmallMeanPoissonSampler(rng, this);
+    }
+
+    /**
+     * Creates a new sampler for the Poisson distribution.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param mean Mean of the distribution.
+     * @return the sampler
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}.
+     */
+    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
+                                                double mean) {
+        return new SmallMeanPoissonSampler(rng, mean);
     }
 }

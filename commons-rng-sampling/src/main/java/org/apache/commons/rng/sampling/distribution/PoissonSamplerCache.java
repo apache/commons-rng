@@ -157,20 +157,20 @@ public class PoissonSamplerCache {
         // Ensure the same functionality as the PoissonSampler by
         // using a SmallMeanPoissonSampler under the switch point.
         if (mean < PoissonSampler.PIVOT) {
-            return new SmallMeanPoissonSampler(rng, mean);
+            return SmallMeanPoissonSampler.of(rng, mean);
         }
         if (mean > maxN) {
             // Outside the range of the cache.
             // This avoids extra parameter checks and handles the case when
             // the cache is empty or if Math.floor(mean) is not an integer.
-            return new LargeMeanPoissonSampler(rng, mean);
+            return LargeMeanPoissonSampler.of(rng, mean);
         }
 
         // Convert the mean into an integer.
         final int n = (int) Math.floor(mean);
         if (n < minN) {
             // Outside the lower range of the cache.
-            return new LargeMeanPoissonSampler(rng, mean);
+            return LargeMeanPoissonSampler.of(rng, mean);
         }
 
         // Look in the cache for a state that can be reused.

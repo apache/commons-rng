@@ -34,9 +34,7 @@ public class AhrensDieterExponentialSamplerTest {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
         final double mean = 0;
-        @SuppressWarnings("unused")
-        final AhrensDieterExponentialSampler sampler =
-            new AhrensDieterExponentialSampler(rng, mean);
+        AhrensDieterExponentialSampler.of(rng, mean);
     }
 
     /**
@@ -47,8 +45,8 @@ public class AhrensDieterExponentialSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final double mean = 1.23;
-        final AhrensDieterExponentialSampler sampler1 =
-            new AhrensDieterExponentialSampler(rng1, mean);
+        final SharedStateContinuousSampler sampler1 =
+            AhrensDieterExponentialSampler.of(rng1, mean);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
