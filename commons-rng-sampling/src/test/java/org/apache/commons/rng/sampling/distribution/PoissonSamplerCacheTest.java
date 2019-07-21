@@ -38,6 +38,15 @@ public class PoissonSamplerCacheTest {
     /** The mid-point of the range of the mean */
     private final int midRange = (minRange + maxRange) / 2;
 
+    /**
+     * Test the cache reports the minimum mean that uses an algorithm that supports caching.
+     * This mean is the same level as the algorithm switch point in the PoissonSampler.
+     */
+    @Test
+    public void testMinimumCachedMean() {
+        Assert.assertEquals(PoissonSampler.PIVOT, PoissonSamplerCache.getMinimumCachedMean(), 0);
+    }
+
     // Edge cases for construction
 
     /**
