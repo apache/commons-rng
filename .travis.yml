@@ -21,5 +21,12 @@ jdk:
   - openjdk8
   - oraclejdk9
 
+# Skip the installation step:
+#   https://docs.travis-ci.com/user/job-lifecycle/#skipping-the-installation-phase
+install: true
+
+script:
+  - mvn
+
 after_success:
-  - mvn clean test pmd:check spotbugs:check checkstyle:check jacoco:report coveralls:report
+  - mvn jacoco:report coveralls:report
