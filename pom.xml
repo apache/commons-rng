@@ -296,13 +296,19 @@
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
-         <!--  Should agree with apache-rat-plugin config under <build> -->
+          <!--  Should agree with apache-rat-plugin config under <build> -->
           <excludes combine.children="append">
             <!-- version 0.8 of apache-rat-plugin does not exclude properly
                  some default development tools files (see RAT-126) -->
             <exclude>.ekstazi/**</exclude>
-            <exclude>src/site/resources/txt/userguide/stress/dh/**</exclude>
-            <exclude>src/site/resources/txt/userguide/stress/tu/**</exclude>
+            <exclude>**/site-content/**</exclude>
+            <exclude>**/.classpath</exclude>
+            <exclude>**/.project</exclude>
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.checkstyle</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
+            <exclude>src/site/resources/txt/userguide/stress/**</exclude>
             <exclude>dist-archive/**</exclude>
           </excludes>
         </configuration>
