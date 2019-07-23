@@ -177,7 +177,7 @@ public class SeedFactoryTest {
      * Assert that the number of 1 bits is approximately 50%. This is based upon a
      * fixed-step "random walk" of +1/-1 from zero.
      *
-     * <p>The test is equivalent to the NIST Monobit test with a fixed p-value of 0.01.
+     * <p>The test is equivalent to the NIST Monobit test with a fixed p-value of 0.0001.
      * The number of bits is recommended to be above 100.</p>
      *
      * @see <A
@@ -193,13 +193,15 @@ public class SeedFactoryTest {
         final double sum = 2.0 * bitCount - numberOfBits;
         // The reference distribution is Normal with a standard deviation of sqrt(n).
         // Check the absolute position is not too far from the mean of 0 with a fixed
-        // p-value of 0.01 taken from a 2-tailed Normal distribution. Computation of
+        // p-value of 0.0001 taken from a 2-tailed Normal distribution. Computation of
         // the p-value requires the complimentary error function.
+        // The p-value is set to be equal to a 0.01 with 1 allowed re-run.
+        // (Re-runs are not configured for this test.) 
         final double absSum = Math.abs(sum);
-        final double max = Math.sqrt(numberOfBits) * 2.576;
+        final double max = Math.sqrt(numberOfBits) * 3.891;
         Assert.assertTrue("Walked too far astray: " + absSum +
                           " > " + max +
-                          " (test will fail randomly about 1 in 100 times)",
+                          " (test will fail randomly about 1 in 10,000 times)",
                           absSum <= max);
     }
 
