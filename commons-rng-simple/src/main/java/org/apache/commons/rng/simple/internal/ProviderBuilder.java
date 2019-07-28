@@ -247,8 +247,6 @@ public final class ProviderBuilder {
                 1,
                 NativeSeedType.LONG);
 
-
-
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
         /** Native seed size. Used for array seeds. */

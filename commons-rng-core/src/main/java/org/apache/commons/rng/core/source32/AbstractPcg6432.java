@@ -57,6 +57,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      * @param seed the new seed.
      */
     private void setSeedInternal(long[] seed) {
+        // Ensuring that the increment is odd to provide a maximal period LCG.
         this.increment = (seed[1] << 1) | 1;
         this.state = bump(seed[0] + this.increment);
     }

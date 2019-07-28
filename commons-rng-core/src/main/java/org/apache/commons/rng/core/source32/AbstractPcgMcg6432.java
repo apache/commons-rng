@@ -75,7 +75,7 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
     @Override
     protected void setStateInternal(byte[] s) {
         final byte[][] d = splitStateInternal(s, 8);
-        state = NumberFactory.makeLong(d[0]);
+        state = NumberFactory.makeLong(d[0]) | 3;
         super.setStateInternal(d[1]);
     }
 }
