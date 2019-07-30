@@ -17,9 +17,11 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.util.NumberFactory;
+
 /**
- * This class aids in implementation of the PCG suite of generators, a family of
- * simple fast space-efficient statistically good algorithms for random number generation.
+ * This abstract class is a base for algorithms from the Permuted Congruential Generator (PCG)
+ * family that use an internal 64-bit Linear Congruential Generator (LCG) and output 32-bits
+ * per cycle.
  *
  * @see <a href="http://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
@@ -29,10 +31,10 @@ abstract class AbstractPcg6432 extends IntProvider {
     /** Size of the seed array. */
     private static final int SEED_SIZE = 2;
 
-    /** Displays the current state. */
+    /** The state of the LCG. */
     private long state;
 
-    /** Used as a part of the LCG. */
+    /** The increment of the LCG. */
     private long increment;
 
     /**
@@ -53,19 +55,21 @@ abstract class AbstractPcg6432 extends IntProvider {
     }
 
     /**
-     * Modifies input parameters into current state.
-     * @param seed the new seed.
+     * Seeds the RNG.
+     *
+     * @param seed Seed.
      */
     private void setSeedInternal(long[] seed) {
-        // Ensuring that the increment is odd to provide a maximal period LCG.
+        // Ensure the increment is odd to provide a maximal period LCG.
         this.increment = (seed[1] << 1) | 1;
         this.state = bump(seed[0] + this.increment);
     }
 
     /**
      * Provides the next state of the LCG.
-     * @param input - The previous state of the generator.
-     * @return Next state of the LCG.
+     *
+     * @param input Current state.
+     * @return next state
      */
     private long bump(long input) {
         return input * 6364136223846793005L + increment;
@@ -80,17 +84,20 @@ abstract class AbstractPcg6432 extends IntProvider {
     }
 
     /**
+     * Transform the 64-bit state of the generator to a 32-bit output.
      * The transformation function shall vary with respect to different generators.
-     * @param x The input.
-     * @return The output of the generator.
+     *
+     * @param x State.
+     * @return the output
      */
     protected abstract int transform(long x);
 
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        /*This transform is used in the reference PCG code; it prevents restoring from
-         a byte state a non-odd increment that results in a sub-maximal period generator.*/
+        // The increment is divided by 2 before saving.
+        // This transform is used in the reference PCG code; it prevents restoring from
+        // a byte state a non-odd increment that results in a sub-maximal period generator.
         return composeStateInternal(NumberFactory.makeByteArray(
                 new long[] {state, increment >>> 1}),
                 super.getStateInternal());
@@ -102,6 +109,7 @@ abstract class AbstractPcg6432 extends IntProvider {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 8);
         final long[] tempseed = NumberFactory.makeLongArray(c[0]);
         state = tempseed[0];
+        // Reverse the transform performed during getState to make the increment odd again.
         increment = tempseed[1] << 1 | 1;
         super.setStateInternal(c[1]);
     }

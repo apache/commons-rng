@@ -17,18 +17,18 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.util.NumberFactory;
+
 /**
- * This class aids in implementation of the Multiplicative congruential generator (MCG)
- * versions of the PCG suite of generators, a family of simple fast space-efficient statistically
- * good algorithms for random number generation.
+ * This abstract class is a base for algorithms from the Permuted Congruential Generator (PCG)
+ * family that use an internal 64-bit Multiplicative Congruential Generator (MCG) and output
+ * 32-bits per cycle.
  *
  * @see <a href="http://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
  */
 abstract class AbstractPcgMcg6432 extends IntProvider {
-
-    /** Displays the current state. */
+    /** The state of the MCG. */
     private long state;
 
     /**
@@ -37,15 +37,20 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
      * @param seed Initial seed.
      */
     AbstractPcgMcg6432(Long seed) {
+        // A seed of zero will result in a non-functional MCG; it must be odd for a maximal
+        // period MCG. The multiplication factor always sets the 2 least-significant bits to 1
+        // if they are already 1 so these are explicitly set. Bit k (zero-based) will have
+        // period 2^(k-1) starting from bit 2 with a period of 1. Bit 63 has period 2^62.
         state = seed | 3;
     }
 
     /**
      * Provides the next state of the MCG.
-     * @param input - The previous state of the generator.
-     * @return Next state of the MCG.
+     *
+     * @param input Current state.
+     * @return next state
      */
-    private long bump(long input) {
+    private static long bump(long input) {
         return input * 6364136223846793005L;
     }
 
@@ -58,9 +63,11 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
     }
 
     /**
+     * Transform the 64-bit state of the generator to a 32-bit output.
      * The transformation function shall vary with respect to different generators.
-     * @param x The input.
-     * @return The output of the generator.
+     *
+     * @param x State.
+     * @return the output
      */
     protected abstract int transform(long x);
 
@@ -75,6 +82,7 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
     @Override
     protected void setStateInternal(byte[] s) {
         final byte[][] d = splitStateInternal(s, 8);
+        // As per the constructor, ensure the lower 2 bits of state are set.
         state = NumberFactory.makeLong(d[0]) | 3;
         super.setStateInternal(d[1]);
     }

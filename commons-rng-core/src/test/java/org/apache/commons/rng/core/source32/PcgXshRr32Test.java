@@ -39,6 +39,8 @@ public class PcgXshRr32Test {
             0xe116141a, 0xf465fe45, 0xa95f35bb, 0xf0398d4d,
             0xe880af3e, 0xc2951dfd, 0x984ec575, 0x8679addb,
         };
-        RandomAssert.assertEquals(expectedSequence, new PcgXshRr32(new long[] {0x012de1babb3c4104L, 0xc8161b4202294965L}));
+        RandomAssert.assertEquals(expectedSequence, new PcgXshRr32(new long[] {
+            0x012de1babb3c4104L, 0xc8161b4202294965L
+        }));
     }
 }

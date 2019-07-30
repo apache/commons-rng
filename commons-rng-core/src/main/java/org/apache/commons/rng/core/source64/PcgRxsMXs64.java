@@ -17,25 +17,26 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.util.NumberFactory;
+
 /**
- * A Permutated Congruential Generator (PCG) that uses a 64-bit Linear Congruential Generator
- * (LCG) combined with the RXS-M-XS (random xorshift, multiply, fixed xorshift) output transformation
- * to create 64-bit output.
- * State size is 128 bits and the period is 2<sup>64</sup>.
+ * A Permuted Congruential Generator (PCG) that is composed of a 64-bit Linear Congruential
+ * Generator (LCG) combined with the RXS-M-XS (random xorshift; multiply; xorshift) output
+ * transformation to create 64-bit output.
+ *
+ * <p>State size is 128 bits and the period is 2<sup>64</sup>.</p>
  *
  * @see <a href="http://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
  */
 public class PcgRxsMXs64 extends LongProvider {
-
     /** Size of the seed array. */
     private static final int SEED_SIZE = 2;
 
-    /** Displays the current state. */
+    /** The state of the LCG. */
     private long state;
 
-    /** Used as a part of the LCG. */
+    /** The increment of the LCG. */
     private long increment;
 
     /**
@@ -56,19 +57,21 @@ public class PcgRxsMXs64 extends LongProvider {
     }
 
     /**
-     * Modifies input parameters into current state.
-     * @param seed the new seed.
+     * Seeds the RNG.
+     *
+     * @param seed Seed.
      */
     private void setSeedInternal(long[] seed) {
-        // Ensuring that the increment is odd to provide a maximal period LCG.
+        // Ensure the increment is odd to provide a maximal period LCG.
         this.increment = (seed[1] << 1) | 1;
         this.state = bump(seed[0] + this.increment);
     }
 
     /**
      * Provides the next state of the LCG.
-     * @param input - The previous state of the generator.
-     * @return Next state of the LCG.
+     *
+     * @param input Current state.
+     * @return next state
      */
     private long bump(long input) {
         return input * 6364136223846793005L + increment;
@@ -86,8 +89,9 @@ public class PcgRxsMXs64 extends LongProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        /*This transform is used in the reference PCG code; it prevents restoring from
-         a byte state a non-odd increment that results in a sub-maximal period generator.*/
+        // The increment is divided by 2 before saving.
+        // This transform is used in the reference PCG code; it prevents restoring from
+        // a byte state a non-odd increment that results in a sub-maximal period generator.
         return composeStateInternal(NumberFactory.makeByteArray(
                 new long[] {state, increment >>> 1}),
                 super.getStateInternal());
@@ -99,6 +103,7 @@ public class PcgRxsMXs64 extends LongProvider {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 8);
         final long[] tempseed = NumberFactory.makeLongArray(c[0]);
         state = tempseed[0];
+        // Reverse the transform performed during getState to make the increment odd again.
         increment = tempseed[1] << 1 | 1;
         super.setStateInternal(c[1]);
     }

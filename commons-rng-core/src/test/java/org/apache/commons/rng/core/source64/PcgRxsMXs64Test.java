@@ -39,6 +39,8 @@ public class PcgRxsMXs64Test {
             0x32877df7625ae7b5L, 0xa3dc41742161f87dL, 0x9556e15438c1aca1L, 0xb2c890ac0e32cd37L,
             0xf1d53427ff980d09L, 0x0e227593be626d22L, 0x0fcbdacbf19d6ae1L, 0xe425b9f0345bd813L,
         };
-        RandomAssert.assertEquals(expectedSequence, new PcgRxsMXs64(new long[] {0x012de1babb3c4104L, 0xc8161b4202294965L}));
+        RandomAssert.assertEquals(expectedSequence, new PcgRxsMXs64(new long[] {
+            0x012de1babb3c4104L, 0xc8161b4202294965L
+        }));
     }
 }
