@@ -80,30 +80,30 @@ as 'flaky' in the report).
         Added the LCG and MCG 32 bit output versions of the XSH-RS and XSH-RR operations,
         along with the 64 bit RXS-M-XS edition.
       </action>
-      <action dev="aherbert" type="add" issue="102">
+      <action dev="aherbert" type="add" issue="RNG-102">
         New "SharedStateSampler" interface to allow a sampler to create a new instance with
         a new source of randomness. Any pre-computed state can be shared between the samplers.
       </action>
-      <action dev="aherbert" type="add" issue="108">
+      <action dev="aherbert" type="add" issue="RNG-108">
         Update "SeedFactory" to improve performance.
       </action>
-      <action dev="aherbert" type="add" issue="99">
+      <action dev="aherbert" type="add" issue="RNG-99">
         New "AliasMethodDiscreteSampler" that can sample from any discrete distribution defined
         by an array of probabilities. Set-up is O(n) time and sampling is O(1) time.
       </action>
-      <action dev="aherbert" type="add" issue="100">
+      <action dev="aherbert" type="add" issue="RNG-100">
         New "GuideTableDiscreteSampler" that can sample from any discrete distribution defined
         by an array of probabilities.
       </action>
-      <action dev="aherbert" type="update" issue="106">
+      <action dev="aherbert" type="update" issue="RNG-106">
         Ensure SeedFactory produces non-zero seed arrays. This avoids invalid seeding of
         generators that cannot recover from a seed of zeros.
       </action>
-      <action dev="aherbert" type="add" issue="98">
+      <action dev="aherbert" type="add" issue="RNG-98">
         New "LongJumpableUniformRandomProvider" interface extends JumpableUniformRandomProvider
         with a long jump method.
       </action>
-      <action dev="aherbert" type="add" issue="97">
+      <action dev="aherbert" type="add" issue="RNG-97">
         New "JumpableUniformRandomProvider" interface provides a jump method that advances
         the generator a large number of steps of the output sequence in a single operation. A
         copy is returned allowing repeat invocations to create a series of generators
@@ -121,7 +121,7 @@ as 'flaky' in the report).
       <action dev="aherbert" type="update" issue="RNG-77">
         "NumberFactory": Improve performance of int and long array to/from byte array conversions.
       </action>
-      <action dev="aherbert" type="add" issue="101">
+      <action dev="aherbert" type="add" issue="RNG-101">
         New "MarsagliaTsangWangDiscreteSampler" that provides samples from a discrete
         distribution stored as a look-up table using a single random integer deviate. Computes
         tables for the Poisson or Binomial distributions, and generically any provided discrete
