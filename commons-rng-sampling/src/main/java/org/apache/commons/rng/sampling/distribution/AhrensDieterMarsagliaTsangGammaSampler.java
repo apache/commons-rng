@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">Gamma distribution</a>.
+ * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">gamma distribution</a>.
  * <ul>
  *  <li>
  *   For {@code 0 < alpha < 1}:
@@ -303,7 +303,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
     }
 
     /**
-     * Creates a new Gamma distribution sampler.
+     * Creates a new gamma distribution sampler.
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Alpha parameter of the distribution (this is a shape parameter).
@@ -312,8 +312,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                double alpha,
-                                                double theta) {
+                                                  double alpha,
+                                                  double theta) {
         // Each sampler should check the input arguments.
         return alpha < 1 ?
                 new AhrensDieterGammaSampler(rng, alpha, theta) :

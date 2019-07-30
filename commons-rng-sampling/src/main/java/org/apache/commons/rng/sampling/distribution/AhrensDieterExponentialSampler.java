@@ -143,7 +143,7 @@ public class AhrensDieterExponentialSampler
     }
 
     /**
-     * Create a new Exponential distribution sampler.
+     * Create a new exponential distribution sampler.
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the distribution.

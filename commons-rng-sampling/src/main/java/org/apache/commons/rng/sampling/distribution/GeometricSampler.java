@@ -133,15 +133,15 @@ public final class GeometricSampler {
     private GeometricSampler() {}
 
     /**
-     * Creates a new geometric distribution sampler. The samples will be provided in
-     * the set {@code k=[0, 1, 2, ...]} where {@code k} indicates the number of
-     * failures before the first success.
+     * Creates a new geometric distribution sampler. The samples will be provided in the set
+     * {@code k=[0, 1, 2, ...]} where {@code k} indicates the number of failures before the first
+     * success.
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param probabilityOfSuccess The probability of success.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in
-     * the range {@code [0 < probabilityOfSuccess <= 1]})
+     * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in the range
+     * {@code [0 < probabilityOfSuccess <= 1]})
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double probabilityOfSuccess) {
