@@ -75,6 +75,11 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-84" due-to="Abhishek Singh Dhadwal">
+        New Permuted Congruential Generators (PCG) from the PCG family.
+        Added the LCG and MCG 32 bit output versions of the XSH-RS and XSH-RR operations,
+        along with the 64 bit RXS-M-XS edition.
+      </action>
       <action dev="aherbert" type="add" issue="102">
         New "SharedStateSampler" interface to allow a sampler to create a new instance with
         a new source of randomness. Any pre-computed state can be shared between the samplers.
