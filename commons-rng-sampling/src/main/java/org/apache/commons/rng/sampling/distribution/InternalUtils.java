@@ -17,6 +17,9 @@
 
 package org.apache.commons.rng.sampling.distribution;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
+
 /**
  * Functions used by some of the samplers.
  * This class is not part of the public API, as it would be
@@ -88,6 +91,31 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
             throw new IllegalArgumentException("Invalid probability: " +
                                                probability);
         }
+    }
+
+    /**
+     * Create a new instance of the given sampler using
+     * {@link SharedStateSampler#withUniformRandomProvider(UniformRandomProvider)}.
+     *
+     * @param sampler Source sampler.
+     * @param rng Generator of uniformly distributed random numbers.
+     * @return the new sampler
+     * @throws UnsupportedOperationException if the underlying sampler is not a
+     * {@link SharedStateSampler} or does not return a {@link NormalizedGaussianSampler} when
+     * sharing state.
+     */
+    static NormalizedGaussianSampler newNormalizedGaussianSampler(
+            NormalizedGaussianSampler sampler,
+            UniformRandomProvider rng) {
+        if (!(sampler instanceof SharedStateSampler<?>)) {
+            throw new UnsupportedOperationException("The underlying sampler cannot share state");
+        }
+        final Object newSampler = ((SharedStateSampler<?>) sampler).withUniformRandomProvider(rng);
+        if (!(newSampler instanceof NormalizedGaussianSampler)) {
+            throw new UnsupportedOperationException(
+                "The underlying sampler did not create a normalized Gaussian sampler");
+        }
+        return (NormalizedGaussianSampler) newSampler;
     }
 
     /**

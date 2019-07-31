@@ -58,13 +58,9 @@ public class LogNormalSampler implements ContinuousSampler, SharedStateSampler<L
      */
     private LogNormalSampler(UniformRandomProvider rng,
                              LogNormalSampler source) {
-        if (!(source.gaussian instanceof SharedStateSampler<?>)) {
-            throw new UnsupportedOperationException("The underlying sampler is not a SharedStateSampler");
-        }
         this.scale = source.scale;
         this.shape = source.shape;
-        this.gaussian = (NormalizedGaussianSampler)
-            ((SharedStateSampler<?>)source.gaussian).withUniformRandomProvider(rng);
+        this.gaussian = InternalUtils.newNormalizedGaussianSampler(source.gaussian, rng);
     }
 
     /** {@inheritDoc} */
@@ -85,9 +81,9 @@ public class LogNormalSampler implements ContinuousSampler, SharedStateSampler<L
      * <p>Note: This function is available if the underlying {@link NormalizedGaussianSampler}
      * is a {@link SharedStateSampler}. Otherwise a run-time exception is thrown.</p>
      *
-     * @throws UnsupportedOperationException if the underlying sampler is not a {@link SharedStateSampler}.
-     * @throws ClassCastException if the underlying {@link SharedStateSampler} does not return a
-     * {@link NormalizedGaussianSampler}.
+     * @throws UnsupportedOperationException if the underlying sampler is not a
+     * {@link SharedStateSampler} or does not return a {@link NormalizedGaussianSampler} when
+     * sharing state.
      */
     @Override
     public LogNormalSampler withUniformRandomProvider(UniformRandomProvider rng) {

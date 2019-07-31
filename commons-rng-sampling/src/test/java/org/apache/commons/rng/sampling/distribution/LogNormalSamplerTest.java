@@ -97,7 +97,7 @@ public class LogNormalSamplerTest {
      * Test the SharedStateSampler implementation throws if the underlying sampler is
      * a SharedStateSampler that returns an incorrect type.
      */
-    @Test(expected = ClassCastException.class)
+    @Test(expected = UnsupportedOperationException.class)
     public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();

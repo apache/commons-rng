@@ -57,13 +57,9 @@ public class GaussianSampler implements ContinuousSampler, SharedStateSampler<Ga
      */
     private GaussianSampler(UniformRandomProvider rng,
                             GaussianSampler source) {
-        if (!(source.normalized instanceof SharedStateSampler<?>)) {
-            throw new UnsupportedOperationException("The underlying sampler is not a SharedStateSampler");
-        }
         this.mean = source.mean;
         this.standardDeviation = source.standardDeviation;
-        this.normalized = (NormalizedGaussianSampler)
-            ((SharedStateSampler<?>)source.normalized).withUniformRandomProvider(rng);
+        this.normalized = InternalUtils.newNormalizedGaussianSampler(source.normalized, rng);
     }
 
     /** {@inheritDoc} */
@@ -84,9 +80,9 @@ public class GaussianSampler implements ContinuousSampler, SharedStateSampler<Ga
      * <p>Note: This function is available if the underlying {@link NormalizedGaussianSampler}
      * is a {@link SharedStateSampler}. Otherwise a run-time exception is thrown.</p>
      *
-     * @throws UnsupportedOperationException if the underlying sampler is not a {@link SharedStateSampler}.
-     * @throws ClassCastException if the underlying {@link SharedStateSampler} does not return a
-     * {@link NormalizedGaussianSampler}.
+     * @throws UnsupportedOperationException if the underlying sampler is not a
+     * {@link SharedStateSampler} or does not return a {@link NormalizedGaussianSampler} when
+     * sharing state.
      */
     @Override
     public GaussianSampler withUniformRandomProvider(UniformRandomProvider rng) {
