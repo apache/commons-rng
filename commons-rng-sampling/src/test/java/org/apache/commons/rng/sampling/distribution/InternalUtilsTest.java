@@ -62,6 +62,17 @@ public class InternalUtilsTest {
     }
 
     @Test
+    public void testFactorialLogCacheSizeAboveRepresentableFactorials() {
+        final int limit = MAX_REPRESENTABLE + 5;
+        FactorialLog factorialLog = FactorialLog.create().withCache(limit);
+        for (int n = MAX_REPRESENTABLE; n <= limit; n++) {
+            // Use Commons math to compute logGamma(1 + n);
+            double expected = Gamma.logGamma(1 + n);
+            Assert.assertEquals(expected, factorialLog.value(n), 1e-10);
+        }
+    }
+
+    @Test
     public void testFactorialLogCacheExpansion() {
         // There is no way to determine if the cache values were reused but this test
         // exercises the method to ensure it does not error.
