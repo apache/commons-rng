@@ -130,7 +130,7 @@ public final class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
                 PoissonSampler.of(RandomSource.create(RandomSource.KISS), meanPoisson));
-            // Dedicated small mean poisson sampler
+            // Dedicated small mean poisson samplers
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
                 SmallMeanPoissonSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_256_PLUS), meanPoisson));
@@ -138,8 +138,13 @@ public final class DiscreteSamplersList {
                 MathArrays.sequence(10, 0, 1),
                 KempSmallMeanPoissonSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
-                    MathArrays.sequence(10, 0, 1),
-                    MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+                MathArrays.sequence(10, 0, 1),
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+            // LargeMeanPoissonSampler should work at small mean.
+            // Note: This hits a code path where the sample from the normal distribution is rejected.
+            add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
+                MathArrays.sequence(10, 0, 1),
+                LargeMeanPoissonSampler.of(RandomSource.create(RandomSource.PCG_MCG_XSH_RR_32), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
