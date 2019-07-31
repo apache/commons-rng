@@ -34,7 +34,7 @@ public class GaussianSamplerTest {
     public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.create(RandomSource.SPLIT_MIX_64);
-        final NormalizedGaussianSampler gauss = ZigguratNormalizedGaussianSampler.of(rng);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = 0;
         GaussianSampler.of(gauss, mean, standardDeviation);
@@ -47,7 +47,7 @@ public class GaussianSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final NormalizedGaussianSampler gauss = ZigguratNormalizedGaussianSampler.of(rng1);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng1);
         final double mean = 1.23;
         final double standardDeviation = 4.56;
         final SharedStateContinuousSampler sampler1 =

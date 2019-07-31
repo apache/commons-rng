@@ -46,7 +46,7 @@ public class BoxMullerLogNormalSampler
                                      double scale,
                                      double shape) {
         super(null);
-        sampler = LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
+        sampler = LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(rng),
                                       scale, shape);
     }
 

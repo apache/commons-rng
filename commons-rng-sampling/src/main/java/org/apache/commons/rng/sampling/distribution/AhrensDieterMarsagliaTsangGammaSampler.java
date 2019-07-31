@@ -219,7 +219,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
                                    double alpha,
                                    double theta) {
             super(rng, alpha, theta);
-            gaussian = ZigguratNormalizedGaussianSampler.of(rng);
+            gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = alpha - ONE_THIRD;
             cOptim = ONE_THIRD / Math.sqrt(dOptim);
         }
@@ -231,7 +231,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         MarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                    MarsagliaTsangGammaSampler source) {
             super(rng, source);
-            gaussian = ZigguratNormalizedGaussianSampler.of(rng);
+            gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = source.dOptim;
             cOptim = source.cOptim;
         }
