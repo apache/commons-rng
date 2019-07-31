@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Sampling from a Gaussian distribution with given mean and
