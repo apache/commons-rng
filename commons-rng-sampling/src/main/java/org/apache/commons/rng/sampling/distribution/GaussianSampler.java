@@ -77,11 +77,12 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * {@inheritDoc}
      *
      * <p>Note: This function is available if the underlying {@link NormalizedGaussianSampler}
-     * is a {@link SharedStateSampler}. Otherwise a run-time exception is thrown.</p>
+     * is a {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler}.
+     * Otherwise a run-time exception is thrown.</p>
      *
      * @throws UnsupportedOperationException if the underlying sampler is not a
-     * {@link SharedStateSampler} or does not return a {@link NormalizedGaussianSampler} when
-     * sharing state.
+     * {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler} or
+     * does not return a {@link NormalizedGaussianSampler} when sharing state.
      */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
@@ -92,8 +93,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * Create a new normalised Gaussian sampler.
      *
      * <p>Note: The shared-state functionality is available if the {@link NormalizedGaussianSampler}
-     * is a {@link SharedStateSampler}. Otherwise a run-time exception will be thrown when the
-     * sampler is used to share state.</p>
+     * is a {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler}.
+     * Otherwise a run-time exception will be thrown when the sampler is used to share state.</p>
      *
      * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
