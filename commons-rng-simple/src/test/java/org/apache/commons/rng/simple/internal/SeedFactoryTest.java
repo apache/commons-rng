@@ -196,7 +196,7 @@ public class SeedFactoryTest {
         // p-value of 0.0001 taken from a 2-tailed Normal distribution. Computation of
         // the p-value requires the complimentary error function.
         // The p-value is set to be equal to a 0.01 with 1 allowed re-run.
-        // (Re-runs are not configured for this test.) 
+        // (Re-runs are not configured for this test.)
         final double absSum = Math.abs(sum);
         final double max = Math.sqrt(numberOfBits) * 3.891;
         Assert.assertTrue("Walked too far astray: " + absSum +
