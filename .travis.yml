@@ -16,6 +16,9 @@
 language: java
 sudo: false
 
+# Required to build with openjdk7
+dist: trusty
+
 jdk:
   - openjdk7
   - openjdk8
