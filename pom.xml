@@ -559,7 +559,7 @@
               <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
               <enableRulesSummary>false</enableRulesSummary>
               <logViolationsToConsole>false</logViolationsToConsole>
-              <failOnViolation>false</failOnViolation>
+              <failOnViolation>true</failOnViolation>
               <resourceExcludes>NOTICE.txt,LICENSE.txt,**/maven-archiver/pom.properties</resourceExcludes>
               <excludes>**/generated/**.java</excludes>
             </configuration>
