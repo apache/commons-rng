@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-110">
+        Factory methods for Discrete and Continuous distribution samplers. The factory method
+        can choose the optimal implementation for the distribution parameters.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-84" due-to="Abhishek Singh Dhadwal">
         New Permuted Congruential Generators (PCG) from the PCG family.
         Added the LCG and MCG 32 bit output versions of the XSH-RS and XSH-RR operations,
