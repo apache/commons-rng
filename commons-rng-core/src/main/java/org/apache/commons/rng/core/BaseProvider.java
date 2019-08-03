@@ -25,28 +25,39 @@ import org.apache.commons.rng.RandomProviderState;
  */
 public abstract class BaseProvider
     implements RestorableUniformRandomProvider {
+    /** Error message when an integer is not positive. */
+    private static final String NOT_POSITIVE = "Must be strictly positive: ";
+    /** 2^32. */
+    private static final long POW_32 = 1L << 32;
+
     /** {@inheritDoc} */
     @Override
     public int nextInt(int n) {
-        checkStrictlyPositive(n);
-
-        if ((n & -n) == n) {
-            return (int) ((n * (long) (nextInt() >>> 1)) >> 31);
+        if (n <= 0) {
+            throw new IllegalArgumentException(NOT_POSITIVE + n);
         }
-        int bits;
-        int val;
-        do {
-            bits = nextInt() >>> 1;
-            val = bits % n;
-        } while (bits - val + (n - 1) < 0);
 
-        return val;
+        // Lemire (2019): Fast Random Integer Generation in an Interval
+        // https://arxiv.org/abs/1805.10941
+        long m = (nextInt() & 0xffffffffL) * n;
+        long l = m & 0xffffffffL;
+        if (l < n) {
+            // 2^32 % n
+            final long t = POW_32 % n;
+            while (l < t) {
+                m = (nextInt() & 0xffffffffL) * n;
+                l = m & 0xffffffffL;
+            }
+        }
+        return (int) (m >>> 32);
     }
 
     /** {@inheritDoc} */
     @Override
     public long nextLong(long n) {
-        checkStrictlyPositive(n);
+        if (n <= 0) {
+            throw new IllegalArgumentException(NOT_POSITIVE + n);
+        }
 
         long bits;
         long val;
@@ -274,18 +285,6 @@ public abstract class BaseProvider
             throw new IndexOutOfBoundsException(index + " is out of interval [" +
                                                 min + ", " +
                                                 max + "]");
-        }
-    }
-
-    /**
-     * Checks that the argument is strictly positive.
-     *
-     * @param n Number to check.
-     * @throws IllegalArgumentException if {@code n <= 0}.
-     */
-    private void checkStrictlyPositive(long n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("Must be strictly positive: " + n);
         }
     }
 
