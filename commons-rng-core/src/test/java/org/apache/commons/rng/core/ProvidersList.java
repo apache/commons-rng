@@ -34,6 +34,7 @@ import org.apache.commons.rng.core.source32.Well44497a;
 import org.apache.commons.rng.core.source32.Well44497b;
 import org.apache.commons.rng.core.source32.ISAACRandom;
 import org.apache.commons.rng.core.source32.MersenneTwister;
+import org.apache.commons.rng.core.source32.MiddleSquareWeylSequence;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.PcgXshRr32;
@@ -103,6 +104,8 @@ public final class ProvidersList {
             add(LIST32, new PcgXshRs32(new long[] {g.nextLong()}));
             add(LIST32, new PcgMcgXshRr32(g.nextLong()));
             add(LIST32, new PcgMcgXshRs32(g.nextLong()));
+            // Ensure a high complexity increment is used for the Weyl sequence
+            add(LIST32, new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
             // ... add more here.
 
             // "long"-based RNGs.
