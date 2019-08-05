@@ -126,6 +126,8 @@ public class ProvidersCommonParametricTest {
     public void testEmptyLongArraySeed() {
         final long[] empty = new long[0];
         Assume.assumeTrue(originalSource.isNativeSeed(empty));
+        // The Middle-Square Weyl Sequence generator cannot self-seed
+        Assume.assumeFalse(originalSource == RandomSource.MSWS);
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
