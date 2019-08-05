@@ -253,8 +253,30 @@ public final class ProviderBuilder {
              NativeSeedType.LONG_ARRAY) {
             @Override
             Object createSeed() {
-                // This generator requires a high quality Weyl increment.
-                final long seed = SeedFactory.createLong();
+                return createMswsSeed(SeedFactory.createLong());
+            }
+
+            @Override
+            Object convertSeed(Object seed) {
+                // Allow seeding with primitives to generate a good seed
+                if (seed instanceof Integer) {
+                    return createMswsSeed((Integer) seed);
+                } else if (seed instanceof Long) {
+                    return createMswsSeed((Long) seed);
+                }
+                // Other types (e.g. the native long[]) are handled by the default conversion
+                return super.convertSeed(seed);
+            }
+
+            /**
+             * Creates the full length seed array from the input seed using the method
+             * recommended for the generator. This is a high quality Weyl increment composed
+             * of a hex character permutation.
+             *
+             * @param seed the seed
+             * @return the seed array
+             */
+            private long[] createMswsSeed(long seed) {
                 final long increment = SeedUtils.createLongHexPermutation(new SplitMix64(seed));
                 // The initial state should not be low complexity but the Weyl
                 // state can be any number.
