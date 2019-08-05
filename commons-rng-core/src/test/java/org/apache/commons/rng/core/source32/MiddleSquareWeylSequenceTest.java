@@ -17,6 +17,8 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.RandomAssert;
+import org.apache.commons.rng.core.util.NumberFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MiddleSquareWeylSequenceTest {
@@ -77,5 +79,20 @@ public class MiddleSquareWeylSequenceTest {
         // Ensure this does not throw. The output quality will be poor.
         final MiddleSquareWeylSequence rng = new MiddleSquareWeylSequence(new long[0]);
         rng.nextInt();
+    }
+
+    /**
+     * Test nextLong() returns two nextInt() values joined together. This tests the custom
+     * nextLong() routine in the implementation that overrides the default.
+     */
+    @Test
+    public void testNextLong() {
+        final long[] seed = {0x012de1babb3c4104L, 0xc8161b4202294965L, 0xb5ad4eceda1ce2a9L};
+        final MiddleSquareWeylSequence rng1 = new MiddleSquareWeylSequence(seed);
+        final MiddleSquareWeylSequence rng2 = new MiddleSquareWeylSequence(seed);
+        for (int i = 0; i < 50; i++) {
+            Assert.assertEquals(NumberFactory.makeLong(rng1.nextInt(), rng1.nextInt()),
+                                rng2.nextLong());
+        }
     }
 }

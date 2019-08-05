@@ -119,4 +119,19 @@ public class MiddleSquareWeylSequence extends IntProvider {
         x += w += s;
         return (int) (x = (x >>> 32) | (x << 32));
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public long nextLong() {
+        // Avoid round trip from long to int to long by performing two iterations inline
+        x *= x;
+        x += w += s;
+        final long i1 = x & 0xffffffff00000000L;
+        x = (x >>> 32) | (x << 32);
+        x *= x;
+        x += w += s;
+        final long i2 = x >>> 32;
+        x = i2 | x << 32;
+        return i1 | i2;
+    }
 }
