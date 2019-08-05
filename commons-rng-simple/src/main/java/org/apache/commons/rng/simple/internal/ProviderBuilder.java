@@ -31,6 +31,7 @@ import org.apache.commons.rng.core.source32.Well44497a;
 import org.apache.commons.rng.core.source32.Well44497b;
 import org.apache.commons.rng.core.source32.ISAACRandom;
 import org.apache.commons.rng.core.source32.MersenneTwister;
+import org.apache.commons.rng.core.source32.MiddleSquareWeylSequence;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
@@ -245,7 +246,23 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link PcgMcgXshRs32}. */
         PCG_MCG_XSH_RS_32(PcgMcgXshRs32.class,
                 1,
-                NativeSeedType.LONG);
+                NativeSeedType.LONG),
+        /** Source of randomness is {@link MiddleSquareWeylSequence}. */
+        MSWS(MiddleSquareWeylSequence.class,
+             3,
+             NativeSeedType.LONG_ARRAY) {
+            @Override
+            Object createSeed() {
+                // This generator requires a high quality Weyl increment.
+                final long seed = SeedFactory.createLong();
+                final long increment = SeedUtils.createLongHexPermutation(new SplitMix64(seed));
+                // The initial state should not be low complexity but the Weyl
+                // state can be any number.
+                final long state = increment;
+                final long weylState = seed;
+                return new long[] {state, weylState, increment};
+            }
+        };
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;

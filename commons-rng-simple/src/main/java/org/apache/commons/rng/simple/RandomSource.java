@@ -426,7 +426,15 @@ public enum RandomSource {
      *  <li>Native seed size: 1.</li>
      * </ul>
      */
-    PCG_MCG_XSH_RS_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RS_32);
+    PCG_MCG_XSH_RS_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RS_32),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.MiddleSquareWeylSequence}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     *  <li>Native seed size: 3.</li>
+     * </ul>
+     */
+    MSWS(ProviderBuilder.RandomSourceInternal.MSWS);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
