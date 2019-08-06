@@ -788,9 +788,9 @@ String word = sampler.sample();
 *-----------------*------------*----------------------*
 | PCG_RXS_M_XS_64 | {{{../txt/userguide/stress/dh_30_1}0}}, {{{../txt/userguide/stress/dh_30_2}0}}, {{{../txt/userguide/stress/dh_30_3}0}}, {{{../txt/userguide/stress/dh_30_4}0}}, {{{../txt/userguide/stress/dh_30_5}0}} | {{{../txt/userguide/stress/tu_30_1}0}}, {{{../txt/userguide/stress/tu_30_2}0}}, {{{../txt/userguide/stress/tu_30_3}1}}, {{{../txt/userguide/stress/tu_30_4}0}}, {{{../txt/userguide/stress/tu_30_5}0}} |
 *-----------------*------------*----------------------*
-| PCG_MCG_XSH_RR_32 | {{{../txt/userguide/stress/dh_31_1}0}}, {{{../txt/userguide/stress/dh_31_2}0}}, {{{../txt/userguide/stress/dh_31_3}0}}, {{{../txt/userguide/stress/dh_31_4}0}}, {{{../txt/userguide/stress/dh_31_5}0}} | {{{../txt/userguide/stress/tu_31_1}0}}, {{{../txt/userguide/stress/tu_31_2}0}}, {{{../txt/userguide/stress/tu_31_3}0}}, {{{../txt/userguide/stress/tu_31_4}0}}, {{{../txt/userguide/stress/tu_31_5}0}} |
-*-----------------*------------*----------------------*
 | PCG_MCG_XSH_RS_32 | {{{../txt/userguide/stress/dh_32_1}0}}, {{{../txt/userguide/stress/dh_32_2}0}}, {{{../txt/userguide/stress/dh_32_3}0}}, {{{../txt/userguide/stress/dh_32_4}0}}, {{{../txt/userguide/stress/dh_32_5}0}} | {{{../txt/userguide/stress/tu_32_1}1}}, {{{../txt/userguide/stress/tu_32_2}1}}, {{{../txt/userguide/stress/tu_32_3}0}}, {{{../txt/userguide/stress/tu_32_4}0}}, {{{../txt/userguide/stress/tu_32_5}0}} |
+*-----------------*------------*----------------------*
+| MSWS | {{{../txt/userguide/stress/dh_33_1}0}}, {{{../txt/userguide/stress/dh_33_2}0}}, {{{../txt/userguide/stress/dh_33_3}0}}, {{{../txt/userguide/stress/dh_33_4}0}}, {{{../txt/userguide/stress/dh_33_5}0}} | {{{../txt/userguide/stress/tu_33_1}0}}, {{{../txt/userguide/stress/tu_33_2}0}}, {{{../txt/userguide/stress/tu_33_3}0}}, {{{../txt/userguide/stress/tu_33_4}1}}, {{{../txt/userguide/stress/tu_33_5}0}} |
 *-----------------*------------*----------------------*
 
 
