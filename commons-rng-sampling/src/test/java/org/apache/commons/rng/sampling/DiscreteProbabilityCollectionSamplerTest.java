@@ -18,8 +18,11 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -74,6 +77,13 @@ public class DiscreteProbabilityCollectionSamplerTest {
         new DiscreteProbabilityCollectionSampler<Double>(rng,
                                                          new HashMap<Double, Double>());
     }
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrecondition7() {
+        // Empty List<T> not allowed
+        new DiscreteProbabilityCollectionSampler<Double>(rng,
+                                                         Collections.<Double>emptyList(),
+                                                         new double[0]);
+    }
 
     @Test
     public void testSample() {
@@ -99,30 +109,38 @@ public class DiscreteProbabilityCollectionSamplerTest {
         Assert.assertEquals(expectedVariance, variance, 2e-3);
     }
 
+
+    @Test
+    public void testSampleUsingMap() {
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final List<Integer> items = Arrays.asList(1, 3, 4, 6, 9);
+        final double[] probabilities = {0.1, 0.2, 0.3, 0.4, 0.5};
+        final DiscreteProbabilityCollectionSampler<Integer> sampler1 =
+            new DiscreteProbabilityCollectionSampler<Integer>(rng1, items, probabilities);
+
+        // Create a map version. The map iterator must be ordered so use a TreeMap.
+        final Map<Integer, Double> map = new TreeMap<Integer, Double>();
+        for (int i = 0; i < probabilities.length; i++) {
+            map.put(items.get(i), probabilities[i]);
+        }
+        final DiscreteProbabilityCollectionSampler<Integer> sampler2 =
+            new DiscreteProbabilityCollectionSampler<Integer>(rng2, map);
+
+        for (int i = 0; i < 50; i++) {
+            Assert.assertEquals(sampler1.sample(), sampler2.sample());
+        }
+    }
+
     /**
      * Edge-case test:
-     * Create a sampler that will return 1 for nextDouble() forcing the binary search to
+     * Create a sampler that will return 1 for nextDouble() forcing the search to
      * identify the end item of the cumulative probability array.
      */
     @Test
     public void testSampleWithProbabilityAtLastItem() {
-        sampleWithProbabilityForLastItem(false);
-    }
-
-    /**
-     * Edge-case test:
-     * Create a sampler that will return over 1 for nextDouble() forcing the binary search to
-     * identify insertion at the end of the cumulative probability array.
-     */
-    @Test
-    public void testSampleWithProbabilityPastLastItem() {
-        sampleWithProbabilityForLastItem(true);
-    }
-
-    private static void sampleWithProbabilityForLastItem(boolean pastLast) {
         // Ensure the samples pick probability 0 (the first item) and then
         // a probability (for the second item) that hits an edge case.
-        final double probability = pastLast ? 1.1 : 1;
         final UniformRandomProvider dummyRng = new UniformRandomProvider() {
             private int count;
             // CHECKSTYLE: stop all
@@ -132,7 +150,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
             public int nextInt() { return 0; }
             public float nextFloat() { return 0; }
             // Return 0 then the given probability
-            public double nextDouble() { return (count++ == 0) ? 0 : probability; }
+            public double nextDouble() { return (count++ == 0) ? 0 : 1.0; }
             public void nextBytes(byte[] bytes, int start, int len) {}
             public void nextBytes(byte[] bytes) {}
             public boolean nextBoolean() { return false; }
@@ -164,7 +182,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         final DiscreteProbabilityCollectionSampler<Double> sampler1 =
             new DiscreteProbabilityCollectionSampler<Double>(rng1,
                                                              items,
-                                                             new double[] {0.1, 0.2, 0.3, 04});
+                                                             new double[] {0.1, 0.2, 0.3, 0.4});
         final DiscreteProbabilityCollectionSampler<Double> sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(
             new RandomAssert.Sampler<Double>() {

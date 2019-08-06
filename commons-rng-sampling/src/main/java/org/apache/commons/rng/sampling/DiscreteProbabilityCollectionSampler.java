@@ -19,11 +19,11 @@ package org.apache.commons.rng.sampling;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 
 /**
  * Sampling from a collection of items with user-defined
@@ -40,12 +40,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  */
 public class DiscreteProbabilityCollectionSampler<T>
     implements SharedStateSampler<DiscreteProbabilityCollectionSampler<T>> {
+    /** The error message for an empty collection. */
+    private static final String EMPTY_COLLECTION = "Empty collection";
     /** Collection to be sampled from. */
     private final List<T> items;
-    /** RNG. */
-    private final UniformRandomProvider rng;
-    /** Cumulative probabilities. */
-    private final double[] cumulativeProbabilities;
+    /** Sampler for the probabilities. */
+    private final SharedStateDiscreteSampler sampler;
 
     /**
      * Creates a sampler.
@@ -64,43 +64,22 @@ public class DiscreteProbabilityCollectionSampler<T>
     public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
                                                 Map<T, Double> collection) {
         if (collection.isEmpty()) {
-            throw new IllegalArgumentException("Empty collection");
+            throw new IllegalArgumentException(EMPTY_COLLECTION);
         }
 
-        this.rng = rng;
+        // Extract the items and probabilities
         final int size = collection.size();
         items = new ArrayList<T>(size);
-        cumulativeProbabilities = new double[size];
+        final double[] probabilities = new double[size];
 
-        double sumProb = 0;
         int count = 0;
         for (final Map.Entry<T, Double> e : collection.entrySet()) {
             items.add(e.getKey());
-
-            final double prob = e.getValue();
-            if (prob < 0 ||
-                Double.isInfinite(prob) ||
-                Double.isNaN(prob)) {
-                throw new IllegalArgumentException("Invalid probability: " +
-                                                   prob);
-            }
-
-            // Temporarily store probability.
-            cumulativeProbabilities[count++] = prob;
-            sumProb += prob;
+            probabilities[count++] = e.getValue();
         }
 
-        if (sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities");
-        }
-
-        // Compute and store cumulative probability.
-        for (int i = 0; i < size; i++) {
-            cumulativeProbabilities[i] /= sumProb;
-            if (i > 0) {
-                cumulativeProbabilities[i] += cumulativeProbabilities[i - 1];
-            }
-        }
+        // Delegate sampling
+        sampler = createSampler(rng, probabilities);
     }
 
     /**
@@ -122,7 +101,19 @@ public class DiscreteProbabilityCollectionSampler<T>
     public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
                                                 List<T> collection,
                                                 double[] probabilities) {
-        this(rng, consolidate(collection, probabilities));
+        if (collection.isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_COLLECTION);
+        }
+        final int len = probabilities.length;
+        if (len != collection.size()) {
+            throw new IllegalArgumentException("Size mismatch: " +
+                                               len + " != " +
+                                               collection.size());
+        }
+        // Shallow copy the list
+        items = new ArrayList<T>(collection);
+        // Delegate sampling
+        sampler = createSampler(rng, probabilities);
     }
 
     /**
@@ -131,9 +122,8 @@ public class DiscreteProbabilityCollectionSampler<T>
      */
     private DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
                                                  DiscreteProbabilityCollectionSampler<T> source) {
-        this.rng = rng;
         this.items = source.items;
-        this.cumulativeProbabilities = source.cumulativeProbabilities;
+        this.sampler = source.sampler.withUniformRandomProvider(rng);
     }
 
     /**
@@ -142,22 +132,7 @@ public class DiscreteProbabilityCollectionSampler<T>
      * @return a random sample.
      */
     public T sample() {
-        final double rand = rng.nextDouble();
-
-        int index = Arrays.binarySearch(cumulativeProbabilities, rand);
-        if (index < 0) {
-            index = -index - 1;
-        }
-
-        if (index < cumulativeProbabilities.length &&
-            rand < cumulativeProbabilities[index]) {
-            return items.get(index);
-        }
-
-        // This should never happen, but it ensures we will return a correct
-        // object in case there is some floating point inequality problem
-        // wrt the cumulative probabilities.
-        return items.get(items.size() - 1);
+        return items.get(sampler.sample());
     }
 
     /** {@inheritDoc} */
@@ -167,38 +142,14 @@ public class DiscreteProbabilityCollectionSampler<T>
     }
 
     /**
-     * @param collection Collection to be sampled.
-     * @param probabilities Probability associated to each item of the
-     * {@code collection}.
-     * @return a consolidated map (where probabilities of equal items
-     * have been summed).
-     * @throws IllegalArgumentException if the number of items in the
-     * {@code collection} is not equal to the number of provided
-     * {@code probabilities}.
-     * @param <T> Type of items in the collection.
+     * Creates the sampler of the enumerated probability distribution.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param probabilities Probability associated to each item.
+     * @return the sampler
      */
-    private static <T> Map<T, Double> consolidate(List<T> collection,
-                                                  double[] probabilities) {
-        final int len = probabilities.length;
-        if (len != collection.size()) {
-            throw new IllegalArgumentException("Size mismatch: " +
-                                               len + " != " +
-                                               collection.size());
-        }
-
-        final Map<T, Double> map = new HashMap<T, Double>();
-        for (int i = 0; i < len; i++) {
-            final T item = collection.get(i);
-            final Double prob = probabilities[i];
-
-            Double currentProb = map.get(item);
-            if (currentProb == null) {
-                currentProb = 0d;
-            }
-
-            map.put(item, currentProb + prob);
-        }
-
-        return map;
+    private static SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
+                                                            double[] probabilities) {
+        return GuideTableDiscreteSampler.of(rng, probabilities);
     }
 }
