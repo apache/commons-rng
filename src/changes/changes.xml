@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-85">
+        New "MiddleSquareWeylSequence" generator.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-90">
         "BaseProvider": Updated to use faster algorithm for nextInt(int).
       </action>
