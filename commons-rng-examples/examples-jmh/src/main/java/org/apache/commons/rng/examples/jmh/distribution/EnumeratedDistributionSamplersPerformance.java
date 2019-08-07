@@ -56,13 +56,51 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class EnumeratedDistributionSamplersPerformance {
     /**
+     * The random sources to use for testing. This is a smaller list than all the possible
+     * random sources; the list is composed of generators of different speeds.
+     */
+    @State(Scope.Benchmark)
+    public static class LocalRandomSources {
+        /**
+         * RNG providers.
+         *
+         * <p>Use different speeds.</p>
+         *
+         * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
+         *      Commons RNG user guide</a>
+         */
+        @Param({"WELL_44497_B",
+                "ISAAC",
+                "XO_RO_SHI_RO_128_PLUS",
+                })
+        private String randomSourceName;
+
+        /** RNG. */
+        private UniformRandomProvider generator;
+
+        /**
+         * @return the RNG.
+         */
+        public UniformRandomProvider getGenerator() {
+            return generator;
+        }
+
+        /** Create the random source. */
+        @Setup
+        public void setup() {
+            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
+            generator = RandomSource.create(randomSource);
+        }
+    }
+
+    /**
      * The {@link DiscreteSampler} samplers to use for testing. Creates the sampler for each
-     * {@link RandomSource} in the default {@link RandomSources}.
+     * random source.
      *
      * <p>This class is abstract. The probability distribution is created by implementations.</p>
      */
     @State(Scope.Benchmark)
-    public abstract static class SamplerSources {
+    public abstract static class SamplerSources extends LocalRandomSources {
         /**
          * A factory for creating DiscreteSampler objects.
          */
@@ -74,21 +112,6 @@ public class EnumeratedDistributionSamplersPerformance {
              */
             DiscreteSampler create();
         }
-
-        /**
-         * RNG providers.
-         *
-         * <p>Use different speeds.</p>
-         *
-         * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
-         *      Commons RNG user guide</a>
-         */
-        @Param({
-                //"WELL_44497_B",
-                //"ISAAC",
-                "XO_RO_SHI_RO_128_PLUS",
-                })
-        private String randomSourceName;
 
         /**
          * The sampler type.
@@ -110,21 +133,11 @@ public class EnumeratedDistributionSamplersPerformance {
                 })
         private String samplerType;
 
-        /** RNG. */
-        private UniformRandomProvider generator;
-
         /** The factory. */
         private DiscreteSamplerFactory factory;
 
         /** The sampler. */
         private DiscreteSampler sampler;
-
-        /**
-         * @return the RNG.
-         */
-        public UniformRandomProvider getGenerator() {
-            return generator;
-        }
 
         /**
          * Gets the sampler.
@@ -136,13 +149,13 @@ public class EnumeratedDistributionSamplersPerformance {
         }
 
         /** Create the distribution (per iteration as it may vary) and instantiates sampler. */
+        @Override
         @Setup(Level.Iteration)
         public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            generator = RandomSource.create(randomSource);
+            super.setup();
 
             final double[] probabilities = createProbabilities();
-            createSamplerFactory(generator, probabilities);
+            createSamplerFactory(getGenerator(), probabilities);
             sampler = factory.create();
         }
 
@@ -343,7 +356,7 @@ public class EnumeratedDistributionSamplersPerformance {
 
     /**
      * Define random probability distributions of known size for testing. These are random but
-     * the average cumulative probability function will be straight line given the increment
+     * the average cumulative probability function will be a straight line given the increment
      * average is 0.5.
      */
     @State(Scope.Benchmark)
@@ -378,7 +391,7 @@ public class EnumeratedDistributionSamplersPerformance {
     }
 
     /**
-     * Compute a sample by binary search of the cumulative probability distribution..
+     * Compute a sample by binary search of the cumulative probability distribution.
      */
     static final class BinarySearchDiscreteSampler
         implements DiscreteSampler {
@@ -504,7 +517,7 @@ public class EnumeratedDistributionSamplersPerformance {
      * @return the {@code int} value
      */
     @Benchmark
-    public int baselineNextDouble(SamplerSources sources) {
+    public int baselineNextDouble(LocalRandomSources sources) {
         return sources.getGenerator().nextDouble() < 0.5 ? 1 : 0;
     }
 
