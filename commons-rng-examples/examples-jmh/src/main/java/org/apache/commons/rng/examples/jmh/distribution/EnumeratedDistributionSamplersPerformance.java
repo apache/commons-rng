@@ -21,7 +21,6 @@ import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.IntegerDistribution;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.examples.jmh.RandomSources;
 import org.apache.commons.rng.sampling.distribution.AliasMethodDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
