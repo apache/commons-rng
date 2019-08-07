@@ -775,9 +775,9 @@ public final class MarsagliaTsangWangDiscreteSampler {
             // Recursive update of Poisson probability until the value is too small
             // p(x + 1) = p(x) * mean / (x + 1)
             double p = p0;
-            int i;
-            for (i = 1; p * DOUBLE_31 >= 1; i++) {
-                p *= mean / i;
+            int i = 1;
+            while (p * DOUBLE_31 >= 1) {
+                p *= mean / i++;
             }
 
             // Probabilities are 30-bit integers, assumed denominator 2^30
@@ -820,16 +820,16 @@ public final class MarsagliaTsangWangDiscreteSampler {
             // before the divisor i is large enough to start reducing the product (i.e. i > c).
             final double c = mean * Math.exp(-mean / mode);
             double p = 1.0;
-            int i;
-            for (i = 1; i <= mode; i++) {
+            for (int i = 1; i <= mode; i++) {
                 p *= c / i;
             }
             final double pMode = p;
 
             // Find the upper limit using recursive computation of the p-value.
             // Note this will exit when i overflows to negative so no check on the range
-            for (i = mode + 1; p * DOUBLE_31 >= 1; i++) {
-                p *= mean / i;
+            int i = mode + 1;
+            while (p * DOUBLE_31 >= 1) {
+                p *= mean / i++;
             }
             final int last = i - 2;
 
