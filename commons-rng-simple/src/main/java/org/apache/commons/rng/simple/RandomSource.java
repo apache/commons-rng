@@ -430,7 +430,7 @@ public enum RandomSource {
     /**
      * Source of randomness is {@link org.apache.commons.rng.core.source32.MiddleSquareWeylSequence}.
      * <ul>
-     *  <li>Native seed type: {@code Long}.</li>
+     *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 3.</li>
      * </ul>
      */
