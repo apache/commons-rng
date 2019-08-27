@@ -39,6 +39,7 @@ import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.PcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgXshRs32;
+import org.apache.commons.rng.core.source32.SFC32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
 import org.apache.commons.rng.core.source64.SplitMix64;
@@ -53,6 +54,7 @@ import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
+import org.apache.commons.rng.core.source64.SFC64;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 
@@ -106,6 +108,7 @@ public final class ProvidersList {
             add(LIST32, new PcgMcgXshRs32(g.nextLong()));
             // Ensure a high complexity increment is used for the Weyl sequence
             add(LIST32, new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
+            add(LIST32, new SFC32(new int[] {g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -122,6 +125,7 @@ public final class ProvidersList {
             add(LIST64, new XoShiRo512Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new PcgRxsMXs64(new long[] {g.nextLong()}));
+            add(LIST64, new SFC64(new long[] {g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.

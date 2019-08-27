@@ -93,6 +93,8 @@ public abstract class BaselineSources {
             "PCG_MCG_XSH_RR_32",
             "PCG_MCG_XSH_RS_32",
             "MSWS",
+            "SFC_32",
+            "SFC_64",
             })
     private String randomSourceName;
 

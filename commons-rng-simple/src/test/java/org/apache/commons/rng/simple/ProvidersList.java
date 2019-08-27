@@ -63,6 +63,7 @@ public final class ProvidersList {
             // Ensure a high complexity increment is used for the Weyl sequence otherwise
             // it will not output random data.
             add(LIST32, RandomSource.MSWS, new long[] {687233648L, 678656564562300L, 0xb5ad4eceda1ce2a9L});
+            add(LIST32, RandomSource.SFC_32, new int[] {-23574234, 7654343});
             // ... add more here.
 
             // "long"-based RNGs.
@@ -79,6 +80,7 @@ public final class ProvidersList {
             add(LIST64, RandomSource.XO_SHI_RO_512_PLUS, new long[] {89932L, -545669L, 4564689L});
             add(LIST64, RandomSource.XO_SHI_RO_512_SS, new long[] {123L, -654654L, 45646789L});
             add(LIST64, RandomSource.PCG_RXS_M_XS_64, new long[] {42088L, 69271L});
+            add(LIST64, RandomSource.SFC_64, new long[] {-2357423478979842L, 76543434515L});
             // ... add more here.
 
             // Do not modify the remaining statements.

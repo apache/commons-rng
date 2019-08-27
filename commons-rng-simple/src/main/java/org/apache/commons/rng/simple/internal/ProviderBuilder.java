@@ -42,6 +42,7 @@ import org.apache.commons.rng.core.source32.PcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgXshRs32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
+import org.apache.commons.rng.core.source32.SFC32;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
@@ -54,6 +55,7 @@ import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
+import org.apache.commons.rng.core.source64.SFC64;
 
 /**
  * RNG builder.
@@ -284,7 +286,15 @@ public final class ProviderBuilder {
                 final long weylState = seed;
                 return new long[] {state, weylState, increment};
             }
-        };
+        },
+        /** Source of randomness is {@link SFC32}. */
+        SFC_32(SFC32.class,
+               3,
+               NativeSeedType.INT_ARRAY),
+        /** Source of randomness is {@link SFC64}. */
+        SFC_64(SFC64.class,
+               3,
+               NativeSeedType.LONG_ARRAY);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
