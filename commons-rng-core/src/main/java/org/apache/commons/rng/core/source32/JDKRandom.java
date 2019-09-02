@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
+
+import org.apache.commons.rng.core.util.NumberFactory;
+
 import java.io.ByteArrayInputStream;
 
 /**
@@ -42,8 +45,6 @@ import java.io.ByteArrayInputStream;
 public class JDKRandom extends IntProvider {
     /** Delegate.  Cannot be "final" (to allow serialization). */
     private Random delegate;
-    /** Size of the byte representation of the state (of the delegate). */
-    private int stateSize;
 
     /**
      * Creates an instance with the given seed.
@@ -75,8 +76,11 @@ public class JDKRandom extends IntProvider {
             oos.writeObject(delegate);
 
             final byte[] state = bos.toByteArray();
-            stateSize = state.length; // To allow state recovery.
-            return composeStateInternal(state,
+            final int stateSize = state.length; // To allow state recovery.
+            // Compose the size with the state
+            final byte[] sizeAndState = composeStateInternal(NumberFactory.makeByteArray(stateSize),
+                                                             state);
+            return composeStateInternal(sizeAndState,
                                         super.getStateInternal());
         } catch (IOException e) {
             // Workaround checked exception.
@@ -87,7 +91,12 @@ public class JDKRandom extends IntProvider {
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        final byte[][] c = splitStateInternal(s, stateSize);
+        // First obtain the state size
+        final byte[][] s2 = splitStateInternal(s, 4);
+        final int stateSize = NumberFactory.makeInt(s2[0]);
+
+        // Second obtain the state
+        final byte[][] c = splitStateInternal(s2[1], stateSize);
 
         try {
             final ByteArrayInputStream bis = new ByteArrayInputStream(c[0]);
