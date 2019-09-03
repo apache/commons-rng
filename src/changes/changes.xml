@@ -75,6 +75,12 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-19">
+        "JDKRandomWrapper": Wraps an instance of java.util.Random for use as a
+        UniformRandomProvider. Can wrap a SecureRandom to use functionality
+        provided by the JDK for cryptographic random numbers and platform dependent
+        features such as reading /dev/urandom on Linux.
+      </action>
       <action dev="aherbert" type="fix" issue="RNG-115">
         "JDKRandom": Fixed the restore state method to function when the instance has not
         previously been used to save state.
