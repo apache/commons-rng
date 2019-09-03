@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="fix" issue="RNG-115">
+        "JDKRandom": Fixed the restore state method to function when the instance has not
+        previously been used to save state.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-112">
         New "SFC32" and "SFC64" (Small, Fast, Chaotic) generators.
       </action>
