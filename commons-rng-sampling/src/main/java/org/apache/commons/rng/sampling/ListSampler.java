@@ -18,6 +18,8 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.List;
+import java.util.ListIterator;
+import java.util.RandomAccess;
 import java.util.ArrayList;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -30,6 +32,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.0
  */
 public final class ListSampler {
+    /**
+     * The size threshold for using the random access algorithm
+     * when the list does not implement java.util.RandomAccess.
+     */
+    private static final int RANDOM_ACCESS_SIZE_THRESHOLD = 4;
+
     /**
      * Class contains only static methods.
      */
@@ -73,25 +81,51 @@ public final class ListSampler {
     }
 
     /**
-     * Shuffles the entries of the given array.
+     * Shuffles the entries of the given array, using the
+     * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
+     * Fisher-Yates</a> algorithm.
      *
-     * @see #shuffle(UniformRandomProvider,List,int,boolean)
+     * <p>
+     * Sampling uses {@link UniformRandomProvider#nextInt(int)}.
+     * </p>
      *
      * @param <T> Type of the list items.
      * @param rng Random number generator.
      * @param list List whose entries will be shuffled (in-place).
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T> void shuffle(UniformRandomProvider rng,
                                    List<T> list) {
-        shuffle(rng, list, 0, false);
+        if (list instanceof RandomAccess || list.size() < RANDOM_ACCESS_SIZE_THRESHOLD) {
+            // Shuffle list in-place
+            for (int i = list.size(); i > 1; i--) {
+                swap(list, i - 1, rng.nextInt(i));
+            }
+        } else {
+            // Shuffle as an array
+            final Object[] array = list.toArray();
+            for (int i = array.length; i > 1; i--) {
+                swap(array, i - 1, rng.nextInt(i));
+            }
+
+            // Copy back. Use raw types.
+            final ListIterator it = list.listIterator();
+            for (final Object item : array) {
+                it.next();
+                it.set(item);
+            }
+        }
     }
 
     /**
      * Shuffles the entries of the given array, using the
      * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
      * Fisher-Yates</a> algorithm.
+     *
+     * <p>
      * The {@code start} and {@code pos} parameters select which part
      * of the array is randomized and which is left untouched.
+     * </p>
      *
      * <p>
      * Sampling uses {@link UniformRandomProvider#nextInt(int)}.
@@ -109,13 +143,38 @@ public final class ListSampler {
                                    List<T> list,
                                    int start,
                                    boolean towardHead) {
-        final int len = list.size();
-        final int[] indices = PermutationSampler.natural(len);
-        PermutationSampler.shuffle(rng, indices, start, towardHead);
-
-        final ArrayList<T> items = new ArrayList<T>(list);
-        for (int i = 0; i < len; i++) {
-            list.set(i, items.get(indices[i]));
+        // Shuffle in-place as a sub-list.
+        if (towardHead) {
+            shuffle(rng, list.subList(0, start + 1));
+        } else {
+            shuffle(rng, list.subList(start, list.size()));
         }
+    }
+
+    /**
+     * Swaps the two specified elements in the list.
+     *
+     * @param <T> Type of the list items.
+     * @param list List.
+     * @param i First index.
+     * @param j Second index.
+     */
+    private static <T> void swap(List<T> list, int i, int j) {
+        final T tmp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, tmp);
+    }
+
+    /**
+     * Swaps the two specified elements in the array.
+     *
+     * @param array Array.
+     * @param i First index.
+     * @param j Second index.
+     */
+    private static void swap(Object[] array, int i, int j) {
+        final Object tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
     }
 }

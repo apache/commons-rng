@@ -18,7 +18,9 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -99,11 +101,18 @@ public class ListSamplerTest {
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
         }
-        final List<Integer> list = new ArrayList<Integer>(orig);
 
-        ListSampler.shuffle(rng, list);
+        final List<Integer> arrayList = new ArrayList<Integer>(orig);
+
+        ListSampler.shuffle(rng, arrayList);
         // Ensure that at least one entry has moved.
-        Assert.assertTrue(compare(orig, list, 0, orig.size(), false));
+        Assert.assertTrue("ArrayList", compare(orig, arrayList, 0, orig.size(), false));
+
+        final List<Integer> linkedList = new LinkedList<Integer>(orig);
+
+        ListSampler.shuffle(rng, linkedList);
+        // Ensure that at least one entry has moved.
+        Assert.assertTrue("LinkedList", compare(orig, linkedList, 0, orig.size(), false));
     }
 
     @Test
@@ -140,6 +149,61 @@ public class ListSamplerTest {
 
         // Ensure that at least one entry has moved.
         Assert.assertTrue(compare(orig, list, 0, start + 1, false));
+    }
+
+    /**
+     * Test shuffle matches {@link PermutationSampler#shuffle(UniformRandomProvider, int[])}.
+     * The implementation may be different but the result is a Fisher-Yates shuffle so the
+     * output order should match.
+     */
+    @Test
+    public void testShuffleMatchesPermutationSamplerShuffle() {
+        final List<Integer> orig = new ArrayList<Integer>();
+        for (int i = 0; i < 10; i++) {
+            orig.add((i + 1) * rng.nextInt());
+        }
+
+        assertShuffleMatchesPermutationSamplerShuffle(new ArrayList<Integer>(orig));
+        assertShuffleMatchesPermutationSamplerShuffle(new LinkedList<Integer>(orig));
+    }
+
+    /**
+     * Test shuffle matches {@link PermutationSampler#shuffle(UniformRandomProvider, int[], int, boolean)}.
+     * The implementation may be different but the result is a Fisher-Yates shuffle so the
+     * output order should match.
+     */
+    @Test
+    public void testShuffleMatchesPermutationSamplerShuffleDirectional() {
+        final List<Integer> orig = new ArrayList<Integer>();
+        for (int i = 0; i < 10; i++) {
+            orig.add((i + 1) * rng.nextInt());
+        }
+
+        assertShuffleMatchesPermutationSamplerShuffle(new ArrayList<Integer>(orig), 4, true);
+        assertShuffleMatchesPermutationSamplerShuffle(new ArrayList<Integer>(orig), 4, false);
+        assertShuffleMatchesPermutationSamplerShuffle(new LinkedList<Integer>(orig), 4, true);
+        assertShuffleMatchesPermutationSamplerShuffle(new LinkedList<Integer>(orig), 4, false);
+    }
+
+    /**
+     * This test hits the edge case when a LinkedList is small enough that the algorithm
+     * using a RandomAccess list is faster than the one with an iterator.
+     */
+    @Test
+    public void testShuffleWithSmallLinkedList() {
+        final int size = 3;
+        final List<Integer> orig = new ArrayList<Integer>();
+        for (int i = 0; i < size; i++) {
+            orig.add((i + 1) * rng.nextInt());
+        }
+
+        // When the size is small there is a chance that the list has no entries that move.
+        // E.g. The number of permutations of 3 items is only 6 giving a 1/6 chance of no change.
+        // So repeat test that the small shuffle matches the PermutationSampler.
+        // 10 times is (1/6)^10 or 1 in 60,466,176 of no change.
+        for (int i = 0; i < 10; i++) {
+            assertShuffleMatchesPermutationSamplerShuffle(new LinkedList<Integer>(orig), size - 1, true);
+        }
     }
 
     //// Support methods.
@@ -179,5 +243,65 @@ public class ListSamplerTest {
         Assert.fail("Sample not found: { " +
                     samp[0] + ", " + samp[1] + " }");
         return -1;
+    }
+
+    /**
+     * Assert the shuffle matches {@link PermutationSampler#shuffle(UniformRandomProvider, int[])}.
+     *
+     * @param list Array whose entries will be shuffled (in-place).
+     */
+    private static void assertShuffleMatchesPermutationSamplerShuffle(List<Integer> list) {
+        final int[] array = new int[list.size()];
+        ListIterator<Integer> it = list.listIterator();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = it.next();
+        }
+
+        // Identical RNGs
+        final long seed = RandomSource.createLong();
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+
+        ListSampler.shuffle(rng1, list);
+        PermutationSampler.shuffle(rng2, array);
+
+        final String msg = "Type=" + list.getClass().getSimpleName();
+        it = list.listIterator();
+        for (int i = 0; i < array.length; i++) {
+            Assert.assertEquals(msg, array[i], it.next().intValue());
+        }
+    }
+    /**
+     * Assert the shuffle matches {@link PermutationSampler#shuffle(UniformRandomProvider, int[], int, boolean)}.
+     *
+     * @param list Array whose entries will be shuffled (in-place).
+     * @param start Index at which shuffling begins.
+     * @param towardHead Shuffling is performed for index positions between
+     * {@code start} and either the end (if {@code false}) or the beginning
+     * (if {@code true}) of the array.
+     */
+    private static void assertShuffleMatchesPermutationSamplerShuffle(List<Integer> list,
+                                                                    int start,
+                                                                    boolean towardHead) {
+        final int[] array = new int[list.size()];
+        ListIterator<Integer> it = list.listIterator();
+        for (int i = 0; i < array.length; i++) {
+            array[i] = it.next();
+        }
+
+        // Identical RNGs
+        final long seed = RandomSource.createLong();
+        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+
+        ListSampler.shuffle(rng1, list, start, towardHead);
+        PermutationSampler.shuffle(rng2, array, start, towardHead);
+
+        final String msg = String.format("Type=%s start=%d towardHead=%b",
+                list.getClass().getSimpleName(), start, towardHead);
+        it = list.listIterator();
+        for (int i = 0; i < array.length; i++) {
+            Assert.assertEquals(msg, array[i], it.next().intValue());
+        }
     }
 }
