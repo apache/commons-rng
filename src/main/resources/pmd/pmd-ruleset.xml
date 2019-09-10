@@ -139,14 +139,21 @@
   </rule>
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
-     <properties>
+    <properties>
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='DiscreteProbabilityCollectionSampler']"/>
     </properties>
   </rule>
 
+  <rule ref="category/java/multithreading.xml/AvoidSynchronizedAtMethodLevel">
+    <properties>
+      <!-- Allows synchronized method when it is an override of the parent class -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='JDKRandomBridge']"/>
+    </properties>
+  </rule>
+
   <rule ref="category/java/performance.xml/AvoidUsingShortType">
-     <properties>
-     <!-- Short datatype is used to optimise 16-bit storage. -->
+    <properties>
+      <!-- Short datatype is used to optimise 16-bit storage. -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
