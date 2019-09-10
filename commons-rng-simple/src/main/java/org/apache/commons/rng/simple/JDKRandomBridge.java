@@ -65,16 +65,14 @@ public final class JDKRandomBridge extends Random {
 
     /** {@inheritDoc} */
     @Override
-    public void setSeed(long seed) {
-        synchronized (this) {
-            if (isInitialized) {
-                delegate = RandomSource.create(source, seed);
+    public synchronized void setSeed(long seed) {
+        if (isInitialized) {
+            delegate = RandomSource.create(source, seed);
 
-                // Force the clearing of the "haveNextNextGaussian" flag
-                // (cf. Javadoc of the base class); the value passed here
-                // is irrelevant (since it will not be used).
-                super.setSeed(0L);
-            }
+            // Force the clearing of the "haveNextNextGaussian" flag
+            // (cf. Javadoc of the base class); the value passed here
+            // is irrelevant (since it will not be used).
+            super.setSeed(0L);
         }
     }
 
