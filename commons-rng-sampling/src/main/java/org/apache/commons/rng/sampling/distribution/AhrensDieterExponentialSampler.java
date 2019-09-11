@@ -58,7 +58,7 @@ public class AhrensDieterExponentialSampler
         double qi = 0;
 
         for (int i = 0; i < EXPONENTIAL_SA_QI.length; i++) {
-            qi += Math.pow(ln2, i + 1) / InternalUtils.factorial(i + 1);
+            qi += Math.pow(ln2, i + 1.0) / InternalUtils.factorial(i + 1);
             EXPONENTIAL_SA_QI[i] = qi;
         }
     }
