@@ -293,7 +293,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     }
 
     /**
-     * Test the constructor with a bad mean.
+     * Test the Poisson distribution with a bad mean that is above the supported range.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreatePoissonDistributionThrowsWithMeanLargerThanUpperBound() {
@@ -304,7 +304,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     }
 
     /**
-     * Test the Poisson distribution with a bad mean.
+     * Test the Poisson distribution with a bad mean that is below the supported range.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testCreatePoissonDistributionThrowsWithZeroMean() {
@@ -321,8 +321,10 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     public void testCreatePoissonDistributionWithMaximumMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1024;
-        @SuppressWarnings("unused")
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
+        // Note: No assertions. This will throw if the table does not sum to 2^30
+        // as the RNG outputs the maximum index into the look-up tables.
+        sampler.sample();
     }
 
     /**
@@ -334,7 +336,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0.25;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
-        // This will throw if the table does not sum to 2^30
+        // Note: No assertions. This will throw if the table does not sum to 2^30
+        // as the RNG outputs the maximum index into the look-up tables.
         sampler.sample();
     }
 
@@ -348,7 +351,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 21.4;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
-        // This will throw if the table does not sum to 2^30
+        // Note: No assertions. This will throw if the table does not sum to 2^30
+        // as the RNG outputs the maximum index into the look-up tables.
         sampler.sample();
     }
 
@@ -542,7 +546,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 65000;
         final double p = 0.01;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
-        // This will throw if the table does not sum to 2^30
+        // Note: No assertions. This will throw if the table does not sum to 2^30
+        // as the RNG outputs the maximum index into the look-up tables.
         sampler.sample();
     }
 
@@ -556,7 +561,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 10;
         final double p = 0.5;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
-        // This will throw if the table does not sum to 2^30
+        // Note: No assertions. This will throw if the table does not sum to 2^30
+        // as the RNG outputs the maximum index into the look-up tables.
         sampler.sample();
     }
 
