@@ -209,6 +209,8 @@ public class SeedFactoryTest {
     public void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
         final int[] seed = new int[0];
         SeedFactory.ensureNonZero(seed);
+        // Note: Nothing to assert.
+        // This tests an ArrayIndexOutOfBoundsException does not occur.
     }
 
     @Test
@@ -239,6 +241,8 @@ public class SeedFactoryTest {
     public void testEnsureNonZeroLongArrayIgnoresEmptySeed() {
         final long[] seed = new long[0];
         SeedFactory.ensureNonZero(seed);
+        // Note: Nothing to assert.
+        // This tests an ArrayIndexOutOfBoundsException does not occur.
     }
 
     @Test
