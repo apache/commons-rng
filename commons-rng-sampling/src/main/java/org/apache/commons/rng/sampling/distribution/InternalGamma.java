@@ -20,8 +20,6 @@ package org.apache.commons.rng.sampling.distribution;
  * <h3>
  *  Adapted and stripped down copy of class
  *  {@code "org.apache.commons.math4.special.Gamma"}.
- *  TODO: Include it in a "core" component upon which high-level functionality
- *  such as sampling can depend.
  * </h3>
  *
  * <p>
