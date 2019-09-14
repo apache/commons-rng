@@ -196,11 +196,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
                 final int m = prob[i];
                 // Primitive type conversion will extract lower 8 bits
                 final byte k = (byte) (i + offset);
-                fill(table1, n1, n1 += getBase64Digit(m, 1), k);
-                fill(table2, n2, n2 += getBase64Digit(m, 2), k);
-                fill(table3, n3, n3 += getBase64Digit(m, 3), k);
-                fill(table4, n4, n4 += getBase64Digit(m, 4), k);
-                fill(table5, n5, n5 += getBase64Digit(m, 5), k);
+                n1 = fill(table1, n1, n1 + getBase64Digit(m, 1), k);
+                n2 = fill(table2, n2, n2 + getBase64Digit(m, 2), k);
+                n3 = fill(table3, n3, n3 + getBase64Digit(m, 3), k);
+                n4 = fill(table4, n4, n4 + getBase64Digit(m, 4), k);
+                n5 = fill(table5, n5, n5 + getBase64Digit(m, 5), k);
             }
         }
 
@@ -229,11 +229,13 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param from Lower bound index (inclusive)
          * @param to Upper bound index (exclusive)
          * @param value Value.
+         * @return the upper bound index
          */
-        private static void fill(byte[] table, int from, int to, byte value) {
+        private static int fill(byte[] table, int from, int to, byte value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
+            return to;
         }
 
         @Override
@@ -336,11 +338,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
                 final int m = prob[i];
                 // Primitive type conversion will extract lower 16 bits
                 final short k = (short) (i + offset);
-                fill(table1, n1, n1 += getBase64Digit(m, 1), k);
-                fill(table2, n2, n2 += getBase64Digit(m, 2), k);
-                fill(table3, n3, n3 += getBase64Digit(m, 3), k);
-                fill(table4, n4, n4 += getBase64Digit(m, 4), k);
-                fill(table5, n5, n5 += getBase64Digit(m, 5), k);
+                n1 = fill(table1, n1, n1 + getBase64Digit(m, 1), k);
+                n2 = fill(table2, n2, n2 + getBase64Digit(m, 2), k);
+                n3 = fill(table3, n3, n3 + getBase64Digit(m, 3), k);
+                n4 = fill(table4, n4, n4 + getBase64Digit(m, 4), k);
+                n5 = fill(table5, n5, n5 + getBase64Digit(m, 5), k);
             }
         }
 
@@ -369,11 +371,13 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param from Lower bound index (inclusive)
          * @param to Upper bound index (exclusive)
          * @param value Value.
+         * @return the upper bound index
          */
-        private static void fill(short[] table, int from, int to, short value) {
+        private static int fill(short[] table, int from, int to, short value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
+            return to;
         }
 
         @Override
@@ -472,11 +476,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
             for (int i = 0; i < prob.length; i++) {
                 final int m = prob[i];
                 final int k = i + offset;
-                fill(table1, n1, n1 += getBase64Digit(m, 1), k);
-                fill(table2, n2, n2 += getBase64Digit(m, 2), k);
-                fill(table3, n3, n3 += getBase64Digit(m, 3), k);
-                fill(table4, n4, n4 += getBase64Digit(m, 4), k);
-                fill(table5, n5, n5 += getBase64Digit(m, 5), k);
+                n1 = fill(table1, n1, n1 + getBase64Digit(m, 1), k);
+                n2 = fill(table2, n2, n2 + getBase64Digit(m, 2), k);
+                n3 = fill(table3, n3, n3 + getBase64Digit(m, 3), k);
+                n4 = fill(table4, n4, n4 + getBase64Digit(m, 4), k);
+                n5 = fill(table5, n5, n5 + getBase64Digit(m, 5), k);
             }
         }
 
@@ -505,11 +509,13 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param from Lower bound index (inclusive)
          * @param to Upper bound index (exclusive)
          * @param value Value.
+         * @return the upper bound index
          */
-        private static void fill(int[] table, int from, int to, int value) {
+        private static int fill(int[] table, int from, int to, int value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
+            return to;
         }
 
         @Override
