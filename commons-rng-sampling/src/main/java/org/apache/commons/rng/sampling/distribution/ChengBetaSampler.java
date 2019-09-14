@@ -91,9 +91,10 @@ public class ChengBetaSampler
 
         if (a > 1) {
             return algorithmBB(a, b);
-        } else {
-            return algorithmBC(b, a);
         }
+        // This method declares parameters (a, b).
+        // The algorithm is deliberately invoked with reversed parameters.
+        return algorithmBC(b, a);
     }
 
     /** {@inheritDoc} */
