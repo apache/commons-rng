@@ -117,7 +117,8 @@ public class MiddleSquareWeylSequence extends IntProvider {
     public int next() {
         x *= x;
         x += w += s;
-        return (int) (x = (x >>> 32) | (x << 32));
+        x = (x >>> 32) | (x << 32);
+        return (int) x;
     }
 
     /** {@inheritDoc} */
