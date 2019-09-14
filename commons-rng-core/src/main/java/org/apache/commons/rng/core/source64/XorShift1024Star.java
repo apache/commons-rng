@@ -126,7 +126,8 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
     @Override
     public long next() {
         final long s0 = state[index];
-        long s1 = state[index = (index + 1) & 15];
+        index = (index + 1) & 15;
+        long s1 = state[index];
         s1 ^= s1 << 31; // a
         state[index] = s1 ^ s0 ^ (s1 >>> 11) ^ (s0 >>> 30); // b,c
         return state[index] * multiplier;
