@@ -29,7 +29,6 @@ import java.io.ByteArrayInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Assume;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -134,19 +133,23 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Ignore@Test
+    @Test
     public void testZeroIntArraySeed() {
         // Exercise capacity to escape all "zero" state.
         final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
+        Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
+                createsNonZeroLongOutput(rng, 2000));
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Ignore@Test
+    @Test
     public void testZeroLongArraySeed() {
         // Exercise capacity to escape all "zero" state.
         final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
+        Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
+                createsNonZeroLongOutput(rng, 2000));
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -358,5 +361,24 @@ public class ProvidersCommonParametricTest {
             Assert.fail(generator + ": Too many failures for n = " + n +
                         " (" + numFailures + " out of " + numTests + " tests failed)");
         }
+    }
+
+    /**
+     * Return true if the generator creates non-zero output from
+     * {@link UniformRandomProvider#nextLong()} within the given number of cycles.
+     *
+     * @param rng Random generator.
+     * @param cycles Number of cycles.
+     * @return true if non-zero output
+     */
+    private static boolean createsNonZeroLongOutput(UniformRandomProvider rng,
+                                                    int cycles) {
+        boolean nonZero = false;
+        for (int i = 0; i < cycles; i++) {
+            if (rng.nextLong() != 0) {
+                nonZero = true;
+            }
+        }
+        return nonZero;
     }
 }
