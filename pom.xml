@@ -102,10 +102,9 @@
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
     <!--
-        Built only upon explicit request (requires Java 1.7+).
-        See profile "commons-rng-examples".
+        The examples are built only upon explicit request (requires Java 1.7+).
+        See profiles: "commons-rng-examples"; "release"
     -->
-    <!-- <module>commons-rng-examples</module> -->
   </modules>
 
   <scm>
