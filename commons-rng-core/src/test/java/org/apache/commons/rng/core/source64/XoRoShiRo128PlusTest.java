@@ -89,7 +89,8 @@ public class XoRoShiRo128PlusTest {
     @Test
     public void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
-        new XoRoShiRo128Plus(new long[] {SEED[0]});
+        RandomAssert.assertNextLongNonZeroOutput(new XoRoShiRo128Plus(new long[] {SEED[0]}),
+                SEED_SIZE, SEED_SIZE);
     }
 
     @Test

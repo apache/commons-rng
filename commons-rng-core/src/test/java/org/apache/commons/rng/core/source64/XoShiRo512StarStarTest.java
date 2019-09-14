@@ -77,7 +77,8 @@ public class XoShiRo512StarStarTest {
     @Test
     public void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
-        new XoShiRo512StarStar(new long[] {SEED[0]});
+        RandomAssert.assertNextLongNonZeroOutput(new XoShiRo512StarStar(new long[] {SEED[0]}),
+                SEED_SIZE, SEED_SIZE);
     }
 
     @Test
