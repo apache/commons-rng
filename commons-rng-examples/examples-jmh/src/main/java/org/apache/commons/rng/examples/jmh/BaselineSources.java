@@ -95,6 +95,8 @@ public abstract class BaselineSources {
             "MSWS",
             "SFC_32",
             "SFC_64",
+            "JSF_32",
+            "JSF_64",
             })
     private String randomSourceName;
 

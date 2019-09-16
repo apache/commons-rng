@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.security.SecureRandom;
 
 import org.apache.commons.rng.core.source32.JDKRandom;
+import org.apache.commons.rng.core.source32.JSF32;
 import org.apache.commons.rng.core.source32.Well512a;
 import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
 import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
@@ -52,6 +53,7 @@ import org.apache.commons.rng.core.source64.XoShiRo256Plus;
 import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
+import org.apache.commons.rng.core.source64.JSF64;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.SFC64;
@@ -109,6 +111,7 @@ public final class ProvidersList {
             // Ensure a high complexity increment is used for the Weyl sequence
             add(LIST32, new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
             add(LIST32, new SFC32(new int[] {g.nextInt(), g.nextInt()}));
+            add(LIST32, new JSF32(g.nextInt()));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -126,6 +129,7 @@ public final class ProvidersList {
             add(LIST64, new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new PcgRxsMXs64(new long[] {g.nextLong()}));
             add(LIST64, new SFC64(new long[] {g.nextLong(), g.nextLong()}));
+            add(LIST64, new JSF64(g.nextLong()));
             // ... add more here.
 
             // Do not modify the remaining statements.

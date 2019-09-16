@@ -450,7 +450,23 @@ public enum RandomSource {
      *  <li>Native seed size: 3.</li>
      * </ul>
      */
-    SFC_64(ProviderBuilder.RandomSourceInternal.SFC_64);
+    SFC_64(ProviderBuilder.RandomSourceInternal.SFC_64),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.JSF32}.
+     * <ul>
+     *  <li>Native seed type: {@code Integer}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
+     */
+    JSF_32(ProviderBuilder.RandomSourceInternal.JSF_32),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.JSF64}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     *  <li>Native seed size: 1.</li>
+     * </ul>
+     */
+    JSF_64(ProviderBuilder.RandomSourceInternal.JSF_64);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
