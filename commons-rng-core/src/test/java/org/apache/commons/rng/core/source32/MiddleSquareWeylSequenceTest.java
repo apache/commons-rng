@@ -68,23 +68,19 @@ public class MiddleSquareWeylSequenceTest {
     }
 
     /**
-     * Test the self-seeding functionality does not throw.
+     * Test the self-seeding functionality outputs non-zero output from the initial state.
      *
-     * <p><strong>Warning:</strong> The seeding of the generator requires a high complexity
-     * increment for the Weyl sequence. The standard test for the statistical quality of the
-     * generator uses a good increment. This test ensures the generator can be created with a seed
-     * smaller than the seed size without exception; the statistical quality of the output from
-     * low complexity Weyl increments is expected to be poor. In this case the output is
-     * non-functional for a large number of cycles.</p>
+     * <p>Note: The generator quality is dependent on a high complexity Weyl increment. This
+     * test passes a seed without the increment set and expects the generator to work. The
+     * statistical quality of the output is not tested.</p>
      */
     @Test
     public void testSelfSeeding() {
-        // This test has been verified to fail when cycles = 2^29 (i.e. 1 << 29).
-        // Here the cycles has been lowered to increase speed.
-        // This demonstrates the generator requires a good seed.
-        final int cycles = 100;
-        RandomAssert.assertNextLongZeroOutput(new MiddleSquareWeylSequence(new long[0]),
-                cycles);
+        final int warmupCycles = 0;
+        final int testCycles = 3;
+        // Do not pass the Weyl increment (the 3rd value in the seed array)
+        RandomAssert.assertNextLongNonZeroOutput(new MiddleSquareWeylSequence(new long[2]),
+                warmupCycles, testCycles);
     }
 
     /**

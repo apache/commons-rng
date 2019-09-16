@@ -19,6 +19,8 @@ package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.util.NumberFactory;
 
+import java.util.Arrays;
+
 /**
  * Middle Square Weyl Sequence Random Number Generator.
  *
@@ -35,6 +37,12 @@ import org.apache.commons.rng.core.util.NumberFactory;
 public class MiddleSquareWeylSequence extends IntProvider {
     /** Size of the seed array. */
     private static final int SEED_SIZE = 3;
+    /**
+     * The default seed.
+     * This has a high quality Weyl increment (containing many bit state transitions).
+     */
+    private static final long[] DEFAULT_SEED =
+        {0x012de1babb3c4104L, 0xc8161b4202294965L, 0xb5ad4eceda1ce2a9L};
 
     /** State of the generator. */
     private long x;
@@ -77,8 +85,10 @@ public class MiddleSquareWeylSequence extends IntProvider {
      */
     public MiddleSquareWeylSequence(long[] seed) {
         if (seed.length < SEED_SIZE) {
-            final long[] tmp = new long[SEED_SIZE];
-            fillState(tmp, seed);
+            // Complete the seed with a default to avoid
+            // low complexity Weyl increments.
+            final long[] tmp = Arrays.copyOf(seed, SEED_SIZE);
+            System.arraycopy(DEFAULT_SEED, seed.length, tmp, seed.length, SEED_SIZE - seed.length);
             setSeedInternal(tmp);
         } else {
             setSeedInternal(seed);
