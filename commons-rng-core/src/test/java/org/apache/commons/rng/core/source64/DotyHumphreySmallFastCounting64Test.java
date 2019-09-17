@@ -20,7 +20,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
-public class SFC64Test {
+public class DotyHumphreySmallFastCounting64Test {
     @Test
     public void testReferenceCode() {
         /*
@@ -39,7 +39,7 @@ public class SFC64Test {
             0x6b44e298f16ca140L, 0xf1c7b84c51d8b1d8L, 0x0bee55dd0ea4439dL, 0xd9a26515c0a88471L,
             0xda4c3174cafc57f8L, 0x6193f4b96362eb4bL, 0x207e9a94b58041afL, 0x5451bd65c481d8fcL,
         };
-        RandomAssert.assertEquals(expectedSequence, new SFC64(new long[] {
+        RandomAssert.assertEquals(expectedSequence, new DotyHumphreySmallFastCounting64(new long[] {
             0x012de1babb3c4104L, 0xc8161b4202294965L, 0xb5ad4eceda1ce2a9L
         }));
     }

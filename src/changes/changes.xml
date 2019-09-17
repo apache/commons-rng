@@ -93,7 +93,7 @@ as 'flaky' in the report).
         previously been used to save state.
       </action>
       <action dev="aherbert" type="add" issue="RNG-112">
-        New "SFC32" and "SFC64" (Small, Fast, Chaotic) generators.
+        New "DotyHumphreySmallFastCounting32" and "DotyHumphreySmallFastCounting64" generators.
       </action>
       <action dev="aherbert" type="update" issue="RNG-109">
         "DiscreteProbabilityCollectionSampler": Use a faster enumerated probability

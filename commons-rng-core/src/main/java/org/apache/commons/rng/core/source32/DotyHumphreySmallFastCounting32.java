@@ -14,33 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.core.source64;
+package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * Implement the Small, Fast, Chaotic (SFC) 64-bit generator of Chris Doty-Humphrey.
+ * Implement the Small, Fast, Counting (SFC) 32-bit generator of Chris Doty-Humphrey.
  * The original source is the PractRand test suite by the same author.
  *
- * <p>The state size is 256-bits; the period is a minimum of 2<sup>64</sup> and an
- * average of approximately 2<sup>255</sup>.</p>
+ * <p>The state size is 128-bits; the period is a minimum of 2<sup>32</sup> and an
+ * average of approximately 2<sup>127</sup>.</p>
  *
  * @see <a href="http://pracrand.sourceforge.net/">PractRand</a>
  *
  * @since 1.3
  */
-public class SFC64 extends LongProvider {
+public class DotyHumphreySmallFastCounting32 extends IntProvider {
     /** Size of the seed. */
     private static final int SEED_SIZE = 3;
 
     /** State a. */
-    private long a;
+    private int a;
     /** State b. */
-    private long b;
+    private int b;
     /** State c. */
-    private long c;
+    private int c;
     /** Counter. */
-    private long counter;
+    private int counter;
 
     /**
      * Creates an instance with the given seed.
@@ -49,9 +49,9 @@ public class SFC64 extends LongProvider {
      * If the length is larger than 3, only the first 3 elements will
      * be used; if smaller, the remaining elements will be automatically set.
      */
-    public SFC64(long[] seed) {
+    public DotyHumphreySmallFastCounting32(int[] seed) {
         if (seed.length < SEED_SIZE) {
-            final long[] state = new long[SEED_SIZE];
+            final int[] state = new int[SEED_SIZE];
             fillState(state, seed);
             setSeedInternal(state);
         } else {
@@ -64,39 +64,39 @@ public class SFC64 extends LongProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(int[] seed) {
         a = seed[0];
         b = seed[1];
         c = seed[2];
-        counter = 1L;
-        for (int i = 0; i < 18; i++) {
+        counter = 1;
+        for (int i = 0; i < 15; i++) {
             next();
         }
     }
 
     /** {@inheritDoc} */
     @Override
-    public final long next() {
-        final long tmp = a + b + counter++;
-        a = b ^ (b >>> 11);
+    public final int next() {
+        final int tmp = a + b + counter++;
+        a = b ^ (b >>> 9);
         b = c + (c << 3);
-        c = Long.rotateLeft(c, 24) + tmp;
+        c = Integer.rotateLeft(c, 21) + tmp;
         return tmp;
     }
 
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return composeStateInternal(NumberFactory.makeByteArray(new long[] {a, b, c, counter}),
+        return composeStateInternal(NumberFactory.makeByteArray(new int[] {a, b, c, counter}),
                                     super.getStateInternal());
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        final byte[][] parts = splitStateInternal(s, 4 * 8);
+        final byte[][] parts = splitStateInternal(s, 4 * 4);
 
-        final long[] tmp = NumberFactory.makeLongArray(parts[0]);
+        final int[] tmp = NumberFactory.makeIntArray(parts[0]);
         a = tmp[0];
         b = tmp[1];
         c = tmp[2];

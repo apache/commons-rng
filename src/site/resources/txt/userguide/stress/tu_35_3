@@ -1,6 +1,6 @@
 # 
 # RandomSource: SFC_64
-# RNG: Byte-reversed org.apache.commons.rng.core.source64.SFC64
+# RNG: Byte-reversed org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64
 # 
 # Java: 1.8.0_202
 # Runtime: Java(TM) SE Runtime Environment (build 1.8.0_202-b08)

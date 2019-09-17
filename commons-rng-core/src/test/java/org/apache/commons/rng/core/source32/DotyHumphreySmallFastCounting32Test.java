@@ -20,7 +20,7 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
-public class SFC32Test {
+public class DotyHumphreySmallFastCounting32Test {
     @Test
     public void testReferenceCode() {
         /*
@@ -39,7 +39,7 @@ public class SFC32Test {
             0x19400604, 0xb76e7394, 0x037addd5, 0xe916ed79,
             0x94f10dc6, 0xf2ecb45e, 0x69834355, 0xb814aeb2,
         };
-        RandomAssert.assertEquals(expectedSequence, new SFC32(new int[] {
+        RandomAssert.assertEquals(expectedSequence, new DotyHumphreySmallFastCounting32(new int[] {
             0xbb3c4104, 0x02294965, 0xda1ce2a9
         }));
     }
