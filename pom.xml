@@ -67,8 +67,6 @@
        jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
        depend on other packages. -->
     <commons.jxr.version>2.5</commons.jxr.version>
-    <!-- Fix to build on JDK 7: version 4.0.0 requires Java 8. -->
-    <commons.felix.version>3.5.1</commons.felix.version>
 
     <commons.jacoco.haltOnFailure>false</commons.jacoco.haltOnFailure>
 
@@ -497,13 +495,18 @@
         </plugins>
       </build>
     </profile>
-    <!-- Profile to alter default Maven goal as it uses checks from Java 8+ plugins. -->
+    <!-- Profile for pre-Java 8 builds. -->
     <profile>
       <id>pre-jdk8</id>
       <activation>
         <jdk>[1.6,1.8)</jdk>
       </activation>
+      <properties>
+        <!-- Override parent version 4.x which requires Java 8. -->
+        <commons.felix.version>3.5.1</commons.felix.version>
+      </properties>
       <build>
+        <!-- Alter default goal as it uses checks from Java 8 plugins. -->
         <defaultGoal>clean verify</defaultGoal>
       </build>
     </profile>
