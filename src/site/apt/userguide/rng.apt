@@ -796,7 +796,10 @@ String word = sampler.sample();
 *-----------------*------------*----------------------*
 | SFC_64 | {{{../txt/userguide/stress/dh_35_1}0}}, {{{../txt/userguide/stress/dh_35_2}0}}, {{{../txt/userguide/stress/dh_35_3}0}}, {{{../txt/userguide/stress/dh_35_4}0}}, {{{../txt/userguide/stress/dh_35_5}0}} | {{{../txt/userguide/stress/tu_35_1}0}}, {{{../txt/userguide/stress/tu_35_2}1}}, {{{../txt/userguide/stress/tu_35_3}0}}, {{{../txt/userguide/stress/tu_35_4}0}}, {{{../txt/userguide/stress/tu_35_5}1}} |
 *-----------------*------------*----------------------*
-
+| JSF_32 | {{{../txt/userguide/stress/dh_36_1}0}}, {{{../txt/userguide/stress/dh_36_2}0}}, {{{../txt/userguide/stress/dh_36_3}0}}, {{{../txt/userguide/stress/dh_36_4}0}}, {{{../txt/userguide/stress/dh_36_5}0}} | {{{../txt/userguide/stress/tu_36_1}0}}, {{{../txt/userguide/stress/tu_36_2}0}}, {{{../txt/userguide/stress/tu_36_3}0}}, {{{../txt/userguide/stress/tu_36_4}1}}, {{{../txt/userguide/stress/tu_36_5}1}} |
+*-----------------*------------*----------------------*
+| JSF_64 | {{{../txt/userguide/stress/dh_37_1}0}}, {{{../txt/userguide/stress/dh_37_2}0}}, {{{../txt/userguide/stress/dh_37_3}0}}, {{{../txt/userguide/stress/dh_37_4}0}}, {{{../txt/userguide/stress/dh_37_5}0}} | {{{../txt/userguide/stress/tu_37_1}1}}, {{{../txt/userguide/stress/tu_37_2}1}}, {{{../txt/userguide/stress/tu_37_3}0}}, {{{../txt/userguide/stress/tu_37_4}0}}, {{{../txt/userguide/stress/tu_37_5}0}} |
+*-----------------*------------*----------------------*
 
 6. Dependencies
 
