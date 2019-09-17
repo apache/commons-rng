@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>48</version>
+    <version>49</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
@@ -553,16 +553,6 @@
               </execution>
             </executions>
           </plugin>
-          <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
-            unnamed module: use the <source> tag. See properties commons.javadoc.java.link, 
-            commons.javadoc.javaee.link in commons-parent. -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <source>${maven.compiler.source}</source>
-            </configuration>
-          </plugin>
         </plugins>
       </build>
       <reporting>
@@ -586,16 +576,6 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>
-          <!--  Fix required when building on JDK 11+ for javadoc <link> directing to packages in the
-            unnamed module: use the <source> tag. See properties commons.javadoc.java.link, 
-            commons.javadoc.javaee.link in commons-parent. -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <source>${maven.compiler.source}</source>
-            </configuration>
           </plugin>
         </plugins>
       </reporting>
