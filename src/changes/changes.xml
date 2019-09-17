@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="RNG-111">
+        New "JSF32" and "JSF64" (Jenkins' Small Fast) generators.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-114">
         "ListSampler": Select the shuffle algorithm based on the list type. This improves
         performance for non-RandomAccess lists such as LinkedList.
