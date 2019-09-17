@@ -76,7 +76,7 @@ within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
       <action dev="aherbert" type="add" issue="RNG-111">
-        New "JSF32" and "JSF64" (Jenkins' Small Fast) generators.
+        New "JenkinsSmallFast32" and "JenkinsSmallFast64" generators.
       </action>
       <action dev="aherbert" type="update" issue="RNG-114">
         "ListSampler": Select the shuffle algorithm based on the list type. This improves

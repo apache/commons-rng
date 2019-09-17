@@ -43,7 +43,7 @@ import org.apache.commons.rng.core.source32.PcgXshRs32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
 import org.apache.commons.rng.core.source32.DotyHumphreySmallFastCounting32;
-import org.apache.commons.rng.core.source32.JSF32;
+import org.apache.commons.rng.core.source32.JenkinsSmallFast32;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
@@ -57,7 +57,7 @@ import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
-import org.apache.commons.rng.core.source64.JSF64;
+import org.apache.commons.rng.core.source64.JenkinsSmallFast64;
 
 /**
  * RNG builder.
@@ -297,12 +297,12 @@ public final class ProviderBuilder {
         SFC_64(DotyHumphreySmallFastCounting64.class,
                3,
                NativeSeedType.LONG_ARRAY),
-        /** Source of randomness is {@link JSF32}. */
-        JSF_32(JSF32.class,
+        /** Source of randomness is {@link JenkinsSmallFast32}. */
+        JSF_32(JenkinsSmallFast32.class,
                1,
                NativeSeedType.INT),
-        /** Source of randomness is {@link JSF64}. */
-        JSF_64(JSF64.class,
+        /** Source of randomness is {@link JenkinsSmallFast64}. */
+        JSF_64(JenkinsSmallFast64.class,
                1,
                NativeSeedType.LONG);
 

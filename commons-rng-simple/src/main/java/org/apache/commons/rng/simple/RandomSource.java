@@ -452,7 +452,7 @@ public enum RandomSource {
      */
     SFC_64(ProviderBuilder.RandomSourceInternal.SFC_64),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.core.source32.JSF32}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.JenkinsSmallFast32}.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
      *  <li>Native seed size: 1.</li>
@@ -460,7 +460,7 @@ public enum RandomSource {
      */
     JSF_32(ProviderBuilder.RandomSourceInternal.JSF_32),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.core.source64.JSF64}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.JenkinsSmallFast64}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      *  <li>Native seed size: 1.</li>

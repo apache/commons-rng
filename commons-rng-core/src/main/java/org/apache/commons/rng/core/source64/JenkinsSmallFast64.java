@@ -14,36 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.core.source32;
+package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * Implement Bob Jenkins's small fast (JSF) 32-bit generator.
+ * Implement Bob Jenkins's small fast (JSF) 64-bit generator.
  *
- * <p>The state size is 128-bits; the shortest period is expected to be about 2<sup>94</sup>
- * and it expected that about one seed will run into another seed within 2<sup>64</sup> values.</p>
+ * <p>The state size is 256-bits.</p>
  *
  * @see <a href="https://burtleburtle.net/bob/rand/smallprng.html">A small noncryptographic PRNG</a>
  *
  * @since 1.3
  */
-public class JSF32 extends IntProvider {
+public class JenkinsSmallFast64 extends LongProvider {
     /** State a. */
-    private int a;
+    private long a;
     /** State b. */
-    private int b;
+    private long b;
     /** State c. */
-    private int c;
+    private long c;
     /** Statd d. */
-    private int d;
+    private long d;
 
     /**
      * Creates an instance with the given seed.
      *
      * @param seed Initial seed.
      */
-    public JSF32(Integer seed) {
+    public JenkinsSmallFast64(Long seed) {
         setSeedInternal(seed);
     }
 
@@ -52,8 +51,8 @@ public class JSF32 extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(int seed) {
-        a = 0xf1ea5eed;
+    private void setSeedInternal(long seed) {
+        a = 0xf1ea5eedL;
         b = c = d = seed;
         for (int i = 0; i < 20; i++) {
             next();
@@ -62,10 +61,10 @@ public class JSF32 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    public final int next() {
-        final int e = a - Integer.rotateLeft(b, 27);
-        a = b ^ Integer.rotateLeft(c, 17);
-        b = c + d;
+    public final long next() {
+        final long e = a - Long.rotateLeft(b, 7);
+        a = b ^ Long.rotateLeft(c, 13);
+        b = c + Long.rotateLeft(d, 37);
         c = d + e;
         d = e + a;
         return d;
@@ -74,16 +73,16 @@ public class JSF32 extends IntProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        return composeStateInternal(NumberFactory.makeByteArray(new int[] {a, b, c, d}),
+        return composeStateInternal(NumberFactory.makeByteArray(new long[] {a, b, c, d}),
                                     super.getStateInternal());
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        final byte[][] parts = splitStateInternal(s, 4 * 4);
+        final byte[][] parts = splitStateInternal(s, 4 * 8);
 
-        final int[] tmp = NumberFactory.makeIntArray(parts[0]);
+        final long[] tmp = NumberFactory.makeLongArray(parts[0]);
         a = tmp[0];
         b = tmp[1];
         c = tmp[2];

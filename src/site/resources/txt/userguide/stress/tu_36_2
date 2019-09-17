@@ -1,6 +1,6 @@
 # 
 # RandomSource: JSF_32
-# RNG: Byte-reversed org.apache.commons.rng.core.source32.JSF32
+# RNG: Byte-reversed org.apache.commons.rng.core.source32.JenkinsSmallFast32
 # 
 # Java: 1.8.0_202
 # Runtime: Java(TM) SE Runtime Environment (build 1.8.0_202-b08)

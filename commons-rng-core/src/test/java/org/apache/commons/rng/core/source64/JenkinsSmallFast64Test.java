@@ -20,7 +20,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
-public class JSF64Test {
+public class JenkinsSmallFast64Test {
     @Test
     public void testReferenceCode() {
         /*
@@ -39,6 +39,6 @@ public class JSF64Test {
             0x79ad91f7404ecef1L, 0x291858706a2286dbL, 0xf395681f493eb602L, 0xf85ed536da160b93L,
             0x5dd685454dd0d913L, 0x150e7b8f99b10f7dL, 0xcd1c0b519cc69c05L, 0xca92e08bf2676077L,
         };
-        RandomAssert.assertEquals(expectedSequence, new JSF64(0x012de1babb3c4104L));
+        RandomAssert.assertEquals(expectedSequence, new JenkinsSmallFast64(0x012de1babb3c4104L));
     }
 }

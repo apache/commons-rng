@@ -20,7 +20,7 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
 
-public class JSF32Test {
+public class JenkinsSmallFast32Test {
     @Test
     public void testReferenceCode() {
         /*
@@ -39,6 +39,6 @@ public class JSF32Test {
             0x522a44c5, 0x25f4baf8, 0x9fd1d806, 0x3a24f3bc,
             0x78f2aac1, 0xce496e14, 0x74d186b8, 0x34ff8809,
         };
-        RandomAssert.assertEquals(expectedSequence, new JSF32(0xb5ad4ece));
+        RandomAssert.assertEquals(expectedSequence, new JenkinsSmallFast32(0xb5ad4ece));
     }
 }
