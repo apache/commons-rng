@@ -348,6 +348,27 @@ DiscreteSampler sampler = RejectionInversionZipfSampler.of(RandomSource.create(R
 int random = sampler.sample();
 +--------------------------+
 
+  * The <<<SharedStateSampler>>> interface allows creation of a copy of the sampler using a new
+    generator. The samplers share only their immutable state and can be used in parallel computations.
+
++--------------------------+
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
+import org.apache.commons.rng.simple.RandomSource;
+
+RandomSource source = RandomSource.PCG_XSH_RR_32;
+
+double[] probabilities = {0.1, 0.2, 0.3, 0.4};
+SharedStateDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.create(source),
+                                                                                      probabilities);
+
+// For use in parallel
+SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(RandomSource.create(source));
++--------------------------+
+
+    All samplers support the <<<SharedStateSampler>>> interface.
+
   * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/PermutationSampler.html}Permutation}},
     {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/CollectionSampler.html}sampling from a <<<Collection>>>}}
     and shuffling utilities.
