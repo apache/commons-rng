@@ -311,8 +311,8 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.GaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 
-ContinuousSampler sampler = new GaussianSampler(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT_64)),
-                                                45.6, 2.3);
+ContinuousSampler sampler = GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT_64)),
+                                               45.6, 2.3);
 double random = sampler.sample();
 +--------------------------+
 
@@ -320,8 +320,8 @@ double random = sampler.sample();
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
 
-DiscreteSampler sampler = new RejectionInversionZipfSampler(RandomSource.create(RandomSource.ISAAC),
-                                                            5, 1.2);
+DiscreteSampler sampler = RejectionInversionZipfSampler.of(RandomSource.create(RandomSource.ISAAC),
+                                                           5, 1.2);
 int random = sampler.sample();
 +--------------------------+
 
