@@ -429,6 +429,9 @@ ListSampler.shuffle(rng, list)
   * Interfaces <<<RestorableUniformRandomProvider>>> and <<<RandomProviderState>>>
     provide the "save/restore" API.
 
+  * Interfaces <<<JumpableUniformRandomProvider>>> and <<<LongJumpableUniformRandomProvider>>>
+    provide the "copy and jump" API for parallel computations.
+
   []
 
 
