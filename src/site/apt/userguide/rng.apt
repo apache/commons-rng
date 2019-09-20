@@ -302,6 +302,29 @@ RestorableUniformRandomProvider rngNew = RandomSource.create(source); // New RNG
 rngNew.restoreState(stateNew);
 +--------------------------+
 
+  * The <<<JumpableUniformRandomProvider>>> interface allows creation of a copy of the generator and
+    advances the state of the current generator a large number of steps in a single jump. This can
+    be used to create a set of generators that will not overlap in their output sequence for the
+    length of the jump for use in parallel computations.
+
++--------------------------+
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
+
+RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
+
+JumpableUniformRandomProvider master = (JumpableUniformRandomProvider) RandomSource.create(source);
+
+// For use in parallel
+UniformRandomProvider[] rngs = new UniformRandomProvider[10];
+for (int i = 0; i < rngs.length; i++) {
+    rngs[i] = master.jump();
+}
++--------------------------+
+
+    In the above example, the source is known to implement the <<<JumpableUniformRandomProvider>>> interface.
+    Not all generators support this functionality.
 
   * Generation of {{{./dist_density_approx.html}random deviates}} for various
     {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/distribution/package-summary.html}distributions}}.
