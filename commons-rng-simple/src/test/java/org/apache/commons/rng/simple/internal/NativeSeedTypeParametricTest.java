@@ -112,6 +112,28 @@ public class NativeSeedTypeParametricTest {
     }
 
     /**
+     * Test the seed can be created, converted to a byte[] and then back to the native type.
+     */
+    @Test
+    public void testConvertSeedToBytes() {
+        final int size = 3;
+        final Object seed = nativeSeedType.createSeed(size);
+        Assert.assertNotNull("Null seed", seed);
+
+        final byte[] bytes = NativeSeedType.convertSeedToBytes(seed);
+        Assert.assertNotNull("Null byte[] seed", bytes);
+
+        final Object seed2 = nativeSeedType.convertSeed(bytes, size);
+        if (type.isArray()) {
+            // This handles nested primitive arrays
+            Assert.assertArrayEquals("byte[] seed was not converted back",
+                                     new Object[] {seed}, new Object[] {seed2});
+        } else {
+            Assert.assertEquals("byte[] seed was not converted back", seed, seed2);
+        }
+    }
+
+    /**
      * Test the seed can be converted to the correct type from any of the supported input types.
      */
     @Test

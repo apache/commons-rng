@@ -203,6 +203,25 @@ public final class SeedFactory {
     }
 
     /**
+     * Creates an array of {@code byte} numbers for use as a seed using the supplied source of
+     * randomness. The result will not be all zeros.
+     *
+     * @param source Source of randomness.
+     * @param n Size of the array to create.
+     * @return an array of {@code n} random numbers.
+     */
+    static byte[] createByteArray(UniformRandomProvider source,
+                                  int n) {
+        final byte[] seed = new byte[n];
+        source.nextBytes(seed);
+        // If the seed is zero it is assumed the input source RNG is either broken
+        // or the seed is small and it was zero by chance. Revert to the built-in
+        // source of randomness to ensure it is non-zero.
+        ensureNonZero(seed);
+        return seed;
+    }
+
+    /**
      * Ensure the seed is non-zero at the first position in the array.
      *
      * <p>This method will replace a zero at index 0 in the array with
@@ -240,6 +259,42 @@ public final class SeedFactory {
                 seed[0] = createLong();
             } while (seed[0] == 0);
         }
+    }
+
+    /**
+     * Ensure the seed is not zero at all positions in the array.
+     *
+     * <p>This method will check all positions in the array and if all
+     * are zero it will replace index 0 in the array with
+     * a non-zero random number. The method ensures any length seed
+     * contains non-zero bits. The output seed is suitable for generators
+     * that cannot be seeded with all zeros.</p>
+     *
+     * @param seed Seed array (modified in place).
+     * @see #createInt()
+     */
+    private static void ensureNonZero(byte[] seed) {
+        // Since zero occurs 1 in 2^8 for a single byte this checks the entire array for zeros.
+        if (seed.length != 0 && isAllZero(seed)) {
+            do {
+                seed[0] = (byte) createInt();
+            } while (seed[0] == 0);
+        }
+    }
+
+    /**
+     * Test if each position in the array is zero.
+     *
+     * @param array Array data.
+     * @return true if all position are zero
+     */
+    private static boolean isAllZero(byte[] array) {
+        for (final byte value : array) {
+            if (value != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

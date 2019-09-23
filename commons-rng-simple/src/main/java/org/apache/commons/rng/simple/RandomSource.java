@@ -490,6 +490,53 @@ public enum RandomSource {
     }
 
     /**
+     * Creates a seed suitable for the implementing class represented by this random source.
+     *
+     * <p>The seed will be created as if passing a {@code null} seed to the factory method
+     * {@link #create(RandomSource, Object, Object...)}. It will satisfy the seed size and any
+     * other seed requirements for the implementing class. The seed is converted from the native
+     * type to a byte representation.</p>
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  byte[] seed = source.createSeed();
+     *  UniformRandomProvider rng = RandomSource.create(source, seed);
+     * </code></pre>
+     *
+     * @return the seed
+     *
+     * @since 1.3
+     */
+    public byte[] createSeed() {
+        return internalIdentifier.createSeedBytes();
+    }
+
+    /**
+     * Creates a seed suitable for the implementing class represented by this random source
+     * using the supplied source of randomness.
+     *
+     * <p>The seed will satisfy the seed size and any other seed requirements for the
+     * implementing class.</p>
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  UniformRandomProvider seedRng = new JDKRandomWrapper(new SecureRandom());
+     *  byte[] seed = source.createSeed(seedRng);
+     *  UniformRandomProvider rng = RandomSource.create(source, seed);
+     * </code></pre>
+     *
+     * @param rng Source of randomness.
+     * @return the seed
+     *
+     * @since 1.3
+     */
+    public byte[] createSeed(UniformRandomProvider rng) {
+        return internalIdentifier.createSeedBytes(rng);
+    }
+
+    /**
      * Checks whether the implementing class represented by this random source
      * supports the {@link org.apache.commons.rng.JumpableUniformRandomProvider
      * JumpableUniformRandomProvider} interface. If {@code true} the instance returned

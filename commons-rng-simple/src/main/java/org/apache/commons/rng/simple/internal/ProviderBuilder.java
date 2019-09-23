@@ -272,20 +272,35 @@ public final class ProviderBuilder {
                 return super.convertSeed(seed);
             }
 
+            @Override
+            protected byte[] createByteArraySeed(UniformRandomProvider source) {
+                return NativeSeedType.convertSeedToBytes(createMswsSeed(source));
+            }
+
             /**
-             * Creates the full length seed array from the input seed using the method
-             * recommended for the generator. This is a high quality Weyl increment composed
-             * of a hex character permutation.
+             * Creates the full length seed array from the input seed.
              *
              * @param seed the seed
              * @return the seed array
              */
             private long[] createMswsSeed(long seed) {
-                final long increment = SeedUtils.createLongHexPermutation(new SplitMix64(seed));
+                return createMswsSeed(new SplitMix64(seed));
+            }
+
+            /**
+             * Creates the full length seed array from the input seed using the method
+             * recommended for the generator. This is a high quality Weyl increment composed
+             * of a hex character permutation.
+             *
+             * @param source Source of randomness.
+             * @return the seed array
+             */
+            private long[] createMswsSeed(UniformRandomProvider source) {
+                final long increment = SeedUtils.createLongHexPermutation(source);
                 // The initial state should not be low complexity but the Weyl
                 // state can be any number.
                 final long state = increment;
-                final long weylState = seed;
+                final long weylState = source.nextLong();
                 return new long[] {state, weylState, increment};
             }
         },
@@ -383,6 +398,16 @@ public final class ProviderBuilder {
         }
 
         /**
+         * Gets the number of seed bytes required to seed the implementing class represented by
+         * this random source.
+         *
+         * @return the number of seed bytes
+         */
+        private int getSeedByteSize() {
+            return nativeSeedSize * nativeSeedType.getBytes();
+        }
+
+        /**
          * Creates a RNG instance.
          *
          * <p>This method can be over-ridden to allow fast construction of a generator
@@ -442,13 +467,30 @@ public final class ProviderBuilder {
         /**
          * Creates a native seed.
          *
-         * <p>This method should be over-ridden to satisfy seed requirements for the generator,
-         * for example if a seed must contain non-zero bits.</p>
+         * <p>The default implementation creates a seed of the native type and, for array seeds,
+         * ensures not all bits are zero.</p>
+         *
+         * <p>This method should be over-ridden to satisfy seed requirements for the generator.</p>
          *
          * @return the native seed
          */
         Object createSeed() {
             return nativeSeedType.createSeed(nativeSeedSize);
+        }
+
+        /**
+         * Creates a {@code byte[]} seed using the provided source of randomness.
+         *
+         * <p>The default implementation creates a full-length seed and ensures not all bits
+         * are zero.</p>
+         *
+         * <p>This method should be over-ridden to satisfy seed requirements for the generator.</p>
+         *
+         * @param source Source of randomness.
+         * @return the byte[] seed
+         */
+        protected byte[] createByteArraySeed(UniformRandomProvider source) {
+            return SeedFactory.createByteArray(source, getSeedByteSize());
         }
 
         /**
@@ -476,6 +518,39 @@ public final class ProviderBuilder {
         }
 
         /**
+         * Creates a seed suitable for the implementing class represented by this random source.
+         *
+         * <p>It will satisfy the seed size and any other seed requirements for the
+         * implementing class. The seed is converted from the native type to bytes.</p>
+         *
+         * @return the seed bytes
+         *
+         * @since 1.3
+         */
+        public final byte[] createSeedBytes() {
+            // Custom implementations can override createSeed
+            final Object seed = createSeed();
+            return NativeSeedType.convertSeedToBytes(seed);
+        }
+
+        /**
+         * Creates a seed suitable for the implementing class represented by this random source
+         * using the supplied source of randomness.
+         *
+         * <p>It will satisfy the seed size and any other seed requirements for the
+         * implementing class. The seed is converted from the native type to bytes.</p>
+         *
+         * @param source Source of randomness.
+         * @return the seed bytes
+         *
+         * @since 1.3
+         */
+        public final byte[] createSeedBytes(UniformRandomProvider source) {
+            // Custom implementations can override createByteArraySeed
+            return createByteArraySeed(source);
+        }
+
+        /**
          * Gets the constructor.
          *
          * @return the RNG constructor.
@@ -492,6 +567,7 @@ public final class ProviderBuilder {
             }
             return constructor;
         }
+
         /**
          * Creates a constructor.
          *

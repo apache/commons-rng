@@ -39,6 +39,7 @@ import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
+import org.apache.commons.rng.core.source64.SplitMix64;
 
 /**
  * Tests which all generators must pass.
@@ -152,6 +153,20 @@ public class ProvidersCommonParametricTest {
         final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
         Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
                 createsNonZeroLongOutput(rng, 2000));
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Test
+    public void testRandomSourceCreateSeed() {
+        final byte[] seed = originalSource.createSeed();
+        final UniformRandomProvider rng = RandomSource.create(originalSource, seed, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Test
+    public void testRandomSourceCreateSeedFromRNG() {
+        final byte[] seed = originalSource.createSeed(new SplitMix64(RandomSource.createLong()));
+        final UniformRandomProvider rng = RandomSource.create(originalSource, seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 

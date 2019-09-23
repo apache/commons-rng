@@ -16,6 +16,8 @@
  */
 package org.apache.commons.rng.simple.internal;
 
+import org.apache.commons.rng.core.util.NumberFactory;
+
 /**
  * The native seed type. Contains values for all native seed types and methods
  * to convert supported seed types to the native seed type.
@@ -41,7 +43,7 @@ package org.apache.commons.rng.simple.internal;
  */
 public enum NativeSeedType {
     /** The seed type is {@code Integer}. */
-    INT(Integer.class) {
+    INT(Integer.class, 4) {
         @Override
         public Integer createSeed(int size) {
             return SeedFactory.createInt();
@@ -68,7 +70,7 @@ public enum NativeSeedType {
         }
     },
     /** The seed type is {@code Long}. */
-    LONG(Long.class) {
+    LONG(Long.class, 8) {
         @Override
         public Long createSeed(int size) {
             return SeedFactory.createLong();
@@ -95,7 +97,7 @@ public enum NativeSeedType {
         }
     },
     /** The seed type is {@code int[]}. */
-    INT_ARRAY(int[].class) {
+    INT_ARRAY(int[].class, 4) {
         @Override
         public int[] createSeed(int size) {
             // Limit the number of calls to the synchronized method. The generator
@@ -124,7 +126,7 @@ public enum NativeSeedType {
         }
     },
     /** The seed type is {@code long[]}. */
-    LONG_ARRAY(long[].class) {
+    LONG_ARRAY(long[].class, 8) {
         @Override
         public long[] createSeed(int size) {
             // Limit the number of calls to the synchronized method. The generator
@@ -153,6 +155,8 @@ public enum NativeSeedType {
         }
     };
 
+    /** Error message for unrecognised seed types. */
+    private static final String UNRECOGNISED_SEED = "Unrecognized seed type: ";
     /** Maximum length of the seed array (for creating array seeds). */
     private static final int RANDOM_SEED_ARRAY_SIZE = 128;
     /** Convert {@code Long} to {@code Integer}. */
@@ -180,10 +184,20 @@ public enum NativeSeedType {
     private final Class<?> type;
 
     /**
-     * @param type Define the class type of the native seed.
+     * Define the number of bytes required to represent the native seed. If the type is
+     * an array then this represents the size of a single value of the type.
      */
-    NativeSeedType(Class<?> type) {
+    private final int bytes;
+
+    /**
+     * Instantiates a new native seed type.
+     *
+     * @param type Define the class type of the native seed.
+     * @param bytes Define the number of bytes required to represent the native seed.
+     */
+    NativeSeedType(Class<?> type, int bytes) {
         this.type = type;
+        this.bytes = bytes;
     }
 
     /**
@@ -193,6 +207,16 @@ public enum NativeSeedType {
      */
     public Class<?> getType() {
         return type;
+    }
+
+    /**
+     * Gets the number of bytes required to represent the native seed type. If the type is
+     * an array then this represents the size of a single value of the type.
+     *
+     * @return the number of bytes
+     */
+    public int getBytes() {
+        return bytes;
     }
 
     /**
@@ -230,7 +254,7 @@ public enum NativeSeedType {
             return convert((byte[]) seed, size);
         }
 
-        throw new UnsupportedOperationException("Unrecognized seed type: " + seed);
+        throw new UnsupportedOperationException(UNRECOGNISED_SEED + seed);
     }
 
     /**
@@ -277,4 +301,27 @@ public enum NativeSeedType {
      * @return the native seed.
      */
     protected abstract Object convert(byte[] seed, int size);
+
+    /**
+     * Converts the input seed from any of the supported seed types to bytes.
+     *
+     * @param seed Input seed.
+     * @return the seed bytes.
+     * @throws UnsupportedOperationException if the {@code seed} type is invalid.
+     */
+    public static byte[] convertSeedToBytes(Object seed) {
+        if (seed instanceof Integer) {
+            return NumberFactory.makeByteArray((Integer) seed);
+        } else if (seed instanceof Long) {
+            return NumberFactory.makeByteArray((Long) seed);
+        } else if (seed instanceof int[]) {
+            return NumberFactory.makeByteArray((int[]) seed);
+        } else if (seed instanceof long[]) {
+            return NumberFactory.makeByteArray((long[]) seed);
+        } else if (seed instanceof byte[]) {
+            return (byte[]) seed;
+        }
+
+        throw new UnsupportedOperationException(UNRECOGNISED_SEED + seed);
+    }
 }
