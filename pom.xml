@@ -504,6 +504,8 @@
       <properties>
         <!-- Override parent version 4.x which requires Java 8. -->
         <commons.felix.version>3.5.1</commons.felix.version>
+        <!-- Override parent version 1.18 which requires Java 8. -->
+        <commons.animal-sniffer.version>1.17</commons.animal-sniffer.version>
       </properties>
       <build>
         <!-- Alter default goal as it uses checks from Java 8 plugins. -->
