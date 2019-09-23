@@ -549,7 +549,7 @@ public enum RandomSource {
      *   when the array contains more bits than the state of the generator.
      *  </li>
      *  <li>
-     *   When the {@code seed} is {@code null}, a seed of the correct type 
+     *   When the {@code seed} is {@code null}, a seed of the correct type
      *   and size (for array seeds) will be generated.
      *  </li>
      * </ul>
