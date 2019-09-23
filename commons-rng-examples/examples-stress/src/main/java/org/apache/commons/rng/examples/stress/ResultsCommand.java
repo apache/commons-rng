@@ -690,7 +690,8 @@ class ResultsCommand implements Callable<Void> {
 
         // Output
         try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
-            output.write(separator);
+            // For the first line using '*' (centre) character instead of '+' (left align)
+            output.write(separator.replace('+', '*'));
             output.write(header);
             output.newLine();
             output.write(separator);
@@ -832,15 +833,18 @@ class ResultsCommand implements Callable<Void> {
     /**
      * Creates the APT separator for each table row.
      *
+     * <p>The separator is created using the '+' character to left align the columns.
+     *
      * @param header Header.
      * @return the separator
      */
     private static String createAPTSeparator(String header) {
-        // Replace everything with '-' except "||" which is replaced with "*-" or "-*" at the end
+        // Replace everything with '-' except '|' which is replaced with "*-" for the first
+        // character, "+-" for all other occurrences except "-+" at the end
         final StringBuilder sb = new StringBuilder(header);
         for (int i = 0; i < header.length(); i++) {
             if (sb.charAt(i) == '|') {
-                sb.setCharAt(i, '*');
+                sb.setCharAt(i, i == 0 ? '*' : '+');
                 sb.setCharAt(i + 1,  '-');
             } else {
                 sb.setCharAt(i,  '-');
@@ -848,7 +852,7 @@ class ResultsCommand implements Callable<Void> {
         }
         // Fix the end
         sb.setCharAt(header.length() - 2, '-');
-        sb.setCharAt(header.length() - 1, '*');
+        sb.setCharAt(header.length() - 1, '+');
         sb.append(System.lineSeparator());
         return sb.toString();
     }
