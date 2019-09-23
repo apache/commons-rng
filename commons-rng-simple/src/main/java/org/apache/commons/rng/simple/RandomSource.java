@@ -490,6 +490,68 @@ public enum RandomSource {
     }
 
     /**
+     * Checks whether the implementing class represented by this random source
+     * supports the {@link org.apache.commons.rng.JumpableUniformRandomProvider
+     * JumpableUniformRandomProvider} interface. If {@code true} the instance returned
+     * by {@link #create(RandomSource)} may be cast to the interface; otherwise a class
+     * cast exception will occur.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  if (source.isJumpable()) {
+     *      JumpableUniformRandomProvider rng =
+     *          (JumpableUniformRandomProvider) RandomSource.create(source);
+     *  }
+     * </code></pre>
+     *
+     * @return {@code true} if jumpable
+     *
+     * @since 1.3
+     */
+    public boolean isJumpable() {
+        return isAssignableTo(org.apache.commons.rng.JumpableUniformRandomProvider.class);
+    }
+
+    /**
+     * Checks whether the implementing class represented by this random source
+     * supports the {@link org.apache.commons.rng.LongJumpableUniformRandomProvider
+     * LongJumpableUniformRandomProvider} interface. If {@code true} the instance returned
+     * by {@link #create(RandomSource)} may be cast to the interface; otherwise a class
+     * cast exception will occur.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  if (source.isJumpable()) {
+     *      LongJumpableUniformRandomProvider rng =
+     *          (LongJumpableUniformRandomProvider) RandomSource.create(source);
+     *  }
+     * </code></pre>
+     *
+     * @return {@code true} if long jumpable
+     *
+     * @since 1.3
+     */
+    public boolean isLongJumpable() {
+        return isAssignableTo(org.apache.commons.rng.LongJumpableUniformRandomProvider.class);
+    }
+
+    /**
+     * Determines if the implementing class represented by this random source is either the same
+     * as, or is a subclass or subinterface of, the class or interface represented
+     * by the specified {@code Class} parameter. It returns true if so; otherwise it returns
+     * false.
+     *
+     * @param type the {@code Class} object to be checked
+     * @return the boolean value indicating whether the class of this random source
+     * can be assigned to objects of the specified type
+     */
+    private boolean isAssignableTo(Class<?> type) {
+        return type.isAssignableFrom(internalIdentifier.getRng());
+    }
+
+    /**
      * Creates a random number generator with a random seed.
      *
      * <p>Usage example:</p>

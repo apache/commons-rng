@@ -34,6 +34,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
@@ -222,6 +224,15 @@ public class ProvidersCommonParametricTest {
     public void testUnrestorableToString() {
         Assert.assertEquals(generator.toString(),
                             RandomSource.unrestorable(generator).toString());
+    }
+
+    @Test
+    public void testSupportedInterfaces() {
+        final UniformRandomProvider rng = RandomSource.create(originalSource, null, originalArgs);
+        Assert.assertEquals("isJumpable", rng instanceof JumpableUniformRandomProvider,
+                            originalSource.isJumpable());
+        Assert.assertEquals("isLongJumpable", rng instanceof LongJumpableUniformRandomProvider,
+                            originalSource.isLongJumpable());
     }
 
     ///// Support methods below.

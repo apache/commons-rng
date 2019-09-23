@@ -66,4 +66,18 @@ public class RandomSourceTest {
             Assert.assertNotEquals(seed[i - 1], seed[i]);
         }
     }
+
+    @Test
+    public void testIsJumpable() {
+        Assert.assertFalse("JDK is not Jumpable", RandomSource.JDK.isJumpable());
+        Assert.assertTrue("XO_SHI_RO_128_SS is Jumpable", RandomSource.XO_SHI_RO_128_SS.isJumpable());
+        Assert.assertTrue("XO_SHI_RO_256_SS is Jumpable", RandomSource.XO_SHI_RO_256_SS.isJumpable());
+    }
+
+    @Test
+    public void testIsLongJumpable() {
+        Assert.assertFalse("JDK is not LongJumpable", RandomSource.JDK.isLongJumpable());
+        Assert.assertFalse("XO_SHI_RO_128_SS is not LongJumpable", RandomSource.XO_SHI_RO_128_SS.isLongJumpable());
+        Assert.assertTrue("XO_SHI_RO_256_SS is LongJumpable", RandomSource.XO_SHI_RO_256_SS.isLongJumpable());
+    }
 }
