@@ -549,8 +549,9 @@ public enum RandomSource {
      *   when the array contains more bits than the state of the generator.
      *  </li>
      *  <li>
-     *   When the {@code seed} is {@code null}, a seed of the correct type
-     *   and size (for array seeds) will be generated.
+     *   When the {@code seed} is {@code null}, a seed of the native type
+     *   will be generated. If the native type is an array, the generated
+     *   size is limited a maximum of 128.
      *  </li>
      * </ul>
      *
