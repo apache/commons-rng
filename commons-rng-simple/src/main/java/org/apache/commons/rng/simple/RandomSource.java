@@ -161,7 +161,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source32.JDKRandom}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     JDK(ProviderBuilder.RandomSourceInternal.JDK),
@@ -233,7 +232,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source64.SplitMix64}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     SPLIT_MIX_64(ProviderBuilder.RandomSourceInternal.SPLIT_MIX_64),
@@ -258,7 +256,6 @@ public enum RandomSource {
      * pair {@code (0, 1)} for the two subcycle generators.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     TWO_CMRES(ProviderBuilder.RandomSourceInternal.TWO_CMRES),
@@ -271,7 +268,6 @@ public enum RandomSource {
      * Different choices of an ordered pair of indices create independent generators.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     TWO_CMRES_SELECT(ProviderBuilder.RandomSourceInternal.TWO_CMRES_SELECT),
@@ -415,7 +411,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source32.PcgMcgXshRr32}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     PCG_MCG_XSH_RR_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RR_32),
@@ -423,7 +418,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source32.PcgMcgXshRs32}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     PCG_MCG_XSH_RS_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RS_32),
@@ -455,7 +449,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source32.JenkinsSmallFast32}.
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     JSF_32(ProviderBuilder.RandomSourceInternal.JSF_32),
@@ -463,7 +456,6 @@ public enum RandomSource {
      * Source of randomness is {@link org.apache.commons.rng.core.source64.JenkinsSmallFast64}.
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
-     *  <li>Native seed size: 1.</li>
      * </ul>
      */
     JSF_64(ProviderBuilder.RandomSourceInternal.JSF_64);
