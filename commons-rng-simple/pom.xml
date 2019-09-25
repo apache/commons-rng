@@ -59,4 +59,16 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- The test for creating a generator from a random seed may spuriously fail. -->
+          <rerunFailingTestsCount>1</rerunFailingTestsCount>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
