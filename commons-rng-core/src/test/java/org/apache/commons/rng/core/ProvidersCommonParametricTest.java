@@ -470,8 +470,8 @@ public class ProvidersCommonParametricTest {
      * {@code nextMethod}.
      * It performs a chi-square test of homogeneity of the observed
      * distribution with the expected uniform distribution.
-     * Tests are performed at the 1% level and an average failure rate
-     * higher than 2% causes the test case to fail.
+     * Repeat tests are performed at the 1% level and the total number of failed
+     * tests is tested at the 0.5% significance level.
      *
      * @param max Upper bound.
      * @param nextMethod method to call.

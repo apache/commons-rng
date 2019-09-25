@@ -255,7 +255,7 @@ public class ProvidersCommonParametricTest {
             list.add(generator.nextFloat());
             list.add(generator.nextDouble());
             list.add(generator.nextDouble());
-            list.add(generator.nextDouble());
+            list.add(generator.nextBoolean() ? 1 : 0);
         }
 
         return list;
@@ -286,8 +286,8 @@ public class ProvidersCommonParametricTest {
      * {@code nextMethod}.
      * It performs a chi-square test of homogeneity of the observed
      * distribution with the expected uniform distribution.
-     * Tests are performed at the 1% level and an average failure rate
-     * higher than 2% causes the test case to fail.
+     * Repeat tests are performed at the 1% level and the total number of failed
+     * tests is tested at the 0.5% significance level.
      *
      * @param max Upper bound.
      * @param nextMethod method to call.
@@ -308,6 +308,8 @@ public class ProvidersCommonParametricTest {
         for (int k = 0; k < numBins; k++) {
             binUpperBounds[k] = (long) ((k + 1) * step);
         }
+        // Rounding error occurs on the long value of 2305843009213693951L
+        binUpperBounds[numBins - 1] = n;
 
         // Run the tests.
         int numFailures = 0;
@@ -357,7 +359,15 @@ public class ProvidersCommonParametricTest {
             throw new RuntimeException("Unexpected", e);
         }
 
-        if ((double) numFailures / (double) numTests > 0.02) {
+        // The expected number of failed tests can be modelled as a Binomial distribution
+        // B(n, p) with n=500, p=0.01 (500 tests with a 1% significance level).
+        // The cumulative probability of the number of failed tests (X) is:
+        // x     P(X>x)
+        // 10    0.0132
+        // 11    0.00521
+        // 12    0.00190
+
+        if (numFailures > 11) { // Test will fail with 0.5% probability
             Assert.fail(generator + ": Too many failures for n = " + n +
                         " (" + numFailures + " out of " + numTests + " tests failed)");
         }
