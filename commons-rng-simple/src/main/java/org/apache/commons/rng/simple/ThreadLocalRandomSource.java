@@ -95,7 +95,7 @@ public final class ThreadLocalRandomSource {
         @Override
         protected UniformRandomProvider initialValue() {
             // Create with the default seed generation method
-            return RandomSource.create(source, null);
+            return RandomSource.create(source);
         }
     }
 
