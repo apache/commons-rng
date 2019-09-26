@@ -134,6 +134,7 @@
 
            java -jar target/examples-jmh.jar -h
            java -jar target/examples-jmh.jar NextDoubleGenerationPerformance -rf json -rff out.json
+           java -jar target/examples-jmh.jar NextIntGen.*nextInt$ -p randomSourceName=MSWS,PCG_MCG_XSH_RS_32
       -->
       <id>examples-jmh</id>
       <build>
