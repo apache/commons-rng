@@ -58,6 +58,19 @@ public class XoShiRo128StarStarTest {
         0x58339082, 0x6f7ac9ed, 0xf07faa96, 0x7348dcbf,
     };
 
+    private static final int[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP  = {
+        0x84ea405d, 0xe43ec9b9, 0x7b43546a, 0x5aeca3cb,
+        0x54ec4005, 0x90511268, 0x63a1d86b, 0x56e93375,
+        0x64a6fd02, 0x559acfe7, 0xf4f18034, 0x70c3ae88,
+        0xfc5d0b08, 0xecba359e, 0x00784b22, 0x48627c78,
+        0xa971ad76, 0x07d938c2, 0x4db234d7, 0xcafbf946,
+        0x6b716c5d, 0xc0275fc2, 0x158f8407, 0x4e41c342,
+        0x1480ac03, 0x6932767a, 0x31eed7c1, 0x9cee78df,
+        0x2c5d98f5, 0x04d1aab9, 0xbd1a4b49, 0xa40820b9,
+        0x9384d31f, 0x35dab84f, 0xd6067813, 0xa45e9b4e,
+        0x13ec0f47, 0x1f3df575, 0x358f3a61, 0xf210c90e,
+    };
+
     @Test
     public void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoShiRo128StarStar(SEED));
@@ -90,5 +103,10 @@ public class XoShiRo128StarStarTest {
     @Test
     public void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoShiRo128StarStar(SEED));
+    }
+
+    @Test
+    public void testLongJump() {
+        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoShiRo128StarStar(SEED));
     }
 }

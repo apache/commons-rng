@@ -18,6 +18,7 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
@@ -29,12 +30,16 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoShiRo128 extends IntProvider implements JumpableUniformRandomProvider {
+abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 4;
     /** The coefficients for the jump function. */
     private static final int[] JUMP_COEFFICIENTS = {
         0x8764000b, 0xf542d2d3, 0x6fa035c3, 0x77f2db5b
+    };
+    /** The coefficients for the long jump function. */
+    private static final int[] LONG_JUMP_COEFFICIENTS = {
+        0xb523952e, 0x0b6f099f, 0xccf5a0ef, 0x1c580662
     };
 
     // State is maintained using variables rather than an array for performance
@@ -135,7 +140,23 @@ abstract class AbstractXoShiRo128 extends IntProvider implements JumpableUniform
     @Override
     public UniformRandomProvider jump() {
         final UniformRandomProvider copy = copy();
-        performJump();
+        performJump(JUMP_COEFFICIENTS);
+        return copy;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>96</sup> calls to
+     * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
+     * 2<sup>32</sup> non-overlapping subsequences of length 2<sup>96</sup>; each
+     * subsequence can provide up to 2<sup>32</sup> non-overlapping subsequences of
+     * length 2<sup>64</sup>using the {@link #jump()} method.</p>
+     */
+    @Override
+    public JumpableUniformRandomProvider longJump() {
+        final JumpableUniformRandomProvider copy = copy();
+        performJump(LONG_JUMP_COEFFICIENTS);
         return copy;
     }
 
@@ -148,13 +169,15 @@ abstract class AbstractXoShiRo128 extends IntProvider implements JumpableUniform
 
     /**
      * Perform the jump to advance the generator state. Resets the cached state of the generator.
+     *
+     * @param jumpCoefficients Jump coefficients.
      */
-    private void performJump() {
+    private void performJump(int[] jumpCoefficients) {
         int s0 = 0;
         int s1 = 0;
         int s2 = 0;
         int s3 = 0;
-        for (final int jc : JUMP_COEFFICIENTS) {
+        for (final int jc : jumpCoefficients) {
             for (int b = 0; b < 32; b++) {
                 if ((jc & (1 << b)) != 0) {
                     s0 ^= state0;

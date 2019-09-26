@@ -59,6 +59,19 @@ public class XoShiRo512PlusTest {
         0xb0389318ac95388fL, 0x12c69799c7c33350L, 0x7e37dbd8210b480cL, 0xf3ab8bf173c83485L,
     };
 
+    private static final long[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
+        0x98ec0fe940d88036L, 0x3e52a613181661d2L, 0xeb21cca2c39a958aL, 0x54ebdbbcf454bc00L,
+        0x35b40a46c5a2db60L, 0xba92b5b8ec604df6L, 0xb8a9d151e1de068cL, 0xf932e23c318739c7L,
+        0x7d37ce0d0251a4f9L, 0x3294c0651c007662L, 0x3baa7ebc5883451dL, 0x5f074c651e12f539L,
+        0x173759a4f89afd6fL, 0xb84f6162c377111cL, 0x8ff2ae4a11140c3bL, 0x90f58d08cd59d92bL,
+        0x3a3fc7591a19dc9cL, 0x7abde79e2d744124L, 0xb501dcc26191260dL, 0xc579a01d3b8060e7L,
+        0x44f8ff268669152bL, 0xa64fc5f1793acc93L, 0xe8e846be0146eeacL, 0x78508943a2f9f185L,
+        0x8ac83b0956d74f6dL, 0x9b2edb8573b06d42L, 0x7043f31d7d3b0072L, 0xcef8bdd056a672aeL,
+        0xa598d8ca8da699baL, 0xd3f4d5229fcd63e0L, 0xc32969e1c8b3344bL, 0x5cd49a0984c25cbeL,
+        0xe611854c41080e47L, 0x2bb80e455908083dL, 0x76b63c69756b1c60L, 0xf1b5cb3e99e921b7L,
+        0x3eec38ebbff82d51L, 0xf0d1900eb73cf3c0L, 0x0d852253155da740L, 0xa0b237932c01e9eaL,
+    };
+
     @Test
     public void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoShiRo512Plus(SEED));
@@ -92,5 +105,10 @@ public class XoShiRo512PlusTest {
     @Test
     public void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoShiRo512Plus(SEED));
+    }
+
+    @Test
+    public void testLongJump() {
+        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoShiRo512Plus(SEED));
     }
 }

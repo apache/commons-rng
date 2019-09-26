@@ -18,6 +18,7 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
@@ -29,13 +30,18 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * @since 1.3
  */
-abstract class AbstractXoShiRo512 extends LongProvider implements JumpableUniformRandomProvider {
+abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUniformRandomProvider {
     /** Size of the state vector. */
     private static final int SEED_SIZE = 8;
     /** The coefficients for the jump function. */
     private static final long[] JUMP_COEFFICIENTS = {
         0x33ed89b6e7a353f9L, 0x760083d7955323beL, 0x2837f2fbb5f22faeL, 0x4b8c5674d309511cL,
         0xb11ac47a7ba28c25L, 0xf1be7667092bcc1cL, 0x53851efdb6df0aafL, 0x1ebbc8b23eaf25dbL
+    };
+    /** The coefficients for the long jump function. */
+    private static final long[] LONG_JUMP_COEFFICIENTS = {
+        0x11467fef8f921d28L, 0xa2a819f2e79c8ea8L, 0xa8299fc284b3959aL, 0xb4d347340ca63ee1L,
+        0x1cb0940bedbff6ceL, 0xd956c5c4fa1f8e17L, 0x915e38fd4eda93bcL, 0x5b3ccdfa5d7daca5L
     };
 
     // State is maintained using variables rather than an array for performance
@@ -162,10 +168,25 @@ abstract class AbstractXoShiRo512 extends LongProvider implements JumpableUnifor
     @Override
     public UniformRandomProvider jump() {
         final UniformRandomProvider copy = copy();
-        performJump();
+        performJump(JUMP_COEFFICIENTS);
         return copy;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 2<sup>384</sup> calls to
+     * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
+     * 2<sup>128</sup> non-overlapping subsequences of length 2<sup>384</sup>; each
+     * subsequence can provide up to 2<sup>128</sup> non-overlapping subsequences of
+     * length 2<sup>256</sup>using the {@link #jump()} method.</p>
+     */
+    @Override
+    public JumpableUniformRandomProvider longJump() {
+        final JumpableUniformRandomProvider copy = copy();
+        performJump(LONG_JUMP_COEFFICIENTS);
+        return copy;
+    }
     /**
      * Create a copy.
      *
@@ -175,8 +196,10 @@ abstract class AbstractXoShiRo512 extends LongProvider implements JumpableUnifor
 
     /**
      * Perform the jump to advance the generator state. Resets the cached state of the generator.
+     *
+     * @param jumpCoefficients Jump coefficients.
      */
-    private void performJump() {
+    private void performJump(long[] jumpCoefficients) {
         long s0 = 0;
         long s1 = 0;
         long s2 = 0;
@@ -185,7 +208,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements JumpableUnifor
         long s5 = 0;
         long s6 = 0;
         long s7 = 0;
-        for (final long jc : JUMP_COEFFICIENTS) {
+        for (final long jc : jumpCoefficients) {
             for (int b = 0; b < 64; b++) {
                 if ((jc & (1L << b)) != 0) {
                     s0 ^= state0;
