@@ -400,7 +400,7 @@ public final class NumberFactory {
     /**
      * @param expected Expected value.
      * @param actual Actual value.
-     * @throw IllegalArgumentException if {@code expected != actual}.
+     * @throws IllegalArgumentException if {@code expected != actual}.
      */
     private static void checkSize(int expected,
                                   int actual) {

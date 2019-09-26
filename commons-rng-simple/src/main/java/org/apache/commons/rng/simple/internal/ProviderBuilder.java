@@ -502,7 +502,7 @@ public final class ProviderBuilder {
          *
          * @param seed Input seed (must not be null).
          * @return the native seed
-         * @throw UnsupportedOperationException if the {@code seed} type is invalid.
+         * @throws UnsupportedOperationException if the {@code seed} type is invalid.
          */
         protected Object convertSeed(Object seed) {
             return nativeSeedType.convertSeed(seed, nativeSeedSize);
@@ -513,7 +513,7 @@ public final class ProviderBuilder {
          *
          * @param seed Input seed (may be null).
          * @return the native seed.
-         * @throw UnsupportedOperationException if the {@code seed} type cannot be converted.
+         * @throws UnsupportedOperationException if the {@code seed} type cannot be converted.
          */
         private Object createNativeSeed(Object seed) {
             return seed == null ?
