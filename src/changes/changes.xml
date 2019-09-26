@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-119">
+        Add LongJumpable support to XoShiRo generators previously only supporting Jumpable.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-117">
         "RandomSource": Support creating a byte[] seed suitable for the implementing
         generator class.
