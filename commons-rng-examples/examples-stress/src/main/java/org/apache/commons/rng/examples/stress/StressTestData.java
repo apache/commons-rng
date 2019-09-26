@@ -97,11 +97,13 @@ class StressTestData {
     /**
      * Creates the random generator.
      *
+     * <p>It is recommended the seed is generated using {@link RandomSource#createSeed()}.</p>
+     *
+     * @param seed the seed (use {@code null} to automatically create a seed)
      * @return the uniform random provider
      */
-    UniformRandomProvider createRNG() {
-        // Use a null seed to force seeding
-        return RandomSource.create(randomSource, null, args);
+    UniformRandomProvider createRNG(byte[] seed) {
+        return RandomSource.create(randomSource, seed, args);
     }
 
     /**

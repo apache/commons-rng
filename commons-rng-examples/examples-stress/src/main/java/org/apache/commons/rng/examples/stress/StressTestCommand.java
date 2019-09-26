@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.examples.stress;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
@@ -417,8 +418,9 @@ class StressTestCommand implements Callable<Void> {
                     continue;
                 }
             }
-            // Create the generator
-            UniformRandomProvider rng = testData.createRNG();
+            // Create the generator. Explicitly create a seed so it can be recorded.
+            final byte[] seed = testData.getRandomSource().createSeed();
+            UniformRandomProvider rng = testData.createRNG(seed);
             // Combined generators must be created first
             if (xorHashCode) {
                 rng = RNGUtils.createHashCodeIntProvider(rng);
@@ -439,8 +441,8 @@ class StressTestCommand implements Callable<Void> {
                 rng = RNGUtils.createReverseBytesIntProvider(rng);
             }
             // Run the test
-            final Runnable r = new StressTestTask(testData.getRandomSource(), rng, output, command,
-                                                  this, progressTracker);
+            final Runnable r = new StressTestTask(testData.getRandomSource(), rng, seed,
+                                                  output, command, this, progressTracker);
             taskList.add(service.submit(r));
         }
     }
@@ -513,6 +515,8 @@ class StressTestCommand implements Callable<Void> {
         private final RandomSource randomSource;
         /** RNG to be tested. */
         private final UniformRandomProvider rng;
+        /** The seed used to create the RNG. */
+        private final byte[] seed;
         /** Output report file of the sub-process. */
         private final File output;
         /** The sub-process command to run. */
@@ -530,6 +534,7 @@ class StressTestCommand implements Callable<Void> {
          *
          * @param randomSource The random source.
          * @param rng RNG to be tested.
+         * @param seed The seed used to create the RNG.
          * @param output Output report file.
          * @param command The sub-process command to run.
          * @param cmd The run command.
@@ -537,12 +542,14 @@ class StressTestCommand implements Callable<Void> {
          */
         StressTestTask(RandomSource randomSource,
                        UniformRandomProvider rng,
+                       byte[] seed,
                        File output,
                        List<String> command,
                        StressTestCommand cmd,
                        ProgressTracker progressTracker) {
             this.randomSource = randomSource;
             this.rng = rng;
+            this.seed = seed;
             this.output = output;
             this.command = command;
             this.cmd = cmd;
@@ -622,6 +629,7 @@ class StressTestCommand implements Callable<Void> {
             sb.append(C).append(N);
             sb.append(C).append("RandomSource: ").append(randomSource.name()).append(N);
             sb.append(C).append("RNG: ").append(rng.toString()).append(N);
+            sb.append(C).append("Seed: ").append(Hex.encodeHexString(seed, true)).append(N);
             sb.append(C).append(N);
 
             // Match the output of 'java -version', e.g.
@@ -635,6 +643,7 @@ class StressTestCommand implements Callable<Void> {
             sb.append(C).append("OS: ").append(System.getProperty("os.name"))
                 .append(' ').append(System.getProperty("os.version"))
                 .append(' ').append(System.getProperty("os.arch")).append(N);
+            sb.append(C).append("Native byte-order: ").append(ByteOrder.nativeOrder()).append(N);
             sb.append(C).append(N);
 
             sb.append(C).append("Analyzer: ");
