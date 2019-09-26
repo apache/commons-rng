@@ -93,11 +93,7 @@ public class XoShiRo512Plus extends AbstractXoShiRo512 {
         return result;
     }
 
-    /**
-     * Create a copy.
-     *
-     * @return the copy
-     */
+    /** {@inheritDoc} */
     @Override
     protected XoShiRo512Plus copy() {
         // This exists to ensure the jump function performed in the super class returns

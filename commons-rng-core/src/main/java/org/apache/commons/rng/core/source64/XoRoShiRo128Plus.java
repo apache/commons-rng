@@ -77,11 +77,7 @@ public class XoRoShiRo128Plus extends AbstractXoRoShiRo128 {
         return result;
     }
 
-    /**
-     * Create a copy.
-     *
-     * @return the copy
-     */
+    /** {@inheritDoc} */
     @Override
     protected XoRoShiRo128Plus copy() {
         // This exists to ensure the jump function performed in the super class returns
