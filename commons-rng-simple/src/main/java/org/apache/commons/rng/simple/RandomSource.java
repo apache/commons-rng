@@ -616,7 +616,7 @@ public enum RandomSource {
      * @see #create(RandomSource,Object,Object[])
      */
     public static RestorableUniformRandomProvider create(RandomSource source) {
-        return create(source, null);
+        return ProviderBuilder.create(source.getInternalIdentifier());
     }
 
     /**

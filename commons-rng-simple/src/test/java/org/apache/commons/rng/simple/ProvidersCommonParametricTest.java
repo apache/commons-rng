@@ -115,6 +115,15 @@ public class ProvidersCommonParametricTest {
     }
 
     @Test
+    public void testNullSeed() {
+        // Note: This is the only test that explicitly calls create() with no other arguments.
+        final UniformRandomProvider rng = originalArgs == null ?
+            RandomSource.create(originalSource) :
+            RandomSource.create(originalSource, null, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @Test
     public void testEmptyIntArraySeed() {
         final int[] empty = new int[0];
         Assume.assumeTrue(originalSource.isNativeSeed(empty));
