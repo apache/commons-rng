@@ -256,12 +256,12 @@ public final class ProviderBuilder {
              3,
              NativeSeedType.LONG_ARRAY) {
             @Override
-            Object createSeed() {
+            protected Object createSeed() {
                 return createMswsSeed(SeedFactory.createLong());
             }
 
             @Override
-            Object convertSeed(Object seed) {
+            protected Object convertSeed(Object seed) {
                 // Allow seeding with primitives to generate a good seed
                 if (seed instanceof Integer) {
                     return createMswsSeed((Integer) seed);
@@ -474,7 +474,7 @@ public final class ProviderBuilder {
          *
          * @return the native seed
          */
-        Object createSeed() {
+        protected Object createSeed() {
             return nativeSeedType.createSeed(nativeSeedSize);
         }
 
@@ -496,11 +496,15 @@ public final class ProviderBuilder {
         /**
          * Converts a seed from any of the supported seed types to a native seed.
          *
+         * <p>The default implementation delegates to the native seed type conversion.</p>
+         *
+         * <p>This method should be over-ridden to satisfy seed requirements for the generator.</p>
+         *
          * @param seed Input seed (must not be null).
          * @return the native seed
          * @throw UnsupportedOperationException if the {@code seed} type is invalid.
          */
-        Object convertSeed(Object seed) {
+        protected Object convertSeed(Object seed) {
             return nativeSeedType.convertSeed(seed, nativeSeedSize);
         }
 
