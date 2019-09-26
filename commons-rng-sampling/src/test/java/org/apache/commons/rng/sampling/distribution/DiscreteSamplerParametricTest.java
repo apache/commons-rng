@@ -106,7 +106,7 @@ public class DiscreteSamplerParametricTest {
                     }
                 }
 
-                if (chiSquareTest.chiSquareTest(expected, observed, 0.001)) {
+                if (chiSquareTest.chiSquareTest(expected, observed, 0.01)) {
                     failedStat.add(chiSquareTest.chiSquareTest(expected, observed));
                     ++numFailures;
                 }
@@ -116,7 +116,15 @@ public class DiscreteSamplerParametricTest {
             throw new RuntimeException("Unexpected", e);
         }
 
-        if ((double) numFailures / (double) numTests > 0.05) {
+        // The expected number of failed tests can be modelled as a Binomial distribution
+        // B(n, p) with n=50, p=0.01 (50 tests with a 1% significance level).
+        // The cumulative probability of the number of failed tests (X) is:
+        // x     P(X>x)
+        // 1     0.0894
+        // 2     0.0138
+        // 3     0.0016
+
+        if (numFailures > 3) { // Test will fail with 0.16% probability
             Assert.fail(sampler + ": Too many failures for sample size = " + sampleSize +
                         " (" + numFailures + " out of " + numTests + " tests failed, " +
                         "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
