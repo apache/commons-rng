@@ -97,6 +97,13 @@ public abstract class BaselineSources {
             "SFC_64",
             "JSF_32",
             "JSF_64",
+            "XO_SHI_RO_128_PP",
+            "XO_RO_SHI_RO_128_PP",
+            "XO_SHI_RO_256_PP",
+            "XO_SHI_RO_512_PP",
+            "XO_RO_SHI_RO_1024_PP",
+            "XO_RO_SHI_RO_1024_S",
+            "XO_RO_SHI_RO_1024_SS",
             })
     private String randomSourceName;
 

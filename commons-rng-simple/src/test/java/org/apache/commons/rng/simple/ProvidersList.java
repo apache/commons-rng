@@ -64,6 +64,7 @@ public final class ProvidersList {
             // it will not output random data.
             add(LIST32, RandomSource.MSWS, new long[] {687233648L, 678656564562300L, 0xb5ad4eceda1ce2a9L});
             add(LIST32, RandomSource.SFC_32, new int[] {-23574234, 7654343});
+            add(LIST32, RandomSource.XO_SHI_RO_128_PP, new int[] {8796823, -3244890, -263842});
             // ... add more here.
 
             // "long"-based RNGs.
@@ -81,6 +82,12 @@ public final class ProvidersList {
             add(LIST64, RandomSource.XO_SHI_RO_512_SS, new long[] {123L, -654654L, 45646789L});
             add(LIST64, RandomSource.PCG_RXS_M_XS_64, new long[] {42088L, 69271L});
             add(LIST64, RandomSource.SFC_64, new long[] {-2357423478979842L, 76543434515L});
+            add(LIST64, RandomSource.XO_RO_SHI_RO_128_PP, new long[] {789741321465L, -461321684612L, -12301654794L});
+            add(LIST64, RandomSource.XO_SHI_RO_256_PP, new long[] {2374243L, -8097397345383L, -223479293943L});
+            add(LIST64, RandomSource.XO_SHI_RO_512_PP, new long[] {-1210684761321465L, -485132198745L, 89942134798523L});
+            add(LIST64, RandomSource.XO_RO_SHI_RO_1024_PP, new long[] {236424345654L, 781544546164721L, -85235476312346L});
+            add(LIST64, RandomSource.XO_RO_SHI_RO_1024_S, new long[] {-1574314L, 7879874453221215L, -7894343883216L});
+            add(LIST64, RandomSource.XO_RO_SHI_RO_1024_SS, new long[] {-41514541234654321L, -12146412316546L, 7984134134L});
             // ... add more here.
 
             // Do not modify the remaining statements.

@@ -37,6 +37,7 @@ import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
 import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
 import org.apache.commons.rng.core.source32.XoShiRo128Plus;
+import org.apache.commons.rng.core.source32.XoShiRo128PlusPlus;
 import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source32.PcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgXshRs32;
@@ -48,12 +49,18 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024PlusPlus;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024Star;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
+import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
 import org.apache.commons.rng.core.source64.XoRoShiRo128StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo256Plus;
+import org.apache.commons.rng.core.source64.XoShiRo256PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo512Plus;
+import org.apache.commons.rng.core.source64.XoShiRo512PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
@@ -319,7 +326,35 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link JenkinsSmallFast64}. */
         JSF_64(JenkinsSmallFast64.class,
                1,
-               NativeSeedType.LONG);
+               NativeSeedType.LONG),
+        /** Source of randomness is {@link XoShiRo128PlusPlus}. */
+        XO_SHI_RO_128_PP(XoShiRo128PlusPlus.class,
+                         4,
+                         NativeSeedType.INT_ARRAY),
+        /** Source of randomness is {@link XoRoShiRo128PlusPlus}. */
+        XO_RO_SHI_RO_128_PP(XoRoShiRo128PlusPlus.class,
+                            2,
+                            NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link XoShiRo256PlusPlus}. */
+        XO_SHI_RO_256_PP(XoShiRo256PlusPlus.class,
+                         4,
+                         NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link XoShiRo512PlusPlus}. */
+        XO_SHI_RO_512_PP(XoShiRo512PlusPlus.class,
+                         8,
+                         NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link XoRoShiRo1024PlusPlus}. */
+        XO_RO_SHI_RO_1024_PP(XoRoShiRo1024PlusPlus.class,
+                             16,
+                             NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link XoRoShiRo1024Star}. */
+        XO_RO_SHI_RO_1024_S(XoRoShiRo1024Star.class,
+                            16,
+                            NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link XoRoShiRo1024StarStar}. */
+        XO_RO_SHI_RO_1024_SS(XoRoShiRo1024StarStar.class,
+                             16,
+                             NativeSeedType.LONG_ARRAY);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;

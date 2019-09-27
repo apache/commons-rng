@@ -458,7 +458,63 @@ public enum RandomSource {
      *  <li>Native seed type: {@code Long}.</li>
      * </ul>
      */
-    JSF_64(ProviderBuilder.RandomSourceInternal.JSF_64);
+    JSF_64(ProviderBuilder.RandomSourceInternal.JSF_64),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.XoShiRo128PlusPlus}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 4.</li>
+     * </ul>
+     */
+    XO_SHI_RO_128_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_128_PP),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 2.</li>
+     * </ul>
+     */
+    XO_RO_SHI_RO_128_PP(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_128_PP),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoShiRo256PlusPlus}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 4.</li>
+     * </ul>
+     */
+    XO_SHI_RO_256_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_256_PP),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoShiRo512PlusPlus}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 8.</li>
+     * </ul>
+     */
+    XO_SHI_RO_512_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_PP),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoRoShiRo1024PlusPlus}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
+     */
+    XO_RO_SHI_RO_1024_PP(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_PP),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoRoShiRo1024Star}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
+     */
+    XO_RO_SHI_RO_1024_S(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_S),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.XoRoShiRo1024StarStar}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 16.</li>
+     * </ul>
+     */
+    XO_RO_SHI_RO_1024_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_SS);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
