@@ -167,10 +167,10 @@ class ListCommand implements Callable<Void> {
         format = String.format("%%-%ds   %%-%ds   ", idWidth + 2, randomSourceWidth);
         for (final StressTestData data : testData) {
             formatter.format(format, data.getId(), data.getRandomSource().name());
-            if (data.getArgs() != null) {
-                formatter.format("%-7d   %s", data.getTrials(), Arrays.toString(data.getArgs()));
-            } else {
+            if (data.getArgs() == null) {
                 appendable.append(Integer.toString(data.getTrials()));
+            } else {
+                formatter.format("%-7d   %s", data.getTrials(), Arrays.toString(data.getArgs()));
             }
             appendable.append(newLine);
         }

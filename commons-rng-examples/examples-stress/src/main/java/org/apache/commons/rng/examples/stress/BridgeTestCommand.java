@@ -87,7 +87,7 @@ class BridgeTestCommand implements Callable<Void> {
      * of the executable. Captures stdout of the executable to a file.
      */
     private void runBridgeTest() {
-        final ArrayList<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
+        final List<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
 
         try {
             final File dataFile = new File(fileOutputPrefix + ".data");
@@ -123,17 +123,17 @@ class BridgeTestCommand implements Callable<Void> {
                 }
             }
 
-            Integer exitValue = ProcessUtils.getExitValue(testingProcess);
-            if (exitValue != null) {
+            final Integer exitValue = ProcessUtils.getExitValue(testingProcess);
+            if (exitValue == null) {
+                LogUtils.error("%s did not exit. Process was killed.", command.get(0));
+            } else {
                 if (exitValue.intValue() != 0) {
                     LogUtils.error("%s exit code = %d", command.get(0), exitValue.intValue());
                 }
-            } else {
-                LogUtils.error("%s did not exit. Process was killed.", command.get(0));
             }
 
         } catch (IOException ex) {
-            throw new ApplicationException("Failed to run process: " + ex.getMessage());
+            throw new ApplicationException("Failed to run process: " + ex.getMessage(), ex);
         }
     }
 
@@ -154,9 +154,7 @@ class BridgeTestCommand implements Callable<Void> {
                                  int value,
                                  boolean littleEndian) throws IOException {
         OutputCommand.writeInt(textOutput, value);
-        if (littleEndian) {
-            value = Integer.reverseBytes(value);
-        }
-        dataOutput.writeInt(value);
+        final int binaryValue = littleEndian ? Integer.reverseBytes(value) : value;
+        dataOutput.writeInt(binaryValue);
     }
 }

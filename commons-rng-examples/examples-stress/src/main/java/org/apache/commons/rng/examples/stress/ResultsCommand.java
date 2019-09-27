@@ -26,8 +26,6 @@ import picocli.CommandLine.Parameters;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -80,6 +78,12 @@ class ResultsCommand implements Callable<Void> {
     private static final String DIEHARDER_SUMS = "diehard_sums";
     /** The string identifying a bit-reversed generator. */
     private static final String BIT_REVERSED = "Bit-reversed";
+    /** Character '\'. */
+    private static final char FORWARD_SLASH = '\\';
+    /** Character '/'. */
+    private static final char BACK_SLASH = '\\';
+    /** Character '|'. */
+    private static final char PIPE = '|';
 
     /** The standard options. */
     @Mixin
@@ -154,7 +158,7 @@ class ResultsCommand implements Callable<Void> {
         /** The test application format. */
         private final TestFormat testFormat;
         /** The names of the failed tests. */
-        private final ArrayList<String> failedTests = new ArrayList<>();
+        private final List<String> failedTests = new ArrayList<>();
         /** The test application name. */
         private String testApplicationName;
         /** Flag to indicate results are complete (i.e. not still in progress). */
@@ -226,7 +230,7 @@ class ResultsCommand implements Callable<Void> {
          *
          * @return the failed tests
          */
-        ArrayList<String> getFailedTests() {
+        List<String> getFailedTests() {
             return failedTests;
         }
 
@@ -263,7 +267,7 @@ class ResultsCommand implements Callable<Void> {
          * @return the test application name
          */
         String getTestApplicationName() {
-            return testApplicationName != null ? testApplicationName : getTestFormat().toString();
+            return testApplicationName == null ? getTestFormat().toString() : testApplicationName;
         }
 
         /**
@@ -309,7 +313,7 @@ class ResultsCommand implements Callable<Void> {
             default:
                 throw new ApplicationException("Unknown output format: " + outputFormat);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new ApplicationException("IO error: " + ex.getMessage(), ex);
         }
         return null;
@@ -322,7 +326,7 @@ class ResultsCommand implements Callable<Void> {
      */
     private List<TestResult> readResults() {
         final ArrayList<TestResult> results = new ArrayList<>();
-        for (File resultFile : resultsFiles) {
+        for (final File resultFile : resultsFiles) {
             readResults(results, resultFile);
         }
         return results;
@@ -336,13 +340,13 @@ class ResultsCommand implements Callable<Void> {
      */
     private void readResults(List<TestResult> results,
                              File resultFile) {
-        final ArrayList<String> contents = readFileContents(resultFile);
+        final List<String> contents = readFileContents(resultFile);
         // Files may have multiple test results per file (i.e. appended output)
         final List<List<String>> outputs = splitContents(contents);
         if (outputs.isEmpty()) {
-            LogUtils.error("No test output in file: " + resultFile);
+            LogUtils.error("No test output in file: %s", resultFile);
         } else {
-            for (List<String> testOutput : outputs) {
+            for (final List<String> testOutput : outputs) {
                 results.add(readResult(resultFile, testOutput));
             }
         }
@@ -355,14 +359,13 @@ class ResultsCommand implements Callable<Void> {
      * @return the file contents
      * @throws ApplicationException If the file cannot be read.
      */
-    private static ArrayList<String> readFileContents(File resultFile) {
+    private static List<String> readFileContents(File resultFile) {
         final ArrayList<String> contents = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(resultFile.toPath())) {
-            String line;
-            while ((line = reader.readLine()) != null) {
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 contents.add(line);
             }
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             throw new ApplicationException("Failed to read file contents: " + resultFile, ex);
         }
         return contents;
@@ -544,8 +547,8 @@ class ResultsCommand implements Callable<Void> {
         // Note:
         // This will count sub-parts of the same test as distinct failures.
         while (iter.hasNext()) {
-            String line = iter.next();
-            Matcher matcher = TESTU01_TEST_RESULT_PATTERN.matcher(line);
+            final String line = iter.next();
+            final Matcher matcher = TESTU01_TEST_RESULT_PATTERN.matcher(line);
             if (matcher.find()) {
                 testResult.addFailedTest(matcher.group(1).trim());
             } else if (TEST_DURATION_PATTERN.matcher(line).find()) {
@@ -580,8 +583,8 @@ class ResultsCommand implements Callable<Void> {
     private OutputStream createOutputStream() {
         if (fileOutput != null) {
             try {
-                return new FileOutputStream(fileOutput);
-            } catch (FileNotFoundException ex) {
+                Files.newOutputStream(fileOutput.toPath());
+            } catch (final IOException ex) {
                 throw new ApplicationException("Failed to create output: " + fileOutput, ex);
             }
         }
@@ -674,8 +677,8 @@ class ResultsCommand implements Callable<Void> {
                 .append(result.getFailureCountString()).append("}}");
             // Convert to web-link name separators
             for (int i = 0; i < sb.length(); i++) {
-                if (sb.charAt(i) == '\\') {
-                    sb.setCharAt(i, '/');
+                if (sb.charAt(i) == BACK_SLASH) {
+                    sb.setCharAt(i, FORWARD_SLASH);
                 }
             }
             return sb.toString();
@@ -697,14 +700,14 @@ class ResultsCommand implements Callable<Void> {
             output.write(separator);
 
             // This will collate results for each combination of 'RandomSource + bitReversed'
-            for (RandomSource randomSource : randomSources) {
-                for (boolean reversed : bitReversed) {
+            for (final RandomSource randomSource : randomSources) {
+                for (final boolean reversed : bitReversed) {
                     output.write('|');
                     writeAPTColumn(output, randomSource.toString());
                     if (showBitReversedColumn) {
                         writeAPTColumn(output, Boolean.toString(reversed));
                     }
-                    for (String testName : testNames) {
+                    for (final String testName : testNames) {
                         final List<TestResult> testResults = getTestResults(results, randomSource, reversed, testName);
                         writeAPTColumn(output, testResults.stream()
                                                           .map(toAPTString)
@@ -725,7 +728,7 @@ class ResultsCommand implements Callable<Void> {
      */
     private static List<RandomSource> getRandomSources(List<TestResult> results) {
         final EnumSet<RandomSource> set = EnumSet.noneOf(RandomSource.class);
-        for (TestResult result : results) {
+        for (final TestResult result : results) {
             set.add(result.getRandomSource());
         }
         final ArrayList<RandomSource> list = new ArrayList<>(set);
@@ -741,18 +744,18 @@ class ResultsCommand implements Callable<Void> {
      */
     private static List<Boolean> getBitReversed(List<TestResult> results) {
         final ArrayList<Boolean> list = new ArrayList<>(2);
-        if (!results.isEmpty()) {
+        if (results.isEmpty()) {
+            // Default to no bit-reversed results
+            list.add(Boolean.FALSE);
+        } else {
             final boolean first = results.get(0).isBitReversed();
             list.add(first);
-            for (TestResult result : results) {
+            for (final TestResult result : results) {
                 if (first != result.isBitReversed()) {
                     list.add(!first);
                     break;
                 }
             }
-        } else {
-            // Default to no bit-reversed results
-            list.add(Boolean.FALSE);
         }
         Collections.sort(list);
         return list;
@@ -766,7 +769,7 @@ class ResultsCommand implements Callable<Void> {
      */
     private static List<String> getTestNames(List<TestResult> results) {
         final HashSet<String> set = new HashSet<>();
-        for (TestResult result : results) {
+        for (final TestResult result : results) {
             set.add(result.getTestApplicationName());
         }
         final ArrayList<String> list = new ArrayList<>(set);
@@ -808,7 +811,7 @@ class ResultsCommand implements Callable<Void> {
      */
     private static String getPathPrefix(TestResult testResult) {
         final String parent = testResult.getResultFile().getParent();
-        return parent != null ? parent : "";
+        return parent == null ? "" : parent;
     }
 
     /**
@@ -820,11 +823,11 @@ class ResultsCommand implements Callable<Void> {
      */
     private static String createAPTHeader(boolean showBitReversedColumn,
                                           List<String> testNames) {
-        final StringBuilder sb = new StringBuilder("|| RNG identifier ||");
+        final StringBuilder sb = new StringBuilder(100).append("|| RNG identifier ||");
         if (showBitReversedColumn) {
-            sb.append(' ').append("Bit-reversed ||");
+            sb.append(" Bit-reversed ||");
         }
-        for (String name : testNames) {
+        for (final String name : testNames) {
             sb.append(' ').append(name).append(" ||");
         }
         return sb.toString();
@@ -843,7 +846,7 @@ class ResultsCommand implements Callable<Void> {
         // character, "+-" for all other occurrences except "-+" at the end
         final StringBuilder sb = new StringBuilder(header);
         for (int i = 0; i < header.length(); i++) {
-            if (sb.charAt(i) == '|') {
+            if (sb.charAt(i) == PIPE) {
                 sb.setCharAt(i, i == 0 ? '*' : '+');
                 sb.setCharAt(i + 1,  '-');
             } else {
@@ -885,7 +888,7 @@ class ResultsCommand implements Callable<Void> {
                                                    boolean bitReversed,
                                                    String testName) {
         final ArrayList<TestResult> list = new ArrayList<>();
-        for (TestResult result : results) {
+        for (final TestResult result : results) {
             if (result.getRandomSource() == randomSource &&
                 result.bitReversed == bitReversed &&
                 result.getTestApplicationName().equals(testName)) {
@@ -914,14 +917,7 @@ class ResultsCommand implements Callable<Void> {
         // Make bit-reversed column optional if no generators are bit reversed.
         final boolean showBitReversedColumn = bitReversed.contains(Boolean.TRUE);
 
-        final ArrayList<List<String>> columns = new ArrayList<>();
-        columns.add(createColumn("RNG"));
-        if (showBitReversedColumn) {
-            columns.add(createColumn(BIT_REVERSED));
-        }
-        for (String testName : testNames) {
-            columns.add(createColumn(testName));
-        }
+        final List<List<String>> columns = createColumns(testNames, showBitReversedColumn);
 
         // Add all data
         // This will collate results for each combination of 'RandomSource + bitReversed'
@@ -932,7 +928,7 @@ class ResultsCommand implements Callable<Void> {
                 if (showBitReversedColumn) {
                     columns.get(i++).add(Boolean.toString(reversed));
                 }
-                for (String testName : testNames) {
+                for (final String testName : testNames) {
                     final List<TestResult> testResults = getTestResults(results, randomSource,
                             reversed, testName);
                     columns.get(i++).add(testResults.stream()
@@ -943,17 +939,7 @@ class ResultsCommand implements Callable<Void> {
         }
 
         // Create format using the column widths
-        final StringBuilder sb = new StringBuilder();
-        try (Formatter formatter = new Formatter(sb)) {
-            for (int i = 0; i < columns.size(); i++) {
-                if (i != 0) {
-                    sb.append('\t');
-                }
-                formatter.format("%%-%ds", getColumnWidth(columns.get(i)));
-            }
-        }
-        sb.append(System.lineSeparator());
-        final String format = sb.toString();
+        final String format = createTextFormatFromColumnWidths(columns);
 
         // Output
         try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
@@ -970,6 +956,26 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
+     * Creates the columns.
+     *
+     * @param testNames the test names
+     * @param showBitReversedColumn Set to true to show the bit reversed column
+     * @return the list of columns
+     */
+    private static List<List<String>> createColumns(final List<String> testNames,
+        final boolean showBitReversedColumn) {
+        final ArrayList<List<String>> columns = new ArrayList<>();
+        columns.add(createColumn("RNG"));
+        if (showBitReversedColumn) {
+            columns.add(createColumn(BIT_REVERSED));
+        }
+        for (final String testName : testNames) {
+            columns.add(createColumn(testName));
+        }
+        return columns;
+    }
+
+    /**
      * Creates the column.
      *
      * @param columnName Column name.
@@ -981,6 +987,27 @@ class ResultsCommand implements Callable<Void> {
         return list;
     }
 
+
+    /**
+     * Creates the text format from column widths.
+     *
+     * @param columns Columns.
+     * @return the text format string
+     */
+    private static String createTextFormatFromColumnWidths(final List<List<String>> columns) {
+        final StringBuilder sb = new StringBuilder();
+        try (Formatter formatter = new Formatter(sb)) {
+            for (int i = 0; i < columns.size(); i++) {
+                if (i != 0) {
+                    sb.append('\t');
+                }
+                formatter.format("%%-%ds", getColumnWidth(columns.get(i)));
+            }
+        }
+        sb.append(System.lineSeparator());
+        return sb.toString();
+    }
+
     /**
      * Gets the column width using the maximum length of the column items.
      *
@@ -989,7 +1016,7 @@ class ResultsCommand implements Callable<Void> {
      */
     private static int getColumnWidth(List<String> column) {
         int width = 0;
-        for (String text : column) {
+        for (final String text : column) {
             width = Math.max(width, text.length());
         }
         return width;

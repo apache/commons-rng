@@ -28,8 +28,6 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,6 +35,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -52,6 +51,10 @@ import java.util.concurrent.Callable;
 class OutputCommand implements Callable<Void> {
     /** The new line characters. */
     private static final String NEW_LINE = System.lineSeparator();
+    /** Character '['. */
+    private static final char LEFT_SQUARE_BRACKET = '[';
+    /** Character ']'. */
+    private static final char RIGHT_SQUARE_BRACKET = ']';
 
     /** Lookup table for binary representation of bytes. */
     private static final String[] BIT_REP = {
@@ -170,7 +173,7 @@ class OutputCommand implements Callable<Void> {
         // Strip these for convenience.
         stripArrayFormatting(arguments);
 
-        for (String argument : arguments) {
+        for (final String argument : arguments) {
             data.add(RNGUtils.parseArgument(argument));
         }
         try {
@@ -193,11 +196,11 @@ class OutputCommand implements Callable<Void> {
         if (size > 1) {
             // These will not be empty as they were created from command-line args.
             final String first = arguments.get(0);
-            if (first.charAt(0) == '[') {
+            if (first.charAt(0) == LEFT_SQUARE_BRACKET) {
                 arguments.set(0, first.substring(1));
             }
             final String last = arguments.get(size - 1);
-            if (last.charAt(last.length() - 1) == ']') {
+            if (last.charAt(last.length() - 1) == RIGHT_SQUARE_BRACKET) {
                 arguments.set(size - 1, last.substring(0, last.length() - 1));
             }
         }
@@ -217,8 +220,8 @@ class OutputCommand implements Callable<Void> {
     private OutputStream createOutputStream() {
         if (fileOutput != null) {
             try {
-                return new FileOutputStream(fileOutput);
-            } catch (FileNotFoundException ex) {
+                Files.newOutputStream(fileOutput.toPath());
+            } catch (IOException ex) {
                 throw new ApplicationException("Failed to create output: " + fileOutput, ex);
             }
         }
@@ -283,12 +286,11 @@ class OutputCommand implements Callable<Void> {
             output.write(NEW_LINE);
             output.write("numbit: 32");
             output.write(NEW_LINE);
-            while (count > 0) {
-                count--;
+            for (long c = 0; c < count; c++) {
                 // Unsigned integers
                 final String text = Long.toString(rng.nextInt() & 0xffffffffL);
                 // Left pad with spaces
-                for (int i = 10 - text.length(); i-- > 0;) {
+                for (int i = 10 - text.length(); i > 0; i--) {
                     output.write(' ');
                 }
                 output.write(text);
@@ -319,14 +321,12 @@ class OutputCommand implements Callable<Void> {
     static void writeBinaryIntData(final UniformRandomProvider rng,
                                    long count,
                                    final OutputStream out) throws IOException {
-        if (count < 1) {
-            // Effectively unlimited: program must be killed
-            count = Long.MAX_VALUE;
-        }
+        // If count is not positive use max value.
+        // This is effectively unlimited: program must be killed.
+        final long limit = (count < 1) ? Long.MAX_VALUE : count;
         try (DataOutputStream data = new DataOutputStream(
                 new BufferedOutputStream(out))) {
-            while (count > 0) {
-                count--;
+            for (long c = 0; c < limit; c++) {
                 data.writeInt(rng.nextInt());
             }
         }
@@ -347,8 +347,7 @@ class OutputCommand implements Callable<Void> {
         checkCount(count, OutputFormat.BITS);
 
         try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
-            while (count > 0) {
-                count--;
+            for (long c = 0; c < count; c++) {
                 writeInt(output, rng.nextInt());
             }
         }

@@ -67,8 +67,8 @@ final class ProcessUtils {
      * @return the command
      * @throws ApplicationException If the executable path cannot be resolved
      */
-    static ArrayList<String> buildSubProcessCommand(File executable,
-                                                    List<String> executableArguments) {
+    static List<String> buildSubProcessCommand(File executable,
+                                               List<String> executableArguments) {
         final ArrayList<String> command = new ArrayList<>();
         try {
             command.add(executable.getCanonicalPath());

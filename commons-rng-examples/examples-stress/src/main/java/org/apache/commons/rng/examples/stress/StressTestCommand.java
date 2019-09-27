@@ -44,6 +44,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Specification for the "stress" command.
@@ -57,6 +58,9 @@ import java.util.concurrent.TimeUnit;
          description = {"Run repeat trials of random data generators using a provided test application.",
                         "Data is transferred to the application sub-process via standard input."})
 class StressTestCommand implements Callable<Void> {
+    /** 1000. Any value below this can be exactly represented to 3 significant figures. */
+    private static final int ONE_THOUSAND = 1000;
+
     /** The standard options. */
     @Mixin
     private StandardOptions reusableOptions;
@@ -160,11 +164,16 @@ class StressTestCommand implements Callable<Void> {
     @Option(names = {"--dry-run"},
             description = "Perform a dry run where the generators and output files are created " +
                           "but the stress test is not executed.")
-    private boolean dryRun = false;
+    private boolean dryRun;
 
-    /** The stop file exists flag. This is set in a synchronised method. */
+    /** The locl to hold when checking the stop file. */
+    private ReentrantLock stopFileLock = new ReentrantLock(false);
+    /** The stop file exists flag. This should be read/updated when holding the lock. */
     private boolean stopFileExists;
-    /** The timestamp when the stop file was last checked. */
+    /**
+     * The timestamp when the stop file was last checked.
+     * This should be read/updated when holding the lock.
+     */
     private long stopFileTimestamp;
 
     /**
@@ -215,26 +224,41 @@ class StressTestCommand implements Callable<Void> {
     /**
      * Check if the stop file exists.
      *
-     * <p>This method is synchronized. It will log a message if the file exists one time only.
+     * <p>This method is thread-safe. It will log a message if the file exists one time only.
      *
      * @return true if the stop file exists
      */
-    private synchronized boolean stopFileExists() {
-        if (!stopFileExists) {
-            // This should hit the filesystem each time it is called.
-            // To prevent this happening a lot when all the first set of tasks run use
-            // a timestamp to limit the check to 1 time each interval.
-            final long timestamp = System.currentTimeMillis();
-            if (timestamp > stopFileTimestamp) {
-                stopFileTimestamp = timestamp + TimeUnit.SECONDS.toMillis(2);
-                stopFileExists = stopFile.exists();
-                if (stopFileExists) {
-                    LogUtils.info("Stop file detected: " + stopFile);
-                    LogUtils.info("No further tasks will start");
+    private boolean isStopFileExists() {
+        stopFileLock.lock();
+        try {
+            if (!stopFileExists) {
+                // This should hit the filesystem each time it is called.
+                // To prevent this happening a lot when all the first set of tasks run use
+                // a timestamp to limit the check to 1 time each interval.
+                final long timestamp = System.currentTimeMillis();
+                if (timestamp > stopFileTimestamp) {
+                    checkStopFile(timestamp);
                 }
             }
+            return stopFileExists;
+        } finally {
+            stopFileLock.unlock();
         }
-        return stopFileExists;
+    }
+
+    /**
+     * Check if the stop file exists. Update the timestamp for the next check. If the stop file
+     * does exists then log a message.
+     *
+     * @param timestamp Timestamp of the last check.
+     */
+    private void checkStopFile(final long timestamp) {
+        stopFileTimestamp = timestamp + TimeUnit.SECONDS.toMillis(2);
+        stopFileExists = stopFile.exists();
+        if (stopFileExists) {
+            LogUtils.info("Stop file detected: %s", stopFile);
+            LogUtils.info("No further tasks will start");
+        }
     }
 
     /**
@@ -282,14 +306,14 @@ class StressTestCommand implements Callable<Void> {
      * @param stressTestData List of generators to be tested.
      */
     private void runStressTest(Iterable<StressTestData> stressTestData) {
-        final ArrayList<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
+        final List<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
 
         // Check existing output files before starting the tasks.
         final String basePath = fileOutputPrefix.getAbsolutePath();
         checkExistingOutputFiles(basePath, stressTestData);
 
         LogUtils.info("Running stress test ...");
-        LogUtils.info("Shutdown by creating stop file: " + stopFile);
+        LogUtils.info("Shutdown by creating stop file: %s",  stopFile);
         final ProgressTracker progressTracker = new ProgressTracker(countTrials(stressTestData));
 
         // Run tasks with parallel execution.
@@ -398,7 +422,7 @@ class StressTestCommand implements Callable<Void> {
      */
     private void submitTasks(ExecutorService service,
                              List<Future<?>> taskList,
-                             ArrayList<String> command,
+                             List<String> command,
                              String basePath,
                              StressTestData testData,
                              ProgressTracker progressTracker) {
@@ -472,9 +496,11 @@ class StressTestCommand implements Callable<Void> {
         /**
          * Increment the progress.
          */
-        synchronized void incrementProgress() {
-            count++;
-            showProgress();
+        void incrementProgress() {
+            synchronized (this) {
+                count++;
+                showProgress();
+            }
         }
 
         /**
@@ -558,7 +584,7 @@ class StressTestCommand implements Callable<Void> {
         /** {@inheritDoc} */
         @Override
         public void run() {
-            if (cmd.stopFileExists()) {
+            if (cmd.isStopFileExists()) {
                 // Do nothing
                 return;
             }
@@ -609,7 +635,7 @@ class StressTestCommand implements Callable<Void> {
                     sink.writeInt(rng.nextInt());
                     numbersUsed++;
                 }
-            } catch (final IOException e) {
+            } catch (final IOException ignored) {
                 // Hopefully getting here when the analyzing software terminates.
             }
 
@@ -624,33 +650,32 @@ class StressTestCommand implements Callable<Void> {
          * {@code output} file.
          */
         private void printHeader() throws IOException {
-            final StringBuilder sb = new StringBuilder();
-            sb.append(C).append(N);
-            sb.append(C).append("RandomSource: ").append(randomSource.name()).append(N);
-            sb.append(C).append("RNG: ").append(rng.toString()).append(N);
-            sb.append(C).append("Seed: ").append(RNGUtils.encodeHex(seed)).append(N);
-            sb.append(C).append(N);
+            final StringBuilder sb = new StringBuilder(200);
+            sb.append(C).append(N)
+                .append(C).append("RandomSource: ").append(randomSource.name()).append(N)
+                .append(C).append("RNG: ").append(rng.toString()).append(N)
+                .append(C).append("Seed: ").append(RNGUtils.encodeHex(seed)).append(N)
+                .append(C).append(N)
 
             // Match the output of 'java -version', e.g.
             // java version "1.8.0_131"
             // Java(TM) SE Runtime Environment (build 1.8.0_131-b11)
             // Java HotSpot(TM) 64-Bit Server VM (build 25.131-b11, mixed mode)
-            sb.append(C).append("Java: ").append(System.getProperty("java.version")).append(N);
+            .append(C).append("Java: ").append(System.getProperty("java.version")).append(N);
             appendNameAndVersion(sb, "Runtime", "java.runtime.name", "java.runtime.version");
             appendNameAndVersion(sb, "JVM", "java.vm.name", "java.vm.version", "java.vm.info");
 
             sb.append(C).append("OS: ").append(System.getProperty("os.name"))
                 .append(' ').append(System.getProperty("os.version"))
-                .append(' ').append(System.getProperty("os.arch")).append(N);
-            sb.append(C).append("Native byte-order: ").append(ByteOrder.nativeOrder()).append(N);
-            sb.append(C).append(N);
-
-            sb.append(C).append("Analyzer: ");
+                .append(' ').append(System.getProperty("os.arch")).append(N)
+                .append(C).append("Native byte-order: ").append(ByteOrder.nativeOrder()).append(N)
+                .append(C).append(N)
+                .append(C).append("Analyzer: ");
             for (final String s : command) {
                 sb.append(s).append(' ');
             }
-            sb.append(N);
-            sb.append(C).append(N);
+            sb.append(N)
+              .append(C).append(N);
 
             appendDate(sb, "Start").append(C).append(N);
 
@@ -667,21 +692,20 @@ class StressTestCommand implements Callable<Void> {
          */
         private void printFooter(long nanoTime,
                                  Object exitValue) throws IOException {
-            final StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder(200);
             sb.append(C).append(N);
 
             appendDate(sb, "End").append(C).append(N);
 
-            sb.append(C).append("Exit value: ").append(exitValue).append(N);
-            sb.append(C).append("Numbers used: ").append(numbersUsed)
-                        .append(" >= 2^").append(log2(numbersUsed))
-                        .append(" (").append(bytesToString(numbersUsed * 4)).append(')').append(N);
-            sb.append(C).append(N);
+            sb.append(C).append("Exit value: ").append(exitValue).append(N)
+                .append(C).append("Numbers used: ").append(numbersUsed)
+                          .append(" >= 2^").append(log2(numbersUsed))
+                          .append(" (").append(bytesToString(numbersUsed * 4)).append(')').append(N)
+                .append(C).append(N);
 
             final double duration = nanoTime * 1e-9 / 60;
-            sb.append(C).append("Test duration: ").append(duration).append(" minutes").append(N);
-
-            sb.append(C).append(N);
+            sb.append(C).append("Test duration: ").append(duration).append(" minutes").append(N)
+                .append(C).append(N);
 
             write(sb, output, true);
         }
@@ -726,7 +750,7 @@ class StressTestCommand implements Callable<Void> {
                 .append(System.getProperty(nameKey, "?"))
                 .append(" (build ")
                 .append(System.getProperty(versionKey, "?"));
-            for (String key : infoKeys) {
+            for (final String key : infoKeys) {
                 final String value = System.getProperty(key, "");
                 if (!value.isEmpty()) {
                     sb.append(", ").append(value);
@@ -748,7 +772,7 @@ class StressTestCommand implements Callable<Void> {
         private static StringBuilder appendDate(StringBuilder sb,
                                                 String prefix) {
             // Use local date format. It is not thread safe.
-            final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+            final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             return appendPrefix(sb, prefix).append(dateFormat.format(new Date())).append(N);
         }
 
@@ -796,7 +820,7 @@ class StressTestCommand implements Callable<Void> {
          */
         static String bytesToString(long bytes) {
             // When using the smallest unit no decimal point is needed, because it's the exact number.
-            if (bytes < 1000) {
+            if (bytes < ONE_THOUSAND) {
                 return bytes + " " + SI_UNITS[0];
             }
 
