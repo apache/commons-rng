@@ -33,6 +33,8 @@ import org.apache.commons.rng.simple.RandomSource;
  * we will have \( \frac{N_c}{N} \approx \frac{\pi}{4} \).
  */
 public class ComputePi extends MonteCarloIntegration {
+    /** Expected number of arguments. */
+    private static final int EXPECTED_ARGUMENTS = 2;
     /** Domain dimension. */
     private static final int DIMENSION = 2;
 
@@ -58,7 +60,7 @@ public class ComputePi extends MonteCarloIntegration {
      * </ol>
      */
     public static void main(String[] args) {
-        if (args.length != 2) {
+        if (args.length != EXPECTED_ARGUMENTS) {
             throw new IllegalStateException("Missing arguments");
         }
 
