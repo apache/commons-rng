@@ -27,6 +27,7 @@ import org.apache.commons.rng.core.source32.Well512a;
 import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
 import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
 import org.apache.commons.rng.core.source32.XoShiRo128Plus;
+import org.apache.commons.rng.core.source32.XoShiRo128PlusPlus;
 import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source32.Well1024a;
 import org.apache.commons.rng.core.source32.Well19937a;
@@ -47,11 +48,17 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.source64.TwoCmres;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024PlusPlus;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024Star;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024StarStar;
 import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
+import org.apache.commons.rng.core.source64.XoRoShiRo128PlusPlus;
 import org.apache.commons.rng.core.source64.XoRoShiRo128StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo256Plus;
+import org.apache.commons.rng.core.source64.XoShiRo256PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo256StarStar;
 import org.apache.commons.rng.core.source64.XoShiRo512Plus;
+import org.apache.commons.rng.core.source64.XoShiRo512PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.JenkinsSmallFast64;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
@@ -112,6 +119,7 @@ public final class ProvidersList {
             add(LIST32, new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
             add(LIST32, new DotyHumphreySmallFastCounting32(new int[] {g.nextInt(), g.nextInt()}));
             add(LIST32, new JenkinsSmallFast32(g.nextInt()));
+            add(LIST32, new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -130,6 +138,12 @@ public final class ProvidersList {
             add(LIST64, new PcgRxsMXs64(new long[] {g.nextLong()}));
             add(LIST64, new DotyHumphreySmallFastCounting64(new long[] {g.nextLong(), g.nextLong()}));
             add(LIST64, new JenkinsSmallFast64(g.nextLong()));
+            add(LIST64, new XoRoShiRo128PlusPlus(new long[] {g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo256PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoShiRo512PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoRoShiRo1024PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoRoShiRo1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            add(LIST64, new XoRoShiRo1024StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.

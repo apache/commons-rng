@@ -159,7 +159,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      *
      * @param jumpCoefficients Jump coefficients.
      */
-    private void performJump(long[] jumpCoefficients) {
+    final void performJump(long[] jumpCoefficients) {
         long s0 = 0;
         long s1 = 0;
         for (final long jc : jumpCoefficients) {

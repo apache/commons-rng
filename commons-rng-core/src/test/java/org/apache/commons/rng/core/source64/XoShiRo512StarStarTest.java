@@ -59,7 +59,6 @@ public class XoShiRo512StarStarTest {
         0x2f1f49ee5e1d5207L, 0xafca316bd4672318L, 0x91e9df4fe8cb3cddL, 0x8857a767c3a1d387L,
     };
 
-
     private static final long[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
         0x1d1aaa6cb41463c7L, 0xf37f8d9edc99e22fL, 0xa9f678cc5b0519acL, 0xcfe2d9024aede22fL,
         0x1ba8d18326d7c87eL, 0xcdd7d8c3fcc9d409L, 0x270738c721177babL, 0xaebe345f36cbfef9L,

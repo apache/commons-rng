@@ -18,39 +18,29 @@
 package org.apache.commons.rng.core.source64;
 
 /**
- * A fast all-purpose 64-bit generator.
+ * A large-state all-purpose 64-bit generator.
  *
- * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 128 bits
- * and the period is 2<sup>128</sup>-1. Speed is expected to be similar to
- * {@link XoShiRo256StarStar}.</p>
+ * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 1024 bits
+ * and the period is 2<sup>1024</sup>-1.</p>
  *
- * @see <a href="http://xoshiro.di.unimi.it/xoroshiro128starstar.c">Original source code</a>
+ * <p>Note: This can be used as a replacement for {@link XorShift1024Star}.</p>
+ *
+ * @see <a href="http://xorshift.di.unimi.it/xoroshiro1024starstar.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
  *
  * @since 1.3
  */
-public class XoRoShiRo128StarStar extends AbstractXoRoShiRo128 {
+public class XoRoShiRo1024StarStar extends AbstractXoRoShiRo1024 {
     /**
      * Creates a new instance.
      *
      * @param seed Initial seed.
-     * If the length is larger than 2, only the first 2 elements will
+     * If the length is larger than 16, only the first 16 elements will
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoRoShiRo128StarStar(long[] seed) {
+    public XoRoShiRo1024StarStar(long[] seed) {
         super(seed);
-    }
-
-    /**
-     * Creates a new instance using a 2 element seed.
-     * A seed containing all zeros will create a non-functional generator.
-     *
-     * @param seed0 Initial seed element 0.
-     * @param seed1 Initial seed element 1.
-     */
-    public XoRoShiRo128StarStar(long seed0, long seed1) {
-        super(seed0, seed1);
     }
 
     /**
@@ -58,29 +48,21 @@ public class XoRoShiRo128StarStar extends AbstractXoRoShiRo128 {
      *
      * @param source Source to copy.
      */
-    protected XoRoShiRo128StarStar(XoRoShiRo128StarStar source) {
+    protected XoRoShiRo1024StarStar(XoRoShiRo1024StarStar source) {
         super(source);
     }
 
     /** {@inheritDoc} */
     @Override
-    public long next() {
-        final long s0 = state0;
-        long s1 = state1;
-        final long result = Long.rotateLeft(s0 * 5, 7) * 9;
-
-        s1 ^= s0;
-        state0 = Long.rotateLeft(s0, 24) ^ s1 ^ (s1 << 16); // a, b
-        state1 = Long.rotateLeft(s1, 37); // c
-
-        return result;
+    protected long transform(long s0, long s15) {
+        return Long.rotateLeft(s0 * 5, 7) * 9;
     }
 
     /** {@inheritDoc} */
     @Override
-    protected XoRoShiRo128StarStar copy() {
-        // This exists to ensure the jump function performed in the super class returns
+    protected XoRoShiRo1024StarStar copy() {
+        // This exists to ensure the jump function returns
         // the correct class type. It should not be public.
-        return new XoRoShiRo128StarStar(this);
+        return new XoRoShiRo1024StarStar(this);
     }
 }

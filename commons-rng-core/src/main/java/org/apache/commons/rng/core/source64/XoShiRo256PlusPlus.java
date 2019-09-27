@@ -20,37 +20,38 @@ package org.apache.commons.rng.core.source64;
 /**
  * A fast all-purpose 64-bit generator.
  *
- * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 128 bits
- * and the period is 2<sup>128</sup>-1. Speed is expected to be similar to
- * {@link XoShiRo256StarStar}.</p>
+ * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 256 bits
+ * and the period is 2<sup>256</sup>-1.</p>
  *
- * @see <a href="http://xoshiro.di.unimi.it/xoroshiro128starstar.c">Original source code</a>
+ * @see <a href="http://xoshiro.di.unimi.it/xoshiro256starstar.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
  *
  * @since 1.3
  */
-public class XoRoShiRo128StarStar extends AbstractXoRoShiRo128 {
+public class XoShiRo256PlusPlus extends AbstractXoShiRo256 {
     /**
      * Creates a new instance.
      *
      * @param seed Initial seed.
-     * If the length is larger than 2, only the first 2 elements will
+     * If the length is larger than 4, only the first 4 elements will
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoRoShiRo128StarStar(long[] seed) {
+    public XoShiRo256PlusPlus(long[] seed) {
         super(seed);
     }
 
     /**
-     * Creates a new instance using a 2 element seed.
+     * Creates a new instance using a 4 element seed.
      * A seed containing all zeros will create a non-functional generator.
      *
      * @param seed0 Initial seed element 0.
      * @param seed1 Initial seed element 1.
+     * @param seed2 Initial seed element 2.
+     * @param seed3 Initial seed element 3.
      */
-    public XoRoShiRo128StarStar(long seed0, long seed1) {
-        super(seed0, seed1);
+    public XoShiRo256PlusPlus(long seed0, long seed1, long seed2, long seed3) {
+        super(seed0, seed1, seed2, seed3);
     }
 
     /**
@@ -58,29 +59,34 @@ public class XoRoShiRo128StarStar extends AbstractXoRoShiRo128 {
      *
      * @param source Source to copy.
      */
-    protected XoRoShiRo128StarStar(XoRoShiRo128StarStar source) {
+    protected XoShiRo256PlusPlus(XoShiRo256PlusPlus source) {
         super(source);
     }
 
     /** {@inheritDoc} */
     @Override
     public long next() {
-        final long s0 = state0;
-        long s1 = state1;
-        final long result = Long.rotateLeft(s0 * 5, 7) * 9;
+        final long result = Long.rotateLeft(state0 + state3, 23) + state0;
 
-        s1 ^= s0;
-        state0 = Long.rotateLeft(s0, 24) ^ s1 ^ (s1 << 16); // a, b
-        state1 = Long.rotateLeft(s1, 37); // c
+        final long t = state1 << 17;
+
+        state2 ^= state0;
+        state3 ^= state1;
+        state1 ^= state2;
+        state0 ^= state3;
+
+        state2 ^= t;
+
+        state3 = Long.rotateLeft(state3, 45);
 
         return result;
     }
 
     /** {@inheritDoc} */
     @Override
-    protected XoRoShiRo128StarStar copy() {
+    protected XoShiRo256PlusPlus copy() {
         // This exists to ensure the jump function performed in the super class returns
         // the correct class type. It should not be public.
-        return new XoRoShiRo128StarStar(this);
+        return new XoShiRo256PlusPlus(this);
     }
 }
