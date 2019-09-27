@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.examples.stress;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
@@ -629,7 +628,7 @@ class StressTestCommand implements Callable<Void> {
             sb.append(C).append(N);
             sb.append(C).append("RandomSource: ").append(randomSource.name()).append(N);
             sb.append(C).append("RNG: ").append(rng.toString()).append(N);
-            sb.append(C).append("Seed: ").append(Hex.encodeHexString(seed, true)).append(N);
+            sb.append(C).append("Seed: ").append(RNGUtils.encodeHex(seed)).append(N);
             sb.append(C).append(N);
 
             // Match the output of 'java -version', e.g.
