@@ -53,12 +53,12 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
     /** Number of (equal-width) bins in the histogram. */
     @Option(names = {"-b", "--bins"},
             description = "The number of bins in the histogram (default: ${DEFAULT-VALUE}).")
-    private int numBins = 25000;
+    private int numBins = 25_000;
 
     /** Number of samples to be generated. */
     @Option(names = {"-n", "--samples"},
             description = "The number of samples in the histogram (default: ${DEFAULT-VALUE}).")
-    private long numSamples = 1000000000;
+    private long numSamples = 1_000_000_000;
 
     /** The samplers. */
     @Option(names = {"-s", "--samplers"},
@@ -70,7 +70,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
     /** Flag to output all samplers. */
     @Option(names = {"-a", "--all"},
             description = "Output all samplers")
-    private boolean allSamplers = false;
+    private boolean allSamplers;
 
     /**
      * The sampler. This enum uses lower case for clarity when matching the distribution name.
@@ -123,10 +123,9 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double binSize = (max - min) / numBins;
         final long[] histogram = new long[numBins];
 
-        long n = 0;
         long belowMin = 0;
         long aboveMax = 0;
-        while (++n < numSamples) {
+        for (long n = 0; n < numSamples; n++) {
             final double r = sampler.sample();
 
             if (r < min) {

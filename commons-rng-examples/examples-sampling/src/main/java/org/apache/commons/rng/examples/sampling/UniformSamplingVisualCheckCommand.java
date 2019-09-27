@@ -88,22 +88,16 @@ class UniformSamplingVisualCheckCommand implements Callable<Void> {
             System.out.printf("# [%d] %s%n", i, samplers[i].getClass().getSimpleName());
         }
 
-        int n = 0;
-        while (++n < numSamples) {
+        for (int n = 0; n < numSamples; n++) {
             System.out.printf("[%d]", n, rng.nextDouble());
 
-            for (ContinuousSampler s : samplers) {
-                while (true) {
-                    final double r = s.sample();
-                    if (r < lo ||
-                        r > hi) {
-                        // Discard numbers outside the tiny region.
-                        continue;
-                    }
-
-                    System.out.printf("\t%.16e", r);
-                    break;
+            for (final ContinuousSampler s : samplers) {
+                double r = s.sample();
+                while (r < lo || r > hi) {
+                    // Discard numbers outside the tiny region.
+                    r = s.sample();
                 }
+                System.out.printf("\t%.16e", r);
             }
 
             System.out.println();
