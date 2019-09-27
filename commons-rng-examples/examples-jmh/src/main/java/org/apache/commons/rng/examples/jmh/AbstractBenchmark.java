@@ -44,5 +44,12 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = { "-server", "-Xms128M", "-Xmx128M" })
 @State(Scope.Benchmark)
 public abstract class AbstractBenchmark {
+    /**
+     * Create a new instance.
+     */
+    protected AbstractBenchmark() {
+        // Hide public constructor to prevent instantiation
+    }
+
     // Empty. Serves as an annotation placeholder.
 }

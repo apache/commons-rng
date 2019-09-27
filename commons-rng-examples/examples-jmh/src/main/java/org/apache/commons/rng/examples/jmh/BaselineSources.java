@@ -113,7 +113,7 @@ public abstract class BaselineSources {
     }
 
     /** Instantiates generator. This need only be done once per set of iterations. */
-    @Setup(value = Level.Trial)
+    @Setup(Level.Trial)
     public void setup() {
         if (BASELINE.equals(randomSourceName)) {
             provider = createBaseline();

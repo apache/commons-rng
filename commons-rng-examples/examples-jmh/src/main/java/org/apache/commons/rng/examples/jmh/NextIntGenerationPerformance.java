@@ -28,6 +28,9 @@ import org.openjdk.jmh.annotations.State;
  * {@link UniformRandomProvider#nextInt(int)}.
  */
 public class NextIntGenerationPerformance extends AbstractBenchmark {
+    /** The value. Must NOT be final to prevent JVM optimisation! */
+    private int value;
+
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
@@ -39,9 +42,6 @@ public class NextIntGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextInt();
         }
     }
-
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private int value;
 
     /**
      * Baseline for a JMH method call with no return value.

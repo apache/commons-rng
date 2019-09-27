@@ -118,7 +118,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(value = 1, jvmArgs = { "-server", "-Xms128M", "-Xmx128M" })
 public class PoissonSamplerCachePerformance {
     /** Number of samples per run. */
-    private static final int NUM_SAMPLES = 100000;
+    private static final int NUM_SAMPLES = 100_000;
     /**
      * Number of range samples.
      *

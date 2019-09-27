@@ -449,10 +449,10 @@ public class RngNextIntInRangeBenchmark {
      * @return the int
      */
     @Benchmark
-    @OperationsPerInvocation(65536)
+    @OperationsPerInvocation(65_536)
     public int nextIntNloop65536(IntRange range, Source source) {
         int sum = 0;
-        for (int i = 0; i < 65536; i++) {
+        for (int i = 0; i < 65_536; i++) {
             sum += source.getRng().nextInt(range.getN());
         }
         return sum;

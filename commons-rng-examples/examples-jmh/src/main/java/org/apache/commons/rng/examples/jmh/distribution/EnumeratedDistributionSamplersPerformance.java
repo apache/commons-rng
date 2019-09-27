@@ -56,6 +56,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class EnumeratedDistributionSamplersPerformance {
     /**
+     * The value for the baseline generation of an {@code int} value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private int value;
+
+    /**
      * The random sources to use for testing. This is a smaller list than all the possible
      * random sources; the list is composed of generators of different speeds.
      */
@@ -102,18 +109,6 @@ public class EnumeratedDistributionSamplersPerformance {
     @State(Scope.Benchmark)
     public abstract static class SamplerSources extends LocalRandomSources {
         /**
-         * A factory for creating DiscreteSampler objects.
-         */
-        interface DiscreteSamplerFactory {
-            /**
-             * Creates the sampler.
-             *
-             * @return the sampler
-             */
-            DiscreteSampler create();
-        }
-
-        /**
          * The sampler type.
          */
         @Param({"BinarySearchDiscreteSampler",
@@ -138,6 +133,18 @@ public class EnumeratedDistributionSamplersPerformance {
 
         /** The sampler. */
         private DiscreteSampler sampler;
+
+        /**
+         * A factory for creating DiscreteSampler objects.
+         */
+        interface DiscreteSamplerFactory {
+            /**
+             * Creates the sampler.
+             *
+             * @return the sampler
+             */
+            DiscreteSampler create();
+        }
 
         /**
          * Gets the sampler.
@@ -315,8 +322,8 @@ public class EnumeratedDistributionSamplersPerformance {
                 final double mean2 = 20;
                 final IntegerDistribution dist1 = createPoissonDistribution(mean2);
                 final int max = dist1.inverseCumulativeProbability(CUMULATIVE_PROBABILITY_LIMIT);
-                double[] p1 = createProbabilities(dist1, 0, max);
-                double[] p2 = createProbabilities(createPoissonDistribution(mean1), 0, max);
+                final double[] p1 = createProbabilities(dist1, 0, max);
+                final double[] p2 = createProbabilities(createPoissonDistribution(mean1), 0, max);
                 for (int i = 0; i < p1.length; i++) {
                     p1[i] += p2[i];
                 }
@@ -347,8 +354,9 @@ public class EnumeratedDistributionSamplersPerformance {
          */
         private static double[] createProbabilities(IntegerDistribution dist, int lower, int upper) {
             double[] probabilities = new double[upper - lower + 1];
-            for (int i = 0, x = lower; x <= upper; i++, x++) {
-                probabilities[i] = dist.probability(x);
+            int index = 0;
+            for (int x = lower; x <= upper; x++) {
+                probabilities[index++] = dist.probability(x);
             }
             return probabilities;
         }
@@ -489,13 +497,6 @@ public class EnumeratedDistributionSamplersPerformance {
             return upper;
         }
     }
-
-    /**
-     * The value for the baseline generation of an {@code int} value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private int value;
 
     // Benchmarks methods below.
 

@@ -144,7 +144,7 @@ public class DiscreteUniformSamplerGenerationPerformance {
     @Benchmark
     public void nextIntBaseline(Blackhole bh, Sources source) {
         int sum = 0;
-        for (int i = samples; i-- != 0;) {
+        for (int i = 0; i < samples; i++) {
             sum += source.getGenerator().nextInt();
         }
         bh.consume(sum);
@@ -159,7 +159,7 @@ public class DiscreteUniformSamplerGenerationPerformance {
     public void nextIntRange(Blackhole bh, Sources source, IntRange range) {
         final int n = range.getUpperBound();
         int sum = 0;
-        for (int i = samples; i-- != 0;) {
+        for (int i = 0; i < samples; i++) {
             sum += source.getGenerator().nextInt(n);
         }
         bh.consume(sum);
@@ -176,7 +176,7 @@ public class DiscreteUniformSamplerGenerationPerformance {
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(
                 source.getGenerator(), 0, range.getUpperBound() - 1);
         int sum = 0;
-        for (int i = samples; i-- != 0;) {
+        for (int i = 0; i < samples; i++) {
             sum += sampler.sample();
         }
         bh.consume(sum);

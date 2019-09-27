@@ -27,6 +27,9 @@ import org.openjdk.jmh.annotations.State;
  * various source providers for {@link UniformRandomProvider#nextFloat()}.
  */
 public class NextFloatGenerationPerformance extends AbstractBenchmark {
+    /** The value. Must NOT be final to prevent JVM optimisation! */
+    private float value;
+
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
@@ -38,9 +41,6 @@ public class NextFloatGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextFloat();
         }
     }
-
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private float value;
 
     /**
      * Baseline for a JMH method call with no return value.

@@ -27,6 +27,9 @@ import org.openjdk.jmh.annotations.State;
  * various source providers for {@link UniformRandomProvider#nextBoolean()}.
  */
 public class NextBooleanGenerationPerformance extends AbstractBenchmark {
+    /** The value. Must NOT be final to prevent JVM optimisation! */
+    private boolean value;
+
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
@@ -38,9 +41,6 @@ public class NextBooleanGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextBoolean();
         }
     }
-
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private boolean value;
 
     /**
      * Baseline for a JMH method call with no return value.

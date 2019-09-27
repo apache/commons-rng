@@ -32,6 +32,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -217,10 +218,10 @@ public class ConstructionPerformance {
          */
         @Override
         @SuppressWarnings("unchecked")
-        @Setup(value = Level.Trial)
+        @Setup(Level.Trial)
         public void setup() {
             super.setup();
-            RandomSource randomSource = getRandomSource();
+            final RandomSource randomSource = getRandomSource();
             nativeSeeds = findNativeSeeds(randomSource);
 
             // Truncate array seeds to length 1
@@ -793,10 +794,13 @@ public class ConstructionPerformance {
      *
      * @param sources Source of randomness.
      * @param bh      Data sink.
-     * @throws Exception If reflection failed.
+     * @throws InvocationTargetException If reflection failed.
+     * @throws IllegalAccessException If reflection failed.
+     * @throws InstantiationException If reflection failed.
      */
     @Benchmark
-    public void newInstance(Sources sources, Blackhole bh) throws Exception {
+    public void newInstance(Sources sources, Blackhole bh) throws InstantiationException,
+            IllegalAccessException, InvocationTargetException {
         final Object[] nativeSeeds = sources.getNativeSeeds();
         final Constructor<?> constructor = sources.getConstructor();
         for (int i = 0; i < SEEDS; i++) {
@@ -809,10 +813,16 @@ public class ConstructionPerformance {
      *
      * @param sources Source of randomness.
      * @param bh      Data sink.
-     * @throws Exception If reflection failed.
+     * @throws InvocationTargetException If reflection failed.
+     * @throws IllegalAccessException If reflection failed.
+     * @throws InstantiationException If reflection failed.
+     * @throws SecurityException If reflection failed.
+     * @throws NoSuchMethodException If reflection failed.
+     * @throws IllegalArgumentException If reflection failed.
      */
     @Benchmark
-    public void lookupNewInstance(Sources sources, Blackhole bh) throws Exception {
+    public void lookupNewInstance(Sources sources, Blackhole bh) throws InstantiationException,
+            IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         final Object[] nativeSeeds = sources.getNativeSeeds();
         final Class<?> implementingClass = sources.getImplementingClass();
         for (int i = 0; i < SEEDS; i++) {

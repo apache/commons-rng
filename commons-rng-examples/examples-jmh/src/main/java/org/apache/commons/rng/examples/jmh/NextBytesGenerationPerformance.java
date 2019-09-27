@@ -28,6 +28,12 @@ import org.openjdk.jmh.annotations.State;
  */
 public class NextBytesGenerationPerformance extends AbstractBenchmark {
     /**
+     * The value. This is a pre-allocated array. Must NOT be final to prevent JVM
+     * optimisation!
+     */
+    private byte[] value = new byte[BaselineGenerationPerformance.NEXT_BYTES_SIZE];
+
+    /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
     @State(Scope.Benchmark)
@@ -38,12 +44,6 @@ public class NextBytesGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextBytes();
         }
     }
-
-    /**
-     * The value. This is a pre-allocated array. Must NOT be final to prevent JVM
-     * optimisation!
-     */
-    private byte[] value = new byte[BaselineGenerationPerformance.NEXT_BYTES_SIZE];
 
     /**
      * Baseline for a JMH method call with no return value.

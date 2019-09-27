@@ -49,6 +49,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class PoissonSamplersPerformance {
     /**
+     * The value for the baseline generation of an {@code int} value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private int value;
+
+    /**
      * The mean for the call to {@link Math#exp(double)}.
      */
     @State(Scope.Benchmark)
@@ -85,18 +92,6 @@ public class PoissonSamplersPerformance {
      */
     @State(Scope.Benchmark)
     public static class Sources {
-        /**
-         * A factory for creating DiscreteSampler objects.
-         */
-        interface DiscreteSamplerFactory {
-            /**
-             * Creates the sampler.
-             *
-             * @return the sampler
-             */
-            DiscreteSampler create();
-        }
-
         /**
          * RNG providers.
          *
@@ -150,6 +145,18 @@ public class PoissonSamplersPerformance {
 
         /** The sampler. */
         private DiscreteSampler sampler;
+
+        /**
+         * A factory for creating DiscreteSampler objects.
+         */
+        interface DiscreteSamplerFactory {
+            /**
+             * Creates the sampler.
+             *
+             * @return the sampler
+             */
+            DiscreteSampler create();
+        }
 
         /**
          * @return The RNG.
@@ -1024,13 +1031,6 @@ public class PoissonSamplersPerformance {
             return rng.nextInt() & 0xffffffffL;
         }
     }
-
-    /**
-     * The value for the baseline generation of an {@code int} value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private int value;
 
     // Benchmarks methods below.
 

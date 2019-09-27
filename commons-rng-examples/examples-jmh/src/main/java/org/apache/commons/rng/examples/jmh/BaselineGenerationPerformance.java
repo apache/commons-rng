@@ -78,7 +78,7 @@ public class BaselineGenerationPerformance {
      * <p>This is the biggest prime number for an {@code int} (2147483629) to give a worst case
      * run-time for the method.</p>
      */
-    static final int NEXT_INT_LIMIT = 2147483629;
+    static final int NEXT_INT_LIMIT = 2_147_483_629;
 
     /**
      * The upper limit for testing {@link UniformRandomProvider#nextLong(long)}.
@@ -86,7 +86,7 @@ public class BaselineGenerationPerformance {
      * <p>This is the biggest prime number for a {@code long} (9223372036854775783L) to
      * give a worst case run-time for the method.</p>
      */
-    static final long NEXT_LONG_LIMIT = 9223372036854775783L;
+    static final long NEXT_LONG_LIMIT = 9_223_372_036_854_775_783L;
 
     /**
      * The provider for testing {@link UniformRandomProvider#nextByte()} and

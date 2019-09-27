@@ -47,6 +47,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class AliasMethodDiscreteSamplerPerformance {
     /**
+     * The value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private int value;
+
+    /**
      * The discrete probability distribution and a sampler. Used to test the sample speed and
      * construction speed of different sized distributions.
      */
@@ -95,7 +102,7 @@ public class AliasMethodDiscreteSamplerPerformance {
         @Setup
         public void setup() {
             probabilities = createProbabilities(size);
-            UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+            final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
             sampler = AliasMethodDiscreteSampler.of(rng, probabilities, alpha);
         }
 
@@ -115,13 +122,6 @@ public class AliasMethodDiscreteSamplerPerformance {
             return probabilities;
         }
     }
-
-    /**
-     * The value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private int value;
 
     // Benchmarks methods below.
 

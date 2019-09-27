@@ -49,6 +49,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class GeometricSamplersPerformance {
     /**
+     * The value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private int value;
+
+    /**
      * The samplers's to use for testing. Defines the RandomSource, probability of success
      * and the type of Geometric sampler.
      */
@@ -140,13 +147,6 @@ public class GeometricSamplersPerformance {
             return Math.max(0, (int) Math.ceil(Math.log1p(-cumulativeProbability) / log1mProbabilityOfSuccess - 1));
         }
     }
-
-    /**
-     * The value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private int value;
 
     /**
      * Baseline for the JMH timing overhead for production of an {@code int} value.

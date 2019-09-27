@@ -56,6 +56,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class ContinuousSamplersPerformance {
     /**
+     * The value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private double value;
+
+    /**
      * The {@link ContinuousSampler} samplers to use for testing. Creates the sampler for each
      * {@link org.apache.commons.rng.simple.RandomSource RandomSource} in the default
      * {@link RandomSources}.
@@ -127,13 +134,6 @@ public class ContinuousSamplersPerformance {
     }
 
     // Benchmarks methods below.
-
-    /**
-     * The value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private double value;
 
     /**
      * Baseline for the JMH timing overhead for production of an {@code double} value.

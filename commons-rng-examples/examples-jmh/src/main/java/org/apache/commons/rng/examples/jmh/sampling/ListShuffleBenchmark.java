@@ -213,7 +213,7 @@ public class ListShuffleBenchmark {
      */
     static final class SplitMix32RNG extends IntProvider {
         /** The state. */
-        protected long state;
+        private long state;
 
         /**
          * Create a new instance.
@@ -262,7 +262,7 @@ public class ListShuffleBenchmark {
         private static final long serialVersionUID = 1L;
 
         /** The state. */
-        protected long state;
+        private long state;
 
         /**
          * Create a new instance.
@@ -390,9 +390,9 @@ public class ListShuffleBenchmark {
 
             // Copy back. Use raw types.
             final ListIterator it = list.listIterator();
-            for (int i = 0; i < array.length; i++) {
+            for (final Object value : array) {
                 it.next();
-                it.set(array[i]);
+                it.set(value);
             }
         }
     }
@@ -426,9 +426,9 @@ public class ListShuffleBenchmark {
 
         // Copy back. Use raw types.
         final ListIterator it = list.listIterator();
-        for (int i = 0; i < array.length; i++) {
+        for (final Object value : array) {
             it.next();
-            it.set(array[i]);
+            it.set(value);
         }
     }
 

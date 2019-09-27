@@ -27,6 +27,9 @@ import org.openjdk.jmh.annotations.State;
  * various source providers for {@link UniformRandomProvider#nextDouble()}.
  */
 public class NextDoubleGenerationPerformance extends AbstractBenchmark {
+    /** The value. Must NOT be final to prevent JVM optimisation! */
+    private double value;
+
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
@@ -38,9 +41,6 @@ public class NextDoubleGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextDouble();
         }
     }
-
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private double value;
 
     /**
      * Baseline for a JMH method call with no return value.

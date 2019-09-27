@@ -48,6 +48,11 @@ import org.apache.commons.rng.simple.ThreadLocalRandomSource;
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class ThreadLocalPerformance {
+    /**
+     * Number of random values to generate.
+     */
+    @Param({"0", "1", "10", "100"})
+    private int numValues;
 
     /**
      * The benchmark state (to retrieve the various "RandomSource"s).
@@ -106,11 +111,6 @@ public class ThreadLocalPerformance {
             };
         }
     }
-    /**
-     * Number of random values to generate.
-     */
-    @Param({"0", "1", "10", "100"})
-    private int numValues;
 
     /**
      * @return the result

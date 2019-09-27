@@ -55,6 +55,13 @@ import java.util.concurrent.TimeUnit;
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class DiscreteSamplersPerformance {
     /**
+     * The value.
+     *
+     * <p>This must NOT be final!</p>
+     */
+    private int value;
+
+    /**
      * The {@link DiscreteSampler} samplers to use for testing. Creates the sampler for each
      * {@link org.apache.commons.rng.simple.RandomSource RandomSource} in the default
      * {@link RandomSources}.
@@ -135,13 +142,6 @@ public class DiscreteSamplersPerformance {
     }
 
     // Benchmarks methods below.
-
-    /**
-     * The value.
-     *
-     * <p>This must NOT be final!</p>
-     */
-    private int value;
 
     /**
      * Baseline for the JMH timing overhead for production of an {@code int} value.

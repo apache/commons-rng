@@ -28,6 +28,9 @@ import org.openjdk.jmh.annotations.State;
  * {@link UniformRandomProvider#nextLong(long)}.
  */
 public class NextLongGenerationPerformance extends AbstractBenchmark {
+    /** The value. Must NOT be final to prevent JVM optimisation! */
+    private long value;
+
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
      */
@@ -39,9 +42,6 @@ public class NextLongGenerationPerformance extends AbstractBenchmark {
             return BaselineUtils.getNextLong();
         }
     }
-
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private long value;
 
     /**
      * Baseline for a JMH method call with no return value.
