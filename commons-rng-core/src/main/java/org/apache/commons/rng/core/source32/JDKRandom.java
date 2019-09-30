@@ -18,7 +18,9 @@ package org.apache.commons.rng.core.source32;
 
 import java.util.Random;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -45,6 +47,38 @@ import java.io.ByteArrayInputStream;
 public class JDKRandom extends IntProvider {
     /** Delegate.  Cannot be "final" (to allow serialization). */
     private Random delegate;
+
+    /**
+     * An <code>ObjectInputStream</code> that's restricted to deserialize
+     * only {@link java.util.Random} using look-ahead deserialization.
+     *
+     * <p>Adapted from o.a.c.io.serialization.ValidatingObjectInputStream.</p>
+     *
+     * @see <a href="http://www.ibm.com/developerworks/library/se-lookahead/">
+     *  IBM DeveloperWorks Article: Look-ahead Java deserialization</a>
+     */
+    private static class ValidatingObjectInputStream extends ObjectInputStream {
+        /**
+         * @param in Input stream
+         * @throws IOException Signals that an I/O exception has occurred.
+         */
+        ValidatingObjectInputStream(final InputStream in) throws IOException {
+            super(in);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected Class<?> resolveClass(final ObjectStreamClass osc) throws IOException,
+            ClassNotFoundException {
+            // For legacy reasons the Random class is serialized using only primitives
+            // even though modern implementations use AtomicLong.
+            // The only expected class is java.util.Random.
+            if (!Random.class.getName().equals(osc.getName())) {
+                throw new IllegalStateException("Stream does not contain java.util.Random: " + osc.getName());
+            }
+            return super.resolveClass(osc);
+        }
+    }
 
     /**
      * Creates an instance with the given seed.
@@ -98,9 +132,10 @@ public class JDKRandom extends IntProvider {
         // Second obtain the state
         final byte[][] c = splitStateInternal(s2[1], stateSize);
 
+        // Use look-ahead deserialization to validate the state byte[] contains java.util.Random.
         try {
             final ByteArrayInputStream bis = new ByteArrayInputStream(c[0]);
-            final ObjectInputStream ois = new ObjectInputStream(bis);
+            final ObjectInputStream ois = new ValidatingObjectInputStream(bis);
 
             delegate = (Random) ois.readObject();
         } catch (ClassNotFoundException e) {

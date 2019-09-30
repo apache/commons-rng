@@ -63,7 +63,7 @@ public class JDKRandomBridgeTest {
         ObjectInputStream ois = new ObjectInputStream(bis);
         final Random serialRng = (Random) (ois.readObject());
 
-        // Check that the serialized data recreated the orginal state.
+        // Check that the serialized data recreated the original state.
         checkSameSequence(rng, serialRng);
     }
 

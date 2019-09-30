@@ -16,13 +16,47 @@
  */
 package org.apache.commons.rng.core.source32;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Random;
 
 import org.apache.commons.rng.RandomProviderState;
+import org.apache.commons.rng.core.RandomProviderDefaultState;
+import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class JDKRandomTest {
+    /**
+     * A class that is Serializable.
+     * It contains member fields so there is something to serialize and malicious
+     * deserialization code.
+     */
+    static class SerializableTestObject implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        private int state0;
+        private double state1;
+        private long state2;
+        private boolean stte3;
+
+        /**
+         * This simulates doing something malicious when deserializing.
+         *
+         * @param input Input stream.
+         * @throws IOException if an error occurs.
+         * @throws ClassNotFoundException if an error occurs.
+         */
+        private void readObject(ObjectInputStream input)
+                throws IOException,
+                       ClassNotFoundException {
+            Assert.fail("This should not be run during the test");
+        }
+    }
+
     @Test
     public void testReferenceCode() {
         final long refSeed = -1357111213L;
@@ -63,5 +97,34 @@ public class JDKRandomTest {
         for (int r = 0; r < numRepeats; r++) {
             Assert.assertEquals(r + " nextInt", rng1.nextInt(), rng2.nextInt());
         }
+    }
+
+    /**
+     * Test the deserialization code identifies bad states that do not contain a Random instance.
+     * This test exercises the code that uses a custom deserialization ObjectInputStream.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testRestoreWithInvalidClass() throws IOException  {
+        // Serialize something
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(new SerializableTestObject());
+        oos.close();
+
+        // Compose the size with the state.
+        // This is what is expected by the JDKRandom class.
+        final byte[] state = bos.toByteArray();
+        final int stateSize = state.length;
+        final byte[] sizeAndState = new byte[4 + stateSize];
+        System.arraycopy(NumberFactory.makeByteArray(stateSize), 0, sizeAndState, 0, 4);
+        System.arraycopy(state, 0, sizeAndState, 4, stateSize);
+
+        final RandomProviderDefaultState dummyState = new RandomProviderDefaultState(sizeAndState);
+
+        final JDKRandom rng = new JDKRandom(13L);
+        // This should throw
+        rng.restoreState(dummyState);
     }
 }

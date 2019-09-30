@@ -106,8 +106,13 @@ public final class JDKRandomBridge extends Random {
             // Write non-transient fields.
             output.defaultWriteObject();
 
-            // Save current state.
-            output.writeObject(((RandomProviderDefaultState) delegate.saveState()).getState());
+            // Save current state and size.
+            // Avoid the use of ObjectOutputStream.writeObject(Object) to save the state.
+            // This allows deserialization to avoid security issues in using readObject().
+            final byte[] state = ((RandomProviderDefaultState) delegate.saveState()).getState();
+            final int size = state.length;
+            output.writeInt(size);
+            output.write(state);
         }
     }
 
@@ -125,6 +130,12 @@ public final class JDKRandomBridge extends Random {
         // Recreate the "delegate" from serialized info.
         delegate = RandomSource.create(source);
         // And restore its state.
-        delegate.restoreState(new RandomProviderDefaultState((byte[]) input.readObject()));
+        // Avoid the use of input.readObject() to deserialize by manually reading the byte[].
+        // Note: ObjectInputStream.readObject() will execute the readObject() method of the named
+        // class in the stream which may contain potentially malicious code.
+        final int size = input.readInt();
+        final byte[] state = new byte[size];
+        input.readFully(state);
+        delegate.restoreState(new RandomProviderDefaultState(state));
     }
 }
