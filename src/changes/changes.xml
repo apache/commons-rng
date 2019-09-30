@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-76">
+        "SplitMix64": Added primitive long constructor.
+      </action>
       <action dev="aherbert" type="add" issue="RNG-117">
         Additional "XorShiRo" family generators. This adds 4 PlusPlus general purpose variants
         of existing generators and 3 variants of a large state (1024-bit) generator.
