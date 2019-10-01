@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh;
+package org.apache.commons.rng.examples.jmh.core;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -24,11 +24,14 @@ import org.openjdk.jmh.annotations.State;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers from the
- * various source providers for {@link UniformRandomProvider#nextDouble()}.
+ * various source providers for {@link UniformRandomProvider#nextBytes(byte[])}.
  */
-public class NextDoubleGenerationPerformance extends AbstractBenchmark {
-    /** The value. Must NOT be final to prevent JVM optimisation! */
-    private double value;
+public class NextBytesGenerationPerformance extends AbstractBenchmark {
+    /**
+     * The value. This is a pre-allocated array. Must NOT be final to prevent JVM
+     * optimisation!
+     */
+    private byte[] value = new byte[BaselineGenerationPerformance.NEXT_BYTES_SIZE];
 
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
@@ -38,7 +41,7 @@ public class NextDoubleGenerationPerformance extends AbstractBenchmark {
         /** {@inheritDoc} */
         @Override
         protected UniformRandomProvider createBaseline() {
-            return BaselineUtils.getNextDouble();
+            return BaselineUtils.getNextBytes();
         }
     }
 
@@ -51,23 +54,25 @@ public class NextDoubleGenerationPerformance extends AbstractBenchmark {
     }
 
     /**
-     * Baseline for a JMH method call returning a {@code double}.
+     * Baseline for a JMH method call returning a {@code byte[]}.
      *
      * @return the value
      */
     @Benchmark
-    public double baselineDouble() {
+    public byte[] baselineBytes() {
         return value;
     }
 
     /**
-     * Exercise the {@link UniformRandomProvider#nextDouble()} method.
+     * Exercise the {@link UniformRandomProvider#nextBytes(byte[])} method.
      *
      * @param sources Source of randomness.
-     * @return the double
+     * @return the boolean
      */
     @Benchmark
-    public double nextDouble(Sources sources) {
-        return sources.getGenerator().nextDouble();
+    public byte[] nextBytes(Sources sources) {
+        // The array allocation is not part of the benchmark.
+        sources.getGenerator().nextBytes(value);
+        return value;
     }
 }

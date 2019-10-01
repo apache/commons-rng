@@ -16,7 +16,7 @@
  */
 
 /**
- * Benchmarks for samplers.
+ * Benchmarks for the {@code org.apache.commons.rng.core} components.
  */
 
-package org.apache.commons.rng.examples.jmh.distribution;
+package org.apache.commons.rng.examples.jmh.core;

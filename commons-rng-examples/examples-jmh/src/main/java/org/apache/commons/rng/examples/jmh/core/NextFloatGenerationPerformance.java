@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh;
+package org.apache.commons.rng.examples.jmh.core;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -24,12 +24,11 @@ import org.openjdk.jmh.annotations.State;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers from the
- * various source providers for {@link UniformRandomProvider#nextInt()} and
- * {@link UniformRandomProvider#nextInt(int)}.
+ * various source providers for {@link UniformRandomProvider#nextFloat()}.
  */
-public class NextIntGenerationPerformance extends AbstractBenchmark {
+public class NextFloatGenerationPerformance extends AbstractBenchmark {
     /** The value. Must NOT be final to prevent JVM optimisation! */
-    private int value;
+    private float value;
 
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
@@ -39,7 +38,7 @@ public class NextIntGenerationPerformance extends AbstractBenchmark {
         /** {@inheritDoc} */
         @Override
         protected UniformRandomProvider createBaseline() {
-            return BaselineUtils.getNextInt();
+            return BaselineUtils.getNextFloat();
         }
     }
 
@@ -52,34 +51,23 @@ public class NextIntGenerationPerformance extends AbstractBenchmark {
     }
 
     /**
-     * Baseline for a JMH method call returning an {@code int}.
+     * Baseline for a JMH method call returning a {@code float}.
      *
      * @return the value
      */
     @Benchmark
-    public int baselineInt() {
+    public float baselineFloat() {
         return value;
     }
 
     /**
-     * Exercise the {@link UniformRandomProvider#nextInt()} method.
+     * Exercise the {@link UniformRandomProvider#nextFloat()} method.
      *
      * @param sources Source of randomness.
-     * @return the int
+     * @return the float
      */
     @Benchmark
-    public int nextInt(Sources sources) {
-        return sources.getGenerator().nextInt();
-    }
-
-    /**
-     * Exercise the {@link UniformRandomProvider#nextInt(int)} method.
-     *
-     * @param sources Source of randomness.
-     * @return the int
-     */
-    @Benchmark
-    public int nextIntN(Sources sources) {
-        return sources.getGenerator().nextInt(BaselineGenerationPerformance.NEXT_INT_LIMIT);
+    public float nextFloat(Sources sources) {
+        return sources.getGenerator().nextFloat();
     }
 }

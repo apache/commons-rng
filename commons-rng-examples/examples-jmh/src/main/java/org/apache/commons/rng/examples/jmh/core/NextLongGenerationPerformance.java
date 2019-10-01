@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh;
+package org.apache.commons.rng.examples.jmh.core;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -24,11 +24,12 @@ import org.openjdk.jmh.annotations.State;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers from the
- * various source providers for {@link UniformRandomProvider#nextFloat()}.
+ * various source providers for {@link UniformRandomProvider#nextLong()} and
+ * {@link UniformRandomProvider#nextLong(long)}.
  */
-public class NextFloatGenerationPerformance extends AbstractBenchmark {
+public class NextLongGenerationPerformance extends AbstractBenchmark {
     /** The value. Must NOT be final to prevent JVM optimisation! */
-    private float value;
+    private long value;
 
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
@@ -38,7 +39,7 @@ public class NextFloatGenerationPerformance extends AbstractBenchmark {
         /** {@inheritDoc} */
         @Override
         protected UniformRandomProvider createBaseline() {
-            return BaselineUtils.getNextFloat();
+            return BaselineUtils.getNextLong();
         }
     }
 
@@ -51,23 +52,34 @@ public class NextFloatGenerationPerformance extends AbstractBenchmark {
     }
 
     /**
-     * Baseline for a JMH method call returning a {@code float}.
+     * Baseline for a JMH method call returning a {@code long}.
      *
      * @return the value
      */
     @Benchmark
-    public float baselineFloat() {
+    public long baselineLong() {
         return value;
     }
 
     /**
-     * Exercise the {@link UniformRandomProvider#nextFloat()} method.
+     * Exercise the {@link UniformRandomProvider#nextLong()} method.
      *
      * @param sources Source of randomness.
-     * @return the float
+     * @return the long
      */
     @Benchmark
-    public float nextFloat(Sources sources) {
-        return sources.getGenerator().nextFloat();
+    public long nextLong(Sources sources) {
+        return sources.getGenerator().nextLong();
+    }
+
+    /**
+     * Exercise the {@link UniformRandomProvider#nextLong(long)} method.
+     *
+     * @param sources Source of randomness.
+     * @return the long
+     */
+    @Benchmark
+    public long nextLongN(Sources sources) {
+        return sources.getGenerator().nextLong(BaselineGenerationPerformance.NEXT_LONG_LIMIT);
     }
 }

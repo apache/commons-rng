@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh;
+package org.apache.commons.rng.examples.jmh.core;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -24,12 +24,12 @@ import org.openjdk.jmh.annotations.State;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers from the
- * various source providers for {@link UniformRandomProvider#nextLong()} and
- * {@link UniformRandomProvider#nextLong(long)}.
+ * various source providers for {@link UniformRandomProvider#nextInt()} and
+ * {@link UniformRandomProvider#nextInt(int)}.
  */
-public class NextLongGenerationPerformance extends AbstractBenchmark {
+public class NextIntGenerationPerformance extends AbstractBenchmark {
     /** The value. Must NOT be final to prevent JVM optimisation! */
-    private long value;
+    private int value;
 
     /**
      * The benchmark state (retrieve the various "RandomSource"s).
@@ -39,7 +39,7 @@ public class NextLongGenerationPerformance extends AbstractBenchmark {
         /** {@inheritDoc} */
         @Override
         protected UniformRandomProvider createBaseline() {
-            return BaselineUtils.getNextLong();
+            return BaselineUtils.getNextInt();
         }
     }
 
@@ -52,34 +52,34 @@ public class NextLongGenerationPerformance extends AbstractBenchmark {
     }
 
     /**
-     * Baseline for a JMH method call returning a {@code long}.
+     * Baseline for a JMH method call returning an {@code int}.
      *
      * @return the value
      */
     @Benchmark
-    public long baselineLong() {
+    public int baselineInt() {
         return value;
     }
 
     /**
-     * Exercise the {@link UniformRandomProvider#nextLong()} method.
+     * Exercise the {@link UniformRandomProvider#nextInt()} method.
      *
      * @param sources Source of randomness.
-     * @return the long
+     * @return the int
      */
     @Benchmark
-    public long nextLong(Sources sources) {
-        return sources.getGenerator().nextLong();
+    public int nextInt(Sources sources) {
+        return sources.getGenerator().nextInt();
     }
 
     /**
-     * Exercise the {@link UniformRandomProvider#nextLong(long)} method.
+     * Exercise the {@link UniformRandomProvider#nextInt(int)} method.
      *
      * @param sources Source of randomness.
-     * @return the long
+     * @return the int
      */
     @Benchmark
-    public long nextLongN(Sources sources) {
-        return sources.getGenerator().nextLong(BaselineGenerationPerformance.NEXT_LONG_LIMIT);
+    public int nextIntN(Sources sources) {
+        return sources.getGenerator().nextInt(BaselineGenerationPerformance.NEXT_INT_LIMIT);
     }
 }

@@ -16,24 +16,7 @@
  */
 
 /**
- * <h3>Performance benchmarks</h3>
- *
- * <p>
- * This package contains code to perform a
- * <a href="http://openjdk.java.net/projects/code-tools/jmh">JMH</a> run.
- * </p>
- *
- * <p>
- * Support for a new {@link org.apache.commons.rng.UniformRandomProvider UniformRandomProvider}
- * with a defined enum value in {@link org.apache.commons.rng.simple.RandomSource RandomSource}
- * can be added by updating:
- * </p>
- *
- * <ul>
- *   <li>The {@link org.apache.commons.rng.examples.jmh.RandomSourceValues RandomSourceValues} class
- *   <li>The {@link org.apache.commons.rng.examples.jmh.core.BaselineSources BaselineSources} class
- *   <li>The {@link org.apache.commons.rng.examples.jmh.simple.ConstructionPerformance
- *       ConstructionPerformance} class
- * </ul>
+ * Benchmarks for the {@code org.apache.commons.rng.sampling.distribution} components.
  */
-package org.apache.commons.rng.examples.jmh;
+
+package org.apache.commons.rng.examples.jmh.sampling.distribution;

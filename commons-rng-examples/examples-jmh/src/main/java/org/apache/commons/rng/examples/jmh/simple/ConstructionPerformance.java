@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh;
+package org.apache.commons.rng.examples.jmh.simple;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -64,6 +64,7 @@ import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
 import org.apache.commons.rng.core.util.NumberFactory;
+import org.apache.commons.rng.examples.jmh.RandomSourceValues;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
 import org.apache.commons.rng.simple.internal.SeedFactory;
@@ -73,7 +74,10 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  *
  * <p>Note that random number providers are created and then used. Thus the construction time must
  * be analysed together with the run time performance benchmark (see for example
- * {@link NextIntGenerationPerformance} and {@link NextLongGenerationPerformance}).
+ * {@link org.apache.commons.rng.examples.jmh.core.NextLongGenerationPerformance
+ * NextIntGenerationPerformance} and
+ * {@link org.apache.commons.rng.examples.jmh.core.NextLongGenerationPerformance
+ * NextLongGenerationPerformance}).
  *
  * <pre>
  * [Total time] = [Construction time] + [Run time]
