@@ -19,7 +19,9 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Utility class implementing Cheng's algorithms for beta distribution sampling.
+ * Sampling from a <a href="http://en.wikipedia.org/wiki/Beta_distribution">Beta distribution</a>.
+ *
+ * <p>Uses Cheng's algorithms for beta distribution sampling:</p>
  *
  * <blockquote>
  * <pre>
@@ -92,8 +94,8 @@ public class ChengBetaSampler
         if (a > 1) {
             return algorithmBB(a, b);
         }
-        // This method declares parameters (a, b).
-        // The algorithm is deliberately invoked with reversed parameters.
+        // The algorithm is deliberately invoked with reversed parameters
+        // as the argument order is: max(alpha,beta), min(alpha,beta).
         return algorithmBC(b, a);
     }
 
@@ -150,11 +152,11 @@ public class ChengBetaSampler
     }
 
     /**
-     * Computes one sample using Cheng's BB algorithm, when at least one of
+     * Computes one sample using Cheng's BC algorithm, when at least one of
      * \( \alpha \) or \( \beta \) is smaller than 1.
      *
-     * @param a \( \min(\alpha, \beta) \).
-     * @param b \( \max(\alpha, \beta) \).
+     * @param a \( \max(\alpha, \beta) \).
+     * @param b \( \min(\alpha, \beta) \).
      * @return a random sample.
      */
     private double algorithmBC(double a,
