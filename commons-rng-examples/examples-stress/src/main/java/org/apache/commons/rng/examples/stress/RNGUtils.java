@@ -88,6 +88,48 @@ final class RNGUtils {
     }
 
     /**
+     * Wrap the random generator with an {@link IntProvider} that will use the upper 32-bits
+     * of the {@code long} from {@link UniformRandomProvider#nextLong()}.
+     *
+     * @param rng The random generator.
+     * @return the upper bits random generator.
+     */
+    static UniformRandomProvider createLongUpperBitsIntProvider(final UniformRandomProvider rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return (int) (rng.nextLong() >>> 32);
+            }
+
+            @Override
+            public String toString() {
+                return "Long upper-bits " + rng.toString();
+            }
+        };
+    }
+
+    /**
+     * Wrap the random generator with an {@link IntProvider} that will use the lower 32-bits
+     * of the {@code long} from {@link UniformRandomProvider#nextLong()}.
+     *
+     * @param rng The random generator.
+     * @return the lower bits random generator.
+     */
+    static UniformRandomProvider createLongLowerBitsIntProvider(final UniformRandomProvider rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return (int) rng.nextLong();
+            }
+
+            @Override
+            public String toString() {
+                return "Long lower-bits " + rng.toString();
+            }
+        };
+    }
+
+    /**
      * Wrap the random generator with an {@link IntProvider} that will combine the bits
      * using a {@code xor} operation with a generated hash code.
      *

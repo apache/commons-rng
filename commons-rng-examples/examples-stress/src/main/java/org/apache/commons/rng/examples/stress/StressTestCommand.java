@@ -132,9 +132,21 @@ class StressTestCommand implements Callable<Void> {
                            "when passing using the standard sequence."})
     private boolean reverseBits;
 
+    /** Flag to use the upper 32-bits from the 64-bit long output. */
+    @Option(names = {"--high-bits"},
+            description = {"Use the upper 32-bits from the 64-bit long output.",
+                           "Takes precedent over --low-bits."})
+    private boolean longHighBits;
+
+    /** Flag to use the lower 32-bits from the 64-bit long output. */
+    @Option(names = {"--low-bits"},
+            description = {"Use the lower 32-bits from the 64-bit long output."})
+    private boolean longLowBits;
+
     /**
      * Flag to indicate the output should be combined with a hashcode from a new object.
-     * This is a method used in the {@link org.apache.commons.rng.simple.internal.SeedFactory SeedFactory}.
+     * This is a method previously used in the
+     * {@link org.apache.commons.rng.simple.internal.SeedFactory SeedFactory}.
      *
      * @see System#identityHashCode(Object)
      */
@@ -445,6 +457,11 @@ class StressTestCommand implements Callable<Void> {
             final byte[] seed = testData.getRandomSource().createSeed();
             UniformRandomProvider rng = testData.createRNG(seed);
             // Combined generators must be created first
+            if (longHighBits) {
+                rng = RNGUtils.createLongUpperBitsIntProvider(rng);
+            } else if (longLowBits) {
+                rng = RNGUtils.createLongLowerBitsIntProvider(rng);
+            }
             if (xorHashCode) {
                 rng = RNGUtils.createHashCodeIntProvider(rng);
             }
