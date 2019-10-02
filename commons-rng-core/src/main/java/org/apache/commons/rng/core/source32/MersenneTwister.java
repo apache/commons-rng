@@ -165,14 +165,45 @@ public class MersenneTwister extends IntProvider {
         // Accept empty seed.
         final int[] seed = (inputSeed.length == 0) ? new int[1] : inputSeed;
 
-        final int stateSize = state.length;
+        initialiseState(state);
 
+        final int nextIndex = mixSeedAndState(state, seed);
+
+        mixState(state, nextIndex);
+
+        state[0] = (int) UPPER_MASK_LONG; // MSB is 1, ensuring non-zero initial array.
+    }
+
+    /**
+     * Fill the state using a defined pseudo-random sequence.
+     *
+     * @param state State to be filled (must be allocated).
+     */
+    private static void initialiseState(int[] state) {
         long mt = 19650218 & INT_MASK_LONG;
         state[0] = (int) mt;
-        for (int i = 1; i < stateSize; i++) {
+        for (int i = 1; i < state.length; i++) {
             mt = (1812433253L * (mt ^ (mt >> 30)) + i) & INT_MASK_LONG;
             state[i] = (int) mt;
         }
+    }
+
+    /**
+     * Mix the seed into the state using a non-linear combination. The procedure
+     * uses {@code k} steps where {@code k = max(state.length, seed.length)}. If
+     * the seed is smaller than the state it is wrapped to obtain enough values.
+     * If the seed is larger than the state then the procedure visits entries in
+     * the state multiple times.
+     *
+     * <p>Returns the index immediately after the most recently visited position
+     * in the state array.</p>
+     *
+     * @param state State to be filled (must be allocated).
+     * @param seed Seed (must be at least length 1).
+     * @return the next index
+     */
+    private static int mixSeedAndState(int[] state, final int[] seed) {
+        final int stateSize = state.length;
 
         int i = 1;
         int j = 0;
@@ -192,7 +223,21 @@ public class MersenneTwister extends IntProvider {
                 j = 0;
             }
         }
+        return i;
+    }
 
+    /**
+     * Mix each position of the state using a non-linear combination. The
+     * procedure starts from the specified index in the state array and wraps
+     * iteration through the array if required.
+     *
+     * @param state State to be filled (must be allocated).
+     * @param startIndex The index to begin within the state array.
+     */
+    private static void mixState(int[] state, int startIndex) {
+        final int stateSize = state.length;
+
+        int i = startIndex;
         for (int k = stateSize - 1; k > 0; k--) {
             final long a = (state[i] & LOWER_MASK_LONG) | ((state[i] < 0) ? UPPER_MASK_LONG : 0);
             final long b = (state[i - 1] & LOWER_MASK_LONG) | ((state[i - 1] < 0) ? UPPER_MASK_LONG : 0);
@@ -204,8 +249,6 @@ public class MersenneTwister extends IntProvider {
                 i = 1;
             }
         }
-
-        state[0] = (int) UPPER_MASK_LONG; // MSB is 1, ensuring non-zero initial array.
     }
 
     /** {@inheritDoc} */
