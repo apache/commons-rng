@@ -240,8 +240,10 @@ public class LargeMeanPoissonSampler
         double qr;
         double qa;
         while (true) {
+            // Step 1:
             final double u = rng.nextDouble();
             if (u <= p1) {
+                // Step 2:
                 final double n = gaussian.sample();
                 x = n * Math.sqrt(lambda + halfDelta) - 0.5d;
                 if (x > delta || x < -lambda) {
@@ -251,6 +253,7 @@ public class LargeMeanPoissonSampler
                 final double e = exponential.sample();
                 v = -e - 0.5 * n * n + c1;
             } else {
+                // Step 3:
                 if (u > p1 + p2) {
                     y = lambda;
                     break;
@@ -259,21 +262,28 @@ public class LargeMeanPoissonSampler
                 y = Math.ceil(x);
                 v = -exponential.sample() - delta * (x + 1) / twolpd;
             }
+            // The Squeeze Principle
+            // Step 4.1:
             a = x < 0 ? 1 : 0;
             t = y * (y + 1) / (2 * lambda);
+            // Step 4.2
             if (v < -t && a == 0) {
                 y = lambda + y;
                 break;
             }
+            // Step 4.3:
             qr = t * ((2 * y + 1) / (6 * lambda) - 1);
             qa = qr - (t * t) / (3 * (lambda + a * (y + 1)));
+            // Step 4.4:
             if (v < qa) {
                 y = lambda + y;
                 break;
             }
+            // Step 4.5:
             if (v > qr) {
                 continue;
             }
+            // Step 4.6:
             if (v < y * logLambda - getFactorialLog((int) (y + lambda)) + logLambdaFactorial) {
                 y = lambda + y;
                 break;
