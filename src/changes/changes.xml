@@ -75,6 +75,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-120">
+        Update security of serialization code for java.util.Random instances. Implement
+        look-ahead deserialization or remove the use of ObjectInputStream.readObject().
+      </action>
       <action dev="aherbert" type="update" issue="RNG-76">
         "SplitMix64": Added primitive long constructor.
       </action>
