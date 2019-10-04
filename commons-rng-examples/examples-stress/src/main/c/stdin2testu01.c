@@ -51,7 +51,7 @@
 #define TU_C "Crush"
 #define TU_B "BigCrush"
 #define T_STDOUT "stdout"
-#define BUFFER_LENGTH 512
+#define BUFFER_LENGTH 2048
 
 typedef struct {
   uint32_t buffer[BUFFER_LENGTH];
