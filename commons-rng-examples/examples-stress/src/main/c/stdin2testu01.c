@@ -50,7 +50,8 @@
 #define TU_S "SmallCrush"
 #define TU_C "Crush"
 #define TU_B "BigCrush"
-#define T_STDOUT "stdout"
+#define T_RAW_32 "raw32"
+#define T_RAW_64 "raw64"
 #define BUFFER_LENGTH 2048
 
 typedef struct {
@@ -77,7 +78,7 @@ void printByte(uint8_t byte)
 }
 
 /*
- * Print a string representation of the 4 bytes of the unsigned int
+ * Print a string representation of the 4 bytes of the 32-bit unsigned integer
  * to stdout on a single line using: a binary string representation of
  * the bytes; the unsigned integer; and the signed integer.
  *
@@ -94,7 +95,36 @@ void printInt(uint32_t value)
   putchar(' ');
   printByte((uint8_t)( value        & 0xff));
   /* Write the unsigned and signed int value */
-  printf(" %11u %11d\n", value, (int) value);
+  printf("  %10u %11d\n", value, (int32_t) value);
+}
+
+/*
+ * Print a string representation of the 8 bytes of the 64-bit unsigned integer
+ * to stdout on a single line using: a binary string representation of
+ * the bytes; the unsigned integer; and the signed integer.
+ *
+ * 10011010 01010011 01011010 11100100 01000111 00010000 01000011 11000101  11120331841399178181 -7326412232310373435
+ */
+void printLong(uint64_t value)
+{
+  /* Write out as 8 bytes with spaces between them, high byte first. */
+  printByte((uint8_t)((value >> 56) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 48) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 40) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 32) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 24) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >> 16) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)((value >>  8) & 0xff));
+  putchar(' ');
+  printByte((uint8_t)( value        & 0xff));
+  /* Write the unsigned and signed int value */
+  printf("  %20lu %20ld\n", value, (int64_t) value);
 }
 
 unsigned long nextInt(void *par,
@@ -190,10 +220,17 @@ int main(int argc,
     bbattery_Crush(gen);
   } else if (strcmp(spec, TU_B) == 0) {
     bbattery_BigCrush(gen);
-  } else if (strcmp(spec, T_STDOUT) == 0) {
+  } else if (strcmp(spec, T_RAW_32) == 0) {
     // Print to stdout until stdin closes
     while (1) {
       printInt(nextInt(0, gen->state));
+    }
+  } else if (strcmp(spec, T_RAW_64) == 0) {
+    // Print to stdout until stdin closes
+    while (1) {
+      uint64_t hi = nextInt(0, gen->state);
+      uint64_t lo = nextInt(0, gen->state);
+      printLong((hi << 32) | lo);
     }
   } else {
     printf("[ERROR] Unknown specification: '%s'\n", spec);
