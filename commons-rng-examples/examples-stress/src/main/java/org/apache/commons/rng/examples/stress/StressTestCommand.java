@@ -17,6 +17,7 @@
 package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -24,10 +25,8 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteOrder;
@@ -119,6 +118,11 @@ class StressTestCommand implements Callable<Void> {
                            "Two threads are required per task."})
     private int taskCount = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
 
+    /** The size of the byte buffer for the binary data. */
+    @Option(names = {"--buffer-size"},
+            description = {"Byte-buffer size for the transferred data (default: ${DEFAULT-VALUE})."})
+    private int bufferSize = 8192;
+
     /** The output byte order of the binary data. */
     @Option(names = {"-b", "--byte-order"},
             description = {"Byte-order of the transferred data (default: ${DEFAULT-VALUE}).",
@@ -142,6 +146,14 @@ class StressTestCommand implements Callable<Void> {
     @Option(names = {"--low-bits"},
             description = {"Use the lower 32-bits from the 64-bit long output."})
     private boolean longLowBits;
+
+    /** Flag to use 64-bit long output. */
+    @Option(names = {"--raw64"},
+            description = {"Use 64-bit output (default is 32-bit).",
+                           "This requires a 64-bit testing application and native 64-bit generators.",
+                           "In 32-bit mode the output uses the upper then lower bits of 64-bit " +
+                           "generators sequentially, each appropriately byte reversed for the platform."})
+    private boolean raw64;
 
     /**
      * Flag to indicate the output should be combined with a hashcode from a new object.
@@ -456,30 +468,36 @@ class StressTestCommand implements Callable<Void> {
             // Create the generator. Explicitly create a seed so it can be recorded.
             final byte[] seed = testData.getRandomSource().createSeed();
             UniformRandomProvider rng = testData.createRNG(seed);
-            // Combined generators must be created first
+
+            // Upper or lower bits from 64-bit generators must be created first.
+            // This will throw if not a 64-bit generator.
             if (longHighBits) {
                 rng = RNGUtils.createLongUpperBitsIntProvider(rng);
             } else if (longLowBits) {
                 rng = RNGUtils.createLongLowerBitsIntProvider(rng);
             }
+
+            // Combination generators. Mainly used for testing.
+            // These operations maintain the native output type (int/long).
             if (xorHashCode) {
-                rng = RNGUtils.createHashCodeIntProvider(rng);
+                rng = RNGUtils.createHashCodeProvider(rng);
             }
             if (xorThreadLocalRandom) {
-                rng = RNGUtils.createThreadLocalRandomIntProvider(rng);
+                rng = RNGUtils.createThreadLocalRandomProvider(rng);
             }
             if (xorRandomSource != null) {
-                rng = RNGUtils.createXorIntProvider(
+                rng = RNGUtils.createXorProvider(
                         RandomSource.create(xorRandomSource),
                         rng);
             }
             if (reverseBits) {
-                rng = RNGUtils.createReverseBitsIntProvider(rng);
+                rng = RNGUtils.createReverseBitsProvider(rng);
             }
-            // Manipulation of the bytes for the platform is done on the entire generator
-            if (byteOrder.equals(ByteOrder.LITTLE_ENDIAN)) {
-                rng = RNGUtils.createReverseBytesIntProvider(rng);
-            }
+
+            // -------
+            // Note: Manipulation of the byte order for the platform is done during output.
+            // -------
+
             // Run the test
             final Runnable r = new StressTestTask(testData.getRandomSource(), rng, seed,
                                                   output, command, this, progressTracker);
@@ -568,8 +586,8 @@ class StressTestCommand implements Callable<Void> {
         /** The progress tracker. */
         private final ProgressTracker progressTracker;
 
-        /** The count of numbers used by the sub-process. */
-        private long numbersUsed;
+        /** The count of bytes used by the sub-process. */
+        private long bytesUsed;
 
         /**
          * Creates the task.
@@ -643,18 +661,19 @@ class StressTestCommand implements Callable<Void> {
             builder.redirectOutput(ProcessBuilder.Redirect.appendTo(output));
             builder.redirectErrorStream(true);
             final Process testingProcess = builder.start();
-            final DataOutputStream sink = new DataOutputStream(
-                new BufferedOutputStream(testingProcess.getOutputStream()));
 
-
-            try {
-                while (true) {
-                    sink.writeInt(rng.nextInt());
-                    numbersUsed++;
+            // Use a custom data output to write the RNG.
+            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, cmd.raw64,
+                testingProcess.getOutputStream(), cmd.bufferSize, cmd.byteOrder)) {
+                for (;;) {
+                    sink.write(rng);
+                    bytesUsed++;
                 }
             } catch (final IOException ignored) {
                 // Hopefully getting here when the analyzing software terminates.
             }
+
+            bytesUsed *= cmd.bufferSize;
 
             // Get the exit value
             return ProcessUtils.getExitValue(testingProcess);
@@ -686,7 +705,11 @@ class StressTestCommand implements Callable<Void> {
                 .append(' ').append(System.getProperty("os.version"))
                 .append(' ').append(System.getProperty("os.arch")).append(N)
                 .append(C).append("Native byte-order: ").append(ByteOrder.nativeOrder()).append(N)
-                .append(C).append(N)
+                .append(C).append("Output byte-order: ").append(cmd.byteOrder).append(N);
+            if (rng instanceof RandomLongSource) {
+                sb.append(C).append("64-bit output: ").append(cmd.raw64).append(N);
+            }
+            sb.append(C).append(N)
                 .append(C).append("Analyzer: ");
             for (final String s : command) {
                 sb.append(s).append(' ');
@@ -715,9 +738,9 @@ class StressTestCommand implements Callable<Void> {
             appendDate(sb, "End").append(C).append(N);
 
             sb.append(C).append("Exit value: ").append(exitValue).append(N)
-                .append(C).append("Numbers used: ").append(numbersUsed)
-                          .append(" >= 2^").append(log2(numbersUsed))
-                          .append(" (").append(bytesToString(numbersUsed * 4)).append(')').append(N)
+                .append(C).append("Bytes used: ").append(bytesUsed)
+                          .append(" >= 2^").append(log2(bytesUsed))
+                          .append(" (").append(bytesToString(bytesUsed)).append(')').append(N)
                 .append(C).append(N);
 
             final double duration = nanoTime * 1e-9 / 60;

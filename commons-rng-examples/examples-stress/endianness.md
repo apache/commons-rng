@@ -113,13 +113,13 @@ send a set of test integer data in binary format to the standard input (stdin) o
 application.
 
 The `stdin2testu01` application is able to read the input binary data and convert it to human
-readable format when run with the argument `stdout`. Details of how to build the `stdin2testu01`
+readable format when run with the argument `raw32`. Details of how to build the `stdin2testu01`
 application are provided in the [stress test](./stress_test.md) page.
 
 The platform endianess is auto-detected by the Java application. To run the bridge test
 use the following command:
 
-        > java -jar target/examples-stress.jar bridge ./stdin2testu01 stdout
+        > java -jar target/examples-stress.jar bridge ./stdin2testu01 raw32
 
 This should produce the following output files:
 
@@ -144,12 +144,12 @@ integer value and the signed integer value. The contents will be similar to:
         01011100 10001111 11110001 11000001  1552937409  1552937409
         10110000 01110101 10010011 00011100  2960495388 -1334471908
 
-The `stdin2testu01` has been written to output the same format when using the `stdout` mode.
+The `stdin2testu01` has been written to output the same format when using the `raw32` mode.
 If the data has been correctly read the `bridge.data` and `bridge.out` should match.
 If the endianess is incorrect then the data sent by the Java application will not match the
 data read by the sub-process. For example to swap the endianness use the `-b` option:
 
-        > java -jar target/examples-stress.jar bridge -b BIG_ENDIAN ./stdin2testu01 stdout
+        > java -jar target/examples-stress.jar bridge -b BIG_ENDIAN ./stdin2testu01 raw32
 
 In this case the little-endian plaform has been sent big-endian data and the contents of the
 `bridge.out` file begin with the reverse byte order:

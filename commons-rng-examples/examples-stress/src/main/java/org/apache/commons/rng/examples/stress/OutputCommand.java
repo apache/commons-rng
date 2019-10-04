@@ -17,6 +17,7 @@
 package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -24,9 +25,7 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -101,6 +100,13 @@ class OutputCommand implements Callable<Void> {
                            "Use negative for an unlimited stream."})
     private long count = 10;
 
+    /** The size of the byte buffer for the binary data. */
+    @Option(names = {"--buffer-size"},
+            description = {"Byte-buffer size for binary data (default: ${DEFAULT-VALUE}).",
+                           "When outputing binary data the count parameter controls the " +
+                           "number of buffers written."})
+    private int bufferSize = 8192;
+
     /** The output byte order of the binary data. */
     @Option(names = {"-b", "--byte-order"},
             description = {"Byte-order of the output data (default: ${DEFAULT-VALUE}).",
@@ -112,6 +118,25 @@ class OutputCommand implements Callable<Void> {
     @Option(names = {"-r", "--reverse-bits"},
             description = {"Reverse the bits in the data (default: ${DEFAULT-VALUE})."})
     private boolean reverseBits;
+
+    /** Flag to use the upper 32-bits from the 64-bit long output. */
+    @Option(names = {"--high-bits"},
+            description = {"Use the upper 32-bits from the 64-bit long output.",
+                           "Takes precedent over --low-bits."})
+    private boolean longHighBits;
+
+    /** Flag to use the lower 32-bits from the 64-bit long output. */
+    @Option(names = {"--low-bits"},
+            description = {"Use the lower 32-bits from the 64-bit long output."})
+    private boolean longLowBits;
+
+    /** Flag to use 64-bit long output. */
+    @Option(names = {"--raw64"},
+            description = {"Use 64-bit output (default is 32-bit).",
+                           "This is ignored if not a native 64-bit generator.",
+                           "In 32-bit mode the output uses the upper then lower bits of 64-bit " +
+                           "generators sequentially."})
+    private boolean raw64;
 
     /**
      * The output mode for existing files.
@@ -132,22 +157,36 @@ class OutputCommand implements Callable<Void> {
     public Void call() {
         LogUtils.setLogLevel(reusableOptions.logLevel);
         UniformRandomProvider rng = createRNG();
-        if (byteOrder.equals(ByteOrder.LITTLE_ENDIAN)) {
-            rng = RNGUtils.createReverseBytesIntProvider(rng);
+
+        // Upper or lower bits from 64-bit generators must be created first.
+        // This will throw if not a 64-bit generator.
+        if (longHighBits) {
+            rng = RNGUtils.createLongUpperBitsIntProvider(rng);
+        } else if (longLowBits) {
+            rng = RNGUtils.createLongLowerBitsIntProvider(rng);
         }
         if (reverseBits) {
-            rng = RNGUtils.createReverseBitsIntProvider(rng);
+            rng = RNGUtils.createReverseBitsProvider(rng);
         }
+
+        // -------
+        // Note: Manipulation of the byte order for the platform is done during output
+        // for the binary format. Otherwise do it in Java.
+        // -------
+        if (outputFormat != OutputFormat.BINARY) {
+            rng = toOutputFormat(rng);
+        }
+
         try (OutputStream out = createOutputStream()) {
             switch (outputFormat) {
             case BINARY:
-                writeBinaryIntData(rng, count, out);
+                writeBinaryData(rng, out);
                 break;
             case DIEHARDER:
-                writeDieharder(rng, seed == null ? "auto" : seed, count, out);
+                writeDieharder(rng, seed == null ? "auto" : seed, out);
                 break;
             case BITS:
-                writeBitIntData(rng, count, out);
+                writeBitData(rng, out);
                 break;
             default:
                 throw new ApplicationException("Unknown output format: " + outputFormat);
@@ -213,6 +252,26 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
+     * Convert the native RNG to the requested output format. This will convert a 64-bit
+     * generator to a 32-bit generator unless the 64-bit mode is active. It then optionally
+     * reverses the byte order of the output.
+     *
+     * @param rng The random generator.
+     * @return the uniform random provider
+     */
+    private UniformRandomProvider toOutputFormat(UniformRandomProvider rng) {
+        UniformRandomProvider convertedRng = rng;
+        if (rng instanceof RandomLongSource && !raw64) {
+            // Convert to 32-bit generator
+            convertedRng = RNGUtils.createIntProvider(rng);
+        }
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+            convertedRng = RNGUtils.createReverseBytesProvider(convertedRng);
+        }
+        return convertedRng;
+    }
+
+    /**
      * Creates the output stream. This will not be buffered.
      *
      * @return the output stream
@@ -251,16 +310,14 @@ class OutputCommand implements Callable<Void> {
      * Write int data to the specified output using the dieharder text format.
      *
      * @param rng The random generator.
-     * @param seed The seed using to create the random source.
-     * @param count The count of numbers to output.
+     * @param seedObject The seed using to create the random source.
      * @param out The output.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ApplicationException If the count is not positive.
      */
-    static void writeDieharder(final UniformRandomProvider rng,
-                               final Object seed,
-                               long count,
-                               final OutputStream out) throws IOException {
+    private void writeDieharder(final UniformRandomProvider rng,
+                                final Object seedObject,
+                                final OutputStream out) throws IOException {
         checkCount(count, OutputFormat.DIEHARDER);
 
         // Use dieharder output, e.g.
@@ -276,7 +333,7 @@ class OutputCommand implements Callable<Void> {
             output.write("# generator ");
             output.write(rng.toString());
             output.write("  seed = ");
-            output.write(String.valueOf(seed));
+            output.write(String.valueOf(seedObject));
             output.write(NEW_LINE);
             writeHeaderLine(output);
             output.write("type: d");
@@ -311,46 +368,85 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
-     * Write raw binary int data to the specified file.
+     * Write raw binary data to the output.
      *
      * @param rng The random generator.
-     * @param count The count of numbers to output.
      * @param out The output.
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    static void writeBinaryIntData(final UniformRandomProvider rng,
-                                   long count,
-                                   final OutputStream out) throws IOException {
+    private void writeBinaryData(final UniformRandomProvider rng,
+                                 final OutputStream out) throws IOException {
         // If count is not positive use max value.
         // This is effectively unlimited: program must be killed.
         final long limit = (count < 1) ? Long.MAX_VALUE : count;
-        try (DataOutputStream data = new DataOutputStream(
-                new BufferedOutputStream(out))) {
+        try (RngDataOutput data = RNGUtils.createDataOutput(rng, raw64, out, bufferSize, byteOrder)) {
             for (long c = 0; c < limit; c++) {
-                data.writeInt(rng.nextInt());
+                data.write(rng);
             }
         }
     }
 
     /**
-     * Write raw binary int data to the specified file.
+     * Write binary bit data to the specified file.
      *
      * @param rng The random generator.
-     * @param count The count of numbers to output.
      * @param out The output.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ApplicationException If the count is not positive.
      */
-    static void writeBitIntData(final UniformRandomProvider rng,
-                                long count,
-                                final OutputStream out) throws IOException {
+    private void writeBitData(final UniformRandomProvider rng,
+                              final OutputStream out) throws IOException {
         checkCount(count, OutputFormat.BITS);
+
+        boolean asLong = rng instanceof RandomLongSource;
 
         try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
             for (long c = 0; c < count; c++) {
-                writeInt(output, rng.nextInt());
+                if (asLong) {
+                    writeLong(output, rng.nextLong());
+                } else {
+                    writeInt(output, rng.nextInt());
+                }
             }
         }
+    }
+
+    /**
+     * Write an {@code long} value to the the output. The native Java value will be
+     * written to the writer on a single line using: a binary string representation
+     * of the bytes; the unsigned integer; and the signed integer.
+     *
+     * <pre>
+     * 10011010 01010011 01011010 11100100 01000111 00010000 01000011 11000101  11120331841399178181 -7326412232310373435
+     * </pre>
+     *
+     * @param out The output.
+     * @param value The value.
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @SuppressWarnings("resource")
+    static void writeLong(Writer out,
+                          long value) throws IOException {
+
+        // Write out as 8 bytes with spaces between them, high byte first.
+        writeByte(out, (int)(value >>> 56) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>> 48) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>> 40) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>> 32) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>> 24) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>> 16) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>>  8) & 0xff);
+        out.write(' ');
+        writeByte(out, (int)(value >>>  0) & 0xff);
+
+        // Write the unsigned and signed int value
+        new Formatter(out).format("  %20s %20d%n", Long.toUnsignedString(value), value);
     }
 
     /**
@@ -380,7 +476,7 @@ class OutputCommand implements Callable<Void> {
         writeByte(out, (value >>>  0) & 0xff);
 
         // Write the unsigned and signed int value
-        new Formatter(out).format(" %11d %11d%n", value & 0xffffffffL, value);
+        new Formatter(out).format("  %10d %11d%n", value & 0xffffffffL, value);
     }
 
     /**

@@ -16,18 +16,20 @@
  */
 package org.apache.commons.rng.examples.stress;
 
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source32.IntProvider;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * a limited number of {@code int} values will be written.</p>
  */
 @Command(name = "bridge",
-         description = {"Transfer test data to a test application sub-process via standard input."})
+         description = {"Transfer test 32-bit data to a test application sub-process via standard input."})
 class BridgeTestCommand implements Callable<Void> {
     /** The standard options. */
     @Mixin
@@ -94,33 +96,45 @@ class BridgeTestCommand implements Callable<Void> {
             final File outputFile = new File(fileOutputPrefix + ".out");
             final File errorFile = new File(fileOutputPrefix + ".err");
 
+            // Store int values
+            final IntBuffer buffer = IntBuffer.allocate(Integer.SIZE * 2);
+
+            try (BufferedWriter textOutput = Files.newBufferedWriter(dataFile.toPath())) {
+                // Write int data using a single bit in all possible positions
+                int value = 1;
+                for (int i = 0; i < Integer.SIZE; i++) {
+                    writeInt(textOutput, buffer, value);
+                    value <<= 1;
+                }
+
+                // Write random int data
+                while (buffer.remaining() != 0) {
+                    writeInt(textOutput, buffer, ThreadLocalRandom.current().nextInt());
+                }
+            }
+
+            // Pass the same values to the output application
+            buffer.flip();
+            UniformRandomProvider rng = new IntProvider() {
+                @Override
+                public int next() {
+                    return buffer.get();
+                }
+            };
+
             // Start the application.
             final ProcessBuilder builder = new ProcessBuilder(command);
             builder.redirectOutput(ProcessBuilder.Redirect.to(outputFile));
             builder.redirectError(ProcessBuilder.Redirect.to(errorFile));
             final Process testingProcess = builder.start();
 
-            // Both resources will be closed automatically
-            try (
-                // Open the stdin of the process
-                DataOutputStream dataOutput = new DataOutputStream(
-                    new BufferedOutputStream(testingProcess.getOutputStream()));
-                // Open the file for Java int data
-                BufferedWriter textOutput = Files.newBufferedWriter(dataFile.toPath())) {
-
-                final boolean littleEndian = byteOrder == ByteOrder.LITTLE_ENDIAN;
-                // Write int data using a single bit in all possible positions
-                int value = 1;
-                for (int i = 0; i < Integer.SIZE; i++) {
-                    writeInt(textOutput, dataOutput, value, littleEndian);
-                    value <<= 1;
-                }
-
-                // Write random int data
-                final ThreadLocalRandom rng = ThreadLocalRandom.current();
-                for (int i = 0; i < Integer.SIZE; i++) {
-                    writeInt(textOutput, dataOutput, rng.nextInt(), littleEndian);
-                }
+            // Open the stdin of the process and write to a custom data sink.
+            // Note: The 'bridge' command only supports 32-bit data in order to
+            // demonstrate passing suitable data for TestU01 BigCrush.
+            final boolean raw64 = false;
+            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, raw64,
+                    testingProcess.getOutputStream(), buffer.capacity() * 4, byteOrder)) {
+                sink.write(rng);
             }
 
             final Integer exitValue = ProcessUtils.getExitValue(testingProcess);
@@ -138,23 +152,20 @@ class BridgeTestCommand implements Callable<Void> {
     }
 
     /**
-     * Write an {@code int} value to the writer and the binary output. The native
-     * Java value will be written to the writer using the debugging output of the
+     * Write an {@code int} value to the writer and the buffer output. The native Java
+     * value will be written to the writer using the debugging output of the
      * {@link OutputCommand}.
      *
      * @param textOutput the text data writer.
-     * @param dataOutput the binary data output.
+     * @param buffer the buffer.
      * @param value the value.
-     * @param littleEndian Set to {@code true} to write the binary output using little-endian byte order.
      * @throws IOException Signals that an I/O exception has occurred.
      * @see OutputCommand#writeInt(java.io.Writer, int)
      */
     private static void writeInt(Writer textOutput,
-                                 DataOutputStream dataOutput,
-                                 int value,
-                                 boolean littleEndian) throws IOException {
+                                 IntBuffer buffer,
+                                 int value) throws IOException {
         OutputCommand.writeInt(textOutput, value);
-        final int binaryValue = littleEndian ? Integer.reverseBytes(value) : value;
-        dataOutput.writeInt(binaryValue);
+        buffer.put(value);
     }
 }
