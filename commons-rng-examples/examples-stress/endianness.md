@@ -127,7 +127,7 @@ This should produce the following output files:
 | --------- | ----------- |
 | bridge.data | Text file containing the data sent by the Java application |
 | bridge.out | Text file containing the stdout written by the sub-process |
-| bridge.data | Text file containing the stderr written by the sub-process |
+| bridge.err | Text file containing the stderr written by the sub-process |
 
 The `bridge.data` file contains 32 integers with a single bit set, least significant first.
 Then 32 random integers. The data is written using the logical byte representation of the data
