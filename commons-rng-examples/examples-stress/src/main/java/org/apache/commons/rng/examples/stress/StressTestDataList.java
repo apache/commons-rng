@@ -16,7 +16,10 @@
  */
 package org.apache.commons.rng.examples.stress;
 
+import org.apache.commons.rng.core.source32.RandomIntSource;
+import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -45,10 +48,10 @@ class StressTestDataList implements Iterable<StressTestData> {
     private final List<StressTestData> list = new ArrayList<>();
 
     /**
-     * Creates the list with the number of trials set to 1.
+     * Creates an empty list.
      */
-    StressTestDataList() {
-        this("", 1);
+    private StressTestDataList() {
+        // Do nothing
     }
 
     /**
@@ -74,5 +77,46 @@ class StressTestDataList implements Iterable<StressTestData> {
     @Override
     public Iterator<StressTestData> iterator() {
         return list.iterator();
+    }
+
+    /**
+     * Create a subset of the list containing only instances of {@link RandomIntSource}.
+     *
+     * @return the stress test data list
+     */
+    public StressTestDataList subsetIntSource() {
+        return subsetOf(RandomIntSource.class);
+    }
+
+    /**
+     * Create a subset of the list containing only instances of {@link RandomLongSource}.
+     *
+     * @return the stress test data list
+     */
+    public StressTestDataList subsetLongSource() {
+        return subsetOf(RandomLongSource.class);
+    }
+
+    /**
+     * Create a subset of the list containing only instances of the specified type.
+     *
+     * @param type The instance type.
+     * @return the stress test data list
+     */
+    private StressTestDataList subsetOf(Class<?> type) {
+        final StressTestDataList subset = new StressTestDataList();
+        for (StressTestData data : list) {
+            // This makes a big assumption that the two enums have the same name
+            RandomSourceInternal source;
+            try {
+                source = RandomSourceInternal.valueOf(data.getRandomSource().name());
+            } catch (IllegalArgumentException ex) {
+                throw new ApplicationException("Unknown internal source: " + data.getRandomSource(), ex);
+            }
+            if (type.isAssignableFrom(source.getRng())) {
+                subset.list.add(data);
+            }
+        }
+        return subset;
     }
 }

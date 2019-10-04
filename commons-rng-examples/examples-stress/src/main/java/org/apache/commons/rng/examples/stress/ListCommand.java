@@ -51,6 +51,13 @@ class ListCommand implements Callable<Void> {
             paramLabel = "<format>")
     private ListFormat listFormat = ListFormat.STRESS_TEST;
 
+    /** The provider type. */
+    @Option(names = {"--provider"},
+            description = {"The provider type (default: ${DEFAULT-VALUE}).",
+                           "Valid values: ${COMPLETION-CANDIDATES}."},
+            paramLabel = "<provider>")
+    private ProviderType providerType = ProviderType.ALL;
+
     /** The prefix for each ID in the template list of random generators. */
     @Option(names = {"-p", "--prefix"},
             description = {"The ID prefix.",
@@ -74,12 +81,29 @@ class ListCommand implements Callable<Void> {
     }
 
     /**
+     * The type of provider.
+     */
+    enum ProviderType {
+        /** List all providers. */
+        ALL,
+        /** List int providers. */
+        INT,
+        /** List long providers. */
+        LONG,
+    }
+
+    /**
      * Prints a template generators list to stdout.
      */
     @Override
     public Void call() throws Exception {
         LogUtils.setLogLevel(reusableOptions.logLevel);
-        final StressTestDataList list = new StressTestDataList(idPrefix, trials);
+        StressTestDataList list = new StressTestDataList(idPrefix, trials);
+        if (providerType == ProviderType.INT) {
+            list = list.subsetIntSource();
+        } else if (providerType == ProviderType.LONG) {
+            list = list.subsetLongSource();
+        }
         // Write in one call to the output
         final StringBuilder sb = new StringBuilder();
         switch (listFormat) {
