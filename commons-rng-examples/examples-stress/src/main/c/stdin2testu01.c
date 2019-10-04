@@ -58,16 +58,6 @@ typedef struct {
   uint32_t index;
 } StdinReader_state;
 
-/*
- * Flag used to store if the system is little endian.
- *
- * Note: Java is big endian and the bytes passed on stdin by a
- * Java DataOutputStream will be written most significant first.
- * If the c compiler is little endian for uint32_t the bytes
- * read from stdin must be reversed.
- */
-static int littleEndian = 0;
-
 /* Lookup table for binary representation of bytes. */
 const char *bit_rep[16] = {
     [ 0] = "0000", [ 1] = "0001", [ 2] = "0010", [ 3] = "0011",
@@ -107,31 +97,6 @@ void printInt(uint32_t value)
   printf(" %11u %11d\n", value, (int) value);
 }
 
-/*
- * Determine endianess.
- */
-void detectEndianess() {
-  uint32_t val = 0x01;
-  /*
-   * Use a raw view of the bytes with a char* to determine if
-   * the first byte is unset (big endian) or set (little endian).
-   */
-  char * buff = (char *)&val;
-
-  littleEndian = (buff[0] != 0);
-}
-
-/*
- * Reverse the 4 bytes in an unsigned int, effectively converting from big
- * endian to small or vice versa.
- */
-uint32_t reverseBytes(uint32_t value) {
-  return ((value >> 24) & 0x000000ff) | // move byte 3 to byte 0
-         ((value <<  8) & 0x00ff0000) | // move byte 1 to byte 2
-         ((value >>  8) & 0x0000ff00) | // move byte 2 to byte 1
-         ((value << 24) & 0xff000000);  // byte 0 to byte 3
-}
-
 unsigned long nextInt(void *par,
                       void *sta) {
   static size_t last_read = 0;
@@ -162,11 +127,6 @@ unsigned long nextInt(void *par,
 
   uint32_t random = state->buffer[state->index];
   ++state->index; /* Next request. */
-
-  if (littleEndian) {
-    /* Convert to machine representation from Java big endian. */
-    random = reverseBytes(random);
-  }
 
   return random;
 }
@@ -220,8 +180,6 @@ int main(int argc,
          char **argv) {
   unif01_Gen *gen = createStdinReader();
   char *spec = argv[1];
-
-  detectEndianess();
 
   if (argc < 2) {
     printf("[ERROR] Specify test suite: '%s', '%s' or '%s'\n", TU_S, TU_C, TU_B);
