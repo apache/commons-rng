@@ -91,8 +91,15 @@ class OutputCommand implements Callable<Void> {
 
     /** The random seed. */
     @Option(names = {"-s", "--seed"},
-            description = {"The random seed (default: auto)."})
+            description = {"The 64-bit number random seed (default: auto)."})
     private Long seed;
+
+    /** The random seed as a byte[]. */
+    @Option(names = {"-x", "--hex-seed"},
+            description = {"The hex-encoded random seed.",
+                           "Bytes for other primitives use little-endian format.",
+                           "Over-rides the --seed parameter."})
+    private String byteSeed;
 
     /** The count of numbers to output. */
     @Option(names = {"-n", "--count"},
@@ -156,7 +163,8 @@ class OutputCommand implements Callable<Void> {
     @Override
     public Void call() {
         LogUtils.setLogLevel(reusableOptions.logLevel);
-        UniformRandomProvider rng = createRNG();
+        final Object objectSeed = createSeed();
+        UniformRandomProvider rng = createRNG(objectSeed);
 
         // Upper or lower bits from 64-bit generators must be created first.
         // This will throw if not a 64-bit generator.
@@ -183,7 +191,7 @@ class OutputCommand implements Callable<Void> {
                 writeBinaryData(rng, out);
                 break;
             case DIEHARDER:
-                writeDieharder(rng, seed == null ? "auto" : seed, out);
+                writeDieharder(rng, out);
                 break;
             case BITS:
                 writeBitData(rng, out);
@@ -198,12 +206,48 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
+     * Creates the seed.
+     *
+     * @return the seed
+     */
+    private Object createSeed() {
+        if (byteSeed != null) {
+            try {
+                return Hex.decodeHex(byteSeed);
+            } catch (IllegalArgumentException ex) {
+                throw new ApplicationException("Invalid hex seed: " + ex.getMessage(), ex);
+            }
+        }
+        if (seed != null) {
+            return seed;
+        }
+        // Let the factory constructor create the native seed.
+        return null;
+    }
+
+    /**
+     * Creates the seed.
+     *
+     * @return the seed
+     */
+    private String createSeedString() {
+        if (byteSeed != null) {
+            return byteSeed;
+        }
+        if (seed != null) {
+            return seed.toString();
+        }
+        return "auto";
+    }
+
+    /**
      * Creates the RNG.
      *
+     * @param objectSeed Seed.
      * @return the uniform random provider
      * @throws ApplicationException If the RNG cannot be created
      */
-    private UniformRandomProvider createRNG() {
+    private UniformRandomProvider createRNG(Object objectSeed) {
         if (randomSource == null) {
             throw new ApplicationException("Random source is null");
         }
@@ -216,7 +260,7 @@ class OutputCommand implements Callable<Void> {
             data.add(RNGUtils.parseArgument(argument));
         }
         try {
-            return RandomSource.create(randomSource, seed, data.toArray());
+            return RandomSource.create(randomSource, objectSeed, data.toArray());
         } catch (IllegalStateException | IllegalArgumentException ex) {
             throw new ApplicationException("Failed to create RNG: " + randomSource + ". " + ex.getMessage(), ex);
         }
@@ -310,13 +354,11 @@ class OutputCommand implements Callable<Void> {
      * Write int data to the specified output using the dieharder text format.
      *
      * @param rng The random generator.
-     * @param seedObject The seed using to create the random source.
      * @param out The output.
      * @throws IOException Signals that an I/O exception has occurred.
      * @throws ApplicationException If the count is not positive.
      */
     private void writeDieharder(final UniformRandomProvider rng,
-                                final Object seedObject,
                                 final OutputStream out) throws IOException {
         checkCount(count, OutputFormat.DIEHARDER);
 
@@ -333,7 +375,7 @@ class OutputCommand implements Callable<Void> {
             output.write("# generator ");
             output.write(rng.toString());
             output.write("  seed = ");
-            output.write(String.valueOf(seedObject));
+            output.write(createSeedString());
             output.write(NEW_LINE);
             writeHeaderLine(output);
             output.write("type: d");

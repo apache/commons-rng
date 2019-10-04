@@ -690,7 +690,7 @@ class StressTestCommand implements Callable<Void> {
             sb.append(C).append(N)
                 .append(C).append("RandomSource: ").append(randomSource.name()).append(N)
                 .append(C).append("RNG: ").append(rng.toString()).append(N)
-                .append(C).append("Seed: ").append(RNGUtils.encodeHex(seed)).append(N)
+                .append(C).append("Seed: ").append(Hex.encodeHex(seed)).append(N)
                 .append(C).append(N)
 
             // Match the output of 'java -version', e.g.
