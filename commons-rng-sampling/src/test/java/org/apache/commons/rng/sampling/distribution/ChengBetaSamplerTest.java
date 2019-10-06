@@ -20,6 +20,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -54,14 +55,58 @@ public class ChengBetaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    public void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaBelowBeta() {
+        testSharedStateSampler(1.23, 4.56);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaAboveBeta() {
+        testSharedStateSampler(4.56, 1.23);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaBelowBeta() {
+        testSharedStateSampler(0.23, 4.56);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     */
+    @Test
+    public void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaAboveBeta() {
+        testSharedStateSampler(4.56, 0.23);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param alpha Alpha.
+     * @param beta Beta.
+     */
+    private static void testSharedStateSampler(double alpha, double beta) {
         final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
         final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final double alpha = 1.23;
-        final double beta = 4.56;
+        // Use instance constructor not factory constructor to exercise 1.X public API
         final SharedStateContinuousSampler sampler1 =
-            ChengBetaSampler.of(rng1, alpha, beta);
+            new ChengBetaSampler(rng1, alpha, beta);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the toString method. This is added to ensure coverage as the factory constructor
+     * used in other tests does not create an instance of the wrapper class.
+     */
+    @Test
+    public void testToString() {
+        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        Assert.assertTrue(new ChengBetaSampler(rng, 1.0, 2.0).toString()
+                .toLowerCase().contains("beta"));
     }
 }
