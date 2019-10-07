@@ -23,7 +23,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.core.source64.SplitMix64;
-import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
+import org.apache.commons.rng.core.source64.XoRoShiRo1024PlusPlus;
 
 /**
  * Utilities related to seeding.
@@ -45,8 +45,8 @@ import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
  * @since 1.0
  */
 public final class SeedFactory {
-    /** Size of the state array of "XorShift1024StarPhi". */
-    private static final int XOR_SHIFT_1024_STATE_SIZE = 16;
+    /** Size of the state array of "XoRoShiRo1024PlusPlus". */
+    private static final int XO_RO_SHI_RO_1024_STATE_SIZE = 16;
     /** Size of block to fill in an {@code int[]} seed per synchronized operation. */
     private static final int INT_ARRAY_BLOCK_SIZE = 8;
     /** Size of block to fill in a {@code long[]} seed per synchronized operation. */
@@ -68,10 +68,10 @@ public final class SeedFactory {
         // Use a secure RNG so that different instances (e.g. in multiple JVM
         // instances started in rapid succession) will have different seeds.
         final SecureRandom seedGen = new SecureRandom();
-        final byte[] bytes = new byte[8 * XOR_SHIFT_1024_STATE_SIZE];
+        final byte[] bytes = new byte[8 * XO_RO_SHI_RO_1024_STATE_SIZE];
         seedGen.nextBytes(bytes);
         final long[] seed = NumberFactory.makeLongArray(bytes);
-        // The XorShift1024StarPhi generator cannot recover from an all zero seed and
+        // The XoRoShiRo1024PlusPlus generator cannot recover from an all zero seed and
         // will produce low quality initial output if initialised with some zeros.
         // Ensure it is non zero at all array positions using a SplitMix64
         // generator (this is insensitive to a zero seed so can use the first seed value).
@@ -80,7 +80,7 @@ public final class SeedFactory {
             seed[i] = ensureNonZero(rng, seed[i]);
         }
 
-        SEED_GENERATOR = new XorShift1024StarPhi(seed);
+        SEED_GENERATOR = new XoRoShiRo1024PlusPlus(seed);
     }
 
     /**

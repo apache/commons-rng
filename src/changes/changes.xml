@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="RNG-122">
+        "SeedFactory": Use XoRoShiRo1024PlusPlus as the default source of randomness.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-121">
         "ChengBetaSampler": Algorithms for different distribution parameters have
         been delegated to specialised classes.
