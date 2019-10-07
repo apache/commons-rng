@@ -18,6 +18,7 @@ package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;
+import org.apache.commons.rng.examples.stress.LogUtils.LogLevel;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -35,6 +36,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
@@ -338,7 +340,7 @@ class StressTestCommand implements Callable<Void> {
 
         LogUtils.info("Running stress test ...");
         LogUtils.info("Shutdown by creating stop file: %s",  stopFile);
-        final ProgressTracker progressTracker = new ProgressTracker(countTrials(stressTestData));
+        final ProgressTracker progressTracker = new ProgressTracker(countTrials(stressTestData), taskCount);
 
         // Run tasks with parallel execution.
         final ExecutorService service = Executors.newFixedThreadPool(taskCount);
@@ -461,7 +463,7 @@ class StressTestCommand implements Callable<Void> {
                 // Log the decision
                 LogUtils.info("%s existing output file: %s", outputMode, output);
                 if (outputMode == StressTestCommand.OutputMode.SKIP) {
-                    progressTracker.incrementProgress();
+                    progressTracker.incrementProgress(0);
                     continue;
                 }
             }
@@ -517,23 +519,38 @@ class StressTestCommand implements Callable<Void> {
         private int count;
         /** The timestamp of the last progress report. */
         private long timestamp;
+        /** The level of parallelisation. */
+        private final int parallelTasks;
+        /** The total time of all completed tasks (in milliseconds). */
+        private long totalTime;
+        /** The number of tasks completed with a time (i.e. were not skipped). */
+        private int completed;
 
         /**
          * Create a new instance.
          *
          * @param total The total progress.
+         * @param parallelTasks The number of parallel tasks.
          */
-        ProgressTracker(int total) {
+        ProgressTracker(int total, int parallelTasks) {
             this.total = total;
+            this.parallelTasks = parallelTasks;
             showProgress();
         }
 
         /**
-         * Increment the progress.
+         * Signal that a task has completed in a specified time.
+         *
+         * @param taskTime The time for the task (milliseconds).
          */
-        void incrementProgress() {
+        void incrementProgress(long taskTime) {
             synchronized (this) {
                 count++;
+                // Used to compute the average task time
+                if (taskTime != 0) {
+                    totalTime += taskTime;
+                    completed++;
+                }
                 showProgress();
             }
         }
@@ -551,8 +568,85 @@ class StressTestCommand implements Callable<Void> {
             final long current = System.currentTimeMillis();
             if (current - timestamp > REPORT_INTERVAL) {
                 timestamp = current;
-                LogUtils.info("Progress %d / %d (%.2f%%)", count, total, 100.0 * count / total);
+                final StringBuilder sb = new StringBuilder(80);
+                try (Formatter formatter = new Formatter(sb)) {
+                    formatter.format("Progress %d / %d (%.2f%%)", count, total, 100.0 * count / total);
+                    LogUtils.info(appendRemaining(sb).toString());
+                }
             }
+        }
+
+        /**
+         * Compute an estimate of the time remaining and append to the progress.
+         *
+         * @param sb String Builder.
+         * @return the string builder
+         */
+        private StringBuilder appendRemaining(StringBuilder sb) {
+            if (completed == 0) {
+                // No estimate possible.
+                return sb;
+            }
+
+            final int remaining = total - count;
+            if (remaining < parallelTasks) {
+                // No more tasks to submit so the last estimate was as good as we can make it.
+                return sb;
+            }
+
+            // Estimate time remaining using the average runtime per task
+            // multiplied by the number of parallel remaining tasks (rounded down).
+            // Parallel remaining is the number of batches required to execute the
+            // remaining tasks in parallel.
+            final long parallelRemaining = remaining / parallelTasks;
+            final long millis = (totalTime * parallelRemaining) / completed;
+
+            // HH:mm:ss format
+            if (LogUtils.isLoggable(LogLevel.DEBUG)) {
+                sb.append(". Average task time = ");
+                hms(sb, totalTime / completed);
+            }
+            sb.append(". Remaining = ");
+            return hms(sb, millis);
+        }
+
+        /**
+         * Append the milliseconds using {@code HH::mm:ss} format.
+         *
+         * @param sb String Builder.
+         * @param millis Milliseconds.
+         * @return the string builder
+         */
+        static StringBuilder hms(StringBuilder sb, final long millis) {
+            final long hours = TimeUnit.MILLISECONDS.toHours(millis);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis);
+            long seconds = TimeUnit.MILLISECONDS.toSeconds(millis);
+            // Truncate to interval [0,59]
+            seconds -= TimeUnit.MINUTES.toSeconds(minutes);
+            minutes -= TimeUnit.HOURS.toMinutes(hours);
+
+            append00(sb, hours).append(':');
+            append00(sb, minutes).append(':');
+            return append00(sb, seconds);
+        }
+
+        /**
+         * Append the ticks to the string builder in the format {@code %02d}.
+         *
+         * @param sb String Builder.
+         * @param ticks Ticks.
+         * @return the string builder
+         */
+        static StringBuilder append00(StringBuilder sb, long ticks) {
+            if (ticks == 0) {
+                sb.append("00");
+            } else {
+                if (ticks < 10) {
+                    sb.append('0');
+                }
+                sb.append(ticks);
+            }
+            return sb;
         }
     }
 
@@ -624,15 +718,14 @@ class StressTestCommand implements Callable<Void> {
                 return;
             }
 
+            long nanoTime = 0;
             try {
                 printHeader();
 
                 Object exitValue;
-                long nanoTime;
                 if (cmd.dryRun) {
                     // Do not do anything
                     exitValue = "N/A";
-                    nanoTime = 0;
                 } else {
                     // Run the sub-process
                     final long startTime = System.nanoTime();
@@ -645,7 +738,7 @@ class StressTestCommand implements Callable<Void> {
             } catch (final IOException ex) {
                 throw new ApplicationException("Failed to run task: " + ex.getMessage(), ex);
             } finally {
-                progressTracker.incrementProgress();
+                progressTracker.incrementProgress(TimeUnit.NANOSECONDS.toMillis(nanoTime));
             }
         }
 
