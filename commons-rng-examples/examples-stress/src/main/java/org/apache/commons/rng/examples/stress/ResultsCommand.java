@@ -36,9 +36,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -84,6 +86,8 @@ class ResultsCommand implements Callable<Void> {
     private static final char BACK_SLASH = '\\';
     /** Character '|'. */
     private static final char PIPE = '|';
+    /** The column name for the RNG. */
+    private static final String COLUMN_RNG = "RNG";
 
     /** The standard options. */
     @Mixin
@@ -108,7 +112,9 @@ class ResultsCommand implements Callable<Void> {
 
     /** The flag to show failed tests. */
     @Option(names = {"--failed"},
-            description = "Output failed tests (not all formats).")
+            description = {"Output failed tests (support varies by format).",
+                           "CSV: List individual test failures.",
+                           "APT: Count of systematic test failures."})
     private boolean showFailedTests;
 
     /** The flag to include the Dieharder sums test. */
@@ -133,6 +139,8 @@ class ResultsCommand implements Callable<Void> {
         APT,
         /** Text table output. */
         TXT,
+        /** Systematic failures output. */
+        FAILURES,
     }
 
     /**
@@ -309,6 +317,9 @@ class ResultsCommand implements Callable<Void> {
                 break;
             case TXT:
                 writeTXT(out, results);
+                break;
+            case FAILURES:
+                writeFailures(out, results);
                 break;
             default:
                 throw new ApplicationException("Unknown output format: " + outputFormat);
@@ -709,9 +720,14 @@ class ResultsCommand implements Callable<Void> {
                     }
                     for (final String testName : testNames) {
                         final List<TestResult> testResults = getTestResults(results, randomSource, reversed, testName);
-                        writeAPTColumn(output, testResults.stream()
-                                                          .map(toAPTString)
-                                                          .collect(Collectors.joining(", ")));
+                        String text = testResults.stream()
+                                                 .map(toAPTString)
+                                                 .collect(Collectors.joining(", "));
+                        // Add systematic failures in brackets
+                        if (showFailedTests) {
+                            text += " (" + getSystematicFailures(testResults).size() + ")";
+                            writeAPTColumn(output, text);
+                        }
                     }
                     output.newLine();
                     output.write(separator);
@@ -861,16 +877,16 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
-     * Write the column name to the output.
+     * Write the column text to the output.
      *
      * @param output Output.
-     * @param name Name.
+     * @param text Text.
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private static void writeAPTColumn(BufferedWriter output,
-                                       String name) throws IOException {
+                                       String text) throws IOException {
         output.write(' ');
-        output.write(name);
+        output.write(text);
         output.write(" |");
     }
 
@@ -899,6 +915,31 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
+     * Gets the systematic failures (tests that fail in every test result).
+     *
+     * @param results Results.
+     * @return the systematic failures
+     */
+    private static List<String> getSystematicFailures(List<TestResult> results) {
+        final HashMap<String, Integer> map = new HashMap<>();
+        for (final TestResult result : results) {
+            // Some named tests can fail more than once on different statistics.
+            // For example TestU01 BigCrush LongestHeadRun can output in the summary:
+            // 86  LongestHeadRun, r = 0            eps
+            // 86  LongestHeadRun, r = 0          1 - eps1
+            // This will be counted as 2 failed tests. For the purpose of systematic
+            // failures the name of the test is the same and should be counted once.
+            final HashSet<String> unique = new HashSet<>(result.getFailedTests());
+            for (String test : unique) {
+                map.merge(test, 1, (i, j) -> i + j);
+            }
+        }
+        return map.entrySet().stream().filter(e -> e.getValue() == results.size())
+                                      .map(Entry::getKey)
+                                      .collect(Collectors.toList());
+    }
+
+    /**
      * Write the results as a text table.
      *
      * @param out Output stream.
@@ -917,7 +958,7 @@ class ResultsCommand implements Callable<Void> {
         // Make bit-reversed column optional if no generators are bit reversed.
         final boolean showBitReversedColumn = bitReversed.contains(Boolean.TRUE);
 
-        final List<List<String>> columns = createColumns(testNames, showBitReversedColumn);
+        final List<List<String>> columns = createTXTColumns(testNames, showBitReversedColumn);
 
         // Add all data
         // This will collate results for each combination of 'RandomSource + bitReversed'
@@ -934,43 +975,31 @@ class ResultsCommand implements Callable<Void> {
                     columns.get(i++).add(testResults.stream()
                                                     .map(TestResult::getFailureCountString)
                                                     .collect(Collectors.joining(",")));
+                    columns.get(i++).add(String.valueOf(getSystematicFailures(testResults).size()));
                 }
             }
         }
 
-        // Create format using the column widths
-        final String format = createTextFormatFromColumnWidths(columns);
-
-        // Output
-        try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
-             Formatter formatter = new Formatter(output)) {
-            final int rows = columns.get(0).size();
-            final Object[] args = new Object[columns.size()];
-            for (int row = 0; row < rows; row++) {
-                for (int i = 0; i < args.length; i++) {
-                    args[i] = columns.get(i).get(row);
-                }
-                formatter.format(format, args);
-            }
-        }
+        writeColumns(out, columns);
     }
 
     /**
-     * Creates the columns.
+     * Creates the columns for the text output.
      *
      * @param testNames the test names
      * @param showBitReversedColumn Set to true to show the bit reversed column
      * @return the list of columns
      */
-    private static List<List<String>> createColumns(final List<String> testNames,
+    private static List<List<String>> createTXTColumns(final List<String> testNames,
         final boolean showBitReversedColumn) {
         final ArrayList<List<String>> columns = new ArrayList<>();
-        columns.add(createColumn("RNG"));
+        columns.add(createColumn(COLUMN_RNG));
         if (showBitReversedColumn) {
             columns.add(createColumn(BIT_REVERSED));
         }
         for (final String testName : testNames) {
             columns.add(createColumn(testName));
+            columns.add(createColumn("∩"));
         }
         return columns;
     }
@@ -1020,5 +1049,100 @@ class ResultsCommand implements Callable<Void> {
             width = Math.max(width, text.length());
         }
         return width;
+    }
+
+    /**
+     * Write the columns as fixed width text to the output.
+     *
+     * @param out Output stream.
+     * @param columns Columns
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private static void writeColumns(OutputStream out,
+                                     List<List<String>> columns) throws IOException {
+        // Create format using the column widths
+        final String format = createTextFormatFromColumnWidths(columns);
+
+        // Output
+        try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+             Formatter formatter = new Formatter(output)) {
+            final int rows = columns.get(0).size();
+            final Object[] args = new Object[columns.size()];
+            for (int row = 0; row < rows; row++) {
+                for (int i = 0; i < args.length; i++) {
+                    args[i] = columns.get(i).get(row);
+                }
+                formatter.format(format, args);
+            }
+        }
+    }
+
+    /**
+     * Write the systematic failures as a text table.
+     *
+     * @param out Output stream.
+     * @param results Results.
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private static void writeFailures(OutputStream out,
+                                      List<TestResult> results) throws IOException {
+        // Identify all:
+        // RandomSources, bit-reversed, test names,
+        final List<RandomSource> randomSources = getRandomSources(results);
+        final List<Boolean> bitReversed = getBitReversed(results);
+        final List<String> testNames = getTestNames(results);
+
+        // Create columns for RandomSource, bit-reversed, each test name.
+        // Make bit-reversed column optional if no generators are bit reversed.
+        final boolean showBitReversedColumn = bitReversed.contains(Boolean.TRUE);
+
+        final List<List<String>> columns = createFailuresColumns(testNames, showBitReversedColumn);
+
+        final AlphaNumericComparator cmp = new AlphaNumericComparator();
+
+        // Add all data for each combination of 'RandomSource + bitReversed'
+        for (final RandomSource randomSource : randomSources) {
+            for (final boolean reversed : bitReversed) {
+                for (final String testName : testNames) {
+                    final List<TestResult> testResults = getTestResults(results, randomSource,
+                            reversed, testName);
+                    final List<String> failures = getSystematicFailures(testResults);
+                    if (failures.isEmpty()) {
+                        continue;
+                    }
+                    Collections.sort(failures, cmp);
+                    for (String failed : failures) {
+                        int i = 0;
+                        columns.get(i++).add(randomSource.toString());
+                        if (showBitReversedColumn) {
+                            columns.get(i++).add(Boolean.toString(reversed));
+                        }
+                        columns.get(i++).add(testName);
+                        columns.get(i).add(failed);
+                    }
+                }
+            }
+        }
+
+        writeColumns(out, columns);
+    }
+
+    /**
+     * Creates the columns for the failures output.
+     *
+     * @param testNames the test names
+     * @param showBitReversedColumn Set to true to show the bit reversed column
+     * @return the list of columns
+     */
+    private static List<List<String>> createFailuresColumns(final List<String> testNames,
+        final boolean showBitReversedColumn) {
+        final ArrayList<List<String>> columns = new ArrayList<>();
+        columns.add(createColumn(COLUMN_RNG));
+        if (showBitReversedColumn) {
+            columns.add(createColumn(BIT_REVERSED));
+        }
+        columns.add(createColumn("Test Suite"));
+        columns.add(createColumn("Test"));
+        return columns;
     }
 }
