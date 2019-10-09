@@ -38,6 +38,9 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class ChengBetaSampler
     extends SamplerBase
     implements SharedStateContinuousSampler {
+    /** Natural logarithm of 4. */
+    private static final double LN_4 = Math.log(4.0);
+
     /** The appropriate beta sampler for the parameters. */
     private final SharedStateContinuousSampler delegate;
 
@@ -49,6 +52,8 @@ public class ChengBetaSampler
         /**
          * Flag set to true if {@code a} is the beta distribution alpha shape parameter.
          * Otherwise {@code a} is the beta distribution beta shape parameter.
+         *
+         * <p>From the original Cheng paper this is equal to the result of: {@code a == a0}.</p>
          */
         protected final boolean aIsAlphaShape;
         /**
@@ -106,6 +111,25 @@ public class ChengBetaSampler
         public String toString() {
             return "Cheng Beta deviate [" + rng.toString() + "]";
         }
+
+        /**
+         * Compute the sample result X.
+         *
+         * <blockquote>
+         * If a == a0 deliver X = W/(b + W); otherwise deliver X = b/(b + W).
+         * </blockquote>
+         *
+         * <p>The finalisation step is shared between the BB and BC algorithm (as step 5 of the
+         * BB algorithm and step 6 of the BC algorithm).</p>
+         *
+         * @param w Algorithm value W.
+         * @return the sample value
+         */
+        protected double computeX(double w) {
+            // Avoid (infinity / infinity) producing NaN
+            final double tmp = Math.min(w, Double.MAX_VALUE);
+            return aIsAlphaShape ? tmp / (b + tmp) : b / (b + tmp);
+        }
     }
 
     /**
@@ -113,6 +137,9 @@ public class ChengBetaSampler
      * {@code beta} shape parameters are both larger than 1.
      */
     private static class ChengBBBetaSampler extends BaseChengBetaSampler {
+        /** 1 + natural logarithm of 5. */
+        private static final double LN_5_P1 = 1 + Math.log(5.0);
+
         /** The algorithm beta factor. This is not the beta distribution beta shape parameter. */
         private final double beta;
         /** The algorithm gamma factor. */
@@ -148,26 +175,29 @@ public class ChengBetaSampler
             double w;
             double t;
             do {
+                // Step 1:
                 final double u1 = rng.nextDouble();
                 final double u2 = rng.nextDouble();
                 final double v = beta * (Math.log(u1) - Math.log1p(-u1));
                 w = a * Math.exp(v);
                 final double z = u1 * u1 * u2;
-                r = gamma * v - 1.3862944;
+                r = gamma * v - LN_4;
                 final double s = a + r - w;
-                if (s + 2.609438 >= 5 * z) {
+                // Step 2:
+                if (s + LN_5_P1 >= 5 * z) {
                     break;
                 }
 
+                // Step 3:
                 t = Math.log(z);
                 if (s >= t) {
                     break;
                 }
+                // Step 4:
             } while (r + alpha * (logAlpha - Math.log(b + w)) < t);
 
-            w = Math.min(w, Double.MAX_VALUE);
-
-            return aIsAlphaShape ? w / (b + w) : b / (b + w);
+            // Step 5:
+            return computeX(w);
         }
 
         @Override
@@ -206,7 +236,10 @@ public class ChengBetaSampler
             // Compute algorithm factors.
             beta = 1 / b;
             delta = 1 + a - b;
-            k1 = delta * (0.0138889 + 0.0416667 * b) / (a * beta - 0.777778);
+            // The following factors are divided by 4:
+            // k1 = delta * (1 + 3b) / (18a/b - 14)
+            // k2 = 1 + (2 + 1/delta) * b
+            k1 = delta * (1.0 / 72.0 + 3.0 / 72.0 * b) / (a * beta - 7.0 / 9.0);
             k2 = 0.25 + (0.5 + 0.25 / delta) * b;
         }
 
@@ -227,36 +260,41 @@ public class ChengBetaSampler
         public double sample() {
             double w;
             while (true) {
+                // Step 1:
                 final double u1 = rng.nextDouble();
                 final double u2 = rng.nextDouble();
+                // Compute Y and Z
                 final double y = u1 * u2;
                 final double z = u1 * y;
                 if (u1 < ONE_HALF) {
-                    if (0.25 * u2 + z - y >= k1) {
+                    // Step 2:
+                    if (ONE_QUARTER * u2 + z - y >= k1) {
                         continue;
                     }
                 } else {
+                    // Step 3:
                     if (z <= ONE_QUARTER) {
                         final double v = beta * (Math.log(u1) - Math.log1p(-u1));
                         w = a * Math.exp(v);
                         break;
                     }
 
+                    // Step 4:
                     if (z >= k2) {
                         continue;
                     }
                 }
 
+                // Step 5:
                 final double v = beta * (Math.log(u1) - Math.log1p(-u1));
                 w = a * Math.exp(v);
-                if (alpha * (logAlpha - Math.log(b + w) + v) - 1.3862944 >= Math.log(z)) {
+                if (alpha * (logAlpha - Math.log(b + w) + v) - LN_4 >= Math.log(z)) {
                     break;
                 }
             }
 
-            w = Math.min(w, Double.MAX_VALUE);
-
-            return aIsAlphaShape ? w / (b + w) : b / (b + w);
+            // Step 6:
+            return computeX(w);
         }
 
         @Override
