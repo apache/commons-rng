@@ -72,25 +72,8 @@ public class XoShiRo512Plus extends AbstractXoShiRo512 {
 
     /** {@inheritDoc} */
     @Override
-    public long next() {
-        final long result = state0 + state2;
-
-        final long t = state1 << 11;
-
-        state2 ^= state0;
-        state5 ^= state1;
-        state1 ^= state2;
-        state7 ^= state3;
-        state3 ^= state4;
-        state4 ^= state5;
-        state0 ^= state6;
-        state6 ^= state7;
-
-        state6 ^= t;
-
-        state7 = Long.rotateLeft(state7, 21);
-
-        return result;
+    protected long nextOutput() {
+        return state0 + state2;
     }
 
     /** {@inheritDoc} */

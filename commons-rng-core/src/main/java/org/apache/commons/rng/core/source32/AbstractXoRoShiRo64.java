@@ -94,4 +94,28 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
 
         super.setStateInternal(c[1]);
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public int next() {
+        final int result = nextOutput();
+
+        final int s0 = state0;
+        int s1 = state1;
+
+        s1 ^= s0;
+        state0 = Integer.rotateLeft(s0, 26) ^ s1 ^ (s1 << 9); // a, b
+        state1 = Integer.rotateLeft(s1, 13); // c
+
+        return result;
+    }
+
+    /**
+     * Use the current state to compute the next output from the generator.
+     * The output function shall vary with respect to different generators.
+     * This method is called from {@link #next()} before the current state is updated.
+     *
+     * @return the next output
+     */
+    protected abstract int nextOutput();
 }

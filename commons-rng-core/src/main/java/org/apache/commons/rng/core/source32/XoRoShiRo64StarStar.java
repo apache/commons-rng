@@ -55,15 +55,7 @@ public class XoRoShiRo64StarStar extends AbstractXoRoShiRo64 {
 
     /** {@inheritDoc} */
     @Override
-    public int next() {
-        final int s0 = state0;
-        int s1 = state1;
-        final int result = Integer.rotateLeft(s0 * 0x9E3779BB, 5) * 5;
-
-        s1 ^= s0;
-        state0 = Integer.rotateLeft(s0, 26) ^ s1 ^ (s1 << 9); // a, b
-        state1 = Integer.rotateLeft(s1, 13); // c
-
-        return result;
+    protected int nextOutput() {
+        return Integer.rotateLeft(state0 * 0x9e3779bb, 5) * 5;
     }
 }

@@ -130,6 +130,34 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
         super.setStateInternal(c[1]);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public int next() {
+        final int result = nextOutput();
+
+        final int t = state1 << 9;
+
+        state2 ^= state0;
+        state3 ^= state1;
+        state1 ^= state2;
+        state0 ^= state3;
+
+        state2 ^= t;
+
+        state3 = Integer.rotateLeft(state3, 11);
+
+        return result;
+    }
+
+    /**
+     * Use the current state to compute the next output from the generator.
+     * The output function shall vary with respect to different generators.
+     * This method is called from {@link #next()} before the current state is updated.
+     *
+     * @return the next output
+     */
+    protected abstract int nextOutput();
+
     /**
      * {@inheritDoc}
      *

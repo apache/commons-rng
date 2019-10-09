@@ -66,21 +66,8 @@ public class XoShiRo128Plus extends AbstractXoShiRo128 {
 
     /** {@inheritDoc} */
     @Override
-    public int next() {
-        final int result = state0 + state3;
-
-        final int t = state1 << 9;
-
-        state2 ^= state0;
-        state3 ^= state1;
-        state1 ^= state2;
-        state0 ^= state3;
-
-        state2 ^= t;
-
-        state3 = Integer.rotateLeft(state3, 11);
-
-        return result;
+    protected int nextOutput() {
+        return state0 + state3;
     }
 
     /** {@inheritDoc} */

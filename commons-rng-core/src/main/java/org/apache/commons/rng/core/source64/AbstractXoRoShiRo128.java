@@ -117,6 +117,30 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
         super.setStateInternal(c[1]);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public long next() {
+        final long result = nextOutput();
+
+        final long s0 = state0;
+        long s1 = state1;
+
+        s1 ^= s0;
+        state0 = Long.rotateLeft(s0, 24) ^ s1 ^ (s1 << 16); // a, b
+        state1 = Long.rotateLeft(s1, 37); // c
+
+        return result;
+    }
+
+    /**
+     * Use the current state to compute the next output from the generator.
+     * The output function shall vary with respect to different generators.
+     * This method is called from {@link #next()} before the current state is updated.
+     *
+     * @return the next output
+     */
+    protected abstract long nextOutput();
+
     /**
      * {@inheritDoc}
      *

@@ -77,6 +77,9 @@ public class XoRoShiRo128PlusPlus extends AbstractXoRoShiRo128 {
     /** {@inheritDoc} */
     @Override
     public long next() {
+        // Override the abstract class to use a different state update step.
+        // Note: This requires different jump coefficients.
+
         final long s0 = state0;
         long s1 = state1;
         final long result = Long.rotateLeft(s0 + s1, 17) + s0;
@@ -86,6 +89,12 @@ public class XoRoShiRo128PlusPlus extends AbstractXoRoShiRo128 {
         state1 = Long.rotateLeft(s1, 28); // c
 
         return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected long nextOutput() {
+        throw new UnsupportedOperationException("The PlusPlus algorithm redefines the next() method");
     }
 
     /** {@inheritDoc} */

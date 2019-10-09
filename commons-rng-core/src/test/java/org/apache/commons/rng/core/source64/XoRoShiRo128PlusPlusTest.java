@@ -109,4 +109,14 @@ public class XoRoShiRo128PlusPlusTest {
     public void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoRoShiRo128PlusPlus(SEED));
     }
+
+    /**
+     * This PlusPlus algorithm uses a different state update step. It overrides next() directly
+     * and the abstract nextOutput() method should not be used. This test checks the method
+     * throws an exception if used.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testNextOutputThrows() {
+        new XoRoShiRo128PlusPlus(SEED).nextOutput();
+    }
 }

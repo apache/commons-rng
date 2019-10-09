@@ -65,21 +65,8 @@ public class XoShiRo256StarStar extends AbstractXoShiRo256 {
 
     /** {@inheritDoc} */
     @Override
-    public long next() {
-        final long result = Long.rotateLeft(state1 * 5, 7) * 9;
-
-        final long t = state1 << 17;
-
-        state2 ^= state0;
-        state3 ^= state1;
-        state1 ^= state2;
-        state0 ^= state3;
-
-        state2 ^= t;
-
-        state3 = Long.rotateLeft(state3, 45);
-
-        return result;
+    protected long nextOutput() {
+        return Long.rotateLeft(state1 * 5, 7) * 9;
     }
 
     /** {@inheritDoc} */
