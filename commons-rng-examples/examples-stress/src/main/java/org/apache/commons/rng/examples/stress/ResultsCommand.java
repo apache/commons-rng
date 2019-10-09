@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -76,6 +77,8 @@ class ResultsCommand implements Callable<Void> {
     private static final Pattern TESTU01_SUMMARY_PATTERN = Pattern.compile("^========= Summary results of (\\S*) ");
     /** The pattern to identify the Test U01 failed test result. */
     private static final Pattern TESTU01_TEST_RESULT_PATTERN = Pattern.compile("^  ?(\\d+  .*)    ");
+    /** The pattern to identify the Test U01 test starting entry. */
+    private static final Pattern TESTU01_STARTING_PATTERN = Pattern.compile("^ *Starting (\\S*)");
     /** The name of the Dieharder sums test. */
     private static final String DIEHARDER_SUMS = "diehard_sums";
     /** The string identifying a bit-reversed generator. */
@@ -128,6 +131,11 @@ class ResultsCommand implements Callable<Void> {
                            "If specified this will replace the common prefix from all " +
                            "files when the path is output, e.g. for the APT report."})
     private String pathPrefix = "";
+
+    /** The flag to include the Dieharder sums test. */
+    @Option(names = {"-i", "--ignore"},
+            description = "Ignore partial results.")
+    private boolean ignorePartialResults;
 
     /**
      * The output mode for the results.
@@ -418,7 +426,7 @@ class ResultsCommand implements Callable<Void> {
     private TestResult readResult(File resultFile,
                                   List<String> testOutput) {
         // Use an iterator for a single pass over the test output
-        final Iterator<String> iter = testOutput.iterator();
+        final ListIterator<String> iter = testOutput.listIterator();
 
         // Identify the RandomSource and bit reversed flag from the header:
         final RandomSource randomSource = getRandomSource(iter);
@@ -491,7 +499,7 @@ class ResultsCommand implements Callable<Void> {
      * Read the result output from the Dieharder test application.
      *
      * @param iter Iterator of the test output.
-     * @param testResult the test result
+     * @param testResult Test result.
      */
     private void readDieharder(Iterator<String> iter,
                                TestResult testResult) {
@@ -528,11 +536,15 @@ class ResultsCommand implements Callable<Void> {
     /**
      * Read the result output from the Test U01 test application.
      *
+     * <p>Test U01 outputs a summary of results at the end of the test output. If this cannot
+     * be found the method will throw an exception unless partial results are allowed.</p>
+     *
      * @param iter Iterator of the test output.
-     * @param testResult the test result
+     * @param testResult Test result.
+     * @throws ApplicationException If the TestU01 summary cannot be found.
      */
-    private static void readTestU01(Iterator<String> iter,
-                                    TestResult testResult) {
+    private void readTestU01(ListIterator<String> iter,
+                             TestResult testResult) {
         // Results are summarised at the end of the file:
         //========= Summary results of BigCrush =========
         //
@@ -552,7 +564,19 @@ class ResultsCommand implements Callable<Void> {
         // 7  CollisionOver, t = 7             eps
 
         // Identify the summary line
-        testResult.setTestApplicationName("TestU01 (" + skipToTestU01Summary(iter) + ")");
+        final String testSuiteName = skipToTestU01Summary(iter);
+
+        // This may not be present if the results are not complete
+        if (testSuiteName == null) {
+            // Rewind
+            while (iter.hasPrevious()) {
+                iter.previous();
+            }
+            updateTestU01ApplicationName(iter, testResult);
+            return;
+        }
+
+        setTestU01ApplicationName(testResult, testSuiteName);
 
         // Read test results using the entire line except the p-value for the test Id
         // Note:
@@ -570,20 +594,68 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
+     * Sets the Test U01 application name using the provide test suite name.
+     *
+     * @param testResult Test result.
+     * @param testSuiteName Test suite name.
+     */
+    private static void setTestU01ApplicationName(TestResult testResult, String testSuiteName) {
+        testResult.setTestApplicationName("TestU01 (" + testSuiteName + ")");
+    }
+
+    /**
      * Skip to the Test U01 result summary.
+     *
+     * <p>If this cannot be found the method will throw an exception unless partial results
+     * are allowed.</p>
      *
      * @param iter Iterator of the test output.
      * @return the name of the test suite
+     * @throws ApplicationException If the TestU01 summary cannot be found.
      */
-    private static String skipToTestU01Summary(Iterator<String> iter) {
+    private String skipToTestU01Summary(Iterator<String> iter) {
+        final String testSuiteName = findMatcherGroup1(iter, TESTU01_SUMMARY_PATTERN);
+        // Allow the partial result to be ignored
+        if (testSuiteName != null || ignorePartialResults) {
+            return testSuiteName;
+        }
+        throw new ApplicationException("Failed to identify the Test U01 result summary");
+    }
+
+    /**
+     * Update the test application name from the Test U01 results. This can be used to identify
+     * the test suite from the start of the results in the event that the results summary has
+     * not been output.
+     *
+     * @param iter Iterator of the test output.
+     * @param testResult Test result.
+     */
+    private static void updateTestU01ApplicationName(Iterator<String> iter,
+                                                     TestResult testResult) {
+        final String testSuiteName = findMatcherGroup1(iter, TESTU01_STARTING_PATTERN);
+        if (testSuiteName != null) {
+            setTestU01ApplicationName(testResult, testSuiteName);
+        }
+    }
+
+    /**
+     * Create a matcher for each item in the iterator and if a match is identified return
+     * group 1.
+     *
+     * @param iter Iterator of text to match.
+     * @param pattern Pattern to match.
+     * @return the string (or null)
+     */
+    private static String findMatcherGroup1(Iterator<String> iter,
+                                            Pattern pattern) {
         while (iter.hasNext()) {
             final String line = iter.next();
-            final Matcher matcher = TESTU01_SUMMARY_PATTERN.matcher(line);
+            final Matcher matcher = pattern.matcher(line);
             if (matcher.find()) {
                 return matcher.group(1);
             }
         }
-        throw new ApplicationException("Failed to identify the Test U01 result summary");
+        return null;
     }
 
     /**
@@ -923,6 +995,10 @@ class ResultsCommand implements Callable<Void> {
     private static List<String> getSystematicFailures(List<TestResult> results) {
         final HashMap<String, Integer> map = new HashMap<>();
         for (final TestResult result : results) {
+            // Ignore partial results
+            if (!result.isComplete()) {
+                continue;
+            }
             // Some named tests can fail more than once on different statistics.
             // For example TestU01 BigCrush LongestHeadRun can output in the summary:
             // 86  LongestHeadRun, r = 0            eps
@@ -934,7 +1010,8 @@ class ResultsCommand implements Callable<Void> {
                 map.merge(test, 1, (i, j) -> i + j);
             }
         }
-        return map.entrySet().stream().filter(e -> e.getValue() == results.size())
+        final int completeCount = (int) results.stream().filter(TestResult::isComplete).count();
+        return map.entrySet().stream().filter(e -> e.getValue() == completeCount)
                                       .map(Entry::getKey)
                                       .collect(Collectors.toList());
     }
