@@ -336,20 +336,22 @@ class StressTestCommand implements Callable<Void> {
     private void runStressTest(Iterable<StressTestData> stressTestData) {
         final List<String> command = ProcessUtils.buildSubProcessCommand(executable, executableArguments);
 
+        LogUtils.info("Set-up stress test ...");
+
         // Check existing output files before starting the tasks.
         final String basePath = fileOutputPrefix.getAbsolutePath();
         checkExistingOutputFiles(basePath, stressTestData);
 
-        LogUtils.info("Running stress test ...");
-        LogUtils.info("Shutdown by creating stop file: %s",  stopFile);
         final ProgressTracker progressTracker = new ProgressTracker(countTrials(stressTestData), taskCount);
+        final List<Runnable> tasks = createTasks(command, basePath, stressTestData, progressTracker);
 
         // Run tasks with parallel execution.
         final ExecutorService service = Executors.newFixedThreadPool(taskCount);
-        final List<Future<?>> taskList = new ArrayList<>();
-        for (final StressTestData testData : stressTestData) {
-            submitTasks(service, taskList, command, basePath, testData, progressTracker);
-        }
+
+        LogUtils.info("Running stress test ...");
+        LogUtils.info("Shutdown by creating stop file: %s",  stopFile);
+        progressTracker.start();
+        final List<Future<?>> taskList = submitTasks(service, tasks);
 
         // Wait for completion (ignoring return value).
         try {
@@ -423,6 +425,79 @@ class StressTestCommand implements Callable<Void> {
     }
 
     /**
+     * Create the tasks for the test data. The output file for the sub-process will be
+     * constructed using the base path, the test identifier and the trial number.
+     *
+     * @param command The command for the test application.
+     * @param basePath The base path to the output results files.
+     * @param stressTestData List of generators to be tested.
+     * @param progressTracker Progress tracker.
+     * @return the list of tasks
+     */
+    private List<Runnable> createTasks(List<String> command,
+                                       String basePath,
+                                       Iterable<StressTestData> stressTestData,
+                                       ProgressTracker progressTracker) {
+        final List<Runnable> tasks = new ArrayList<>();
+        for (final StressTestData testData : stressTestData) {
+            for (int trial = 1; trial <= testData.getTrials(); trial++) {
+                // Create the output file
+                final File output = createOutputFile(basePath, testData, trial);
+                if (output.exists()) {
+                    // In case the file was created since the last check
+                    if (outputMode == StressTestCommand.OutputMode.ERROR) {
+                        throw new ApplicationException(createExistingFileMessage(output));
+                    }
+                    // Log the decision
+                    LogUtils.info("%s existing output file: %s", outputMode, output);
+                    if (outputMode == StressTestCommand.OutputMode.SKIP) {
+                        progressTracker.incrementProgress(0);
+                        continue;
+                    }
+                }
+                // Create the generator. Explicitly create a seed so it can be recorded.
+                final byte[] seed = testData.getRandomSource().createSeed();
+                UniformRandomProvider rng = testData.createRNG(seed);
+
+                // Upper or lower bits from 64-bit generators must be created first.
+                // This will throw if not a 64-bit generator.
+                if (longHighBits) {
+                    rng = RNGUtils.createLongUpperBitsIntProvider(rng);
+                } else if (longLowBits) {
+                    rng = RNGUtils.createLongLowerBitsIntProvider(rng);
+                }
+
+                // Combination generators. Mainly used for testing.
+                // These operations maintain the native output type (int/long).
+                if (xorHashCode) {
+                    rng = RNGUtils.createHashCodeProvider(rng);
+                }
+                if (xorThreadLocalRandom) {
+                    rng = RNGUtils.createThreadLocalRandomProvider(rng);
+                }
+                if (xorRandomSource != null) {
+                    rng = RNGUtils.createXorProvider(
+                            RandomSource.create(xorRandomSource),
+                            rng);
+                }
+                if (reverseBits) {
+                    rng = RNGUtils.createReverseBitsProvider(rng);
+                }
+
+                // -------
+                // Note: Manipulation of the byte order for the platform is done during output.
+                // -------
+
+                // Run the test
+                final Runnable r = new StressTestTask(testData.getRandomSource(), rng, seed,
+                                                      output, command, this, progressTracker);
+                tasks.add(r);
+            }
+        }
+        return tasks;
+    }
+
+    /**
      * Count the total number of trials.
      *
      * @param stressTestData List of generators to be tested.
@@ -437,76 +512,17 @@ class StressTestCommand implements Callable<Void> {
     }
 
     /**
-     * Submit the tasks for the test data to the executor service. The output file for the
-     * sub-process will be constructed using the base path, the test identifier and the
-     * trial number.
+     * Submit the tasks to the executor service.
      *
      * @param service The executor service.
-     * @param taskList The list of submitted tasks.
-     * @param command The command for the test application.
-     * @param basePath The base path to the output results files.
-     * @param testData The test data.
-     * @param progressTracker The progress tracker.
+     * @param tasks The list of tasks.
+     * @return the list of submitted tasks
      */
-    private void submitTasks(ExecutorService service,
-                             List<Future<?>> taskList,
-                             List<String> command,
-                             String basePath,
-                             StressTestData testData,
-                             ProgressTracker progressTracker) {
-        for (int trial = 1; trial <= testData.getTrials(); trial++) {
-            // Create the output file
-            final File output = createOutputFile(basePath, testData, trial);
-            if (output.exists()) {
-                // In case the file was created since the last check
-                if (outputMode == StressTestCommand.OutputMode.ERROR) {
-                    throw new ApplicationException(createExistingFileMessage(output));
-                }
-                // Log the decision
-                LogUtils.info("%s existing output file: %s", outputMode, output);
-                if (outputMode == StressTestCommand.OutputMode.SKIP) {
-                    progressTracker.incrementProgress(0);
-                    continue;
-                }
-            }
-            // Create the generator. Explicitly create a seed so it can be recorded.
-            final byte[] seed = testData.getRandomSource().createSeed();
-            UniformRandomProvider rng = testData.createRNG(seed);
-
-            // Upper or lower bits from 64-bit generators must be created first.
-            // This will throw if not a 64-bit generator.
-            if (longHighBits) {
-                rng = RNGUtils.createLongUpperBitsIntProvider(rng);
-            } else if (longLowBits) {
-                rng = RNGUtils.createLongLowerBitsIntProvider(rng);
-            }
-
-            // Combination generators. Mainly used for testing.
-            // These operations maintain the native output type (int/long).
-            if (xorHashCode) {
-                rng = RNGUtils.createHashCodeProvider(rng);
-            }
-            if (xorThreadLocalRandom) {
-                rng = RNGUtils.createThreadLocalRandomProvider(rng);
-            }
-            if (xorRandomSource != null) {
-                rng = RNGUtils.createXorProvider(
-                        RandomSource.create(xorRandomSource),
-                        rng);
-            }
-            if (reverseBits) {
-                rng = RNGUtils.createReverseBitsProvider(rng);
-            }
-
-            // -------
-            // Note: Manipulation of the byte order for the platform is done during output.
-            // -------
-
-            // Run the test
-            final Runnable r = new StressTestTask(testData.getRandomSource(), rng, seed,
-                                                  output, command, this, progressTracker);
-            taskList.add(service.submit(r));
-        }
+    private static List<Future<?>> submitTasks(ExecutorService service,
+                                               List<Runnable> tasks) {
+        final List<Future<?>> taskList = new ArrayList<>(tasks.size());
+        tasks.forEach(r -> taskList.add(service.submit(r)));
+        return taskList;
     }
 
     /**
@@ -539,6 +555,12 @@ class StressTestCommand implements Callable<Void> {
         ProgressTracker(int total, int parallelTasks) {
             this.total = total;
             this.parallelTasks = parallelTasks;
+        }
+
+        /**
+         * Start the tracker. This will show progress as 0% complete.
+         */
+        void start() {
             showProgress();
         }
 
