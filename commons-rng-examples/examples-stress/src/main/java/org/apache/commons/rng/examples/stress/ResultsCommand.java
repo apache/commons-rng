@@ -858,8 +858,8 @@ class ResultsCommand implements Callable<Void> {
                         // Add systematic failures in brackets
                         if (showFailedTests) {
                             text += " (" + getSystematicFailures(testResults).size() + ")";
-                            writeAPTColumn(output, text);
                         }
+                        writeAPTColumn(output, text);
                     }
                     output.newLine();
                     output.write(separator);
