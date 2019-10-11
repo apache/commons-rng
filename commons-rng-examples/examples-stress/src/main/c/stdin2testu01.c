@@ -166,7 +166,6 @@ double nextDouble(void *par,
   return nextInt(par, sta) / 4294967296.0;
 }
 
-
 static void dummy(void *sta) {
   printf("N/A");
 
@@ -221,16 +220,31 @@ int main(int argc,
   } else if (strcmp(spec, TU_B) == 0) {
     bbattery_BigCrush(gen);
   } else if (strcmp(spec, T_RAW_32) == 0) {
-    // Print to stdout until stdin closes
+    /* Print to stdout until stdin closes. */
     while (1) {
       printInt(nextInt(0, gen->state));
     }
   } else if (strcmp(spec, T_RAW_64) == 0) {
-    // Print to stdout until stdin closes
+    /* Detect endianness required to join two 32-bit values. */
+    uint32_t val = 0x01;
+    /*
+     * Use a raw view of the bytes with a char* to determine if
+     * the first byte is unset (big endian) or set (little endian).
+     */
+    char * buff = (char *)&val;
+
+    int littleEndian = (buff[0] != 0);
+
+    /* Print to stdout until stdin closes. */
     while (1) {
+      /* Read 2 values. */
       uint64_t hi = nextInt(0, gen->state);
       uint64_t lo = nextInt(0, gen->state);
-      printLong((hi << 32) | lo);
+      if (littleEndian) {
+        printLong((lo << 32) | hi);
+      } else {
+        printLong((hi << 32) | lo);
+      }
     }
   } else {
     printf("[ERROR] Unknown specification: '%s'\n", spec);
