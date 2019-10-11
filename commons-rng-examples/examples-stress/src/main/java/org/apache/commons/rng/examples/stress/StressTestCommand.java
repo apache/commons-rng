@@ -18,7 +18,6 @@ package org.apache.commons.rng.examples.stress;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;
-import org.apache.commons.rng.examples.stress.LogUtils.LogLevel;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -34,6 +33,9 @@ import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
@@ -525,6 +527,8 @@ class StressTestCommand implements Callable<Void> {
         private long totalTime;
         /** The number of tasks completed with a time (i.e. were not skipped). */
         private int completed;
+        /** The estimated time of arrival (in milliseconds from the epoch). */
+        private long eta;
 
         /**
          * Create a new instance.
@@ -560,24 +564,47 @@ class StressTestCommand implements Callable<Void> {
          * or if the progress is complete.
          */
         private void showProgress() {
+            final long current = System.currentTimeMillis();
             // Edge case. This handles 0 / 0 as 100%.
             if (count >= total) {
-                LogUtils.info("Progress %d / %d (100%%)", total, total);
-                return;
-            }
-            final long current = System.currentTimeMillis();
-            if (current - timestamp > REPORT_INTERVAL) {
+                final StringBuilder sb = createStringBuilderWithTimestamp(current);
+                LogUtils.info(sb.append(" (100%)").toString());
+            } else if (current - timestamp > REPORT_INTERVAL) {
                 timestamp = current;
-                final StringBuilder sb = new StringBuilder(80);
+                final StringBuilder sb = createStringBuilderWithTimestamp(current);
                 try (Formatter formatter = new Formatter(sb)) {
-                    formatter.format("Progress %d / %d (%.2f%%)", count, total, 100.0 * count / total);
-                    LogUtils.info(appendRemaining(sb).toString());
+                    formatter.format(" (%.2f%%)", 100.0 * count / total);
+                    appendRemaining(sb);
+                    LogUtils.info(sb.toString());
                 }
             }
         }
 
         /**
-         * Compute an estimate of the time remaining and append to the progress.
+         * Creates the string builder for the progress message with a timestamp prefix.
+         *
+         * <pre>
+         * [HH:mm:ss] Progress [count] / [total]
+         * </pre>
+         *
+         * @param current Current time (in milliseconds)
+         * @return the string builder
+         */
+        private StringBuilder createStringBuilderWithTimestamp(long current) {
+            final StringBuilder sb = new StringBuilder(80);
+            // Use local time to adjust for timezone
+            final LocalDateTime time = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(current), ZoneId.systemDefault());
+            sb.append('[');
+            append00(sb, time.getHour()).append(':');
+            append00(sb, time.getMinute()).append(':');
+            append00(sb, time.getSecond());
+            return sb.append("] Progress ").append(count).append(" / ").append(total);
+        }
+
+        /**
+         * Compute an estimate of the time remaining and append to the progress. Updates the
+         * estimated time of arrival (ETA).
          *
          * @param sb String Builder.
          * @return the string builder
@@ -588,26 +615,44 @@ class StressTestCommand implements Callable<Void> {
                 return sb;
             }
 
-            final int remaining = total - count;
-            if (remaining < parallelTasks) {
-                // No more tasks to submit so the last estimate was as good as we can make it.
+            final long millis = getRemainingTime();
+            if (millis == 0) {
+                // This is an over-run of the ETA. Must be close to completion now.
                 return sb;
+            }
+
+            // HH:mm:ss format
+            sb.append(". Remaining = ");
+            hms(sb, millis);
+            return sb;
+        }
+
+        /**
+         * Gets the remaining time (in milliseconds). Uses or updates the estimated time of
+         * arrival (ETA), depending on the estimation method.
+         *
+         * @return the remaining time
+         */
+        private long getRemainingTime() {
+            final int remainingTasks = total - count;
+
+            if (remainingTasks < parallelTasks) {
+                // No more tasks to submit so the last estimate was as good as we can make it.
+                // Return the difference between the ETA and the current timestamp.
+                return Math.max(0, eta - timestamp);
             }
 
             // Estimate time remaining using the average runtime per task
             // multiplied by the number of parallel remaining tasks (rounded down).
             // Parallel remaining is the number of batches required to execute the
             // remaining tasks in parallel.
-            final long parallelRemaining = remaining / parallelTasks;
+            final long parallelRemaining = remainingTasks / parallelTasks;
             final long millis = (totalTime * parallelRemaining) / completed;
 
-            // HH:mm:ss format
-            if (LogUtils.isLoggable(LogLevel.DEBUG)) {
-                sb.append(". Average task time = ");
-                hms(sb, totalTime / completed);
-            }
-            sb.append(". Remaining = ");
-            return hms(sb, millis);
+            // Update the ETA
+            eta = timestamp + millis;
+
+            return millis;
         }
 
         /**
