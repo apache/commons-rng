@@ -52,12 +52,19 @@
 #define TU_B "BigCrush"
 #define T_RAW_32 "raw32"
 #define T_RAW_64 "raw64"
-#define BUFFER_LENGTH 2048
+#define BUFFER_LENGTH_32 2048
+/* The 64-bit buffer must be the same size. */
+#define BUFFER_LENGTH_64 (BUFFER_LENGTH_32 / 2)
 
 typedef struct {
-  uint32_t buffer[BUFFER_LENGTH];
+  uint32_t buffer[BUFFER_LENGTH_32];
   uint32_t index;
 } StdinReader_state;
+
+typedef struct {
+  uint64_t buffer[BUFFER_LENGTH_64];
+  uint32_t index;
+} Stdin64Reader_state;
 
 /* Lookup table for binary representation of bytes. */
 const char *bit_rep[16] = {
@@ -124,9 +131,13 @@ void printLong(uint64_t value)
   putchar(' ');
   printByte((uint8_t)( value        & 0xff));
   /* Write the unsigned and signed int value */
-  printf("  %20lu %20ld\n", value, (int64_t) value);
+  printf("  %20llu %20lld\n", value, (int64_t) value);
 }
 
+/*
+ * Method to read 32-bit input from stdin.
+ * Matches the signature for generators in TestU01.
+ */
 unsigned long nextInt(void *par,
                       void *sta) {
   static size_t last_read = 0;
@@ -134,8 +145,8 @@ unsigned long nextInt(void *par,
   StdinReader_state *state = (StdinReader_state *) sta;
   if (state->index >= last_read) {
     /* Refill. */
-    last_read = fread(state->buffer, sizeof(uint32_t), BUFFER_LENGTH, stdin);
-    if (last_read != BUFFER_LENGTH) {
+    last_read = fread(state->buffer, sizeof(uint32_t), BUFFER_LENGTH_32, stdin);
+    if (last_read != BUFFER_LENGTH_32) {
       // Allow reading less than the buffer length, but not zero
       if (last_read == 0) {
         // Error handling
@@ -156,6 +167,44 @@ unsigned long nextInt(void *par,
   }
 
   uint32_t random = state->buffer[state->index];
+  ++state->index; /* Next request. */
+
+  return random;
+}
+
+/*
+ * Dedicated method to read 64-bit input from stdin.
+ * Not used for TestU01. Used to test reading 64-bit binary data.
+ */
+uint64_t nextLong(void *sta) {
+  static size_t last_read = 0;
+
+  /* This works because the 64-bit state is the same size. */
+  Stdin64Reader_state *state = (Stdin64Reader_state *) sta;
+  if (state->index >= last_read) {
+    /* Refill. */
+    last_read = fread(state->buffer, sizeof(uint64_t), BUFFER_LENGTH_64, stdin);
+    if (last_read != BUFFER_LENGTH_64) {
+      // Allow reading less than the buffer length, but not zero
+      if (last_read == 0) {
+        // Error handling
+        if (feof(stdin)) {
+          // End of stream, just exit. This is used for testing.
+          exit(0);
+        } else if (ferror(stdin)) {
+          // perror will contain a description of the error code
+          perror("[ERROR] Failed to read stdin");
+          exit(1);
+        } else {
+          printf("[ERROR] No data from stdin\n");
+          exit(1);
+        }
+      }
+    }
+    state->index = 0;
+  }
+
+  uint64_t random = state->buffer[state->index];
   ++state->index; /* Next request. */
 
   return random;
@@ -194,7 +243,7 @@ unif01_Gen *createStdinReader(void) {
 
    // Read binary input.
    freopen(NULL, "rb", stdin);
-   state->index = BUFFER_LENGTH;
+   state->index = BUFFER_LENGTH_32;
 
    return gen;
 }
@@ -225,26 +274,9 @@ int main(int argc,
       printInt(nextInt(0, gen->state));
     }
   } else if (strcmp(spec, T_RAW_64) == 0) {
-    /* Detect endianness required to join two 32-bit values. */
-    uint32_t val = 0x01;
-    /*
-     * Use a raw view of the bytes with a char* to determine if
-     * the first byte is unset (big endian) or set (little endian).
-     */
-    char * buff = (char *)&val;
-
-    int littleEndian = (buff[0] != 0);
-
-    /* Print to stdout until stdin closes. */
+    /* Print to stdout until stdin closes. Use dedicated 64-bit reader. */
     while (1) {
-      /* Read 2 values. */
-      uint64_t hi = nextInt(0, gen->state);
-      uint64_t lo = nextInt(0, gen->state);
-      if (littleEndian) {
-        printLong((lo << 32) | hi);
-      } else {
-        printLong((hi << 32) | lo);
-      }
+      printLong(nextLong(gen->state));
     }
   } else {
     printf("[ERROR] Unknown specification: '%s'\n", spec);
