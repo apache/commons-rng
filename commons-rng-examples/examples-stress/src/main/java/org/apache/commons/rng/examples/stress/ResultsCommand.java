@@ -132,10 +132,16 @@ class ResultsCommand implements Callable<Void> {
                            "files when the path is output, e.g. for the APT report."})
     private String pathPrefix = "";
 
-    /** The flag to include the Dieharder sums test. */
+    /** The flag to ignore partial results. */
     @Option(names = {"-i", "--ignore"},
             description = "Ignore partial results.")
     private boolean ignorePartialResults;
+
+    /** The flag to delete partial results files. */
+    @Option(names = {"--delete"},
+            description = {"Delete partial results files.",
+                           "This is not reversible!"})
+    private boolean deletePartialResults;
 
     /**
      * The output mode for the results.
@@ -283,7 +289,7 @@ class ResultsCommand implements Callable<Void> {
          * @return the test application name
          */
         String getTestApplicationName() {
-            return testApplicationName == null ? getTestFormat().toString() : testApplicationName;
+            return testApplicationName == null ? String.valueOf(getTestFormat()) : testApplicationName;
         }
 
         /**
@@ -314,6 +320,11 @@ class ResultsCommand implements Callable<Void> {
 
         // Read the results
         final List<TestResult> results = readResults();
+
+        if (deletePartialResults) {
+            deleteIfIncomplete(results);
+            return null;
+        }
 
         try (OutputStream out = createOutputStream()) {
             switch (outputFormat) {
@@ -356,6 +367,7 @@ class ResultsCommand implements Callable<Void> {
      *
      * @param results Results.
      * @param resultFile Result file.
+     * @throws ApplicationException If the results cannot be parsed.
      */
     private void readResults(List<TestResult> results,
                              File resultFile) {
@@ -366,7 +378,11 @@ class ResultsCommand implements Callable<Void> {
             LogUtils.error("No test output in file: %s", resultFile);
         } else {
             for (final List<String> testOutput : outputs) {
-                results.add(readResult(resultFile, testOutput));
+                final TestResult result = readResult(resultFile, testOutput);
+                results.add(result);
+                if (!result.isComplete()) {
+                    LogUtils.info("Partial results in file: %s", resultFile);
+                }
             }
         }
     }
@@ -422,6 +438,7 @@ class ResultsCommand implements Callable<Void> {
      * @param resultFile Result file.
      * @param testOutput Test output.
      * @return the test result
+     * @throws ApplicationException If the result cannot be parsed.
      */
     private TestResult readResult(File resultFile,
                                   List<String> testOutput) {
@@ -429,17 +446,18 @@ class ResultsCommand implements Callable<Void> {
         final ListIterator<String> iter = testOutput.listIterator();
 
         // Identify the RandomSource and bit reversed flag from the header:
-        final RandomSource randomSource = getRandomSource(iter);
-        final boolean bitReversed = getBitReversed(iter);
-        // Identify the test application format
-        final TestFormat testFormat = getTestFormat(iter);
+        final RandomSource randomSource = getRandomSource(resultFile, iter);
+        final boolean bitReversed = getBitReversed(resultFile, iter);
+
+        // Identify the test application format. This may return null.
+        final TestFormat testFormat = getTestFormat(resultFile, iter);
 
         // Read the application results
         final TestResult testResult = new TestResult(resultFile, randomSource, bitReversed, testFormat);
         if (testFormat == TestFormat.DIEHARDER) {
             readDieharder(iter, testResult);
         } else {
-            readTestU01(iter, testResult);
+            readTestU01(resultFile, iter, testResult);
         }
         return testResult;
     }
@@ -447,42 +465,50 @@ class ResultsCommand implements Callable<Void> {
     /**
      * Gets the random source from the output header.
      *
+     * @param resultFile Result file (for the exception message).
      * @param iter Iterator of the test output.
      * @return the random source
+     * @throws ApplicationException If the RandomSource header line cannot be found.
      */
-    private static RandomSource getRandomSource(Iterator<String> iter) {
+    private static RandomSource getRandomSource(File resultFile, Iterator<String> iter) {
         while (iter.hasNext()) {
             final Matcher matcher = RANDOM_SOURCE_PATTERN.matcher(iter.next());
             if (matcher.matches()) {
                 return RandomSource.valueOf(matcher.group(1));
             }
         }
-        throw new ApplicationException("Failed to find RandomSource header line");
+        throw new ApplicationException("Failed to find RandomSource header line: " + resultFile);
     }
 
     /**
      * Gets the bit-reversed flag from the output header.
      *
+     * @param resultFile Result file (for the exception message).
      * @param iter Iterator of the test output.
      * @return the bit-reversed flag
+     * @throws ApplicationException If the RNG header line cannot be found.
      */
-    private static boolean getBitReversed(Iterator<String> iter) {
+    private static boolean getBitReversed(File resultFile, Iterator<String> iter) {
         while (iter.hasNext()) {
             final Matcher matcher = RNG_PATTERN.matcher(iter.next());
             if (matcher.matches()) {
                 return matcher.group(1).contains(BIT_REVERSED);
             }
         }
-        throw new ApplicationException("Failed to find RNG header line");
+        throw new ApplicationException("Failed to find RNG header line: " + resultFile);
     }
 
     /**
-     * Gets the test format from the output.
+     * Gets the test format from the output. This scans the stdout produced by a test application.
+     * If it is not recognised this may be a valid partial result or an unknown result. Throw
+     * an exception if not allowing partial results, otherwise log an error.
      *
+     * @param resultFile Result file (for the exception message).
      * @param iter Iterator of the test output.
-     * @return the test format
+     * @return the test format (or null)
+     * @throws ApplicationException If the test format cannot be found.
      */
-    private static TestFormat getTestFormat(Iterator<String> iter) {
+    private TestFormat getTestFormat(File resultFile, Iterator<String> iter) {
         while (iter.hasNext()) {
             final String line = iter.next();
             if (DIEHARDER_PATTERN.matcher(line).find()) {
@@ -492,7 +518,11 @@ class ResultsCommand implements Callable<Void> {
                 return TestFormat.TESTU01;
             }
         }
-        throw new ApplicationException("Failed to identify the test application format");
+        if (!ignorePartialResults) {
+            throw new ApplicationException("Failed to identify the test application format: " + resultFile);
+        }
+        LogUtils.error("Failed to identify the test application format: %s", resultFile);
+        return null;
     }
 
     /**
@@ -528,7 +558,7 @@ class ResultsCommand implements Callable<Void> {
                                          line.substring(index1 + 1, index2).trim());
             } else if (TEST_DURATION_PATTERN.matcher(line).find()) {
                 testResult.setComplete(true);
-                break;
+                return;
             }
         }
     }
@@ -539,11 +569,13 @@ class ResultsCommand implements Callable<Void> {
      * <p>Test U01 outputs a summary of results at the end of the test output. If this cannot
      * be found the method will throw an exception unless partial results are allowed.</p>
      *
+     * @param resultFile Result file (for the exception message).
      * @param iter Iterator of the test output.
      * @param testResult Test result.
      * @throws ApplicationException If the TestU01 summary cannot be found.
      */
-    private void readTestU01(ListIterator<String> iter,
+    private void readTestU01(File resultFile,
+                             ListIterator<String> iter,
                              TestResult testResult) {
         // Results are summarised at the end of the file:
         //========= Summary results of BigCrush =========
@@ -564,7 +596,7 @@ class ResultsCommand implements Callable<Void> {
         // 7  CollisionOver, t = 7             eps
 
         // Identify the summary line
-        final String testSuiteName = skipToTestU01Summary(iter);
+        final String testSuiteName = skipToTestU01Summary(resultFile, iter);
 
         // This may not be present if the results are not complete
         if (testSuiteName == null) {
@@ -588,7 +620,7 @@ class ResultsCommand implements Callable<Void> {
                 testResult.addFailedTest(matcher.group(1).trim());
             } else if (TEST_DURATION_PATTERN.matcher(line).find()) {
                 testResult.setComplete(true);
-                break;
+                return;
             }
         }
     }
@@ -609,17 +641,18 @@ class ResultsCommand implements Callable<Void> {
      * <p>If this cannot be found the method will throw an exception unless partial results
      * are allowed.</p>
      *
+     * @param resultFile Result file (for the exception message).
      * @param iter Iterator of the test output.
      * @return the name of the test suite
      * @throws ApplicationException If the TestU01 summary cannot be found.
      */
-    private String skipToTestU01Summary(Iterator<String> iter) {
+    private String skipToTestU01Summary(File resultFile, Iterator<String> iter) {
         final String testSuiteName = findMatcherGroup1(iter, TESTU01_SUMMARY_PATTERN);
         // Allow the partial result to be ignored
         if (testSuiteName != null || ignorePartialResults) {
             return testSuiteName;
         }
-        throw new ApplicationException("Failed to identify the Test U01 result summary");
+        throw new ApplicationException("Failed to identify the Test U01 result summary: " + resultFile);
     }
 
     /**
@@ -656,6 +689,33 @@ class ResultsCommand implements Callable<Void> {
             }
         }
         return null;
+    }
+
+    /**
+     * Delete any result file if incomplete.
+     *
+     * @param results Results.
+     * @throws ApplicationException If a file could not be deleted.
+     */
+    private static void deleteIfIncomplete(List<TestResult> results) {
+        results.forEach(ResultsCommand::deleteIfIncomplete);
+    }
+
+    /**
+     * Delete the result file if incomplete.
+     *
+     * @param result Test result.
+     * @throws ApplicationException If the file could not be deleted.
+     */
+    private static void deleteIfIncomplete(TestResult result) {
+        if (!result.isComplete()) {
+            try {
+                Files.delete(result.getResultFile().toPath());
+                LogUtils.info("Deleted file: %s", result.getResultFile());
+            } catch (IOException ex) {
+                throw new ApplicationException("Failed to delete file: " + result.getResultFile(), ex);
+            }
+        }
     }
 
     /**
