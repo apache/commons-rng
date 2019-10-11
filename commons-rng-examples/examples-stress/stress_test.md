@@ -74,8 +74,8 @@ required.
 Test platform Endianness
 ------------------------
 
-The stress test application will output raw binary data for generated integers. An integer is 4
-bytes and thus the byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness) of the data
+The stress test application will output raw binary data for generated integers or longs. 
+An integer is 4 bytes and a long is 8 bytes and thus the byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness) of the data
 must be correct for the test application. The stress test application can support either big-endian
 or little-endian format. The application will auto-detect the platform and will default to output
 binary data using the native byte order.
@@ -144,6 +144,35 @@ The output results can be viewed using the `results` command:
 
         > java -jar target/examples-stress.jar results \
               target/tu_* \
-              target/dh_* --ignore-sums
+              target/dh_*
 
 Various formats are available. Use the `--help` option to show the available options.
+
+Test 64-bit generators
+----------------------
+
+The available random generators output either 32-bits or 64-bits per cycle. The test applications
+**Dieharder** and **TestU01** require 32-bit input. The standard method for a 64-bit generator is
+to use the upper and then lower 32-bits of each 64-bit output. The stress test application has
+options to use only the upper or the lower 32-bits for testing. These can then be bit-reversed or
+byte-reversed if desired.
+
+The `list` command can output available generators by provider type. For example to output the
+64-bit providers to a `rng64.list` file:
+
+        > java -jar target/examples-stress.jar list \
+              --provider long > rng64.list
+
+The list can then be used to test 64-bit providers, for example to test the lower 32-bits in reverse
+order using **BigCrush**:
+
+        > java -jar target/examples-stress.jar stress \
+              --list rng64.list \
+              --low-bits \
+              --reverse-bits \
+              --prefix target/tu_lo_r_ \
+              ./stdin2testu01 \
+              BigCrush
+
+If a 32-bit provider is used with the `--low-bits` or `--upper-bits` options then an error
+message is shown.
