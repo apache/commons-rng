@@ -683,7 +683,8 @@ class StressTestCommand implements Callable<Void> {
                 final int nthOldest = Math.max(0, id - parallelTasks + remainder);
                 final long endTime = startTimes[nthOldest] + taskTime;
                 // Note: The current time is the most recent entry in the startTimes array.
-                millis += endTime - startTimes[id];
+                // Ensure the addition is positive in the case where the estimate is too low.
+                millis += Math.max(0, endTime - startTimes[id]);
             }
 
             return millis;
@@ -695,10 +696,34 @@ class StressTestCommand implements Callable<Void> {
          * @return the estimated task time
          */
         private long getEstimatedTaskTime() {
-            // Use the median. This is less sensitive to outliers than the average.
-            // For example PractRand may fail very fast for bad generators and this
-            // will skew the average.
-            return sortedDurations[completed / 2];
+            // Return median of small lists. If no tasks have finished this returns zero.
+            // as the durations is zero initialised.
+            if (completed < 4) {
+                return sortedDurations[completed / 2];
+            }
+
+            // Dieharder and BigCrush run in approximately constant time.
+            // Speed varies with the speed of the RNG by about 2-fold, and
+            // for Dieharder it may repeat suspicious tests.
+            // PractRand may fail very fast for bad generators which skews
+            // using the mean or even the median. So look at the longest
+            // running tests.
+
+            // Find long running tests (>50% of the max run-time)
+            int upper = completed - 1;
+            final long halfMax = sortedDurations[upper] / 2;
+            // Binary search for the approximate cut-off
+            int lower = 0;
+            while (lower + 1 < upper) {
+                int mid = (lower + upper) >>> 1;
+                if (sortedDurations[mid] < halfMax) {
+                    lower = mid;
+                } else {
+                    upper = mid;
+                }
+            }
+            // Use the median of all tasks within approximately 50% of the max.
+            return sortedDurations[(lower + completed - 1) / 2];
         }
 
         /**
