@@ -65,8 +65,8 @@ class ResultsCommand implements Callable<Void> {
     private static final Pattern RANDOM_SOURCE_PATTERN = Pattern.compile("^# RandomSource: (.*)");
     /** The pattern to identify the RNG in the stress test result header. */
     private static final Pattern RNG_PATTERN = Pattern.compile("^# RNG: (.*)");
-    /** The pattern to identify the test duration in the stress test result footer. */
-    private static final Pattern TEST_DURATION_PATTERN = Pattern.compile("^# Test duration:");
+    /** The pattern to identify the test exit code in the stress test result footer. */
+    private static final Pattern TEST_EXIT_PATTERN = Pattern.compile("^# Exit value: (\\d+)");
     /** The pattern to identify the Dieharder test format. */
     private static final Pattern DIEHARDER_PATTERN = Pattern.compile("^# *dieharder version");
     /** The pattern to identify a Dieharder failed test result. */
@@ -183,8 +183,12 @@ class ResultsCommand implements Callable<Void> {
         private final List<String> failedTests = new ArrayList<>();
         /** The test application name. */
         private String testApplicationName;
-        /** Flag to indicate results are complete (i.e. not still in progress). */
-        private boolean complete;
+        /**
+         * Store the exit code.
+         * Initialised to {@link Integer#MIN_VALUE}. Exit values are expected to be 8-bit numbers
+         * with zero for success.
+         */
+        private int exitCode = Integer.MIN_VALUE;
 
         /**
          * @param resultFile the result file
@@ -294,20 +298,21 @@ class ResultsCommand implements Callable<Void> {
 
         /**
          * Checks if the test result is complete.
+         * This is {@code true} only if the exit code was found and is zero.
          *
          * @return true if complete
          */
         boolean isComplete() {
-            return complete;
+            return exitCode == 0;
         }
 
         /**
-         * Sets the complete flag.
+         * Sets the exit code flag.
          *
-         * @param complete the new complete
+         * @param exitCode the new exit code
          */
-        void setComplete(boolean complete) {
-            this.complete = complete;
+        void setExitCode(int exitCode) {
+            this.exitCode = exitCode;
         }
     }
 
@@ -556,11 +561,26 @@ class ResultsCommand implements Callable<Void> {
                 final int index2 = line.indexOf('|', index1 + 1);
                 testResult.addFailedTest(line.substring(0, index1).trim() + ":" +
                                          line.substring(index1 + 1, index2).trim());
-            } else if (TEST_DURATION_PATTERN.matcher(line).find()) {
-                testResult.setComplete(true);
+            } else if (findExitCode(testResult, line)) {
                 return;
             }
         }
+    }
+
+    /**
+     * Find the exit code in the line. Update the test result with the code if found.
+     *
+     * @param testResult Test result.
+     * @param line Line from the test result output.
+     * @return true, if the exit code was found
+     */
+    private static boolean findExitCode(TestResult testResult, String line) {
+        final Matcher matcher = TEST_EXIT_PATTERN.matcher(line);
+        if (matcher.find()) {
+            testResult.setExitCode(Integer.parseInt(matcher.group(1)));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -618,8 +638,7 @@ class ResultsCommand implements Callable<Void> {
             final Matcher matcher = TESTU01_TEST_RESULT_PATTERN.matcher(line);
             if (matcher.find()) {
                 testResult.addFailedTest(matcher.group(1).trim());
-            } else if (TEST_DURATION_PATTERN.matcher(line).find()) {
-                testResult.setComplete(true);
+            } else if (findExitCode(testResult, line)) {
                 return;
             }
         }
