@@ -98,7 +98,8 @@ final class ProcessUtils {
      * Get the exit value from the process, waiting at most for the given time, otherwise
      * kill the process and return {@code null}.
      *
-     * <p>This should be used when it is expected the process has completed.</p>
+     * <p>This should be used when it is expected the process has completed. If the timeout
+     * expires an error message is logged before the process is killed.</p>
      *
      * @param process The process.
      * @param timeoutMillis The timeout (in milliseconds).
@@ -123,6 +124,8 @@ final class ProcessUtils {
             }
             remaining = timeoutMillis - (System.currentTimeMillis() - startTime);
         }
+
+        LogUtils.error("Failed to obtain exit value after %d ms, forcing termination", timeoutMillis);
 
         // Not finished so kill it
         process.destroy();

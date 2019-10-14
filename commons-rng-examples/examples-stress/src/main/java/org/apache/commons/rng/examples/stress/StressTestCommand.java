@@ -835,8 +835,13 @@ class StressTestCommand implements Callable<Void> {
 
             bytesUsed *= cmd.bufferSize;
 
-            // Get the exit value
-            return ProcessUtils.getExitValue(testingProcess);
+            // Get the exit value.
+            // Wait for up to 60 seconds.
+            // If an application does not exit after this time then something is wrong.
+            // Dieharder and TestU01 BigCrush exit within 1 second.
+            // PractRand has been observed to take longer than 1 second. It calls std::exit(0)
+            // when failing a test so the length of time may be related to freeing memory.
+            return ProcessUtils.getExitValue(testingProcess, TimeUnit.SECONDS.toMillis(60));
         }
 
         /**
