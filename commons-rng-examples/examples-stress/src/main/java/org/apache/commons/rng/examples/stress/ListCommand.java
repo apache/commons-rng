@@ -194,7 +194,7 @@ class ListCommand implements Callable<Void> {
             if (data.getArgs() == null) {
                 appendable.append(Integer.toString(data.getTrials()));
             } else {
-                formatter.format("%-7d   %s", data.getTrials(), Arrays.toString(data.getArgs()));
+                formatter.format("%-6d   %s", data.getTrials(), Arrays.toString(data.getArgs()));
             }
             appendable.append(newLine);
         }
