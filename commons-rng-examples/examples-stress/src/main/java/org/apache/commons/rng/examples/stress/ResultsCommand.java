@@ -861,25 +861,40 @@ class ResultsCommand implements Callable<Void> {
             output.newLine();
             output.write(separator);
 
+            final StringBuilder sb = new StringBuilder();
+
             // This will collate results for each combination of 'RandomSource + bitReversed'
             for (final RandomSource randomSource : randomSources) {
                 for (final boolean reversed : bitReversed) {
-                    output.write('|');
-                    writeAPTColumn(output, randomSource.toString());
+                    // Highlight in bold a RNG with no systematic failures
+                    boolean highlight = true;
+
+                    // Buffer the column output
+                    sb.setLength(0);
+
                     if (showBitReversedColumn) {
-                        writeAPTColumn(output, Boolean.toString(reversed));
+                        writeAPTColumn(sb, Boolean.toString(reversed), false);
                     }
                     for (final String testName : testNames) {
                         final List<TestResult> testResults = getTestResults(results, randomSource, reversed, testName);
                         String text = testResults.stream()
                                                  .map(toAPTString)
                                                  .collect(Collectors.joining(", "));
-                        // Add systematic failures in brackets
-                        if (showFailedTests) {
-                            text += " (" + getSystematicFailures(testResults).size() + ")";
+                        // Identify RNGs with no systematic failures
+                        final int count = getSystematicFailures(testResults).size();
+                        if (count != 0) {
+                            highlight = false;
                         }
-                        writeAPTColumn(output, text);
+                        if (showFailedTests) {
+                            // Add systematic failures in brackets
+                            text += " (" + count + ")";
+                        }
+                        writeAPTColumn(sb, text, false);
                     }
+
+                    output.write('|');
+                    writeAPTColumn(output, randomSource.toString(), highlight);
+                    output.write(sb.toString());
                     output.newLine();
                     output.write(separator);
                 }
@@ -1032,13 +1047,21 @@ class ResultsCommand implements Callable<Void> {
      *
      * @param output Output.
      * @param text Text.
+     * @param highlight If {@code true} highlight the text in bold.
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private static void writeAPTColumn(BufferedWriter output,
-                                       String text) throws IOException {
-        output.write(' ');
-        output.write(text);
-        output.write(" |");
+    private static void writeAPTColumn(Appendable output,
+                                       String text,
+                                       boolean highlight) throws IOException {
+        output.append(' ');
+        if (highlight) {
+            output.append("<<");
+        }
+        output.append(text);
+        if (highlight) {
+            output.append(">>");
+        }
+        output.append(" |");
     }
 
     /**
