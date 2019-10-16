@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.examples.stress;
 
+import org.apache.commons.rng.examples.stress.ResultsCommand.TestFormat;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -44,6 +45,7 @@ import java.util.ListIterator;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -79,6 +81,12 @@ class ResultsCommand implements Callable<Void> {
     private static final Pattern TESTU01_TEST_RESULT_PATTERN = Pattern.compile("^  ?(\\d+  .*)    ");
     /** The pattern to identify the Test U01 test starting entry. */
     private static final Pattern TESTU01_STARTING_PATTERN = Pattern.compile("^ *Starting (\\S*)");
+    /** The pattern to identify the PractRand test format. */
+    private static final Pattern PRACTRAND_PATTERN = Pattern.compile("PractRand version");
+    /** The pattern to identify the PractRand output byte size. */
+    private static final Pattern PRACTRAND_OUTPUT_SIZE_PATTERN = Pattern.compile("\\(2\\^(\\d+) bytes\\)");
+    /** The pattern to identify a PractRand failed test result. */
+    private static final Pattern PRACTRAND_FAILED_PATTERN = Pattern.compile("FAIL *!* *$");
     /** The name of the Dieharder sums test. */
     private static final String DIEHARDER_SUMS = "diehard_sums";
     /** The string identifying a bit-reversed generator. */
@@ -91,6 +99,8 @@ class ResultsCommand implements Callable<Void> {
     private static final char PIPE = '|';
     /** The column name for the RNG. */
     private static final String COLUMN_RNG = "RNG";
+    /** Constant for conversion of bytes to binary units, prefixed with a space. */
+    private static final String[] BINARY_UNITS = {" B", " KiB", " MiB", " GiB", " TiB", " PiB", " EiB"};
 
     /** The standard options. */
     @Mixin
@@ -165,6 +175,8 @@ class ResultsCommand implements Callable<Void> {
         DIEHARDER,
         /** Test U01. */
         TESTU01,
+        /** PractRand. */
+        PRACTRAND,
     }
 
     /**
@@ -270,11 +282,14 @@ class ResultsCommand implements Callable<Void> {
         }
 
         /**
-         * Gets the failure count as a string. This will be negative if the test is not complete.
+         * Gets the a failure summary string.
          *
-         * @return the failure count
+         * <p>The default implementation is the count of the number of failures.
+         * This will be negative if the test is not complete.</p>
+         *
+         * @return the failure summary
          */
-        String getFailureCountString() {
+        String getFailureSummaryString() {
             return (isComplete()) ? Integer.toString(failedTests.size()) : "-" + failedTests.size();
         }
 
@@ -313,6 +328,54 @@ class ResultsCommand implements Callable<Void> {
          */
         void setExitCode(int exitCode) {
             this.exitCode = exitCode;
+        }
+    }
+
+    /**
+     * Encapsulate the results of a PractRand test application. This is a specialisation that
+     * allows handling PractRand results which are linked to the output length used by the RNG.
+     */
+    private static class PractRandTestResult extends TestResult {
+        /** The length of the RNG output used to generate failed tests. */
+        private int lengthExponent;
+
+        /**
+         * @param resultFile the result file
+         * @param randomSource the random source
+         * @param bitReversed the bit reversed flag
+         * @param testFormat the test format
+         */
+        PractRandTestResult(File resultFile, RandomSource randomSource, boolean bitReversed, TestFormat testFormat) {
+            super(resultFile, randomSource, bitReversed, testFormat);
+        }
+
+        /**
+         * Gets the length of the RNG output used to generate failed tests.
+         *
+         * @return the length exponent
+         */
+        int getLengthExponent() {
+            return lengthExponent;
+        }
+
+        /**
+         * Sets the length of the RNG output used to generate failed tests.
+         *
+         * @param lengthExponent the length exponent
+         */
+        void setLengthExponent(int lengthExponent) {
+            this.lengthExponent = lengthExponent;
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * <p>The PractRand summary is the exponent of the length of byte output from the RNG where
+         * a failure occurred.
+         */
+        @Override
+        String getFailureSummaryString() {
+            return lengthExponent == 0 ? "-" : Integer.toString(lengthExponent);
         }
     }
 
@@ -458,13 +521,31 @@ class ResultsCommand implements Callable<Void> {
         final TestFormat testFormat = getTestFormat(resultFile, iter);
 
         // Read the application results
-        final TestResult testResult = new TestResult(resultFile, randomSource, bitReversed, testFormat);
+        final TestResult testResult = createTestResult(resultFile, randomSource, bitReversed, testFormat);
         if (testFormat == TestFormat.DIEHARDER) {
             readDieharder(iter, testResult);
-        } else {
+        } else if (testFormat == TestFormat.TESTU01) {
             readTestU01(resultFile, iter, testResult);
+        } else {
+            readPractRand(iter, (PractRandTestResult) testResult);
         }
         return testResult;
+    }
+
+    /**
+     * Creates the test result.
+     *
+     * @param resultFile Result file.
+     * @param randomSource Random source.
+     * @param bitReversed True if the random source was bit reversed.
+     * @param testFormat Test format.
+     * @return the test result
+     */
+    private static TestResult createTestResult(File resultFile, RandomSource randomSource,
+                                               boolean bitReversed, TestFormat testFormat) {
+        return testFormat == TestFormat.PRACTRAND ?
+            new PractRandTestResult(resultFile, randomSource, bitReversed, testFormat) :
+            new TestResult(resultFile, randomSource, bitReversed, testFormat);
     }
 
     /**
@@ -521,6 +602,9 @@ class ResultsCommand implements Callable<Void> {
             }
             if (TESTU01_PATTERN.matcher(line).find()) {
                 return TestFormat.TESTU01;
+            }
+            if (PRACTRAND_PATTERN.matcher(line).find()) {
+                return TestFormat.PRACTRAND;
             }
         }
         if (!ignorePartialResults) {
@@ -711,6 +795,60 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
+     * Read the result output from the PractRand test application.
+     *
+     * @param iter Iterator of the test output.
+     * @param testResult Test result.
+     */
+    private static void readPractRand(Iterator<String> iter,
+                                      PractRandTestResult testResult) {
+        // PractRand results are printed for blocks of byte output that double in size.
+        // The results report 'unusual' and 'suspicious' output and the test stops
+        // at the first failure.
+        // Results are typically reported as the size of output that failed, e.g.
+        // the JDK random fails at 256KiB.
+        //
+        // rng=RNG_stdin32, seed=0xfc6c7332
+        // length= 128 kilobytes (2^17 bytes), time= 5.9 seconds
+        //   no anomalies in 118 test result(s)
+        //
+        // rng=RNG_stdin32, seed=0xfc6c7332
+        // length= 256 kilobytes (2^18 bytes), time= 7.6 seconds
+        //   Test Name                         Raw       Processed     Evaluation
+        //   [Low1/64]Gap-16:A                 R= +12.4  p =  8.7e-11   VERY SUSPICIOUS
+        //   [Low1/64]Gap-16:B                 R= +13.4  p =  3.0e-11    FAIL
+        //   [Low8/32]DC6-9x1Bytes-1           R=  +7.6  p =  5.7e-4   unusual
+        //   ...and 136 test result(s) without anomalies
+
+        testResult.setTestApplicationName("PractRand");
+
+        // Store the exponent of the current output length.
+        int exp = 0;
+
+        // Identify any line containing FAIL and then get the test name using
+        // the first token in the line.
+        while (iter.hasNext()) {
+            String line = iter.next();
+            final Matcher matcher = PRACTRAND_OUTPUT_SIZE_PATTERN.matcher(line);
+            if (matcher.find()) {
+                // Store the current output length
+                exp = Integer.parseInt(matcher.group(1));
+            } else if (PRACTRAND_FAILED_PATTERN.matcher(line).find()) {
+                // Record the output length where failures occurred.
+                testResult.setLengthExponent(exp);
+                // Add the failed test name. This does not include the length exponent
+                // allowing meta-processing of systematic failures.
+                // Remove initial whitespace
+                line = line.trim();
+                final int index = line.indexOf(' ');
+                testResult.addFailedTest(line.substring(0, index));
+            } else if (findExitCode(testResult, line)) {
+                return;
+            }
+        }
+    }
+
+    /**
      * Delete any result file if incomplete.
      *
      * @param results Results.
@@ -797,7 +935,7 @@ class ResultsCommand implements Callable<Void> {
                 output.write(',');
                 output.write(result.getTestApplicationName());
                 output.write(',');
-                output.write(result.getFailureCountString());
+                output.write(result.getFailureSummaryString());
                 // Optionally write out failed test names.
                 if (showFailedTests) {
                     output.write(',');
@@ -836,7 +974,7 @@ class ResultsCommand implements Callable<Void> {
             // Build the APT relative link
             final StringBuilder sb = new StringBuilder()
                 .append("{{{").append(pathPrefix).append(path).append('}')
-                .append(result.getFailureCountString()).append("}}");
+                .append(result.getFailureSummaryString()).append("}}");
             // Convert to web-link name separators
             for (int i = 0; i < sb.length(); i++) {
                 if (sb.charAt(i) == BACK_SLASH) {
@@ -880,14 +1018,15 @@ class ResultsCommand implements Callable<Void> {
                         String text = testResults.stream()
                                                  .map(toAPTString)
                                                  .collect(Collectors.joining(", "));
-                        // Identify RNGs with no systematic failures
-                        final int count = getSystematicFailures(testResults).size();
-                        if (count != 0) {
+                        // Summarise the failures across all tests
+                        final String summary = getFailuresSummary(testResults);
+                        if (summary.length() != 0) {
+                            // Identify RNGs with no systematic failures
                             highlight = false;
-                        }
-                        if (showFailedTests) {
-                            // Add systematic failures in brackets
-                            text += " (" + count + ")";
+                            if (showFailedTests) {
+                                // Add summary in brackets
+                                text += " (" + summary + ")";
+                            }
                         }
                         writeAPTColumn(sb, text, false);
                     }
@@ -1113,9 +1252,61 @@ class ResultsCommand implements Callable<Void> {
             }
         }
         final int completeCount = (int) results.stream().filter(TestResult::isComplete).count();
-        return map.entrySet().stream().filter(e -> e.getValue() == completeCount)
-                                      .map(Entry::getKey)
-                                      .collect(Collectors.toList());
+        final List<String> list = map.entrySet().stream()
+                                                .filter(e -> e.getValue() == completeCount)
+                                                .map(Entry::getKey)
+                                                .collect(Collectors.toCollection(
+                                                    (Supplier<List<String>>) ArrayList::new));
+        // Special case for PractRand. Add the maximum RNG output length before failure.
+        // This is because some PractRand tests may not be counted as systematic failures
+        // as they have not been run to the same output length due to earlier failure of
+        // another test.
+        final int max = getMaxLengthExponent(results);
+        if (max != 0) {
+            list.add(bytesToString(max));
+        }
+        return list;
+    }
+
+    /**
+     * Gets the maximum length exponent from any PractRand results.
+     *
+     * @param results Results.
+     * @return the maximum length exponent (or zero)
+     */
+    private static int getMaxLengthExponent(List<TestResult> results) {
+        if (results.isEmpty()) {
+            return 0;
+        }
+        return results.stream()
+                      .filter(r -> r instanceof PractRandTestResult)
+                      .mapToInt(r -> ((PractRandTestResult) r).getLengthExponent())
+                      .max().orElse(0);
+    }
+
+    /**
+     * Gets a summary of the failures across all results. The text is empty if there are no
+     * failures to report.
+     *
+     * <p>For Dieharder and TestU01 this is the number of systematic failures (tests that fail
+     * in every test result). For PractRand it is the maximum byte output size that was reached
+     * before failure.
+     *
+     * <p>It is assumed all the results are for the same test suite.</p>
+     *
+     * @param results Results.
+     * @return the failures summary
+     */
+    private static String getFailuresSummary(List<TestResult> results) {
+        if (results.isEmpty()) {
+            return "";
+        }
+        if (results.get(0).getTestFormat() == TestFormat.PRACTRAND) {
+            final int max = getMaxLengthExponent(results);
+            return max == 0 ? "" : bytesToString(max);
+        }
+        final int count = getSystematicFailures(results).size();
+        return count == 0 ? "" : Integer.toString(count);
     }
 
     /**
@@ -1152,9 +1343,9 @@ class ResultsCommand implements Callable<Void> {
                     final List<TestResult> testResults = getTestResults(results, randomSource,
                             reversed, testName);
                     columns.get(i++).add(testResults.stream()
-                                                    .map(TestResult::getFailureCountString)
+                                                    .map(TestResult::getFailureSummaryString)
                                                     .collect(Collectors.joining(",")));
-                    columns.get(i++).add(String.valueOf(getSystematicFailures(testResults).size()));
+                    columns.get(i++).add(getFailuresSummary(testResults));
                 }
             }
         }
@@ -1323,5 +1514,34 @@ class ResultsCommand implements Callable<Void> {
         columns.add(createColumn("Test Suite"));
         columns.add(createColumn("Test"));
         return columns;
+    }
+
+    /**
+     * Convert bytes to a human readable string. The byte size is expressed in powers of 2.
+     * The output units use the ISO binary prefix for increments of 2<sup>10</sup> or 1024.
+     *
+     * <p>This is a utility function used for reporting PractRand output sizes.
+     * Example output:
+     *
+     * <pre>
+     *            exponent       Binary
+     *                   0          0 B
+     *                  10        1 KiB
+     *                  13        8 KiB
+     *                  20        1 MiB
+     *                  27      128 MiB
+     *                  30        1 GiB
+     *                  40        1 TiB
+     *                  50        1 PiB
+     *                  60        1 EiB
+     * </pre>
+     *
+     * @param exponent Exponent of the byte size (i.e. 2^exponent).
+     * @return the string
+     */
+    static String bytesToString(int exponent) {
+        final int unit = exponent / 10;
+        final int size = 1 << (exponent - 10 * unit);
+        return size + BINARY_UNITS[unit];
     }
 }
