@@ -723,7 +723,7 @@ class StressTestCommand implements Callable<Void> {
                 }
             }
             // Use the median of all tasks within approximately 50% of the max.
-            return sortedDurations[(lower + completed - 1) / 2];
+            return sortedDurations[(upper + completed - 1) / 2];
         }
 
         /**
