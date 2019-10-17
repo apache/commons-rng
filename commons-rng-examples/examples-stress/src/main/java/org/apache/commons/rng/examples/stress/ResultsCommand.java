@@ -447,10 +447,13 @@ class ResultsCommand implements Callable<Void> {
         } else {
             for (final List<String> testOutput : outputs) {
                 final TestResult result = readResult(resultFile, testOutput);
-                results.add(result);
                 if (!result.isComplete()) {
                     LogUtils.info("Partial results in file: %s", resultFile);
+                    if (ignorePartialResults) {
+                        continue;
+                    }
                 }
+                results.add(result);
             }
         }
     }
