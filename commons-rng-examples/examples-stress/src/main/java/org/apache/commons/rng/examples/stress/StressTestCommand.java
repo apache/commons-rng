@@ -518,6 +518,9 @@ class StressTestCommand implements Callable<Void> {
      * for all the tests.
      */
     static class ProgressTracker {
+        /** The interval at which to report progress (in milliseconds). */
+        private static final long PROGRESS_INTERVAL = 500;
+
         /** The total. */
         private int total;
         /** The level of parallelisation. */
@@ -530,6 +533,8 @@ class StressTestCommand implements Callable<Void> {
         private long[] sortedDurations;
         /** The number of completed tasks. */
         private int completed;
+        /** The timestamp of the next progress report. */
+        private long nextReportTimestamp;
 
         /**
          * Create a new instance. The total number of tasks must be initialised before use.
@@ -563,12 +568,7 @@ class StressTestCommand implements Callable<Void> {
                 final long current = System.currentTimeMillis();
                 id = taskId++;
                 startTimes[id] = current;
-                final StringBuilder sb = createStringBuilderWithTimestamp(current);
-                try (Formatter formatter = new Formatter(sb)) {
-                    formatter.format(" (%.2f%%)", 100.0 * taskId / total);
-                    appendRemaining(sb);
-                    LogUtils.info(sb.toString());
-                }
+                reportProgress(current);
             }
             return id;
         }
@@ -580,26 +580,62 @@ class StressTestCommand implements Callable<Void> {
          * @return the task time in milliseconds
          */
         long endTask(int id) {
-            final long current = System.currentTimeMillis();
-            final long duration = current - startTimes[id];
+            long duration;
             synchronized (this) {
+                final long current = System.currentTimeMillis();
+                duration = current - startTimes[id];
                 sortedDurations[completed++] = duration;
-                Arrays.sort(sortedDurations, 0, completed);
+                reportProgress(current);
             }
             return duration;
+        }
+
+        /**
+         * Report the progress. This uses the current state and should be done within a
+         * synchronized block.
+         *
+         * @param current Current time (in milliseconds).
+         */
+        private void reportProgress(long current) {
+            // Determine the current state of tasks
+            final int pending = total - taskId;
+            final int running = taskId - completed;
+
+            // Report progress in the following conditions:
+            // - All tasks have completed (i.e. the end); or
+            // - The current timestamp is above the next reporting time and either:
+            // -- The number of running tasks is equal to the level of parallel tasks
+            //    (i.e. the system is running at capacity, so not the end of a task but the start
+            //    of a new one)
+            // -- There are no pending tasks (i.e. the final submission or the end of a final task)
+            if (completed >= total ||
+                (current >= nextReportTimestamp && (running == parallelTasks || pending == 0))) {
+                // Report
+                nextReportTimestamp = current + PROGRESS_INTERVAL;
+                final StringBuilder sb = createStringBuilderWithTimestamp(current, pending, running, completed);
+                try (Formatter formatter = new Formatter(sb)) {
+                    formatter.format(" (%.2f%%)", 100.0 * completed / total);
+                    appendRemaining(sb, current, pending, running);
+                    LogUtils.info(sb.toString());
+                }
+            }
         }
 
         /**
          * Creates the string builder for the progress message with a timestamp prefix.
          *
          * <pre>
-         * [HH:mm:ss] Progress [count] / [total]
+         * [HH:mm:ss] Pending [pending]. Running [running]. Completed [completed]
          * </pre>
          *
          * @param current Current time (in milliseconds)
+         * @param pending Pending tasks.
+         * @param running Running tasks.
+         * @param completed Completed tasks.
          * @return the string builder
          */
-        private StringBuilder createStringBuilderWithTimestamp(long current) {
+        private static StringBuilder createStringBuilderWithTimestamp(long current,
+            int pending, int running, int completed) {
             final StringBuilder sb = new StringBuilder(80);
             // Use local time to adjust for timezone
             final LocalDateTime time = LocalDateTime.ofInstant(
@@ -608,7 +644,9 @@ class StressTestCommand implements Callable<Void> {
             append00(sb, time.getHour()).append(':');
             append00(sb, time.getMinute()).append(':');
             append00(sb, time.getSecond());
-            return sb.append("] Running ").append(taskId).append(" / ").append(total);
+            return sb.append("] Pending ").append(pending)
+                     .append(". Running ").append(running)
+                     .append(". Completed ").append(completed);
         }
 
         /**
@@ -616,10 +654,13 @@ class StressTestCommand implements Callable<Void> {
          * the estimated time of arrival (ETA).
          *
          * @param sb String Builder.
+         * @param current Current time (in milliseconds)
+         * @param pending Pending tasks.
+         * @param running Running tasks.
          * @return the string builder
          */
-        private StringBuilder appendRemaining(StringBuilder sb) {
-            final long millis = getRemainingTime();
+        private StringBuilder appendRemaining(StringBuilder sb, long current, int pending, int running) {
+            final long millis = getRemainingTime(current, pending, running);
             if (millis == 0) {
                 // Unknown.
                 return sb;
@@ -634,17 +675,35 @@ class StressTestCommand implements Callable<Void> {
         /**
          * Gets the remaining time (in milliseconds).
          *
+         * @param current Current time (in milliseconds)
+         * @param pending Pending tasks.
+         * @param running Running tasks.
          * @return the remaining time
          */
-        private long getRemainingTime() {
+        private long getRemainingTime(long current, int pending, int running) {
             final long taskTime = getEstimatedTaskTime();
             if (taskTime == 0) {
+                // No estimate possible
                 return 0;
             }
 
-            // There is at least 1 task left.
-            // The remaining time is at least the length of the task estimate.
-            long millis = taskTime;
+            // The start times are sorted. This method assumes the most recent start times
+            // are still running tasks.
+            // If this is wrong (more recently submitted tasks finished early) the result
+            // is the estimate is too high. This could be corrected by storing the tasks
+            // that have finished and finding the times of only running tasks.
+
+            // The remaining time is:
+            //   The time for all running tasks to finish
+            // + The time for pending tasks to run
+
+            // The id of the most recently submitted task.
+            // Guard with a minimum index of zero to get a valid index.
+            final int id = Math.max(0, taskId - 1);
+
+            // If there is a running task assume the youngest task is still running
+            // and estimate the time left.
+            long millis = (running == 0) ? 0 : getTimeRemaining(taskTime, current, startTimes[id]);
 
             // If additional tasks must also be submitted then the time must include
             // the estimated time for running tasks to finish before new submissions
@@ -656,35 +715,19 @@ class StressTestCommand implements Callable<Void> {
             //                    s4 -------------->
             //
 
-            // Compute the number of additional tasks after this one to finish.
-            // E.g. 4 tasks left is 3 additional tasks.
-            final int additionalTasks = total - taskId;
-
             // Assume parallel batch execution.
             // E.g. 3 additional tasks with parallelisation 4 is 0 batches
-            int batches = additionalTasks / parallelTasks;
+            int batches = pending / parallelTasks;
             millis += batches * taskTime;
 
             // Compute the expected end time of the final batch based on it starting when
             // a currently running task ends.
             // E.g. 3 remaining tasks requires the end time of the 3rd oldest running task.
-            int remainder = additionalTasks % parallelTasks;
+            int remainder = pending % parallelTasks;
             if (remainder != 0) {
-                // The start times are sorted. This assumes the most recent start times are
-                // still running tasks.
-                // If this is wrong (more recently submitted tasks finished early) the result
-                // is the estimate is too high. This could be corrected by storing the tasks
-                // that have finished and finding the time corresponding the N'th oldest
-                // task that is still running.
-                final int id = taskId - 1;
-                // This should not index-out-of-bounds unless a task ends before the first
-                // set of parallel tasks has been submitted, i.e. during a dry-run.
-                // Guard with a minimum index of zero to get a valid start time.
+                // Guard with a minimum index of zero to get a valid index.
                 final int nthOldest = Math.max(0, id - parallelTasks + remainder);
-                final long endTime = startTimes[nthOldest] + taskTime;
-                // Note: The current time is the most recent entry in the startTimes array.
-                // Ensure the addition is positive in the case where the estimate is too low.
-                millis += Math.max(0, endTime - startTimes[id]);
+                millis += getTimeRemaining(taskTime, current, startTimes[nthOldest]);
             }
 
             return millis;
@@ -696,6 +739,8 @@ class StressTestCommand implements Callable<Void> {
          * @return the estimated task time
          */
         private long getEstimatedTaskTime() {
+            Arrays.sort(sortedDurations, 0, completed);
+
             // Return median of small lists. If no tasks have finished this returns zero.
             // as the durations is zero initialised.
             if (completed < 4) {
@@ -724,6 +769,20 @@ class StressTestCommand implements Callable<Void> {
             }
             // Use the median of all tasks within approximately 50% of the max.
             return sortedDurations[(upper + completed - 1) / 2];
+        }
+
+        /**
+         * Gets the time remaining for the task.
+         *
+         * @param taskTime Estimated task time.
+         * @param current Current time.
+         * @param startTime Start time.
+         * @return the time remaining
+         */
+        private static long getTimeRemaining(long taskTime, long current, long startTime) {
+            final long endTime = startTime + taskTime;
+            // Ensure the time is positive in the case where the estimate is too low.
+            return Math.max(0, endTime - current);
         }
 
         /**
