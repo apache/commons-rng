@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.examples.stress;
 
-import org.apache.commons.rng.examples.stress.ResultsCommand.TestFormat;
 import org.apache.commons.rng.simple.RandomSource;
 
 import picocli.CommandLine.Command;
@@ -351,6 +350,7 @@ class ResultsCommand implements Callable<Void> {
 
         /**
          * Gets the length of the RNG output used to generate failed tests.
+         * If this is zero then no failures occurred.
          *
          * @return the length exponent
          */
@@ -1272,7 +1272,12 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
-     * Gets the maximum length exponent from any PractRand results.
+     * Gets the maximum length exponent from the PractRand results if <strong>all</strong> failed.
+     * Otherwise return zero (i.e. some passed the full length of the test).
+     *
+     * <p>This method excludes those results that are not complete. It assumes all complete
+     * tests are for the same length of RNG output. Thus if all failed then the max exponent
+     * is the systematic failure length.</p>
      *
      * @param results Results.
      * @return the maximum length exponent (or zero)
@@ -1281,10 +1286,24 @@ class ResultsCommand implements Callable<Void> {
         if (results.isEmpty()) {
             return 0;
         }
-        return results.stream()
-                      .filter(r -> r instanceof PractRandTestResult)
-                      .mapToInt(r -> ((PractRandTestResult) r).getLengthExponent())
-                      .max().orElse(0);
+        // [0] = count of zeros
+        // [1] = max non-zero
+        final int[] data = new int[2];
+        results.stream()
+               .filter(TestResult::isComplete)
+               .filter(r -> r instanceof PractRandTestResult)
+               .mapToInt(r -> ((PractRandTestResult) r).getLengthExponent())
+               .forEach(i -> {
+                   if (i == 0) {
+                       // Count results that passed
+                       data[0]++;
+                   } else {
+                       // Find the max of the failures
+                       data[1] = Math.max(i, data[1]);
+                   }
+               });
+        // If all failed (i.e. no zeros) then return the max, otherwise zero.
+        return data[0] == 0 ? data[1] : 0;
     }
 
     /**
