@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.rng.core.RandomAssert;
 import org.apache.commons.rng.core.source64.TwoCmres.Cmres;
 import org.junit.Assert;
 import org.junit.Test;
@@ -59,11 +60,7 @@ public class TwoCmresTest {
         // Seed with a single bit
         for (int bit = 0; bit < 32; bit++) {
             final int seed = 1 << bit;
-
-            final TwoCmres rng1 = new TwoCmres(seed);
-            for (int i = 0; i < n; i++) {
-                Assert.assertNotEquals(values[i], rng1.nextLong());
-            }
+            RandomAssert.assertNotEquals(values, new TwoCmres(seed));
         }
     }
 

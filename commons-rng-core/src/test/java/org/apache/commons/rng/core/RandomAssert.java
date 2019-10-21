@@ -36,7 +36,8 @@ public final class RandomAssert {
     private RandomAssert() {}
 
     /**
-     * Assert that the random generator produces the expected output.
+     * Assert that the random generator produces the expected output using
+     * {@link UniformRandomProvider#nextInt()}.
      *
      * @param expected Expected output.
      * @param rng Random generator.
@@ -46,7 +47,8 @@ public final class RandomAssert {
     }
 
     /**
-     * Assert that the random generator produces the expected output.
+     * Assert that the random generator produces the expected output using
+     * {@link UniformRandomProvider#nextLong()}.
      *
      * @param expected Expected output.
      * @param rng Random generator.
@@ -56,7 +58,8 @@ public final class RandomAssert {
     }
 
     /**
-     * Assert that the random generator produces the expected output.
+     * Assert that the random generator produces the expected output using
+     * {@link UniformRandomProvider#nextInt()}.
      * The message prefix is prepended to the array index for the assertion message.
      *
      * @param messagePrefix Message prefix.
@@ -70,7 +73,8 @@ public final class RandomAssert {
     }
 
     /**
-     * Assert that the random generator produces the expected output.
+     * Assert that the random generator produces the expected output using
+     * {@link UniformRandomProvider#nextLong()}.
      * The message prefix is prepended to the array index for the assertion message.
      *
      * @param messagePrefix Message prefix.
@@ -81,6 +85,22 @@ public final class RandomAssert {
         for (int i = 0; i < expected.length; i++) {
             Assert.assertEquals(messagePrefix + i, expected[i], rng.nextLong());
         }
+    }
+
+    /**
+     * Assert that the random generator produces a <strong>different</strong> output using
+     * {@link UniformRandomProvider#nextLong()} to the expected output.
+     *
+     * @param expected Expected output.
+     * @param rng Random generator.
+     */
+    public static void assertNotEquals(long[] expected, UniformRandomProvider rng) {
+        for (int i = 0; i < expected.length; i++) {
+            if (expected[i] != rng.nextLong()) {
+                return;
+            }
+        }
+        Assert.fail("Expected a different nextLong output");
     }
 
     /**
