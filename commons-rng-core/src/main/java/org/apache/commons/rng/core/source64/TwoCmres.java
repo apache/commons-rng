@@ -223,17 +223,9 @@ public class TwoCmres extends LongProvider {
         long transform(long state) {
             long s = state;
             s *= multiply;
-            s = rotl(s);
+            s = Long.rotateLeft(s, rotate);
             s -= state;
             return s;
-        }
-
-        /**
-         * @param state State.
-         * @return the rotated state.
-         */
-        private long rotl(long state) {
-            return (state << rotate) | (state >>> (64 - rotate));
         }
 
         /** Factory. */
