@@ -40,6 +40,33 @@ public class TwoCmresTest {
         }
     }
 
+    /**
+     * This test targets the seeding procedure to verify any bit of the input seed contributes
+     * to the output. Note: The seeding routine creates 2 16-bit integers from the 32-bit seed,
+     * thus a change of any single bit should make a different output.
+     */
+    @Test
+    public void testSeedingWithASingleBitProducesDifferentOutputFromZeroSeed() {
+        final int n = 100;
+
+        // Output with a zero seed
+        final long[] values = new long[n];
+        final TwoCmres rng = new TwoCmres(0);
+        for (int i = 0; i < n; i++) {
+            values[i] = rng.nextLong();
+        }
+
+        // Seed with a single bit
+        for (int bit = 0; bit < 32; bit++) {
+            final int seed = 1 << bit;
+
+            final TwoCmres rng1 = new TwoCmres(seed);
+            for (int i = 0; i < n; i++) {
+                Assert.assertNotEquals(values[i], rng1.nextLong());
+            }
+        }
+    }
+
     @Test
     public void testSubcycleGeneratorsMustBeDifferent() {
         final int max = TwoCmres.numberOfSubcycleGenerators();

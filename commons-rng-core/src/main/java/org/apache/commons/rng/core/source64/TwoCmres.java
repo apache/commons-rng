@@ -150,11 +150,6 @@ public class TwoCmres extends LongProvider {
         final int xMax = (seed & 0xffff) + (SEED_GUARD & 0xff);
         final int yMax = (seed >>> 16)   + (SEED_GUARD & 0xff);
 
-        if (xMax < 0 ||
-            yMax < 0) {
-            throw new IllegalStateException(INTERNAL_ERROR_MSG);
-        }
-
         xx = x.getStart();
         for (int i = xMax; i > 0; i--) {
             xx = x.transform(xx);
