@@ -97,7 +97,7 @@ class OutputCommand implements Callable<Void> {
     /** The random seed as a byte[]. */
     @Option(names = {"-x", "--hex-seed"},
             description = {"The hex-encoded random seed.",
-                           "Bytes for other primitives use little-endian format.",
+                           "Seed conversion for multi-byte primitives use little-endian format.",
                            "Over-rides the --seed parameter."})
     private String byteSeed;
 

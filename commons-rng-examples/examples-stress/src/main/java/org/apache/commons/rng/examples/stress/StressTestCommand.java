@@ -160,6 +160,13 @@ class StressTestCommand implements Callable<Void> {
                            "generators sequentially, each appropriately byte reversed for the platform."})
     private boolean raw64;
 
+    /** The random seed as a byte[]. */
+    @Option(names = {"-x", "--hex-seed"},
+            description = {"The hex-encoded random seed.",
+                           "Seed conversion for multi-byte primitives use little-endian format.",
+                           "Use to repeat tests. Not recommended for batch testing."})
+    private String byteSeed;
+
     /**
      * Flag to indicate the output should be combined with a hashcode from a new object.
      * This is a method previously used in the
@@ -456,7 +463,7 @@ class StressTestCommand implements Callable<Void> {
                     }
                 }
                 // Create the generator. Explicitly create a seed so it can be recorded.
-                final byte[] seed = testData.getRandomSource().createSeed();
+                final byte[] seed = createSeed(testData.getRandomSource());
                 UniformRandomProvider rng = testData.createRNG(seed);
 
                 // Upper or lower bits from 64-bit generators must be created first.
@@ -495,6 +502,24 @@ class StressTestCommand implements Callable<Void> {
             }
         }
         return tasks;
+    }
+
+    /**
+     * Creates the seed. This will call {@link RandomSource#createSeed()} unless a hex seed has
+     * been explicitly specified on the command line.
+     *
+     * @param randomSource Random source.
+     * @return the seed
+     */
+    private byte[] createSeed(RandomSource randomSource) {
+        if (byteSeed != null) {
+            try {
+                return Hex.decodeHex(byteSeed);
+            } catch (IllegalArgumentException ex) {
+                throw new ApplicationException("Invalid hex seed: " + ex.getMessage(), ex);
+            }
+        }
+        return randomSource.createSeed();
     }
 
     /**
