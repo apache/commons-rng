@@ -131,7 +131,7 @@ void printLong(uint64_t value)
   putchar(' ');
   printByte((uint8_t)( value        & 0xff));
   /* Write the unsigned and signed int value */
-  printf("  %20llu %20lld\n", value, (int64_t) value);
+  printf("  %20lu %20ld\n", value, (int64_t) value);
 }
 
 /*
@@ -254,28 +254,40 @@ void deleteStdinReader(unif01_Gen *gen) {
    util_Free(gen);
 }
 
+unsigned long getCount(int argc, char **argv) {
+    if (argc < 3) {
+        /* 2^64 - 1 == Unlimited. */
+        return -1;
+    }
+    return strtoul(argv[2], 0, 0);
+}
+
 int main(int argc,
          char **argv) {
-  unif01_Gen *gen = createStdinReader();
-  char *spec = argv[1];
-
   if (argc < 2) {
     printf("[ERROR] Specify test suite: '%s', '%s' or '%s'\n", TU_S, TU_C, TU_B);
     exit(1);
-  } else if (strcmp(spec, TU_S) == 0) {
+  }
+
+  unif01_Gen *gen = createStdinReader();
+  char *spec = argv[1];
+
+  if (strcmp(spec, TU_S) == 0) {
     bbattery_SmallCrush(gen);
   } else if (strcmp(spec, TU_C) == 0) {
     bbattery_Crush(gen);
   } else if (strcmp(spec, TU_B) == 0) {
     bbattery_BigCrush(gen);
   } else if (strcmp(spec, T_RAW_32) == 0) {
-    /* Print to stdout until stdin closes. */
-    while (1) {
+    unsigned long count = getCount(argc, argv);
+    /* Print to stdout until stdin closes or count is reached. */
+    while (count--) {
       printInt(nextInt(0, gen->state));
     }
   } else if (strcmp(spec, T_RAW_64) == 0) {
-    /* Print to stdout until stdin closes. Use dedicated 64-bit reader. */
-    while (1) {
+    unsigned long count = getCount(argc, argv);
+    /* Print to stdout until stdin closes or count is reached. Use dedicated 64-bit reader. */
+    while (count--) {
       printLong(nextLong(gen->state));
     }
   } else {
