@@ -1,0 +1,10 @@
+--- tools/RNG_test.cpp	2019-10-23 12:01:43.168306859 +0100
++++ tools/RNG_test.new.cpp	2019-10-23 12:02:32.696759305 +0100
+@@ -500,6 +500,7 @@
+ 	else
+ 		std::printf("  ...and %d test result(s) without anomalies\n", int(results.size() - marked.size()));
+ 	std::printf("\n");
++	std::fflush(stdout);
+ 	if (end_on_failure && biggest_decimal_suspicion > 8.5) std::exit(0);
+ }
+ double interpret_length(const std::string &lengthstr, bool normal_mode) {
