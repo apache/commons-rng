@@ -1,0 +1,33 @@
+--- tools/RNG_test.cpp	2019-10-23 12:01:43.168306859 +0100
++++ tools/RNG_test.new.cpp	2019-10-23 12:02:32.696759305 +0100
+@@ -500,6 +500,7 @@
+ 	else
+ 		std::printf("  ...and %d test result(s) without anomalies\n", int(results.size() - marked.size()));
+ 	std::printf("\n");
++	std::fflush(stdout);
+ 	if (end_on_failure && biggest_decimal_suspicion > 8.5) std::exit(0);
+ }
+ double interpret_length(const std::string &lengthstr, bool normal_mode) {
+--- tools/RNG_from_name.h.orig	2019-10-23 17:14:27.443993007 +0100
++++ tools/RNG_from_name.h	2019-10-23 17:30:21.011881702 +0100
+@@ -8,7 +8,7 @@
+ 			std::fprintf(stderr, "error reading standard input\n");
+ 			std::exit(0);
+ 		}
+-		enum { BUFF_SIZE = 4096 / sizeof(Word) };
++		enum { BUFF_SIZE = 8192 / sizeof(Word) };
+ 		Word *pos, *end;
+ 		bool ended;
+ 		Word buffer[BUFF_SIZE];
+@@ -19,7 +19,10 @@
+ 			end = &buffer[n];
+ 		}
+ 	public:
+-		_stdin_reader() : ended(false) { refill(); }
++		_stdin_reader() : ended(false) {
++		    setvbuf(stdin, 0, _IOFBF, 8192);
++		    refill();
++		}
+ 		Word read() { Word rv = *(pos++); if (pos == end) refill(); return rv; }
+ 	};
+ 	class RNG_stdin : public PractRand::RNGs::vRNG8 {

@@ -75,19 +75,24 @@ required.
 ### PractRand
 
 This must be installed using the source from [PractRand](http://pracrand.sourceforge.net/). These
-instructions apply to `v0.93` on linux. The latest stable build `v0.94` does not compile the
-`RNG_test` source.
+instructions apply on linux using the v0.93 and v0.94 versions. Patch files have been generated
+to correct issues with the source for compilation using `g++`. The patches also includes an
+increase to the buffer size for reading from standard input to match the buffer size used by the
+`stress` command.
 
-`PractRand` prints results to standard output. Version 0.93 did not flush the output after
-reporting test results. This prevents following the latest results and can cause
-missing results if the test aborts. This can happen due to memory allocation failures on long
-running tests which can use gigabytes of memory. A patch file is provided
-[RNG_test_0.93.patch](./src/main/resources/patch/RNG_test_0.93.patch) to flush the output.
-This can be applied from the root directory of the PractRand v0.93 source archive:
+Version 0.93 did not flush the standard output after reporting test results. This prevents
+following the latest results and can cause missing results if the test aborts. This can be
+corrected using [PractRand_0.93.patch](./src/main/resources/patch/PractRand_0.93.patch)
+from the root directory of the PractRand v0.93 source archive:
 
-        patch -p0 < RNG_test_0.93.patch
+        patch -p0 < PractRand_0.93.patch
 
-Flushing of test results to output has been corrected in version 0.94+.
+Version 0.94 does not compile on linux due to mismatch between include statements and filenames.
+Case insensitive include filenames are allowed using windows compilers but not linux compilers.
+This can be corrected using [PractRand_0.94.patch](./src/main/resources/patch/PractRand_0.94.patch)
+from the root directory of the PractRand v0.94 source archive:
+
+        patch -p0 < PractRand_0.94.patch
 
 Building **PractRand** for multi-threaded support:
 
