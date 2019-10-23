@@ -117,11 +117,23 @@ class StressTestCommand implements Callable<Void> {
                            "Use for parallel tests with the same output prefix."})
     private int trialOffset;
 
-    /** The number of concurrent tasks. */
-    @Option(names = {"-n", "--tasks"},
-            description = {"Number of concurrent tasks (default: ${DEFAULT-VALUE}).",
-                           "Two threads are required per task."})
-    private int taskCount = Math.max(1, Runtime.getRuntime().availableProcessors() / 2);
+    /** The number of available processors. */
+    @Option(names = {"-p", "--processors"},
+            description = {"Number of available processors (default: ${DEFAULT-VALUE}).",
+                           "Number of concurrent tasks = ceil(processors / threadsPerTask)",
+                           "threadsPerTask = applicationThreads + (ignoreJavaThread ? 0 : 1)"})
+    private int processors = Math.max(1, Runtime.getRuntime().availableProcessors());
+
+    /** The number of threads to use for each test task. */
+    @Option(names = {"--ignore-java-thread"},
+            description = {"Ignore the java RNG thread when computing concurrent tasks."})
+    private boolean ignoreJavaThread;
+
+    /** The number of threads to use for each testing application. */
+    @Option(names = {"--threads"},
+            description = {"Number of threads to use for each application (default: ${DEFAULT-VALUE}).",
+                           "Total threads per task includes an optional java thread."})
+    private int applicationThreads = 1;
 
     /** The size of the byte buffer for the binary data. */
     @Option(names = {"--buffer-size"},
@@ -350,11 +362,13 @@ class StressTestCommand implements Callable<Void> {
         final String basePath = fileOutputPrefix.getAbsolutePath();
         checkExistingOutputFiles(basePath, stressTestData);
 
-        final ProgressTracker progressTracker = new ProgressTracker(taskCount);
+        final int parallelTasks = getParallelTasks();
+
+        final ProgressTracker progressTracker = new ProgressTracker(parallelTasks);
         final List<Runnable> tasks = createTasks(command, basePath, stressTestData, progressTracker);
 
         // Run tasks with parallel execution.
-        final ExecutorService service = Executors.newFixedThreadPool(taskCount);
+        final ExecutorService service = Executors.newFixedThreadPool(parallelTasks);
 
         LogUtils.info("Running stress test ...");
         LogUtils.info("Shutdown by creating stop file: %s",  stopFile);
@@ -430,6 +444,27 @@ class StressTestCommand implements Callable<Void> {
      */
     private static String createExistingFileMessage(File output) {
         return "Existing output file: " + output;
+    }
+
+    /**
+     * Gets the number of parallel tasks. This uses the number of available processors and
+     * the number of threads to use per task.
+     *
+     * <pre>
+     * threadsPerTask = applicationThreads + (ignoreJavaThread ? 0 : 1)
+     * parallelTasks = ceil(processors / threadsPerTask)
+     * </pre>
+     *
+     * @return the parallel tasks
+     */
+    private int getParallelTasks() {
+        // Avoid zeros in the fraction numberator and denominator
+        final int availableProcessors = Math.max(1, processors);
+        final int threadsPerTask = Math.max(1, applicationThreads + (ignoreJavaThread ? 0 : 1));
+        final int parallelTasks = (int) Math.ceil((double) availableProcessors / threadsPerTask);
+        LogUtils.debug("Parallel tasks = %d (%d / %d)",
+            parallelTasks, availableProcessors, threadsPerTask);
+        return parallelTasks;
     }
 
     /**
