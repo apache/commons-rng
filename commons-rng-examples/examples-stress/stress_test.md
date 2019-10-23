@@ -207,7 +207,8 @@ Note the use of `--raw64` and ``threads 3` for the `stress` command and the `std
 **PractRand** runs for a long time as the RNG output is tested in doubling sizes starting from 1 KB.
 The default maximum is 32 TB of RNG output. At each doubling of data an interim test analysis is
 performed. The tests compare the current aggregated output to previous tests. Thus memory
-consumption grows with the test duration. Trials have shown the following:
+consumption grows with the test duration. Trials have shown the following maximum memory consumption
+when watching the **PractRand** process:
 
 | Argument  | Max memory (KB) |
 | --------- | ---------- |
@@ -217,7 +218,7 @@ consumption grows with the test duration. Trials have shown the following:
 | stdin64 -tf 2 -te 0 -tlmax 1TB | 1304116 |
 | stdin32 -tf 1 -te 0 -tlmax 4TB | ? |
 | stdin32 -tf 2 -te 0 -tlmax 4TB | 2314232 |
-| stdin64 -tf 1 -te 0 -tlmax 4TB | ? |
+| stdin64 -tf 1 -te 0 -tlmax 4TB | 1324436 |
 | stdin64 -tf 2 -te 0 -tlmax 4TB | ? |
 
 Given the large memory consumption on long running tests the machine resources may be better used
@@ -245,11 +246,17 @@ Various formats are available. Use the `--help` option to show the available opt
 Test 64-bit generators
 ----------------------
 
-The available random generators output either 32-bits or 64-bits per cycle. The test applications
-**Dieharder** and **TestU01** require 32-bit input. The standard method for a 64-bit generator is
-to use the upper and then lower 32-bits of each 64-bit output. The stress test application has
-options to use only the upper or the lower 32-bits for testing. These can then be bit-reversed or
-byte-reversed if desired.
+The available random generators output either 32-bits or 64-bits per cycle. 
+
+Any application that supports 64-bit generators and should be tested using the `--raw64`
+output mode of the `stress` command. See the example for running tests using **PractRand**
+for details.
+
+Any application that supports 32-bit generators can be tested using different subsets of the
+64-bit output. For example the test applications **Dieharder** and **TestU01** require 32-bit input.
+The standard method for a 64-bit generator is to use the upper and then lower 32-bits of each
+64-bit output. The stress test application has options to use only the upper or the lower 32-bits
+for testing. These can then be bit-reversed or byte-reversed if desired.
 
 The `list` command can output available generators by provider type. For example to output the
 64-bit providers to a `rng64.list` file:
