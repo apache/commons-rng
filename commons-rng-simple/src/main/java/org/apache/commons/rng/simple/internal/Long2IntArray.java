@@ -63,19 +63,17 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
     private static int[] convertSeed(Long seed, int size) {
         final int[] out = new int[size];
         final SplitMix64 rng = new SplitMix64(seed);
-        int i = 0;
-        // Handle an odd size
-        if ((size & 1) == 1) {
-            out[i++] = NumberFactory.extractHi(rng.nextLong());
-        }
-        // Fill the remaining pairs
-        while (i < size) {
+        // Fill pairs of ints from a long.
+        // The array is filled from the end towards the start.
+        for (int i = size - 1; i > 0; i -= 2) {
             final long v = rng.nextLong();
             out[i] = NumberFactory.extractHi(v);
-            out[i + 1] = NumberFactory.extractLo(v);
-            i += 2;
+            out[i - 1] = NumberFactory.extractLo(v);
         }
-
+        // An odd size requires a final single int at the start
+        if ((size & 1) == 1) {
+            out[0] = NumberFactory.extractHi(rng.nextLong());
+        }
         return out;
     }
 }

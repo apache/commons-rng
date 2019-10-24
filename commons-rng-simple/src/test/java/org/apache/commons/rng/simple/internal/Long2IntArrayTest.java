@@ -25,9 +25,19 @@ import org.junit.Test;
 public class Long2IntArrayTest {
     @Test
     public void testFixedLengthConversion() {
+        for (int length = 0; length < 10; length++) {
+            testFixedLengthConversion(length);
+        }
+    }
+
+    private static void testFixedLengthConversion(int length) {
         final Long seed = 567L;
-        final int length = 5;
         final int[] out = new Long2IntArray(length).convert(seed);
         Assert.assertEquals(length, out.length);
+        // This very seed dependent but the algorithm
+        // should only produce 0 about 1 in 2^32 times.
+        for (int i = 0; i < length; i++) {
+            Assert.assertNotEquals(0, out[i]);
+        }
     }
 }
