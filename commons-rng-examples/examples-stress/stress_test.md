@@ -218,13 +218,13 @@ when watching the **PractRand** process:
 | Argument  | Max memory (KB) |
 | --------- | ---------- |
 | stdin32 -tf 1 -te 0 -tlmax 1TB | 732792 |
-| stdin32 -tf 2 -te 0 -tlmax 1TB | 1271424 |
 | stdin64 -tf 1 -te 0 -tlmax 1TB | 800148 |
-| stdin64 -tf 2 -te 0 -tlmax 1TB | 1304116 |
-| stdin32 -tf 1 -te 0 -tlmax 4TB | ? |
-| stdin32 -tf 2 -te 0 -tlmax 4TB | 2314232 |
+| stdin -tf 2 -te 0 -tlmax 1TB | 1271424 |
+| stdin32 -tf 1 -te 0 -tlmax 4TB | 1239440 |
 | stdin64 -tf 1 -te 0 -tlmax 4TB | 1324436 |
-| stdin64 -tf 2 -te 0 -tlmax 4TB | ? |
+| stdin -tf 2 -te 0 -tlmax 4TB | 2314232 |
+
+Note that the `-tf 2` option ignores the output mode of the RNG.
 
 Given the large memory consumption on long running tests the machine resources may be better used
 when RAM limited by running **PractRand** multi-threaded instead of running more single-threaded
