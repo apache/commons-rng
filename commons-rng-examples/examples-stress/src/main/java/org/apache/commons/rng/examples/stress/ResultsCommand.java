@@ -39,9 +39,11 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -1086,19 +1088,18 @@ class ResultsCommand implements Callable<Void> {
     }
 
     /**
-     * Gets the test names present in the results.
+     * Gets the test names present in the results. These are returned in encountered order.
      *
      * @param results Results.
      * @return the test names
      */
     private static List<String> getTestNames(List<TestResult> results) {
-        final HashSet<String> set = new HashSet<>();
+        // Enforce encountered order with a linked hash set.
+        final Set<String> set = new LinkedHashSet<>();
         for (final TestResult result : results) {
             set.add(result.getTestApplicationName());
         }
-        final ArrayList<String> list = new ArrayList<>(set);
-        Collections.sort(list);
-        return list;
+        return new ArrayList<>(set);
     }
 
     /**
