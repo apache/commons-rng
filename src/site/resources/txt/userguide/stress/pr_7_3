@@ -1,0 +1,168 @@
+# 
+# RandomSource: WELL_44497_B
+# RNG: org.apache.commons.rng.core.source32.Well44497b
+# Seed: 7f6b86a87b09b2f67a21593d4bd232c67590d76de30db51b69069e08fb42e529fcc3173c32bb1dd9f8eb8a33132a524185379453ab4ba12d8b14193351a74b545a06dd21590bf6977f17d3e57f09b8d819d8f66bf40c289f1643968648136406aa0c23e36633e001d60b15c13e5c7259dac6c6dc150a2162ffe17a00c1671f886625440b475017aa54b8c5e42d78ccd4b08b320ef5cd7b490d442dab128627ebbfe94d7e3094ad8f2523e3dc3216f3841feb2e5a841a0dac92393fdbac23578f7e7dae57a9064cf228f3bc6c81ccbd20aaaa5898aa96e19ed76dc07c636fb78f8a1eab42cc40a0c903ada34b1394b2c14c79d86aea1569c7fad6ad7fd7bd577f5ea0df27ac6c74ce2a96ad7f91039dbf5c7a780c2a26a25ec1359670487d1d541d50018b73b05de04ac6adcb5de1df0273691e53d4a5dbf7363367011b05b0b37f2c16aa2e0707429391a34b1833371dcf7866372d82492763fd4fdb37d7f277e98eb7411939970f1ddf88cb75fb200090b5711d0611cda101649366555af13ffdf7b756e128dc35ec1edb356ad5d43321dc48482cc154cb9ae76084e42a40ca19715962a529e12acdb4635de007fd762eb9648ce23580cf3f752e89bdd2e8243ecd77f15b234610452920a91bd9fbdc3631b9dea1527b8e448d99f0f267a1502503a2d6c1c34e18c50d40b6e5afb6ffa5a9984fc86c60023fcd301befc4edb2
+# 
+# Java: 1.8.0_202
+# Runtime: Java(TM) SE Runtime Environment (build 1.8.0_202-b08)
+# JVM: Java HotSpot(TM) 64-Bit Server VM (build 25.202-b08, mixed mode)
+# OS: Linux 3.13.0-91-generic amd64
+# Native byte-order: LITTLE_ENDIAN
+# Output byte-order: LITTLE_ENDIAN
+# 
+# Analyzer: /home/ah403/rng/PractRand/RNG_test_094 stdin32 -tf 1 -te 0 -tlmin 1KB -tlmax 4TB -multithreaded 
+# 
+# Start: 2019-10-26 22:26:20
+# 
+RNG_test using PractRand version 0.94
+RNG = RNG_stdin32, seed = unknown
+test set = core, folding = standard (32 bit)
+
+rng=RNG_stdin32, seed=unknown
+length= 1 kilobyte (2^10 bytes), time= 0.2 seconds
+  no anomalies in 6 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 2 kilobytes (2^11 bytes), time= 0.3 seconds
+  Test Name                         Raw       Processed     Evaluation
+  DC6-9x1Bytes-1                    R=  -2.9  p = 0.967     unusual          
+  ...and 7 test result(s) without anomalies
+
+rng=RNG_stdin32, seed=unknown
+length= 4 kilobytes (2^12 bytes), time= 0.4 seconds
+  Test Name                         Raw       Processed     Evaluation
+  DC6-9x1Bytes-1                    R=  -4.2  p =1-3.7e-3   unusual          
+  ...and 17 test result(s) without anomalies
+
+rng=RNG_stdin32, seed=unknown
+length= 8 kilobytes (2^13 bytes), time= 0.8 seconds
+  no anomalies in 21 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 16 kilobytes (2^14 bytes), time= 1.2 seconds
+  no anomalies in 26 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 32 kilobytes (2^15 bytes), time= 1.6 seconds
+  no anomalies in 34 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 64 kilobytes (2^16 bytes), time= 2.0 seconds
+  no anomalies in 42 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 128 kilobytes (2^17 bytes), time= 2.7 seconds
+  no anomalies in 50 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 256 kilobytes (2^18 bytes), time= 3.3 seconds
+  no anomalies in 59 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 512 kilobytes (2^19 bytes), time= 3.9 seconds
+  no anomalies in 67 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 1 megabyte (2^20 bytes), time= 4.5 seconds
+  no anomalies in 74 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 2 megabytes (2^21 bytes), time= 5.1 seconds
+  no anomalies in 87 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 4 megabytes (2^22 bytes), time= 5.9 seconds
+  no anomalies in 97 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 8 megabytes (2^23 bytes), time= 6.8 seconds
+  no anomalies in 106 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 16 megabytes (2^24 bytes), time= 7.5 seconds
+  no anomalies in 118 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 32 megabytes (2^25 bytes), time= 8.8 seconds
+  no anomalies in 128 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 64 megabytes (2^26 bytes), time= 10.1 seconds
+  no anomalies in 140 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 128 megabytes (2^27 bytes), time= 11.8 seconds
+  no anomalies in 154 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 256 megabytes (2^28 bytes), time= 14.5 seconds
+  no anomalies in 165 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 512 megabytes (2^29 bytes), time= 18.6 seconds
+  no anomalies in 178 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 1 gigabyte (2^30 bytes), time= 25.7 seconds
+  no anomalies in 192 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 2 gigabytes (2^31 bytes), time= 39.4 seconds
+  Test Name                         Raw       Processed     Evaluation
+  [Low1/32]DC6-9x1Bytes-1           R=  -4.4  p =1-3.3e-3   unusual          
+  ...and 203 test result(s) without anomalies
+
+rng=RNG_stdin32, seed=unknown
+length= 4 gigabytes (2^32 bytes), time= 66.3 seconds
+  no anomalies in 216 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 8 gigabytes (2^33 bytes), time= 119 seconds
+  no anomalies in 229 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 16 gigabytes (2^34 bytes), time= 226 seconds
+  no anomalies in 240 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 32 gigabytes (2^35 bytes), time= 439 seconds
+  no anomalies in 251 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 64 gigabytes (2^36 bytes), time= 877 seconds
+  no anomalies in 263 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 128 gigabytes (2^37 bytes), time= 1728 seconds
+  no anomalies in 273 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 256 gigabytes (2^38 bytes), time= 3417 seconds
+  no anomalies in 284 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 512 gigabytes (2^39 bytes), time= 6870 seconds
+  no anomalies in 295 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 1 terabyte (2^40 bytes), time= 13714 seconds
+  no anomalies in 304 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 2 terabytes (2^41 bytes), time= 27171 seconds
+  no anomalies in 313 test result(s)
+
+rng=RNG_stdin32, seed=unknown
+length= 4 terabytes (2^42 bytes), time= 55008 seconds
+  Test Name                         Raw       Processed     Evaluation
+  BRank(12):48K(1)                  R>+99999  p~= 0           FAIL !!!!!!!!  
+  ...and 322 test result(s) without anomalies
+
+# 
+# End: 2019-10-27 12:43:09
+# 
+# Exit value: 0
+# Bytes used: 4398046584832 >= 2^42 (4.4 TB)
+# 
+# Test duration: 916.81855 minutes
+# 

@@ -1,0 +1,154 @@
+# 
+# RandomSource: MT_64
+# RNG: org.apache.commons.rng.core.source64.MersenneTwister64
+# Seed: 27b7019f5a30a49d0588e5f1efbec20d817302001779438db3a49df5d520f6d2a7975377575949a6987a5c69a6442f80c5d0dd2d24d354212d2bfd0cb3e36f35e491b7a895e3c2de1ca0391fc8fdf04a61771a0d7052ce1d40976889fb9505c647c875a28f61402de6fd356e6565243a9daa7347eaa4072cf3023c9b2f63b65e45a6782aae9b8cc3145488835558bce431f6ca4cbbb6f01b3f91228735a9b7558b98855a1e9c0b8a3ca29990183e5dd8a60973ad9390fd641611cafc1db9a9f604a64e30e557aeaa5bade4ff3891990dc3793212138a5035d444d87df3aa126d9a3137f9bedf51e173574ed01b4b2e9a04f5c3127feff7b707df0e55376b06ec7b6a024cc8455061066a51363d447ce5e8ee2183e72c2efd9459e77e7c2fd2fe69ceec044edba31a744a408383ecf8c4cbc89a9962379238cdd11102002c8f0ad083971a2a28b0eb630cac032c1bd05e38ad8ee654f89a04b2fe2aee893566384d50e8d7aa2d912801eb257e02ee898cd2cc9cbbdc6eaaaee0193a0528cf5567dabbae9847a3671323c458b0908b72b7af0d32968f86bc22ad8ec92fb3270cdd418cb10a67642c847ef993330453c86cd78af2f9fac1c466b441e1ced1da4092bbf8426eb0f4cf4c653b69971910b9cfa2be1d476296599f80ed4316701537f072a968350c9baf80b72ccbb831c188a6eb46269bebf5baec6e30de267a9ea0499e351ff9aeda3e6805a182d75d14af7bf87bbc784ab012ed78eb2435767d2b45716b1ee079986d3365e31e10aec4304c1a4406b76b20f09d0912f1886e9fed28900527d537af3d7ba8aa7865134a474fd64463c5025c1198120c7527074c5935642fc1fcaa163151c256b38fdccbe353ffb2592116b5afc237134e217ab0428f055c3275952f1788b58f387fba6b1a46e5c49bb81232a75cd913c4a5e1333f175682eaf3dfe53a696fac4490a7b8b70f7bd24d12c08ad3373900b96a9faca2d7ac0dee641765a0d3fe40df919ad015def6b658cf9e93807b6471349bcc0427f4be5f17d1f058aeb5b7056eb9faed57d85a396264ffbd69410b6903a8e52780a8670df4b4b3f69c4edb579fe14b879b88f4eea45aa4c92d13b07b66839e0645cabfcd824c7dc7694c7e015156bbab1b3d00128280bfd9f2bd9a90885c1d9825b67f8747fb643668ed8c499d3f6916844323e1af15f9b3c8598b198bfeaab33f7cec28ffec4517cca647ce1a34690251d11ee1776456be509307bf83299eafd71a9f7d77bc2a5c5322e048973d914b11883e9c5af5e19e7f26290a30b45153dfe1153fe0ddb9de2dda859deadf6d40b5ec4de792298955f142224fa7c25807146d0f7518b456bc97e2261c599866d50133f17b3f4d993ab10489c2a9e49a8a1f1bc15ac922ba9af1aa0284867919ae8247d94d68b0fbdd665b451aaa26f884ad83
+# 
+# Java: 1.8.0_222
+# Runtime: OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~16.04.1-b10)
+# JVM: OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+# OS: Linux 4.4.0-165-generic amd64
+# Native byte-order: LITTLE_ENDIAN
+# Output byte-order: LITTLE_ENDIAN
+# 64-bit output: true
+# 
+# Analyzer: /home/ah403/rng/PractRand/RNG_test_094 stdin64 -tf 1 -te 0 -tlmin 1KB -tlmax 4TB -multithreaded 
+# 
+# Start: 2019-10-25 22:10:28
+# 
+RNG_test using PractRand version 0.94
+RNG = RNG_stdin64, seed = unknown
+test set = core, folding = standard (64 bit)
+
+rng=RNG_stdin64, seed=unknown
+length= 1 kilobyte (2^10 bytes), time= 0.2 seconds
+  no anomalies in 6 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 2 kilobytes (2^11 bytes), time= 0.3 seconds
+  no anomalies in 8 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 4 kilobytes (2^12 bytes), time= 0.4 seconds
+  no anomalies in 18 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 8 kilobytes (2^13 bytes), time= 0.7 seconds
+  no anomalies in 21 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 16 kilobytes (2^14 bytes), time= 1.0 seconds
+  no anomalies in 32 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 32 kilobytes (2^15 bytes), time= 1.4 seconds
+  no anomalies in 36 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 64 kilobytes (2^16 bytes), time= 1.8 seconds
+  no anomalies in 52 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 128 kilobytes (2^17 bytes), time= 2.5 seconds
+  no anomalies in 59 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 256 kilobytes (2^18 bytes), time= 3.0 seconds
+  no anomalies in 72 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 512 kilobytes (2^19 bytes), time= 3.8 seconds
+  no anomalies in 81 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 1 megabyte (2^20 bytes), time= 4.5 seconds
+  no anomalies in 93 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 2 megabytes (2^21 bytes), time= 5.3 seconds
+  no anomalies in 105 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 4 megabytes (2^22 bytes), time= 6.1 seconds
+  no anomalies in 120 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 8 megabytes (2^23 bytes), time= 6.9 seconds
+  no anomalies in 133 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 16 megabytes (2^24 bytes), time= 7.8 seconds
+  no anomalies in 147 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 32 megabytes (2^25 bytes), time= 8.9 seconds
+  no anomalies in 162 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 64 megabytes (2^26 bytes), time= 9.9 seconds
+  no anomalies in 177 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 128 megabytes (2^27 bytes), time= 11.3 seconds
+  no anomalies in 193 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 256 megabytes (2^28 bytes), time= 13.2 seconds
+  no anomalies in 210 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 512 megabytes (2^29 bytes), time= 15.9 seconds
+  no anomalies in 226 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 1 gigabyte (2^30 bytes), time= 20.2 seconds
+  no anomalies in 243 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 2 gigabytes (2^31 bytes), time= 28.8 seconds
+  no anomalies in 261 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 4 gigabytes (2^32 bytes), time= 44.2 seconds
+  no anomalies in 277 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 8 gigabytes (2^33 bytes), time= 74.7 seconds
+  Test Name                         Raw       Processed     Evaluation
+  [Low1/64]BCFN(2+5,13-5,T)         R=  -7.7  p =1-3.6e-5   unusual          
+  ...and 293 test result(s) without anomalies
+
+rng=RNG_stdin64, seed=unknown
+length= 16 gigabytes (2^34 bytes), time= 138 seconds
+  no anomalies in 310 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 32 gigabytes (2^35 bytes), time= 256 seconds
+  no anomalies in 325 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 64 gigabytes (2^36 bytes), time= 501 seconds
+  no anomalies in 340 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 128 gigabytes (2^37 bytes), time= 990 seconds
+  no anomalies in 355 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 256 gigabytes (2^38 bytes), time= 1916 seconds
+  no anomalies in 369 test result(s)
+
+rng=RNG_stdin64, seed=unknown
+length= 512 gigabytes (2^39 bytes), time= 3839 seconds
+  Test Name                         Raw       Processed     Evaluation
+  BRank(12):24K(1)                  R=+99759  p~= 0           FAIL !!!!!!!!  
+  [Low16/64]BRank(12):16K(1)        R= +1165  p~=  1.3e-351   FAIL !!!!!!!   
+  ...and 381 test result(s) without anomalies
+
+# 
+# End: 2019-10-25 23:14:28
+# 
+# Exit value: 0
+# Bytes used: 549755887616 >= 2^39 (549.8 GB)
+# 
+# Test duration: 63.998799999999996 minutes
+# 
