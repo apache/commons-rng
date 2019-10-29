@@ -686,7 +686,7 @@ ListSampler.shuffle(rng, list)
   {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/distribution/MarsagliaNormalizedGaussianSampler.html}MarsagliaNormalizedGaussianSampler}},
   and {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/distribution/ZigguratNormalizedGaussianSampler.html}ZigguratNormalizedGaussianSampler}}.
 
-  Each score is normalized to the score of {{{https://docs.oracle.com/javase/8/docs/api/java/util/Random.html#nextGaussian--}nextGaussian()}} method of <<<java.util.Random>>>.
+  Each score is normalized to the score of {{{https://docs.oracle.com/javase/8/docs/api/java/util/Random.html#nextGaussian--}nextGaussian()}} method of <<<java.util.Random>>> which internally uses the Box-Muller algorithm.
 
 *-----------------------*---------*----------*---------*
 || RNG identifier       || <<<BoxMullerNormalizedGaussianSampler>>> || <<<MarsagliaNormalizedGaussianSampler>>> || <<<ZigguratNormalizedGaussianSampler>>> |
@@ -778,7 +778,9 @@ ListSampler.shuffle(rng, list)
 | XO_RO_SHI_RO_1024_SS  | 0.58185 | 0.33993 | 0.18551 |
 *-----------------------+---------:---------:---------:
 
-  Note that the reference <<<java.util.Random>>> nextGaussian() method uses the Box-Muller algorithm and a synchronized method call per sample. The <<<RandomSource.JDK>>> RNG will use 1 synchronized method call for two samples when using the <<<BoxMullerNormalizedGaussianSampler>>>, hence the observed difference. All the other RNGs are not synchronized.
+  Notes:
+
+  The reference <<<java.util.Random>>> nextGaussian() method uses synchronized method calls per sample. The <<<RandomSource.JDK>>> RNG will use synchronized method calls when generating numbers for the <<<BoxMullerNormalizedGaussianSampler>>> but the calls to obtain the samples are not synchronized, hence the observed difference. All the other RNGs are not synchronized.
 
 
 5. Quality
