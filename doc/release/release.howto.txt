@@ -618,6 +618,11 @@ next version will be 1.1).
 
     <version>1.1-SNAPSHOT</version>
 
+  This can be done using maven:
+
+    $ mvn release:update-versions -DautoVersionSubmodules=true
+
+  You will only be prompted for the desired version number once.
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.
   Then commit them.
