@@ -441,7 +441,7 @@ Tag name:
   RNG_1_0_RC6 (signature can be checked from git using 'git tag -v')
 
 Tag URL:
-  https://git-wip-us.apache.org/repos/asf?p=commons-rng.git;a=commit;h=4581a4520315657a4219b37c81f5db80e4a4e43c
+  https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=4581a4520315657a4219b37c81f5db80e4a4e43c
 
 Commit ID the tag points at:
   4581a4520315657a4219b37c81f5db80e4a4e43c
