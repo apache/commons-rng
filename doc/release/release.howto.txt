@@ -279,8 +279,8 @@ key to the KEYS file. [If you have already done so, skip this section.]
 
 Retrieve the files from the SVN repository:
 
-  $ svn co --depth=immediates \
-    https://__Your_apache_login__@svn.apache.org/repos/asf/commons/trunks-proper
+  $ svn co --depth=files \
+    https://dist.apache.org/repos/dist/release/commons/svn
 
 and follow the instructions at the top of the "KEYS" file.
 
