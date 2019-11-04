@@ -59,8 +59,9 @@ double random = rng.nextDouble();
 
       <p>
         The emphasis is on state-of-the-art generators that pass stringent uniformity
-        tests such as <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TU01</a>
-        and <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">Dieharder</a>.
+        tests such as <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TestU01 (BigCrush)</a>,
+        <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">Dieharder</a> and
+        <a href="http://pracrand.sourceforge.net/">PractRand</a>.
         Weaker algorithms, with known shortcomings, are also provided (for reference or
         due to their historical importance) but their use is best avoided in new
         applications.
