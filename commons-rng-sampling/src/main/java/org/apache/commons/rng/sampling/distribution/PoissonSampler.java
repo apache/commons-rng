@@ -91,7 +91,11 @@ public class PoissonSampler
         return poissonSamplerDelegate.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         // Direct return of the optimised sampler
@@ -106,6 +110,7 @@ public class PoissonSampler
      * @return the sampler
      * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean >}
      * {@link Integer#MAX_VALUE}.
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double mean) {

@@ -86,7 +86,11 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
         return SubsetSamplerUtils.partialSample(domain, size, rng, true);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public PermutationSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new PermutationSampler(rng, this);

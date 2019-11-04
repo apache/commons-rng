@@ -192,7 +192,11 @@ public class RejectionInversionZipfSampler
         return "Rejection inversion Zipf deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new RejectionInversionZipfSampler(rng, this);
@@ -207,6 +211,7 @@ public class RejectionInversionZipfSampler
      * @return the sampler
      * @throws IllegalArgumentException if {@code numberOfElements <= 0} or
      * {@code exponent <= 0}.
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 int numberOfElements,

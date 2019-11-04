@@ -310,7 +310,11 @@ public class LargeMeanPoissonSampler
         return "Large Mean Poisson deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new LargeMeanPoissonSampler(rng, this);
@@ -324,6 +328,7 @@ public class LargeMeanPoissonSampler
      * @return the sampler
      * @throws IllegalArgumentException if {@code mean < 1} or {@code mean > 0.5 *}
      * {@link Integer#MAX_VALUE}.
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double mean) {

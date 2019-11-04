@@ -77,7 +77,11 @@ public class CollectionSampler<T> implements SharedStateSampler<CollectionSample
         return items.get(rng.nextInt(items.size()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public CollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
         return new CollectionSampler<T>(rng, this);

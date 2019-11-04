@@ -33,9 +33,9 @@ import java.util.Random;
  * There are many other pseudo-random number generators that are statistically superior and often
  * faster (see {@link RandomSource}).</p>
  *
- * @since 1.3
  * @see java.security.SecureRandom
  * @see RandomSource
+ * @since 1.3
  */
 public final class JDKRandomWrapper implements UniformRandomProvider {
     /** The JDK Random instance. */

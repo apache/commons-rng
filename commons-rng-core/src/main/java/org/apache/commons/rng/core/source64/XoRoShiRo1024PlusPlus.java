@@ -27,7 +27,6 @@ package org.apache.commons.rng.core.source64;
  *
  * @see <a href="http://xorshift.di.unimi.it/xoroshiro1024plusplus.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
- *
  * @since 1.3
  */
 public class XoRoShiRo1024PlusPlus extends AbstractXoRoShiRo1024 {

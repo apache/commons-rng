@@ -36,6 +36,7 @@ public class SplitMix64 extends LongProvider {
      * Creates a new instance.
      *
      * @param seed Initial seed.
+     * @since 1.3
      */
     public SplitMix64(long seed) {
         state = seed;

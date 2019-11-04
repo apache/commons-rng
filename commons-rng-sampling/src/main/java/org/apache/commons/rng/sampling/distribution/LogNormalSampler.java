@@ -84,6 +84,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @throws UnsupportedOperationException if the underlying sampler is not a
      * {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler} or
      * does not return a {@link NormalizedGaussianSampler} when sharing state.
+     *
+     * @since 1.3
      */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
@@ -103,6 +105,7 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @return the sampler
      * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
      * @see #withUniformRandomProvider(UniformRandomProvider)
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(NormalizedGaussianSampler gaussian,
                                                   double scale,

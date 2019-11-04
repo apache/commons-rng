@@ -61,6 +61,7 @@ public abstract class IntProvider
      * JumpableUniformRandomProvider} interface.
      *
      * @param source Source to copy.
+     * @since 1.3
      */
     protected IntProvider(IntProvider source) {
         booleanSource = source.booleanSource;
@@ -73,6 +74,8 @@ public abstract class IntProvider
      * <p>This should be used when the state is no longer valid, for example after a jump
      * performed for the {@link org.apache.commons.rng.JumpableUniformRandomProvider
      * JumpableUniformRandomProvider} interface.</p>
+     *
+     * @since 1.3
      */
     protected void resetCachedState() {
         booleanSource = 0;

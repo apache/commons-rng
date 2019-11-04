@@ -83,6 +83,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @throws UnsupportedOperationException if the underlying sampler is not a
      * {@link org.apache.commons.rng.sampling.SharedStateSampler SharedStateSampler} or
      * does not return a {@link NormalizedGaussianSampler} when sharing state.
+     *
+     * @since 1.3
      */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
@@ -102,6 +104,7 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @return the sampler
      * @throws IllegalArgumentException if {@code standardDeviation <= 0}
      * @see #withUniformRandomProvider(UniformRandomProvider)
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(NormalizedGaussianSampler normalized,
                                                   double mean,

@@ -26,7 +26,6 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * average of approximately 2<sup>255</sup>.</p>
  *
  * @see <a href="http://pracrand.sourceforge.net/">PractRand</a>
- *
  * @since 1.3
  */
 public class DotyHumphreySmallFastCounting64 extends LongProvider {

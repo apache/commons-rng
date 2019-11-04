@@ -301,6 +301,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
      * </ul>
+     * @since 1.3
      */
     XOR_SHIFT_1024_S_PHI(ProviderBuilder.RandomSourceInternal.XOR_SHIFT_1024_S_PHI),
     /**
@@ -309,6 +310,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_64_S(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_64_S),
     /**
@@ -317,6 +319,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_64_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_64_SS),
     /**
@@ -325,6 +328,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_128_PLUS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_128_PLUS),
     /**
@@ -333,6 +337,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_128_SS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_128_SS),
     /**
@@ -341,6 +346,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_128_PLUS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_128_PLUS),
     /**
@@ -349,6 +355,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_128_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_128_SS),
     /**
@@ -357,6 +364,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_256_PLUS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_256_PLUS),
     /**
@@ -365,6 +373,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_256_SS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_256_SS),
     /**
@@ -373,6 +382,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 8.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_512_PLUS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_PLUS),
     /**
@@ -381,6 +391,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 8.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_512_SS(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_SS),
     /**
@@ -389,6 +400,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     PCG_XSH_RR_32(ProviderBuilder.RandomSourceInternal.PCG_XSH_RR_32),
     /**
@@ -397,6 +409,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     PCG_XSH_RS_32(ProviderBuilder.RandomSourceInternal.PCG_XSH_RS_32),
     /**
@@ -405,6 +418,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     PCG_RXS_M_XS_64(ProviderBuilder.RandomSourceInternal.PCG_RXS_M_XS_64),
     /**
@@ -412,6 +426,7 @@ public enum RandomSource {
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      * </ul>
+     * @since 1.3
      */
     PCG_MCG_XSH_RR_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RR_32),
     /**
@@ -419,6 +434,7 @@ public enum RandomSource {
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      * </ul>
+     * @since 1.3
      */
     PCG_MCG_XSH_RS_32(ProviderBuilder.RandomSourceInternal.PCG_MCG_XSH_RS_32),
     /**
@@ -427,6 +443,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 3.</li>
      * </ul>
+     * @since 1.3
      */
     MSWS(ProviderBuilder.RandomSourceInternal.MSWS),
     /**
@@ -435,6 +452,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 3.</li>
      * </ul>
+     * @since 1.3
      */
     SFC_32(ProviderBuilder.RandomSourceInternal.SFC_32),
     /**
@@ -443,6 +461,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 3.</li>
      * </ul>
+     * @since 1.3
      */
     SFC_64(ProviderBuilder.RandomSourceInternal.SFC_64),
     /**
@@ -450,6 +469,7 @@ public enum RandomSource {
      * <ul>
      *  <li>Native seed type: {@code Integer}.</li>
      * </ul>
+     * @since 1.3
      */
     JSF_32(ProviderBuilder.RandomSourceInternal.JSF_32),
     /**
@@ -457,6 +477,7 @@ public enum RandomSource {
      * <ul>
      *  <li>Native seed type: {@code Long}.</li>
      * </ul>
+     * @since 1.3
      */
     JSF_64(ProviderBuilder.RandomSourceInternal.JSF_64),
     /**
@@ -465,6 +486,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_128_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_128_PP),
     /**
@@ -473,6 +495,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 2.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_128_PP(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_128_PP),
     /**
@@ -481,6 +504,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 4.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_256_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_256_PP),
     /**
@@ -489,6 +513,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 8.</li>
      * </ul>
+     * @since 1.3
      */
     XO_SHI_RO_512_PP(ProviderBuilder.RandomSourceInternal.XO_SHI_RO_512_PP),
     /**
@@ -497,6 +522,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_1024_PP(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_PP),
     /**
@@ -505,6 +531,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_1024_S(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_S),
     /**
@@ -513,6 +540,7 @@ public enum RandomSource {
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 16.</li>
      * </ul>
+     * @since 1.3
      */
     XO_RO_SHI_RO_1024_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_SS);
 
@@ -561,7 +589,6 @@ public enum RandomSource {
      * </code></pre>
      *
      * @return the seed
-     *
      * @since 1.3
      */
     public byte[] createSeed() {
@@ -585,7 +612,6 @@ public enum RandomSource {
      *
      * @param rng Source of randomness.
      * @return the seed
-     *
      * @since 1.3
      */
     public byte[] createSeed(UniformRandomProvider rng) {
@@ -609,7 +635,6 @@ public enum RandomSource {
      * </code></pre>
      *
      * @return {@code true} if jumpable
-     *
      * @since 1.3
      */
     public boolean isJumpable() {
@@ -633,7 +658,6 @@ public enum RandomSource {
      * </code></pre>
      *
      * @return {@code true} if long jumpable
-     *
      * @since 1.3
      */
     public boolean isLongJumpable() {

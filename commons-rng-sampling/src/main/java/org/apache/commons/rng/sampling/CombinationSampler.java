@@ -121,7 +121,11 @@ public class CombinationSampler implements SharedStateSampler<CombinationSampler
         return SubsetSamplerUtils.partialSample(domain, steps, rng, upper);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public CombinationSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new CombinationSampler(rng, this);

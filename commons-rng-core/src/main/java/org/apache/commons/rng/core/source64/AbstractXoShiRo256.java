@@ -27,7 +27,6 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * generators with 256-bits of state.
  *
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
- *
  * @since 1.3
  */
 abstract class AbstractXoShiRo256 extends LongProvider implements LongJumpableUniformRandomProvider {

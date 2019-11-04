@@ -25,7 +25,6 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * and it expected that about one seed will run into another seed within 2<sup>64</sup> values.</p>
  *
  * @see <a href="https://burtleburtle.net/bob/rand/smallprng.html">A small noncryptographic PRNG</a>
- *
  * @since 1.3
  */
 public class JenkinsSmallFast32 extends IntProvider {

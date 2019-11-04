@@ -42,7 +42,6 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @see <a
  * href="https://en.wikipedia.org/wiki/Geometric_distribution#Related_distributions">Geometric
  * distribution - related distributions</a>
- *
  * @since 1.3
  */
 public final class GeometricSampler {

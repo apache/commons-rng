@@ -91,6 +91,8 @@ public class InverseTransformDiscreteSampler
      *
      * <p>Note: The new sampler will share the inverse cumulative probability function. This
      * must be suitable for concurrent use to ensure thread safety.</p>
+     *
+     * @since 1.3
      */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
@@ -108,6 +110,7 @@ public class InverseTransformDiscreteSampler
      * @param function Inverse cumulative probability function.
      * @return the sampler
      * @see #withUniformRandomProvider(UniformRandomProvider)
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 DiscreteInverseCumulativeProbabilityFunction function) {

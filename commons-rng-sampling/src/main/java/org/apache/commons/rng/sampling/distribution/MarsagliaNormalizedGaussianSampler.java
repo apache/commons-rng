@@ -85,7 +85,11 @@ public class MarsagliaNormalizedGaussianSampler
         return "Box-Muller (with rejection) normalized Gaussian deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new MarsagliaNormalizedGaussianSampler(rng);
@@ -97,6 +101,7 @@ public class MarsagliaNormalizedGaussianSampler
      * @param <S> Sampler type.
      * @param rng Generator of uniformly distributed random numbers.
      * @return the sampler
+     * @since 1.3
      */
     @SuppressWarnings("unchecked")
     public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S

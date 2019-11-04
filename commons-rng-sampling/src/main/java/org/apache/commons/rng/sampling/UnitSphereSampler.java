@@ -99,7 +99,11 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         return v;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public UnitSphereSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new UnitSphereSampler(rng, this);

@@ -135,7 +135,11 @@ public class DiscreteProbabilityCollectionSampler<T>
         return items.get(sampler.sample());
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
         return new DiscreteProbabilityCollectionSampler<T>(rng, this);

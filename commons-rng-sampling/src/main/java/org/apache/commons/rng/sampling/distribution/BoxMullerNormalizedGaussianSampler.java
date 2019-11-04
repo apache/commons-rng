@@ -76,7 +76,11 @@ public class BoxMullerNormalizedGaussianSampler
         return "Box-Muller normalized Gaussian deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new BoxMullerNormalizedGaussianSampler(rng);
@@ -88,6 +92,7 @@ public class BoxMullerNormalizedGaussianSampler
      * @param <S> Sampler type.
      * @param rng Generator of uniformly distributed random numbers.
      * @return the sampler
+     * @since 1.3
      */
     @SuppressWarnings("unchecked")
     public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S

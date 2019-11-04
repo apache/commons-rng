@@ -62,7 +62,11 @@ public class ContinuousUniformSampler
         return "Uniform deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new ContinuousUniformSampler(rng, lo, hi);
@@ -75,6 +79,7 @@ public class ContinuousUniformSampler
      * @param lo Lower bound.
      * @param hi Higher bound.
      * @return the sampler
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double lo,

@@ -24,7 +24,6 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * <p>The state size is 256-bits.</p>
  *
  * @see <a href="https://burtleburtle.net/bob/rand/smallprng.html">A small noncryptographic PRNG</a>
- *
  * @since 1.3
  */
 public class JenkinsSmallFast64 extends LongProvider {

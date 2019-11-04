@@ -80,7 +80,11 @@ public class InverseTransformParetoSampler
         return "[Inverse method for Pareto distribution " + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new InverseTransformParetoSampler(rng, this);
@@ -94,6 +98,7 @@ public class InverseTransformParetoSampler
      * @param shape Shape of the distribution.
      * @return the sampler
      * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double scale,

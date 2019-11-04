@@ -70,6 +70,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      * @param multiplier The multiplier for the XorShift1024 algorithm.
+     * @since 1.3
      */
     protected XorShift1024Star(long[] seed, long multiplier) {
         setSeedInternal(seed);
@@ -80,6 +81,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * Creates a copy instance.
      *
      * @param source Source to copy.
+     * @since 1.3
      */
     protected XorShift1024Star(XorShift1024Star source) {
         super(source);
@@ -139,6 +141,8 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * <p>The jump size is the equivalent of 2<sup>512</sup>
      * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
      * up to 2<sup>512</sup> non-overlapping subsequences.</p>
+     *
+     * @since 1.3
      */
     @Override
     public UniformRandomProvider jump() {
@@ -151,6 +155,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * Create a copy.
      *
      * @return the copy
+     * @since 1.3
      */
     protected XorShift1024Star copy() {
         // This exists to ensure the jump function returns

@@ -508,6 +508,7 @@ public final class ProviderBuilder {
          * <p>This method should be over-ridden to satisfy seed requirements for the generator.</p>
          *
          * @return the native seed
+         * @since 1.3
          */
         protected Object createSeed() {
             return nativeSeedType.createSeed(nativeSeedSize);
@@ -523,6 +524,7 @@ public final class ProviderBuilder {
          *
          * @param source Source of randomness.
          * @return the byte[] seed
+         * @since 1.3
          */
         protected byte[] createByteArraySeed(UniformRandomProvider source) {
             return SeedFactory.createByteArray(source, getSeedByteSize());
@@ -538,6 +540,7 @@ public final class ProviderBuilder {
          * @param seed Input seed (must not be null).
          * @return the native seed
          * @throws UnsupportedOperationException if the {@code seed} type is invalid.
+         * @since 1.3
          */
         protected Object convertSeed(Object seed) {
             return nativeSeedType.convertSeed(seed, nativeSeedSize);
@@ -563,7 +566,6 @@ public final class ProviderBuilder {
          * implementing class. The seed is converted from the native type to bytes.</p>
          *
          * @return the seed bytes
-         *
          * @since 1.3
          */
         public final byte[] createSeedBytes() {
@@ -581,7 +583,6 @@ public final class ProviderBuilder {
          *
          * @param source Source of randomness.
          * @return the seed bytes
-         *
          * @since 1.3
          */
         public final byte[] createSeedBytes(UniformRandomProvider source) {

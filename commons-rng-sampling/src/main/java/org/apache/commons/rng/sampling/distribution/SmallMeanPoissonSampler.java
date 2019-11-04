@@ -108,7 +108,11 @@ public class SmallMeanPoissonSampler
         return "Small Mean Poisson deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new SmallMeanPoissonSampler(rng, this);
@@ -121,6 +125,7 @@ public class SmallMeanPoissonSampler
      * @param mean Mean of the distribution.
      * @return the sampler
      * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}.
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double mean) {

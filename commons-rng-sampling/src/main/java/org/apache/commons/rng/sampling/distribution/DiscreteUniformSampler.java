@@ -345,7 +345,11 @@ public class DiscreteUniformSampler
         return delegate.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
         // Direct return of the optimised sampler
@@ -360,6 +364,7 @@ public class DiscreteUniformSampler
      * @param upper Upper bound (inclusive) of the distribution.
      * @return the sampler
      * @throws IllegalArgumentException if {@code lower > upper}.
+     * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 int lower,

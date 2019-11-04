@@ -31,7 +31,6 @@ import java.util.Arrays;
  * <a href="https://arxiv.org/abs/1704.00358v3">Middle Square Weyl Sequence RNG</a>.</p>
  *
  * @see <a href="https://en.wikipedia.org/wiki/Middle-square_method">Middle Square Method</a>
- *
  * @since 1.3
  */
 public class MiddleSquareWeylSequence extends IntProvider {

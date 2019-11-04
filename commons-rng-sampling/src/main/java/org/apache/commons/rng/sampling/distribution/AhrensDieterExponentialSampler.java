@@ -136,7 +136,11 @@ public class AhrensDieterExponentialSampler
         return "Ahrens-Dieter Exponential deviate [" + rng.toString() + "]";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return new AhrensDieterExponentialSampler(rng, this);
@@ -149,6 +153,7 @@ public class AhrensDieterExponentialSampler
      * @param mean Mean of the distribution.
      * @return the sampler
      * @throws IllegalArgumentException if {@code mean <= 0}
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double mean) {

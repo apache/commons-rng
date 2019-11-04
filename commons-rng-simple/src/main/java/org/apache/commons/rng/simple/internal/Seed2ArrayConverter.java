@@ -21,7 +21,6 @@ package org.apache.commons.rng.simple.internal;
  *
  * @param <IN> Input seed type.
  * @param <OUT> Output seed type.
- *
  * @since 1.3
  */
 public interface Seed2ArrayConverter<IN, OUT> extends SeedConverter<IN, OUT> {

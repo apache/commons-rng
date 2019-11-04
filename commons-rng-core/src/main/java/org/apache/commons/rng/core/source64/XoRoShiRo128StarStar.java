@@ -26,7 +26,6 @@ package org.apache.commons.rng.core.source64;
  *
  * @see <a href="http://xoshiro.di.unimi.it/xoroshiro128starstar.c">Original source code</a>
  * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
- *
  * @since 1.3
  */
 public class XoRoShiRo128StarStar extends AbstractXoRoShiRo128 {

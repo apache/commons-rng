@@ -46,9 +46,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code alpha >= 1})
  * </ul>
  *
- * @since 1.0
  * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">MathWorld Gamma distribution</a>
  * @see <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Wikipedia Gamma distribution</a>
+ * @since 1.0
  */
 public class AhrensDieterMarsagliaTsangGammaSampler
     extends SamplerBase
@@ -295,7 +295,11 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         return delegate.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         // Direct return of the optimised sampler
@@ -310,6 +314,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @param theta Theta parameter of the distribution (this is a scale parameter).
      * @return the sampler
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double alpha,

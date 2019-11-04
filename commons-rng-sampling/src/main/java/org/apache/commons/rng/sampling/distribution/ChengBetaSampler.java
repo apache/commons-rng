@@ -330,7 +330,11 @@ public class ChengBetaSampler
         return delegate.toString();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.3
+     */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
         return delegate.withUniformRandomProvider(rng);
@@ -344,6 +348,7 @@ public class ChengBetaSampler
      * @param beta Distribution second shape parameter.
      * @return the sampler
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
+     * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double alpha,
