@@ -189,7 +189,7 @@ In particular:
 The "download" page template is located at "src/site/xdoc/download_rng.xml".
 This file is updated automatically by running the command:
 
-  $ mvn -Pcommons-rng-examples commons-build:download-page
+  $ mvn -N -Pcommons-rng-examples commons-build:download-page
 
 
 (7)
