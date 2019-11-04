@@ -171,6 +171,10 @@ In particular:
 
     <version>1.0</version>
 
+   This can be done using maven:
+
+    $ mvn versions:set -DnewVersion=1.0 -DgenerateBackupPoms=false
+
    Modify the section of "<properties>" that also refers to version numbers.
    You should uncomment the "<commons.rc.version>" line and indicate the
    appropriate numbering of the release candidate: This refers to how many
