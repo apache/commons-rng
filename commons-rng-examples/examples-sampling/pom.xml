@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-examples</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
   </parent>
 
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-sampling</artifactId>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
   <!-- This name is used in the shaded jar to provide the application title for the version information. -->
   <name>Apache Commons RNG Examples Sampling Utilities</name>
 
