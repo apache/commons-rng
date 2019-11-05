@@ -35,7 +35,7 @@
  |                                                                      |
  |  <properties>                                                        |
  |    <commons.componentid>rng</commons.componentid>                    |
- |    <commons.release.version>1.2</commons.release.version>            |
+ |    <commons.release.version>1.3</commons.release.version>            |
  |  </properties>                                                       |
  |                                                                      |
  +======================================================================+
@@ -71,7 +71,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-core</artifactId>
-  <version>1.2</version>
+  <version>1.3</version>
 </dependency>
 ```
 
