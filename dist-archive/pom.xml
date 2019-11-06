@@ -39,7 +39,6 @@ under the License.
     <checkstyle.skip>true</checkstyle.skip>
     <animal.sniffer.skip>true</animal.sniffer.skip>
     <!-- Commons Release Plugin -->
-    <commons.bc.version>1.0</commons.bc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
     <commons.siteOutputDirectory>${basedir}/../target/site</commons.siteOutputDirectory>
     <commons.releaseNotesLocation>${basedir}/../RELEASE-NOTES.txt</commons.releaseNotesLocation>

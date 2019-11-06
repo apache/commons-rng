@@ -50,6 +50,10 @@
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
 
     <rng.picocli.version>3.9.5</rng.picocli.version>
+
+    <!-- Disable JApiCmp failures (but keep the report). The examples API is allowed to change. -->
+    <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
+    <commons.japicmp.breakBuildOnSourceIncompatibleModifications>false</commons.japicmp.breakBuildOnSourceIncompatibleModifications>
   </properties>
 
   <dependencyManagement>
