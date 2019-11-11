@@ -825,6 +825,8 @@ https://reference.apache.org/committer/email#sendingemailfromyourapacheorgemaila
 
 You can use the following message as a template:
 
+Subject:
+[ANNOUNCEMENT] Apache Commons RNG Version 1.3 Released
 ----------
 The Apache Commons Team is pleased to announce the availability of
 version 1.3 of "Apache Commons RNG".
@@ -832,8 +834,17 @@ version 1.3 of "Apache Commons RNG".
 Apache Commons RNG provides Java implementations of pseudo-random
 numbers generators.
 
-The release notes can be reviewed at
-  https://www.apache.org/dist/commons/rng/RELEASE-NOTES.txt
+Changes in this version include:
+
+***<Include release notes inline wrapped to 80 characters>***
+
+Historical list of changes:
+  https://commons.apache.org/proper/commons-rng/changes-report.html
+
+For complete information on Apache Commons RNG, including instructions on how
+to submit bug reports, patches, or suggestions for improvement, see the
+Apache Commons RNG website:
+  https://commons.apache.org/proper/commons-rng/
 
 Distribution packages can be downloaded from
   https://commons.apache.org/proper/commons-rng/download_rng.cgi
@@ -843,8 +854,21 @@ available at
   https://www.apache.org/dist/commons/KEYS
 
 Maven artifacts are also available in the central Maven repository:
-  https://repo1.maven.org/maven2/org/apache/commons/
+  https://repo.maven.apache.org/maven2/org/apache/commons/
 
+----
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-rng-client-api</artifactId>
+  <version>1.3</version>
+----
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-rng-simple</artifactId>
+  <version>1.3</version>
+----
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-rng-sampling</artifactId>
+  <version>1.3</version>
+----
 
 The Apache Commons Team
 ----------
