@@ -46,7 +46,7 @@ Apache Commons RNG Core
 [![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-core/1.2.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-core/1.2)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-core/1.3.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-core/1.3)
 
 Pure Java implementations of random numbers generator algorithms.
   Code in this module should not be used directly by applications; please use
@@ -71,7 +71,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-core</artifactId>
-  <version>1.2</version>
+  <version>1.3</version>
 </dependency>
 ```
 
