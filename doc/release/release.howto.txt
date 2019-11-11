@@ -20,6 +20,10 @@ for all components, including [rng], are available on the Apache Commons
 main site: at "https://commons.apache.org/releases/prepare.html" and
 "https://commons.apache.org/releases/release.html".
 
+When performing a release it is recommended to make notes of any changes that
+were required to those detailed in this document. The changes can be incorporated
+after a successful release.
+
 The files "settings-security.xml" and "settings.xml" are minimal examples
 of files used by maven to pick up authentication credentials needed to
 connect to remote servers and to cryptographically sign the artifacts.
@@ -70,12 +74,23 @@ This process allows:
 Preliminary checks:
  * All Java files must contain a license header. The "RAT" maven plugin will
    generate a report indicating for which files the license is missing.
- * For a "minor" release, the library must be backward-compatible. Check all
-   the errors reported by the "Clirr" plugin.
+ * For a "minor" release, the library must be backward-compatible.
+   Ensure the binary compatibility release version is correctly set in the pom.xml using the
+   appropriate properties:
+     <properties>
+       <!-- ... -->
+       <commons.release.version>1.2</commons.release.version>
+       <commons.bc.version>1.2</commons.bc.version>
+       <!-- ... -->
+     </properties>
+   Check all the issues reported by the "Clirr" and "japicmp" plugin.
+   Check the new public/protected API classes/interfaces/methods/enums have an appropriate
+   @since tag for the release.
  * Clear all "CheckStyle" warnings.
- * Make sure that the construct reported by "SpotBugs" are intentional.
- * Mark all fixed issues as such in the bug-tracking system, and add a
-   corresponding entry in "src/changes/changes.xml".
+ * Make sure that the construct reported by "SpotBugs" and "PMD" are intentional.
+ * Mark all issues fixed in the release as resolved in the bug-tracking system (JIRA). Issues marked
+   as 'Implemented' or 'Fixed' will appear in the changes report. Add a corresponding entry in
+   "src/changes/changes.xml" for the JIRA ticket.
 
 
 (1)
@@ -85,7 +100,7 @@ that the build process can create all the necessary artifacts.
   (1a)
   The command
 
-    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean test site deploy
+    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean test package site deploy
 
   should create the artifacts in the "target/deploy" directory.
 
@@ -111,10 +126,10 @@ that the build process can create all the necessary artifacts.
     $ ( cd dist-archive && mvn assembly:single )
 
   The "dist-archive/target" directory will then contain those files:
-    commons-rng-1.0-SNAPSHOT-bin.tar.gz
-    commons-rng-1.0-SNAPSHOT-bin.zip
-    commons-rng-1.0-SNAPSHOT-src.tar.gz
-    commons-rng-1.0-SNAPSHOT-src.zip
+    commons-rng-1.3-SNAPSHOT-bin.tar.gz
+    commons-rng-1.3-SNAPSHOT-bin.zip
+    commons-rng-1.3-SNAPSHOT-src.tar.gz
+    commons-rng-1.3-SNAPSHOT-src.zip
 
 
 (2)
@@ -125,14 +140,18 @@ candidate, create it locally starting from the master branch or the version
 branch and push it to Apache repository (assuming it is called origin),
 remembering the binding between the local and remote origin branches:
 
-  $ git branch 1.0-release
-  $ git push -u origin 1.0-release
+  $ git branch 1.3-release
+  $ git push -u origin 1.3-release
+
+(Optional)
+Modify the dist-archive/pom.xml to update the release manager name and GPG signing key
+to be used for the release.
 
 
 (3)
 Switch to the release branch:
 
-  $ git checkout 1.0-release
+  $ git checkout 1.3-release
 
 
 (4)
@@ -140,8 +159,8 @@ If there have been changes committed in the master branch or the version
 branch since the creation of the release branch, there are two cases:
 
   (4a)
-  if all these changes must be included in version 1.0, merge "master"
-  or the version branch into "1.0-release":
+  if all these changes must be included in version 1.3, merge "master"
+  or the version branch into "1.3-release":
 
     $ git merge master
 
@@ -150,15 +169,15 @@ branch since the creation of the release branch, there are two cases:
     $ git merge RNG_1_X
 
   (4b)
-  if only part of these changes must be included in version 1.0,
-  cherry-pick the required commits into the "1.0-release" branch:
+  if only part of these changes must be included in version 1.3,
+  cherry-pick the required commits into the "1.3-release" branch:
 
     $ git cherry-pick commit-SHA
 
 
 (5)
 Update the release specific files, checking you are really working on the
-1.0-release branch and *not* on the master branch.
+1.3-release branch and *not* on the master branch.
 
 In particular:
  * Update and commit the "src/site/site.xml" file to contain the information
@@ -166,14 +185,14 @@ In particular:
  * Estimate a release date (taking into account the release vote delay) and
    insert it in the "src/changes/changes.xml" file.
  * Update the "pom.xml" to contain the final version number and not a SNAPSHOT:
-   Assuming that the release version will be "1.0", modify the "<version>" tag to
+   Assuming that the release version will be "1.3", modify the "<version>" tag to
    read:
 
-    <version>1.0</version>
+    <version>1.3</version>
 
    This can be done using maven:
 
-    $ mvn versions:set -DnewVersion=1.0 -DgenerateBackupPoms=false
+    $ mvn versions:set -DnewVersion=1.3 -DgenerateBackupPoms=false
 
    Modify the section of "<properties>" that also refers to version numbers.
    You should uncomment the "<commons.rc.version>" line and indicate the
@@ -183,7 +202,7 @@ In particular:
 
   <properties>
     <!-- ... -->
-    <commons.release.version>1.0</commons.release.version>
+    <commons.release.version>1.3</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <!-- ... -->
   </properties>
@@ -199,17 +218,40 @@ This file is updated automatically by running the command:
 (7)
 The "release notes" file will be created by gathering all the changes
 collected during development in the file "src/changes/changes.xml".
+
 Create it by running:
 
   $ mvn -Prelease-notes -Pcommons-rng-examples changes:announcement-generate
 
-Check the file for weird line breaks, and commit the updated files to git:
+Ensure the formatting of the RELEASE-NOTES.txt is consistent. Compare the main
+header description to the previous release notes in src/site/resources/release-notes/
+and update the line wrap formatting to match. Remove trailing whitespace.
+Ensure the lines wrap at 100 characters.
+Note that wrapping is taken from changes.xml which should be written to wrap
+at 100 characters but allowing for a indent on the first line due to the RNG
+issue field. Update changes.xml if appropriate.
+
+Append the previous release notes from src/site/resources/release-notes/ to the current one:
+
+  $ (echo "=============================================================================" &&
+     cat src/site/resources/release-notes/RELEASE-NOTES-<old version>.txt) >> RELEASE-NOTES.txt
+
+Copy the RELEASE-NOTES.txt to src/site/resources/release-notes:
+
+  $ cp RELEASE-NOTES.txt src/site/resources/release-notes/RELEASE-NOTES-<version>.txt
+
+Update the src/site/xdoc/release-history.xml to include the latest version. This generates
+the release history page on the web site.
+
+Commit the updated files to git:
 
   $ git add src/site/site.xml \
             src/changes/changes.xml \
             pom.xml \
             src/site/xdoc/download_rng.xml \
-            RELEASE-NOTES.txt
+            RELEASE-NOTES.txt \
+            src/site/resources/release-notes/RELEASE-NOTES-* \
+            src/site/xdoc/release-history.xml
 
 Check you did not forget any files:
 
@@ -230,7 +272,7 @@ Then, assuming the first candidate, the suffix will be "RC1" (this should
 be the same as in the "<properties>" in the "pom.xml"), and the command
 will be:
 
-  $ git tag -u "__Your_key_id__" -s -m "RC1." RNG_1_0_RC1
+  $ git tag -u "__Your_key_id__" -s -m "RC1." RNG_1_3_RC1
 
 If you have several GPG keys, you may prefer to use "-u keyId" to select a specific
 key for signing the tag instead of "-s" which select automatically one key
@@ -238,13 +280,13 @@ from the configured e-mail address.
 
 Check the tag GPG signature:
 
-  $ git tag -v RNG_1_0_RC1
+  $ git tag -v RNG_1_3_RC1
 
 You will get something like:
 
   object cf4a9d70c9ac24dd7196995390171150e4e56451
   type commit
-  tag RNG_1_0_RC1
+  tag RNG_1_3_RC1
   tagger YourName <YourApacheEmail> 1418934614 +0100
 
   RC1.
@@ -264,7 +306,7 @@ Switch to a new directory out of your regular workspace, and retrieve
 the official tag from the Apache repository:
 
   $ cd /tmp
-  $ git clone https://git-wip-us.apache.org/repos/asf/commons-rng.git --branch RNG_1_0_RC1
+  $ git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch RNG_1_3_RC1
 
 In the command above, the --branch option accepts both branch names and tags names,
 so we specify directly the tag here. Git will warn that the resulting workspace
@@ -294,26 +336,45 @@ Create and transfer the artifacts to the Nexus server (a.k.a. "deploy").
 
 Because the artifacts must be cryptographically signed, this step requires that
 a profile named "release" exists in the maven "settings.xml" configuration file
-which will contain the identifier of your GPG key (cf. sample "settings.xml" 
+which will contain the identifier of your GPG key (cf. sample "settings.xml"
 file). You will also have to follow the instructions at
 https://maven.apache.org/guides/mini/guide-encryption.html to set your password
-in the settings.xml file.
+for your apache id in the settings.xml file which is used for Nexus repository staging.
+
+The release process requires commit access for the commons SVN repository used to host the
+web site. This will use the provided 'user.name' for SVN. If your SVN is not set-up to
+cache passwords then a password must be provided. This can be done using a <server> section in
+the maven settings.xml file. Typically the username is the same for Nexus repository staging
+(i.e. your apache id) so the server 'apache.releases.https' configured in the example
+settings.xml file can be used by setting the commons.distServer property for the commons release
+plugin (see https://commons.apache.org/proper/commons-release-plugin/index.html).
 
 You can then run
 
-  $ mvn -Duser.name="__Your_Apache_id__" -Pcommons-rng-examples -Prelease clean site site:stage deploy
+  With site generation (the 'package' goal is required for the site report javadoc
+  of the Java 9 modules):
+
+  $ mvn -Duser.name="__Your_Apache_id__" [-Dcommons.distServer=apache.releases.https] \
+        -Pcommons-rng-examples -Prelease clean package site site:stage deploy
+
+  Or without the site generation:
+
+  $ mvn -Duser.name="__Your_Apache_id__" [-Dcommons.distServer=apache.releases.https] \
+        -Pcommons-rng-examples -Prelease clean deploy
+
+  The site can be generated afterwards using 'mvn -Pcommons-rng-examples package site site stage'.
 
 which will transfer the artifacts to the Nexus repository located at
   https://repository.apache.org/index.html#stagingRepositories
 
 This process transfers more files than really needed in the the "staging" (i.e.
 non official) maven repository. The files expected in the repository are
-  commons-rng-1.0.pom
-  commons-rng-1.0.jar
-  commons-rng-1.0.javadoc
-  commons-rng-1.0.sources
-  commons-rng-1.0.test-sources
-  commons-rng-1.0.tests
+  commons-rng-<ModuleArtefactID>-1.3.pom
+  commons-rng-<ModuleArtefactID>-1.3.jar
+  commons-rng-<ModuleArtefactID>-1.3.javadoc
+  commons-rng-<ModuleArtefactID>-1.3.sources
+  commons-rng-<ModuleArtefactID>-1.3.test-sources
+  commons-rng-<ModuleArtefactID>-1.3.tests
 and their associated fingerprints
   <file-name>.md5
   <file-name>.sha1
@@ -324,12 +385,12 @@ Nexus used to add "md5" and "sha1" checksums files to the "asc" files
 (cryptographic signature). If these fingerprints on signatures are
 present, they must be manually removed from Nexus staging area.
 
-The process also transfers the complete source and binaries distributions files,
+The process used to transfer the complete source and binaries distributions files,
 (for each module):
-  commons-rng-<ModuleArtefactId>-1.0-bin.tar.gz
-  commons-rng-<ModuleArtefactId>-1.0-bin.zip
-  commons-rng-<ModuleArtefactId>-1.0-src.tar.gz
-  commons-rng-<ModuleArtefactId>-1.0-src.zip
+  commons-rng-<ModuleArtefactId>-1.3-bin.tar.gz
+  commons-rng-<ModuleArtefactId>-1.3-bin.zip
+  commons-rng-<ModuleArtefactId>-1.3-src.tar.gz
+  commons-rng-<ModuleArtefactId>-1.3-src.zip
 as well as their associated .md5 and .sha1 fingerprints and .asc signatures.
 All these files are not maven artifacts but rather distribution archives: They
 belong elsewhere; hence they must also been removed from the Nexus staging
@@ -338,12 +399,23 @@ repository.
 As a measure of sanity check, the Nexus repository must be manually "closed"
 before other people review the deliverables just created.
 How to "close" the staging repository is explained at this page:
-  http://books.sonatype.com/nexus-book/reference/staging-repositories.html#staging-sect-closing
+  http://www.apache.org/dev/publishing-maven-artifacts.html#close-stage
 
 
 (12)
 [NOTE: The "Commons release-plugin" now automatically performs all the tasks
 referred to in this section.]
+
+***
+Verify that the release plugin has performed the steps below.
+You may be required to remove the staged site from the "dev" area
+and add missing files. The following was performed for release 1.3:
+
+  $ cp path-to-the-RC-workspace/CONTRIBUTING.md .
+  $ cp path-to-the-RC-workspace/dist-archive/target/commons-release-plugin/scm/1.3-RC1/README.html
+  $ svn add CONTRIBUTING.md README.html
+  $ svn del site
+***
 
 Create and upload the other distribution files to the Apache servers.
 
@@ -358,7 +430,7 @@ Create and upload the other distribution files to the Apache servers.
   The modules "dist-archive" dedicated to creating the archive files.
   Run the following command:
 
-    $ ( cd dist-archive && mvn assembly:single )
+    $ ( cd dist-archive && mvn -P release assembly:single )
 
   (12c)
   Go to a temporary directory and check out the "dev" area.
@@ -375,7 +447,7 @@ Create and upload the other distribution files to the Apache servers.
 
     $ cp path-to-the-RC-workspace/RELEASE-NOTES.txt .
     $ cp path-to-the-RC-workspace/CONTRIBUTING.md .
-    $ cp path-to-the-RC-workspace/README.md .
+    $ cp path-to-the-RC-workspace/dist-archive/target/commons-release-plugin/scm/1.3-RC1/README.html .
     $ cp path-to-the-RC-workspace/dist-archive/target/*-bin.* binaries
     $ cp path-to-the-RC-workspace/dist-archive/target/*-src.* source
 
@@ -393,12 +465,11 @@ Create and upload the other distribution files to the Apache servers.
 
     $ svn add \
       CONTRIBUTING.md \
-      README.md \
       README.html \
       RELEASE-NOTES.txt \
       binaries/* \
       source/*
-    $ svn commit -m "Distribution files for Commons RNG v1.0 (RC1)."
+    $ svn commit -m "Distribution files for Commons RNG v1.3 (RC1)."
 
 
 (13)
@@ -420,12 +491,17 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  $ mvn clean -Pcommons-rng-examples site site:stage
+  (Optional. Use this if the release step in (11) was performed without site generation.
+  Do not run 'clean' as it will delete the release source/binary artifacts and the release
+  plugin cannot be used to generate the template VOTE.txt file with the correct hashes.)
+  $ mvn -Pcommons-rng-examples package site site:stage
+
   $ cd target
-  $ mv staging commons-rng-1.0-RC1-site
+  $ mv staging commons-rng-1.3-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
+     lftp you@home.apache.org:~> mkdir public_html
      lftp you@home.apache.org:~> cd public_html
-     lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.0-RC1-site
+     lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.3-RC1-site
      lftp you@home.apache.org:~/public_html> bye
 
 
@@ -434,48 +510,92 @@ Then run these commands:
 message. However, the script makes some (incorrect) assumptions and produces
 a result that must be heavily edited.]
 
-Call to vote by sending a message to the "dev" ML with subject
-"[VOTE][RC1] Release Commons RNG 1.0". You can use the following example as
-a starting point, replacing the URLs with the appropriate ones:
-----------
-This is a [VOTE] for releasing Apache Commons RNG 1.0 (from RC6).
+Template the vote using this command (run from the dist-archive module):
 
+  $ mvn org.apache.commons:commons-release-plugin:vote-txt -Dcommons.nexus.repo.id=1476
+
+See target/VOTE.txt. This must be heavily edited. It is useful to generate the release hashes.
+
+Call to vote by sending a message to the "dev" ML with subject
+"[VOTE][RC1] Release Commons RNG 1.3". You can use the following example as
+a reference point, replacing the URLs with the appropriate ones:
+----------
+We have fixed quite a few bugs and added some significant enhancements since Apache Commons RNG 1.2 was released, so I would like to release Apache Commons RNG 1.3.
+
+Apache Commons RNG 1.3 RC1 is available for review here:
+  https://dist.apache.org/repos/dist/dev/commons/rng/1.3-RC1/
+  https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/
 
 Tag name:
-  RNG_1_0_RC6 (signature can be checked from git using 'git tag -v')
+  RNG_1_3_RC1 (signature can be checked from git using 'git tag -v RNG_1_3_RC1')
 
 Tag URL:
-  https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=4581a4520315657a4219b37c81f5db80e4a4e43c
+https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=43f290e68c31e5bea6cde97c7e999c2e1f2562b2
 
 Commit ID the tag points at:
-  4581a4520315657a4219b37c81f5db80e4a4e43c
+  43f290e68c31e5bea6cde97c7e999c2e1f2562b2
+
+Maven artifacts are here:
+https://repository.apache.org/content/repositories/orgapachecommons-1476/org/apache/commons/
+
+These are the artifacts and their SHA 512 hashes:
+<hash> commons-rng-1.3-bin.tar.gz
+<hash> commons-rng-1.3-bin.zip
+<hash> commons-rng-1.3-src.tar.gz
+<hash> commons-rng-1.3-src.zip
+
+The source code contains examples that are not part of the public API. These examples contain Java 9 modules and are enabled using a profile (see below).
+
+Note: Testing randomness using statistical thresholds results in failures at a given probability. The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
+
+I have tested this with:
+
+'mvn clean install site' using:
+
+***
+<mvn -version>
+***
+
+Java 9 modules in the examples modules.
+
+'mvn -Pcommons-rng-examples clean install site' using:
+
+***
+<mvn -version>
+***
+
+Details of changes since 1.2 are in the release notes:
+https://dist.apache.org/repos/dist/dev/commons/rng/1.3-RC1/RELEASE-NOTES.txt
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/changes-report.html
 
 Site:
-  http://home.apache.org/~erans/commons-rng-1.0-RC6-site
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/index.html
+    (note some *relative* links are broken and the 1.3 directories are not yet created - these will be OK once the site is deployed.)
 
-Distribution files (committed at revision 17284):
-  https://dist.apache.org/repos/dist/dev/commons/rng/
+CLIRR Report (compared to 1.2):
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/commons-rng-client-api/clirr-report.html
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/commons-rng-core/clirr-report.html
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/commons-rng-simple/clirr-report.html
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/commons-rng-sampling/clirr-report.html
 
-Distribution files hashes (SHA1):
-  c5e70a523160ed848194eeba0efa2b14d23c7a61 commons-rng-1.0-bin.tar.gz
-  66d7701afc90aafa4c4b6e033b8df6cd84365161 commons-rng-1.0-bin.zip
-  ef56543c8882a0e4771de83ecf8b3be190f122cf commons-rng-1.0-src.tar.gz
-  3dc56b0793d8bbd703a4efa68547eb58f6fb5b35 commons-rng-1.0-src.zip
+RAT Report:
+https://home.apache.org/~aherbert/commons-rng-1.3-RC1-site/rat-report.html
 
-KEYS file to check signatures:
+KEYS:
   https://www.apache.org/dist/commons/KEYS
 
-Maven artifacts:
-  https://repository.apache.org/content/repositories/orgapachecommons-1229/
+Please review the release candidate and vote.
+This vote will close no sooner that 72 hours from now.
 
-Please select one of the following options:
- [ ] +1 Release it.
- [ ] +0 Go ahead; I don't care.
- [ ] -0 There are a few minor glitches: ...
- [ ] -1 No, do not release it because ...
+  [ ] +1 Release these artifacts
+  [ ] +0 OK, but...
+  [ ] -0 OK, but really should fix...
+  [ ] -1 I oppose this release because...
 
-This vote will be open for at least 72 hours, i.e. until 2016-12-10T00:00:00Z
-(this is UTC time).
+Thank you,
+
+Alex Herbert,
+Release Manager (using key BC87A3FD0A54480F0BADBEBD21939FF0CA2A6567)
 ----------
 
 
@@ -502,6 +622,10 @@ area of the Apache dist server.
 
     $ svn co https://dist.apache.org/repos/dist/release/commons/rng
 
+  Identify symbolic links:
+
+    $ find . -type l
+
   (17b)
   Copy the files from the checkout of the repository that was voted on:
 
@@ -512,22 +636,29 @@ area of the Apache dist server.
   revert" in order to restore the files that should not be updated.]
 
   (17c)
-  Check files.
+  Check files. The following is useful:
+
+    $ svn diff --summarize
+
   Perform a "svn add" for the new release artefacts.
   Perform a "svn del" for the old release(s) artefacts.
 
   (17d)
   Commit:
 
-    $ svn commit -m "Release Commons RNG v1.0 (from RC6)."
+    $ svn commit -m "Release Commons RNG v1.3 (from RC1)."
 
   (17e)
   Register the release at
     https://reporter.apache.org/addrelease.html?commons
 
+
 (18)
+Login to the Nexus repository located at
+  https://repository.apache.org/index.html#stagingRepositories
+
 Release (a.k.a. "promote") the artifacts on the Nexus server, as shown here:
-  http://books.sonatype.com/nexus-book/reference/staging-repositories.html#staging-sect-releasing
+  http://www.apache.org/dev/publishing-maven-artifacts.html#promote
 
 
 (19)
@@ -548,14 +679,32 @@ Remove all files there (except .svn folder) and move all the files from the site
 
  $ cd site-content
  $ rm -rf *
- $ cp -pR ../target/commons-rng-1.0-RC1-site/* .
+ $ cp -pR ../target/commons-rng-1.3-RC1-site/* .
 
 Check for new or deleted files:
  $ svn status
 and "svn add" or "svn del" them if necessary.
 
+It is very useful to know changes to the project since the last release. The clirr and japicmp
+reports are helpful for the public API. Changes in commons-rng-examples are not subject to these
+reports and require developer insight. If in doubt do not delete files.
+
+The following commands are useful:
+
+Deleting (**do not** delete old javadocs):
+
+  $ svn status | grep -v javadocs | grep ^!
+  $ svn status | grep -v javadocs | awk '{if ($1 == "?") print $2 }' | xargs svn del
+
+Adding:
+
+  $ svn status | grep ^?
+  $ svn status | awk '{if ($1 == "?") print $2 }' | xargs svn add
+
 Commit the new contents of the web site:
- $ svn commit -m "Commons RNG v1.0 was released (from RC6). Web site update"
+ $ svn commit -m "Commons RNG v1.3 was released (from RC1). Web site update"
+
+Note the SVN website revision for the next step.
 
 
 (20)
@@ -568,7 +717,7 @@ The Javadoc must therefore be copied manually using server side copy from the
 to work. This is done as follows:
 
   $ export RNG_WEB_SITE_SVN_REVISION=1002658
-  $ export RNG_RELEASE_VERSION=1.0
+  $ export RNG_RELEASE_VERSION=1.3
   $ svnmucc -U https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng \
       cp $RNG_WEB_SITE_SVN_REVISION commons-rng-client-api/apidocs \
                                     commons-rng-client-api/javadocs/api-$RNG_RELEASE_VERSION \
@@ -591,14 +740,14 @@ to make sure that everything looks correct.
 (21)
 Put the official final tag to point at the same commit as the last release candidate tag:
 
-  $ git tag -u "__Your_key_id__" -s -m "RC6 becomes v1.0 official release." RNG_1_0 cf4a9d70c9ac24dd7196995390171150e4e56451
+  $ git tag -u "__Your_key_id__" -s -m "RC1 becomes v1.3 official release." RNG_1_3 cf4a9d70c9ac24dd7196995390171150e4e56451
   $ git push --tags
 
 
 (22)
 Switch back to the "master" branch.
 We now prepare for the next round of development (here we assume that the
-next version will be 1.1).
+next version will be 1.4).
 
   (22a)
   Edit "doap_rng.rdf" to add the just released version date.
@@ -607,31 +756,59 @@ next version will be 1.1).
   in the SVN repository.
 
   (22b)
-  Retrieve files from the "1.0-release branch" (so that the web site will
+  Retrieve files from the "1.3-release branch" (so that the web site will
   contain up-to-date information):
 
-    $ git checkout 1.0-release src/site/xdoc/download_rng.xml
-    $ git checkout 1.0-release src/changes/changes.xml
+    $ git checkout 1.3-release src/site/xdoc/download_rng.xml
+    $ git checkout 1.3-release src/changes/changes.xml
+    $ git checkout 1.3-release RELEASE-NOTES.txt
+    $ git checkout 1.3-release src/site/resources/release-notes/RELEASE-NOTES-<version>.txt
+    $ git checkout 1.3-release src/site/xdoc/release-history.xml
 
   Edit "src/changes/changes.xml" to add a new section for the next release,
   setting the release date and description to "TBD".
   Then commit them.
 
   (22c)
+  Optional: If the release manager was changed retrieve the updated release manager details:
+
+    $ git checkout 1.3-release dist-archive/pom.xml
+
   Edit every "pom.xml" file (i.e. for each module) to contain
 
-    <version>1.1-SNAPSHOT</version>
+    <version>1.4-SNAPSHOT</version>
 
   This can be done using maven:
 
-    $ mvn release:update-versions -DautoVersionSubmodules=true
+    $ mvn release:update-versions -DautoVersionSubmodules=true -Pcommons-rng-examples
 
   You will only be prompted for the desired version number once.
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.
   Then commit them.
 
-  Push everything to the Apache repository.
+  (22d)
+  Update the README.md files to refer the latest release. These files are
+  auto-generated from the commons maven plugin using 'mvn common:readme-md'.
+  The generated README.md files may have been edited for the multi-module
+  set-up of RNG with extra text added to the main README.md.
+
+  An updated will involve:
+
+  1. Replacing the <version>1.2</version> example XML for the maven dependency to
+     <version>1.3</version>.
+  2. Updating any badges for Javadocs. This can be done using search and replace
+     of '1.2.svg' for '1.3.svg' and '/1.2)' for '/1.3)'.
+
+  Check the changes using 'git diff' and commit.
+
+  (22e)
+  Update the <commons.release.version> tag in the master pom for the latest release.
+
+  (22f)
+  Update any other files that use a hard-coded version number:
+
+  - commons-rng-examples/examples-jpms/runApp.sh
 
 
 (23)
@@ -650,7 +827,7 @@ You can use the following message as a template:
 
 ----------
 The Apache Commons Team is pleased to announce the availability of
-version 1.0 of "Apache Commons RNG".
+version 1.3 of "Apache Commons RNG".
 
 Apache Commons RNG provides Java implementations of pseudo-random
 numbers generators.
@@ -671,3 +848,40 @@ Maven artifacts are also available in the central Maven repository:
 
 The Apache Commons Team
 ----------
+
+
+(24)
+Update JIRA to close all issues resolved in this release and prepare for the next version.
+
+  (24a)
+  Log in to JIRA:
+  https://issues.apache.org/jira/projects/RNG
+
+  (24b)
+  Batch close resolved issues without sending notification e-mails:
+
+  - Click 'View all issues and filters'.
+  - Enter in the search field: project = RNG AND status = resolved
+  - Select "Tools" in the top right and choose "Bulk Change" for all of your relevant issues.
+      Step 1: Select the issues to close.
+      Step 2: Select 'Transition issues'.
+      Step 3: Select to close.
+      Step 4: Enter comment: 'Closed by release 1.3'.
+              Unselect 'Send mail for this update'.
+      Confirm.
+
+  (24c)
+  Manage the JIRA version for the release.
+
+  Click 'Project settings > Versions'.
+
+  Add a new version:
+  - Enter the new version number in the field and click 'Add'.
+
+  Set the release date for the recently release version:
+  - Click the released version.
+  - Click 'Release' and enter the date.
+
+
+(25)
+Finally revise the release notes (this document) with any changes to improve the release process.
