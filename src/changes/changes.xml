@@ -211,7 +211,8 @@ as 'flaky' in the report).
         seeds.
       </action>
       <action dev="aherbert" type="update" issue="RNG-77">
-        "NumberFactory": Improve performance of int and long array to/from byte array conversions.
+        "NumberFactory": Improve performance of int and long array to/from byte array
+        conversions.
       </action>
       <action dev="aherbert" type="add" issue="RNG-101">
         New "MarsagliaTsangWangDiscreteSampler" that provides samples from a discrete
@@ -249,9 +250,10 @@ as 'flaky' in the report).
         "MultiplyWithCarry256": Performance improvement by advancing state one step per sample.
       </action>
       <action dev="aherbert" type="add" issue="RNG-82">
-        New "XorShift1024StarPhi" generator. This is a modified implementation of XorShift1024Star
-        that improves randomness of the output sequence. The XOR_SHIFT_1024_S enum has been marked
-        deprecated as a note to users to switch to the new XOR_SHIFT_1024_S_PHI version.
+        New "XorShift1024StarPhi" generator. This is a modified implementation of
+        XorShift1024Star that improves randomness of the output sequence. The XOR_SHIFT_1024_S
+        enum has been marked deprecated as a note to users to switch to the new
+        XOR_SHIFT_1024_S_PHI version.
       </action>
       <action dev="aherbert" type="add" issue="RNG-78">
         New "ThreadLocalRandomSource" class provides thread safe access to random generators.

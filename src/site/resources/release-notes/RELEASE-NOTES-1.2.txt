@@ -5,37 +5,53 @@ The Apache Commons RNG team is pleased to announce the release of Apache Commons
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
-This is a minor release of Apache Commons RNG, containing a few new features and performance improvements. Apache Commons RNG 1.2 contains the following library modules:
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
+Apache Commons RNG 1.2 contains the following library modules:
  commons-rng-client-api (requires Java 6)
  commons-rng-core (requires Java 6)
  commons-rng-simple (requires Java 6)
- commons-rng-sampling (requires Java 6) The code in module 'commons-rng-core' should not be accessed directly by applications as a future release might make use of the JPMS modularization feature available in Java 9+.
+ commons-rng-sampling (requires Java 6)
+
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
+
 Additional code is provided in the following module:
- commons-rng-examples (requires Java 9) It is however not part of the official API and no compatibility should be expected in subsequent releases.
-It must be noted that, due to the nature of random number generation, some of unit tests are bound to fail with some probability.
-The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
 
 Changes in this version include:
 
 New features:
-o RNG-62:  New "CombinationSampler" class. Thanks to Alex D. Herbert. 
+o RNG-62:  New "CombinationSampler" class. Thanks to Alex D. Herbert.
 
 Fixed Bugs:
-o RNG-59:  Use JDK's "SecureRandom" to seed the "SeedFactory". 
-o RNG-56:  "ZigguratNormalizedGaussianSampler": Missing statements in least used branch. 
+o RNG-59:  Use JDK's "SecureRandom" to seed the "SeedFactory".
+o RNG-56:  "ZigguratNormalizedGaussianSampler": Missing statements in least used branch.
 o RNG-55:  "UnitSphereSampler": Prevent returning NaN components and forbid
-        negative dimension. Thanks to Alex D. Herbert. 
+        negative dimension. Thanks to Alex D. Herbert.
 
 Changes:
-o RNG-63:  "NumberFactory": Some methods have become obsolete following RNG-57. 
-o RNG-64:  "PermutationSampler" and "CombinationSampler" shared code moved to a utility class. Thanks to Alex D. Herbert. 
-o RNG-61:  "PermutationSampler": Performance improvement. Thanks to Alex D. Herbert. 
-o RNG-57:  Cache for using up all the bits provided by the underlying source of randomness. Thanks to Alex D. Herbert. 
-o RNG-60:  Use random seeds for unit testing. 
-o RNG-52:  Set conservative upper bound in "LargePoissonSampler" to avoid truncation. 
+o RNG-63:  "NumberFactory": Some methods have become obsolete following RNG-57.
+o RNG-64:  "PermutationSampler" and "CombinationSampler" shared code moved to a utility class.
+        Thanks to Alex D. Herbert.
+o RNG-61:  "PermutationSampler": Performance improvement. Thanks to Alex D. Herbert.
+o RNG-57:  Cache for using up all the bits provided by the underlying source of randomness.
+        Thanks to Alex D. Herbert.
+o RNG-60:  Use random seeds for unit testing.
+o RNG-52:  Set conservative upper bound in "LargePoissonSampler" to avoid truncation.
 o RNG-58:  Allow part of RNG state to be contained in base classes, e.g. to enable
-        caching in common code (see RNG-57). 
-o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert. 
+        caching in common code (see RNG-57).
+o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert.
 
 
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
@@ -43,4 +59,100 @@ patches, or suggestions for improvement, see the Apache Commons RNG website:
 
 https://commons.apache.org/proper/commons-rng/
 
+=============================================================================
 
+              Apache Commons RNG 1.1 RELEASE NOTES
+
+The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.1
+
+The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
+
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
+Apache Commons RNG 1.1 contains the following library modules:
+  commons-rng-client-api (requires Java 6)
+  commons-rng-core (requires Java 6)
+  commons-rng-simple (requires Java 6)
+  commons-rng-sampling (requires Java 6)
+
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
+
+Additional code is provided in the following module:
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
+
+Changes in this version include:
+
+New features:
+o RNG-37:  Implementation of the "Ziggurat" algorithm for Gaussian sampling.
+o RNG-47:  "DiscreteProbabilityCollectionSampler": Sampling from a collection of items
+        with user-defined probabilities (feature ported from "Commons Math").
+o RNG-43:  "LogNormalSampler" with user-defined underlying "NormalizedGaussianSampler".
+o RNG-39:  "UnitSphereSampler": generate random vectors isotropically located
+        on the surface of a sphere (feature ported from "Commons Math").
+o RNG-36:  "MarsagliaNormalizedGaussianSampler": Faster variation of the
+        Box-Muller algorithm.
+        This version is used within "AhrensDieterMarsagliaTsangGammaSampler"
+        "MarsagliaLogNormalSampler" and "PoissonSampler" (generated sequences
+        will thus differ from those generated by version 1.0 of the library).
+o RNG-35:  New generic "GaussianSampler" based on "NormalizedGaussianSampler"
+        marker interface.
+        Implementation of "BoxMullerNormalizedGaussianSampler" deprecates
+        "BoxMullerGaussianSampler".
+
+Fixed Bugs:
+o RNG-53:  Class "SamplerBase" has been deprecated.  It was meant for internal use
+        only but, through inheritance, it allows incorrect usage of the sampler
+        classes.
+
+Changes:
+o RNG-50: "PoissonSampler": Algorithms for small mean and large mean have
+        been separated into dedicated classes.  Cache precomputation has
+        been disabled as it is only marginally used and is a performance
+        hit for small sampling sets.Thanks to Alex D. Herbert.
+o RNG-42:  Use "ZigguratNormalizedGaussianSampler" within the library.
+o RNG-46:  Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
+        Furthermore, its base class has been removed; although it is a binary
+        incompatibility, it cannot cause any problem that were not already
+        present in code using v1.0 of the library: Calls to the base class
+        would have raised a NPE.
+
+
+For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons RNG website:
+
+https://commons.apache.org/proper/commons-rng/
+
+=============================================================================
+
+              Apache Commons RNG 1.0 RELEASE NOTES
+
+The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.0
+
+The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
+
+This is the first release of Apache Commons RNG.
+Apache Commons RNG 1.0 contains the following modules:
+ commons-rng-client-api (requires Java 6)
+ commons-rng-core (requires Java 6)
+ commons-rng-simple (requires Java 6)
+ commons-rng-sampling (requires Java 6)
+ commons-rng-jmh (requires Java 6)
+ commons-rng-examples (requires Java 7)
+
+No changes defined in this version.
+
+For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Commons RNG website:
+
+https://commons.apache.org/proper/commons-rng/

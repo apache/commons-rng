@@ -5,118 +5,131 @@ The Apache Commons RNG team is pleased to announce the release of Apache Commons
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
-This is a minor release of Apache Commons RNG, containing a few new features and performance improvements. Apache Commons RNG 1.3 contains the following library modules:
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
+Apache Commons RNG 1.3 contains the following library modules:
  commons-rng-client-api (requires Java 6)
  commons-rng-core (requires Java 6)
  commons-rng-simple (requires Java 6)
- commons-rng-sampling (requires Java 6) The code in module 'commons-rng-core' should not be accessed directly by applications as a future release might make use of the JPMS modularization feature available in Java 9+.
-Additional code is provided in the following module:
- commons-rng-examples (requires Java 9) It is however not part of the official API and no compatibility should be expected in subsequent releases.
-It must be noted that, due to the nature of random number generation, some of unit tests are bound to fail with some probability.
-The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
+ commons-rng-sampling (requires Java 6)
 
-Changes in this version include:
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
+
+Additional code is provided in the following module:
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
 
 New features:
 o RNG-117:  Additional "XorShiRo" family generators. This adds 4 PlusPlus general purpose variants
-        of existing generators and 3 variants of a large state (1024-bit) generator. 
+        of existing generators and 3 variants of a large state (1024-bit) generator.
 o RNG-117:  "RandomSource": Support creating a byte[] seed suitable for the implementing
-        generator class. 
+        generator class.
 o RNG-116:  "RandomSource": Expose interfaces supported by the implementing generator class
-        with methods isJumpable() and isLongJumpable(). 
-o RNG-111:  New "JenkinsSmallFast32" and "JenkinsSmallFast64" generators. 
+        with methods isJumpable() and isLongJumpable().
+o RNG-111:  New "JenkinsSmallFast32" and "JenkinsSmallFast64" generators.
 o RNG-19:  "JDKRandomWrapper": Wraps an instance of java.util.Random for use as a
         UniformRandomProvider. Can wrap a SecureRandom to use functionality
         provided by the JDK for cryptographic random numbers and platform dependent
-        features such as reading /dev/urandom on Linux. 
-o RNG-112:  New "DotyHumphreySmallFastCounting32" and "DotyHumphreySmallFastCounting64" generators. 
-o RNG-85:  New "MiddleSquareWeylSequence" generator. 
+        features such as reading /dev/urandom on Linux.
+o RNG-112:  New "DotyHumphreySmallFastCounting32" and "DotyHumphreySmallFastCounting64" generators.
+o RNG-85:  New "MiddleSquareWeylSequence" generator.
 o RNG-110:  Factory methods for Discrete and Continuous distribution samplers. The factory method
-        can choose the optimal implementation for the distribution parameters. 
+        can choose the optimal implementation for the distribution parameters.
 o RNG-84:  New Permuted Congruential Generators (PCG) from the PCG family.
         Added the LCG and MCG 32 bit output versions of the XSH-RS and XSH-RR operations,
-        along with the 64 bit RXS-M-XS edition. Thanks to Abhishek Singh Dhadwal. 
+        along with the 64 bit RXS-M-XS edition. Thanks to Abhishek Singh Dhadwal.
 o RNG-102:  New "SharedStateSampler" interface to allow a sampler to create a new instance with
-        a new source of randomness. Any pre-computed state can be shared between the samplers. 
-o RNG-108:  Update "SeedFactory" to improve performance. 
+        a new source of randomness. Any pre-computed state can be shared between the samplers.
+o RNG-108:  Update "SeedFactory" to improve performance.
 o RNG-99:  New "AliasMethodDiscreteSampler" that can sample from any discrete distribution defined
-        by an array of probabilities. Set-up is O(n) time and sampling is O(1) time. 
+        by an array of probabilities. Set-up is O(n) time and sampling is O(1) time.
 o RNG-100:  New "GuideTableDiscreteSampler" that can sample from any discrete distribution defined
-        by an array of probabilities. 
+        by an array of probabilities.
 o RNG-98:  New "LongJumpableUniformRandomProvider" interface extends JumpableUniformRandomProvider
-        with a long jump method. 
+        with a long jump method.
 o RNG-97:  New "JumpableUniformRandomProvider" interface provides a jump method that advances
         the generator a large number of steps of the output sequence in a single operation. A
         copy is returned allowing repeat invocations to create a series of generators
-        for use in parallel computations. 
+        for use in parallel computations.
 o RNG-101:  New "MarsagliaTsangWangDiscreteSampler" that provides samples from a discrete
         distribution stored as a look-up table using a single random integer deviate. Computes
         tables for the Poisson or Binomial distributions, and generically any provided discrete
-        probability distribution. 
+        probability distribution.
 o RNG-91:  New "KempSmallMeanPoissonSampler" that provides Poisson samples using only 1 random
         deviate per sample. This algorithm outperforms the SmallMeanPoissonSampler
-        when the generator is slow. 
+        when the generator is slow.
 o RNG-70:  New "XorShiRo" family of generators. This adds 6 new general purpose generators with
         different periods and 4 related generators with improved performance for floating-point
-        generation. 
-o RNG-82:  New "XorShift1024StarPhi" generator. This is a modified implementation of XorShift1024Star
-        that improves randomness of the output sequence. The XOR_SHIFT_1024_S enum has been marked
-        deprecated as a note to users to switch to the new XOR_SHIFT_1024_S_PHI version. 
-o RNG-78:  New "ThreadLocalRandomSource" class provides thread safe access to random generators. 
-o RNG-79:  Benchmark methods for producing nextDouble and nextFloat. 
-o RNG-72:  Add new JMH benchmark ConstructionPerformance. 
-o RNG-71:  Validate parameters for the distribution samplers. 
-o RNG-67:  Instructions for how to build and run the examples-stress code. 
-o RNG-69:  New "GeometricSampler" class. 
+        generation.
+o RNG-82:  New "XorShift1024StarPhi" generator. This is a modified implementation of
+        XorShift1024Star that improves randomness of the output sequence. The XOR_SHIFT_1024_S
+        enum has been marked deprecated as a note to users to switch to the new
+        XOR_SHIFT_1024_S_PHI version.
+o RNG-78:  New "ThreadLocalRandomSource" class provides thread safe access to random generators.
+o RNG-79:  Benchmark methods for producing nextDouble and nextFloat.
+o RNG-72:  Add new JMH benchmark ConstructionPerformance.
+o RNG-71:  Validate parameters for the distribution samplers.
+o RNG-67:  Instructions for how to build and run the examples-stress code.
+o RNG-69:  New "GeometricSampler" class.
 
 Fixed Bugs:
 o RNG-115:  "JDKRandom": Fixed the restore state method to function when the instance has not
-        previously been used to save state. 
+        previously been used to save state.
 o RNG-96:  "AhrensDieterMarsagliaTsangGammaSampler": Fix parameter interpretation so that alpha
         is a 'shape' parameter and theta is a 'scale' parameter. This reverses the functionality
         of the constructor parameters from previous versions. Dependent code should be checked
-        and parameters reversed to ensure existing functionality is maintained. 
+        and parameters reversed to ensure existing functionality is maintained.
 o RNG-93:  "SmallMeanPoissonSampler": Requires the Poisson probability for p(x=0) to be positive
-        setting an upper bound on the mean of approximately 744.44. 
-o RNG-92:  "LargeMeanPoissonSampler": Requires mean >= 1. 
+        setting an upper bound on the mean of approximately 744.44.
+o RNG-92:  "LargeMeanPoissonSampler": Requires mean >= 1.
 
 Changes:
-o RNG-122:  "SeedFactory": Use XoRoShiRo1024PlusPlus as the default source of randomness. 
+o RNG-122:  "SeedFactory": Use XoRoShiRo1024PlusPlus as the default source of randomness.
 o RNG-121:  "ChengBetaSampler": Algorithms for different distribution parameters have
-        been delegated to specialised classes. 
+        been delegated to specialised classes.
 o RNG-120:  Update security of serialization code for java.util.Random instances. Implement
-        look-ahead deserialization or remove the use of ObjectInputStream.readObject(). 
-o RNG-76:  "SplitMix64": Added primitive long constructor. 
-o RNG-119:  Add LongJumpable support to XoShiRo generators previously only supporting Jumpable. 
+        look-ahead deserialization or remove the use of ObjectInputStream.readObject().
+o RNG-76:  "SplitMix64": Added primitive long constructor.
+o RNG-119:  Add LongJumpable support to XoShiRo generators previously only supporting Jumpable.
 o RNG-114:  "ListSampler": Select the shuffle algorithm based on the list type. This improves
-        performance for non-RandomAccess lists such as LinkedList. 
+        performance for non-RandomAccess lists such as LinkedList.
 o RNG-109:  "DiscreteProbabilityCollectionSampler": Use a faster enumerated probability
-        distribution sampler to replace the binary search algorithm. 
-o RNG-90:  "BaseProvider": Updated to use faster algorithm for nextInt(int). 
-o RNG-95:  "DiscreteUniformSampler": Updated to use faster algorithms for generation of ranges. 
+        distribution sampler to replace the binary search algorithm.
+o RNG-90:  "BaseProvider": Updated to use faster algorithm for nextInt(int).
+o RNG-95:  "DiscreteUniformSampler": Updated to use faster algorithms for generation of ranges.
 o RNG-106:  Ensure SeedFactory produces non-zero seed arrays. This avoids invalid seeding of
-        generators that cannot recover from a seed of zeros. 
+        generators that cannot recover from a seed of zeros.
 o RNG-103:  "LargeMeanPoissonSampler: Switch from SmallMeanPoissonSampler to use
-        KempSmallMeanPoissonSampler for the fractional mean sample. 
+        KempSmallMeanPoissonSampler for the fractional mean sample.
 o RNG-75:  "RandomSource.create(...)": Refactor internal components to allow custom seeding routines
         per random source. Improvements were made to the speed of creating generators with small
-        seeds. 
-o RNG-77:  "NumberFactory": Improve performance of int and long array to/from byte array conversions. 
-o RNG-88:  Update the generation performance JMH benchmarks to have a reference baseline. 
-o RNG-87:  "MultiplyWithCarry256": Performance improvement by advancing state one step per sample. 
-o RNG-81:  "NumberFactory": Evenly sample all dyadic rationals between 0 and 1. 
-o RNG-73:  Add the methods used from UniformRandomProvider to each sampler in the sampling module. 
+        seeds.
+o RNG-77:  "NumberFactory": Improve performance of int and long array to/from byte array
+        conversions.
+o RNG-88:  Update the generation performance JMH benchmarks to have a reference baseline.
+o RNG-87:  "MultiplyWithCarry256": Performance improvement by advancing state one step per sample.
+o RNG-81:  "NumberFactory": Evenly sample all dyadic rationals between 0 and 1.
+o RNG-73:  Add the methods used from UniformRandomProvider to each sampler in the sampling module.
 o RNG-74:  "DiscreteUniformSampler": Algorithms for small and large integer ranges have
-        been delegated to specialised classes. 
+        been delegated to specialised classes.
 o RNG-68:  "AhrensDieterMarsagliaTsangGammaSampler": Algorithms for small and large theta have
-        been delegated to specialised classes. 
+        been delegated to specialised classes.
 
 
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
 https://commons.apache.org/proper/commons-rng/
-
 
 =============================================================================
 
@@ -126,44 +139,59 @@ The Apache Commons RNG team is pleased to announce the release of Apache Commons
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
-This is a minor release of Apache Commons RNG, containing a few new features and performance improvements. Apache Commons RNG 1.2 contains the following library modules:
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
+Apache Commons RNG 1.2 contains the following library modules:
  commons-rng-client-api (requires Java 6)
  commons-rng-core (requires Java 6)
  commons-rng-simple (requires Java 6)
- commons-rng-sampling (requires Java 6) The code in module 'commons-rng-core' should not be accessed directly by applications as a future release might make use of the JPMS modularization feature available in Java 9+.
+ commons-rng-sampling (requires Java 6)
+
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
+
 Additional code is provided in the following module:
- commons-rng-examples (requires Java 9) It is however not part of the official API and no compatibility should be expected in subsequent releases.
-It must be noted that, due to the nature of random number generation, some of unit tests are bound to fail with some probability.
-The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
 
 Changes in this version include:
 
 New features:
-o RNG-62:  New "CombinationSampler" class. Thanks to Alex D. Herbert. 
+o RNG-62:  New "CombinationSampler" class. Thanks to Alex D. Herbert.
 
 Fixed Bugs:
-o RNG-59:  Use JDK's "SecureRandom" to seed the "SeedFactory". 
-o RNG-56:  "ZigguratNormalizedGaussianSampler": Missing statements in least used branch. 
+o RNG-59:  Use JDK's "SecureRandom" to seed the "SeedFactory".
+o RNG-56:  "ZigguratNormalizedGaussianSampler": Missing statements in least used branch.
 o RNG-55:  "UnitSphereSampler": Prevent returning NaN components and forbid
-        negative dimension. Thanks to Alex D. Herbert. 
+        negative dimension. Thanks to Alex D. Herbert.
 
 Changes:
-o RNG-63:  "NumberFactory": Some methods have become obsolete following RNG-57. 
-o RNG-64:  "PermutationSampler" and "CombinationSampler" shared code moved to a utility class. Thanks to Alex D. Herbert. 
-o RNG-61:  "PermutationSampler": Performance improvement. Thanks to Alex D. Herbert. 
-o RNG-57:  Cache for using up all the bits provided by the underlying source of randomness. Thanks to Alex D. Herbert. 
-o RNG-60:  Use random seeds for unit testing. 
-o RNG-52:  Set conservative upper bound in "LargePoissonSampler" to avoid truncation. 
+o RNG-63:  "NumberFactory": Some methods have become obsolete following RNG-57.
+o RNG-64:  "PermutationSampler" and "CombinationSampler" shared code moved to a utility class.
+        Thanks to Alex D. Herbert.
+o RNG-61:  "PermutationSampler": Performance improvement. Thanks to Alex D. Herbert.
+o RNG-57:  Cache for using up all the bits provided by the underlying source of randomness.
+        Thanks to Alex D. Herbert.
+o RNG-60:  Use random seeds for unit testing.
+o RNG-52:  Set conservative upper bound in "LargePoissonSampler" to avoid truncation.
 o RNG-58:  Allow part of RNG state to be contained in base classes, e.g. to enable
-        caching in common code (see RNG-57). 
-o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert. 
+        caching in common code (see RNG-57).
+o RNG-51:  "PoissonSampler": Performance improvement. Thanks to Alex D. Herbert.
 
 
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
 https://commons.apache.org/proper/commons-rng/
-
 
 =============================================================================
 
@@ -173,56 +201,71 @@ The Apache Commons RNG team is pleased to announce the release of Apache Commons
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
-This is a minor release of Apache Commons RNG, containing a few new features and performance improvements.
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+
 Apache Commons RNG 1.1 contains the following library modules:
- commons-rng-client-api (requires Java 6)
- commons-rng-core (requires Java 6)
- commons-rng-simple (requires Java 6)
- commons-rng-sampling (requires Java 6)
-The code in module 'commons-rng-core' should not be accessed directly by applications as a future release might make use of the JPMS modularization feature available in Java 9+.
+  commons-rng-client-api (requires Java 6)
+  commons-rng-core (requires Java 6)
+  commons-rng-simple (requires Java 6)
+  commons-rng-sampling (requires Java 6)
+
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 9+.
+
 Additional code is provided in the following module:
- commons-rng-examples (requires Java 9) It is however not part of the official API and no compatibility should be expected in subsequent releases.
-We would like to also note that unit tests in module 'commons-rng-sampling' are bound to fail with some probability; this is expected due to the nature of random number generation.
-The 'maven-surefire-plugin' can be configured to re-run tests that fail and pass the build if they succeed (the test will be marked as 'flaky' in the report).
+  commons-rng-examples (requires Java 9)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+We would like to also note that unit tests in module 'commons-rng-sampling'
+are bound to fail with some probability; this is expected due to the nature
+of random number generation.  The 'maven-surefire-plugin' can be configured
+to re-run tests that fail and pass the build if they succeed (the test will
+be marked as 'flaky' in the report).
 
 Changes in this version include:
 
 New features:
-o RNG-37:  Implementation of the "Ziggurat" algorithm for Gaussian sampling. 
+o RNG-37:  Implementation of the "Ziggurat" algorithm for Gaussian sampling.
 o RNG-47:  "DiscreteProbabilityCollectionSampler": Sampling from a collection of items
-        with user-defined probabilities (feature ported from "Commons Math"). 
-o RNG-43:  "LogNormalSampler" with user-defined underlying "NormalizedGaussianSampler". 
+        with user-defined probabilities (feature ported from "Commons Math").
+o RNG-43:  "LogNormalSampler" with user-defined underlying "NormalizedGaussianSampler".
 o RNG-39:  "UnitSphereSampler": generate random vectors isotropically located
-        on the surface of a sphere (feature ported from "Commons Math"). 
+        on the surface of a sphere (feature ported from "Commons Math").
 o RNG-36:  "MarsagliaNormalizedGaussianSampler": Faster variation of the
         Box-Muller algorithm.
         This version is used within "AhrensDieterMarsagliaTsangGammaSampler"
         "MarsagliaLogNormalSampler" and "PoissonSampler" (generated sequences
-        will thus differ from those generated by version 1.0 of the library). 
+        will thus differ from those generated by version 1.0 of the library).
 o RNG-35:  New generic "GaussianSampler" based on "NormalizedGaussianSampler"
         marker interface.
         Implementation of "BoxMullerNormalizedGaussianSampler" deprecates
-        "BoxMullerGaussianSampler". 
+        "BoxMullerGaussianSampler".
 
 Fixed Bugs:
 o RNG-53:  Class "SamplerBase" has been deprecated.  It was meant for internal use
         only but, through inheritance, it allows incorrect usage of the sampler
-        classes. 
+        classes.
 
 Changes:
-o RNG-50:  "PoissonSampler": Algorithms for small mean and large mean have
+o RNG-50: "PoissonSampler": Algorithms for small mean and large mean have
         been separated into dedicated classes.  Cache precomputation has
         been disabled as it is only marginally used and is a performance
-        hit for small sampling sets. Thanks to Alex D. Herbert. 
-o RNG-42:  Use "ZigguratNormalizedGaussianSampler" within the library. 
-o RNG-46:  Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated. 
+        hit for small sampling sets.Thanks to Alex D. Herbert.
+o RNG-42:  Use "ZigguratNormalizedGaussianSampler" within the library.
+o RNG-46:  Following RNG-43, "BoxMullerLogNormalSampler" has been deprecated.
+        Furthermore, its base class has been removed; although it is a binary
+        incompatibility, it cannot cause any problem that were not already
+        present in code using v1.0 of the library: Calls to the base class
+        would have raised a NPE.
 
 
 For complete information on Apache Commons RNG, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
 https://commons.apache.org/proper/commons-rng/
-
 
 =============================================================================
 
@@ -247,5 +290,3 @@ For complete information on Apache Commons RNG, including instructions on how to
 patches, or suggestions for improvement, see the Apache Commons RNG website:
 
 https://commons.apache.org/proper/commons-rng/
-
-
