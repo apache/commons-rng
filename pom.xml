@@ -59,6 +59,7 @@
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.20</rng.checkstyle.dep.version>
     <rng.mathjax.version>2.7.2</rng.mathjax.version>
+    <rng.antrun.version>1.8</rng.antrun.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
@@ -400,10 +401,24 @@
       </build>
     </profile>
     <profile>
+      <!-- Sets a property if the SVN site checkout can copy from the parent directory. -->
+      <id>can-copy-checkout</id>
+      <activation>
+        <file>
+          <exists>../${commons.scmPubCheckoutDirectory}</exists>
+        </file>
+      </activation>
+      <properties>
+        <copy.parent.scmPubCheckoutDirectory>true</copy.parent.scmPubCheckoutDirectory>
+      </properties>
+    </profile>
+    <profile>
+      <!-- Runs if the SVN site checkout does not exist.
+           This is either copied from the parent directory or obtained using svn. -->
       <id>setup-checkout</id>
       <activation>
         <file>
-          <missing>site-content</missing>
+          <missing>${commons.scmPubCheckoutDirectory}</missing>
         </file>
       </activation>
       <build>
@@ -411,9 +426,25 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.7</version>
+            <version>${rng.antrun.version}</version>
             <executions>
-              <!-- Avoid download of the archived Javadocs for the modules.
+              <execution>
+                <id>copy-parent-checkout</id>
+                <phase>pre-site</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <!-- For multi-module builds, copy the checkout from the parent. -->
+                  <target name="copy-parent-checkout" if="${copy.parent.scmPubCheckoutDirectory}">
+                    <copy todir="${commons.scmPubCheckoutDirectory}" verbose="true">
+                      <fileset dir="../${commons.scmPubCheckoutDirectory}" includes="**" defaultexcludes="no" />
+                    </copy>
+                  </target>
+                </configuration>
+              </execution>
+              <!-- Checkout the site using SVN.
+                   Avoid download of the archived Javadocs for the modules.
                    This includes the legacy javadocs for commons-rng-examples release 1.0. -->
               <execution>
                 <id>prepare-checkout</id>
@@ -422,7 +453,7 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <target>
+                  <target name="prepare-checkout" unless="${copy.parent.scmPubCheckoutDirectory}">
                     <!-- Top level directory -->
                     <exec executable="svn">
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
@@ -468,6 +499,33 @@
                     <exec executable="svn">
                       <arg line="update --set-depth infinity ${dirs}" />
                     </exec>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- Allow the SVN site checkout to be removed in the clean phase. -->
+      <id>clean-checkout</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>${rng.antrun.version}</version>
+            <executions>
+              <execution>
+                <id>remove-checkout</id>
+                <phase>clean</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target name="remove-checkout">
+                    <delete dir="${commons.scmPubCheckoutDirectory}"/>
                   </target>
                 </configuration>
               </execution>
