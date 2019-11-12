@@ -413,6 +413,8 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <version>1.7</version>
             <executions>
+              <!-- Avoid download of the archived Javadocs for the modules.
+                   This includes the legacy javadocs for commons-rng-examples release 1.0. -->
               <execution>
                 <id>prepare-checkout</id>
                 <phase>pre-site</phase>
@@ -420,22 +422,53 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <tasks>
+                  <target>
+                    <!-- Top level directory -->
                     <exec executable="svn">
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
                     </exec>
 
+                    <!-- Top level for each module -->
                     <exec executable="svn">
-                      <arg line="update --set-depth exclude ${commons.scmPubCheckoutDirectory}/javadocs" />
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-client-api ${commons.scmPubCheckoutDirectory}/commons-rng-client-api" />
+                    </exec>
+                    <exec executable="svn">
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-core ${commons.scmPubCheckoutDirectory}/commons-rng-core" />
+                    </exec>
+                    <exec executable="svn">
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-simple ${commons.scmPubCheckoutDirectory}/commons-rng-simple" />
+                    </exec>
+                    <exec executable="svn">
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-sampling ${commons.scmPubCheckoutDirectory}/commons-rng-sampling" />
+                    </exec>
+                    <exec executable="svn">
+                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-examples ${commons.scmPubCheckoutDirectory}/commons-rng-examples" />
                     </exec>
 
+                    <!-- Do not download the archived javadocs. This will delete the 'javadocs' directory. -->
+                    <pathconvert pathsep=" " property="javadocsDirs">
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-rng-*/javadocs" />
+                    </pathconvert>
+                    <exec executable="svn">
+                      <arg line="update --set-depth exclude ${javadocsDirs}" />
+                    </exec>
+
+                    <!-- Update the modules without the javadocs. -->
+                    <pathconvert pathsep=" " property="modulesDirs">
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-rng-client-api/*,commons-rng-core/*,commons-rng-simple/*,commons-rng-sampling/*,commons-rng-examples/*" />
+                    </pathconvert>
+                    <exec executable="svn">
+                      <arg line="update --set-depth infinity ${modulesDirs}" />
+                    </exec>
+
+                    <!-- Update the remaining non-module directories -->
                     <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" />
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" excludes="commons-rng-client-api,commons-rng-core,commons-rng-simple,commons-rng-sampling,commons-rng-examples" />
                     </pathconvert>
                     <exec executable="svn">
                       <arg line="update --set-depth infinity ${dirs}" />
                     </exec>
-                  </tasks>
+                  </target>
                 </configuration>
               </execution>
             </executions>
