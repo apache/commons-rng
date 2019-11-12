@@ -38,6 +38,7 @@
 
       <p>
         Example:
+      </p>
 
 <source>import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
@@ -50,7 +51,6 @@ public class Dice {
     }
 }
 </source>
-      </p>
 
       <p>
         Browse the <a href="apidocs/index.html">Javadoc</a> for more information.

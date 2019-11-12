@@ -33,6 +33,7 @@
 
       <p>
         Casual use is as simple as:
+      </p>
 
 <source>import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
@@ -43,8 +44,6 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
 // Use it to produce a floating-point value between 0 and 1.
 double random = rng.nextDouble();
 </source>
-
-      </p>
 
       <p>
         For more examples and more advanced usage, see the <a href="userguide/rng.html">userguide</a>.
