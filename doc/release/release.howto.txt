@@ -181,7 +181,8 @@ Update the release specific files, checking you are really working on the
 
 In particular:
  * Update and commit the "src/site/site.xml" file to contain the information
-   about the API docs of the new release.
+   about the API docs of the new release. This is for each of
+   common-rng-<module> with <module>: client-api; core; sampling; and simple.
  * Estimate a release date (taking into account the release vote delay) and
    insert it in the "src/changes/changes.xml" file.
  * Update the "pom.xml" to contain the final version number and not a SNAPSHOT:
