@@ -71,4 +71,17 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>jdk8-plugins</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <!-- Allow japicmp -->
+        <japicmp.skip>false</japicmp.skip>
+      </properties>
+    </profile>
+  </profiles>
+
 </project>
