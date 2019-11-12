@@ -44,10 +44,10 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 
 public class NormalDeviates {
-   private final ContinuousSampler normalizedGaussian;
+    private final ContinuousSampler normalizedGaussian;
 
     public NormalDeviates(UniformRandomProvider rng) {
-        normalizedGaussian = new MarsagliaNormalizedGaussianSampler(rng);
+        normalizedGaussian = MarsagliaNormalizedGaussianSampler.of(rng);
     }
 
     public double sample(double mean,
