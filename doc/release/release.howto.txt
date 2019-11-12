@@ -691,10 +691,15 @@ reports and require developer insight. If in doubt do not delete files.
 
 The following commands are useful:
 
+Reverting:
+
+  $ svn status | grep ^M
+  $ svn status | awk '{if ($1 == "M") print $2 }' | xargs svn revert
+
 Deleting (**do not** delete old javadocs):
 
   $ svn status | grep -v javadocs | grep ^!
-  $ svn status | grep -v javadocs | awk '{if ($1 == "?") print $2 }' | xargs svn del
+  $ svn status | grep -v javadocs | awk '{if ($1 == "!") print $2 }' | xargs svn del
 
 Adding:
 
