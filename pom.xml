@@ -627,8 +627,6 @@
         <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
         <!-- Check for all javadoc errors -->
         <doclint.javadoc.qualifier>-Xdoclint:all</doclint.javadoc.qualifier>
-        <!-- Enable JApiCmp -->
-        <japicmp.skip>false</japicmp.skip>
       </properties>
       <build>
         <plugins>
@@ -664,18 +662,6 @@
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>com.github.siom79.japicmp</groupId>
-            <artifactId>japicmp-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <phase>verify</phase>
-                <goals>
-                  <goal>cmp</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
       <reporting>
@@ -699,11 +685,6 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>com.github.siom79.japicmp</groupId>
-            <artifactId>japicmp-maven-plugin</artifactId>
-            <version>${commons.japicmp.version}</version>
           </plugin>
         </plugins>
       </reporting>
