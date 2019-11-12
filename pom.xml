@@ -401,11 +401,25 @@
       </build>
     </profile>
     <profile>
-      <!-- Sets a property if the SVN site checkout can copy from the parent directory. -->
+      <!--
+        Sets a property if the SVN site checkout can copy from the parent directory.
+
+        Note: The Maven reactor configures all the profiles for the child modules at start-up.
+        Thus the parent must have the site-content folder created first for the copy to work:
+
+        # Optional: Remove the site-content directories
+        mvn clean -Pclean-checkout
+
+        # Checkout the parent site-content directory
+        mvn -N pre-site
+
+        # Copy the site-content for all child modules
+        mvn pre-site
+      -->
       <id>can-copy-checkout</id>
       <activation>
         <file>
-          <exists>../${commons.scmPubCheckoutDirectory}</exists>
+          <exists>${basedir}/../${commons.scmPubCheckoutDirectory}</exists>
         </file>
       </activation>
       <properties>
@@ -437,7 +451,7 @@
                 <configuration>
                   <!-- For multi-module builds, copy the checkout from the parent. -->
                   <target name="copy-parent-checkout" if="${copy.parent.scmPubCheckoutDirectory}">
-                    <copy todir="${commons.scmPubCheckoutDirectory}" verbose="true">
+                    <copy todir="${commons.scmPubCheckoutDirectory}">
                       <fileset dir="../${commons.scmPubCheckoutDirectory}" includes="**" defaultexcludes="no" />
                     </copy>
                   </target>
