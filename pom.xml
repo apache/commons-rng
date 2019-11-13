@@ -490,28 +490,30 @@
                       <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-examples ${commons.scmPubCheckoutDirectory}/commons-rng-examples" />
                     </exec>
 
-                    <!-- Do not download the archived javadocs. This will delete the 'javadocs' directory. -->
                     <pathconvert pathsep=" " property="javadocsDirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-rng-*/javadocs" />
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-${commons.componentid}-*/javadocs" />
                     </pathconvert>
+                    <pathconvert pathsep=" " property="nonModuleDirs">
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" excludes="commons-${commons.componentid}-*" />
+                    </pathconvert>
+
+                    <!-- Do not download the archived javadocs. This will delete the 'javadocs' directory. -->
                     <exec executable="svn">
                       <arg line="update --set-depth exclude ${javadocsDirs}" />
                     </exec>
 
-                    <!-- Update the modules without the javadocs. -->
-                    <pathconvert pathsep=" " property="modulesDirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-rng-client-api/*,commons-rng-core/*,commons-rng-simple/*,commons-rng-sampling/*,commons-rng-examples/*" />
+                    <pathconvert pathsep=" " property="modulesDirsNoJavadocs">
+                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-${commons.componentid}-*/*" />
                     </pathconvert>
+
+                    <!-- Update the modules without the javadocs. -->
                     <exec executable="svn">
-                      <arg line="update --set-depth infinity ${modulesDirs}" />
+                      <arg line="update --set-depth infinity ${modulesDirsNoJavadocs}" />
                     </exec>
 
                     <!-- Update the remaining non-module directories -->
-                    <pathconvert pathsep=" " property="dirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" excludes="commons-rng-client-api,commons-rng-core,commons-rng-simple,commons-rng-sampling,commons-rng-examples" />
-                    </pathconvert>
                     <exec executable="svn">
-                      <arg line="update --set-depth infinity ${dirs}" />
+                      <arg line="update --set-depth infinity ${nonModuleDirs}" />
                     </exec>
                   </target>
                 </configuration>
