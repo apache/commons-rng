@@ -39,7 +39,7 @@
       <p>
         Example:
 
-<source>import org.apache.commons.rng.UniformRandomProvider;
+<source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 

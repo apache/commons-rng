@@ -40,7 +40,7 @@
         Example:
       </p>
 
-<source>import org.apache.commons.rng.UniformRandomProvider;
+<source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 public class Dice {

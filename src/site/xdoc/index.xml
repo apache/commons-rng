@@ -35,7 +35,7 @@
         Casual use is as simple as:
       </p>
 
-<source>import org.apache.commons.rng.UniformRandomProvider;
+<source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 // Instantiate a "Mersenne-Twister" generator with a factory method.
