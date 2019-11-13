@@ -394,16 +394,16 @@ import org.apache.commons.rng.sampling.CombinationSampler;
 int n = 6;
 int k = 3;
 
-// If the order of the subset must be random
+// If the order of the elements matters.
 PermutationSampler permutationSampler = new PermutationSampler(RandomSource.create(RandomSource.KISS),
                                                                n, k);
-// n! / (n - k)! = 120 permutations
+// n! / (n - k)! = 120 permutations.
 int[] permutation = permutationSampler.sample();
 
-// If the elements of the subset must be random
+// If the order of the elements does not matter.
 CombinationSampler combinationSampler = new CombinationSampler(RandomSource.create(RandomSource.KISS),
                                                                n, k);
-// n! / (r! (n - k)!) = 20 combinations
+// n! / (k! (n - k)!) = 20 combinations.
 int[] combination = combinationSampler.sample();
 +--------------------------+
 
