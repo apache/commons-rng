@@ -62,8 +62,8 @@
             Launch Maven from the top-level directory
             in the checkout of Commons RNG trunk. No special setup is required,
             except that currently to build the site (i.e. to execute Maven's
-            "site" goal), you may need to increase the default memory allocation
-            (e.g. <code>export MAVEN_OPTS=-Xmx512m</code>) before launching
+            "<kbd>site</kbd>" goal), you may need to increase the default memory allocation
+            (e.g. <kbd>export MAVEN_OPTS=-Xmx512m</kbd>) before launching
             Maven.
           </li>
           <li>
@@ -130,7 +130,7 @@
           ticket for each feature, adding multiple patches to the ticket
           as necessary.  Use the git diff command to generate your patches as
           diffs.  Please do not submit modified copies of existing java files. Be
-          patient (but not <strong>too</strong> patient) with  committers reviewing
+          patient (but not <strong>too</strong> patient) with committers reviewing
           patches. Post a *nudge* message to commons-dev with a reference to the
           ticket if a patch goes more than a few days with no comment or commit.
           </li>
@@ -143,7 +143,7 @@
           <a href="https://www.oracle.com/technetwork/java/codeconventions-150003.pdf">Code
           Conventions for the Java Programming Language</a>. As part of the maven
           build process, style checking is performed using the Checkstyle plugin,
-          using the properties specified in <code>checkstyle.xml</code>.
+          using the properties specified in <kbd>checkstyle.xml</kbd>.
           Committed code <i>should</i> generate no Checkstyle errors.  One thing
           that Checkstyle will complain about is tabs included in the code code.
           Please make sure to set your IDE or editor to use spaces instead of tabs.
@@ -177,13 +177,13 @@ user.email</source>
             Commons RNG javadoc generation supports embedded LaTeX formulas via the
             <a href="https://www.mathjax.org">MathJax</a> javascript display engine.
             To embed mathematical expressions formatted in LaTeX in javadoc, simply surround
-            the expression to be formatted with either <code>\(</code> and <code>\)</code>
-            for inline formulas (or <code>\[</code> and <code>\]</code> to have the formula
+            the expression to be formatted with either <kbd>\(</kbd> and <kbd>\)</kbd>
+            for inline formulas (or <kbd>\[</kbd> and <kbd>\]</kbd> to have the formula
             appear on a separate line).
             For example,
-            <code>\(</code><code>a^2 + b^2 = c^2</code><code>\)</code>
+            <kbd>\(</kbd> <kbd>a^2 + b^2 = c^2</kbd> <kbd>\)</kbd>
             will render an in-line formula
-            saying that (a, b, c) is a Pythagorean triplet: \( a^2 + b^2 = c^2 \).
+            saying that <kbd>(a, b, c)</kbd> is a Pythagorean triplet: \( a^2 + b^2 = c^2 \).
             <br/>
             See the MathJax and LaTex documentation for details on how to represent formulas
             and escape special characters.
