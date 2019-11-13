@@ -38,7 +38,7 @@ if it comes with
  1. a unit test where the output (say, a few hundred numbers) of "Commons RNG"
     is compared against another implementation,
  2. the outputs of the "RandomStressTester" (Java source is in module
-    "commons-rng-examples"), piping from the "Dieharder" and "TU01/BigCrush"
-    actual stress test suites (these software must be installed separately;
+    "commons-rng-examples"), piping from the "Dieharder", "TU01/BigCrush" and
+    "PractRand" stress test suites (these software must be installed separately;
     the C source of a simple interface to the "TU01" library is in module
     "commons-rng-examples").
