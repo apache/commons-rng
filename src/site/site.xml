@@ -15,7 +15,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project name="RNG">
+<project name="RNG"
+    xmlns="http://maven.apache.org/DECORATION/1.6.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.6.0 http://maven.apache.org/xsd/decoration-1.6.0.xsd">
   <bannerRight>
     <name>Apache Commons RNG</name>
     <src>/images/commons_rng.small.png</src>
@@ -23,6 +26,11 @@
   </bannerRight>
 
   <body>
+    <head>
+      <![CDATA[<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+      </script>]]>
+    </head>
+
     <menu name="RNG">
       <item name="Overview" href="/index.html"/>
       <item name="Downloads" href="https://commons.apache.org/rng/download_rng.cgi"/>
@@ -38,11 +46,6 @@
     <menu name="User Guide">
       <item name="Contents" href="/userguide/index.html"/>
     </menu>
-
-    <head>
-      <![CDATA[<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-      </script>]]>
-    </head>
 
   </body>
 </project>
