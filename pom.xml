@@ -94,6 +94,10 @@
     <allowscript.javadoc.qualifier />
     <!-- Invalid flag for old javadoc versions (default to empty). -->
     <doclint.javadoc.qualifier />
+
+    <!-- Workaround to avoid the SVN site checkout in all modules.
+         This flag should be deactivated by child modules. -->
+    <perform.site.checkout>true</perform.site.checkout>
   </properties>
 
   <modules>
@@ -401,34 +405,21 @@
       </build>
     </profile>
     <profile>
-      <!--
-        Sets a property if the SVN site checkout can copy from the parent directory.
-
-        Note: The Maven reactor configures all the profiles for the child modules at start-up.
-        Thus the parent must have the site-content folder created first for the copy to work:
-
-        # Optional: Remove the site-content directories
-        mvn clean -Pclean-checkout
-
-        # Checkout the parent site-content directory
-        mvn -N pre-site
-
-        # Copy the site-content for all child modules
-        mvn pre-site
-      -->
-      <id>can-copy-checkout</id>
+      <!-- Override a parent property if the SVN site checkout should not be performed.
+           This should activate for child modules. -->
+      <id>is-child-module</id>
       <activation>
         <file>
-          <exists>${basedir}/../${commons.scmPubCheckoutDirectory}</exists>
+          <missing>${basedir}/CONTRIBUTING.md</missing>
         </file>
       </activation>
       <properties>
-        <copy.parent.scmPubCheckoutDirectory>true</copy.parent.scmPubCheckoutDirectory>
+        <perform.site.checkout>false</perform.site.checkout>
       </properties>
     </profile>
     <profile>
       <!-- Runs if the SVN site checkout does not exist.
-           This is either copied from the parent directory or obtained using svn. -->
+           This is either obtained using svn (for the parent) or an empty directory is created. -->
       <id>setup-checkout</id>
       <activation>
         <file>
@@ -442,18 +433,17 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <version>${rng.antrun.version}</version>
             <executions>
+              <!-- For multi-module builds, only the parent directory requires a site checkout.
+                   This task will create an empty directory as the site checkout is missing. -->
               <execution>
-                <id>copy-parent-checkout</id>
+                <id>empty-checkout</id>
                 <phase>pre-site</phase>
                 <goals>
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <!-- For multi-module builds, copy the checkout from the parent. -->
-                  <target name="copy-parent-checkout" if="${copy.parent.scmPubCheckoutDirectory}">
-                    <copy todir="${commons.scmPubCheckoutDirectory}">
-                      <fileset dir="../${commons.scmPubCheckoutDirectory}" includes="**" defaultexcludes="no" />
-                    </copy>
+                  <target name="empty-checkout" unless="${perform.site.checkout}">
+                    <mkdir dir="${commons.scmPubCheckoutDirectory}"/>
                   </target>
                 </configuration>
               </execution>
@@ -467,7 +457,7 @@
                   <goal>run</goal>
                 </goals>
                 <configuration>
-                  <target name="prepare-checkout" unless="${copy.parent.scmPubCheckoutDirectory}">
+                  <target name="prepare-checkout" if="${perform.site.checkout}">
                     <!-- Top level directory -->
                     <exec executable="svn">
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
