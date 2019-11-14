@@ -43,6 +43,7 @@
     <commons.automatic.module.name>org.apache.commons.rng.core</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <rng.jira.component>core</rng.jira.component>
   </properties>
 
   <dependencies>

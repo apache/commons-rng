@@ -52,6 +52,7 @@
     <!-- Disable JApiCmp failures (but keep the report). The examples API is allowed to change. -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
     <commons.japicmp.breakBuildOnSourceIncompatibleModifications>false</commons.japicmp.breakBuildOnSourceIncompatibleModifications>
+    <rng.jira.component>examples</rng.jira.component>
   </properties>
 
   <dependencyManagement>
