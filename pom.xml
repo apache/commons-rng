@@ -431,12 +431,12 @@
                 <configuration>
                   <target name="empty-checkout" unless="${perform.site.checkout}">
                     <mkdir dir="${commons.scmPubCheckoutDirectory}"/>
+                    <echo file="${commons.scmPubCheckoutDirectory}${file.separator}README"
+                          message="The '${commons.scmPubCheckoutDirectory}' directory is empty in child modules."/>
                   </target>
                 </configuration>
               </execution>
-              <!-- Checkout the site using SVN.
-                   Avoid download of the archived Javadocs for the modules.
-                   This includes the legacy javadocs for commons-rng-examples release 1.0. -->
+              <!-- Checkout the top-level directory of the site using SVN. -->
               <execution>
                 <id>prepare-checkout</id>
                 <phase>pre-site</phase>
@@ -450,48 +450,10 @@
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
                     </exec>
 
-                    <!-- Top level for each module -->
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-client-api ${commons.scmPubCheckoutDirectory}/commons-rng-client-api" />
-                    </exec>
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-core ${commons.scmPubCheckoutDirectory}/commons-rng-core" />
-                    </exec>
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-simple ${commons.scmPubCheckoutDirectory}/commons-rng-simple" />
-                    </exec>
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-sampling ${commons.scmPubCheckoutDirectory}/commons-rng-sampling" />
-                    </exec>
-                    <exec executable="svn">
-                      <arg line="checkout --depth immediates ${commons.scmPubUrl}/commons-rng-examples ${commons.scmPubCheckoutDirectory}/commons-rng-examples" />
-                    </exec>
-
-                    <pathconvert pathsep=" " property="javadocsDirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-${commons.componentid}-*/javadocs" />
-                    </pathconvert>
-                    <pathconvert pathsep=" " property="nonModuleDirs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="*" excludes="commons-${commons.componentid}-*" />
-                    </pathconvert>
-
-                    <!-- Do not download the archived javadocs. This will delete the 'javadocs' directory. -->
-                    <exec executable="svn">
-                      <arg line="update --set-depth exclude ${javadocsDirs}" />
-                    </exec>
-
-                    <pathconvert pathsep=" " property="modulesDirsNoJavadocs">
-                      <dirset dir="${commons.scmPubCheckoutDirectory}" includes="commons-${commons.componentid}-*/*" />
-                    </pathconvert>
-
-                    <!-- Update the modules without the javadocs. -->
-                    <exec executable="svn">
-                      <arg line="update --set-depth infinity ${modulesDirsNoJavadocs}" />
-                    </exec>
-
-                    <!-- Update the remaining non-module directories -->
-                    <exec executable="svn">
-                      <arg line="update --set-depth infinity ${nonModuleDirs}" />
-                    </exec>
+                    <echo file="${commons.scmPubCheckoutDirectory}.README">The '${commons.scmPubCheckoutDirectory}' directory is controlled by "subversion".
+Running "svn up" will download *all* the files of the live web site at
+    https://commons.apache.org/rng
+                    </echo>
                   </target>
                 </configuration>
               </execution>
