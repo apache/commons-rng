@@ -786,9 +786,11 @@ next version will be 1.4).
 
   This can be done using maven:
 
-    $ mvn release:update-versions -DautoVersionSubmodules=true -Pcommons-rng-examples
+    $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease
 
   You will only be prompted for the desired version number once.
+  This will miss the dist-archive/pom.xml for all the dependencies.
+  These should be updated manually.
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.
   Then commit them.
