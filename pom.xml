@@ -58,7 +58,7 @@
     <rng.pmd.dep.version>6.14.0</rng.pmd.dep.version>
     <rng.checkstyle.version>3.0.0</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.20</rng.checkstyle.dep.version>
-    <rng.mathjax.version>2.7.2</rng.mathjax.version>
+    <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
     <rng.antrun.version>1.8</rng.antrun.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -253,7 +253,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <!-- Enable MathJax -->
-          <additionalOptions>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalOptions>
+          <additionalOptions>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" async src="${rng.mathjax.url}"&gt;&lt;/script&gt;'</additionalOptions>
         </configuration>
       </plugin>
       <plugin>
@@ -354,7 +354,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <!-- Enable MathJax -->
-          <additionalOptions>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/${rng.mathjax.version}/MathJax.js?config=TeX-AMS-MML_HTMLorMML"&gt;&lt;/script&gt;'</additionalOptions>
+          <additionalOptions>${doclint.javadoc.qualifier} ${allowscript.javadoc.qualifier} -header '&lt;script type="text/javascript" async src="${rng.mathjax.url}"&gt;&lt;/script&gt;'</additionalOptions>
         </configuration>
       </plugin>
       <plugin>
