@@ -46,9 +46,9 @@
             under the heading "Repository Checkout" on the
             <a href="https://gitbox.apache.org/">Git at the ASF page</a>.
             The git url for the current development sources of Commons RNG
-            is <source>http://gitbox.apache.org/repos/asf/commons-rng.git</source>
+            is <source class="none">http://gitbox.apache.org/repos/asf/commons-rng.git</source>
             for anonymous read-only access and
-            <source>https://apacheid@gitbox.apache.org/repos/asf/commons-rng.git</source>
+            <source class="none">https://apacheid@gitbox.apache.org/repos/asf/commons-rng.git</source>
             (where apacheid should be replaced by each committer Apache ID) for committers
             read-write access.
           </li>
@@ -93,7 +93,7 @@
               Generating patches: The requested format for generating patches is
               the Unified Diff format, which can be easily generated using the git
               client or various IDEs.
-              <source>git diff -p > patch </source>
+              <source class="none">git diff -p > patch </source>
               Run this command from the top-level project directory (where pom.xml
               resides).
             </li>
