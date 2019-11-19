@@ -31,7 +31,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * parameter \( p = 1 − e^\lambda \), with \( p \) the probability of success.</p>
  *
  * <p>This sampler outperforms using the {@link InverseTransformDiscreteSampler} with an appropriate
- * Geometric inverse cumulative probability function.</p>
+ * geometric inverse cumulative probability function.</p>
  *
  * <p>Usage note: As the probability of success (\( p \)) tends towards zero the mean of the
  * distribution (\( \frac{1-p}{p} \)) tends towards infinity and due to the use of {@code int}
