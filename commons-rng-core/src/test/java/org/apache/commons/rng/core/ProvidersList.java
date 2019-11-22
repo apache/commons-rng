@@ -112,7 +112,9 @@ public final class ProvidersList {
             add(LIST32, new XoShiRo128Plus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             add(LIST32, new XoShiRo128StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             add(LIST32, new PcgXshRr32(new long[] {g.nextLong()}));
+            add(LIST32, new PcgXshRr32(g.nextLong()));
             add(LIST32, new PcgXshRs32(new long[] {g.nextLong()}));
+            add(LIST32, new PcgXshRs32(g.nextLong()));
             add(LIST32, new PcgMcgXshRr32(g.nextLong()));
             add(LIST32, new PcgMcgXshRs32(g.nextLong()));
             // Ensure a high complexity increment is used for the Weyl sequence
@@ -136,6 +138,7 @@ public final class ProvidersList {
             add(LIST64, new XoShiRo512Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             add(LIST64, new PcgRxsMXs64(new long[] {g.nextLong()}));
+            add(LIST64, new PcgRxsMXs64(g.nextLong()));
             add(LIST64, new DotyHumphreySmallFastCounting64(new long[] {g.nextLong(), g.nextLong()}));
             add(LIST64, new JenkinsSmallFast64(g.nextLong()));
             add(LIST64, new XoRoShiRo128PlusPlus(new long[] {g.nextLong(), g.nextLong()}));

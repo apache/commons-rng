@@ -29,11 +29,25 @@ package org.apache.commons.rng.core.source32;
  */
 public class PcgXshRr32 extends AbstractPcg6432 {
     /**
+     * Creates a new instance using a default increment.
+     *
+     * @param seed Initial state.
+     * @since 1.4
+     */
+    public PcgXshRr32(Long seed) {
+        super(seed);
+    }
+
+    /**
      * Creates a new instance.
      *
      * @param seed Initial seed.
      * If the length is larger than 2, only the first 2 elements will
      * be used; if smaller, the remaining elements will be automatically set.
+     *
+     * <p>The 1st element is used to set the LCG state. The 2nd element is used
+     * to set the LCG increment; the most significant bit
+     * is discarded by left shift and the increment is set to odd.</p>
      */
     public PcgXshRr32(long[] seed) {
         super(seed);

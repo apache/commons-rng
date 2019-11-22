@@ -24,7 +24,7 @@ public class PcgRxsMXs64Test {
     @Test
     public void testReferenceCode() {
         /*
-         * Tested with respect to pcg_engines::setseq_rxs_m_xs_64_64 of the C++ implementation.
+         * Tested with respect to pcg_engines::setseq_rxs_m_xs_64_64(x, y) of the C++ implementation.
          * See : http://www.pcg-random.org/download.html#cpp-implementation
          */
         final long[] expectedSequence = {
@@ -42,5 +42,26 @@ public class PcgRxsMXs64Test {
         RandomAssert.assertEquals(expectedSequence, new PcgRxsMXs64(new long[] {
             0x012de1babb3c4104L, 0xc8161b4202294965L
         }));
+    }
+
+    @Test
+    public void testReferenceCodeFixedIncrement() {
+        /*
+         * Tested with respect to pcg_engines::setseq_rxs_m_xs_64_64(x) of the C++ implementation.
+         * See : http://www.pcg-random.org/download.html#cpp-implementation
+         */
+        final long[] expectedSequence = {
+            0xa5ace6c92c5fa6c7L, 0xac02118387228764L, 0xa6e796e49dc36e00L, 0x4713f32552134368L,
+            0xa2ad36cb4e6b7cc9L, 0x6bbce7db898fa11dL, 0x134cb18300fe9eb0L, 0x3f705c0d635cbc23L,
+            0x4bd7531b62a59b62L, 0x413cc95f3c3e9952L, 0xbc77749b270d987cL, 0xd2c74089bc6489f5L,
+            0xc2debc07a31bb1a8L, 0x5163cfcc77ebd4fbL, 0x6f41b5621cba1b2dL, 0x72dd618ae82f792fL,
+            0x76888898287eeaa2L, 0xf5c7de46ad2739a0L, 0xc9d63bfe7b405a66L, 0xefc0161a3119efd0L,
+            0xbc7a7e23220b53c8L, 0x6efb5e3e2b510988L, 0xe70ce3d64ed4ee82L, 0x3e5c15687252a94dL,
+            0x95530066e3a7f3a6L, 0x6c9a303ab74d9a21L, 0x93ff7e36cf46cdeaL, 0xd5173d3428745856L,
+            0x4fb30e4c6e8bf68eL, 0x6466bbcaf078ad4fL, 0x846768c1bd451c96L, 0xd9c7d6b4aabce95dL,
+            0x4f789941d453a26fL, 0x802e40798afb9cf9L, 0x4f9fd27240f2303bL, 0xb9c25cd3e029e4eaL,
+            0x7d8ecedb3334b077L, 0x9011d404cf44b7c7L, 0xe6f26367c52b12a6L, 0xcbfb6a1dd20f2df4L,
+        };
+        RandomAssert.assertEquals(expectedSequence, new PcgRxsMXs64(0x012de1babb3c4104L));
     }
 }

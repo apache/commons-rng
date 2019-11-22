@@ -97,6 +97,9 @@ public class RandomSourceInternalParametricTest {
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.XO_RO_SHI_RO_1024_PP, longBytes * 16);
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.XO_RO_SHI_RO_1024_S, longBytes * 16);
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.XO_RO_SHI_RO_1024_SS, longBytes * 16);
+        EXPECTED_SEED_BYTES.put(RandomSourceInternal.PCG_XSH_RR_32_OS, longBytes);
+        EXPECTED_SEED_BYTES.put(RandomSourceInternal.PCG_XSH_RS_32_OS, longBytes);
+        EXPECTED_SEED_BYTES.put(RandomSourceInternal.PCG_RXS_M_XS_64_OS, longBytes);
         // ... add more here.
         // Verify the seed byte size is reflected in the enum javadoc for RandomSource.
     }

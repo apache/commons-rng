@@ -32,6 +32,8 @@ import org.apache.commons.rng.core.util.NumberFactory;
 public class PcgRxsMXs64 extends LongProvider {
     /** Size of the seed array. */
     private static final int SEED_SIZE = 2;
+    /** The default increment. */
+    private static final long DEFAULT_INCREMENT = 1442695040888963407L;
 
     /** The state of the LCG. */
     private long state;
@@ -40,11 +42,26 @@ public class PcgRxsMXs64 extends LongProvider {
     private long increment;
 
     /**
+     * Creates a new instance using a default increment.
+     *
+     * @param seed Initial state.
+     * @since 1.4
+     */
+    public PcgRxsMXs64(Long seed) {
+        increment = DEFAULT_INCREMENT;
+        state = bump(seed + this.increment);
+    }
+
+    /**
      * Creates a new instance.
      *
      * @param seed Initial seed.
      * If the length is larger than 2, only the first 2 elements will
      * be used; if smaller, the remaining elements will be automatically set.
+     *
+     * <p>The 1st element is used to set the LCG state. The 2nd element is used
+     * to set the LCG increment; the most significant bit
+     * is discarded by left shift and the increment is set to odd.</p>
      */
     public PcgRxsMXs64(long[] seed) {
         if (seed.length < SEED_SIZE) {

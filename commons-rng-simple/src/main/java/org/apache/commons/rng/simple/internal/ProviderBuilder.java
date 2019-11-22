@@ -354,7 +354,19 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link XoRoShiRo1024StarStar}. */
         XO_RO_SHI_RO_1024_SS(XoRoShiRo1024StarStar.class,
                              16,
-                             NativeSeedType.LONG_ARRAY);
+                             NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link PcgXshRr32}. */
+        PCG_XSH_RR_32_OS(PcgXshRr32.class,
+                1,
+                NativeSeedType.LONG),
+        /** Source of randomness is {@link PcgXshRs32}. */
+        PCG_XSH_RS_32_OS(PcgXshRs32.class,
+                1,
+                NativeSeedType.LONG),
+        /** Source of randomness is {@link PcgRxsMXs64}. */
+        PCG_RXS_M_XS_64_OS(PcgRxsMXs64.class,
+                1,
+                NativeSeedType.LONG);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;

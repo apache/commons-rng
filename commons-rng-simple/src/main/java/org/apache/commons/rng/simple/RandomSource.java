@@ -542,7 +542,31 @@ public enum RandomSource {
      * </ul>
      * @since 1.3
      */
-    XO_RO_SHI_RO_1024_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_SS);
+    XO_RO_SHI_RO_1024_SS(ProviderBuilder.RandomSourceInternal.XO_RO_SHI_RO_1024_SS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.PcgXshRr32}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     * </ul>
+     * @since 1.4
+     */
+    PCG_XSH_RR_32_OS(ProviderBuilder.RandomSourceInternal.PCG_XSH_RR_32_OS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.PcgXshRs32}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     * </ul>
+     * @since 1.4
+     */
+    PCG_XSH_RS_32_OS(ProviderBuilder.RandomSourceInternal.PCG_XSH_RS_32_OS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.PcgRxsMXs64}.
+     * <ul>
+     *  <li>Native seed type: {@code Long}.</li>
+     * </ul>
+     * @since 1.4
+     */
+    PCG_RXS_M_XS_64_OS(ProviderBuilder.RandomSourceInternal.PCG_RXS_M_XS_64_OS);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
