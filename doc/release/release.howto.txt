@@ -708,9 +708,19 @@ Adding:
   $ svn status | awk '{if ($1 == "?") print $2 }' | xargs svn add
 
 Commit the new contents of the web site:
- $ svn commit -m "Commons RNG v1.3 was released (from RC1). Web site update"
+  $ svn commit -m "Commons RNG v1.3 was released (from RC1). Web site update"
 
 Note the SVN website revision for the next step.
+
+
+Edit the file component_releases.properties to hold the current version and release date for
+your component:
+
+  $ svn checkout --depth files https://svn.apache.org/repos/asf/commons/cms-site/trunk/conf/component_releases.properties
+
+  [edit file]
+
+  $ (cd conf && svn commit -m "Commons RNG v1.3 was released (from RC1)")
 
 
 (20)
