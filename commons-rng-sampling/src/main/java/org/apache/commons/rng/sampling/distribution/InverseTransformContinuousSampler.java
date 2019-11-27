@@ -42,12 +42,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  * final RealDistribution dist = new ChiSquaredDistribution(9);
  * // Create the sampler.
  * final ContinuousSampler chiSquareSampler =
- *     new InverseTransformContinuousSampler(RandomSource.create(RandomSource.MT),
- *                                           new ContinuousInverseCumulativeProbabilityFunction() {
- *                                               public double inverseCumulativeProbability(double p) {
- *                                                   return dist.inverseCumulativeProbability(p);
- *                                               }
- *                                           });
+ *     InverseTransformContinuousSampler.of(RandomSource.create(RandomSource.MT),
+ *                                          new ContinuousInverseCumulativeProbabilityFunction() {
+ *                                              public double inverseCumulativeProbability(double p) {
+ *                                                  return dist.inverseCumulativeProbability(p);
+ *                                              }
+ *                                          });
  *
  * // Generate random deviate.
  * double random = chiSquareSampler.sample();

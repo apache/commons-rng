@@ -144,7 +144,7 @@ public class PoissonSamplerCache {
      * Creates a new Poisson sampler.
      *
      * <p>The returned sampler will function exactly the
-     * same as {@link PoissonSampler#PoissonSampler(UniformRandomProvider, double)}.
+     * same as {@link PoissonSampler#of(UniformRandomProvider, double)}.
      *
      * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
