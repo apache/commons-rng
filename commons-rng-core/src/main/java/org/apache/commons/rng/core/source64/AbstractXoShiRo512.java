@@ -210,7 +210,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
      * 2<sup>128</sup> non-overlapping subsequences of length 2<sup>384</sup>; each
      * subsequence can provide up to 2<sup>128</sup> non-overlapping subsequences of
-     * length 2<sup>256</sup>using the {@link #jump()} method.</p>
+     * length 2<sup>256</sup> using the {@link #jump()} method.</p>
      */
     @Override
     public JumpableUniformRandomProvider longJump() {
