@@ -151,9 +151,29 @@ public class PoissonSamplerCache {
      * @return A Poisson sampler
      * @throws IllegalArgumentException if {@code mean <= 0} or
      * {@code mean >} {@link Integer#MAX_VALUE}.
+     * @deprecated Use {@link #createSharedStateSampler(UniformRandomProvider, double)}.
      */
+    @Deprecated
     public DiscreteSampler createPoissonSampler(UniformRandomProvider rng,
                                                 double mean) {
+        return createSharedStateSampler(rng, mean);
+    }
+
+    /**
+     * Creates a new Poisson sampler.
+     *
+     * <p>The returned sampler will function exactly the
+     * same as {@link PoissonSampler#of(UniformRandomProvider, double)}.
+     *
+     * @param rng  Generator of uniformly distributed random numbers.
+     * @param mean Mean.
+     * @return A Poisson sampler
+     * @throws IllegalArgumentException if {@code mean <= 0} or
+     * {@code mean >} {@link Integer#MAX_VALUE}.
+     * @since 1.4
+     */
+    public SharedStateDiscreteSampler createSharedStateSampler(UniformRandomProvider rng,
+                                                               double mean) {
         // Ensure the same functionality as the PoissonSampler by
         // using a SmallMeanPoissonSampler under the switch point.
         if (mean < PoissonSampler.PIVOT) {
@@ -218,7 +238,7 @@ public class PoissonSamplerCache {
      * {@code false}.
      *
      * <p>The cache can still be used to create a {@link PoissonSampler} using
-     * {@link #createPoissonSampler(UniformRandomProvider, double)}.
+     * {@link #createSharedStateSampler(UniformRandomProvider, double)}.
      *
      * <p>This method can be used to determine if the cache has a potential
      * performance benefit.

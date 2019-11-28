@@ -241,28 +241,28 @@ public class PoissonSamplerCacheTest {
     // Edge cases for creating a Poisson sampler
 
     /**
-     * Test createPoissonSampler() with a bad mean.
+     * Test createSharedStateSampler() with a bad mean.
      *
      * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCreatePoissonSamplerThrowsWithZeroMean() {
+    public void testCreateSharedStateSamplerThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
-        cache.createPoissonSampler(rng, 0);
+        cache.createSharedStateSampler(rng, 0);
     }
 
     /**
-     * Test createPoissonSampler() with a mean that is too large.
+     * Test createSharedStateSampler() with a mean that is too large.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCreatePoissonSamplerThrowsWithNonIntegerMean() {
+    public void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.create(RandomSource.SPLIT_MIX_64);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         final double mean = Integer.MAX_VALUE + 1.0;
-        cache.createPoissonSampler(rng, mean);
+        cache.createSharedStateSampler(rng, mean);
     }
 
     // Sampling tests
@@ -385,7 +385,7 @@ public class PoissonSamplerCacheTest {
             PoissonSamplerCache cache,
             double mean) {
         final DiscreteSampler s1 = PoissonSampler.of(rng1, mean);
-        final DiscreteSampler s2 = cache.createPoissonSampler(rng2, mean);
+        final DiscreteSampler s2 = cache.createSharedStateSampler(rng2, mean);
         for (int j = 0; j < 10; j++) {
             Assert.assertEquals(s1.sample(), s2.sample());
         }
@@ -468,7 +468,7 @@ public class PoissonSamplerCacheTest {
         // Test all means in the test range (which may be different
         // from the cache range).
         for (int i = minMean; i <= maxMean; i++) {
-            cache.createPoissonSampler(rng1, i);
+            cache.createSharedStateSampler(rng1, i);
         }
 
         final PoissonSamplerCache cache2 = cache.withRange(minMean2, maxMean2);
@@ -485,5 +485,17 @@ public class PoissonSamplerCacheTest {
             // Test non-integer mean (SmallMeanPoissonSampler required)
             testPoissonSamples(rng1, rng2, cache2, i + 0.5);
         }
+    }
+
+    /**
+     * Explicit test for the deprecated method createPoissonSampler().
+     * All other uses of this method have been removed.
+     */
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testCreatePoissonSampler() {
+        final PoissonSamplerCache cache = createPoissonSamplerCache(0, 100);
+        final DiscreteSampler s2 = cache.createPoissonSampler(null, 42);
+        Assert.assertTrue(s2 instanceof LargeMeanPoissonSampler);
     }
 }

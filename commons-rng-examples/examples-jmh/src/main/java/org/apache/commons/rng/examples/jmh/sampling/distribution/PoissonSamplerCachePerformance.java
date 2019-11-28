@@ -330,7 +330,7 @@ public class PoissonSamplerCachePerformance {
         final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
             @Override
             public DiscreteSampler createPoissonSampler(double mean) {
-                return cache.createPoissonSampler(r, mean);
+                return cache.createSharedStateSampler(r, mean);
             }
         };
         runSample(factory, range, bh);
@@ -351,7 +351,7 @@ public class PoissonSamplerCachePerformance {
         final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
             @Override
             public DiscreteSampler createPoissonSampler(double mean) {
-                return cache.createPoissonSampler(r, mean);
+                return cache.createSharedStateSampler(r, mean);
             }
         };
         runSample(factory, range, bh);
