@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
@@ -327,12 +326,12 @@ public class PoissonSamplerCacheTest {
     private void checkComputeSameSamplesAsPoissonSampler(int minMean,
                                                          int maxMean) {
         // Two identical RNGs
+        final RandomSource source = RandomSource.SPLIT_MIX_64;
+        final long seed = RandomSource.createLong();
         final RestorableUniformRandomProvider rng1 =
-                RandomSource.create(RandomSource.WELL_19937_C);
-        final RandomProviderState state = rng1.saveState();
+                RandomSource.create(source, seed);
         final RestorableUniformRandomProvider rng2 =
-                RandomSource.create(RandomSource.WELL_19937_C);
-        rng2.restoreState(state);
+                RandomSource.create(source, seed);
 
         // Create the cache with the given range
         final PoissonSamplerCache cache =
@@ -456,11 +455,12 @@ public class PoissonSamplerCacheTest {
                                                                      int minMean2,
                                                                      int maxMean2) {
         // Two identical RNGs
+        final RandomSource source = RandomSource.SPLIT_MIX_64;
+        final long seed = RandomSource.createLong();
         final RestorableUniformRandomProvider rng1 =
-                RandomSource.create(RandomSource.WELL_19937_C);
-        final RandomProviderState state = rng1.saveState();
+                RandomSource.create(source, seed);
         final RestorableUniformRandomProvider rng2 =
-                RandomSource.create(RandomSource.WELL_19937_C);
+                RandomSource.create(source, seed);
 
         // Create the cache with the given range and fill it
         final PoissonSamplerCache cache =
@@ -473,9 +473,6 @@ public class PoissonSamplerCacheTest {
 
         final PoissonSamplerCache cache2 = cache.withRange(minMean2, maxMean2);
         Assert.assertTrue("WithRange cache is the same object", cache != cache2);
-
-        rng1.restoreState(state);
-        rng2.restoreState(state);
 
         // Test all means in the test range (which may be different
         // from the cache range).
