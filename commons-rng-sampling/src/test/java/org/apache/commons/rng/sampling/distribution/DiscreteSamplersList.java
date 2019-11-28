@@ -183,7 +183,7 @@ public final class DiscreteSamplersList {
             add(LIST, discreteProbabilities,
                 GuideTableDiscreteSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_512_SS), discreteProbabilities));
             add(LIST, discreteProbabilities,
-                    AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.KISS), discreteProbabilities));
+                AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.KISS), discreteProbabilities));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);

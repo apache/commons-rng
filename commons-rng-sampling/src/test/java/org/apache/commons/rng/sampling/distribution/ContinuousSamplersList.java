@@ -115,11 +115,11 @@ public final class ContinuousSamplersList {
             // Gamma (alpha < 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaSmallerThanOne, thetaGamma),
                 AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S),
-                                                           alphaGammaSmallerThanOne, thetaGamma));
+                                                          alphaGammaSmallerThanOne, thetaGamma));
             // Gamma (alpha > 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
                 AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.WELL_44497_B),
-                                                           alphaGammaLargerThanOne, thetaGamma));
+                                                          alphaGammaLargerThanOne, thetaGamma));
 
             // Gumbel ("inverse method").
             final double muGumbel = -4.56;
