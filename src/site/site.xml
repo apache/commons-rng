@@ -26,12 +26,6 @@
     <href>https://commons.apache.org/proper/commons-rng/index.html</href>
   </bannerRight>
 
-  <skin>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-skin</artifactId>
-    <version>4.2</version>
-  </skin>
-
   <body>
     <head>
       <![CDATA[<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
