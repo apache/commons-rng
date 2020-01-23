@@ -202,7 +202,7 @@
 
 ================================================================================
 
-Class "org.apache.commons.rng.internal.source64.MersenneTwister64" contains
+Class "org.apache.commons.rng.core.source64.MersenneTwister64" contains
 Java code partly ported from the reference implementation in C.
 That source file contained the following notice:
 
@@ -238,7 +238,7 @@ That source file contained the following notice:
 
 ================================================================================
 
-Class "org.apache.commons.rng.internal.source32.MersenneTwister" contains
+Class "org.apache.commons.rng.core.source32.MersenneTwister" contains
 Java code partly ported from the reference implementation in C.
 That source file contained the following notice:
 
