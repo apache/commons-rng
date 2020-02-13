@@ -43,4 +43,14 @@
     <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
   </Match>
 
+  <Match>
+    <!-- Benchmark state classes can expose internal representations.
+         Unwritten fields can be used for baseline values. -->
+    <Class name="~org.apache.commons.rng.examples.jmh..*(Benchmark|Performance).*"/>
+    <Or>
+      <BugPattern name="EI_EXPOSE_REP"/>
+      <BugPattern name="UWF_UNWRITTEN_FIELD"/>
+    </Or>
+  </Match>
+
 </FindBugsFilter>

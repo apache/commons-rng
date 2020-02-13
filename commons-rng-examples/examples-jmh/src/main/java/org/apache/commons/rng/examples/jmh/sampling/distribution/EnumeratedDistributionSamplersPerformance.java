@@ -268,6 +268,18 @@ public class EnumeratedDistributionSamplersPerformance {
     public static class KnownDistributionSources extends SamplerSources {
         /** The cumulative probability limit for unbounded distributions. */
         private static final double CUMULATIVE_PROBABILITY_LIMIT = 1 - 1e-9;
+        /** Binomial distribution number of trials. */
+        private static final int BINOM_N = 67;
+        /** Binomial distribution probability of success. */
+        private static final double BINOM_P = 0.7;
+        /** Geometric distribution probability of success. */
+        private static final double GEO_P = 0.2;
+        /** Poisson distribution mean. */
+        private static final double POISS_MEAN = 3.22;
+        /** Bimodal distribution mean 1. */
+        private static final double BIMOD_MEAN1 = 10;
+        /** Bimodal distribution mean 1. */
+        private static final double BIMOD_MEAN2 = 20;
 
         /**
          * The distribution.
@@ -275,7 +287,7 @@ public class EnumeratedDistributionSamplersPerformance {
         @Param({"Binomial_N67_P0.7",
                 "Geometric_P0.2",
                 "4SidedLoadedDie",
-                "Poisson_Mean3.14",
+                "Poisson_Mean3.22",
                 "Poisson_Mean10_Mean20",
                 })
         private String distribution;
@@ -284,13 +296,10 @@ public class EnumeratedDistributionSamplersPerformance {
         @Override
         protected double[] createProbabilities() {
             if ("Binomial_N67_P0.7".equals(distribution)) {
-                final int trials = 67;
-                final double probabilityOfSuccess = 0.7;
-                final BinomialDistribution dist = new BinomialDistribution(null, trials, probabilityOfSuccess);
-                return createProbabilities(dist, 0, trials);
+                final BinomialDistribution dist = new BinomialDistribution(null, BINOM_N, BINOM_P);
+                return createProbabilities(dist, 0, BINOM_N);
             } else if ("Geometric_P0.2".equals(distribution)) {
-                final double probabilityOfSuccess = 0.2;
-                final double probabilityOfFailure = 1 - probabilityOfSuccess;
+                final double probabilityOfFailure = 1 - GEO_P;
                 // https://en.wikipedia.org/wiki/Geometric_distribution
                 // PMF = (1-p)^k * p
                 // k is number of failures before a success
@@ -300,7 +309,7 @@ public class EnumeratedDistributionSamplersPerformance {
                 double sum = 0;
                 int k = 0;
                 while (k < probabilities.length) {
-                    probabilities[k] = p * probabilityOfSuccess;
+                    probabilities[k] = p * GEO_P;
                     sum += probabilities[k++];
                     if (sum > CUMULATIVE_PROBABILITY_LIMIT) {
                         break;
@@ -311,19 +320,16 @@ public class EnumeratedDistributionSamplersPerformance {
                 return Arrays.copyOf(probabilities, k);
             } else if ("4SidedLoadedDie".equals(distribution)) {
                 return new double[] {1.0 / 2, 1.0 / 3, 1.0 / 12, 1.0 / 12};
-            } else if ("Poisson_Mean3.14".equals(distribution)) {
-                final double mean = 3.14;
-                final IntegerDistribution dist = createPoissonDistribution(mean);
+            } else if ("Poisson_Mean3.22".equals(distribution)) {
+                final IntegerDistribution dist = createPoissonDistribution(POISS_MEAN);
                 final int max = dist.inverseCumulativeProbability(CUMULATIVE_PROBABILITY_LIMIT);
                 return createProbabilities(dist, 0, max);
             } else if ("Poisson_Mean10_Mean20".equals(distribution)) {
                 // Create a Bimodel using two Poisson distributions
-                final double mean1 = 10;
-                final double mean2 = 20;
-                final IntegerDistribution dist1 = createPoissonDistribution(mean2);
+                final IntegerDistribution dist1 = createPoissonDistribution(BIMOD_MEAN2);
                 final int max = dist1.inverseCumulativeProbability(CUMULATIVE_PROBABILITY_LIMIT);
                 final double[] p1 = createProbabilities(dist1, 0, max);
-                final double[] p2 = createProbabilities(createPoissonDistribution(mean1), 0, max);
+                final double[] p2 = createProbabilities(createPoissonDistribution(BIMOD_MEAN1), 0, max);
                 for (int i = 0; i < p1.length; i++) {
                     p1[i] += p2[i];
                 }
