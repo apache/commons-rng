@@ -46,14 +46,14 @@ public class AhrensDieterExponentialSampler
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
 
-    /**
-     * Initialize tables.
-     */
+    //
+    // Initialize tables.
+    //
     static {
-        /**
-         * Filling EXPONENTIAL_SA_QI table.
-         * Note that we don't want qi = 0 in the table.
-         */
+        //
+        // Filling EXPONENTIAL_SA_QI table.
+        // Note that we don't want qi = 0 in the table.
+        //
         final double ln2 = Math.log(2);
         double qi = 0;
 

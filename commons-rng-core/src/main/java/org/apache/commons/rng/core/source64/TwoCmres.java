@@ -228,13 +228,13 @@ public class TwoCmres extends LongProvider {
             /** List of good "Cmres" subcycle generators. */
             private static final List<Cmres> TABLE = new ArrayList<Cmres>();
 
-            /*
-             * Populates the table.
-             * It lists parameters known to be good (provided in
-             * the article referred to above).
-             * To maintain compatibility, new entries must be added
-             * only at the end of the table.
-             */
+            //
+            // Populates the table.
+            // It lists parameters known to be good (provided in
+            // the article referred to above).
+            // To maintain compatibility, new entries must be added
+            // only at the end of the table.
+            //
             static {
                 add(0xedce446814d3b3d9L, 33, 0x13b572e7);
                 add(0xc5b3cf786c806df7L, 33, 0x13c8e18a);
