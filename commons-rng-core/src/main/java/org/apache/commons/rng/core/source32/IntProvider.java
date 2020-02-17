@@ -85,8 +85,8 @@ public abstract class IntProvider
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        final int[] state = new int[] {booleanSource,
-                                       booleanBitMask};
+        final int[] state = {booleanSource,
+                             booleanBitMask};
         return composeStateInternal(NumberFactory.makeByteArray(state),
                                     super.getStateInternal());
     }

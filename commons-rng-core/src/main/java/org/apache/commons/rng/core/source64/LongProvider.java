@@ -101,10 +101,10 @@ public abstract class LongProvider
     @Override
     protected byte[] getStateInternal() {
         // Pack the boolean inefficiently as a long
-        final long[] state = new long[] {booleanSource,
-                                         booleanBitMask,
-                                         intSource,
-                                         cachedIntSource ? 1 : 0 };
+        final long[] state = {booleanSource,
+                              booleanBitMask,
+                              intSource,
+                              cachedIntSource ? 1 : 0 };
         return composeStateInternal(NumberFactory.makeByteArray(state),
                                     super.getStateInternal());
     }

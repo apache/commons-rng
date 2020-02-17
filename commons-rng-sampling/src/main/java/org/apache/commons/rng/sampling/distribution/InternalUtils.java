@@ -27,7 +27,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 final class InternalUtils { // Class is package-private on purpose; do not make it public.
     /** All long-representable factorials. */
-    private static final long[] FACTORIALS = new long[] {
+    private static final long[] FACTORIALS = {
         1L,                1L,                  2L,
         6L,                24L,                 120L,
         720L,              5040L,               40320L,
