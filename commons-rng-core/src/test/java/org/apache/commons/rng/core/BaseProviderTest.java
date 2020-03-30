@@ -81,7 +81,7 @@ public class BaseProviderTest {
     }
 
     /**
-     * Dummy class for checking the behaviour of the IntProvider. Tests:
+     * Dummy class for checking the behaviorof the IntProvider. Tests:
      * <ul>
      *  <li>an incomplete implementation</li>
      *  <li>{@code fillState} methods with "protected" access</li>

@@ -215,7 +215,7 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new long[] {
 
     []
 
-    In both cases, the behaviour is not standard but should not change between releases of the library
+    In both cases, the behavior is not standard but should not change between releases of the library
     (bugs notwithstanding).
 
     Each RNG implementation has a single "native" seed; when the seed argument passed

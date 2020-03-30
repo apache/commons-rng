@@ -76,7 +76,7 @@
 
   * As a concrete class, <<<java.util.Random>>> contains code tied to
     "implementation details"; it is hard to modify it without changing
-    long-established behaviour, even if it would be to fix a
+    long-established behavior, even if it would be to fix a
     {{{https://bugs.openjdk.java.net/browse/JDK-8154225}bug}}.
 
 
