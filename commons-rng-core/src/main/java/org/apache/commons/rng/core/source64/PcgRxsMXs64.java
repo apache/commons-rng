@@ -25,6 +25,10 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * <p>State size is 128 bits and the period is 2<sup>64</sup>.</p>
  *
+ * <p><strong>Note:</strong> Although the seed size is 128 bits, only the first 64 are
+ * effective: in effect, two seeds that only differ by the last 64 bits may produce
+ * highly correlated sequences.
+ *
  * @see <a href="http://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
@@ -54,6 +58,10 @@ public class PcgRxsMXs64 extends LongProvider {
 
     /**
      * Creates a new instance.
+     *
+     * <p><strong>Note:</strong> Although the seed size is 128 bits, only the first 64 are
+     * effective: in effect, two seeds that only differ by the last 64 bits may produce
+     * highly correlated sequences.
      *
      * @param seed Initial seed.
      * If the length is larger than 2, only the first 2 elements will

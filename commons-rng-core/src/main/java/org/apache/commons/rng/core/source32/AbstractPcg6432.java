@@ -23,8 +23,40 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * family that use an internal 64-bit Linear Congruential Generator (LCG) and output 32-bits
  * per cycle.
  *
+ * <h2>Note: PCG generators may exhibit massive stream correlation</h2>
+ *
+ * <p>Although the seed size is 128 bits, only the first 64 are effective: in effect,
+ * two seeds that only differ by the last 64 bits may produce highly correlated sequences.
+ *
+ * <p>Due to the use of an underlying linear congruential generator (LCG) alterations
+ * to the 128 bit seed have the following effect: the first 64-bits alter the
+ * generator state; the second 64 bits, with the exception of the most significant bit,
+ * which is discarded, choose between one of two alternative LCGs
+ * where the output of the chosen LCG is the same sequence except for an additive
+ * constant determined by the seed bits. The result is that seeds that differ
+ * only in the last 64-bits will have a 50% chance of producing highly correlated
+ * output sequences.
+
+ * <p>Consider using the fixed increment variant where the 64-bit seed sets the
+ * generator state.
+ *
+ * <p>For further information see:
+ * <ul>
+ *  <li>
+ *   <blockquote>
+ *    Durst, M.J. (1989) <i>Using Linear Congruential Generators For Parallel Random Number Generation.
+ *    Section 3.1: Different additive constants in a maximum potency congruential generator</i>.
+ *    1989 Winter Simulation Conference Proceedings, Washington, DC, USA, 1989, pp. 462-466.
+ *   </blockquote>
+ *  </li>
+ * </ul>
+ *
  * @see <a href="http://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
+ * @see <a href="https://ieeexplore.ieee.org/document/718715">Durst, M.J. (1989)
+ *  Using Linear Congruential Generators For Parallel Random Number Generation</a>
+ * @see <a href="https://issues.apache.org/jira/browse/RNG-123">
+ *  PCG generators may exhibit massive stream correlation</a>
  * @since 1.3
  */
 abstract class AbstractPcg6432 extends IntProvider {
