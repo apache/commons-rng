@@ -607,7 +607,7 @@ Running "svn up" will download *all* the files of the live web site at
               <enableRulesSummary>false</enableRulesSummary>
               <logViolationsToConsole>false</logViolationsToConsole>
               <failOnViolation>true</failOnViolation>
-              <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties</resourceExcludes>
+              <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
               <excludes>**/generated/**.java</excludes>
             </configuration>
             <executions>
