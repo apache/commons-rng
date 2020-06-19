@@ -24,7 +24,6 @@
     <version>1.4-SNAPSHOT</version>
   </parent>
 
-  <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-quadrature</artifactId>
   <version>1.4-SNAPSHOT</version>
   <name>Quadrature example</name>
