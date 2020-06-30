@@ -472,7 +472,7 @@ public class PoissonSamplerCacheTest {
         }
 
         final PoissonSamplerCache cache2 = cache.withRange(minMean2, maxMean2);
-        Assert.assertTrue("WithRange cache is the same object", cache != cache2);
+        Assert.assertNotSame("WithRange cache is the same object", cache, cache2);
 
         // Test all means in the test range (which may be different
         // from the cache range).

@@ -38,7 +38,7 @@ public final class RandomAssert {
     public static void assertProduceSameSequence(UniformRandomProvider rng1,
                                                  UniformRandomProvider rng2) {
         for (int i = 0; i < 54; i++) {
-            Assert.assertTrue(rng1.nextBoolean() == rng2.nextBoolean());
+            Assert.assertEquals(rng1.nextBoolean(), rng2.nextBoolean());
         }
         for (int i = 0; i < 23; i++) {
             Assert.assertEquals(rng1.nextInt(), rng2.nextInt());

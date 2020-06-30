@@ -223,25 +223,25 @@ public class ProvidersCommonParametricTest {
 
         // Discard a few more.
         final List<Number> listDiscard = makeList(n);
-        Assert.assertTrue(listDiscard.size() != 0);
-        Assert.assertFalse(listOrig.equals(listDiscard));
+        Assert.assertNotEquals(0, listDiscard.size());
+        Assert.assertNotEquals(listOrig, listDiscard);
 
         // Retrieve from serialized stream.
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
         final RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
-        Assert.assertTrue(stateOrig != stateNew);
+        Assert.assertNotSame(stateOrig, stateNew);
 
         // Reset.
         restorable.restoreState(stateNew);
 
         // Replay.
         final List<Number> listReplay = makeList(n);
-        Assert.assertFalse(listOrig == listReplay);
+        Assert.assertNotSame(listOrig, listReplay);
 
         // Check that the serialized data recreated the orginal state.
-        Assert.assertTrue(listOrig.equals(listReplay));
+        Assert.assertEquals(listOrig, listReplay);
     }
 
     @Test

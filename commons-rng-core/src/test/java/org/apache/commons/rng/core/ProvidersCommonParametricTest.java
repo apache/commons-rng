@@ -234,15 +234,15 @@ public class ProvidersCommonParametricTest {
         final List<Number> listOrig = makeList(n);
         // Discard a few more.
         final List<Number> listDiscard = makeList(n);
-        Assert.assertTrue(listDiscard.size() != 0);
-        Assert.assertFalse(listOrig.equals(listDiscard));
+        Assert.assertNotEquals(0, listDiscard.size());
+        Assert.assertNotEquals(listOrig, listDiscard);
         // Reset.
         generator.restoreState(state);
         // Replay.
         final List<Number> listReplay = makeList(n);
-        Assert.assertFalse(listOrig == listReplay);
+        Assert.assertNotSame(listOrig, listReplay);
         // Check that the restored state is the same as the original.
-        Assert.assertTrue(listOrig.equals(listReplay));
+        Assert.assertEquals(listOrig, listReplay);
     }
 
     @Test(expected = IllegalStateException.class)
