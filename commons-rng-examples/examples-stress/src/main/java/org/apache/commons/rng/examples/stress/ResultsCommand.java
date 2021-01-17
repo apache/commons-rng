@@ -1025,7 +1025,7 @@ class ResultsCommand implements Callable<Void> {
                                                  .collect(Collectors.joining(", "));
                         // Summarise the failures across all tests
                         final String summary = getFailuresSummary(testResults);
-                        if (summary.length() != 0) {
+                        if (!summary.isEmpty()) {
                             // Identify RNGs with no systematic failures
                             highlight = false;
                             if (showFailedTests) {
