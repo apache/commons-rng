@@ -38,9 +38,9 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @param standardDeviation Standard deviation of the Gaussian distribution.
      * @throws IllegalArgumentException if {@code standardDeviation <= 0}
      */
-    public GaussianSampler(NormalizedGaussianSampler normalized,
-                           double mean,
-                           double standardDeviation) {
+    public GaussianSampler(final NormalizedGaussianSampler normalized,
+                           final double mean,
+                           final double standardDeviation) {
         if (standardDeviation <= 0) {
             throw new IllegalArgumentException(
                 "standard deviation is not strictly positive: " + standardDeviation);
@@ -54,8 +54,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private GaussianSampler(UniformRandomProvider rng,
-                            GaussianSampler source) {
+    private GaussianSampler(final UniformRandomProvider rng,
+                            final GaussianSampler source) {
         this.mean = source.mean;
         this.standardDeviation = source.standardDeviation;
         this.normalized = InternalUtils.newNormalizedGaussianSampler(source.normalized, rng);
@@ -87,7 +87,7 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new GaussianSampler(rng, this);
     }
 
@@ -106,9 +106,9 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(NormalizedGaussianSampler normalized,
-                                                  double mean,
-                                                  double standardDeviation) {
+    public static SharedStateContinuousSampler of(final NormalizedGaussianSampler normalized,
+                                                  final double mean,
+                                                  final double standardDeviation) {
         return new GaussianSampler(normalized, mean, standardDeviation);
     }
 }

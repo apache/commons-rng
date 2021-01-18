@@ -46,8 +46,8 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
      * A shallow copy will be stored in this instance.
      * @throws IllegalArgumentException If {@code dimension <= 0}
      */
-    public UnitSphereSampler(int dimension,
-                             UniformRandomProvider rng) {
+    public UnitSphereSampler(final int dimension,
+                             final UniformRandomProvider rng) {
         if (dimension <= 0) {
             throw new IllegalArgumentException("Dimension must be strictly positive");
         }
@@ -60,8 +60,8 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
      * @param rng Generator for the individual components of the vectors.
      * @param source Source to copy.
      */
-    private UnitSphereSampler(UniformRandomProvider rng,
-                              UnitSphereSampler source) {
+    private UnitSphereSampler(final UniformRandomProvider rng,
+                              final UnitSphereSampler source) {
         // The Gaussian sampler has no shared state so create a new instance
         sampler = new ZigguratNormalizedGaussianSampler(rng);
         dimension = source.dimension;
@@ -105,7 +105,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
      * @since 1.3
      */
     @Override
-    public UnitSphereSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public UnitSphereSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new UnitSphereSampler(rng, this);
     }
 }

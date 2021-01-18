@@ -37,14 +37,14 @@ public class BoxMullerNormalizedGaussianSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    public BoxMullerNormalizedGaussianSampler(UniformRandomProvider rng) {
+    public BoxMullerNormalizedGaussianSampler(final UniformRandomProvider rng) {
         this.rng = rng;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        double random;
+        final double random;
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 
@@ -82,7 +82,7 @@ public class BoxMullerNormalizedGaussianSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new BoxMullerNormalizedGaussianSampler(rng);
     }
 
@@ -96,7 +96,7 @@ public class BoxMullerNormalizedGaussianSampler
      */
     @SuppressWarnings("unchecked")
     public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S
-            of(UniformRandomProvider rng) {
+            of(final UniformRandomProvider rng) {
         return (S) new BoxMullerNormalizedGaussianSampler(rng);
     }
 }

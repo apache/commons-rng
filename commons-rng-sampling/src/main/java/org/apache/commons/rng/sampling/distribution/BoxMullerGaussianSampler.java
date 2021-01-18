@@ -48,9 +48,9 @@ public class BoxMullerGaussianSampler
      * @param standardDeviation Standard deviation of the Gaussian distribution.
      * @throws IllegalArgumentException if {@code standardDeviation <= 0}
      */
-    public BoxMullerGaussianSampler(UniformRandomProvider rng,
-                                    double mean,
-                                    double standardDeviation) {
+    public BoxMullerGaussianSampler(final UniformRandomProvider rng,
+                                    final double mean,
+                                    final double standardDeviation) {
         super(null);
         if (standardDeviation <= 0) {
             throw new IllegalArgumentException("standard deviation is not strictly positive: " +
@@ -64,7 +64,7 @@ public class BoxMullerGaussianSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        double random;
+        final double random;
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 

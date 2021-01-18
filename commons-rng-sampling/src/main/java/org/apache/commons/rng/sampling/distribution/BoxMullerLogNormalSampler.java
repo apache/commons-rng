@@ -42,9 +42,9 @@ public class BoxMullerLogNormalSampler
      * @param shape Shape of the log-normal distribution.
      * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
      */
-    public BoxMullerLogNormalSampler(UniformRandomProvider rng,
-                                     double scale,
-                                     double shape) {
+    public BoxMullerLogNormalSampler(final UniformRandomProvider rng,
+                                     final double scale,
+                                     final double shape) {
         super(null);
         sampler = LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(rng),
                                       scale, shape);

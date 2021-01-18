@@ -43,7 +43,7 @@ public class RandomProviderDefaultState implements RandomProviderState {
      * {@link org.apache.commons.rng.UniformRandomProvider} needs in order
      * to reset its internal state.
      */
-    public RandomProviderDefaultState(byte[] state) {
+    public RandomProviderDefaultState(final byte[] state) {
         this.state = Arrays.copyOf(state, state.length);
     }
 

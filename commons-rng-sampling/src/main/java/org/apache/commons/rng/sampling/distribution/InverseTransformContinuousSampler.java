@@ -67,8 +67,8 @@ public class InverseTransformContinuousSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param function Inverse cumulative probability function.
      */
-    public InverseTransformContinuousSampler(UniformRandomProvider rng,
-                                             ContinuousInverseCumulativeProbabilityFunction function) {
+    public InverseTransformContinuousSampler(final UniformRandomProvider rng,
+                                             final ContinuousInverseCumulativeProbabilityFunction function) {
         super(null);
         this.rng = rng;
         this.function = function;
@@ -95,7 +95,7 @@ public class InverseTransformContinuousSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new InverseTransformContinuousSampler(rng, function);
     }
 
@@ -112,8 +112,8 @@ public class InverseTransformContinuousSampler
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  ContinuousInverseCumulativeProbabilityFunction function) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final ContinuousInverseCumulativeProbabilityFunction function) {
         return new InverseTransformContinuousSampler(rng, function);
     }
 }

@@ -57,9 +57,9 @@ public class RejectionInversionZipfSampler
      * @throws IllegalArgumentException if {@code numberOfElements <= 0}
      * or {@code exponent <= 0}.
      */
-    public RejectionInversionZipfSampler(UniformRandomProvider rng,
-                                         int numberOfElements,
-                                         double exponent) {
+    public RejectionInversionZipfSampler(final UniformRandomProvider rng,
+                                         final int numberOfElements,
+                                         final double exponent) {
         super(null);
         this.rng = rng;
         if (numberOfElements <= 0) {
@@ -80,8 +80,8 @@ public class RejectionInversionZipfSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private RejectionInversionZipfSampler(UniformRandomProvider rng,
-                                          RejectionInversionZipfSampler source) {
+    private RejectionInversionZipfSampler(final UniformRandomProvider rng,
+                                          final RejectionInversionZipfSampler source) {
         super(null);
         this.rng = rng;
         this.numberOfElements = source.numberOfElements;
@@ -198,7 +198,7 @@ public class RejectionInversionZipfSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new RejectionInversionZipfSampler(rng, this);
     }
 
@@ -213,9 +213,9 @@ public class RejectionInversionZipfSampler
      * {@code exponent <= 0}.
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                int numberOfElements,
-                                                double exponent) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final int numberOfElements,
+                                                final double exponent) {
         return new RejectionInversionZipfSampler(rng, numberOfElements, exponent);
     }
 

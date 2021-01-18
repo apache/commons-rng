@@ -46,8 +46,8 @@ public class CollectionSampler<T> implements SharedStateSampler<CollectionSample
      * A (shallow) copy will be stored in the created instance.
      * @throws IllegalArgumentException if {@code collection} is empty.
      */
-    public CollectionSampler(UniformRandomProvider rng,
-                             Collection<T> collection) {
+    public CollectionSampler(final UniformRandomProvider rng,
+                             final Collection<T> collection) {
         if (collection.isEmpty()) {
             throw new IllegalArgumentException("Empty collection");
         }
@@ -60,8 +60,8 @@ public class CollectionSampler<T> implements SharedStateSampler<CollectionSample
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private CollectionSampler(UniformRandomProvider rng,
-                              CollectionSampler<T> source) {
+    private CollectionSampler(final UniformRandomProvider rng,
+                              final CollectionSampler<T> source) {
         this.rng = rng;
         items = source.items;
     }
@@ -83,7 +83,7 @@ public class CollectionSampler<T> implements SharedStateSampler<CollectionSample
      * @since 1.3
      */
     @Override
-    public CollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
+    public CollectionSampler<T> withUniformRandomProvider(final UniformRandomProvider rng) {
         return new CollectionSampler<T>(rng, this);
     }
 }

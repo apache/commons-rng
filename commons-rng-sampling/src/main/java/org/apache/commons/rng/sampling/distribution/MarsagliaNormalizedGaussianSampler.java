@@ -39,7 +39,7 @@ public class MarsagliaNormalizedGaussianSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    public MarsagliaNormalizedGaussianSampler(UniformRandomProvider rng) {
+    public MarsagliaNormalizedGaussianSampler(final UniformRandomProvider rng) {
         this.rng = rng;
     }
 
@@ -91,7 +91,7 @@ public class MarsagliaNormalizedGaussianSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new MarsagliaNormalizedGaussianSampler(rng);
     }
 
@@ -105,7 +105,7 @@ public class MarsagliaNormalizedGaussianSampler
      */
     @SuppressWarnings("unchecked")
     public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S
-            of(UniformRandomProvider rng) {
+            of(final UniformRandomProvider rng) {
         return (S) new MarsagliaNormalizedGaussianSampler(rng);
     }
 }

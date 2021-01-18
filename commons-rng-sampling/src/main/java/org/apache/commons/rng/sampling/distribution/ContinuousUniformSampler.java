@@ -40,9 +40,9 @@ public class ContinuousUniformSampler
      * @param lo Lower bound.
      * @param hi Higher bound.
      */
-    public ContinuousUniformSampler(UniformRandomProvider rng,
-                                    double lo,
-                                    double hi) {
+    public ContinuousUniformSampler(final UniformRandomProvider rng,
+                                    final double lo,
+                                    final double hi) {
         super(null);
         this.rng = rng;
         this.lo = lo;
@@ -68,7 +68,7 @@ public class ContinuousUniformSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new ContinuousUniformSampler(rng, lo, hi);
     }
 
@@ -81,9 +81,9 @@ public class ContinuousUniformSampler
      * @return the sampler
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  double lo,
-                                                  double hi) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final double lo,
+                                                  final double hi) {
         return new ContinuousUniformSampler(rng, lo, hi);
     }
 }

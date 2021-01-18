@@ -26,7 +26,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
 public class LongArray2IntArray implements SeedConverter<long[], int[]> {
     /** {@inheritDoc} */
     @Override
-    public int[] convert(long[] seed) {
+    public int[] convert(final long[] seed) {
         final int[] out = new int[seed.length * 2];
         for (int i = 0; i < seed.length; i++) {
             final long current = seed[i];

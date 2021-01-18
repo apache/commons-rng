@@ -65,7 +65,7 @@ public final class GeometricSampler {
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             // No requirement for a new instance
             return this;
         }
@@ -86,7 +86,7 @@ public final class GeometricSampler {
          * @param probabilityOfSuccess The probability of success (must be in the range
          * {@code [0 < probabilityOfSuccess < 1]})
          */
-        GeometricExponentialSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
+        GeometricExponentialSampler(final UniformRandomProvider rng, final double probabilityOfSuccess) {
             this.rng = rng;
             // Use a related exponential distribution:
             // λ = −ln(1 − probabilityOfSuccess)
@@ -106,7 +106,7 @@ public final class GeometricSampler {
          * @param rng Generator of uniformly distributed random numbers
          * @param source Source to copy.
          */
-        GeometricExponentialSampler(UniformRandomProvider rng, GeometricExponentialSampler source) {
+        GeometricExponentialSampler(final UniformRandomProvider rng, final GeometricExponentialSampler source) {
             this.rng = rng;
             exponentialSampler = source.exponentialSampler.withUniformRandomProvider(rng);
         }
@@ -123,7 +123,7 @@ public final class GeometricSampler {
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new GeometricExponentialSampler(rng, this);
         }
     }
@@ -142,8 +142,8 @@ public final class GeometricSampler {
      * @throws IllegalArgumentException if {@code probabilityOfSuccess} is not in the range
      * {@code [0 < probabilityOfSuccess <= 1]})
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double probabilityOfSuccess) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double probabilityOfSuccess) {
         if (probabilityOfSuccess <= 0 || probabilityOfSuccess > 1) {
             throw new IllegalArgumentException(
                 "Probability of success (p) must be in the range [0 < p <= 1]: " +

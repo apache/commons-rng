@@ -67,9 +67,9 @@ public final class GuideTableDiscreteSampler
      * @param cumulativeProbabilities The cumulative probability table ({@code f(x)}).
      * @param guideTable The inverse cumulative probability guide table.
      */
-    private GuideTableDiscreteSampler(UniformRandomProvider rng,
-                                      double[] cumulativeProbabilities,
-                                      int[] guideTable) {
+    private GuideTableDiscreteSampler(final UniformRandomProvider rng,
+                                      final double[] cumulativeProbabilities,
+                                      final int[] guideTable) {
         this.rng = rng;
         this.cumulativeProbabilities = cumulativeProbabilities;
         this.guideTable = guideTable;
@@ -105,7 +105,7 @@ public final class GuideTableDiscreteSampler
 
     /** {@inheritDoc} */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new GuideTableDiscreteSampler(rng, cumulativeProbabilities, guideTable);
     }
 
@@ -123,8 +123,8 @@ public final class GuideTableDiscreteSampler
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double[] probabilities) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double[] probabilities) {
         return of(rng, probabilities, DEFAULT_ALPHA);
     }
 
@@ -143,9 +143,9 @@ public final class GuideTableDiscreteSampler
      * probability is negative, infinite or {@code NaN}, the sum of all
      * probabilities is not strictly positive, or {@code alpha} is not strictly positive.
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double[] probabilities,
-                                                double alpha) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double[] probabilities,
+                                                final double alpha) {
         validateParameters(probabilities, alpha);
 
         final int size = probabilities.length;
@@ -205,7 +205,7 @@ public final class GuideTableDiscreteSampler
      * @throws IllegalArgumentException if {@code probabilities} is null or empty, or
      * {@code alpha} is not strictly positive.
      */
-    private static void validateParameters(double[] probabilities, double alpha) {
+    private static void validateParameters(final double[] probabilities, final double alpha) {
         if (probabilities == null || probabilities.length == 0) {
             throw new IllegalArgumentException("Probabilities must not be empty.");
         }
@@ -222,7 +222,7 @@ public final class GuideTableDiscreteSampler
      * @param tableLength Table length.
      * @return the guide table index.
      */
-    private static int getGuideTableIndex(double p, int tableLength) {
+    private static int getGuideTableIndex(final double p, final int tableLength) {
         // Note: This is only ever called when p is in the range of the cumulative
         // probability table. So assume 0 <= p <= 1.
         return (int) (p * (tableLength - 1));

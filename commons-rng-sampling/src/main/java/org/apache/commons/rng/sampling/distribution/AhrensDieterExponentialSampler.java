@@ -68,8 +68,8 @@ public class AhrensDieterExponentialSampler
      * @param mean Mean of this distribution.
      * @throws IllegalArgumentException if {@code mean <= 0}
      */
-    public AhrensDieterExponentialSampler(UniformRandomProvider rng,
-                                          double mean) {
+    public AhrensDieterExponentialSampler(final UniformRandomProvider rng,
+                                          final double mean) {
         super(null);
         if (mean <= 0) {
             throw new IllegalArgumentException("mean is not strictly positive: " + mean);
@@ -82,8 +82,8 @@ public class AhrensDieterExponentialSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private AhrensDieterExponentialSampler(UniformRandomProvider rng,
-                                           AhrensDieterExponentialSampler source) {
+    private AhrensDieterExponentialSampler(final UniformRandomProvider rng,
+                                           final AhrensDieterExponentialSampler source) {
         super(null);
         this.rng = rng;
         this.mean = source.mean;
@@ -142,7 +142,7 @@ public class AhrensDieterExponentialSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new AhrensDieterExponentialSampler(rng, this);
     }
 
@@ -155,8 +155,8 @@ public class AhrensDieterExponentialSampler
      * @throws IllegalArgumentException if {@code mean <= 0}
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  double mean) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final double mean) {
         return new AhrensDieterExponentialSampler(rng, mean);
     }
 }

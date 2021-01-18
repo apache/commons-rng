@@ -82,7 +82,7 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
      * @param x Argument.
      * @return \( \ln \Gamma(x) \), or {@code NaN} if {@code x <= 0}.
      */
-    public static double logGamma(double x) {
+    public static double logGamma(final double x) {
         // Stripped-down version of the same method defined in "Commons Math":
         // Unused "if" branches (for when x < 8) have been removed here since
         // this method is only used (by class "InternalUtils") in order to

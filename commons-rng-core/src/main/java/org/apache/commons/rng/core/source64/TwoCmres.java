@@ -56,9 +56,9 @@ public class TwoCmres extends LongProvider {
      * @param y Second subcycle generator.
      * @throws IllegalArgumentException if {@code x == y}.
      */
-    private TwoCmres(int seed,
-                     Cmres x,
-                     Cmres y) {
+    private TwoCmres(final int seed,
+                     final Cmres x,
+                     final Cmres y) {
         if (x.equals(y)) {
             throw new IllegalArgumentException("Subcycle generators must be different");
         }
@@ -72,7 +72,7 @@ public class TwoCmres extends LongProvider {
      *
      * @param seed Seed.
      */
-    public TwoCmres(Integer seed) {
+    public TwoCmres(final Integer seed) {
         this(seed, 0, 1);
     }
 
@@ -88,9 +88,9 @@ public class TwoCmres extends LongProvider {
      * @throws IndexOutOfBoundsException if {@code j < 0} or
      * {@code j >= numberOfSubcycleGenerators()}.
      */
-    public TwoCmres(Integer seed,
-                    int i,
-                    int j) {
+    public TwoCmres(final Integer seed,
+                    final int i,
+                    final int j) {
         this(seed, FACTORY.get(i), FACTORY.get(j));
     }
 
@@ -125,7 +125,7 @@ public class TwoCmres extends LongProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, 16);
 
         final long[] state = NumberFactory.makeLongArray(c[0]);
@@ -138,7 +138,7 @@ public class TwoCmres extends LongProvider {
     /**
      * @param seed Seed.
      */
-    private void setSeedInternal(int seed) {
+    private void setSeedInternal(final int seed) {
         // The seeding procedure consists in going away from some
         // point known to be in the cycle.
         // The total number of calls to the "transform" method will
@@ -182,9 +182,9 @@ public class TwoCmres extends LongProvider {
          * @param rotate Positive number. Must be in {@code [0, 64]}.
          * @param start Cycle start.
          */
-        Cmres(long multiply,
-              int rotate,
-              int start) {
+        Cmres(final long multiply,
+              final int rotate,
+              final int start) {
             this.multiply = multiply;
             this.rotate = rotate;
             this.start = start;
@@ -215,7 +215,7 @@ public class TwoCmres extends LongProvider {
          * @param state Current state.
          * @return the new state.
          */
-        long transform(long state) {
+        long transform(final long state) {
             long s = state;
             s *= multiply;
             s = Long.rotateLeft(s, rotate);
@@ -264,7 +264,7 @@ public class TwoCmres extends LongProvider {
              * @param index Index into the list of available generators.
              * @return the subcycle generator entry at index {@code index}.
              */
-            Cmres get(int index) {
+            Cmres get(final int index) {
                 if (index < 0 ||
                     index >= TABLE.size()) {
                     throw new IndexOutOfBoundsException("Out of interval [0, " +
@@ -281,9 +281,9 @@ public class TwoCmres extends LongProvider {
              * @param rotate Rotate.
              * @param start Cycle start.
              */
-            private static void add(long multiply,
-                                    int rotate,
-                                    int start) {
+            private static void add(final long multiply,
+                                    final int rotate,
+                                    final int start) {
                 // Sanity check: if there are duplicates, the class initialization
                 // will fail (and the JVM will report "NoClassDefFoundError").
                 checkUnique(TABLE, multiply);
@@ -298,7 +298,7 @@ public class TwoCmres extends LongProvider {
              * @param table the table
              * @param multiply the multiply parameter
              */
-            static void checkUnique(List<Cmres> table, long multiply) {
+            static void checkUnique(final List<Cmres> table, final long multiply) {
                 for (final Cmres sg : table) {
                     if (multiply == sg.getMultiply()) {
                         throw new IllegalStateException(INTERNAL_ERROR_MSG);

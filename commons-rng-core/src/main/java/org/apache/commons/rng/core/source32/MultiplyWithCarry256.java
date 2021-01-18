@@ -54,7 +54,7 @@ public class MultiplyWithCarry256 extends IntProvider {
      * be used; if smaller, the remaining elements will be automatically
      * set.
      */
-    public MultiplyWithCarry256(int[] seed) {
+    public MultiplyWithCarry256(final int[] seed) {
         setSeedInternal(seed);
     }
 
@@ -71,7 +71,7 @@ public class MultiplyWithCarry256 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (SEED_SIZE + 1) * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(c[0]);
@@ -88,7 +88,7 @@ public class MultiplyWithCarry256 extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(int[] seed) {
+    private void setSeedInternal(final int[] seed) {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
         final int[] tmp = new int[SEED_SIZE];

@@ -82,7 +82,7 @@ public class MiddleSquareWeylSequence extends IntProvider {
      * If the length is larger than 3, only the first 3 elements will
      * be used; if smaller, the remaining elements will be automatically set.
      */
-    public MiddleSquareWeylSequence(long[] seed) {
+    public MiddleSquareWeylSequence(final long[] seed) {
         if (seed.length < SEED_SIZE) {
             // Complete the seed with a default to avoid
             // low complexity Weyl increments.
@@ -99,7 +99,7 @@ public class MiddleSquareWeylSequence extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(final long[] seed) {
         x = seed[0];
         w = seed[1];
         // Ensure the increment is odd to provide a maximal period Weyl sequence.
@@ -115,7 +115,7 @@ public class MiddleSquareWeylSequence extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] state) {
+    protected void setStateInternal(final byte[] state) {
         final byte[][] c = splitStateInternal(state, SEED_SIZE * 8);
         setSeedInternal(NumberFactory.makeLongArray(c[0]));
         super.setStateInternal(c[1]);

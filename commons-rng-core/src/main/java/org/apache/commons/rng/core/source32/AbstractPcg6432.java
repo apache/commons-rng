@@ -77,7 +77,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      * @param seed Initial state.
      * @since 1.4
      */
-    AbstractPcg6432(Long seed) {
+    AbstractPcg6432(final Long seed) {
         increment = DEFAULT_INCREMENT;
         state = bump(seed + this.increment);
     }
@@ -93,7 +93,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      * to set the LCG increment; the most significant bit
      * is discarded by left shift and the increment is set to odd.</p>
      */
-    AbstractPcg6432(long[] seed) {
+    AbstractPcg6432(final long[] seed) {
         if (seed.length < SEED_SIZE) {
             final long[] tmp = new long[SEED_SIZE];
             fillState(tmp, seed);
@@ -108,7 +108,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(final long[] seed) {
         // Ensure the increment is odd to provide a maximal period LCG.
         this.increment = (seed[1] << 1) | 1;
         this.state = bump(seed[0] + this.increment);
@@ -120,7 +120,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      * @param input Current state.
      * @return next state
      */
-    private long bump(long input) {
+    private long bump(final long input) {
         return input * 6364136223846793005L + increment;
     }
 
@@ -154,7 +154,7 @@ abstract class AbstractPcg6432 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 8);
         final long[] tempseed = NumberFactory.makeLongArray(c[0]);
         state = tempseed[0];

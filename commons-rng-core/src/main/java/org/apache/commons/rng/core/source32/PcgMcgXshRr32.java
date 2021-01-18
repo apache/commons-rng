@@ -33,13 +33,13 @@ public class PcgMcgXshRr32 extends AbstractPcgMcg6432 {
      *
      * @param seed Initial seed.
      */
-    public PcgMcgXshRr32(Long seed) {
+    public PcgMcgXshRr32(final Long seed) {
         super(seed);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected int transform(long x) {
+    protected int transform(final long x) {
         final int count = (int)(x >>> 59);
         return Integer.rotateRight((int)((x ^ (x >>> 18)) >>> 27), count);
     }

@@ -61,7 +61,7 @@ final class SeedUtils {
         /**
          * @param rng Source of randomness.
          */
-        UnsignedByteProvider(UniformRandomProvider rng) {
+        UnsignedByteProvider(final UniformRandomProvider rng) {
             this.rng = rng;
         }
 
@@ -96,7 +96,7 @@ final class SeedUtils {
      * @param rng Source of randomness.
      * @return hex digit permutation.
      */
-    static int createIntHexPermutation(UniformRandomProvider rng) {
+    static int createIntHexPermutation(final UniformRandomProvider rng) {
         final UnsignedByteProvider provider = new UnsignedByteProvider(rng);
         return createUpperBitsHexPermutation(provider);
     }
@@ -108,7 +108,7 @@ final class SeedUtils {
      * @param rng Source of randomness.
      * @return hex digit permutation.
      */
-    static long createLongHexPermutation(UniformRandomProvider rng) {
+    static long createLongHexPermutation(final UniformRandomProvider rng) {
         final UnsignedByteProvider provider = new UnsignedByteProvider(rng);
         // Extract upper bits and combine with a second sample
         return NumberFactory.makeLong(createUpperBitsHexPermutation(provider),
@@ -121,7 +121,7 @@ final class SeedUtils {
      * @param provider Source of randomness.
      * @return hex digit permutation.
      */
-    private static int createUpperBitsHexPermutation(UnsignedByteProvider provider) {
+    private static int createUpperBitsHexPermutation(final UnsignedByteProvider provider) {
         // Compute a Fisher-Yates shuffle in-place on the 16 hex digits.
         // Each digit is chosen uniformly from the remaining digits.
         // The value is swapped with the current digit.
@@ -174,7 +174,7 @@ final class SeedUtils {
      * @see <a href="https://arxiv.org/abs/1805.10941">
      * Lemire (2019): Fast Random Integer Generation in an Interval</a>
      */
-    private static int nextUnsignedByteInRange(UnsignedByteProvider provider, int threshold, int n) {
+    private static int nextUnsignedByteInRange(final UnsignedByteProvider provider, final int threshold, final int n) {
         // Rejection method using multiply by a fraction:
         // n * [0, 2^8 - 1)
         //     ------------
@@ -202,7 +202,7 @@ final class SeedUtils {
      * @param lower Lower index.
      * @return Updated bits.
      */
-    private static int copyToOutput(byte[] digits, int bits, int upper, int lower) {
+    private static int copyToOutput(final byte[] digits, final int bits, final int upper, final int lower) {
         // Move the existing bits up and append the next hex digit.
         // This is equivalent to swapping lower to upper.
         final int newbits = bits << 4 | digits[lower] & 0xf;

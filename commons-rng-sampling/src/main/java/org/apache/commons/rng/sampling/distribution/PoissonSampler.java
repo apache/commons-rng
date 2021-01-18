@@ -71,8 +71,8 @@ public class PoissonSampler
      * @throws IllegalArgumentException if {@code mean <= 0} or
      * {@code mean >} {@link Integer#MAX_VALUE}.
      */
-    public PoissonSampler(UniformRandomProvider rng,
-                          double mean) {
+    public PoissonSampler(final UniformRandomProvider rng,
+                          final double mean) {
         super(null);
 
         // Delegate all work to specialised samplers.
@@ -97,7 +97,7 @@ public class PoissonSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         // Direct return of the optimised sampler
         return poissonSamplerDelegate.withUniformRandomProvider(rng);
     }
@@ -112,8 +112,8 @@ public class PoissonSampler
      * {@link Integer#MAX_VALUE}.
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double mean) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double mean) {
         // Each sampler should check the input arguments.
         return mean < PIVOT ?
             SmallMeanPoissonSampler.of(rng, mean) :

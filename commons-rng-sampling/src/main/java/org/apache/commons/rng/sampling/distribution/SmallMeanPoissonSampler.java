@@ -58,8 +58,8 @@ public class SmallMeanPoissonSampler
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}
      */
-    public SmallMeanPoissonSampler(UniformRandomProvider rng,
-                                   double mean) {
+    public SmallMeanPoissonSampler(final UniformRandomProvider rng,
+                                   final double mean) {
         this.rng = rng;
         if (mean <= 0) {
             throw new IllegalArgumentException("mean is not strictly positive: " + mean);
@@ -78,8 +78,8 @@ public class SmallMeanPoissonSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private SmallMeanPoissonSampler(UniformRandomProvider rng,
-                                    SmallMeanPoissonSampler source) {
+    private SmallMeanPoissonSampler(final UniformRandomProvider rng,
+                                    final SmallMeanPoissonSampler source) {
         this.rng = rng;
         p0 = source.p0;
         limit = source.limit;
@@ -114,7 +114,7 @@ public class SmallMeanPoissonSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new SmallMeanPoissonSampler(rng, this);
     }
 
@@ -127,8 +127,8 @@ public class SmallMeanPoissonSampler
      * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}.
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double mean) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double mean) {
         return new SmallMeanPoissonSampler(rng, mean);
     }
 }

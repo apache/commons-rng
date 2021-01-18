@@ -42,7 +42,7 @@ public class JenkinsSmallFast32 extends IntProvider {
      *
      * @param seed Initial seed.
      */
-    public JenkinsSmallFast32(Integer seed) {
+    public JenkinsSmallFast32(final Integer seed) {
         setSeedInternal(seed);
     }
 
@@ -51,7 +51,7 @@ public class JenkinsSmallFast32 extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(int seed) {
+    private void setSeedInternal(final int seed) {
         a = 0xf1ea5eed;
         b = c = d = seed;
         for (int i = 0; i < 20; i++) {
@@ -79,7 +79,7 @@ public class JenkinsSmallFast32 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] parts = splitStateInternal(s, 4 * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(parts[0]);

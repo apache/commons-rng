@@ -93,7 +93,7 @@ public class MersenneTwister64 extends LongProvider {
      *
      * @param seed Initial seed.
      */
-    public MersenneTwister64(long[] seed) {
+    public MersenneTwister64(final long[] seed) {
         setSeedInternal(seed);
     }
 
@@ -109,7 +109,7 @@ public class MersenneTwister64 extends LongProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (NN + 1) * 8);
 
         final long[] tmp = NumberFactory.makeLongArray(c[0]);
@@ -124,7 +124,7 @@ public class MersenneTwister64 extends LongProvider {
      *
      * @param inputSeed Initial seed.
      */
-    private void setSeedInternal(long[] inputSeed) {
+    private void setSeedInternal(final long[] inputSeed) {
         // Accept empty seed.
         final long[] seed = (inputSeed.length == 0) ? new long[1] : inputSeed;
 
@@ -163,7 +163,7 @@ public class MersenneTwister64 extends LongProvider {
      *
      * @param seed Seed.
      */
-    private void initState(long seed) {
+    private void initState(final long seed) {
         mt[0] = seed;
         for (mti = 1; mti < NN; mti++) {
             final long mm1 = mt[mti - 1];

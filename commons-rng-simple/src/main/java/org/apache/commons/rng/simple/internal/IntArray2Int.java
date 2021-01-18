@@ -24,7 +24,7 @@ package org.apache.commons.rng.simple.internal;
 public class IntArray2Int implements SeedConverter<int[], Integer> {
     /** {@inheritDoc} */
     @Override
-    public Integer convert(int[] seed) {
+    public Integer convert(final int[] seed) {
         int out = 0;
         for (final int s : seed) {
             out ^= s;

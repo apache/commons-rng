@@ -68,7 +68,7 @@ public class DiscreteUniformSampler
         /**
          * @param rng Generator of uniformly distributed random numbers.
          */
-        AbstractDiscreteUniformSampler(UniformRandomProvider rng) {
+        AbstractDiscreteUniformSampler(final UniformRandomProvider rng) {
             this.rng = rng;
         }
 
@@ -90,8 +90,8 @@ public class DiscreteUniformSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param value The value.
          */
-        FixedDiscreteUniformSampler(UniformRandomProvider rng,
-                                    int value) {
+        FixedDiscreteUniformSampler(final UniformRandomProvider rng,
+                                    final int value) {
             super(rng);
             this.value = value;
         }
@@ -102,7 +102,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             // No requirement for the RNG
             return this;
         }
@@ -125,8 +125,8 @@ public class DiscreteUniformSampler
          * @param range Maximum range of the sample (exclusive).
          * Must be a power of 2 greater than 2^0.
          */
-        PowerOf2RangeDiscreteUniformSampler(UniformRandomProvider rng,
-                                            int range) {
+        PowerOf2RangeDiscreteUniformSampler(final UniformRandomProvider rng,
+                                            final int range) {
             super(rng);
             this.shift = Integer.numberOfLeadingZeros(range) + 1;
         }
@@ -135,8 +135,8 @@ public class DiscreteUniformSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        PowerOf2RangeDiscreteUniformSampler(UniformRandomProvider rng,
-                                            PowerOf2RangeDiscreteUniformSampler source) {
+        PowerOf2RangeDiscreteUniformSampler(final UniformRandomProvider rng,
+                                            final PowerOf2RangeDiscreteUniformSampler source) {
             super(rng);
             this.shift = source.shift;
         }
@@ -150,7 +150,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new PowerOf2RangeDiscreteUniformSampler(rng, this);
         }
     }
@@ -181,8 +181,8 @@ public class DiscreteUniformSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
          */
-        SmallRangeDiscreteUniformSampler(UniformRandomProvider rng,
-                                         int range) {
+        SmallRangeDiscreteUniformSampler(final UniformRandomProvider rng,
+                                         final int range) {
             super(rng);
             // Handle range as an unsigned 32-bit integer
             this.n = range & 0xffffffffL;
@@ -194,8 +194,8 @@ public class DiscreteUniformSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        SmallRangeDiscreteUniformSampler(UniformRandomProvider rng,
-                                         SmallRangeDiscreteUniformSampler source) {
+        SmallRangeDiscreteUniformSampler(final UniformRandomProvider rng,
+                                         final SmallRangeDiscreteUniformSampler source) {
             super(rng);
             this.n = source.n;
             this.threshold = source.threshold;
@@ -229,7 +229,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new SmallRangeDiscreteUniformSampler(rng, this);
         }
     }
@@ -250,9 +250,9 @@ public class DiscreteUniformSampler
          * @param lower Lower bound (inclusive) of the distribution.
          * @param upper Upper bound (inclusive) of the distribution.
          */
-        LargeRangeDiscreteUniformSampler(UniformRandomProvider rng,
-                                         int lower,
-                                         int upper) {
+        LargeRangeDiscreteUniformSampler(final UniformRandomProvider rng,
+                                         final int lower,
+                                         final int upper) {
             super(rng);
             this.lower = lower;
             this.upper = upper;
@@ -274,7 +274,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new LargeRangeDiscreteUniformSampler(rng, lower, upper);
         }
     }
@@ -293,8 +293,8 @@ public class DiscreteUniformSampler
          * @param offset The offset for the sample.
          * @param sampler The discrete sampler.
          */
-        OffsetDiscreteUniformSampler(int offset,
-                                     SharedStateDiscreteSampler sampler) {
+        OffsetDiscreteUniformSampler(final int offset,
+                                     final SharedStateDiscreteSampler sampler) {
             super(null);
             this.offset = offset;
             this.sampler = sampler;
@@ -312,7 +312,7 @@ public class DiscreteUniformSampler
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new OffsetDiscreteUniformSampler(offset, sampler.withUniformRandomProvider(rng));
         }
     }
@@ -326,9 +326,9 @@ public class DiscreteUniformSampler
      * @param upper Upper bound (inclusive) of the distribution.
      * @throws IllegalArgumentException if {@code lower > upper}.
      */
-    public DiscreteUniformSampler(UniformRandomProvider rng,
-                                  int lower,
-                                  int upper) {
+    public DiscreteUniformSampler(final UniformRandomProvider rng,
+                                  final int lower,
+                                  final int upper) {
         super(null);
         delegate = of(rng, lower, upper);
     }
@@ -351,7 +351,7 @@ public class DiscreteUniformSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         // Direct return of the optimised sampler
         return delegate.withUniformRandomProvider(rng);
     }
@@ -366,9 +366,9 @@ public class DiscreteUniformSampler
      * @throws IllegalArgumentException if {@code lower > upper}.
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                int lower,
-                                                int upper) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final int lower,
+                                                final int upper) {
         if (lower > upper) {
             throw new IllegalArgumentException(lower  + " > " + upper);
         }
@@ -414,8 +414,8 @@ public class DiscreteUniformSampler
      * @param upper Upper bound (inclusive) of the distribution. Must be positive.
      * @return the sampler
      */
-    private static AbstractDiscreteUniformSampler createZeroBoundedSampler(UniformRandomProvider rng,
-                                                                           int upper) {
+    private static AbstractDiscreteUniformSampler createZeroBoundedSampler(final UniformRandomProvider rng,
+                                                                           final int upper) {
         // Note: Handle any range up to 2^31 (which is negative as a signed
         // 32-bit integer but handled as a power of 2)
         final int range = upper + 1;

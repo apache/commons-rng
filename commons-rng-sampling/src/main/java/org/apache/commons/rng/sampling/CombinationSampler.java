@@ -73,9 +73,9 @@ public class CombinationSampler implements SharedStateSampler<CombinationSampler
      * @throws IllegalArgumentException if {@code n <= 0} or {@code k <= 0} or
      *                                  {@code k > n}.
      */
-    public CombinationSampler(UniformRandomProvider rng,
-                              int n,
-                              int k) {
+    public CombinationSampler(final UniformRandomProvider rng,
+                              final int n,
+                              final int k) {
         SubsetSamplerUtils.checkSubset(n, k);
         domain = PermutationSampler.natural(n);
         // The sample can be optimised by only performing the first k or (n - k) steps
@@ -93,8 +93,8 @@ public class CombinationSampler implements SharedStateSampler<CombinationSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private CombinationSampler(UniformRandomProvider rng,
-                               CombinationSampler source) {
+    private CombinationSampler(final UniformRandomProvider rng,
+                               final CombinationSampler source) {
         // Do not clone the domain. This ensures:
         // 1. Thread safety as the domain may be shuffled during the clone
         //    and a shuffle swap step can result in duplicates and missing elements
@@ -127,7 +127,7 @@ public class CombinationSampler implements SharedStateSampler<CombinationSampler
      * @since 1.3
      */
     @Override
-    public CombinationSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public CombinationSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new CombinationSampler(rng, this);
     }
 }

@@ -122,7 +122,7 @@ public final class SeedFactory {
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
-    public static int[] createIntArray(int n) {
+    public static int[] createIntArray(final int n) {
         final int[] seed = new int[n];
         // Compute the size that can be filled with complete blocks
         final int blockSize = INT_ARRAY_BLOCK_SIZE * (n / INT_ARRAY_BLOCK_SIZE);
@@ -146,7 +146,7 @@ public final class SeedFactory {
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
-    public static long[] createLongArray(int n) {
+    public static long[] createLongArray(final int n) {
         final long[] seed = new long[n];
         // Compute the size that can be filled with complete blocks
         final int blockSize = LONG_ARRAY_BLOCK_SIZE * (n / LONG_ARRAY_BLOCK_SIZE);
@@ -172,7 +172,7 @@ public final class SeedFactory {
      * @param start Start (inclusive).
      * @param end End (exclusive).
      */
-    private static void fillIntArray(int[] array, int start, int end) {
+    private static void fillIntArray(final int[] array, final int start, final int end) {
         LOCK.lock();
         try {
             for (int i = start; i < end; i++) {
@@ -191,7 +191,7 @@ public final class SeedFactory {
      * @param start Start (inclusive).
      * @param end End (exclusive).
      */
-    private static void fillLongArray(long[] array, int start, int end) {
+    private static void fillLongArray(final long[] array, final int start, final int end) {
         LOCK.lock();
         try {
             for (int i = start; i < end; i++) {
@@ -210,8 +210,8 @@ public final class SeedFactory {
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
-    static byte[] createByteArray(UniformRandomProvider source,
-                                  int n) {
+    static byte[] createByteArray(final UniformRandomProvider source,
+                                  final int n) {
         final byte[] seed = new byte[n];
         source.nextBytes(seed);
         // If the seed is zero it is assumed the input source RNG is either broken
@@ -232,7 +232,7 @@ public final class SeedFactory {
      * @param seed Seed array (modified in place).
      * @see #createInt()
      */
-    static void ensureNonZero(int[] seed) {
+    static void ensureNonZero(final int[] seed) {
         // Zero occurs 1 in 2^32
         if (seed.length != 0 && seed[0] == 0) {
             do {
@@ -252,7 +252,7 @@ public final class SeedFactory {
      * @param seed Seed array (modified in place).
      * @see #createLong()
      */
-    static void ensureNonZero(long[] seed) {
+    static void ensureNonZero(final long[] seed) {
         // Zero occurs 1 in 2^64
         if (seed.length != 0 && seed[0] == 0) {
             do {
@@ -273,7 +273,7 @@ public final class SeedFactory {
      * @param seed Seed array (modified in place).
      * @see #createInt()
      */
-    private static void ensureNonZero(byte[] seed) {
+    private static void ensureNonZero(final byte[] seed) {
         // Since zero occurs 1 in 2^8 for a single byte this checks the entire array for zeros.
         if (seed.length != 0 && isAllZero(seed)) {
             do {
@@ -288,7 +288,7 @@ public final class SeedFactory {
      * @param array Array data.
      * @return true if all position are zero
      */
-    private static boolean isAllZero(byte[] array) {
+    private static boolean isAllZero(final byte[] array) {
         for (final byte value : array) {
             if (value != 0) {
                 return false;
@@ -306,8 +306,8 @@ public final class SeedFactory {
      * @param value Value.
      * @return {@code value} if non-zero; else a new random number
      */
-    static long ensureNonZero(RandomLongSource source,
-                              long value) {
+    static long ensureNonZero(final RandomLongSource source,
+                              final long value) {
         long result = value;
         while (result == 0) {
             result = source.next();

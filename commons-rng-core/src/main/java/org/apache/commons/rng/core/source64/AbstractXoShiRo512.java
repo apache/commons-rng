@@ -70,7 +70,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    AbstractXoShiRo512(long[] seed) {
+    AbstractXoShiRo512(final long[] seed) {
         if (seed.length < SEED_SIZE) {
             final long[] state = new long[SEED_SIZE];
             fillState(state, seed);
@@ -93,8 +93,8 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      * @param seed6 Initial seed element 6.
      * @param seed7 Initial seed element 7.
      */
-    AbstractXoShiRo512(long seed0, long seed1, long seed2, long seed3,
-                       long seed4, long seed5, long seed6, long seed7) {
+    AbstractXoShiRo512(final long seed0, final long seed1, final long seed2, final long seed3,
+                       final long seed4, final long seed5, final long seed6, final long seed7) {
         state0 = seed0;
         state1 = seed1;
         state2 = seed2;
@@ -110,7 +110,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      *
      * @param source Source to copy.
      */
-    protected AbstractXoShiRo512(AbstractXoShiRo512 source) {
+    protected AbstractXoShiRo512(final AbstractXoShiRo512 source) {
         super(source);
         state0 = source.state0;
         state1 = source.state1;
@@ -127,7 +127,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      *
      * @param state the new state
      */
-    private void setState(long[] state) {
+    private void setState(final long[] state) {
         state0 = state[0];
         state1 = state[1];
         state2 = state[2];
@@ -149,7 +149,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 8);
 
         setState(NumberFactory.makeLongArray(c[0]));
@@ -230,7 +230,7 @@ abstract class AbstractXoShiRo512 extends LongProvider implements LongJumpableUn
      *
      * @param jumpCoefficients Jump coefficients.
      */
-    private void performJump(long[] jumpCoefficients) {
+    private void performJump(final long[] jumpCoefficients) {
         long s0 = 0;
         long s1 = 0;
         long s2 = 0;

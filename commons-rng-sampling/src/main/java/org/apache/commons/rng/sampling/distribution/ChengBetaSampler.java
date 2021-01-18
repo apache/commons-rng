@@ -82,7 +82,8 @@ public class ChengBetaSampler
          * @param a Distribution first shape parameter.
          * @param b Distribution second shape parameter.
          */
-        BaseChengBetaSampler(UniformRandomProvider rng, boolean aIsAlphaShape, double a, double b) {
+        BaseChengBetaSampler(final UniformRandomProvider rng, final boolean aIsAlphaShape, final double a,
+                             final double b) {
             this.rng = rng;
             this.aIsAlphaShape = aIsAlphaShape;
             this.a = a;
@@ -95,8 +96,8 @@ public class ChengBetaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private BaseChengBetaSampler(UniformRandomProvider rng,
-                                     BaseChengBetaSampler source) {
+        private BaseChengBetaSampler(final UniformRandomProvider rng,
+                                     final BaseChengBetaSampler source) {
             this.rng = rng;
             aIsAlphaShape = source.aIsAlphaShape;
             a = source.a;
@@ -125,7 +126,7 @@ public class ChengBetaSampler
          * @param w Algorithm value W.
          * @return the sample value
          */
-        protected double computeX(double w) {
+        protected double computeX(final double w) {
             // Avoid (infinity / infinity) producing NaN
             final double tmp = Math.min(w, Double.MAX_VALUE);
             return aIsAlphaShape ? tmp / (b + tmp) : b / (b + tmp);
@@ -151,7 +152,8 @@ public class ChengBetaSampler
          * @param a min(alpha, beta) shape parameter.
          * @param b max(alpha, beta) shape parameter.
          */
-        ChengBBBetaSampler(UniformRandomProvider rng, boolean aIsAlphaShape, double a, double b) {
+        ChengBBBetaSampler(final UniformRandomProvider rng, final boolean aIsAlphaShape, final double a,
+                           final double b) {
             super(rng, aIsAlphaShape, a, b);
             beta = Math.sqrt((alpha - 2) / (2 * a * b - alpha));
             gamma = a + 1 / beta;
@@ -161,8 +163,8 @@ public class ChengBetaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private ChengBBBetaSampler(UniformRandomProvider rng,
-                                   ChengBBBetaSampler source) {
+        private ChengBBBetaSampler(final UniformRandomProvider rng,
+                                   final ChengBBBetaSampler source) {
             super(rng, source);
             // Compute algorithm factors.
             beta = source.beta;
@@ -201,7 +203,7 @@ public class ChengBetaSampler
         }
 
         @Override
-        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new ChengBBBetaSampler(rng, this);
         }
     }
@@ -231,7 +233,8 @@ public class ChengBetaSampler
          * @param a max(alpha, beta) shape parameter.
          * @param b min(alpha, beta) shape parameter.
          */
-        ChengBCBetaSampler(UniformRandomProvider rng, boolean aIsAlphaShape, double a, double b) {
+        ChengBCBetaSampler(final UniformRandomProvider rng, final boolean aIsAlphaShape, final double a,
+                           final double b) {
             super(rng, aIsAlphaShape, a, b);
             // Compute algorithm factors.
             beta = 1 / b;
@@ -247,8 +250,8 @@ public class ChengBetaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private ChengBCBetaSampler(UniformRandomProvider rng,
-                                   ChengBCBetaSampler source) {
+        private ChengBCBetaSampler(final UniformRandomProvider rng,
+                                   final ChengBCBetaSampler source) {
             super(rng, source);
             beta = source.beta;
             delta = source.delta;
@@ -298,7 +301,7 @@ public class ChengBetaSampler
         }
 
         @Override
-        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new ChengBCBetaSampler(rng, this);
         }
     }
@@ -311,9 +314,9 @@ public class ChengBetaSampler
      * @param beta Distribution second shape parameter.
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
      */
-    public ChengBetaSampler(UniformRandomProvider rng,
-                            double alpha,
-                            double beta) {
+    public ChengBetaSampler(final UniformRandomProvider rng,
+                            final double alpha,
+                            final double beta) {
         super(null);
         delegate = of(rng, alpha, beta);
     }
@@ -336,7 +339,7 @@ public class ChengBetaSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return delegate.withUniformRandomProvider(rng);
     }
 
@@ -350,9 +353,9 @@ public class ChengBetaSampler
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  double alpha,
-                                                  double beta) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final double alpha,
+                                                  final double beta) {
         if (alpha <= 0) {
             throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
         }

@@ -50,9 +50,9 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * @throws IllegalArgumentException if {@code n <= 0} or {@code k <= 0}
      * or {@code k > n}.
      */
-    public PermutationSampler(UniformRandomProvider rng,
-                              int n,
-                              int k) {
+    public PermutationSampler(final UniformRandomProvider rng,
+                              final int n,
+                              final int k) {
         SubsetSamplerUtils.checkSubset(n, k);
         domain = natural(n);
         size = k;
@@ -63,8 +63,8 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private PermutationSampler(UniformRandomProvider rng,
-                               PermutationSampler source) {
+    private PermutationSampler(final UniformRandomProvider rng,
+                               final PermutationSampler source) {
         // Do not clone the domain. This ensures:
         // 1. Thread safety as the domain may be shuffled during the clone
         //    and an incomplete shuffle swap step can result in duplicates and
@@ -92,7 +92,7 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * @since 1.3
      */
     @Override
-    public PermutationSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public PermutationSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new PermutationSampler(rng, this);
     }
 
@@ -104,8 +104,8 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * @param rng Random number generator.
      * @param list Array whose entries will be shuffled (in-place).
      */
-    public static void shuffle(UniformRandomProvider rng,
-                               int[] list) {
+    public static void shuffle(final UniformRandomProvider rng,
+                               final int[] list) {
         shuffle(rng, list, list.length - 1, true);
     }
 
@@ -125,10 +125,10 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * {@code start} and either the end (if {@code false}) or the beginning
      * (if {@code true}) of the array.
      */
-    public static void shuffle(UniformRandomProvider rng,
-                               int[] list,
-                               int start,
-                               boolean towardHead) {
+    public static void shuffle(final UniformRandomProvider rng,
+                               final int[] list,
+                               final int start,
+                               final boolean towardHead) {
         if (towardHead) {
             // Visit all positions from start to 0.
             // Do not visit 0 to avoid a swap with itself.
@@ -154,7 +154,7 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      * @return an array whose entries are the numbers 0, 1, ..., {@code n}-1.
      * If {@code n == 0}, the returned array is empty.
      */
-    public static int[] natural(int n) {
+    public static int[] natural(final int n) {
         final int[] a = new int[n];
         for (int i = 0; i < n; i++) {
             a[i] = i;

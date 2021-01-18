@@ -41,9 +41,9 @@ public class InverseTransformParetoSampler
      * @param shape Shape of the distribution.
      * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
      */
-    public InverseTransformParetoSampler(UniformRandomProvider rng,
-                                         double scale,
-                                         double shape) {
+    public InverseTransformParetoSampler(final UniformRandomProvider rng,
+                                         final double scale,
+                                         final double shape) {
         super(null);
         if (scale <= 0) {
             throw new IllegalArgumentException("scale is not strictly positive: " + scale);
@@ -60,8 +60,8 @@ public class InverseTransformParetoSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private InverseTransformParetoSampler(UniformRandomProvider rng,
-                                          InverseTransformParetoSampler source) {
+    private InverseTransformParetoSampler(final UniformRandomProvider rng,
+                                          final InverseTransformParetoSampler source) {
         super(null);
         this.rng = rng;
         scale = source.scale;
@@ -86,7 +86,7 @@ public class InverseTransformParetoSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new InverseTransformParetoSampler(rng, this);
     }
 
@@ -100,9 +100,9 @@ public class InverseTransformParetoSampler
      * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  double scale,
-                                                  double shape) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final double scale,
+                                                  final double shape) {
         return new InverseTransformParetoSampler(rng, scale, shape);
     }
 }

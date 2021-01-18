@@ -91,7 +91,7 @@ public final class ProviderBuilder {
      * generator implemented by the given {@code source}.
      * @since 1.3
      */
-    public static RestorableUniformRandomProvider create(RandomSourceInternal source) {
+    public static RestorableUniformRandomProvider create(final RandomSourceInternal source) {
         // Delegate to the random source allowing generator specific implementations.
         return source.create();
     }
@@ -108,9 +108,9 @@ public final class ProviderBuilder {
      * @throws IllegalStateException if data is missing to initialize the
      * generator implemented by the given {@code source}.
      */
-    public static RestorableUniformRandomProvider create(RandomSourceInternal source,
-                                                         Object seed,
-                                                         Object[] args) {
+    public static RestorableUniformRandomProvider create(final RandomSourceInternal source,
+                                                         final Object seed,
+                                                         final Object[] args) {
         // Delegate to the random source allowing generator specific implementations.
         // This method checks arguments for null and calls the appropriate internal method.
         if (args != null) {
@@ -268,7 +268,7 @@ public final class ProviderBuilder {
             }
 
             @Override
-            protected Object convertSeed(Object seed) {
+            protected Object convertSeed(final Object seed) {
                 // Allow seeding with primitives to generate a good seed
                 if (seed instanceof Integer) {
                     return createMswsSeed((Integer) seed);
@@ -280,7 +280,7 @@ public final class ProviderBuilder {
             }
 
             @Override
-            protected byte[] createByteArraySeed(UniformRandomProvider source) {
+            protected byte[] createByteArraySeed(final UniformRandomProvider source) {
                 return NativeSeedType.convertSeedToBytes(createMswsSeed(source));
             }
 
@@ -290,7 +290,7 @@ public final class ProviderBuilder {
              * @param seed the seed
              * @return the seed array
              */
-            private long[] createMswsSeed(long seed) {
+            private long[] createMswsSeed(final long seed) {
                 return createMswsSeed(new SplitMix64(seed));
             }
 
@@ -302,7 +302,7 @@ public final class ProviderBuilder {
              * @param source Source of randomness.
              * @return the seed array
              */
-            private long[] createMswsSeed(UniformRandomProvider source) {
+            private long[] createMswsSeed(final UniformRandomProvider source) {
                 final long increment = SeedUtils.createLongHexPermutation(source);
                 // The initial state should not be low complexity but the Weyl
                 // state can be any number.
@@ -390,10 +390,10 @@ public final class ProviderBuilder {
          * @param nativeSeedType Native seed type.
          * @param args Additional data needed to create a generator instance.
          */
-        RandomSourceInternal(Class<? extends UniformRandomProvider> rng,
-                             int nativeSeedSize,
-                             NativeSeedType nativeSeedType,
-                             Class<?>... args) {
+        RandomSourceInternal(final Class<? extends UniformRandomProvider> rng,
+                             final int nativeSeedSize,
+                             final NativeSeedType nativeSeedType,
+                             final Class<?>... args) {
             this.rng = rng;
             this.nativeSeedSize = nativeSeedSize;
             this.nativeSeedType = nativeSeedType;
@@ -440,7 +440,7 @@ public final class ProviderBuilder {
          * @return {@code true} if the seed can be passed to the builder
          * for this RNG type.
          */
-        public <SEED> boolean isNativeSeed(SEED seed) {
+        public <SEED> boolean isNativeSeed(final SEED seed) {
             return seed != null && getSeed().equals(seed.getClass());
         }
 
@@ -479,7 +479,7 @@ public final class ProviderBuilder {
          * @return a new RNG instance.
          * @throws UnsupportedOperationException if the seed type is invalid.
          */
-        RestorableUniformRandomProvider create(Object seed) {
+        RestorableUniformRandomProvider create(final Object seed) {
             // Convert seed to native type.
             final Object nativeSeed = convertSeed(seed);
             // Instantiate.
@@ -497,13 +497,13 @@ public final class ProviderBuilder {
          * @return a new RNG instance.
          * @throws UnsupportedOperationException if the seed type is invalid.
          */
-        RestorableUniformRandomProvider create(Object seed,
-                                               Object[] constructorArgs) {
+        RestorableUniformRandomProvider create(final Object seed,
+                                               final Object[] constructorArgs) {
             final Object nativeSeed = createNativeSeed(seed);
 
             // Build a single array with all the arguments to be passed
             // (in the right order) to the constructor.
-            Object[] all = new Object[constructorArgs.length + 1];
+            final Object[] all = new Object[constructorArgs.length + 1];
             all[0] = nativeSeed;
             System.arraycopy(constructorArgs, 0, all, 1, constructorArgs.length);
 
@@ -538,7 +538,7 @@ public final class ProviderBuilder {
          * @return the byte[] seed
          * @since 1.3
          */
-        protected byte[] createByteArraySeed(UniformRandomProvider source) {
+        protected byte[] createByteArraySeed(final UniformRandomProvider source) {
             return SeedFactory.createByteArray(source, getSeedByteSize());
         }
 
@@ -554,7 +554,7 @@ public final class ProviderBuilder {
          * @throws UnsupportedOperationException if the {@code seed} type is invalid.
          * @since 1.3
          */
-        protected Object convertSeed(Object seed) {
+        protected Object convertSeed(final Object seed) {
             return nativeSeedType.convertSeed(seed, nativeSeedSize);
         }
 
@@ -565,7 +565,7 @@ public final class ProviderBuilder {
          * @return the native seed.
          * @throws UnsupportedOperationException if the {@code seed} type cannot be converted.
          */
-        private Object createNativeSeed(Object seed) {
+        private Object createNativeSeed(final Object seed) {
             return seed == null ?
                 createSeed() :
                 convertSeed(seed);
@@ -597,7 +597,7 @@ public final class ProviderBuilder {
          * @return the seed bytes
          * @since 1.3
          */
-        public final byte[] createSeedBytes(UniformRandomProvider source) {
+        public final byte[] createSeedBytes(final UniformRandomProvider source) {
             // Custom implementations can override createByteArraySeed
             return createByteArraySeed(source);
         }
@@ -628,7 +628,7 @@ public final class ProviderBuilder {
         private Constructor<?> createConstructor() {
             try {
                 return getRng().getConstructor(getArgs());
-            } catch (NoSuchMethodException e) {
+            } catch (final NoSuchMethodException e) {
                 // Info in "RandomSourceInternal" is inconsistent with the
                 // constructor of the implementation.
                 throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
@@ -642,15 +642,15 @@ public final class ProviderBuilder {
          * @param args Arguments to the implementation's constructor.
          * @return a new RNG instance.
          */
-        private static RestorableUniformRandomProvider create(Constructor<?> rng,
-                                                              Object[] args) {
+        private static RestorableUniformRandomProvider create(final Constructor<?> rng,
+                                                              final Object[] args) {
             try {
                 return (RestorableUniformRandomProvider) rng.newInstance(args);
-            } catch (InvocationTargetException e) {
+            } catch (final InvocationTargetException e) {
                 throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
-            } catch (InstantiationException e) {
+            } catch (final InstantiationException e) {
                 throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
-            } catch (IllegalAccessException e) {
+            } catch (final IllegalAccessException e) {
                 throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
             }
         }

@@ -31,7 +31,7 @@ public class ByteArray2IntArray implements SeedConverter<byte[], int[]> {
 
     /** {@inheritDoc} */
     @Override
-    public int[] convert(byte[] seed) {
+    public int[] convert(final byte[] seed) {
         final byte[] tmp = seed.length % INT_SIZE == 0 ?
             seed :
             Arrays.copyOf(seed, INT_SIZE * ((seed.length + INT_SIZE - 1) / INT_SIZE));

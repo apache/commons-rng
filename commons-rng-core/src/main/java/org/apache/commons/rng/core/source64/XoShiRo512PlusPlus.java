@@ -37,7 +37,7 @@ public class XoShiRo512PlusPlus extends AbstractXoShiRo512 {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoShiRo512PlusPlus(long[] seed) {
+    public XoShiRo512PlusPlus(final long[] seed) {
         super(seed);
     }
 
@@ -54,8 +54,8 @@ public class XoShiRo512PlusPlus extends AbstractXoShiRo512 {
      * @param seed6 Initial seed element 6.
      * @param seed7 Initial seed element 7.
      */
-    public XoShiRo512PlusPlus(long seed0, long seed1, long seed2, long seed3,
-                              long seed4, long seed5, long seed6, long seed7) {
+    public XoShiRo512PlusPlus(final long seed0, final long seed1, final long seed2, final long seed3,
+                              final long seed4, final long seed5, final long seed6, final long seed7) {
         super(seed0, seed1, seed2, seed3, seed4, seed5, seed6, seed7);
     }
 
@@ -64,7 +64,7 @@ public class XoShiRo512PlusPlus extends AbstractXoShiRo512 {
      *
      * @param source Source to copy.
      */
-    protected XoShiRo512PlusPlus(XoShiRo512PlusPlus source) {
+    protected XoShiRo512PlusPlus(final XoShiRo512PlusPlus source) {
         super(source);
     }
 

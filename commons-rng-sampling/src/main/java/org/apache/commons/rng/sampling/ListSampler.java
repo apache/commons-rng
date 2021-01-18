@@ -65,9 +65,9 @@ public final class ListSampler {
      * {@code k > collection.size()}.
      * @return a shuffled sample from the source collection.
      */
-    public static <T> List<T> sample(UniformRandomProvider rng,
-                                     List<T> collection,
-                                     int k) {
+    public static <T> List<T> sample(final UniformRandomProvider rng,
+                                     final List<T> collection,
+                                     final int k) {
         final int n = collection.size();
         final PermutationSampler p = new PermutationSampler(rng, n, k);
         final List<T> result = new ArrayList<T>(k);
@@ -94,8 +94,8 @@ public final class ListSampler {
      * @param list List whose entries will be shuffled (in-place).
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <T> void shuffle(UniformRandomProvider rng,
-                                   List<T> list) {
+    public static <T> void shuffle(final UniformRandomProvider rng,
+                                   final List<T> list) {
         if (list instanceof RandomAccess || list.size() < RANDOM_ACCESS_SIZE_THRESHOLD) {
             // Shuffle list in-place
             for (int i = list.size(); i > 1; i--) {
@@ -139,10 +139,10 @@ public final class ListSampler {
      * {@code start} and either the end (if {@code false}) or the beginning
      * (if {@code true}) of the array.
      */
-    public static <T> void shuffle(UniformRandomProvider rng,
-                                   List<T> list,
-                                   int start,
-                                   boolean towardHead) {
+    public static <T> void shuffle(final UniformRandomProvider rng,
+                                   final List<T> list,
+                                   final int start,
+                                   final boolean towardHead) {
         // Shuffle in-place as a sub-list.
         if (towardHead) {
             shuffle(rng, list.subList(0, start + 1));
@@ -159,7 +159,7 @@ public final class ListSampler {
      * @param i First index.
      * @param j Second index.
      */
-    private static <T> void swap(List<T> list, int i, int j) {
+    private static <T> void swap(final List<T> list, final int i, final int j) {
         final T tmp = list.get(i);
         list.set(i, list.get(j));
         list.set(j, tmp);
@@ -172,7 +172,7 @@ public final class ListSampler {
      * @param i First index.
      * @param j Second index.
      */
-    private static void swap(Object[] array, int i, int j) {
+    private static void swap(final Object[] array, final int i, final int j) {
         final Object tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;

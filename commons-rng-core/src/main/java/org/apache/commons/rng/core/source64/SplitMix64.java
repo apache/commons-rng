@@ -38,7 +38,7 @@ public class SplitMix64 extends LongProvider {
      * @param seed Initial seed.
      * @since 1.3
      */
-    public SplitMix64(long seed) {
+    public SplitMix64(final long seed) {
         state = seed;
     }
 
@@ -47,7 +47,7 @@ public class SplitMix64 extends LongProvider {
      *
      * @param seed Initial seed.
      */
-    public SplitMix64(Long seed) {
+    public SplitMix64(final Long seed) {
         // Support for Long to allow instantiation through the
         // rng.simple.RandomSource factory methods.
         setSeedInternal(seed);
@@ -58,7 +58,7 @@ public class SplitMix64 extends LongProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(Long seed) {
+    private void setSeedInternal(final Long seed) {
         state = seed.longValue();
     }
 
@@ -80,7 +80,7 @@ public class SplitMix64 extends LongProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, 8);
 
         state = NumberFactory.makeLong(c[0]);

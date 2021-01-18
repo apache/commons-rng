@@ -36,7 +36,7 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
      *
      * @param seed Initial seed.
      */
-    AbstractPcgMcg6432(Long seed) {
+    AbstractPcgMcg6432(final Long seed) {
         // A seed of zero will result in a non-functional MCG; it must be odd for a maximal
         // period MCG. The multiplication factor always sets the 2 least-significant bits to 1
         // if they are already 1 so these are explicitly set. Bit k (zero-based) will have
@@ -50,7 +50,7 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
      * @param input Current state.
      * @return next state
      */
-    private static long bump(long input) {
+    private static long bump(final long input) {
         return input * 6364136223846793005L;
     }
 
@@ -80,7 +80,7 @@ abstract class AbstractPcgMcg6432 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] d = splitStateInternal(s, 8);
         // As per the constructor, ensure the lower 2 bits of state are set.
         state = NumberFactory.makeLong(d[0]) | 3;

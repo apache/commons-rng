@@ -37,9 +37,9 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @param shape Shape of the log-normal distribution.
      * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
      */
-    public LogNormalSampler(NormalizedGaussianSampler gaussian,
-                            double scale,
-                            double shape) {
+    public LogNormalSampler(final NormalizedGaussianSampler gaussian,
+                            final double scale,
+                            final double shape) {
         if (scale < 0) {
             throw new IllegalArgumentException("scale is not positive: " + scale);
         }
@@ -55,8 +55,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private LogNormalSampler(UniformRandomProvider rng,
-                             LogNormalSampler source) {
+    private LogNormalSampler(final UniformRandomProvider rng,
+                             final LogNormalSampler source) {
         this.scale = source.scale;
         this.shape = source.shape;
         this.gaussian = InternalUtils.newNormalizedGaussianSampler(source.gaussian, rng);
@@ -88,7 +88,7 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new LogNormalSampler(rng, this);
     }
 
@@ -107,9 +107,9 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(NormalizedGaussianSampler gaussian,
-                                                  double scale,
-                                                  double shape) {
+    public static SharedStateContinuousSampler of(final NormalizedGaussianSampler gaussian,
+                                                  final double scale,
+                                                  final double shape) {
         return new LogNormalSampler(gaussian, scale, shape);
     }
 }

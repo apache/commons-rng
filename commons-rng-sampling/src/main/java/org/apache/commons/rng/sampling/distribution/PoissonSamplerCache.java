@@ -83,8 +83,8 @@ public class PoissonSamplerCache {
      * @param maxMean The maximum mean covered by the cache.
      * @throws IllegalArgumentException if {@code maxMean < minMean}
      */
-    public PoissonSamplerCache(double minMean,
-                               double maxMean) {
+    public PoissonSamplerCache(final double minMean,
+                               final double maxMean) {
 
         checkMeanRange(minMean, maxMean);
 
@@ -109,9 +109,9 @@ public class PoissonSamplerCache {
      * @param maxN   The maximum N covered by the cache where {@code N = (int)Math.floor(mean)}.
      * @param states The precomputed states.
      */
-    private PoissonSamplerCache(int minN,
-                                int maxN,
-                                LargeMeanPoissonSamplerState[] states) {
+    private PoissonSamplerCache(final int minN,
+                                final int maxN,
+                                final LargeMeanPoissonSamplerState[] states) {
         this.minN = minN;
         this.maxN = maxN;
         // Stored directly as the states were newly created within this class.
@@ -125,7 +125,7 @@ public class PoissonSamplerCache {
      * @param maxMean The maximum mean covered by the cache.
      * @throws IllegalArgumentException if {@code maxMean < minMean}
      */
-    private static void checkMeanRange(double minMean, double maxMean) {
+    private static void checkMeanRange(final double minMean, final double maxMean) {
         // Note:
         // Although a mean of 0 is invalid for a Poisson sampler this case
         // is handled to make the cache user friendly. Any low means will
@@ -154,8 +154,8 @@ public class PoissonSamplerCache {
      * @deprecated Use {@link #createSharedStateSampler(UniformRandomProvider, double)}.
      */
     @Deprecated
-    public DiscreteSampler createPoissonSampler(UniformRandomProvider rng,
-                                                double mean) {
+    public DiscreteSampler createPoissonSampler(final UniformRandomProvider rng,
+                                                final double mean) {
         return createSharedStateSampler(rng, mean);
     }
 
@@ -172,8 +172,8 @@ public class PoissonSamplerCache {
      * {@code mean >} {@link Integer#MAX_VALUE}.
      * @since 1.4
      */
-    public SharedStateDiscreteSampler createSharedStateSampler(UniformRandomProvider rng,
-                                                               double mean) {
+    public SharedStateDiscreteSampler createSharedStateSampler(final UniformRandomProvider rng,
+                                                               final double mean) {
         // Ensure the same functionality as the PoissonSampler by
         // using a SmallMeanPoissonSampler under the switch point.
         if (mean < PoissonSampler.PIVOT) {
@@ -219,7 +219,7 @@ public class PoissonSamplerCache {
      *            the mean
      * @return true, if within the cache range
      */
-    public boolean withinRange(double mean) {
+    public boolean withinRange(final double mean) {
         if (mean < PoissonSampler.PIVOT) {
             // Construction is optimal
             return true;
@@ -330,8 +330,8 @@ public class PoissonSamplerCache {
      * @throws IllegalArgumentException if {@code maxMean < minMean}
      * @return the poisson sampler cache
      */
-    public PoissonSamplerCache withRange(double minMean,
-                                         double maxMean) {
+    public PoissonSamplerCache withRange(final double minMean,
+                                         final double maxMean) {
         if (values == null) {
             // Nothing to reuse
             return new PoissonSamplerCache(minMean, maxMean);
@@ -351,8 +351,8 @@ public class PoissonSamplerCache {
                 new LargeMeanPoissonSamplerState[withMaxN - withMinN + 1];
 
         // Preserve values from the current array to the next
-        int currentIndex;
-        int nextIndex;
+        final int currentIndex;
+        final int nextIndex;
         if (this.minN <= withMinN) {
             // The current array starts before the new array
             currentIndex = withMinN - this.minN;

@@ -38,8 +38,8 @@ final class SubsetSamplerUtils {
      * @throws IllegalArgumentException if {@code n <= 0} or {@code k <= 0} or
      *                                  {@code k > n}.
      */
-    static void checkSubset(int n,
-                            int k) {
+    static void checkSubset(final int n,
+                            final int k) {
         if (n <= 0) {
             throw new IllegalArgumentException("n <= 0 : n=" + n);
         }
@@ -67,10 +67,10 @@ final class SubsetSamplerUtils {
      * @param upper  Set to true to return the upper fully shuffled section.
      * @return a random combination.
      */
-    static int[] partialSample(int[] domain,
-                               int steps,
-                               UniformRandomProvider rng,
-                               boolean upper) {
+    static int[] partialSample(final int[] domain,
+                               final int steps,
+                               final UniformRandomProvider rng,
+                               final boolean upper) {
         // Shuffle from the end but limit to the number of steps.
         // Note: If 'steps' is the full length of the array then the final
         // swap is redundant so can be skipped.
@@ -93,7 +93,7 @@ final class SubsetSamplerUtils {
      * @param i     the first index
      * @param j     the second index
      */
-    static void swap(int[] array, int i, int j) {
+    static void swap(final int[] array, final int i, final int j) {
         final int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;

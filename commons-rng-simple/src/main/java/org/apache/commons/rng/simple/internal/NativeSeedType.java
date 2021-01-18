@@ -45,112 +45,112 @@ public enum NativeSeedType {
     /** The seed type is {@code Integer}. */
     INT(Integer.class, 4) {
         @Override
-        public Integer createSeed(int size) {
+        public Integer createSeed(final int size) {
             return SeedFactory.createInt();
         }
         @Override
-        protected Integer convert(Integer seed, int size) {
+        protected Integer convert(final Integer seed, final int size) {
             return seed;
         }
         @Override
-        protected Integer convert(Long seed, int size) {
+        protected Integer convert(final Long seed, final int size) {
             return LONG_TO_INT.convert(seed);
         }
         @Override
-        protected Integer convert(int[] seed, int size) {
+        protected Integer convert(final int[] seed, final int size) {
             return INT_ARRAY_TO_INT.convert(seed);
         }
         @Override
-        protected Integer convert(long[] seed, int size) {
+        protected Integer convert(final long[] seed, final int size) {
             return LONG_TO_INT.convert(LONG_ARRAY_TO_LONG.convert(seed));
         }
         @Override
-        protected Integer convert(byte[] seed, int size) {
+        protected Integer convert(final byte[] seed, final int size) {
             return INT_ARRAY_TO_INT.convert(BYTE_ARRAY_TO_INT_ARRAY.convert(seed));
         }
     },
     /** The seed type is {@code Long}. */
     LONG(Long.class, 8) {
         @Override
-        public Long createSeed(int size) {
+        public Long createSeed(final int size) {
             return SeedFactory.createLong();
         }
         @Override
-        protected Long convert(Integer seed, int size) {
+        protected Long convert(final Integer seed, final int size) {
             return INT_TO_LONG.convert(seed);
         }
         @Override
-        protected Long convert(Long seed, int size) {
+        protected Long convert(final Long seed, final int size) {
             return seed;
         }
         @Override
-        protected Long convert(int[] seed, int size) {
+        protected Long convert(final int[] seed, final int size) {
             return INT_TO_LONG.convert(INT_ARRAY_TO_INT.convert(seed));
         }
         @Override
-        protected Long convert(long[] seed, int size) {
+        protected Long convert(final long[] seed, final int size) {
             return LONG_ARRAY_TO_LONG.convert(seed);
         }
         @Override
-        protected Long convert(byte[] seed, int size) {
+        protected Long convert(final byte[] seed, final int size) {
             return LONG_ARRAY_TO_LONG.convert(BYTE_ARRAY_TO_LONG_ARRAY.convert(seed));
         }
     },
     /** The seed type is {@code int[]}. */
     INT_ARRAY(int[].class, 4) {
         @Override
-        public int[] createSeed(int size) {
+        public int[] createSeed(final int size) {
             // Limit the number of calls to the synchronized method. The generator
             // will support self-seeding.
             return SeedFactory.createIntArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
         }
         @Override
-        protected int[] convert(Integer seed, int size) {
+        protected int[] convert(final Integer seed, final int size) {
             return LONG_TO_INT_ARRAY.convert(INT_TO_LONG.convert(seed), size);
         }
         @Override
-        protected int[] convert(Long seed, int size) {
+        protected int[] convert(final Long seed, final int size) {
             return LONG_TO_INT_ARRAY.convert(seed, size);
         }
         @Override
-        protected int[] convert(int[] seed, int size) {
+        protected int[] convert(final int[] seed, final int size) {
             return seed;
         }
         @Override
-        protected int[] convert(long[] seed, int size) {
+        protected int[] convert(final long[] seed, final int size) {
             return LONG_ARRAY_TO_INT_ARRAY.convert(seed);
         }
         @Override
-        protected int[] convert(byte[] seed, int size) {
+        protected int[] convert(final byte[] seed, final int size) {
             return BYTE_ARRAY_TO_INT_ARRAY.convert(seed);
         }
     },
     /** The seed type is {@code long[]}. */
     LONG_ARRAY(long[].class, 8) {
         @Override
-        public long[] createSeed(int size) {
+        public long[] createSeed(final int size) {
             // Limit the number of calls to the synchronized method. The generator
             // will support self-seeding.
             return SeedFactory.createLongArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
         }
         @Override
-        protected long[] convert(Integer seed, int size) {
+        protected long[] convert(final Integer seed, final int size) {
             return LONG_TO_LONG_ARRAY.convert(INT_TO_LONG.convert(seed), size);
         }
         @Override
-        protected long[] convert(Long seed, int size) {
+        protected long[] convert(final Long seed, final int size) {
             return LONG_TO_LONG_ARRAY.convert(seed, size);
         }
         @Override
-        protected long[] convert(int[] seed, int size) {
+        protected long[] convert(final int[] seed, final int size) {
             return INT_ARRAY_TO_LONG_ARRAY.convert(seed);
         }
         @Override
-        protected long[] convert(long[] seed, int size) {
+        protected long[] convert(final long[] seed, final int size) {
             return seed;
         }
         @Override
-        protected long[] convert(byte[] seed, int size) {
+        protected long[] convert(final byte[] seed, final int size) {
             return BYTE_ARRAY_TO_LONG_ARRAY.convert(seed);
         }
     };
@@ -195,7 +195,7 @@ public enum NativeSeedType {
      * @param type Define the class type of the native seed.
      * @param bytes Define the number of bytes required to represent the native seed.
      */
-    NativeSeedType(Class<?> type, int bytes) {
+    NativeSeedType(final Class<?> type, final int bytes) {
         this.type = type;
         this.bytes = bytes;
     }
@@ -237,8 +237,8 @@ public enum NativeSeedType {
      * @return the native seed.
      * @throws UnsupportedOperationException if the {@code seed} type is invalid.
      */
-    public Object convertSeed(Object seed,
-                              int size) {
+    public Object convertSeed(final Object seed,
+                              final int size) {
         // Convert to native type.
         // Each method must be overridden by specific implementations.
 
@@ -309,7 +309,7 @@ public enum NativeSeedType {
      * @return the seed bytes.
      * @throws UnsupportedOperationException if the {@code seed} type is invalid.
      */
-    public static byte[] convertSeedToBytes(Object seed) {
+    public static byte[] convertSeedToBytes(final Object seed) {
         if (seed instanceof Integer) {
             return NumberFactory.makeByteArray((Integer) seed);
         } else if (seed instanceof Long) {

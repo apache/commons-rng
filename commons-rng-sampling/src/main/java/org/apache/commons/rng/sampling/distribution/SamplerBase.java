@@ -33,7 +33,7 @@ public class SamplerBase {
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    protected SamplerBase(UniformRandomProvider rng) {
+    protected SamplerBase(final UniformRandomProvider rng) {
         this.rng = rng;
     }
 
@@ -56,7 +56,7 @@ public class SamplerBase {
      * @param max Upper bound (excluded).
      * @return a random {@code int} value in the interval {@code [0, max)}.
      */
-    protected int nextInt(int max) {
+    protected int nextInt(final int max) {
         return rng.nextInt(max);
     }
 

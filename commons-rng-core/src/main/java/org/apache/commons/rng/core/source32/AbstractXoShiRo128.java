@@ -60,7 +60,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    AbstractXoShiRo128(int[] seed) {
+    AbstractXoShiRo128(final int[] seed) {
         if (seed.length < SEED_SIZE) {
             final int[] state = new int[SEED_SIZE];
             fillState(state, seed);
@@ -79,7 +79,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      * @param seed2 Initial seed element 2.
      * @param seed3 Initial seed element 3.
      */
-    AbstractXoShiRo128(int seed0, int seed1, int seed2, int seed3) {
+    AbstractXoShiRo128(final int seed0, final int seed1, final int seed2, final int seed3) {
         state0 = seed0;
         state1 = seed1;
         state2 = seed2;
@@ -91,7 +91,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      *
      * @param source Source to copy.
      */
-    protected AbstractXoShiRo128(AbstractXoShiRo128 source) {
+    protected AbstractXoShiRo128(final AbstractXoShiRo128 source) {
         super(source);
         state0 = source.state0;
         state1 = source.state1;
@@ -104,7 +104,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      *
      * @param state the new state
      */
-    private void setState(int[] state) {
+    private void setState(final int[] state) {
         state0 = state[0];
         state1 = state[1];
         state2 = state[2];
@@ -121,7 +121,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 4);
 
         setState(NumberFactory.makeIntArray(c[0]));
@@ -199,7 +199,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      *
      * @param jumpCoefficients Jump coefficients.
      */
-    private void performJump(int[] jumpCoefficients) {
+    private void performJump(final int[] jumpCoefficients) {
         int s0 = 0;
         int s1 = 0;
         int s2 = 0;

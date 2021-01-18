@@ -95,7 +95,7 @@ public class ZigguratNormalizedGaussianSampler
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    public ZigguratNormalizedGaussianSampler(UniformRandomProvider rng) {
+    public ZigguratNormalizedGaussianSampler(final UniformRandomProvider rng) {
         this.rng = rng;
     }
 
@@ -124,8 +124,8 @@ public class ZigguratNormalizedGaussianSampler
      * @param iz Index of cell corresponding to {@code hz}.
      * @return the requested random value.
      */
-    private double fix(long hz,
-                       int iz) {
+    private double fix(final long hz,
+                       final int iz) {
         double x;
         double y;
 
@@ -157,7 +157,7 @@ public class ZigguratNormalizedGaussianSampler
      * @param x Argument.
      * @return \( e^{-\frac{x^2}{2}} \)
      */
-    private static double gauss(double x) {
+    private static double gauss(final double x) {
         return Math.exp(-0.5 * x * x);
     }
 
@@ -167,7 +167,7 @@ public class ZigguratNormalizedGaussianSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new ZigguratNormalizedGaussianSampler(rng);
     }
 
@@ -181,7 +181,7 @@ public class ZigguratNormalizedGaussianSampler
      */
     @SuppressWarnings("unchecked")
     public static <S extends NormalizedGaussianSampler & SharedStateContinuousSampler> S
-            of(UniformRandomProvider rng) {
+            of(final UniformRandomProvider rng) {
         return (S) new ZigguratNormalizedGaussianSampler(rng);
     }
 }

@@ -212,7 +212,7 @@ public class AliasMethodDiscreteSampler
 
         /** {@inheritDoc} */
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new SmallTableAliasMethodDiscreteSampler(rng, probability, alias);
         }
     }
@@ -279,7 +279,7 @@ public class AliasMethodDiscreteSampler
 
     /** {@inheritDoc} */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new AliasMethodDiscreteSampler(rng, probability, alias);
     }
 
@@ -350,7 +350,7 @@ public class AliasMethodDiscreteSampler
      */
     public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
                                                 final double[] probabilities,
-                                                int alpha) {
+                                                final int alpha) {
         // The Alias method balances N categories with counts around the mean into N sections,
         // each allocated 'mean' observations.
         //
@@ -475,7 +475,7 @@ public class AliasMethodDiscreteSampler
      * @param small Number of small indices.
      * @return the updated number of small indices
      */
-    private static int fillRemainingIndices(final int length, final int[] indices, int small) {
+    private static int fillRemainingIndices(final int length, final int[] indices, final int small) {
         int updatedSmall = small;
         for (int i = length; i < indices.length; i++) {
             indices[updatedSmall++] = i;
@@ -509,7 +509,7 @@ public class AliasMethodDiscreteSampler
      * @param alpha The alpha factor controlling the zero padding.
      * @return the padded size
      */
-    private static int computeSize(int length, int alpha) {
+    private static int computeSize(final int length, final int alpha) {
         if (alpha < 0) {
             // No padding
             return length;
@@ -540,7 +540,8 @@ public class AliasMethodDiscreteSampler
      * @param start Start position.
      * @param end End position.
      */
-    private static void fillTable(long[] probability, int[] alias, int[] indices, int start, int end) {
+    private static void fillTable(final long[] probability, final int[] alias, final int[] indices, final int start,
+                                  final int end) {
         for (int i = start; i < end; i++) {
             final int index = indices[i];
             probability[index] = ONE_AS_NUMERATOR;
@@ -555,7 +556,7 @@ public class AliasMethodDiscreteSampler
      * @param n Size of the alias table.
      * @return true if supported by {@link SmallTableAliasMethodDiscreteSampler}
      */
-    private static boolean isSmallPowerOf2(int n) {
+    private static boolean isSmallPowerOf2(final int n) {
         return n <= MAX_SMALL_POWER_2_SIZE && (n & (n - 1)) == 0;
     }
 }

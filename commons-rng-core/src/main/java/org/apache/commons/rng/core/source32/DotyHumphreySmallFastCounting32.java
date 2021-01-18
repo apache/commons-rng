@@ -48,7 +48,7 @@ public class DotyHumphreySmallFastCounting32 extends IntProvider {
      * If the length is larger than 3, only the first 3 elements will
      * be used; if smaller, the remaining elements will be automatically set.
      */
-    public DotyHumphreySmallFastCounting32(int[] seed) {
+    public DotyHumphreySmallFastCounting32(final int[] seed) {
         if (seed.length < SEED_SIZE) {
             final int[] state = new int[SEED_SIZE];
             fillState(state, seed);
@@ -63,7 +63,7 @@ public class DotyHumphreySmallFastCounting32 extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(int[] seed) {
+    private void setSeedInternal(final int[] seed) {
         a = seed[0];
         b = seed[1];
         c = seed[2];
@@ -92,7 +92,7 @@ public class DotyHumphreySmallFastCounting32 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] parts = splitStateInternal(s, 4 * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(parts[0]);

@@ -38,7 +38,7 @@ public class PcgXshRs32 extends AbstractPcg6432 {
      * @param seed Initial state.
      * @since 1.4
      */
-    public PcgXshRs32(Long seed) {
+    public PcgXshRs32(final Long seed) {
         super(seed);
     }
 
@@ -57,13 +57,13 @@ public class PcgXshRs32 extends AbstractPcg6432 {
      * to set the LCG increment; the most significant bit
      * is discarded by left shift and the increment is set to odd.</p>
      */
-    public PcgXshRs32(long[] seed) {
+    public PcgXshRs32(final long[] seed) {
         super(seed);
     }
 
     /** {@inheritDoc} */
     @Override
-   protected int transform(long x) {
+   protected int transform(final long x) {
         final int count = (int)(x >>> 61);
         return (int)((x ^ (x >>> 22)) >>> (22 + count));
     }

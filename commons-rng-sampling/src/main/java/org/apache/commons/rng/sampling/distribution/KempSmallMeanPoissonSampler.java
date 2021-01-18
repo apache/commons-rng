@@ -64,9 +64,9 @@ public final class KempSmallMeanPoissonSampler
      * @param p0 Probability of the Poisson sample {@code p(x=0)}.
      * @param mean Mean.
      */
-    private KempSmallMeanPoissonSampler(UniformRandomProvider rng,
-                                        double p0,
-                                        double mean) {
+    private KempSmallMeanPoissonSampler(final UniformRandomProvider rng,
+                                        final double p0,
+                                        final double mean) {
         this.rng = rng;
         this.p0 = p0;
         this.mean = mean;
@@ -108,7 +108,7 @@ public final class KempSmallMeanPoissonSampler
 
     /** {@inheritDoc} */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new KempSmallMeanPoissonSampler(rng, p0, mean);
     }
 
@@ -121,8 +121,8 @@ public final class KempSmallMeanPoissonSampler
      * @throws IllegalArgumentException if {@code mean <= 0} or
      * {@code Math.exp(-mean) == 0}.
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double mean) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double mean) {
         if (mean <= 0) {
             throw new IllegalArgumentException("Mean is not strictly positive: " + mean);
         }

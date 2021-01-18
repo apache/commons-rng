@@ -78,7 +78,7 @@ public class ISAACRandom extends IntProvider {
      *
      * @param seed Initial seed
      */
-    public ISAACRandom(int[] seed) {
+    public ISAACRandom(final int[] seed) {
         setSeedInternal(seed);
     }
 
@@ -100,7 +100,7 @@ public class ISAACRandom extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (2 * SIZE + 4) * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(c[0]);
@@ -120,7 +120,7 @@ public class ISAACRandom extends IntProvider {
      *
      * @param seed Seed. Cannot be null.
      */
-    private void setSeedInternal(int[] seed) {
+    private void setSeedInternal(final int[] seed) {
         final int seedLen = seed.length;
         final int rslLen = rsl.length;
         System.arraycopy(seed, 0, rsl, 0, Math.min(seedLen, rslLen));
@@ -257,7 +257,7 @@ public class ISAACRandom extends IntProvider {
      *
      * @param start First index into {@link #mem} array.
      */
-    private void setState(int start) {
+    private void setState(final int start) {
         mem[start] = arr[0];
         mem[start + 1] = arr[1];
         mem[start + 2] = arr[2];

@@ -100,8 +100,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param distributionName Distribution name.
          */
-        AbstractMarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
-                                                  String distributionName) {
+        AbstractMarsagliaTsangWangDiscreteSampler(final UniformRandomProvider rng,
+                                                  final String distributionName) {
             this.rng = rng;
             this.distributionName = distributionName;
         }
@@ -110,8 +110,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        AbstractMarsagliaTsangWangDiscreteSampler(UniformRandomProvider rng,
-                                                  AbstractMarsagliaTsangWangDiscreteSampler source) {
+        AbstractMarsagliaTsangWangDiscreteSampler(final UniformRandomProvider rng,
+                                                  final AbstractMarsagliaTsangWangDiscreteSampler source) {
             this.rng = rng;
             this.distributionName = source.distributionName;
         }
@@ -158,10 +158,10 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param prob The probabilities.
          * @param offset The offset (must be positive).
          */
-        MarsagliaTsangWangBase64Int8DiscreteSampler(UniformRandomProvider rng,
-                                                    String distributionName,
-                                                    int[] prob,
-                                                    int offset) {
+        MarsagliaTsangWangBase64Int8DiscreteSampler(final UniformRandomProvider rng,
+                                                    final String distributionName,
+                                                    final int[] prob,
+                                                    final int offset) {
             super(rng, distributionName);
 
             // Get table sizes for each base-64 digit
@@ -208,8 +208,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private MarsagliaTsangWangBase64Int8DiscreteSampler(UniformRandomProvider rng,
-                MarsagliaTsangWangBase64Int8DiscreteSampler source) {
+        private MarsagliaTsangWangBase64Int8DiscreteSampler(final UniformRandomProvider rng,
+                                                            final MarsagliaTsangWangBase64Int8DiscreteSampler source) {
             super(rng, source);
             t1 = source.t1;
             t2 = source.t2;
@@ -231,7 +231,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param value Value.
          * @return the upper bound index
          */
-        private static int fill(byte[] table, int from, int to, byte value) {
+        private static int fill(final byte[] table, final int from, final int to, final byte value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
@@ -260,7 +260,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int8DiscreteSampler(rng, this);
         }
     }
@@ -300,10 +300,10 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param prob The probabilities.
          * @param offset The offset (must be positive).
          */
-        MarsagliaTsangWangBase64Int16DiscreteSampler(UniformRandomProvider rng,
-                                                     String distributionName,
-                                                     int[] prob,
-                                                     int offset) {
+        MarsagliaTsangWangBase64Int16DiscreteSampler(final UniformRandomProvider rng,
+                                                     final String distributionName,
+                                                     final int[] prob,
+                                                     final int offset) {
             super(rng, distributionName);
 
             // Get table sizes for each base-64 digit
@@ -350,8 +350,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private MarsagliaTsangWangBase64Int16DiscreteSampler(UniformRandomProvider rng,
-                MarsagliaTsangWangBase64Int16DiscreteSampler source) {
+        private MarsagliaTsangWangBase64Int16DiscreteSampler(final UniformRandomProvider rng,
+                                                             final MarsagliaTsangWangBase64Int16DiscreteSampler source) {
             super(rng, source);
             t1 = source.t1;
             t2 = source.t2;
@@ -373,7 +373,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param value Value.
          * @return the upper bound index
          */
-        private static int fill(short[] table, int from, int to, short value) {
+        private static int fill(final short[] table, final int from, final int to, final short value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
@@ -402,7 +402,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int16DiscreteSampler(rng, this);
         }
     }
@@ -439,10 +439,10 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param prob The probabilities.
          * @param offset The offset (must be positive).
          */
-        MarsagliaTsangWangBase64Int32DiscreteSampler(UniformRandomProvider rng,
-                                                     String distributionName,
-                                                     int[] prob,
-                                                     int offset) {
+        MarsagliaTsangWangBase64Int32DiscreteSampler(final UniformRandomProvider rng,
+                                                     final String distributionName,
+                                                     final int[] prob,
+                                                     final int offset) {
             super(rng, distributionName);
 
             // Get table sizes for each base-64 digit
@@ -488,8 +488,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private MarsagliaTsangWangBase64Int32DiscreteSampler(UniformRandomProvider rng,
-                MarsagliaTsangWangBase64Int32DiscreteSampler source) {
+        private MarsagliaTsangWangBase64Int32DiscreteSampler(final UniformRandomProvider rng,
+                                                             final MarsagliaTsangWangBase64Int32DiscreteSampler source) {
             super(rng, source);
             t1 = source.t1;
             t2 = source.t2;
@@ -511,7 +511,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param value Value.
          * @return the upper bound index
          */
-        private static int fill(int[] table, int from, int to, int value) {
+        private static int fill(final int[] table, final int from, final int to, final int value) {
             for (int i = from; i < to; i++) {
                 table[i] = value;
             }
@@ -540,7 +540,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         @Override
-        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new MarsagliaTsangWangBase64Int32DiscreteSampler(rng, this);
         }
     }
@@ -557,7 +557,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * @param k the digit.
      * @return the base 64 digit
      */
-    private static int getBase64Digit(int m, int k) {
+    private static int getBase64Digit(final int m, final int k) {
         return (m >>> (30 - 6 * k)) & 63;
     }
 
@@ -568,7 +568,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * @param p Probability.
      * @return the fraction numerator
      */
-    private static int toUnsignedInt30(double p) {
+    private static int toUnsignedInt30(final double p) {
         return (int) (p * INT_30 + 0.5);
     }
 
@@ -585,10 +585,10 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * @param offset The offset (must be positive).
      * @return Sampler.
      */
-    private static SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
-                                                            String distributionName,
-                                                            int[] prob,
-                                                            int offset) {
+    private static SharedStateDiscreteSampler createSampler(final UniformRandomProvider rng,
+                                                            final String distributionName,
+                                                            final int[] prob,
+                                                            final int offset) {
         // Note: No argument checks for private method.
 
         // Choose implementation based on the maximum index
@@ -641,8 +641,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * probability is negative, infinite or {@code NaN}, or the sum of all
          * probabilities is not strictly positive.
          */
-        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                    double[] probabilities) {
+        public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                    final double[] probabilities) {
             return createSampler(rng, ENUMERATED_NAME, normaliseProbabilities(probabilities), 0);
         }
 
@@ -655,7 +655,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * probability is negative, infinite or {@code NaN}, or the sum of all
          * probabilities is not strictly positive.
          */
-        private static int[] normaliseProbabilities(double[] probabilities) {
+        private static int[] normaliseProbabilities(final double[] probabilities) {
             final double sumProb = InternalUtils.validateProbabilities(probabilities);
 
             // Compute the normalisation: 2^30 / sum
@@ -742,8 +742,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @return Sampler.
          * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
          */
-        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                    double mean) {
+        public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                    final double mean) {
             validatePoissonDistributionParameters(mean);
 
             // Create the distribution either from X=0 or from X=mode when the mean is high.
@@ -758,7 +758,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @param mean Mean.
          * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
          */
-        private static void validatePoissonDistributionParameters(double mean) {
+        private static void validatePoissonDistributionParameters(final double mean) {
             if (mean <= 0) {
                 throw new IllegalArgumentException("mean is not strictly positive: " + mean);
             }
@@ -775,7 +775,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @return Sampler.
          */
         private static SharedStateDiscreteSampler createPoissonDistributionFromX0(
-                UniformRandomProvider rng, double mean) {
+                final UniformRandomProvider rng, final double mean) {
             final double p0 = Math.exp(-mean);
 
             // Recursive update of Poisson probability until the value is too small
@@ -816,7 +816,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @return Sampler.
          */
         private static SharedStateDiscreteSampler createPoissonDistributionFromXMode(
-                UniformRandomProvider rng, double mean) {
+                final UniformRandomProvider rng, final double mean) {
             // If mean >= 21.4, generate from largest p-value up, then largest down.
             // The largest p-value will be at the mode (floor(mean)).
 
@@ -901,7 +901,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
             /**
              * @param result Result.
              */
-            MarsagliaTsangWangFixedResultBinomialSampler(int result) {
+            MarsagliaTsangWangFixedResultBinomialSampler(final int result) {
                 super(null, BINOMIAL_NAME);
                 this.result = result;
             }
@@ -917,7 +917,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
             }
 
             @Override
-            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
                 // No shared state
                 return this;
             }
@@ -942,8 +942,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
              * @param trials Number of trials.
              * @param sampler Binomial distribution sampler.
              */
-            MarsagliaTsangWangInversionBinomialSampler(int trials,
-                                                       SharedStateDiscreteSampler sampler) {
+            MarsagliaTsangWangInversionBinomialSampler(final int trials,
+                                                       final SharedStateDiscreteSampler sampler) {
                 super(null, BINOMIAL_NAME);
                 this.trials = trials;
                 this.sampler = sampler;
@@ -960,7 +960,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
             }
 
             @Override
-            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
                 return new MarsagliaTsangWangInversionBinomialSampler(this.trials,
                     this.sampler.withUniformRandomProvider(rng));
             }
@@ -999,9 +999,9 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * {@code p} is not in the range {@code [0-1]}, or the probability distribution cannot
          * be computed.
          */
-        public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                    int trials,
-                                                    double probabilityOfSuccess) {
+        public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                    final int trials,
+                                                    final double probabilityOfSuccess) {
             validateBinomialDistributionParameters(trials, probabilityOfSuccess);
 
             // Handle edge cases
@@ -1028,7 +1028,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @throws IllegalArgumentException if {@code trials < 0} or
          * {@code p} is not in the range {@code [0-1]}
          */
-        private static void validateBinomialDistributionParameters(int trials, double probabilityOfSuccess) {
+        private static void validateBinomialDistributionParameters(final int trials,
+                                                                   final double probabilityOfSuccess) {
             if (trials < 0) {
                 throw new IllegalArgumentException("Trials is not positive: " + trials);
             }
@@ -1051,7 +1052,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * computed.
          */
         private static SharedStateDiscreteSampler createBinomialDistributionSampler(
-                UniformRandomProvider rng, int trials, double probabilityOfSuccess) {
+                final UniformRandomProvider rng, final int trials, final double probabilityOfSuccess) {
 
             // The maximum supported value for Math.exp is approximately -744.
             // This occurs when trials is large and p is close to 1.
@@ -1112,8 +1113,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @return Sampler.
          */
         private static SharedStateDiscreteSampler createBinomialDistributionSamplerFromRange(
-                UniformRandomProvider rng, int trials, double p,
-                boolean useInversion, double p0, int begin, int end) {
+                final UniformRandomProvider rng, final int trials, final double p,
+                final boolean useInversion, final double p0, final int begin, final int end) {
 
             // Assign probability values as 30-bit integers
             final int size = end - begin + 1;

@@ -75,9 +75,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        BaseGammaSampler(UniformRandomProvider rng,
-                         double alpha,
-                         double theta) {
+        BaseGammaSampler(final UniformRandomProvider rng,
+                         final double alpha,
+                         final double theta) {
             if (alpha <= 0) {
                 throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
             }
@@ -93,8 +93,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        BaseGammaSampler(UniformRandomProvider rng,
-                         BaseGammaSampler source) {
+        BaseGammaSampler(final UniformRandomProvider rng,
+                         final BaseGammaSampler source) {
             this.rng = rng;
             this.alpha = source.alpha;
             this.theta = source.theta;
@@ -130,9 +130,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        AhrensDieterGammaSampler(UniformRandomProvider rng,
-                                 double alpha,
-                                 double theta) {
+        AhrensDieterGammaSampler(final UniformRandomProvider rng,
+                                 final double alpha,
+                                 final double theta) {
             super(rng, alpha, theta);
             oneOverAlpha = 1 / alpha;
             bGSOptim = 1 + alpha / Math.E;
@@ -142,8 +142,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        AhrensDieterGammaSampler(UniformRandomProvider rng,
-                                 AhrensDieterGammaSampler source) {
+        AhrensDieterGammaSampler(final UniformRandomProvider rng,
+                                 final AhrensDieterGammaSampler source) {
             super(rng, source);
             oneOverAlpha = source.oneOverAlpha;
             bGSOptim = source.bGSOptim;
@@ -182,7 +182,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         @Override
-        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new AhrensDieterGammaSampler(rng, this);
         }
     }
@@ -215,9 +215,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param theta Theta parameter of the distribution.
          * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
          */
-        MarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                   double alpha,
-                                   double theta) {
+        MarsagliaTsangGammaSampler(final UniformRandomProvider rng,
+                                   final double alpha,
+                                   final double theta) {
             super(rng, alpha, theta);
             gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = alpha - ONE_THIRD;
@@ -228,8 +228,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        MarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                   MarsagliaTsangGammaSampler source) {
+        MarsagliaTsangGammaSampler(final UniformRandomProvider rng,
+                                   final MarsagliaTsangGammaSampler source) {
             super(rng, source);
             gaussian = new ZigguratNormalizedGaussianSampler(rng);
             dOptim = source.dOptim;
@@ -262,7 +262,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         @Override
-        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+        public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
             return new MarsagliaTsangGammaSampler(rng, this);
         }
     }
@@ -276,9 +276,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @param theta Theta parameter of the distribution (this is a scale parameter).
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
      */
-    public AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
-                                                  double alpha,
-                                                  double theta) {
+    public AhrensDieterMarsagliaTsangGammaSampler(final UniformRandomProvider rng,
+                                                  final double alpha,
+                                                  final double theta) {
         super(null);
         delegate = of(rng, alpha, theta);
     }
@@ -301,7 +301,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @since 1.3
      */
     @Override
-    public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateContinuousSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         // Direct return of the optimised sampler
         return delegate.withUniformRandomProvider(rng);
     }
@@ -316,9 +316,9 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
      * @since 1.3
      */
-    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
-                                                  double alpha,
-                                                  double theta) {
+    public static SharedStateContinuousSampler of(final UniformRandomProvider rng,
+                                                  final double alpha,
+                                                  final double theta) {
         // Each sampler should check the input arguments.
         return alpha < 1 ?
                 new AhrensDieterGammaSampler(rng, alpha, theta) :

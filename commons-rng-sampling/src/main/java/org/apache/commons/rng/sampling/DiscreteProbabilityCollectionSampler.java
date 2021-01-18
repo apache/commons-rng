@@ -61,8 +61,8 @@ public class DiscreteProbabilityCollectionSampler<T>
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
      */
-    public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
-                                                Map<T, Double> collection) {
+    public DiscreteProbabilityCollectionSampler(final UniformRandomProvider rng,
+                                                final Map<T, Double> collection) {
         if (collection.isEmpty()) {
             throw new IllegalArgumentException(EMPTY_COLLECTION);
         }
@@ -98,9 +98,9 @@ public class DiscreteProbabilityCollectionSampler<T>
      * of items in the {@code collection} is not equal to the number of
      * provided {@code probabilities}.
      */
-    public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
-                                                List<T> collection,
-                                                double[] probabilities) {
+    public DiscreteProbabilityCollectionSampler(final UniformRandomProvider rng,
+                                                final List<T> collection,
+                                                final double[] probabilities) {
         if (collection.isEmpty()) {
             throw new IllegalArgumentException(EMPTY_COLLECTION);
         }
@@ -120,8 +120,8 @@ public class DiscreteProbabilityCollectionSampler<T>
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
-                                                 DiscreteProbabilityCollectionSampler<T> source) {
+    private DiscreteProbabilityCollectionSampler(final UniformRandomProvider rng,
+                                                 final DiscreteProbabilityCollectionSampler<T> source) {
         this.items = source.items;
         this.sampler = source.sampler.withUniformRandomProvider(rng);
     }
@@ -141,7 +141,7 @@ public class DiscreteProbabilityCollectionSampler<T>
      * @since 1.3
      */
     @Override
-    public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
+    public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(final UniformRandomProvider rng) {
         return new DiscreteProbabilityCollectionSampler<T>(rng, this);
     }
 
@@ -152,8 +152,8 @@ public class DiscreteProbabilityCollectionSampler<T>
      * @param probabilities Probability associated to each item.
      * @return the sampler
      */
-    private static SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
-                                                            double[] probabilities) {
+    private static SharedStateDiscreteSampler createSampler(final UniformRandomProvider rng,
+                                                            final double[] probabilities) {
         return GuideTableDiscreteSampler.of(rng, probabilities);
     }
 }

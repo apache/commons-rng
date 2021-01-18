@@ -53,7 +53,7 @@ public class LargeMeanPoissonSampler
     private static final SharedStateDiscreteSampler NO_SMALL_MEAN_POISSON_SAMPLER =
         new SharedStateDiscreteSampler() {
             @Override
-            public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
                 // No requirement for RNG
                 return this;
             }
@@ -121,8 +121,8 @@ public class LargeMeanPoissonSampler
      * @throws IllegalArgumentException if {@code mean < 1} or
      * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
-    public LargeMeanPoissonSampler(UniformRandomProvider rng,
-                                   double mean) {
+    public LargeMeanPoissonSampler(final UniformRandomProvider rng,
+                                   final double mean) {
         if (mean < 1) {
             throw new IllegalArgumentException("mean is not >= 1: " + mean);
         }
@@ -168,9 +168,9 @@ public class LargeMeanPoissonSampler
      * @throws IllegalArgumentException
      *                         if {@code lambdaFractional < 0 || lambdaFractional >= 1}.
      */
-    LargeMeanPoissonSampler(UniformRandomProvider rng,
-                            LargeMeanPoissonSamplerState state,
-                            double lambdaFractional) {
+    LargeMeanPoissonSampler(final UniformRandomProvider rng,
+                            final LargeMeanPoissonSamplerState state,
+                            final double lambdaFractional) {
         if (lambdaFractional < 0 || lambdaFractional >= 1) {
             throw new IllegalArgumentException(
                     "lambdaFractional must be in the range 0 (inclusive) to 1 (exclusive): " + lambdaFractional);
@@ -203,8 +203,8 @@ public class LargeMeanPoissonSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
-    private LargeMeanPoissonSampler(UniformRandomProvider rng,
-                                    LargeMeanPoissonSampler source) {
+    private LargeMeanPoissonSampler(final UniformRandomProvider rng,
+                                    final LargeMeanPoissonSampler source) {
         this.rng = rng;
 
         gaussian = source.gaussian.withUniformRandomProvider(rng);
@@ -300,7 +300,7 @@ public class LargeMeanPoissonSampler
      * @return {@code log(n!)}
      * @throws IllegalArgumentException if {@code n < 0}.
      */
-    private double getFactorialLog(int n) {
+    private double getFactorialLog(final int n) {
         return factorialLog.value(n);
     }
 
@@ -316,7 +316,7 @@ public class LargeMeanPoissonSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new LargeMeanPoissonSampler(rng, this);
     }
 
@@ -330,8 +330,8 @@ public class LargeMeanPoissonSampler
      * {@link Integer#MAX_VALUE}.
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                double mean) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final double mean) {
         return new LargeMeanPoissonSampler(rng, mean);
     }
     /**
@@ -395,9 +395,9 @@ public class LargeMeanPoissonSampler
          * @param p2 the p2 constant
          * @param c1 the c1 constant
          */
-        LargeMeanPoissonSamplerState(double lambda, double logLambda,
-                double logLambdaFactorial, double delta, double halfDelta, double twolpd,
-                double p1, double p2, double c1) {
+        LargeMeanPoissonSamplerState(final double lambda, final double logLambda,
+                                     final double logLambdaFactorial, final double delta, final double halfDelta,
+                                     final double twolpd, final double p1, final double p2, final double c1) {
             this.lambda = lambda;
             this.logLambda = logLambda;
             this.logLambdaFactorial = logLambdaFactorial;

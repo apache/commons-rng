@@ -67,8 +67,8 @@ public class InverseTransformDiscreteSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param function Inverse cumulative probability function.
      */
-    public InverseTransformDiscreteSampler(UniformRandomProvider rng,
-                                           DiscreteInverseCumulativeProbabilityFunction function) {
+    public InverseTransformDiscreteSampler(final UniformRandomProvider rng,
+                                           final DiscreteInverseCumulativeProbabilityFunction function) {
         super(null);
         this.rng = rng;
         this.function = function;
@@ -95,7 +95,7 @@ public class InverseTransformDiscreteSampler
      * @since 1.3
      */
     @Override
-    public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+    public SharedStateDiscreteSampler withUniformRandomProvider(final UniformRandomProvider rng) {
         return new InverseTransformDiscreteSampler(rng, function);
     }
 
@@ -112,8 +112,8 @@ public class InverseTransformDiscreteSampler
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
-    public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
-                                                DiscreteInverseCumulativeProbabilityFunction function) {
+    public static SharedStateDiscreteSampler of(final UniformRandomProvider rng,
+                                                final DiscreteInverseCumulativeProbabilityFunction function) {
         return new InverseTransformDiscreteSampler(rng, function);
     }
 }

@@ -28,7 +28,7 @@ package org.apache.commons.rng.simple.internal;
 public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
     /** {@inheritDoc} */
     @Override
-    public SEED convert(SEED seed) {
+    public SEED convert(final SEED seed) {
         return seed;
     }
 }

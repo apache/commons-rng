@@ -48,7 +48,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * @throws IndexOutOfBoundsException if the result is too large to be represented
      * by a {@code long} (i.e. if {@code n > 20}), or {@code n} is negative.
      */
-    public static long factorial(int n)  {
+    public static long factorial(final int n)  {
         return FACTORIALS[n];
     }
 
@@ -61,7 +61,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
      */
-    public static double validateProbabilities(double[] probabilities) {
+    public static double validateProbabilities(final double[] probabilities) {
         if (probabilities == null || probabilities.length == 0) {
             throw new IllegalArgumentException("Probabilities must not be empty.");
         }
@@ -84,7 +84,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * @param probability Probability.
      * @throws IllegalArgumentException if {@code probability} is negative, infinite or {@code NaN}.
      */
-    public static void validateProbability(double probability) {
+    public static void validateProbability(final double probability) {
         if (probability < 0 ||
             Double.isInfinite(probability) ||
             Double.isNaN(probability)) {
@@ -105,8 +105,8 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * sharing state.
      */
     static NormalizedGaussianSampler newNormalizedGaussianSampler(
-            NormalizedGaussianSampler sampler,
-            UniformRandomProvider rng) {
+            final NormalizedGaussianSampler sampler,
+            final UniformRandomProvider rng) {
         if (!(sampler instanceof SharedStateSampler<?>)) {
             throw new UnsupportedOperationException("The underlying sampler cannot share state");
         }
@@ -138,11 +138,11 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
          * @param cache Existing cache.
          * @throws NegativeArraySizeException if {@code numValues < 0}.
          */
-        private FactorialLog(int numValues,
-                             double[] cache) {
+        private FactorialLog(final int numValues,
+                             final double[] cache) {
             logFactorials = new double[numValues];
 
-            int endCopy;
+            final int endCopy;
             if (cache != null && cache.length > BEGIN_LOG_FACTORIALS) {
                 // Copy available values.
                 endCopy = Math.min(cache.length, numValues);
