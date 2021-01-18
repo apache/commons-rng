@@ -84,7 +84,7 @@ public class MersenneTwister64 extends LongProvider {
     /** Least significant 31 bits. */
     private static final long LM = 0x7fffffffL;
     /** Bytes pool. */
-    private long[] mt = new long[NN];
+    private final long[] mt = new long[NN];
     /** Current index in the bytes pool. */
     private int mti;
 

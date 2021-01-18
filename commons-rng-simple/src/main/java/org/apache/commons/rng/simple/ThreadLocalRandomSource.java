@@ -69,7 +69,7 @@ public final class ThreadLocalRandomSource {
      *
      * <p>This should only be modified to create new instances in a synchronized block.
      */
-    private static EnumMap<RandomSource, ThreadLocal<UniformRandomProvider>> sources =
+    private static final EnumMap<RandomSource, ThreadLocal<UniformRandomProvider>> SOURCES =
         new EnumMap<RandomSource,
                     ThreadLocal<UniformRandomProvider>>(RandomSource.class);
 
@@ -112,7 +112,7 @@ public final class ThreadLocalRandomSource {
      * @throws IllegalArgumentException if the source is null or the source requires arguments
      */
     public static UniformRandomProvider current(RandomSource source) {
-        ThreadLocal<UniformRandomProvider> rng = sources.get(source);
+        ThreadLocal<UniformRandomProvider> rng = SOURCES.get(source);
         // Implement double-checked locking:
         // https://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java
         if (rng == null) {
@@ -122,11 +122,11 @@ public final class ThreadLocalRandomSource {
                 throw new IllegalArgumentException("Random source is null");
             }
 
-            synchronized (sources) {
-                rng = sources.get(source);
+            synchronized (SOURCES) {
+                rng = SOURCES.get(source);
                 if (rng == null) {
                     rng = new ThreadLocalRng(source);
-                    sources.put(source, rng);
+                    SOURCES.put(source, rng);
                 }
             }
         }

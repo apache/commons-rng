@@ -189,9 +189,7 @@ public class ISAACRandom extends IntProvider {
         isaacA = 0;
         isaacB = 0;
         isaacC = 0;
-        for (int j = 0; j < arr.length; j++) {
-            arr[j] = GLD_RATIO;
-        }
+        Arrays.fill(arr, GLD_RATIO);
         for (int j = 0; j < 4; j++) {
             shuffle();
         }

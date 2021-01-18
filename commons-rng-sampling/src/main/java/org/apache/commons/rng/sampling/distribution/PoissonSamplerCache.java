@@ -75,7 +75,7 @@ public class PoissonSamplerCache {
      * {@code N = (int)Math.floor(mean)}.
      */
     private final int maxN;
-    /** The cache of states between {@link minN} and {@link maxN}. */
+    /** The cache of states between {@link #minN} and {@link #maxN}. */
     private final LargeMeanPoissonSamplerState[] values;
 
     /**
