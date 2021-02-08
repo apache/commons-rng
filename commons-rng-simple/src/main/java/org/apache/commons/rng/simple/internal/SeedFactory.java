@@ -72,7 +72,7 @@ public final class SeedFactory {
         seedGen.nextBytes(bytes);
         final long[] seed = NumberFactory.makeLongArray(bytes);
         // The XoRoShiRo1024PlusPlus generator cannot recover from an all zero seed and
-        // will produce low quality initial output if initialised with some zeros.
+        // will produce low quality initial output if initialized with some zeros.
         // Ensure it is non zero at all array positions using a SplitMix64
         // generator (this is insensitive to a zero seed so can use the first seed value).
         final SplitMix64 rng = new SplitMix64(seed[0]);
