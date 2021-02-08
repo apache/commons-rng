@@ -597,7 +597,7 @@ class StressTestCommand implements Callable<Void> {
         private long nextReportTimestamp;
 
         /**
-         * Create a new instance. The total number of tasks must be initialised before use.
+         * Create a new instance. The total number of tasks must be initialized before use.
          *
          * @param parallelTasks The number of parallel tasks.
          */
@@ -802,7 +802,7 @@ class StressTestCommand implements Callable<Void> {
             Arrays.sort(sortedDurations, 0, completed);
 
             // Return median of small lists. If no tasks have finished this returns zero.
-            // as the durations is zero initialised.
+            // as the durations is zero initialized.
             if (completed < 4) {
                 return sortedDurations[completed / 2];
             }

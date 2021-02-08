@@ -549,7 +549,7 @@ public class PoissonSamplersPerformance {
          * Store the cumulative probability for all samples up to and including x.
          * This is F(x) = sum of p(X<=x).
          *
-         * <p>This table is initialised to store cumulative probabilities for x up to 2 * mean
+         * <p>This table is initialized to store cumulative probabilities for x up to 2 * mean
          * or 99.99% (whichever is larger).
          */
         private final double[] fx;
@@ -736,7 +736,7 @@ public class PoissonSamplersPerformance {
          * Store the cumulative probability for all samples up to and including x. This is
          * F(x) = sum of p(X<=x).
          *
-         * <p>This table is initialised to store cumulative probabilities for x up to 2 * mean
+         * <p>This table is initialized to store cumulative probabilities for x up to 2 * mean
          * or 99.99% (whichever is larger).
          */
         private final double[] cumulativeProbability;

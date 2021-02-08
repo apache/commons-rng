@@ -126,7 +126,7 @@ public class SeedGenerationPerformance {
 
         /** No public construction. */
         private ThreadLocalRNG() {
-            // Do nothing. The seed could be initialised here.
+            // Do nothing. The seed could be initialized here.
         }
 
         @Override
@@ -158,7 +158,7 @@ public class SeedGenerationPerformance {
 
         /** No public construction. */
         private ThreadLocalSplitMix() {
-            // Do nothing. The seed could be initialised here.
+            // Do nothing. The seed could be initialized here.
         }
 
         @Override
@@ -190,7 +190,7 @@ public class SeedGenerationPerformance {
 
         /** No public construction. */
         private ThreadLocalSequence() {
-            // Do nothing. The seed could be initialised here.
+            // Do nothing. The seed could be initialized here.
         }
 
         @Override
