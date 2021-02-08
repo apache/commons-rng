@@ -162,7 +162,7 @@ public class CombinationSamplerTest {
         // otherwise they are negative.
         final int totalBitCombinations = 1 << n;
         int[] codeLookup = new int[totalBitCombinations];
-        Arrays.fill(codeLookup, -1); // initialise as negative
+        Arrays.fill(codeLookup, -1); // initialize as negative
         int codes = 0;
         for (int i = 0; i < totalBitCombinations; i++) {
             if (Integer.bitCount(i) == k) {

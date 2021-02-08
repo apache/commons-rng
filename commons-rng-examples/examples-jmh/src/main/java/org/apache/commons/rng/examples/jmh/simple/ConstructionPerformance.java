@@ -143,7 +143,7 @@ public class ConstructionPerformance {
     }
 
     /**
-     * Default constructor to initialise state.
+     * Default constructor to initialize state.
      */
     public ConstructionPerformance() {
         values = new Object[SEEDS];

@@ -796,7 +796,7 @@ public class PoissonSamplersPerformance {
                 cumulativeProbability[0] = probabilityX;
 
                 guideTable = new int[cumulativeProbability.length + 1];
-                initialiseGuideTable(probabilityX);
+                initializeGuideTable(probabilityX);
             } else {
                 // This will catch NaN mean values
                 throw new IllegalArgumentException("No probability for mean " + mean);
@@ -809,7 +809,7 @@ public class PoissonSamplersPerformance {
          *
          * @param p0 the probability for x=0
          */
-        private void initialiseGuideTable(double p0) {
+        private void initializeGuideTable(double p0) {
             for (int index = getGuideTableIndex(p0); index >= 0; index--) {
                 guideTable[index] = 1;
             }

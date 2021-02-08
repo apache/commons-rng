@@ -182,7 +182,7 @@ public class LargeMeanPoissonSampler
         // Plain constructor uses the uncached function.
         factorialLog = NO_CACHE_FACTORIAL_LOG;
 
-        // Use the state to initialise the algorithm
+        // Use the state to initialize the algorithm
         lambda = state.getLambdaRaw();
         logLambda = state.getLogLambda();
         logLambdaFactorial = state.getLogLambdaFactorial();
