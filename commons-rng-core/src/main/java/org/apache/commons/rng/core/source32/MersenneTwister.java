@@ -165,7 +165,7 @@ public class MersenneTwister extends IntProvider {
         // Accept empty seed.
         final int[] seed = (inputSeed.length == 0) ? new int[1] : inputSeed;
 
-        initialiseState(state);
+        initializeState(state);
 
         final int nextIndex = mixSeedAndState(state, seed);
 
@@ -179,7 +179,7 @@ public class MersenneTwister extends IntProvider {
      *
      * @param state State to be filled (must be allocated).
      */
-    private static void initialiseState(int[] state) {
+    private static void initializeState(int[] state) {
         long mt = 19650218 & INT_MASK_LONG;
         state[0] = (int) mt;
         for (int i = 1; i < state.length; i++) {
