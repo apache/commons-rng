@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="128">
+        New "UnitBallSampler" to generate coordinates uniformly within an n-unit ball.
+      </action>
       <action dev="aherbert" type="add" issue="126">
         "PoissonSamplerCache": Method to return a SharedStateDiscreteSampler.
       </action>
