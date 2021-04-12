@@ -75,6 +75,13 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="fix" issue="130">
+        "UnitSphereSampler": Fix 1 dimension sampling to only return vectors containing 1 or -1.
+      </action>
+      <action dev="aherbert" type="update" issue="129">
+        "UnitSphereSampler": Improve performance with specialisations for low order dimensions.
+        Added a factory constructor to create the sampler.
+      </action>
       <action dev="aherbert" type="add" issue="128">
         New "UnitBallSampler" to generate coordinates uniformly within an n-unit ball.
       </action>
