@@ -41,6 +41,8 @@ public abstract class UnitBallSampler implements SharedStateSampler<UnitBallSamp
     private static final int TWO_D = 2;
     /** The dimension for 3D sampling. */
     private static final int THREE_D = 3;
+    /** The mask to extract the lower 53-bits from a long. */
+    private static final long LOWER_53_BITS = -1L >>> 11;
 
     /**
      * Sample uniformly from a 1D unit line.
@@ -228,9 +230,10 @@ public abstract class UnitBallSampler implements SharedStateSampler<UnitBallSamp
      * @return the double
      */
     private static double makeSignedDouble(long bits) {
-        // Upper 53-bits generates a positive number in the range [0, 1).
-        // This has 1 optionally subtracted. Do not use the lower bits on the
-        // assumption they are less random.
-        return ((bits >>> 11) * 0x1.0p-53d) - ((bits >>> 10) & 0x1L);
+        // Use the upper 54 bits on the assumption they are more random.
+        // The sign bit generates a value of 0 or 1 for subtraction.
+        // The next 53 bits generates a positive number in the range [0, 1).
+        // [0, 1) - (0 or 1) => [-1, 1)
+        return (((bits >>> 10) & LOWER_53_BITS) * 0x1.0p-53d) - (bits >>> 63);
     }
 }

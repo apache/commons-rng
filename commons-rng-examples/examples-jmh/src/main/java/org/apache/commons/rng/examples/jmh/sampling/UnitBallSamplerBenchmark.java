@@ -46,7 +46,6 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = { "-server", "-Xms128M", "-Xmx128M" })
 public class UnitBallSamplerBenchmark {
-
     /** Name for the baseline method. */
     private static final String BASELINE = "Baseline";
     /** Name for the rejection method. */
@@ -61,6 +60,8 @@ public class UnitBallSamplerBenchmark {
     private static final String HYPERSPHERE_DISCARD = "HypersphereDiscard";
     /** Error message for an unknown sampler type. */
     private static final String UNKNOWN_SAMPLER = "Unknown sampler type: ";
+    /** The mask to extract the lower 53-bits from a long. */
+    private static final long LOWER_53_BITS = -1L >>> 11;
 
     /**
      * The sampler.
@@ -738,10 +739,11 @@ public class UnitBallSamplerBenchmark {
      * @return the double
      */
     private static double makeSignedDouble(long bits) {
-        // Upper 53-bits generates a positive number in the range [0, 1).
-        // This has 1 optionally subtracted. Do not use the lower bits on the
-        // assumption they are less random.
-        return ((bits >>> 11) * 0x1.0p-53d) - ((bits >>> 10) & 0x1L);
+        // Use the upper 54 bits on the assumption they are more random.
+        // The sign bit generates a value of 0 or 1 for subtraction.
+        // The next 53 bits generates a positive number in the range [0, 1).
+        // [0, 1) - (0 or 1) => [-1, 1)
+        return (((bits >>> 10) & LOWER_53_BITS) * 0x1.0p-53d) - (bits >>> 63);
     }
 
     /**
@@ -763,7 +765,7 @@ public class UnitBallSamplerBenchmark {
      * @param bh Data sink
      * @param data Input data.
      */
-    //@Benchmark
+    @Benchmark
     public void create1D(Blackhole bh, Sampler1D data) {
         runSampler(bh, data);
     }
