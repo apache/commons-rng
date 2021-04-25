@@ -29,15 +29,17 @@
  * <p>
  * When no specific algorithm is provided, one can still sample from any
  * distribution, using the <em>inverse method</em>, as illustrated in:
+ * </p>
  * <ul>
  *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseTransformDiscreteSampler InverseTransformDiscreteSampler}</li>
  *  <li>{@link org.apache.commons.rng.sampling.distribution.InverseTransformContinuousSampler InverseTransformContinuousSampler}</li>
  * </ul>
  *
+ * <p>
  * Algorithms are described in e.g. Luc Devroye (1986), <a href="http://luc.devroye.org/chapter_nine.pdf">chapter 9</a>
  * and <a href="http://luc.devroye.org/chapter_ten.pdf">chapter 10</a>.
- *
  * This <a href="http://www.doc.ic.ac.uk/~wl/papers/07/csur07dt.pdf">paper</a> discusses Gaussian generators.
+ * </p>
  */
 
 package org.apache.commons.rng.sampling.distribution;
