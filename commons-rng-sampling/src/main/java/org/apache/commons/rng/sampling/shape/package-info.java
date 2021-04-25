@@ -21,6 +21,8 @@
  * <p>
  * This package contains classes for sampling coordinates from shapes, for example a unit ball.
  * </p>
+ * 
+ * @since 1.4
  */
 
 package org.apache.commons.rng.sampling.shape;
