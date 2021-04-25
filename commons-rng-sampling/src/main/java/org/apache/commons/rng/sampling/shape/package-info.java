@@ -16,19 +16,11 @@
  */
 
 /**
- * <h3>Samplers</h3>
+ * <h3>Shape samplers</h3>
  *
  * <p>
- * This package provides sampling utilities.
- * </p>
- * <p>
- * The {@link org.apache.commons.rng.sampling.distribution distribution}
- * sub-package provides sampling from statistical distributions.
- * </p>
- * <p>
- * The {@link org.apache.commons.rng.sampling.shape shape}
- * sub-package provides sampling coordinates from shapes.
+ * This package contains classes for sampling coordinates from shapes, for example a unit ball.
  * </p>
  */
 
-package org.apache.commons.rng.sampling;
+package org.apache.commons.rng.sampling.shape;

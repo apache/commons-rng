@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.sampling;
+package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.SharedStateSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 

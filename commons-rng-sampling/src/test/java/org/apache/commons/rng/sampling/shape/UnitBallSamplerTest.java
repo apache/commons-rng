@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.sampling;
+package org.apache.commons.rng.sampling.shape;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,6 +23,8 @@ import java.util.Arrays;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
+import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.sampling.RandomAssert.Sampler;
 
 /**
  * Test for {@link UnitBallSampler}.
