@@ -306,9 +306,8 @@ public final class ProviderBuilder {
                 final long increment = SeedUtils.createLongHexPermutation(source);
                 // The initial state should not be low complexity but the Weyl
                 // state can be any number.
-                final long state = increment;
                 final long weylState = source.nextLong();
-                return new long[] {state, weylState, increment};
+                return new long[] {increment, weylState, increment};
             }
         },
         /** Source of randomness is {@link DotyHumphreySmallFastCounting32}. */
