@@ -46,4 +46,28 @@ public class CoordinatesTest {
             }
         }
     }
+
+    /**
+     * Test {@link Coordinates#requireLength(double[], int, String)} detects invalid lengths.
+     */
+    @Test
+    public void testRequireLengthWithMessageThrows() {
+        final String message = "This should be prepended";
+        for (final double[] c : new double[][] {{0, 1}, {0, 1, 2}}) {
+            final int length = c.length;
+            Assert.assertSame(c, Coordinates.requireLength(c, length, message));
+            try {
+                Coordinates.requireLength(c, length - 1, message);
+                Assert.fail("Did not detect length was too long: " + (length - 1));
+            } catch (IllegalArgumentException ex) {
+                Assert.assertTrue("Missing message prefix", ex.getMessage().startsWith(message));
+            }
+            try {
+                Coordinates.requireLength(c, length + 1, message);
+                Assert.fail("Did not detect length was too short: " + (length + 1));
+            } catch (IllegalArgumentException ex) {
+                Assert.assertTrue("Missing message prefix", ex.getMessage().startsWith(message));
+            }
+        }
+    }
 }

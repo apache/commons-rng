@@ -41,7 +41,7 @@ final class Coordinates {
      * @param values the values
      * @param message the message detail to prepend to the message in the event an exception is thrown
      * @return the values
-     * @throws IllegalArgumentException If a non-finite value is found
+     * @throws IllegalArgumentException if a non-finite value is found
      */
     static double[] requireFinite(double[] values, String message) {
         for (final double value : values) {
@@ -61,5 +61,31 @@ final class Coordinates {
      */
     private static boolean isFinite(double value) {
         return Math.abs(value) <= Double.MAX_VALUE;
+    }
+
+    /**
+     * Check that the values is the specified length. This method is primarily for
+     * parameter validation in methods and constructors, for example:
+     *
+     * <pre>
+     * public Square(double[] topLeft, double[] bottomRight) {
+     *     this.topLeft = Coordinates.requireLength(topLeft, 2, "topLeft");
+     *     this.bottomRight = Coordinates.requireLength(bottomRight, 2, "bottomRight");
+     * }
+     * </pre>
+     *
+     * @param values the values
+     * @param length the length
+     * @param message the message detail to prepend to the message in the event an
+     * exception is thrown
+     * @return the values
+     * @throws IllegalArgumentException if the array length is not the specified length
+     */
+    static double[] requireLength(double[] values, int length, String message) {
+        if (values.length != length) {
+            throw new IllegalArgumentException(String.format("%s length mismatch: %d != %d",
+                    message, values.length, length));
+        }
+        return values;
     }
 }

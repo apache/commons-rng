@@ -75,6 +75,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="135">
+        New "TetrahedronSampler" to sample uniformly from a tetrahedron.
+      </action>
       <action dev="aherbert" type="add" issue="134">
         New "BoxSampler" to sample uniformly from a box (or hyperrectangle).
       </action>
