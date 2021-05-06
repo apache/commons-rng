@@ -67,15 +67,15 @@
 
   <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
     <properties>
       <!-- Array is generated internally in this case. -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='PoissonSamplerCache' or @Image='AliasMethodDiscreteSampler'
-          or @Image='GuideTableDiscreteSampler']"/>
+        value="//ClassOrInterfaceDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
+          or @SimpleName='GuideTableDiscreteSampler']"/>
     </properties>
   </rule>
 
@@ -83,8 +83,8 @@
     <properties>
       <!-- Do not require Utils/Helper suffix -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='ListSampler' or @Image='ProviderBuilder'
-          or @Image='ThreadLocalRandomSource' or @Image='SeedFactory']"/>
+        value="//ClassOrInterfaceDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
+          or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
@@ -92,7 +92,7 @@
   <rule ref="category/java/codestyle.xml/ShortMethodName">
     <properties>
       <!-- Allow samplers to have factory constructor method 'of' -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@Image, '^.*Sampler$')]"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Sampler$')]"/>
     </properties>
   </rule>
 
@@ -100,7 +100,7 @@
     <properties>
       <!-- Increase from default of 200 -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@Image='LargeMeanPoissonSampler' or @Image='MersenneTwister']"/>
+        value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler' or @SimpleName='MersenneTwister']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/CyclomaticComplexity">
@@ -111,24 +111,24 @@
   </rule>
   <rule ref="category/java/design.xml/ExcessiveImports">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/CouplingBetweenObjects">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveMethodLength">
     <properties>
       <!-- The length is due to comments -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='AliasMethodDiscreteSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='AliasMethodDiscreteSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveClassLength">
     <properties>
       <!-- The length is due to multiple implementations as inner classes -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
 
@@ -140,21 +140,21 @@
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='DiscreteProbabilityCollectionSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='DiscreteProbabilityCollectionSampler']"/>
     </properties>
   </rule>
 
   <rule ref="category/java/multithreading.xml/AvoidSynchronizedAtMethodLevel">
     <properties>
       <!-- Allows synchronized method when it is an override of the parent class -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='JDKRandomBridge']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='JDKRandomBridge']"/>
     </properties>
   </rule>
 
   <rule ref="category/java/performance.xml/AvoidUsingShortType">
     <properties>
       <!-- Short datatype is used to optimise 16-bit storage. -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@Image='MarsagliaTsangWangDiscreteSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
 
