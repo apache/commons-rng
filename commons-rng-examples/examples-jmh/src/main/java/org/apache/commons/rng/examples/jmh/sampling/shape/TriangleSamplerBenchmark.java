@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.rng.examples.jmh.sampling;
+package org.apache.commons.rng.examples.jmh.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.UnitSphereSampler;
