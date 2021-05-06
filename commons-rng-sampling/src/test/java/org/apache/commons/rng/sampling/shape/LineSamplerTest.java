@@ -252,7 +252,7 @@ public class LineSamplerTest {
                 final double[] x = sampler.sample();
                 Assert.assertEquals(dimension, x.length);
                 final double c = (x[0] - a[0]) * scale[0];
-                Assert.assertTrue("Not uniformly distributed: " + c, c >= 0.0 && c <= 1.0);
+                Assert.assertTrue("Not uniformly distributed", c >= 0.0 && c <= 1.0);
                 for (int j = 1; j < dimension; j++) {
                     Assert.assertEquals("Not on the line", c, (x[j] - a[j]) * scale[j], 1e-14);
                 }
