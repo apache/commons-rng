@@ -212,7 +212,7 @@ public abstract class BoxSampler implements SharedStateSampler<BoxSampler> {
     }
 
     /**
-     * @return a random Cartesian point within the box.
+     * @return a random Cartesian coordinate within the box.
      */
     public abstract double[] sample();
 
@@ -230,11 +230,13 @@ public abstract class BoxSampler implements SharedStateSampler<BoxSampler> {
 
     /**
      * Create a box sampler with bounds {@code a} and {@code b}.
-     * Points are returned within the box defined by the bounds.
+     * Sampled points are uniformly distributed within the box defined by the bounds.
      *
-     * <p>Sampling is supported in dimensions of 2 or above.
+     * <p>Sampling is supported in dimensions of 2 or above. Single dimension sampling
+     * can be performed using a {@link LineSampler}.
      *
-     * <p>There is no requirement that {@code a <= b}.
+     * <p>Note: There is no requirement that {@code a <= b}. The samples will be uniformly
+     * distributed in the range {@code a} to {@code b} for each dimension.
      *
      * @param a Bound a.
      * @param b Bound b.

@@ -200,10 +200,12 @@ public abstract class UnitBallSampler implements SharedStateSampler<UnitBallSamp
 
     /**
      * Create a unit n-ball sampler for the given dimension.
+     * Sampled points are uniformly distributed within the unit n-ball.
+     *
+     * <p>Sampling is supported in dimensions of 1 or above.
      *
      * @param dimension Space dimension.
-     * @param rng Generator for the individual components of the coordinates. A shallow
-     * copy will be stored in this instance.
+     * @param rng Source of randomness.
      * @return the sampler
      * @throws IllegalArgumentException If {@code dimension <= 0}
      */

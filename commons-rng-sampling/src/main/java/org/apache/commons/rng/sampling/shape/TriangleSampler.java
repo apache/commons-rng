@@ -22,7 +22,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
  * Generate points <a href="https://mathworld.wolfram.com/TrianglePointPicking.html">
- * inside a triangle</a>.
+ * uniformly distributed within a triangle</a>.
  *
  * <ul>
  *  <li>
@@ -271,7 +271,7 @@ public abstract class TriangleSampler implements SharedStateSampler<TriangleSamp
     }
 
     /**
-     * @return a random Cartesian point inside the triangle.
+     * @return a random Cartesian coordinate within the triangle.
      */
     public double[] sample() {
         final double s = rng.nextDouble();
@@ -306,7 +306,7 @@ public abstract class TriangleSampler implements SharedStateSampler<TriangleSamp
 
     /**
      * Create a triangle sampler with vertices {@code a}, {@code b} and {@code c}.
-     * Points are returned within the triangle.
+     * Sampled points are uniformly distributed within the triangle.
      *
      * <p>Sampling is supported in dimensions of 2 or above. Samples will lie in the
      * plane (2D Euclidean space) defined by using the three triangle vertices to

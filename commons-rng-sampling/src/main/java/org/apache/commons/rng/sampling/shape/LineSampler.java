@@ -21,7 +21,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.SharedStateSampler;
 
 /**
- * Generate points on a line.
+ * Generate points uniformly distributed on a line.
  *
  * <p>Sampling uses:</p>
  *
@@ -259,7 +259,7 @@ public abstract class LineSampler implements SharedStateSampler<LineSampler> {
     }
 
     /**
-     * @return a random Cartesian point on the line.
+     * @return a random Cartesian coordinate on the line.
      */
     public double[] sample() {
         final double u = rng.nextDouble();
@@ -282,7 +282,7 @@ public abstract class LineSampler implements SharedStateSampler<LineSampler> {
 
     /**
      * Create a line sampler with vertices {@code a} and {@code b}.
-     * Points are returned on the line segment {@code ab}.
+     * Sampled points are uniformly distributed on the line segment {@code ab}.
      *
      * <p>Sampling is supported in dimensions of 1 or above.
      *
