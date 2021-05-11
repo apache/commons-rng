@@ -16,13 +16,16 @@
  */
 package org.apache.commons.rng.sampling.shape;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.apache.commons.rng.simple.RandomSource;
-import java.util.Arrays;
+
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
+
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Test for {@link TriangleSampler}.
