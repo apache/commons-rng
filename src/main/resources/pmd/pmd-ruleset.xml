@@ -75,7 +75,7 @@
       <!-- Array is generated internally in this case. -->
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
-          or @SimpleName='GuideTableDiscreteSampler']"/>
+          or @SimpleName='GuideTableDiscreteSampler' or @SimpleName='SharedStateDiscreteProbabilitySampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
@@ -117,6 +117,12 @@
         value="//ClassOrInterfaceDeclaration[@SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
+  <rule ref="category/java/codestyle.xml/LinguisticNaming">
+    <properties>
+      <!-- Allow Builder set methods to return the Builder (not void) -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Builder$')]"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/design.xml/NPathComplexity">
     <properties>
@@ -152,7 +158,8 @@
   <rule ref="category/java/design.xml/ExcessiveClassLength">
     <properties>
       <!-- The length is due to multiple implementations as inner classes -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler'
+        or @SimpleName='CompositeSamplers']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/LogicInversion">
@@ -171,10 +178,22 @@
         or @SimpleName='UniformSamplingVisualCheckCommand']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/AvoidThrowingNullPointerException">
+    <properties>
+      <!-- Local implementation of Objects.requireNonNull -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='CompositeSamplers']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
       <property name="ignoreMagicNumbers" value="-1,0,1" />
+    </properties>
+  </rule>
+  <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingMethodName">
+    <properties>
+      <!-- Field INSTANCE matches instance() which returne a generic typed version of the instance.  -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*ObjectSamplerFactory$')]"/>
     </properties>
   </rule>
 
