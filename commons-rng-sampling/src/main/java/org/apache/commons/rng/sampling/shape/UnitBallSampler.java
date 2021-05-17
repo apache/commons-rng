@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
+import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 
@@ -35,7 +35,7 @@ import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSa
  *
  * @since 1.4
  */
-public abstract class UnitBallSampler implements SharedStateSampler<UnitBallSampler> {
+public abstract class UnitBallSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 1D sampling. */
     private static final int ONE_D = 1;
     /** The dimension for 2D sampling. */
@@ -196,7 +196,13 @@ public abstract class UnitBallSampler implements SharedStateSampler<UnitBallSamp
     /**
      * @return a random Cartesian coordinate within the unit n-ball.
      */
+    @Override
     public abstract double[] sample();
+
+    /** {@inheritDoc} */
+    // Redeclare the signature to return a UnitBallSampler not a SharedStateObjectSampler<double[]>
+    @Override
+    public abstract UnitBallSampler withUniformRandomProvider(UniformRandomProvider rng);
 
     /**
      * Create a unit n-ball sampler for the given dimension.

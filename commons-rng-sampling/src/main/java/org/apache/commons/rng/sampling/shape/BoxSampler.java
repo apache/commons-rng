@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
+import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 
 /**
  * Generate points uniformly distributed within a n-dimension box (hyperrectangle).
@@ -32,7 +32,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * @see <a href="https://en.wikipedia.org/wiki/Hyperrectangle">Hyperrectangle (Wikipedia)</a>
  * @since 1.4
  */
-public abstract class BoxSampler implements SharedStateSampler<BoxSampler> {
+public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 2D sampling. */
     private static final int TWO_D = 2;
     /** The dimension for 3D sampling. */
@@ -214,6 +214,7 @@ public abstract class BoxSampler implements SharedStateSampler<BoxSampler> {
     /**
      * @return a random Cartesian coordinate within the box.
      */
+    @Override
     public abstract double[] sample();
 
     /**
@@ -227,6 +228,11 @@ public abstract class BoxSampler implements SharedStateSampler<BoxSampler> {
         final double u = rng.nextDouble();
         return (1.0 - u) * a + u * b;
     }
+
+    /** {@inheritDoc} */
+    // Redeclare the signature to return a BoxSampler not a SharedStateObjectSampler<double[]>
+    @Override
+    public abstract BoxSampler withUniformRandomProvider(UniformRandomProvider rng);
 
     /**
      * Create a box sampler with bounds {@code a} and {@code b}.

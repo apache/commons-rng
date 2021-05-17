@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
+import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 
 /**
  * Generate points <a href="https://mathworld.wolfram.com/TrianglePointPicking.html">
@@ -42,7 +42,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *
  * @since 1.4
  */
-public abstract class TriangleSampler implements SharedStateSampler<TriangleSampler> {
+public abstract class TriangleSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 2D sampling. */
     private static final int TWO_D = 2;
     /** The dimension for 3D sampling. */
@@ -273,6 +273,7 @@ public abstract class TriangleSampler implements SharedStateSampler<TriangleSamp
     /**
      * @return a random Cartesian coordinate within the triangle.
      */
+    @Override
     public double[] sample() {
         final double s = rng.nextDouble();
         final double t = rng.nextDouble();
@@ -303,6 +304,11 @@ public abstract class TriangleSampler implements SharedStateSampler<TriangleSamp
      * @return the sample
      */
     protected abstract double[] createSample(double p1msmt, double s, double t);
+
+    /** {@inheritDoc} */
+    // Redeclare the signature to return a TriangleSampler not a SharedStateObjectSampler<double[]>
+    @Override
+    public abstract TriangleSampler withUniformRandomProvider(UniformRandomProvider rng);
 
     /**
      * Create a triangle sampler with vertices {@code a}, {@code b} and {@code c}.

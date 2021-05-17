@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
+import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 
 /**
  * Generate points uniformly distributed within a
@@ -45,7 +45,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *   Rocchini, C. &amp; Cignoni, P. (2001) Journal of Graphics Tools 5, pp. 9-12</a>
  * @since 1.4
  */
-public class TetrahedronSampler implements SharedStateSampler<TetrahedronSampler> {
+public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 3D sampling. */
     private static final int THREE_D = 3;
     /** The name of vertex a. */
@@ -100,6 +100,7 @@ public class TetrahedronSampler implements SharedStateSampler<TetrahedronSampler
     /**
      * @return a random Cartesian point within the tetrahedron.
      */
+    @Override
     public double[] sample() {
         double s = rng.nextDouble();
         double t = rng.nextDouble();

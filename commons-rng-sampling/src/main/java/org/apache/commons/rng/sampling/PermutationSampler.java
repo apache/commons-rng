@@ -27,7 +27,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <p>This class also contains utilities for shuffling an {@code int[]} array in-place.</p>
  */
-public class PermutationSampler implements SharedStateSampler<PermutationSampler> {
+public class PermutationSampler implements SharedStateObjectSampler<int[]> {
     /** Domain of the permutation. */
     private final int[] domain;
     /** Size of the permutation. */
@@ -82,6 +82,7 @@ public class PermutationSampler implements SharedStateSampler<PermutationSampler
      *
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
+    @Override
     public int[] sample() {
         return SubsetSamplerUtils.partialSample(domain, size, rng, true);
     }

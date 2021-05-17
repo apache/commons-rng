@@ -37,7 +37,7 @@ import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSa
  *
  * @since 1.1
  */
-public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> {
+public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 1D sampling. */
     private static final int ONE_D = 1;
     /** The dimension for 2D sampling. */
@@ -69,7 +69,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         }
 
         @Override
-        public double[] nextVector() {
+        public double[] sample() {
             // Either:
             // 1 - 0 = 1
             // 1 - 2 = -1
@@ -99,7 +99,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         }
 
         @Override
-        public double[] nextVector() {
+        public double[] sample() {
             final double x = sampler.sample();
             final double y = sampler.sample();
             final double sum = x * x + y * y;
@@ -135,7 +135,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         }
 
         @Override
-        public double[] nextVector() {
+        public double[] sample() {
             final double x = sampler.sample();
             final double y = sampler.sample();
             final double z = sampler.sample();
@@ -175,7 +175,7 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
         }
 
         @Override
-        public double[] nextVector() {
+        public double[] sample() {
             final double[] v = new double[dimension];
 
             // Pick a point by choosing a standard Gaussian for each element,
@@ -234,9 +234,20 @@ public class UnitSphereSampler implements SharedStateSampler<UnitSphereSampler> 
 
     /**
      * @return a random normalized Cartesian vector.
+     * @since 1.4
      */
+    @Override
+    public double[] sample() {
+        return delegate.sample();
+    }
+
+    /**
+     * @return a random normalized Cartesian vector.
+     * @deprecated Use {@link #sample()}.
+     */
+    @Deprecated
     public double[] nextVector() {
-        return delegate.nextVector();
+        return sample();
     }
 
     /**

@@ -76,6 +76,19 @@ within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
       <action dev="aherbert" type="add" issue="135">
+        New "ObjectSampler&lt;T&gt;" and "SharedStateObjectSampler&lt;T&gt;" interfaces.
+        These interfaces are implemented by samplers returning an object.<br/>
+        This changes the functional compatibility of existing samplers that implement
+        SharedStatedSampler&lt;R&gt;: CollectionSampler&lt;T&gt;; CombinationSampler;
+        DiscreteProbabilityCollectionSampler&lt;T&gt;; PermutationSampler; and UnitSphereSampler.
+        The method signature of the SharedStateSampler&lt;R&gt; interface remains
+        'public R withUniformRandomProvider(UniformRandomProvider)'. The result can still be
+        assigned to an instance of the same class R; it can no longer be assigned to an instance of
+        SharedStatedSampler&lt;R&gt;. It can now be assigned to SharedStateObjectSampler&lt;T&gt;
+        which can be used to generate samples of type &lt;T&gt;.
+        Code that assigned to SharedStatedSampler&lt;R&gt; should be updated.
+      </action>
+      <action dev="aherbert" type="add" issue="135">
         New "TetrahedronSampler" to sample uniformly from a tetrahedron.
       </action>
       <action dev="aherbert" type="add" issue="134">

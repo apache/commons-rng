@@ -32,7 +32,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @since 1.0
  */
-public class CollectionSampler<T> implements SharedStateSampler<CollectionSampler<T>> {
+public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
     /** Collection to be sampled from. */
     private final List<T> items;
     /** RNG. */
@@ -73,6 +73,7 @@ public class CollectionSampler<T> implements SharedStateSampler<CollectionSample
      *
      * @return a random sample.
      */
+    @Override
     public T sample() {
         return items.get(rng.nextInt(items.size()));
     }

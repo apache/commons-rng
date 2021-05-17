@@ -18,7 +18,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.SharedStateSampler;
+import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 
 /**
  * Generate points uniformly distributed on a line.
@@ -31,7 +31,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  *
  * @since 1.4
  */
-public abstract class LineSampler implements SharedStateSampler<LineSampler> {
+public abstract class LineSampler implements SharedStateObjectSampler<double[]> {
     /** The dimension for 1D sampling. */
     private static final int ONE_D = 1;
     /** The dimension for 2D sampling. */
@@ -261,6 +261,7 @@ public abstract class LineSampler implements SharedStateSampler<LineSampler> {
     /**
      * @return a random Cartesian coordinate on the line.
      */
+    @Override
     public double[] sample() {
         final double u = rng.nextDouble();
         return createSample(1.0 - u, u);
@@ -279,6 +280,11 @@ public abstract class LineSampler implements SharedStateSampler<LineSampler> {
      * @return the sample
      */
     protected abstract double[] createSample(double p1mu, double u);
+
+    /** {@inheritDoc} */
+    // Redeclare the signature to return a LineSampler not a SharedStateObjectSampler<double[]>
+    @Override
+    public abstract LineSampler withUniformRandomProvider(UniformRandomProvider rng);
 
     /**
      * Create a line sampler with vertices {@code a} and {@code b}.

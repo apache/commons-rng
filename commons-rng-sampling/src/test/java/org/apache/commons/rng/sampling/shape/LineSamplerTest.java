@@ -218,8 +218,8 @@ public class LineSamplerTest {
             b = new double[] {-rng.nextDouble()};
         } else {
             final UnitSphereSampler sphere = UnitSphereSampler.of(dimension, rng);
-            a = sphere.nextVector();
-            b = sphere.nextVector();
+            a = sphere.sample();
+            b = sphere.sample();
         }
 
         // To test uniformity on the line all fractional lengths along each dimension

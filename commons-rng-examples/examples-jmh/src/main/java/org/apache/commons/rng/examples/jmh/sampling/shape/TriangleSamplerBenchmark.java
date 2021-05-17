@@ -205,9 +205,9 @@ public class TriangleSamplerBenchmark {
             final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP);
             final int dimension = getDimension();
             final UnitSphereSampler s = UnitSphereSampler.of(dimension, rng);
-            final double[] a = s.nextVector();
-            final double[] b = s.nextVector();
-            final double[] c = s.nextVector();
+            final double[] a = s.sample();
+            final double[] b = s.sample();
+            final double[] c = s.sample();
             sampler = createSampler(a, b, c, rng);
         }
 

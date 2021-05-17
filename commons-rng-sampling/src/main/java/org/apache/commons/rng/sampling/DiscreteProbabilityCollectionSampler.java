@@ -38,8 +38,7 @@ import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
  *
  * @since 1.1
  */
-public class DiscreteProbabilityCollectionSampler<T>
-    implements SharedStateSampler<DiscreteProbabilityCollectionSampler<T>> {
+public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjectSampler<T> {
     /** The error message for an empty collection. */
     private static final String EMPTY_COLLECTION = "Empty collection";
     /** Collection to be sampled from. */
@@ -131,6 +130,7 @@ public class DiscreteProbabilityCollectionSampler<T>
      *
      * @return a random sample.
      */
+    @Override
     public T sample() {
         return items.get(sampler.sample());
     }

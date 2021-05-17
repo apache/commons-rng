@@ -39,7 +39,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * @see PermutationSampler
  */
-public class CombinationSampler implements SharedStateSampler<CombinationSampler> {
+public class CombinationSampler implements SharedStateObjectSampler<int[]> {
     /** Domain of the combination. */
     private final int[] domain;
     /** The number of steps of a full shuffle to perform. */
@@ -117,6 +117,7 @@ public class CombinationSampler implements SharedStateSampler<CombinationSampler
      *
      * @return a random combination.
      */
+    @Override
     public int[] sample() {
         return SubsetSamplerUtils.partialSample(domain, steps, rng, upper);
     }

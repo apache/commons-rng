@@ -432,10 +432,10 @@ public class TetrahedronSamplerBenchmark {
             // This could be configured using @Param
             final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_256_PP);
             final UnitSphereSampler s = UnitSphereSampler.of(3, rng);
-            final double[] a = s.nextVector();
-            final double[] b = s.nextVector();
-            final double[] c = s.nextVector();
-            final double[] d = s.nextVector();
+            final double[] a = s.sample();
+            final double[] b = s.sample();
+            final double[] c = s.sample();
+            final double[] d = s.sample();
             sampler = createSampler(a, b, c, d, rng);
         }
 

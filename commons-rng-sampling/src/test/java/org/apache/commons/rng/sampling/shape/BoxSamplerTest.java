@@ -194,8 +194,8 @@ public class BoxSamplerTest {
         final UniformRandomProvider rng = RandomSource.create(RandomSource.JSF_64, 0xdabfab);
 
         final UnitSphereSampler sphere = UnitSphereSampler.of(dimension, rng);
-        final double[] a = sphere.nextVector();
-        final double[] b = sphere.nextVector();
+        final double[] a = sphere.sample();
+        final double[] b = sphere.sample();
 
         // Assign bins
         final int bins = 10;

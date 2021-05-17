@@ -74,6 +74,8 @@ public class UnitSphereSamplerTest {
         // Count the negatives.
         int count = 0;
         for (int i = 0; i < samples; i++) {
+            // Test the deprecated method once in the test suite.
+            @SuppressWarnings("deprecation")
             final double[] v = generator.nextVector();
             Assert.assertEquals(1, v.length);
             final double d = v[0];
@@ -146,7 +148,7 @@ public class UnitSphereSamplerTest {
         final long[] observed = new long[angleBins];
         final int steps = 100000;
         for (int i = 0; i < steps; ++i) {
-            final double[] v = generator.nextVector();
+            final double[] v = generator.sample();
             Assert.assertEquals(2, v.length);
             Assert.assertEquals(1.0, length(v), 1e-10);
             // Get the polar angle bin from xy
@@ -196,7 +198,7 @@ public class UnitSphereSamplerTest {
         final long[] observed = new long[angleBins * depthBins];
         final int steps = 1000000;
         for (int i = 0; i < steps; ++i) {
-            final double[] v = generator.nextVector();
+            final double[] v = generator.sample();
             Assert.assertEquals(3, v.length);
             Assert.assertEquals(1.0, length(v), 1e-10);
             // Get the polar angle bin from xy
@@ -267,7 +269,7 @@ public class UnitSphereSamplerTest {
         final long[] observed2 = new long[observed1.length];
         final int steps = 1000000;
         for (int i = 0; i < steps; ++i) {
-            final double[] v = generator.nextVector();
+            final double[] v = generator.sample();
             Assert.assertEquals(4, v.length);
             Assert.assertEquals(1.0, length(v), 1e-10);
             // Circle 1
@@ -382,7 +384,7 @@ public class UnitSphereSamplerTest {
             }
         };
 
-        UnitSphereSampler.of(dimension, bad).nextVector();
+        UnitSphereSampler.of(dimension, bad).sample();
     }
 
     /**
@@ -427,7 +429,7 @@ public class UnitSphereSamplerTest {
             }
         };
 
-        final double[] vector = UnitSphereSampler.of(dimension, bad).nextVector();
+        final double[] vector = UnitSphereSampler.of(dimension, bad).sample();
         Assert.assertEquals(dimension, vector.length);
         Assert.assertEquals(1.0, length(vector), 1e-10);
     }
@@ -526,13 +528,13 @@ public class UnitSphereSamplerTest {
             new RandomAssert.Sampler<double[]>() {
                 @Override
                 public double[] sample() {
-                    return sampler1.nextVector();
+                    return sampler1.sample();
                 }
             },
             new RandomAssert.Sampler<double[]>() {
                 @Override
                 public double[] sample() {
-                    return sampler2.nextVector();
+                    return sampler2.sample();
                 }
             });
     }
