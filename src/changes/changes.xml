@@ -75,7 +75,7 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
-      <action dev="aherbert" type="add" issue="135">
+      <action dev="aherbert" type="add" issue="136">
         New "ObjectSampler&lt;T&gt;" and "SharedStateObjectSampler&lt;T&gt;" interfaces.
         These interfaces are implemented by samplers returning an object.<br/>
         This changes the functional compatibility of existing samplers that implement
