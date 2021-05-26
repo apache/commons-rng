@@ -31,4 +31,5 @@
   <suppress checks="LineLength" files=".*[/\\]test[/\\].*" />
   <suppress checks="IllegalCatch" files=".*[/\\]test[/\\].*" />
   <suppress checks="MethodLength" files="(MersenneTwister64|Well44497[ab]|MultiplyWithCarry256)Test" />
+  <suppress checks="FileLength" files="[\\/]StableSamplerTest" />
 </suppressions>

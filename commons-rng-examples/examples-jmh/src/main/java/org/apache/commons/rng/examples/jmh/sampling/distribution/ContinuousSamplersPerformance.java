@@ -29,6 +29,7 @@ import org.apache.commons.rng.sampling.distribution.InverseTransformParetoSample
 import org.apache.commons.rng.sampling.distribution.LevySampler;
 import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.StableSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 
@@ -89,7 +90,8 @@ public class ContinuousSamplersPerformance {
                 "LogNormalSampler.ZigguratSampler.NormalizedGaussian",
                 "ChengBetaSampler",
                 "ContinuousUniformSampler",
-                "InverseTransformParetoSampler"})
+                "InverseTransformParetoSampler",
+                "StableSampler"})
         private String samplerType;
 
         /** The sampler. */
@@ -142,6 +144,8 @@ public class ContinuousSamplersPerformance {
                 sampler = ContinuousUniformSampler.of(rng, 123.4, 5678.9);
             } else if ("InverseTransformParetoSampler".equals(samplerType)) {
                 sampler = InverseTransformParetoSampler.of(rng, 23.45, 0.1234);
+            } else if ("StableSampler".equals(samplerType)) {
+                sampler = StableSampler.of(rng, 1.3, 0.2);
             }
         }
     }

@@ -100,7 +100,7 @@
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
-          or @SimpleName='Coordinates' or @SimpleName='Hex']"/>
+          or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
@@ -159,13 +159,14 @@
     <properties>
       <!-- The length is due to multiple implementations as inner classes -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler'
-        or @SimpleName='CompositeSamplers']"/>
+        or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/LogicInversion">
     <properties>
-      <!-- Logic inversion mimics !Double.isFinite(x) -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='GaussianSampler']"/>
+      <!-- Logic inversion allows detection of NaN for parameters that are expected in a range -->
+      <property name="violationSuppressXPath"
+        value="//ClassOrInterfaceDeclaration[@SimpleName='GaussianSampler' or @SimpleName='StableSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ImmutableField">

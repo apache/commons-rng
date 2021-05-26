@@ -89,4 +89,22 @@
     <BugPattern name="DM_EXIT"/>
   </Match>
 
+  <Match>
+    <!-- This is required to ensure the uniform deviate has exclusive lower bounds. -->
+    <Or>
+      <Class name="org.apache.commons.rng.sampling.distribution.StableSampler$BaseStableSampler"/>
+      <Class name="org.apache.commons.rng.examples.jmh.sampling.distribution.StableSamplerPerformance$StableRandomGenerator"/>
+    </Or>
+    <Or>
+      <Method name="getPhi"/>
+      <Method name="getPhiBy2"/>
+    </Or>
+    <BugPattern name="FE_FLOATING_POINT_EQUALITY"/>
+  </Match>
+  <Match>
+    <!-- This is required to ensure the uniform deviate has exclusive lower bounds. -->
+    <Class name="~.*\.StableSamplerPerformance\$UniformRandomSource.*"/>
+    <BugPattern name="FE_FLOATING_POINT_EQUALITY"/>
+  </Match>
+
 </FindBugsFilter>

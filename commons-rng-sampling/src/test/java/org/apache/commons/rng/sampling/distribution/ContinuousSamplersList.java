@@ -194,6 +194,57 @@ public final class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto),
                 InverseTransformParetoSampler.of(RandomSource.XOR_SHIFT_1024_S_PHI.create(), scalePareto, shapePareto));
 
+            // Stable distributions.
+            // Gaussian case: alpha=2
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, 0, Math.sqrt(2)),
+                StableSampler.of(RandomSource.MSWS.create(), 2, 0));
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, 3.4, 0.75 * Math.sqrt(2)),
+                    StableSampler.of(RandomSource.MSWS.create(), 2, 0, 0.75, 3.4));
+            // Cauchy case: alpha=1, beta=0, gamma=2.73, delta=0.87
+            add(LIST, new org.apache.commons.math3.distribution.CauchyDistribution(unusedRng, 0.87, 2.73),
+                StableSampler.of(RandomSource.KISS.create(), 1, 0, 2.73, 0.87));
+            // Levy case: alpha=0.5, beta=0, gamma=5.7, delta=-1.23
+            // The 0-parameterization requires the reference distribution (1-parameterization) is shifted:
+            // S0(Z) = S1(Z) + gamma * beta * tan(pi * alpha / 2); gamma = 5.7, beta = -1, alpha = 0.5
+            // = gamma * -1 * tan(pi/4) = -gamma
+            add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, -1.23 - 5.7, 5.7),
+                StableSampler.of(RandomSource.JSF_64.create(), 0.5, 1.0, 5.7, -1.23));
+            // Levy case: alpha=0.5, beta=0.
+            // The 0-parameterization requires the reference distribution is shifted by -tan(pi/4) = -1
+            add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, -1.0, 1.0),
+                    StableSampler.of(RandomSource.JSF_64.create(), 0.5, 1.0, 1.0, 0.0));
+
+            // No Stable distribution in Commons Math: Deciles computed using Nolan's STABLE program:
+            // https://edspace.american.edu/jpnolan/stable/
+
+            // General case (alpha > 1): alpha=1.3, beta=0.4, gamma=1.5, delta=-6.4
+            add(LIST, new double[] {-8.95069776039550, -7.89186827865320, -7.25070352695719, -6.71497820795024,
+                -6.19542020516881, -5.63245847779003, -4.94643432673952, -3.95462242999135,
+                -1.90020994991840, Double.POSITIVE_INFINITY},
+                StableSampler.of(RandomSource.JSF_64.create(), 1.3, 0.4, 1.5, -6.4));
+            // General case (alpha < 1): alpha=0.8, beta=-0.3, gamma=0.75, delta=3.25
+            add(LIST, new double[] {-1.60557902637291, 1.45715153372767, 2.39577970333297, 2.86274746879986,
+                3.15907259287483, 3.38633464572309, 3.60858199662215, 3.96001854555454, 5.16261950198042,
+                Double.POSITIVE_INFINITY},
+                StableSampler.of(RandomSource.XO_SHI_RO_512_PP.create(), 0.8, -0.3, 0.75, 3.25));
+            // Alpha 1 case: alpha=1.0, beta=0.3
+            add(LIST, new double[] {-2.08189340389400, -0.990511737972781, -0.539025554211755, -0.204710171216492,
+                0.120388569770401, 0.497197960523146, 1.01228394387185, 1.89061920660563, 4.20559140293206,
+                Double.POSITIVE_INFINITY},
+                StableSampler.of(RandomSource.XO_SHI_RO_512_SS.create(), 1.0, 0.3));
+            // Symmetric case (beta=0): alpha=1.3, beta=0.0
+            add(LIST, new double[] {-2.29713832179280, -1.26781259700375, -0.739212223404616, -0.346771353386198,
+                0.00000000000000, 0.346771353386198, 0.739212223404616, 1.26781259700376, 2.29713832179280,
+                Double.POSITIVE_INFINITY},
+                StableSampler.of(RandomSource.XO_SHI_RO_512_PLUS.create(), 1.3, 0.0));
+
+            // This is the smallest alpha where the CDF can be reliably computed.
+            // Small alpha case: alpha=0.1, beta=-0.2
+            add(LIST, new double[] {-14345498.0855558, -4841.68845914421, -22.6430159400915, -0.194461655962062,
+                0.299822962206354E-1, 0.316768853375197E-1, 0.519382255860847E-1, 21.8595769961580,
+                147637.033822552, Double.POSITIVE_INFINITY},
+                StableSampler.of(RandomSource.XO_SHI_RO_512_PLUS.create(), 0.1, -0.2));
+
             // T ("inverse method").
             final double dofT = 0.76543;
             add(LIST, new org.apache.commons.math3.distribution.TDistribution(unusedRng, dofT),
@@ -268,6 +319,18 @@ public final class ContinuousSamplersList {
                             final ContinuousSampler sampler) {
         list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(sampler,
                                                                                 getDeciles(dist))});
+    }
+
+    /**
+     * @param list List of data (one the "parameters" tested by the Junit parametric test).
+     * @param deciles Deciles of the given distribution.
+     * @param sampler Sampler.
+     */
+    private static void add(List<ContinuousSamplerTestData[]> list,
+                            final double[] deciles,
+                            final ContinuousSampler sampler) {
+        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(sampler,
+                                                                                deciles)});
     }
 
     /**
