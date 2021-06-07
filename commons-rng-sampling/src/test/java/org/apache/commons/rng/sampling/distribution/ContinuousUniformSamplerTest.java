@@ -33,7 +33,7 @@ public class ContinuousUniformSamplerTest {
     public void testNoRestrictionOnOrderOfLowAndHighParameters() {
         final double low = 3.18;
         final double high = 5.23;
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         testSampleInRange(rng, low, high);
         testSampleInRange(rng, high, low);
     }
@@ -54,8 +54,8 @@ public class ContinuousUniformSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double low = 1.23;
         final double high = 4.56;
         final SharedStateContinuousSampler sampler1 =

@@ -79,7 +79,7 @@ public class AliasMethodDiscreteSamplerTest {
      * @return the alias method discrete sampler
      */
     private static SharedStateDiscreteSampler createSampler(double[] probabilities) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         return AliasMethodDiscreteSampler.of(rng, probabilities, -1);
     }
 
@@ -130,7 +130,7 @@ public class AliasMethodDiscreteSamplerTest {
     @Test
     public void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
-        checkSamples(AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), expected), expected);
+        checkSamples(AliasMethodDiscreteSampler.of(RandomSource.SPLIT_MIX_64.create(), expected), expected);
     }
 
     /**
@@ -272,8 +272,8 @@ public class AliasMethodDiscreteSamplerTest {
      * @param probabilities The probabilities
      */
     private static void testSharedStateSampler(double[] probabilities) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         // Use negative alpha to disable padding
         final SharedStateDiscreteSampler sampler1 =
             AliasMethodDiscreteSampler.of(rng1, probabilities, -1);

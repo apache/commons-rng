@@ -46,168 +46,168 @@ public final class ContinuousSamplersList {
             final double meanNormal = -123.45;
             final double sigmaNormal = 6.789;
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                RandomSource.create(RandomSource.KISS));
+                RandomSource.KISS.create());
             // Gaussian (DEPRECATED "Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                new BoxMullerGaussianSampler(RandomSource.create(RandomSource.MT), meanNormal, sigmaNormal));
+                new BoxMullerGaussianSampler(RandomSource.MT.create(), meanNormal, sigmaNormal));
             // Gaussian ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                GaussianSampler.of(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
+                GaussianSampler.of(new BoxMullerNormalizedGaussianSampler(RandomSource.MT.create()),
                                    meanNormal, sigmaNormal));
             // Gaussian ("Marsaglia").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                GaussianSampler.of(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
+                GaussianSampler.of(new MarsagliaNormalizedGaussianSampler(RandomSource.MT.create()),
                                    meanNormal, sigmaNormal));
             // Gaussian ("Ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
-                GaussianSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MT)),
+                GaussianSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.MT.create()),
                                    meanNormal, sigmaNormal));
 
             // Beta ("inverse method").
             final double alphaBeta = 4.3;
             final double betaBeta = 2.1;
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, alphaBeta, betaBeta),
-                RandomSource.create(RandomSource.ISAAC));
+                RandomSource.ISAAC.create());
             // Beta ("Cheng").
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, alphaBeta, betaBeta),
-                ChengBetaSampler.of(RandomSource.create(RandomSource.MWC_256), alphaBeta, betaBeta));
+                ChengBetaSampler.of(RandomSource.MWC_256.create(), alphaBeta, betaBeta));
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, betaBeta, alphaBeta),
-                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_19937_A), betaBeta, alphaBeta));
+                ChengBetaSampler.of(RandomSource.WELL_19937_A.create(), betaBeta, alphaBeta));
             // Beta ("Cheng", alternate algorithm).
             final double alphaBetaAlt = 0.5678;
             final double betaBetaAlt = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, alphaBetaAlt, betaBetaAlt),
-                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_512_A), alphaBetaAlt, betaBetaAlt));
+                ChengBetaSampler.of(RandomSource.WELL_512_A.create(), alphaBetaAlt, betaBetaAlt));
             add(LIST, new org.apache.commons.math3.distribution.BetaDistribution(unusedRng, betaBetaAlt, alphaBetaAlt),
-                ChengBetaSampler.of(RandomSource.create(RandomSource.WELL_19937_C), betaBetaAlt, alphaBetaAlt));
+                ChengBetaSampler.of(RandomSource.WELL_19937_C.create(), betaBetaAlt, alphaBetaAlt));
 
             // Cauchy ("inverse method").
             final double medianCauchy = 0.123;
             final double scaleCauchy = 4.5;
             add(LIST, new org.apache.commons.math3.distribution.CauchyDistribution(unusedRng, medianCauchy, scaleCauchy),
-                RandomSource.create(RandomSource.WELL_19937_C));
+                RandomSource.WELL_19937_C.create());
 
             // Chi-square ("inverse method").
             final int dofChi2 = 12;
             add(LIST, new org.apache.commons.math3.distribution.ChiSquaredDistribution(unusedRng, dofChi2),
-                RandomSource.create(RandomSource.WELL_19937_A));
+                RandomSource.WELL_19937_A.create());
 
             // Exponential ("inverse method").
             final double meanExp = 3.45;
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
-                RandomSource.create(RandomSource.WELL_44497_A));
+                RandomSource.WELL_44497_A.create());
             // Exponential.
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
-                AhrensDieterExponentialSampler.of(RandomSource.create(RandomSource.MT), meanExp));
+                AhrensDieterExponentialSampler.of(RandomSource.MT.create(), meanExp));
 
             // F ("inverse method").
             final int numDofF = 4;
             final int denomDofF = 7;
             add(LIST, new org.apache.commons.math3.distribution.FDistribution(unusedRng, numDofF, denomDofF),
-                RandomSource.create(RandomSource.MT_64));
+                RandomSource.MT_64.create());
 
             // Gamma ("inverse method").
             final double alphaGammaSmallerThanOne = 0.1234;
             final double alphaGammaLargerThanOne = 2.345;
             final double thetaGamma = 3.456;
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
-                RandomSource.create(RandomSource.SPLIT_MIX_64));
+                RandomSource.SPLIT_MIX_64.create());
             // Gamma (alpha < 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaSmallerThanOne, thetaGamma),
-                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S),
+                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.XOR_SHIFT_1024_S_PHI.create(),
                                                           alphaGammaSmallerThanOne, thetaGamma));
             // Gamma (alpha > 1).
             add(LIST, new org.apache.commons.math3.distribution.GammaDistribution(unusedRng, alphaGammaLargerThanOne, thetaGamma),
-                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.create(RandomSource.WELL_44497_B),
+                AhrensDieterMarsagliaTsangGammaSampler.of(RandomSource.WELL_44497_B.create(),
                                                           alphaGammaLargerThanOne, thetaGamma));
 
             // Gumbel ("inverse method").
             final double muGumbel = -4.56;
             final double betaGumbel = 0.123;
             add(LIST, new org.apache.commons.math3.distribution.GumbelDistribution(unusedRng, muGumbel, betaGumbel),
-                RandomSource.create(RandomSource.WELL_1024_A));
+                RandomSource.WELL_1024_A.create());
 
             // Laplace ("inverse method").
             final double muLaplace = 12.3;
             final double betaLaplace = 5.6;
             add(LIST, new org.apache.commons.math3.distribution.LaplaceDistribution(unusedRng, muLaplace, betaLaplace),
-                RandomSource.create(RandomSource.MWC_256));
+                RandomSource.MWC_256.create());
 
             // Levy ("inverse method").
             final double muLevy = -1.098;
             final double cLevy = 0.76;
             add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, muLevy, cLevy),
-                RandomSource.create(RandomSource.TWO_CMRES));
+                RandomSource.TWO_CMRES.create());
 
             // Log normal ("inverse method").
             final double scaleLogNormal = 2.345;
             final double shapeLogNormal = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                RandomSource.create(RandomSource.KISS));
+                RandomSource.KISS.create());
             // Log-normal (DEPRECATED "Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                new BoxMullerLogNormalSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scaleLogNormal, shapeLogNormal));
+                new BoxMullerLogNormalSampler(RandomSource.XOR_SHIFT_1024_S_PHI.create(), scaleLogNormal, shapeLogNormal));
             // Log-normal ("Box-Muller").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(RandomSource.create(RandomSource.XOR_SHIFT_1024_S)),
+                LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(RandomSource.XOR_SHIFT_1024_S_PHI.create()),
                                     scaleLogNormal, shapeLogNormal));
             // Log-normal ("Marsaglia").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                LogNormalSampler.of(new MarsagliaNormalizedGaussianSampler(RandomSource.create(RandomSource.MT_64)),
+                LogNormalSampler.of(new MarsagliaNormalizedGaussianSampler(RandomSource.MT_64.create()),
                                     scaleLogNormal, shapeLogNormal));
             // Log-normal ("Ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                LogNormalSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.create(RandomSource.MWC_256)),
+                LogNormalSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.MWC_256.create()),
                                     scaleLogNormal, shapeLogNormal));
 
             // Logistic ("inverse method").
             final double muLogistic = -123.456;
             final double sLogistic = 7.89;
             add(LIST, new org.apache.commons.math3.distribution.LogisticDistribution(unusedRng, muLogistic, sLogistic),
-                RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 2, 6));
+                RandomSource.TWO_CMRES_SELECT.create((Object) null, 2, 6));
 
             // Nakagami ("inverse method").
             final double muNakagami = 78.9;
             final double omegaNakagami = 23.4;
             final double inverseAbsoluteAccuracyNakagami = org.apache.commons.math3.distribution.NakagamiDistribution.DEFAULT_INVERSE_ABSOLUTE_ACCURACY;
             add(LIST, new org.apache.commons.math3.distribution.NakagamiDistribution(unusedRng, muNakagami, omegaNakagami, inverseAbsoluteAccuracyNakagami),
-                RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 5, 3));
+                RandomSource.TWO_CMRES_SELECT.create((Object) null, 5, 3));
 
             // Pareto ("inverse method").
             final double scalePareto = 23.45;
             final double shapePareto = 0.1234;
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto),
-                RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 9, 11));
+                RandomSource.TWO_CMRES_SELECT.create((Object) null, 9, 11));
             // Pareto.
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto),
-                InverseTransformParetoSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), scalePareto, shapePareto));
+                InverseTransformParetoSampler.of(RandomSource.XOR_SHIFT_1024_S_PHI.create(), scalePareto, shapePareto));
 
             // T ("inverse method").
             final double dofT = 0.76543;
             add(LIST, new org.apache.commons.math3.distribution.TDistribution(unusedRng, dofT),
-                RandomSource.create(RandomSource.ISAAC));
+                RandomSource.ISAAC.create());
 
             // Triangular ("inverse method").
             final double aTriangle = -0.76543;
             final double cTriangle = -0.65432;
             final double bTriangle = -0.54321;
             add(LIST, new org.apache.commons.math3.distribution.TriangularDistribution(unusedRng, aTriangle, cTriangle, bTriangle),
-                RandomSource.create(RandomSource.MT));
+                RandomSource.MT.create());
 
             // Uniform ("inverse method").
             final double loUniform = -1.098;
             final double hiUniform = 0.76;
             add(LIST, new org.apache.commons.math3.distribution.UniformRealDistribution(unusedRng, loUniform, hiUniform),
-                RandomSource.create(RandomSource.TWO_CMRES));
+                RandomSource.TWO_CMRES.create());
             // Uniform.
             add(LIST, new org.apache.commons.math3.distribution.UniformRealDistribution(unusedRng, loUniform, hiUniform),
-                ContinuousUniformSampler.of(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
+                ContinuousUniformSampler.of(RandomSource.MT_64.create(), loUniform, hiUniform));
 
             // Weibull ("inverse method").
             final double alphaWeibull = 678.9;
             final double betaWeibull = 98.76;
             add(LIST, new org.apache.commons.math3.distribution.WeibullDistribution(unusedRng, alphaWeibull, betaWeibull),
-                RandomSource.create(RandomSource.WELL_44497_B));
+                RandomSource.WELL_44497_B.create());
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);

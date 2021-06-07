@@ -33,7 +33,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 0;
         final double theta = 1;
         AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
@@ -45,7 +45,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 1;
         final double theta = 0;
         AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
@@ -74,8 +74,8 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * @param theta Theta.
      */
     private static void testSharedStateSampler(double alpha, double theta) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         // Use instance constructor not factory constructor to exercise 1.X public API
         final AhrensDieterMarsagliaTsangGammaSampler sampler1 =
             new AhrensDieterMarsagliaTsangGammaSampler(rng1, alpha, theta);
@@ -89,7 +89,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      */
     @Test
     public void testToString() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assert.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
                 .toLowerCase().contains("gamma"));
     }

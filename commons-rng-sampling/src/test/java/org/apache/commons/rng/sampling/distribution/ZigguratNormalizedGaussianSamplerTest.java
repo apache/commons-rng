@@ -53,8 +53,8 @@ public class ZigguratNormalizedGaussianSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateContinuousSampler sampler1 =
             ZigguratNormalizedGaussianSampler.<ZigguratNormalizedGaussianSampler>of(rng1);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

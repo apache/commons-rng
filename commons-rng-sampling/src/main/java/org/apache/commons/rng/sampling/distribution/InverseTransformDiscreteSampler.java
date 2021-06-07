@@ -42,7 +42,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * final IntegerDistribution dist = new BinomialDistribution(11, 0.56);
  * // Create the sampler.
  * final DiscreteSampler binomialSampler =
- *     InverseTransformDiscreteSampler.of(RandomSource.create(RandomSource.MT),
+ *     InverseTransformDiscreteSampler.of(RandomSource.MT.create(),
  *                                        new DiscreteInverseCumulativeProbabilityFunction() {
  *                                            public int inverseCumulativeProbability(double p) {
  *                                                return dist.inverseCumulativeProbability(p);

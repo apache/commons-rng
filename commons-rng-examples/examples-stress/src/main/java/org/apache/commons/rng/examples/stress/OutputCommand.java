@@ -260,7 +260,7 @@ class OutputCommand implements Callable<Void> {
             data.add(RNGUtils.parseArgument(argument));
         }
         try {
-            return RandomSource.create(randomSource, objectSeed, data.toArray());
+            return randomSource.create(objectSeed, data.toArray());
         } catch (IllegalStateException | IllegalArgumentException ex) {
             throw new ApplicationException("Failed to create RNG: " + randomSource + ". " + ex.getMessage(), ex);
         }

@@ -102,7 +102,7 @@ public class SeedArrayGenerationPerformance {
          */
         @Setup
         public void setup() {
-            generator = RandomSource.create(RandomSource.valueOf(randomSourceName));
+            generator = RandomSource.valueOf(randomSourceName).create();
         }
     }
 

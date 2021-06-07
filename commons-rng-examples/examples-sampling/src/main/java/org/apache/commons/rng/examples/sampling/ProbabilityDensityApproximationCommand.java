@@ -179,7 +179,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             System.exit(1);
         }
 
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
+        final UniformRandomProvider rng = RandomSource.XOR_SHIFT_1024_S_PHI.create();
 
         final double gaussMean = 1;
         final double gaussSigma = 2;

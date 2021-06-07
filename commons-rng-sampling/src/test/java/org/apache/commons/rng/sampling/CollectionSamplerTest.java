@@ -38,7 +38,7 @@ public class CollectionSamplerTest {
         list.add("RNG");
 
         final CollectionSampler<String> sampler =
-            new CollectionSampler<String>(RandomSource.create(RandomSource.MWC_256),
+            new CollectionSampler<String>(RandomSource.MWC_256.create(),
                                           list);
         final String word = sampler.sample();
         for (String w : list) {
@@ -52,7 +52,7 @@ public class CollectionSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSamplePrecondition() {
         // Must fail for empty collection.
-        new CollectionSampler<String>(RandomSource.create(RandomSource.MT),
+        new CollectionSampler<String>(RandomSource.SPLIT_MIX_64.create(0L),
                                       new ArrayList<String>());
     }
 
@@ -61,8 +61,8 @@ public class CollectionSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<String> list = Arrays.asList("Apache", "Commons", "RNG");
         final CollectionSampler<String> sampler1 =
             new CollectionSampler<String>(rng1, list);

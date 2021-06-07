@@ -151,8 +151,8 @@ public class KempSmallMeanPoissonSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;
         final SharedStateDiscreteSampler sampler1 =
             KempSmallMeanPoissonSampler.of(rng1, mean);

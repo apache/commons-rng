@@ -30,7 +30,7 @@ import org.apache.commons.rng.simple.RandomSource;
  * Tests for {@link CombinationSampler}.
  */
 public class CombinationSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S);
+    private final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 
     @Test
     public void testSampleIsInDomain() {
@@ -118,8 +118,8 @@ public class CombinationSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int n = 17;
         final int k = 3;
         final CombinationSampler sampler1 =

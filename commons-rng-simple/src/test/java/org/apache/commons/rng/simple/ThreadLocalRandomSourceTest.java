@@ -49,7 +49,7 @@ public class ThreadLocalRandomSourceTest {
         ThreadLocalRandomSource.current(null);
     }
 
-    //@Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCurrentThrowsForRandomSourceWithDataArguments() {
         ThreadLocalRandomSource.current(RandomSource.TWO_CMRES_SELECT);
     }

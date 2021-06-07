@@ -32,7 +32,7 @@ public class InverseTransformParetoSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroScale() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 0;
         final double shape = 1;
         InverseTransformParetoSampler.of(rng, scale, shape);
@@ -44,7 +44,7 @@ public class InverseTransformParetoSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;
         final double shape = 0;
         InverseTransformParetoSampler.of(rng, scale, shape);
@@ -55,8 +55,8 @@ public class InverseTransformParetoSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1.23;
         final double shape = 4.56;
         final SharedStateContinuousSampler sampler1 =

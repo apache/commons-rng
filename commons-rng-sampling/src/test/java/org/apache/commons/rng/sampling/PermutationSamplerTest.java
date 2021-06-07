@@ -30,14 +30,14 @@ import org.apache.commons.rng.simple.RandomSource;
  * Tests for {@link PermutationSampler}.
  */
 public class PermutationSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, 1232343456L);
+    private final UniformRandomProvider rng = RandomSource.ISAAC.create(1232343456L);
     private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
     public void testSampleTrivial() {
         final int n = 6;
         final int k = 3;
-        final PermutationSampler sampler = new PermutationSampler(RandomSource.create(RandomSource.KISS),
+        final PermutationSampler sampler = new PermutationSampler(RandomSource.KISS.create(),
                                                                   n, k);
         final int[] random = sampler.sample();
         SAMPLE: for (int s : random) {
@@ -191,8 +191,8 @@ public class PermutationSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int n = 17;
         final int k = 13;
         final PermutationSampler sampler1 =

@@ -101,13 +101,13 @@ public class SeedGenerationPerformance {
     private final AtomicLong state = new AtomicLong();
 
     /** The XoRoShiRo128Plus RNG. */
-    private final UniformRandomProvider xoRoShiRo128Plus = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS);
+    private final UniformRandomProvider xoRoShiRo128Plus = RandomSource.XO_RO_SHI_RO_128_PLUS.create();
 
     /** The XorShift1024StarPhi RNG. */
-    private final UniformRandomProvider xorShift1024StarPhi = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
+    private final UniformRandomProvider xorShift1024StarPhi = RandomSource.XOR_SHIFT_1024_S_PHI.create();
 
     /** The Well44497b RNG. */
-    private final UniformRandomProvider well44497b = RandomSource.create(RandomSource.WELL_44497_B);
+    private final UniformRandomProvider well44497b = RandomSource.WELL_44497_B.create();
 
     /** The JDK Random instance (the implementation is thread-safe). */
     private final Random random = new Random();

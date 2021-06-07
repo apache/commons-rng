@@ -158,7 +158,7 @@ public class PoissonSamplerCachePerformance {
     static {
         // Build a random seed for all the tests
         SEED = new int[SEED_SIZE];
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.MWC_256);
+        final UniformRandomProvider rng = RandomSource.MWC_256.create();
         for (int i = 0; i < SEED.length; i++) {
             SEED[i] = rng.nextInt();
         }
@@ -219,7 +219,7 @@ public class PoissonSamplerCachePerformance {
             final RandomSource randomSource = RandomSource
                     .valueOf(randomSourceName);
             // Use the same seed
-            generator = RandomSource.create(randomSource, SEED.clone());
+            generator = randomSource.create(SEED.clone());
             state = generator.saveState();
         }
     }

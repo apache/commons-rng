@@ -131,7 +131,7 @@ public class UnitBallSamplerBenchmark {
         @Setup
         public void setup() {
             // This could be configured using @Param
-            final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP);
+            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             sampler = createSampler(rng);
         }
 

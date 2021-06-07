@@ -125,7 +125,7 @@ public class UnitBallSamplerTest {
         Arrays.fill(expected, (double) samples / layers);
 
         // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_512_PP, 0xa1b2c3d4L);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xa1b2c3d4L);
         final UnitBallSampler sampler = UnitBallSampler.of(dimension, rng);
         for (int loop = 0; loop < 1; loop++) {
             // Assign each coordinate to a layer inside the ball and an orthant using the sign
@@ -224,8 +224,8 @@ public class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final UnitBallSampler sampler1 = UnitBallSampler.of(dimension, rng1);
         final UnitBallSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(

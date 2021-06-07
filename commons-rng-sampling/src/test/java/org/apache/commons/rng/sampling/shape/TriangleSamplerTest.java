@@ -82,7 +82,7 @@ public class TriangleSamplerTest {
         // Test that a(1 - s - t) + sb + tc does not overflow is s+t = 1
         final double max = Double.MAX_VALUE;
         s -= delta;
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP);
+        final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
         for (int n = 0; n < 100; n++) {
             Assert.assertNotEquals(Double.POSITIVE_INFINITY, (1 - s - t) * max + s * max + t * max, 0.0);
             s = rng.nextDouble();
@@ -215,9 +215,9 @@ public class TriangleSamplerTest {
                 Double.NEGATIVE_INFINITY, c2[2][1] - c2[1][1], 0.0);
 
         final TriangleSampler sampler1 = TriangleSampler.of(c1[0],  c1[1],  c1[2],
-                RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
         final TriangleSampler sampler2 = TriangleSampler.of(c2[0],  c2[1],  c2[2],
-                RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -312,7 +312,7 @@ public class TriangleSamplerTest {
         }
 
         // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_512_PP, 0xfabcab);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xfabcab);
         final TriangleSampler sampler1 = TriangleSampler.of(forward.apply(a), forward.apply(d), forward.apply(b), rng);
         final TriangleSampler sampler2 = TriangleSampler.of(forward.apply(b), forward.apply(c), forward.apply(e), rng);
         final TriangleSampler sampler3 = TriangleSampler.of(forward.apply(c), forward.apply(d), forward.apply(e), rng);
@@ -390,8 +390,8 @@ public class TriangleSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
@@ -443,8 +443,8 @@ public class TriangleSamplerTest {
      * @param dimension the dimension
      */
     private static void testChangedInputCoordinates(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
@@ -523,7 +523,7 @@ public class TriangleSamplerTest {
             throw new AssertionError("Unsupported dimension: " + dimension);
         }
 
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 789L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(789L);
         double sum = 0;
         for (int n = 0; n < 10; n++) {
             final double[] a = new double[] {rng.nextDouble(), rng.nextDouble()};

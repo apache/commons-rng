@@ -202,7 +202,7 @@ public class TriangleSamplerBenchmark {
         @Setup(Level.Iteration)
         public void setup() {
             // This could be configured using @Param
-            final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP);
+            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             final int dimension = getDimension();
             final UnitSphereSampler s = UnitSphereSampler.of(dimension, rng);
             final double[] a = s.sample();

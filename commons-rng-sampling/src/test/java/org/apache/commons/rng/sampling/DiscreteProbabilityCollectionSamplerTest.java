@@ -34,7 +34,7 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 public class DiscreteProbabilityCollectionSamplerTest {
     /** RNG. */
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.WELL_1024_A);
+    private final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create();
 
     @Test(expected = IllegalArgumentException.class)
     public void testPrecondition1() {
@@ -112,8 +112,8 @@ public class DiscreteProbabilityCollectionSamplerTest {
 
     @Test
     public void testSampleUsingMap() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<Integer> items = Arrays.asList(1, 3, 4, 6, 9);
         final double[] probabilities = {0.1, 0.2, 0.3, 0.4, 0.5};
         final DiscreteProbabilityCollectionSampler<Integer> sampler1 =
@@ -176,8 +176,8 @@ public class DiscreteProbabilityCollectionSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<Double> items = Arrays.asList(new Double[] {1d, 2d, 3d, 4d});
         final DiscreteProbabilityCollectionSampler<Double> sampler1 =
             new DiscreteProbabilityCollectionSampler<Double>(rng1,

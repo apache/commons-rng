@@ -129,7 +129,7 @@ public abstract class BaselineSources {
             provider = createBaseline();
         } else {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            provider = RandomSource.create(randomSource);
+            provider = randomSource.create();
         }
     }
 

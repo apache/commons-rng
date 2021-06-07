@@ -430,7 +430,7 @@ public class TetrahedronSamplerBenchmark {
         @Setup(Level.Iteration)
         public void setup() {
             // This could be configured using @Param
-            final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_256_PP);
+            final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_PP.create();
             final UnitSphereSampler s = UnitSphereSampler.of(3, rng);
             final double[] a = s.sample();
             final double[] b = s.sample();

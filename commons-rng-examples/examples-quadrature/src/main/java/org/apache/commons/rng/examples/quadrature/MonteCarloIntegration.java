@@ -38,7 +38,7 @@ public abstract class MonteCarloIntegration {
      */
     public MonteCarloIntegration(RandomSource source,
                                  int dimension) {
-        this.rng = RandomSource.create(source);
+        this.rng = source.create();
         this.dimension = dimension;
     }
 

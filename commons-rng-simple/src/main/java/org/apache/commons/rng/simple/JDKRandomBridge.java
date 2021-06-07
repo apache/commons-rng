@@ -59,7 +59,7 @@ public final class JDKRandomBridge extends Random {
     public JDKRandomBridge(RandomSource source,
                            Object seed) {
         this.source = source;
-        delegate = RandomSource.create(source, seed);
+        delegate = source.create(seed);
         isInitialized = true;
     }
 
@@ -67,7 +67,7 @@ public final class JDKRandomBridge extends Random {
     @Override
     public synchronized void setSeed(long seed) {
         if (isInitialized) {
-            delegate = RandomSource.create(source, seed);
+            delegate = source.create(seed);
 
             // Force the clearing of the "haveNextNextGaussian" flag
             // (cf. Javadoc of the base class); the value passed here
@@ -128,7 +128,7 @@ public final class JDKRandomBridge extends Random {
         input.defaultReadObject();
 
         // Recreate the "delegate" from serialized info.
-        delegate = RandomSource.create(source);
+        delegate = source.create();
         // And restore its state.
         // Avoid the use of input.readObject() to deserialize by manually reading the byte[].
         // Note: ObjectInputStream.readObject() will execute the readObject() method of the named

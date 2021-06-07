@@ -32,7 +32,7 @@ public class RejectionInversionZipfSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroNumberOfElements() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 0;
         final double exponent = 1;
         RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
@@ -44,7 +44,7 @@ public class RejectionInversionZipfSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroExponent() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 1;
         final double exponent = 0;
         RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
@@ -55,8 +55,8 @@ public class RejectionInversionZipfSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 7;
         final double exponent = 1.23;
         final SharedStateDiscreteSampler sampler1 =

@@ -43,7 +43,7 @@ public final class DiceGameApplication {
                                 int numRounds,
                                 RandomSource identifier) {
         game = new DiceGame(numPlayers, numRounds,
-                            RandomSource.create(identifier),
+                            identifier.create(),
                             4.3, 2.1);
     }
 

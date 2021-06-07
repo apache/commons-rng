@@ -87,8 +87,8 @@ public final class ProviderBuilder {
      *
      * @param source RNG specification.
      * @return a new RNG instance.
-     * @throws IllegalStateException if data is missing to initialize the
-     * generator implemented by the given {@code source}.
+     * @throws IllegalArgumentException if argument data to initialize the
+     * generator implemented by the given {@code source} is missing.
      * @since 1.3
      */
     public static RestorableUniformRandomProvider create(RandomSourceInternal source) {
@@ -105,8 +105,8 @@ public final class ProviderBuilder {
      * @param args Additional arguments to the implementation's constructor.
      * @return a new RNG instance.
      * @throws UnsupportedOperationException if the seed type is invalid.
-     * @throws IllegalStateException if data is missing to initialize the
-     * generator implemented by the given {@code source}.
+     * @throws IllegalArgumentException if argument data to initialize the
+     * generator implemented by the given {@code source} is invalid.
      */
     public static RestorableUniformRandomProvider create(RandomSourceInternal source,
                                                          Object seed,

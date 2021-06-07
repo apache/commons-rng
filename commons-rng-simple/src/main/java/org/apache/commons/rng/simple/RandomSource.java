@@ -26,17 +26,17 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  *
  * <p>Usage examples:</p>
  * <pre><code>
- *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+ *  UniformRandomProvider rng = RandomSource.MT.create();
  * </code></pre>
  * or
  * <pre><code>
  *  final int[] seed = new int[] { 196, 9, 0, 226 };
- *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT, seed);
+ *  UniformRandomProvider rng = RandomSource.MT.create(seed);
  * </code></pre>
  * or
  * <pre><code>
  *  final int[] seed = RandomSource.createIntArray(256);
- *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT, seed);
+ *  UniformRandomProvider rng = RandomSource.MT.create(seed);
  * </code></pre>
  * where the first argument to method {@code create} is the identifier
  * of the generator's concrete implementation, and the second the is the
@@ -600,8 +600,8 @@ public enum RandomSource {
     /**
      * Creates a seed suitable for the implementing class represented by this random source.
      *
-     * <p>The seed will be created as if passing a {@code null} seed to the factory method
-     * {@link #create(RandomSource, Object, Object...)}. It will satisfy the seed size and any
+     * <p>The seed will be created as if passing a {@code null} seed to the method
+     * {@link #create(Object, Object...)}. It will satisfy the seed size and any
      * other seed requirements for the implementing class. The seed is converted from the native
      * type to a byte representation.</p>
      *
@@ -609,7 +609,7 @@ public enum RandomSource {
      * <pre><code>
      *  RandomSource source = ...;
      *  byte[] seed = source.createSeed();
-     *  UniformRandomProvider rng = RandomSource.create(source, seed);
+     *  UniformRandomProvider rng = source.create(seed);
      * </code></pre>
      *
      * @return the seed
@@ -631,7 +631,7 @@ public enum RandomSource {
      *  RandomSource source = ...;
      *  UniformRandomProvider seedRng = new JDKRandomWrapper(new SecureRandom());
      *  byte[] seed = source.createSeed(seedRng);
-     *  UniformRandomProvider rng = RandomSource.create(source, seed);
+     *  UniformRandomProvider rng = source.create(seed);
      * </code></pre>
      *
      * @param rng Source of randomness.
@@ -654,7 +654,7 @@ public enum RandomSource {
      *  RandomSource source = ...;
      *  if (source.isJumpable()) {
      *      JumpableUniformRandomProvider rng =
-     *          (JumpableUniformRandomProvider) RandomSource.create(source);
+     *          (JumpableUniformRandomProvider) source.create();
      *  }
      * </code></pre>
      *
@@ -677,7 +677,7 @@ public enum RandomSource {
      *  RandomSource source = ...;
      *  if (source.isJumpable()) {
      *      LongJumpableUniformRandomProvider rng =
-     *          (LongJumpableUniformRandomProvider) RandomSource.create(source);
+     *          (LongJumpableUniformRandomProvider) source.create();
      *  }
      * </code></pre>
      *
@@ -707,6 +707,93 @@ public enum RandomSource {
      *
      * <p>Usage example:</p>
      * <pre><code>
+     *  UniformRandomProvider rng = RandomSource.MT.create();
+     * </code></pre>
+     * <p>or, if a {@link RestorableUniformRandomProvider "save/restore"} functionality is needed,</p>
+     * <pre><code>
+     *  RestorableUniformRandomProvider rng = RandomSource.MT.create();
+     * </code></pre>
+     *
+     * <p>This method will raise an exception if the generator requires arguments in addition
+     * to a seed (e.g. {@link #TWO_CMRES_SELECT}).</p>
+     *
+     * @return the RNG.
+     * @throws IllegalArgumentException if the generator requires arguments in addition
+     * to a seed.
+     *
+     * @see #create(Object,Object[])
+     */
+    public RestorableUniformRandomProvider create() {
+        return ProviderBuilder.create(getInternalIdentifier());
+    }
+
+    /**
+     * Creates a random number generator with the given {@code seed}.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create(0x123abcL);
+     *  UniformRandomProvider rng = RandomSource.TWO_CMRES_SELECT.create(26219, 6, 9);
+     *  // null seed with arguments
+     *  UniformRandomProvider rng = RandomSource.TWO_CMRES_SELECT.create((Object) null, 6, 9);
+     * </code></pre>
+     *
+     * <p>Valid types for the {@code seed} are:</p>
+     *  <ul>
+     *   <li>{@code Integer} (or {@code int})</li>
+     *   <li>{@code Long} (or {@code long})</li>
+     *   <li>{@code int[]}</li>
+     *   <li>{@code long[]}</li>
+     *   <li>{@code byte[]}</li>
+     *  </ul>
+     *
+     * <p>Notes:</p>
+     * <ul>
+     *  <li>
+     *   When the seed type passed as argument is more complex (i.e. more
+     *   bits can be independently chosen) than the generator's
+     *   {@link #isNativeSeed(Object) native type}, the conversion of a
+     *   set of different seeds will necessarily result in the same value
+     *   of the native seed type.
+     *  </li>
+     *  <li>
+     *   When the native seed type is an array, the same remark applies
+     *   when the array contains more bits than the state of the generator.
+     *  </li>
+     *  <li>
+     *   When the {@code seed} is {@code null}, a seed of the native type
+     *   will be generated. If the native type is an array, the generated
+     *   size is limited a maximum of 128.
+     *  </li>
+     * </ul>
+     *
+     * <p>This method will raise an exception if the additional arguments for
+     * the implementation's constructor are incorrect (e.g. {@link #TWO_CMRES_SELECT}).
+     * This includes the case where arguments are supplied and the implementation
+     * does not require additional arguments.</p>
+     *
+     * @param seed Seed value.  It can be {@code null} (in which case a
+     * random value will be used).
+     * @param data Additional arguments to the implementation's constructor.
+     * Please refer to the documentation of each specific implementation.
+     * @return the RNG.
+     * @throws IllegalArgumentException if the argument data required to initialize the
+     * generator is incorrect.
+     * @throws UnsupportedOperationException if the type of the {@code seed}
+     * is invalid.
+     *
+     * @see #create()
+     */
+    public RestorableUniformRandomProvider create(Object seed,
+                                                  Object... data) {
+        return ProviderBuilder.create(getInternalIdentifier(), seed, data);
+    }
+
+    /**
+     * Creates a random number generator with a random seed.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
      * </code></pre>
      * <p>or, if a {@link RestorableUniformRandomProvider "save/restore"} functionality is needed,</p>
@@ -714,11 +801,18 @@ public enum RandomSource {
      *  RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.MT);
      * </code></pre>
      *
+     * <p>This method will raise an exception if the generator requires arguments in addition
+     * to a seed (e.g. {@link #TWO_CMRES_SELECT}).</p>
+     *
      * @param source RNG type.
      * @return the RNG.
+     * @throws IllegalArgumentException if the generator requires arguments in addition
+     * to a seed.
      *
      * @see #create(RandomSource,Object,Object[])
+     * @deprecated It is preferred to use the {@link RandomSource#create()} instance method.
      */
+    @Deprecated
     public static RestorableUniformRandomProvider create(RandomSource source) {
         return ProviderBuilder.create(source.getInternalIdentifier());
     }
@@ -728,6 +822,7 @@ public enum RandomSource {
      *
      * <p>Usage example:</p>
      * <pre><code>
+     *  UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, 0x123abcL);
      *  UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, 26219, 6, 9);
      * </code></pre>
      *
@@ -760,19 +855,26 @@ public enum RandomSource {
      *  </li>
      * </ul>
      *
+     * <p>This method will raise an exception if the additional arguments for
+     * the implementation's constructor are incorrect (e.g. {@link #TWO_CMRES_SELECT}).
+     * This includes the case where arguments are supplied and the implementation
+     * does not require additional arguments.</p>
+     *
      * @param source RNG type.
      * @param seed Seed value.  It can be {@code null} (in which case a
      * random value will be used).
      * @param data Additional arguments to the implementation's constructor.
      * Please refer to the documentation of each specific implementation.
      * @return the RNG.
+     * @throws IllegalArgumentException if the argument data required to initialize the
+     * generator is incorrect.
      * @throws UnsupportedOperationException if the type of the {@code seed}
      * is invalid.
-     * @throws IllegalStateException if data is missing to initialize the
-     * generator implemented by the given {@code source}.
      *
      * @see #create(RandomSource)
+     * @deprecated It is preferred to use the {@link RandomSource#create(Object, Object...)} instance method.
      */
+    @Deprecated
     public static RestorableUniformRandomProvider create(RandomSource source,
                                                          Object seed,
                                                          Object... data) {

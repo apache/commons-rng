@@ -24,7 +24,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * This class provides a thread-local {@link UniformRandomProvider}.
  *
  * <p>The {@link UniformRandomProvider} is created once-per-thread using the default
- * construction method {@link RandomSource#create(RandomSource)}.
+ * construction method {@link RandomSource#create()}.
  *
  * <p>Example:</p>
  * <pre><code>
@@ -52,7 +52,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *     new ThreadLocal&lt;UniformRandomProvider&gt;() {
  *         &#64;Override
  *         protected UniformRandomProvider initialValue() {
- *             return RandomSource.create(RandomSource.TWO_CMRES_SELECT, null, 3, 4);
+ *             return RandomSource.TWO_CMRES_SELECT.create(null, 3, 4);
  *         }
  *     };
  *
@@ -95,14 +95,14 @@ public final class ThreadLocalRandomSource {
         @Override
         protected UniformRandomProvider initialValue() {
             // Create with the default seed generation method
-            return RandomSource.create(source);
+            return source.create();
         }
     }
 
     /**
      * Returns the current thread's copy of the given {@code source}. If there is no
      * value for the current thread, it is first initialized to the value returned
-     * by {@link RandomSource#create(RandomSource)}.
+     * by {@link RandomSource#create()}.
      *
      * <p>Note if the {@code source} requires additional arguments then it is not
      * supported.

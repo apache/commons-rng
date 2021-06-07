@@ -36,7 +36,7 @@ import org.apache.commons.rng.simple.RandomSource;
  * Tests for {@link ListSampler}.
  */
 public class ListSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, 6543432321L);
+    private final UniformRandomProvider rng = RandomSource.ISAAC.create(6543432321L);
     private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
@@ -259,8 +259,8 @@ public class ListSamplerTest {
 
         // Identical RNGs
         final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
 
         ListSampler.shuffle(rng1, list);
         PermutationSampler.shuffle(rng2, array);
@@ -291,8 +291,8 @@ public class ListSamplerTest {
 
         // Identical RNGs
         final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, seed);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
 
         ListSampler.shuffle(rng1, list, start, towardHead);
         PermutationSampler.shuffle(rng2, array, start, towardHead);

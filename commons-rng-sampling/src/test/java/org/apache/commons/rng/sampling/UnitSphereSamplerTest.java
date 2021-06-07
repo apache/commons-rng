@@ -68,7 +68,7 @@ public class UnitSphereSamplerTest {
      * RNG-130: All samples should be 1 or -1.
      */
     private static void testDistribution1D(boolean factoryConstructor) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, 0x1a2b3cL);
+        final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create(0x1a2b3cL);
         final UnitSphereSampler generator = createUnitSphereSampler(1, rng, factoryConstructor);
         final int samples = 10000;
         // Count the negatives.
@@ -140,7 +140,7 @@ public class UnitSphereSamplerTest {
      * Obtains polar coordinates and checks the angle distribution is uniform.
      */
     private static void testDistribution2D(boolean factoryConstructor) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S, 17399225432L);
+        final UniformRandomProvider rng = RandomSource.XOR_SHIFT_1024_S_PHI.create(17399225432L);
         final UnitSphereSampler generator = createUnitSphereSampler(2, rng, factoryConstructor);
 
         // In 2D, angles with a given vector should be uniformly distributed.
@@ -183,7 +183,7 @@ public class UnitSphereSamplerTest {
      * Obtains spherical coordinates and checks the distribution is uniform.
      */
     private static void testDistribution3D(boolean factoryConstructor) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_256_PP, 0xabcdefL);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_PP.create(0xabcdefL);
         final UnitSphereSampler generator = createUnitSphereSampler(3, rng, factoryConstructor);
 
         // Get 3D spherical coordinates. Assign to a bin.
@@ -235,7 +235,7 @@ public class UnitSphereSamplerTest {
      * Checks the surface of the 3-sphere can be used to generate uniform samples within a circle.
      */
     private static void testDistribution4D(boolean factoryConstructor) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_512_PP, 0x9876543210L);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0x9876543210L);
         final UnitSphereSampler generator = createUnitSphereSampler(4, rng, factoryConstructor);
 
         // No uniform distribution of spherical coordinates for a 3-sphere.
@@ -520,8 +520,8 @@ public class UnitSphereSamplerTest {
      * @param factoryConstructor true to use the factory constructor
      */
     private static void testSharedStateSampler(int dimension, boolean factoryConstructor) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final UnitSphereSampler sampler1 = createUnitSphereSampler(dimension, rng1, factoryConstructor);
         final UnitSphereSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(

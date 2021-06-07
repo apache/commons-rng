@@ -126,7 +126,7 @@ public class ConstructionPerformance {
         LONG_ARRAY_SEEDS = new long[SEEDS][];
         INT_ARRAY_SEEDS = new int[SEEDS][];
         BYTE_ARRAY_SEEDS = new byte[SEEDS][];
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XOR_SHIFT_1024_S_PHI);
+        final UniformRandomProvider rng = RandomSource.XOR_SHIFT_1024_S_PHI.create();
         for (int i = 0; i < SEEDS; i++) {
             final long[] longArray = new long[MAX_SEED_SIZE];
             final int[] intArray = new int[MAX_SEED_SIZE];
@@ -841,8 +841,9 @@ public class ConstructionPerformance {
     @Benchmark
     public void createNullSeed(Sources sources, Blackhole bh) {
         final RandomSource randomSource = sources.getRandomSource();
+        final Object seed = null;
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(RandomSource.create(randomSource, null));
+            bh.consume(randomSource.create(seed));
         }
     }
 
@@ -855,7 +856,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final Object[] nativeSeeds = sources.getNativeSeeds();
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(RandomSource.create(randomSource, nativeSeeds[i]));
+            bh.consume(randomSource.create(nativeSeeds[i]));
         }
     }
 
@@ -874,7 +875,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final Object[] nativeSeeds1 = sources.getNativeSeeds1();
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(RandomSource.create(randomSource, nativeSeeds1[i]));
+            bh.consume(randomSource.create(nativeSeeds1[i]));
         }
     }
 
@@ -886,7 +887,7 @@ public class ConstructionPerformance {
     public void createLongSeed(Sources sources, Blackhole bh) {
         final RandomSource randomSource = sources.getRandomSource();
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(RandomSource.create(randomSource, LONG_SEEDS[i]));
+            bh.consume(randomSource.create(LONG_SEEDS[i]));
         }
     }
 
@@ -899,7 +900,7 @@ public class ConstructionPerformance {
         final RandomSource randomSource = sources.getRandomSource();
         final byte[][] byteSeeds = sources.getByteSeeds();
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(RandomSource.create(randomSource, byteSeeds[i]));
+            bh.consume(randomSource.create(byteSeeds[i]));
         }
     }
 

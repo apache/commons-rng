@@ -118,7 +118,7 @@
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
-UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+UniformRandomProvider rng = RandomSource.MT.create();
 +--------------------------+
 
 
@@ -161,7 +161,7 @@ rng.nextBytes(a, 15, 3);
   * In order to generate reproducible sequences, generators must be instantiated with a user-defined seed.
 
 +--------------------------+
-UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 5776);
+UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(5776);
 +--------------------------+
 
     If no seed is passed, a random seed is generated implicitly.
@@ -197,13 +197,13 @@ long[] seed = RandomSource.createLongArray(128); // Length of returned array is 
     []
 
 +--------------------------+
-UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, 5776);
+UniformRandomProvider rng = RandomSource.ISAAC.create(5776);
 +--------------------------+
 +--------------------------+
-UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new int[] { 6, 7, 7, 5, 6, 1, 0, 2 });
+UniformRandomProvider rng = RandomSource.ISAAC.create(new int[] { 6, 7, 7, 5, 6, 1, 0, 2 });
 +--------------------------+
 +--------------------------+
-UniformRandomProvider rng = RandomSource.create(RandomSource.ISAAC, new long[] { 0x638a3fd83bc0e851L, 0x9730fd12c75ae247L });
+UniformRandomProvider rng = RandomSource.ISAAC.create(new long[] { 0x638a3fd83bc0e851L, 0x9730fd12c75ae247L });
 +--------------------------+
 
     Note however that, upon initialization, the underlying generation algorithm
@@ -244,7 +244,7 @@ if (!RandomSource.TWO_CMRES.isNativeSeed(seed)) {
 int seed = 96912062;
 int first = 7; // Subcycle identifier.
 int second = 4; // Subcycle identifier.
-UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, seed, first, second);
+UniformRandomProvider rng = RandomSource.TWO_CMRES_SELECT.create(seed, first, second);
 +--------------------------+
 
     In the above example, valid "subcycle identifiers" are in the interval [0, 13].
@@ -260,7 +260,7 @@ UniformRandomProvider rng = RandomSource.create(RandomSource.TWO_CMRES_SELECT, s
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 
-RestorableUniformRandomProvider rng = RandomSource.create(RandomSource.WELL_512_A);
+RestorableUniformRandomProvider rng = RandomSource.WELL_512_A.create();
 RandomProviderState state = rng.saveState();
 double x = rng.nextDouble();
 rng.restoreState(state);
@@ -283,7 +283,7 @@ import org.apache.commons.rng.core.RandomProviderDefaultState;
 
 RandomSource source = RandomSource.MT_64; // Known source identifier.
 
-RestorableUniformRandomProvider rngOrig = RandomSource.create(source); // Original RNG instance.
+RestorableUniformRandomProvider rngOrig = source.create(); // Original RNG instance.
 
 // Save and serialize state.
 RandomProviderState stateOrig = rngOrig.saveState(rngOrig);
@@ -296,7 +296,7 @@ ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 ObjectInputStream ois = new ObjectInputStream(bis);
 RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
-RestorableUniformRandomProvider rngNew = RandomSource.create(source); // New RNG instance from the same "source".
+RestorableUniformRandomProvider rngNew = source.create(); // New RNG instance from the same "source".
 
 // Restore original state on the new instance.
 rngNew.restoreState(stateNew);
@@ -314,7 +314,7 @@ import org.apache.commons.rng.simple.RandomSource;
 
 RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
 
-JumpableUniformRandomProvider master = (JumpableUniformRandomProvider) RandomSource.create(source);
+JumpableUniformRandomProvider master = (JumpableUniformRandomProvider) source.create();
 
 // For use in parallel
 UniformRandomProvider[] rngs = new UniformRandomProvider[10];
@@ -346,7 +346,7 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.GaussianSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 
-ContinuousSampler sampler = GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.create(RandomSource.MT_64)),
+ContinuousSampler sampler = GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.MT_64.create()),
                                                45.6, 2.3);
 double random = sampler.sample();
 +--------------------------+
@@ -355,7 +355,7 @@ double random = sampler.sample();
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.RejectionInversionZipfSampler;
 
-DiscreteSampler sampler = RejectionInversionZipfSampler.of(RandomSource.create(RandomSource.ISAAC),
+DiscreteSampler sampler = RejectionInversionZipfSampler.of(RandomSource.ISAAC.create(),
                                                            5, 1.2);
 int random = sampler.sample();
 +--------------------------+
@@ -369,14 +369,14 @@ import org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSa
 import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 import org.apache.commons.rng.simple.RandomSource;
 
-RandomSource source = RandomSource.PCG_XSH_RR_32;
+RandomSource source = RandomSource.XO_RO_SHI_RO_128_PP;
 
 double[] probabilities = {0.1, 0.2, 0.3, 0.4};
-SharedStateDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.create(source),
+SharedStateDiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Enumerated.of(source.create(),
                                                                                       probabilities);
 
 // For use in parallel
-SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(RandomSource.create(source));
+SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(source.create());
 +--------------------------+
 
     All samplers support the <<<SharedStateSampler>>> interface.
@@ -395,13 +395,13 @@ int n = 6;
 int k = 3;
 
 // If the order of the elements matters.
-PermutationSampler permutationSampler = new PermutationSampler(RandomSource.create(RandomSource.KISS),
+PermutationSampler permutationSampler = new PermutationSampler(RandomSource.KISS.create(),
                                                                n, k);
 // n! / (n - k)! = 120 permutations.
 int[] permutation = permutationSampler.sample();
 
 // If the order of the elements does not matter.
-CombinationSampler combinationSampler = new CombinationSampler(RandomSource.create(RandomSource.KISS),
+CombinationSampler combinationSampler = new CombinationSampler(RandomSource.KISS.create(),
                                                                n, k);
 // n! / (k! (n - k)!) = 20 combinations.
 int[] combination = combinationSampler.sample();
@@ -416,7 +416,7 @@ list.add("Apache");
 list.add("Commons");
 list.add("RNG");
 
-CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.create(RandomSource.MWC_256),
+CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.MWC_256.create(),
                                                                   list, 1);
 String word = sampler.sample();
 +--------------------------+
@@ -429,7 +429,7 @@ import org.apache.commons.rng.sampling.ListSampler;
 
 List<String> list = Arrays.asList("Apache", "Commons", "RNG");
 
-UniformRandomProvider rng = RandomSource.create(RandomSource.PCG_XSH_RS_32);
+UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 
 // Get 2 random items
 int k = 2;

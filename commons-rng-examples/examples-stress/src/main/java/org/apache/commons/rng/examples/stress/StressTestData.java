@@ -103,7 +103,7 @@ class StressTestData {
      * @return the uniform random provider
      */
     UniformRandomProvider createRNG(byte[] seed) {
-        return RandomSource.create(randomSource, seed, args);
+        return randomSource.create(seed, args);
     }
 
     /**

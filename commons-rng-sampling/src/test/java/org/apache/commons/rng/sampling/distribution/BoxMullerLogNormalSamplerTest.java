@@ -30,10 +30,10 @@ public class BoxMullerLogNormalSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = -1e-6;
         final double shape = 1;
-        @SuppressWarnings("unused")
+        @SuppressWarnings({"unused", "deprecation"})
         final BoxMullerLogNormalSampler sampler =
             new BoxMullerLogNormalSampler(rng, scale, shape);
     }
@@ -44,10 +44,10 @@ public class BoxMullerLogNormalSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;
         final double shape = 0;
-        @SuppressWarnings("unused")
+        @SuppressWarnings({"unused", "deprecation"})
         final BoxMullerLogNormalSampler sampler =
             new BoxMullerLogNormalSampler(rng, scale, shape);
     }

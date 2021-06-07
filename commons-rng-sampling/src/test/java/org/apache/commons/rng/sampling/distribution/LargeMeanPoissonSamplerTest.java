@@ -39,7 +39,7 @@ public class LargeMeanPoissonSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = Integer.MAX_VALUE / 2 + 1;
         LargeMeanPoissonSampler.of(rng, mean);
     }
@@ -50,7 +50,7 @@ public class LargeMeanPoissonSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = Math.nextAfter(1, -1);
         LargeMeanPoissonSampler.of(rng, mean);
     }
@@ -61,7 +61,7 @@ public class LargeMeanPoissonSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, -0.1);
@@ -73,7 +73,7 @@ public class LargeMeanPoissonSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, 1.1);
@@ -85,7 +85,7 @@ public class LargeMeanPoissonSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithStateAndFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         @SuppressWarnings("unused")
         LargeMeanPoissonSampler sampler = new LargeMeanPoissonSampler(rng, state, 1);
@@ -101,10 +101,10 @@ public class LargeMeanPoissonSamplerTest {
     public void testCanComputeSameSamplesWhenConstructedWithState() {
         // Two identical RNGs
         final RestorableUniformRandomProvider rng1 =
-                RandomSource.create(RandomSource.MWC_256);
+                RandomSource.MWC_256.create();
         final RandomProviderState state = rng1.saveState();
         final RestorableUniformRandomProvider rng2 =
-                RandomSource.create(RandomSource.MWC_256);
+                RandomSource.MWC_256.create();
         rng2.restoreState(state);
 
         // The sampler is suitable for mean > 40
@@ -163,8 +163,8 @@ public class LargeMeanPoissonSamplerTest {
      * @param mean Mean.
      */
     private static void testSharedStateSampler(double mean) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler1 =
             LargeMeanPoissonSampler.of(rng1, mean);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

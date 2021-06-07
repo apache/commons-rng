@@ -49,26 +49,26 @@ public final class DiscreteSamplersList {
             final double probSuccessBinomial = 0.67;
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 MathArrays.sequence(8, 9, 1),
-                RandomSource.create(RandomSource.KISS));
+                RandomSource.KISS.create());
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, probSuccessBinomial),
                 // range [9,16]
                 MathArrays.sequence(8, 9, 1),
-                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.create(RandomSource.WELL_19937_A), trialsBinomial, probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.WELL_19937_A.create(), trialsBinomial, probSuccessBinomial));
             // Inverted
             add(LIST, new org.apache.commons.math3.distribution.BinomialDistribution(unusedRng, trialsBinomial, 1 - probSuccessBinomial),
                 // range [4,11] = [20-16, 20-9]
                 MathArrays.sequence(8, 4, 1),
-                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.create(RandomSource.WELL_19937_C), trialsBinomial, 1 - probSuccessBinomial));
+                MarsagliaTsangWangDiscreteSampler.Binomial.of(RandomSource.WELL_19937_C.create(), trialsBinomial, 1 - probSuccessBinomial));
 
             // Geometric ("inverse method").
             final double probSuccessGeometric = 0.21;
             add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(unusedRng, probSuccessGeometric),
                 MathArrays.sequence(10, 0, 1),
-                RandomSource.create(RandomSource.ISAAC));
+                RandomSource.ISAAC.create());
             // Geometric.
             add(LIST, new org.apache.commons.math3.distribution.GeometricDistribution(unusedRng, probSuccessGeometric),
                 MathArrays.sequence(10, 0, 1),
-                GeometricSampler.of(RandomSource.create(RandomSource.XOR_SHIFT_1024_S), probSuccessGeometric));
+                GeometricSampler.of(RandomSource.XOR_SHIFT_1024_S_PHI.create(), probSuccessGeometric));
 
             // Hypergeometric ("inverse method").
             final int popSizeHyper = 34;
@@ -76,54 +76,54 @@ public final class DiscreteSamplersList {
             final int sampleSizeHyper = 12;
             add(LIST, new org.apache.commons.math3.distribution.HypergeometricDistribution(unusedRng, popSizeHyper, numSuccessesHyper, sampleSizeHyper),
                 MathArrays.sequence(10, 0, 1),
-                RandomSource.create(RandomSource.MT));
+                RandomSource.MT.create());
 
             // Pascal ("inverse method").
             final int numSuccessesPascal = 6;
             final double probSuccessPascal = 0.2;
             add(LIST, new org.apache.commons.math3.distribution.PascalDistribution(unusedRng, numSuccessesPascal, probSuccessPascal),
                 MathArrays.sequence(18, 1, 1),
-                RandomSource.create(RandomSource.TWO_CMRES));
+                RandomSource.TWO_CMRES.create());
 
             // Uniform ("inverse method").
             final int loUniform = -3;
             final int hiUniform = 4;
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiUniform),
                 MathArrays.sequence(8, -3, 1),
-                RandomSource.create(RandomSource.SPLIT_MIX_64));
+                RandomSource.SPLIT_MIX_64.create());
             // Uniform (power of 2 range).
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiUniform),
                 MathArrays.sequence(8, -3, 1),
-                DiscreteUniformSampler.of(RandomSource.create(RandomSource.MT_64), loUniform, hiUniform));
+                DiscreteUniformSampler.of(RandomSource.MT_64.create(), loUniform, hiUniform));
             // Uniform (large range).
             final int halfMax = Integer.MAX_VALUE / 2;
             final int hiLargeUniform = halfMax + 10;
             final int loLargeUniform = -hiLargeUniform;
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loLargeUniform, hiLargeUniform),
                 MathArrays.sequence(20, -halfMax, halfMax / 10),
-                DiscreteUniformSampler.of(RandomSource.create(RandomSource.WELL_1024_A), loLargeUniform, hiLargeUniform));
+                DiscreteUniformSampler.of(RandomSource.WELL_1024_A.create(), loLargeUniform, hiLargeUniform));
             // Uniform (non-power of 2 range).
             final int rangeNonPowerOf2Uniform = 11;
             final int hiNonPowerOf2Uniform = loUniform + rangeNonPowerOf2Uniform;
             add(LIST, new org.apache.commons.math3.distribution.UniformIntegerDistribution(unusedRng, loUniform, hiNonPowerOf2Uniform),
                 MathArrays.sequence(rangeNonPowerOf2Uniform, -3, 1),
-                DiscreteUniformSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_256_SS), loUniform, hiNonPowerOf2Uniform));
+                DiscreteUniformSampler.of(RandomSource.XO_SHI_RO_256_SS.create(), loUniform, hiNonPowerOf2Uniform));
 
             // Zipf ("inverse method").
             final int numElementsZipf = 5;
             final double exponentZipf = 2.345;
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(unusedRng, numElementsZipf, exponentZipf),
                 MathArrays.sequence(5, 1, 1),
-                RandomSource.create(RandomSource.XOR_SHIFT_1024_S));
+                RandomSource.XOR_SHIFT_1024_S_PHI.create());
             // Zipf.
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(unusedRng, numElementsZipf, exponentZipf),
                 MathArrays.sequence(5, 1, 1),
-                RejectionInversionZipfSampler.of(RandomSource.create(RandomSource.WELL_19937_C), numElementsZipf, exponentZipf));
+                RejectionInversionZipfSampler.of(RandomSource.WELL_19937_C.create(), numElementsZipf, exponentZipf));
             // Zipf (exponent close to 1).
             final double exponentCloseToOneZipf = 1 - 1e-10;
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(unusedRng, numElementsZipf, exponentCloseToOneZipf),
                 MathArrays.sequence(5, 1, 1),
-                RejectionInversionZipfSampler.of(RandomSource.create(RandomSource.WELL_19937_C), numElementsZipf, exponentCloseToOneZipf));
+                RejectionInversionZipfSampler.of(RandomSource.WELL_19937_C.create(), numElementsZipf, exponentCloseToOneZipf));
 
             // Poisson ("inverse method").
             final double epsilonPoisson = org.apache.commons.math3.distribution.PoissonDistribution.DEFAULT_EPSILON;
@@ -131,59 +131,59 @@ public final class DiscreteSamplersList {
             final double meanPoisson = 3.21;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                RandomSource.create(RandomSource.MWC_256));
+                RandomSource.MWC_256.create());
             // Poisson.
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                PoissonSampler.of(RandomSource.create(RandomSource.KISS), meanPoisson));
+                PoissonSampler.of(RandomSource.KISS.create(), meanPoisson));
             // Dedicated small mean poisson samplers
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                SmallMeanPoissonSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_256_PLUS), meanPoisson));
+                SmallMeanPoissonSampler.of(RandomSource.XO_SHI_RO_256_PLUS.create(), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                KempSmallMeanPoissonSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+                KempSmallMeanPoissonSampler.of(RandomSource.XO_SHI_RO_128_PLUS.create(), meanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_SHI_RO_128_PLUS), meanPoisson));
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.XO_SHI_RO_128_PLUS.create(), meanPoisson));
             // LargeMeanPoissonSampler should work at small mean.
             // Note: This hits a code path where the sample from the normal distribution is rejected.
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, meanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(10, 0, 1),
-                LargeMeanPoissonSampler.of(RandomSource.create(RandomSource.PCG_MCG_XSH_RR_32), meanPoisson));
+                LargeMeanPoissonSampler.of(RandomSource.PCG_MCG_XSH_RR_32.create(), meanPoisson));
             // Poisson (40 < mean < 80).
             final double largeMeanPoisson = 67.89;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
-                PoissonSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
+                PoissonSampler.of(RandomSource.SPLIT_MIX_64.create(), largeMeanPoisson));
             // Dedicated large mean poisson sampler
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
-                LargeMeanPoissonSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), largeMeanPoisson));
+                LargeMeanPoissonSampler.of(RandomSource.SPLIT_MIX_64.create(), largeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, largeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(50, (int) (largeMeanPoisson - 25), 1),
-                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PLUS), largeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.XO_RO_SHI_RO_128_PLUS.create(), largeMeanPoisson));
             // Poisson (mean >> 40).
             final double veryLargeMeanPoisson = 543.21;
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
-                PoissonSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
+                PoissonSampler.of(RandomSource.SPLIT_MIX_64.create(), veryLargeMeanPoisson));
             // Dedicated large mean poisson sampler
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
-                LargeMeanPoissonSampler.of(RandomSource.create(RandomSource.SPLIT_MIX_64), veryLargeMeanPoisson));
+                LargeMeanPoissonSampler.of(RandomSource.SPLIT_MIX_64.create(), veryLargeMeanPoisson));
             add(LIST, new org.apache.commons.math3.distribution.PoissonDistribution(unusedRng, veryLargeMeanPoisson, epsilonPoisson, maxIterationsPoisson),
                 MathArrays.sequence(100, (int) (veryLargeMeanPoisson - 50), 1),
-                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.create(RandomSource.XO_RO_SHI_RO_64_SS), veryLargeMeanPoisson));
+                MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.XO_RO_SHI_RO_64_SS.create(), veryLargeMeanPoisson));
 
             // Any discrete distribution
             final double[] discreteProbabilities = new double[] {0.1, 0.2, 0.3, 0.4, 0.5};
             add(LIST, discreteProbabilities,
-                MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.create(RandomSource.XO_SHI_RO_512_PLUS), discreteProbabilities));
+                MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.XO_SHI_RO_512_PLUS.create(), discreteProbabilities));
             add(LIST, discreteProbabilities,
-                GuideTableDiscreteSampler.of(RandomSource.create(RandomSource.XO_SHI_RO_512_SS), discreteProbabilities));
+                GuideTableDiscreteSampler.of(RandomSource.XO_SHI_RO_512_SS.create(), discreteProbabilities));
             add(LIST, discreteProbabilities,
-                AliasMethodDiscreteSampler.of(RandomSource.create(RandomSource.KISS), discreteProbabilities));
+                AliasMethodDiscreteSampler.of(RandomSource.KISS.create(), discreteProbabilities));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);

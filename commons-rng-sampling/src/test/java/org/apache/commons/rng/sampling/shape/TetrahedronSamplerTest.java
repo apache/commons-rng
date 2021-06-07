@@ -36,7 +36,7 @@ public class TetrahedronSamplerTest {
      */
     @Test
     public void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] ok = new double[3];
         final double[] bad = new double[2];
         final double[][] c = {ok, ok, ok, ok};
@@ -57,7 +57,7 @@ public class TetrahedronSamplerTest {
      */
     @Test
     public void testNonFiniteVertexCoordinates() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid tetrahedron
         final double[][] c = new double[][] {
             {1, 1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, -1}
@@ -111,9 +111,9 @@ public class TetrahedronSamplerTest {
                 Double.POSITIVE_INFINITY, c2[2][2] - c2[1][2], 0.0);
 
         final TetrahedronSampler sampler1 = TetrahedronSampler.of(c1[0], c1[1], c1[2], c1[3],
-                RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
         final TetrahedronSampler sampler2 = TetrahedronSampler.of(c2[0], c2[1], c2[2], c2[3],
-                RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -167,7 +167,7 @@ public class TetrahedronSamplerTest {
         Arrays.fill(expected, 1);
 
         // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.XO_SHI_RO_512_PP, 0xaabbccddeeffL);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xaabbccddeeffL);
 
         // Cut the box into 6 equal volume tetrahedra by cutting the box in half three times,
         // cutting diagonally through each of the three pairs of opposing faces. In this way,
@@ -251,8 +251,8 @@ public class TetrahedronSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(-1);
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);
@@ -279,8 +279,8 @@ public class TetrahedronSamplerTest {
      */
     @Test
     public void testChangedInputCoordinates() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1);
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);

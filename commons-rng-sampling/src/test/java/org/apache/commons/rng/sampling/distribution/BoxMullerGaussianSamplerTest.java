@@ -30,10 +30,10 @@ public class BoxMullerGaussianSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1;
         final double standardDeviation = 0;
-        @SuppressWarnings("unused")
+        @SuppressWarnings({"unused", "deprecation"})
         final BoxMullerGaussianSampler sampler =
             new BoxMullerGaussianSampler(rng, mean, standardDeviation);
     }

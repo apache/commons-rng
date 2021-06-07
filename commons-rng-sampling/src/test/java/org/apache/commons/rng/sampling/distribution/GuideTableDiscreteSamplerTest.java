@@ -87,7 +87,7 @@ public class GuideTableDiscreteSamplerTest {
      * @return the alias method discrete sampler
      */
     private static SharedStateDiscreteSampler createSampler(double[] probabilities, double alpha) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         return GuideTableDiscreteSampler.of(rng, probabilities, alpha);
     }
 
@@ -241,8 +241,8 @@ public class GuideTableDiscreteSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] probabilities = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};
         final SharedStateDiscreteSampler sampler1 =
             GuideTableDiscreteSampler.of(rng1, probabilities);

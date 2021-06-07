@@ -93,7 +93,7 @@ public class DiscreteUniformSamplerGenerationPerformance {
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            generator = RandomSource.create(randomSource);
+            generator = randomSource.create();
         }
     }
 

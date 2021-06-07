@@ -182,7 +182,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     public void testRealProbabilityDistributionSamples() {
         // These do not have to sum to 1
         final double[] probabilities = new double[11];
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         for (int i = 0; i < probabilities.length; i++) {
             probabilities[i] = rng.nextDouble();
         }
@@ -613,8 +613,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * @param prob Probability values.
      */
     private static void testSharedStateSampler(int offset, int[] prob) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         double[] probabilities = createProbabilities(offset, prob);
         final SharedStateDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng1, probabilities);
@@ -647,8 +647,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * @param probabilityOfSuccess Probability of success.
      */
     private static void testSharedStateSampler(int trials, double probabilityOfSuccess) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.Binomial.of(rng1, trials, probabilityOfSuccess);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

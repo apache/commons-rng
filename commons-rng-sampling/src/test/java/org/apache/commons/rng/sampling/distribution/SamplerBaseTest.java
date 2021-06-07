@@ -58,8 +58,8 @@ public class SamplerBaseTest {
 
     @Test
     public void testNextMethods() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SimpleSampler sampler = new SimpleSampler(rng2);
         final int n = 256;
         for (int i = 0; i < 3; i++) {
@@ -72,7 +72,7 @@ public class SamplerBaseTest {
 
     @Test
     public void testToString() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final SimpleSampler sampler = new SimpleSampler(rng);
         Assert.assertTrue(sampler.toString().contains("rng"));
     }

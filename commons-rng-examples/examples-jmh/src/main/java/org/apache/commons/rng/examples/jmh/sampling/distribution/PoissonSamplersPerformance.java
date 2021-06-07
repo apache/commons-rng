@@ -178,7 +178,7 @@ public class PoissonSamplersPerformance {
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            generator = RandomSource.create(randomSource);
+            generator = randomSource.create();
 
             // This would benefit from Java 8 Supplier<DiscreteSampler> lambda function
             if ("SmallMeanPoissonSampler".equals(samplerType)) {

@@ -50,8 +50,8 @@ public class PoissonSamplerTest {
      * @param mean Mean.
      */
     private static void testSharedStateSampler(double mean) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         // Use instance constructor not factory constructor to exercise 1.X public API
         final SharedStateDiscreteSampler sampler1 =
             new PoissonSampler(rng1, mean);
@@ -65,7 +65,7 @@ public class PoissonSamplerTest {
      */
     @Test
     public void testToString() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assert.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
     }
 }

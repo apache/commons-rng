@@ -37,8 +37,8 @@ public class InverseTransformDiscreteSamplerTest {
                     return (int) Math.round(789 * p);
                 }
         };
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler1 =
             InverseTransformDiscreteSampler.of(rng1, function);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

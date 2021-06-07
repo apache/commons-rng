@@ -519,7 +519,7 @@ class StressTestCommand implements Callable<Void> {
                 }
                 if (xorRandomSource != null) {
                     rng = RNGUtils.createXorProvider(
-                            RandomSource.create(xorRandomSource),
+                            xorRandomSource.create(),
                             rng);
                 }
                 if (reverseBits) {

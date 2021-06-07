@@ -18,14 +18,13 @@
 package org.apache.commons.rng.examples.jmh;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 /**
- * A benchmark state that can retrieve the various generators defined by {@link RandomSource}
- * values.
+ * A benchmark state that can retrieve the various generators defined by
+ * {@link org.apache.commons.rng.simple.RandomSource RandomSource} values.
  *
  * <p>The state will include only those that do not require additional constructor arguments.</p>
  */
@@ -44,12 +43,13 @@ public class RandomSources extends RandomSourceValues {
     }
 
     /**
-     * Look-up the {@link RandomSource} from the name and instantiates the generator.
+     * Look-up the {@link org.apache.commons.rng.simple.RandomSource RandomSource} from the
+     * name and instantiates the generator.
      */
     @Override
     @Setup
     public void setup() {
         super.setup();
-        generator = RandomSource.create(getRandomSource());
+        generator = getRandomSource().create();
     }
 }

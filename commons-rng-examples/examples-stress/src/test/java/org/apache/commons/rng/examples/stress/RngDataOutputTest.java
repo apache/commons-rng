@@ -151,8 +151,8 @@ public class RngDataOutputTest {
         RngDataOutputFactory factory,
         ByteOrder byteOrder) throws IOException {
         final long seed = RandomSource.createLong();
-        UniformRandomProvider rng1 = RandomSource.create(source, seed);
-        UniformRandomProvider rng2 = RandomSource.create(source, seed);
+        UniformRandomProvider rng1 = source.create(seed);
+        UniformRandomProvider rng2 = source.create(seed);
         final int size = 37;
         for (int repeats = 1; repeats <= 2; repeats++) {
             byte[] expected = createBytes(rng1, size, repeats, rngConverter, pipe);

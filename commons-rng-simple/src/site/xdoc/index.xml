@@ -44,7 +44,7 @@
 import org.apache.commons.rng.simple.RandomSource;
 
 public class Dice {
-    private final UniformRandomProvider rng = RandomSource.create(RandomSource.MT);
+    private final UniformRandomProvider rng = RandomSource.MT_64.create();
 
     public int roll() {
         return 1 + rng.nextInt(6);

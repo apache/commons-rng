@@ -64,7 +64,7 @@ public class ProvidersCommonParametricTest {
         originalSource = data.getSource();
         originalSeed = data.getSeed();
         originalArgs = data.getArgs();
-        generator = RandomSource.create(originalSource, originalSeed, originalArgs);
+        generator = originalSource.create(originalSeed, originalArgs);
     }
 
     @Parameters(name = "{index}: data={0}")
@@ -77,7 +77,62 @@ public class ProvidersCommonParametricTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testUnsupportedSeedType() {
         final byte seed = 123;
-        RandomSource.create(originalSource, seed, originalArgs);
+        originalSource.create(seed, originalArgs);
+    }
+
+    /**
+     * Test the factory create method returns the same class as the instance create method.
+     */
+    @Test
+    public void testFactoryCreateMethod() {
+        // Cannot test providers that require arguments
+        Assume.assumeTrue(originalArgs == null);
+        @SuppressWarnings("deprecation")
+        final UniformRandomProvider rng = RandomSource.create(originalSource);
+        Assert.assertTrue(generator.getClass().equals(rng.getClass()));
+    }
+
+    /**
+     * Test the factory create method returns the same class as the instance create method
+     * and produces the same output.
+     */
+    @Test
+    public void testFactoryCreateMethodWithSeed() {
+        @SuppressWarnings("deprecation")
+        final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
+        Assert.assertTrue(rng1.getClass().equals(generator.getClass()));
+        // Check the output
+        final UniformRandomProvider rng2 = originalSource.create(originalSeed, originalArgs);
+        for (int i = 0; i < 10; i++) {
+            Assert.assertEquals(rng2.nextLong(), rng1.nextLong());
+        }
+    }
+
+    /**
+     * Test the create method throws an {@link IllegalArgumentException} if passed the wrong
+     * arguments.
+     */
+    @Test
+    public void testCreateMethodThrowsWithIncorrectArguments() {
+        if (originalArgs == null) {
+            try {
+                // Try passing arguments to a provider that does not require them
+                int arg1 = 123;
+                double arg2 = 456.0;
+                originalSource.create(arg1, arg2);
+                Assert.fail("Source does not require arguments: " + originalSource);
+            } catch (IllegalArgumentException ex) {
+                // Expected
+            }
+        } else {
+            try {
+                // Try no arguments for a provider that does require them
+                originalSource.create();
+                Assert.fail("Source requires arguments: " + originalSource);
+            } catch (IllegalArgumentException ex) {
+                // Expected
+            }
+        }
     }
 
     @Test
@@ -107,7 +162,7 @@ public class ProvidersCommonParametricTest {
                 ++nonNativeSeedCount;
             }
 
-            RandomSource.create(originalSource, s, originalArgs);
+            originalSource.create(s, originalArgs);
         }
 
         Assert.assertEquals(6, seedCount);
@@ -116,10 +171,10 @@ public class ProvidersCommonParametricTest {
 
     @Test
     public void testNullSeed() {
-        // Note: This is the only test that explicitly calls create() with no other arguments.
+        // Note: This is the only test that explicitly calls RandomSource.create() with no other arguments.
         final UniformRandomProvider rng = originalArgs == null ?
-            RandomSource.create(originalSource) :
-            RandomSource.create(originalSource, null, originalArgs);
+            originalSource.create() :
+            originalSource.create(null, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -129,7 +184,7 @@ public class ProvidersCommonParametricTest {
         Assume.assumeTrue(originalSource.isNativeSeed(empty));
 
         // Exercise the default seeding procedure.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(empty, originalArgs);
         checkNextIntegerInRange(rng, 10, 20000);
     }
 
@@ -141,7 +196,7 @@ public class ProvidersCommonParametricTest {
         Assume.assumeFalse(originalSource == RandomSource.MSWS);
 
         // Exercise the default seeding procedure.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, empty, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(empty, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -149,7 +204,7 @@ public class ProvidersCommonParametricTest {
     public void testZeroIntArraySeed() {
         // Exercise capacity to escape all "zero" state.
         final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
         Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
                 createsNonZeroLongOutput(rng, 2000));
         checkNextIntegerInRange(rng, 10, 10000);
@@ -159,7 +214,7 @@ public class ProvidersCommonParametricTest {
     public void testZeroLongArraySeed() {
         // Exercise capacity to escape all "zero" state.
         final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
-        final UniformRandomProvider rng = RandomSource.create(originalSource, zero, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
         Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
                 createsNonZeroLongOutput(rng, 2000));
         checkNextIntegerInRange(rng, 10, 10000);
@@ -168,14 +223,14 @@ public class ProvidersCommonParametricTest {
     @Test
     public void testRandomSourceCreateSeed() {
         final byte[] seed = originalSource.createSeed();
-        final UniformRandomProvider rng = RandomSource.create(originalSource, seed, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
     @Test
     public void testRandomSourceCreateSeedFromRNG() {
         final byte[] seed = originalSource.createSeed(new SplitMix64(RandomSource.createLong()));
-        final UniformRandomProvider rng = RandomSource.create(originalSource, seed, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -184,8 +239,8 @@ public class ProvidersCommonParametricTest {
     @Test
     public void testUnrestorable() {
         // Create two generators of the same type as the one being tested.
-        final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
-        final UniformRandomProvider rng2 = RandomSource.unrestorable(RandomSource.create(originalSource, originalSeed, originalArgs));
+        final UniformRandomProvider rng1 = originalSource.create(originalSeed, originalArgs);
+        final UniformRandomProvider rng2 = RandomSource.unrestorable(originalSource.create(originalSeed, originalArgs));
 
         // Ensure that they generate the same values.
         RandomAssert.assertProduceSameSequence(rng1, rng2);
@@ -252,7 +307,7 @@ public class ProvidersCommonParametricTest {
 
     @Test
     public void testSupportedInterfaces() {
-        final UniformRandomProvider rng = RandomSource.create(originalSource, null, originalArgs);
+        final UniformRandomProvider rng = originalSource.create(null, originalArgs);
         Assert.assertEquals("isJumpable", rng instanceof JumpableUniformRandomProvider,
                             originalSource.isJumpable());
         Assert.assertEquals("isLongJumpable", rng instanceof LongJumpableUniformRandomProvider,

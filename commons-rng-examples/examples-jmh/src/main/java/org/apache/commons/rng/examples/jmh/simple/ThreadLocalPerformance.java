@@ -106,7 +106,7 @@ public class ThreadLocalPerformance {
             rng = new ThreadLocal<UniformRandomProvider>() {
                 @Override
                 protected UniformRandomProvider initialValue() {
-                    return RandomSource.create(randomSource);
+                    return randomSource.create();
                 }
             };
         }
@@ -169,7 +169,7 @@ public class ThreadLocalPerformance {
     @Benchmark
     @Threads(4)
     public long randomSourceCreate(Sources sources) {
-        final UniformRandomProvider rng = RandomSource.create(sources.getRandomSource());
+        final UniformRandomProvider rng = sources.getRandomSource().create();
         long result = 0;
         for (int i = 0; i < numValues; i++) {
             result = result ^ rng.nextLong();

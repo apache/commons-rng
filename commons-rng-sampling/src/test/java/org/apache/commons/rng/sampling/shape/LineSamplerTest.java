@@ -37,7 +37,7 @@ public class LineSamplerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         LineSampler.of(new double[0], new double[0], rng);
     }
 
@@ -46,7 +46,7 @@ public class LineSamplerTest {
      */
     @Test
     public void testDimensionMismatchThrows() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
         for (double[][] c : new double[][][] {
@@ -68,7 +68,7 @@ public class LineSamplerTest {
      */
     @Test
     public void testNonFiniteVertexCoordinates() {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid line
         final double[][] c = new double[][] {
             {0, 1, 2}, {-1, 2, 3}
@@ -156,9 +156,9 @@ public class LineSamplerTest {
             Double.POSITIVE_INFINITY, c2[1][0] - c2[0][0], 0.0);
 
         final LineSampler sampler1 = LineSampler.of(c1[0], c1[1],
-            RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+            RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
         final LineSampler sampler2 = LineSampler.of(c2[0], c2[1],
-            RandomSource.create(RandomSource.XO_RO_SHI_RO_128_PP, seed));
+            RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -209,7 +209,7 @@ public class LineSamplerTest {
      * @param dimension the dimension
      */
     private static void testDistributionND(int dimension) {
-        final UniformRandomProvider rng = RandomSource.create(RandomSource.SFC_64, 0xfabcab);
+        final UniformRandomProvider rng = RandomSource.SFC_64.create(0xfabcab);
 
         double[] a;
         double[] b;
@@ -300,8 +300,8 @@ public class LineSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final LineSampler sampler1 = LineSampler.of(c1, c2, rng1);
@@ -360,8 +360,8 @@ public class LineSamplerTest {
      * @param dimension the dimension
      */
     private static void testChangedInputCoordinates(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final LineSampler sampler1 = LineSampler.of(c1, c2, rng1);

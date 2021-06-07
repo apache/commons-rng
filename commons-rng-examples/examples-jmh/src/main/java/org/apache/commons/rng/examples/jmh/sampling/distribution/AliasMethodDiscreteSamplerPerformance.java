@@ -102,7 +102,7 @@ public class AliasMethodDiscreteSamplerPerformance {
         @Setup
         public void setup() {
             probabilities = createProbabilities(size);
-            final UniformRandomProvider rng = RandomSource.create(RandomSource.SPLIT_MIX_64);
+            final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
             sampler = AliasMethodDiscreteSampler.of(rng, probabilities, alpha);
         }
 

@@ -100,7 +100,7 @@ public class GeometricSamplersPerformance {
         @Setup
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            final UniformRandomProvider rng = RandomSource.create(randomSource);
+            final UniformRandomProvider rng = randomSource.create();
             if ("GeometricSampler".equals(samplerType)) {
                 sampler = GeometricSampler.of(rng, probabilityOfSuccess);
             } else {

@@ -32,7 +32,7 @@ public class AhrensDieterExponentialSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
         AhrensDieterExponentialSampler.of(rng, mean);
     }
@@ -42,8 +42,8 @@ public class AhrensDieterExponentialSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;
         final SharedStateContinuousSampler sampler1 =
             AhrensDieterExponentialSampler.of(rng1, mean);

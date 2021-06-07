@@ -247,7 +247,7 @@ public class PoissonSamplerCacheTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateSharedStateSamplerThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         cache.createSharedStateSampler(rng, 0);
     }
@@ -258,7 +258,7 @@ public class PoissonSamplerCacheTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
         final RestorableUniformRandomProvider rng =
-                RandomSource.create(RandomSource.SPLIT_MIX_64);
+                RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         final double mean = Integer.MAX_VALUE + 1.0;
         cache.createSharedStateSampler(rng, mean);
@@ -328,10 +328,8 @@ public class PoissonSamplerCacheTest {
         // Two identical RNGs
         final RandomSource source = RandomSource.SPLIT_MIX_64;
         final long seed = RandomSource.createLong();
-        final RestorableUniformRandomProvider rng1 =
-                RandomSource.create(source, seed);
-        final RestorableUniformRandomProvider rng2 =
-                RandomSource.create(source, seed);
+        final RestorableUniformRandomProvider rng1 = source.create(seed);
+        final RestorableUniformRandomProvider rng2 = source.create(seed);
 
         // Create the cache with the given range
         final PoissonSamplerCache cache =
@@ -457,10 +455,8 @@ public class PoissonSamplerCacheTest {
         // Two identical RNGs
         final RandomSource source = RandomSource.SPLIT_MIX_64;
         final long seed = RandomSource.createLong();
-        final RestorableUniformRandomProvider rng1 =
-                RandomSource.create(source, seed);
-        final RestorableUniformRandomProvider rng2 =
-                RandomSource.create(source, seed);
+        final RestorableUniformRandomProvider rng1 = source.create(seed);
+        final RestorableUniformRandomProvider rng2 = source.create(seed);
 
         // Create the cache with the given range and fill it
         final PoissonSamplerCache cache =

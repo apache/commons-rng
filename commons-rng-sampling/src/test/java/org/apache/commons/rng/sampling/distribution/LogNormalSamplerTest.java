@@ -33,7 +33,7 @@ public class LogNormalSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double scale = -1e-6;
         final double shape = 1;
@@ -46,7 +46,7 @@ public class LogNormalSamplerTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
-            RandomSource.create(RandomSource.SPLIT_MIX_64);
+            RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double scale = 1;
         final double shape = 0;
@@ -58,8 +58,8 @@ public class LogNormalSamplerTest {
      */
     @Test
     public void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng1);
         final double scale = 1.23;
         final double shape = 4.56;
@@ -75,7 +75,7 @@ public class LogNormalSamplerTest {
      */
     @Test(expected = UnsupportedOperationException.class)
     public void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
             @Override
             public double sample() {
@@ -95,7 +95,7 @@ public class LogNormalSamplerTest {
      */
     @Test(expected = UnsupportedOperationException.class)
     public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
-        final UniformRandomProvider rng2 = RandomSource.create(RandomSource.SPLIT_MIX_64, 0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double scale = 1.23;
         final double shape = 4.56;
