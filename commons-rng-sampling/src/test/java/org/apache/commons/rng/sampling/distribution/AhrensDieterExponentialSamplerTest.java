@@ -16,16 +16,25 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 /**
  * Test for the {@link AhrensDieterExponentialSampler}. The tests hit edge cases for the sampler.
  */
 public class AhrensDieterExponentialSamplerTest {
+
+    /** The global timeout for tests. Used to kill a test stuck in an infinite loop. */
+    @Rule
+    public Timeout globalTimeout = new Timeout(50, TimeUnit.MILLISECONDS);
+
     /**
      * Test the constructor with a bad mean.
      */
@@ -49,5 +58,23 @@ public class AhrensDieterExponentialSamplerTest {
             AhrensDieterExponentialSampler.of(rng1, mean);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the sampler is robust to a generator that outputs zeros.
+     * See RNG-144.
+     */
+    @Test
+    public void testSamplerWithZeroFromRandomGenerator() {
+        // A broken generator that returns zero.
+        final UniformRandomProvider rng = new SplitMix64(0) {
+            @Override
+            public long nextLong() {
+                return 0L;
+            }
+        };
+        final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
+        // This should not infinite loop
+        sampler.sample();
     }
 }

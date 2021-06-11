@@ -21,7 +21,12 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from an <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
  *
- * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextLong()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ * </ul>
  *
  * @since 1.0
  */
@@ -41,6 +46,11 @@ public class AhrensDieterExponentialSampler
      * By trying, n = 16 in Java is enough to reach 1.
      */
     private static final double[] EXPONENTIAL_SA_QI = new double[16];
+    /**
+     * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+     * Taken from org.apache.commons.rng.core.util.NumberFactory.
+     */
+    private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
     /** The mean of this distribution. */
     private final double mean;
     /** Underlying source of randomness. */
@@ -94,7 +104,8 @@ public class AhrensDieterExponentialSampler
     public double sample() {
         // Step 1:
         double a = 0;
-        double u = rng.nextDouble();
+        // Avoid u=0 which creates an infinite loop
+        double u = nextNonZeroDouble();
 
         // Step 2 and 3:
         while (u < 0.5) {
@@ -128,6 +139,17 @@ public class AhrensDieterExponentialSampler
         } while (u > EXPONENTIAL_SA_QI[i]); // Ensured to exit since EXPONENTIAL_SA_QI[MAX] = 1.
 
         return mean * (a + umin * EXPONENTIAL_SA_QI[0]);
+    }
+
+    /**
+     * Create a double in the interval {@code (0, 1]}.
+     *
+     * @return a {@code double} value in the interval {@code (0, 1]}.
+     */
+    private double nextNonZeroDouble() {
+        // This matches the method in o.a.c.rng.core.util.NumberFactory.makeDouble(long)
+        // but shifts the range from [0, 1) to (0, 1].
+        return ((rng.nextLong() >>> 11) + 1L) * DOUBLE_MULTIPLIER;
     }
 
     /** {@inheritDoc} */
