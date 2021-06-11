@@ -22,6 +22,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -75,6 +76,26 @@ public class AhrensDieterExponentialSamplerTest {
         };
         final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
         // This should not infinite loop
-        sampler.sample();
+        final double x = sampler.sample();
+        Assert.assertTrue(x >= 0);
+    }
+
+    /**
+     * Test the sampler is robust to a generator that outputs full bits. The uniform random
+     * double will be at the top of the range {@code [0, 1]}.
+     */
+    @Test
+    public void testSamplerWithOneFromRandomGenerator() {
+        // A broken generator that returns zero.
+        final UniformRandomProvider rng = new SplitMix64(0) {
+            @Override
+            public long nextLong() {
+                // All the bits set
+                return -1;
+            }
+        };
+        final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
+        final double x = sampler.sample();
+        Assert.assertTrue(x >= 0);
     }
 }
