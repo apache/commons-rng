@@ -86,7 +86,7 @@ public class AhrensDieterExponentialSamplerTest {
      */
     @Test
     public void testSamplerWithOneFromRandomGenerator() {
-        // A broken generator that returns zero.
+        // A broken generator that returns all the bits set.
         final UniformRandomProvider rng = new SplitMix64(0) {
             @Override
             public long nextLong() {
