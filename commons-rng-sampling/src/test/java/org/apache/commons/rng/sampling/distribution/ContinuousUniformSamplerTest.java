@@ -63,16 +63,18 @@ public class ContinuousUniformSamplerTest {
             private long l2;
             @Override
             public long nextLong() {
+                long x;
                 if (l1 > l2) {
                     l2++;
                     // Descending sequence: -1, -2, -3, ...
-                    return -l2;
+                    x = -l2;
+                } else {
+                    // Ascending sequence: 0, 1, 2, ...
+                    x = l1++;
                 }
-                // Ascending sequence: 0, 1, 2, ...
-                l1++;
                 // Shift by 11 bits to reverse the shift performed when computing the next
                 // double from a long.
-                return l1 << 11;
+                return x << 11;
             }
         };
         final double low = 3.18;
