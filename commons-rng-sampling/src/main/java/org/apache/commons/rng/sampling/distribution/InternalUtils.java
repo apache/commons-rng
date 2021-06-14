@@ -48,7 +48,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * @throws IndexOutOfBoundsException if the result is too large to be represented
      * by a {@code long} (i.e. if {@code n > 20}), or {@code n} is negative.
      */
-    public static long factorial(int n)  {
+    static long factorial(int n)  {
         return FACTORIALS[n];
     }
 
@@ -61,7 +61,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * probability is negative, infinite or {@code NaN}, or the sum of all
      * probabilities is not strictly positive.
      */
-    public static double validateProbabilities(double[] probabilities) {
+    static double validateProbabilities(double[] probabilities) {
         if (probabilities == null || probabilities.length == 0) {
             throw new IllegalArgumentException("Probabilities must not be empty.");
         }
@@ -84,7 +84,7 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * @param probability Probability.
      * @throws IllegalArgumentException if {@code probability} is negative, infinite or {@code NaN}.
      */
-    public static void validateProbability(double probability) {
+    static void validateProbability(double probability) {
         if (probability < 0 ||
             Double.isInfinite(probability) ||
             Double.isNaN(probability)) {
