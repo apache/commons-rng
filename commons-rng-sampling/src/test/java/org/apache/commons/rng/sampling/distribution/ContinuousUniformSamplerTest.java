@@ -84,7 +84,7 @@ public class ContinuousUniformSamplerTest {
         // Test the sampler excludes the end points
         for (int i = 0; i < 10; i++) {
             final double value = sampler.sample();
-            Assert.assertTrue("Value not in range", value >= low && value <= high);
+            Assert.assertTrue("Value not in range: " + value, value > low && value < high);
         }
     }
 

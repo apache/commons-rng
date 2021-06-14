@@ -49,8 +49,15 @@ public class ContinuousUniformSampler
         }
 
         @Override
-        double getU() {
-            return InternalUtils.nextDouble01(getRng());
+        public double sample() {
+            final double x = super.sample();
+            // Due to rounding using a variate u in the open interval (0,1) with the original
+            // algorithm may generate a value at the bound. Thus the bound is explicitly tested
+            // and the sample repeated if necessary.
+            if (x == getHi() || x == getLo()) {
+                return sample();
+            }
+            return x;
         }
 
         @Override
@@ -76,18 +83,8 @@ public class ContinuousUniformSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double u = getU();
+        final double u = rng.nextDouble();
         return u * hi + (1 - u) * lo;
-    }
-
-    /**
-     * Gets the uniform deviate {@code u} the interval 0 to 1.
-     * The interval may be open or closed depending on the implementation.
-     *
-     * @return u
-     */
-    double getU() {
-        return rng.nextDouble();
     }
 
     /**
@@ -106,15 +103,6 @@ public class ContinuousUniformSampler
      */
     double getHi() {
         return hi;
-    }
-
-    /**
-     * Gets the RNG. This is deliberately scoped as package private.
-     *
-     * @return the rng
-     */
-    UniformRandomProvider getRng() {
-        return rng;
     }
 
     /** {@inheritDoc} */
