@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
@@ -50,17 +51,82 @@ public class ContinuousUniformSamplerTest {
     }
 
     /**
+     * Test the sampler excludes the bounds when the underlying generator returns long values
+     * that produce the limit of the uniform double output.
+     */
+    @Test
+    public void testExcludeBounds() {
+        // A broken RNG that will return in an alternating sequence from 0 up or -1 down.
+        // This is either zero bits or all the bits
+        final UniformRandomProvider rng = new SplitMix64(0L) {
+            private long l1;
+            private long l2;
+            @Override
+            public long nextLong() {
+                if (l1 > l2) {
+                    l2++;
+                    // Descending sequence: -1, -2, -3, ...
+                    return -l2;
+                }
+                // Ascending sequence: 0, 1, 2, ...
+                l1++;
+                // Shift by 11 bits to reverse the shift performed when computing the next
+                // double from a long.
+                return l1 << 11;
+            }
+        };
+        final double low = 3.18;
+        final double high = 5.23;
+        final SharedStateContinuousSampler sampler =
+            ContinuousUniformSampler.of(rng, low, high, true);
+        // Test the sampler excludes the end points
+        for (int i = 0; i < 10; i++) {
+            final double value = sampler.sample();
+            Assert.assertTrue("Value not in range", value >= low && value <= high);
+        }
+    }
+
+    /**
      * Test the SharedStateSampler implementation.
      */
     @Test
     public void testSharedStateSampler() {
+        testSharedStateSampler(false);
+        testSharedStateSampler(true);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation.
+     *
+     * @param excludedBounds Set to true to exclude the bounds.
+     */
+    private static void testSharedStateSampler(boolean excludedBounds) {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double low = 1.23;
         final double high = 4.56;
         final SharedStateContinuousSampler sampler1 =
-            ContinuousUniformSampler.of(rng1, low, high);
+            ContinuousUniformSampler.of(rng1, low, high, excludedBounds);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the sampler implementation with bounds excluded matches that with bounds included
+     * when the generator does not produce the limit of the uniform double output.
+     */
+    @Test
+    public void testSamplerWithBoundsExcluded() {
+        // SplitMix64 only returns zero once in the output. Seeded with zero it outputs zero
+        // at the end of the period.
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final double low = 1.23;
+        final double high = 4.56;
+        final SharedStateContinuousSampler sampler1 =
+            ContinuousUniformSampler.of(rng1, low, high, false);
+        final SharedStateContinuousSampler sampler2 =
+            ContinuousUniformSampler.of(rng2, low, high, true);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

@@ -38,6 +38,13 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
 
     /** The first array index with a non-zero log factorial. */
     private static final int BEGIN_LOG_FACTORIALS = 2;
+    /**
+     * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+     * See {@link #makeDouble(long)} and {@link #makeDouble(int, int)}.
+     *
+     * <p>This is equivalent to 1.0 / (1L << 53).
+     */
+    private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
 
     /** Utility class. */
     private InternalUtils() {}
@@ -116,6 +123,25 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
                 "The underlying sampler did not create a normalized Gaussian sampler");
         }
         return (NormalizedGaussianSampler) newSampler;
+    }
+
+    /**
+     * Gets a uniform random variable in the open interval {@code (0, 1)}.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @return u
+     */
+    static double nextDouble01(UniformRandomProvider rng) {
+        // See o.a.c.rng.core.util.NumberFactory.createDouble(long)
+        // Require the least significant 53-bits so shift the higher bits across
+        final long x = rng.nextLong() >>> 11;
+        if (x == 0) {
+            // Recursive call will create a stack overflow if the random generator
+            // is broken (always returns 0-bits). The alternative would be an infinite loop.
+            return nextDouble01(rng);
+        }
+        // Generate a double in the 2^53-1 dyadic rationals in (0, 1).
+        return x * DOUBLE_MULTIPLIER;
     }
 
     /**

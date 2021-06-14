@@ -36,6 +36,30 @@ public class ContinuousUniformSampler
     private final UniformRandomProvider rng;
 
     /**
+     * Specialization to sample from an open interval {@code (lo, hi)}.
+     */
+    private static class OpenIntervalContinuousUniformSampler extends ContinuousUniformSampler {
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param lo Lower bound.
+         * @param hi Higher bound.
+         */
+        OpenIntervalContinuousUniformSampler(UniformRandomProvider rng, double lo, double hi) {
+            super(rng, lo, hi);
+        }
+
+        @Override
+        double getU() {
+            return InternalUtils.nextDouble01(getRng());
+        }
+
+        @Override
+        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new OpenIntervalContinuousUniformSampler(rng, getLo(), getHi());
+        }
+    }
+
+    /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param lo Lower bound.
      * @param hi Higher bound.
@@ -52,8 +76,45 @@ public class ContinuousUniformSampler
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        final double u = rng.nextDouble();
+        final double u = getU();
         return u * hi + (1 - u) * lo;
+    }
+
+    /**
+     * Gets the uniform deviate {@code u} the interval 0 to 1.
+     * The interval may be open or closed depending on the implementation.
+     *
+     * @return u
+     */
+    double getU() {
+        return rng.nextDouble();
+    }
+
+    /**
+     * Gets the lower bound. This is deliberately scoped as package private.
+     *
+     * @return the lower bound
+     */
+    double getLo() {
+        return lo;
+    }
+
+    /**
+     * Gets the higher bound. This is deliberately scoped as package private.
+     *
+     * @return the higher bound
+     */
+    double getHi() {
+        return hi;
+    }
+
+    /**
+     * Gets the RNG. This is deliberately scoped as package private.
+     *
+     * @return the rng
+     */
+    UniformRandomProvider getRng() {
+        return rng;
     }
 
     /** {@inheritDoc} */
@@ -85,5 +146,25 @@ public class ContinuousUniformSampler
                                                   double lo,
                                                   double hi) {
         return new ContinuousUniformSampler(rng, lo, hi);
+    }
+
+    /**
+     * Creates a new continuous uniform distribution sampler.
+     * The bounds can be optionally excluded.
+     *
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param lo Lower bound.
+     * @param hi Higher bound.
+     * @param excludeBounds Set to {@code true} to use the open interval {@code (lower, upper)}.
+     * @return the sampler
+     * @since 1.4
+     */
+    public static SharedStateContinuousSampler of(UniformRandomProvider rng,
+                                                  double lo,
+                                                  double hi,
+                                                  boolean excludeBounds) {
+        return excludeBounds ?
+            new OpenIntervalContinuousUniformSampler(rng, lo, hi) :
+            new ContinuousUniformSampler(rng, lo, hi);
     }
 }
