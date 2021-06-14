@@ -28,6 +28,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class ContinuousUniformSampler
     extends SamplerBase
     implements SharedStateContinuousSampler {
+    /** The minimum ULP gap for the open interval when the doubles have the same sign. */
+    private static final int MIN_ULP_SAME_SIGN = 2;
+    /** The minimum ULP gap for the open interval when the doubles have the opposite sign. */
+    private static final int MIN_ULP_OPPOSITE_SIGN = 3;
+
     /** Lower bound. */
     private final double lo;
     /** Higher bound. */
@@ -138,21 +143,83 @@ public class ContinuousUniformSampler
 
     /**
      * Creates a new continuous uniform distribution sampler.
-     * The bounds can be optionally excluded.
+     *
+     * <p>The bounds can be optionally excluded to sample from the open interval
+     * {@code (lower, upper)}. In this case if the bounds have the same sign the
+     * open interval must contain at least 1 double value between the limits; if the
+     * bounds have opposite signs the open interval must contain at least 2 double values
+     * between the limits excluding {@code -0.0}. Thus the interval {@code (-x,x)} will
+     * raise an exception when {@code x} is {@link Double#MIN_VALUE}.
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param lo Lower bound.
      * @param hi Higher bound.
-     * @param excludeBounds Set to {@code true} to use the open interval {@code (lower, upper)}.
+     * @param excludeBounds Set to {@code true} to use the open interval
+     * {@code (lower, upper)}.
      * @return the sampler
+     * @throws IllegalArgumentException If the open interval is invalid.
      * @since 1.4
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double lo,
                                                   double hi,
                                                   boolean excludeBounds) {
-        return excludeBounds ?
-            new OpenIntervalContinuousUniformSampler(rng, lo, hi) :
-            new ContinuousUniformSampler(rng, lo, hi);
+        if (excludeBounds) {
+            if (!validateOpenInterval(lo, hi)) {
+                throw new IllegalArgumentException("Invalid open interval (" +
+                                                    lo + "," + hi + ")");
+            }
+            return new OpenIntervalContinuousUniformSampler(rng, lo, hi);
+        }
+        return new ContinuousUniformSampler(rng, lo, hi);
+    }
+
+    /**
+     * Check that the open interval is valid. It must contain at least one double value
+     * between the limits if the signs are the same, or two double values between the limits
+     * if the signs are different (excluding {@code -0.0}).
+     *
+     * @param lo Lower bound.
+     * @param hi Higher bound.
+     * @return false is the interval is invalid
+     */
+    private static boolean validateOpenInterval(double lo, double hi) {
+        // Get the raw bit representation.
+        long bitsx = Double.doubleToRawLongBits(lo);
+        long bitsy = Double.doubleToRawLongBits(hi);
+        // xor will set the sign bit if the signs are different
+        if ((bitsx ^ bitsy) < 0) {
+            // Opposite signs. Drop the sign bit to represent the count of
+            // bits above +0.0. When combined this should be above 2.
+            // This prevents the range (-Double.MIN_VALUE, Double.MIN_VALUE)
+            // which cannot be sampled unless the uniform deviate u=0.5.
+            // (MAX_VALUE has all bits set except the most significant sign bit.)
+            bitsx &= Long.MAX_VALUE;
+            bitsy &= Long.MAX_VALUE;
+            if (lessThanUnsigned(bitsx + bitsy, MIN_ULP_OPPOSITE_SIGN)) {
+                return false;
+            }
+        } else {
+            // Same signs, subtraction will count the ULP difference.
+            // This should be above 1.
+            if (Math.abs(bitsx - bitsy) < MIN_ULP_SAME_SIGN) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Compares two {@code long} values numerically treating the values as unsigned
+     * to test if the first value is less than the second value.
+     *
+     * <p>See Long.compareUnsigned(long, long) in JDK 1.8.
+     *
+     * @param x the first value
+     * @param y the second value
+     * @return true if {@code x < y}
+     */
+    private static boolean lessThanUnsigned(long x, long y) {
+        return x + Long.MIN_VALUE < y + Long.MIN_VALUE;
     }
 }

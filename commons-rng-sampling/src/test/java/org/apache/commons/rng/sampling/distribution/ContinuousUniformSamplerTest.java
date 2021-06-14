@@ -89,6 +89,79 @@ public class ContinuousUniformSamplerTest {
     }
 
     /**
+     * Test open intervals {@code (lower,upper)} where there are not enough double values
+     * between the limits.
+     */
+    @Test
+    public void testInvalidOpenIntervalThrows() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
+        for (final double[] interval : new double[][] {
+            // Opposite signs. Require two doubles inside the range.
+            {-0.0, 0.0},
+            {-0.0, Double.MIN_VALUE},
+            {-0.0, Double.MIN_VALUE * 2},
+            {-Double.MIN_VALUE, 0.0},
+            {-Double.MIN_VALUE * 2, 0.0},
+            {-Double.MIN_VALUE, Double.MIN_VALUE},
+            // Same signs. Requires one double inside the range.
+            // Same exponent
+            {1.23, Math.nextAfter(1.23, Double.POSITIVE_INFINITY)},
+            {1.23, Math.nextAfter(1.23, Double.NEGATIVE_INFINITY)},
+            // Different exponent
+            {2.0, Math.nextAfter(2.0, Double.NEGATIVE_INFINITY)},
+        }) {
+            final double low = interval[0];
+            final double high = interval[1];
+            try {
+                ContinuousUniformSampler.of(rng, low, high, true);
+                Assert.fail("(" + low + "," + high + ")");
+            } catch (IllegalArgumentException ex) {
+                // Expected
+            }
+            try {
+                ContinuousUniformSampler.of(rng, high, low, true);
+                Assert.fail("(" + high + "," + low + ")");
+            } catch (IllegalArgumentException ex) {
+                // Expected
+            }
+        }
+
+        // Valid. This will overflow if the raw long bits are extracted and
+        // subtracted to obtain a ULP difference.
+        ContinuousUniformSampler.of(rng, Double.MAX_VALUE, -Double.MAX_VALUE, true);
+    }
+
+    /**
+     * Test open intervals {@code (lower,upper)} where there is only the minimum number of
+     * double values between the limits.
+     */
+    @Test
+    public void testTinyOpenIntervalSample() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
+
+        // Test sub-normal ranges
+        final double x = Double.MIN_VALUE;
+
+        for (final double expected : new double[] {
+            1.23, 2, 56787.7893, 3 * x, 2 * x, x
+        }) {
+            final double low = Math.nextAfter(expected, Double.POSITIVE_INFINITY);
+            final double high = Math.nextAfter(expected, Double.NEGATIVE_INFINITY);
+            Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, low, high, true).sample(), 0.0);
+            Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, high, low, true).sample(), 0.0);
+            Assert.assertEquals(-expected, ContinuousUniformSampler.of(rng, -low, -high, true).sample(), 0.0);
+            Assert.assertEquals(-expected, ContinuousUniformSampler.of(rng, -high, -low, true).sample(), 0.0);
+        }
+
+        // Special case of sampling around zero.
+        // Requires 2 doubles inside the range.
+        final double y = ContinuousUniformSampler.of(rng, -x, 2 * x, true).sample();
+        Assert.assertTrue(-x < y && y < 2 * x);
+        final double z = ContinuousUniformSampler.of(rng, -2 * x, x, true).sample();
+        Assert.assertTrue(-2 * x < z && z < x);
+    }
+
+    /**
      * Test the SharedStateSampler implementation.
      */
     @Test
@@ -103,8 +176,27 @@ public class ContinuousUniformSamplerTest {
      * @param excludedBounds Set to true to exclude the bounds.
      */
     private static void testSharedStateSampler(boolean excludedBounds) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        // Create RNGs that will generate a sample at the limits.
+        // This tests the bounds excluded sampler correctly shares state.
+        // Do this using a RNG that outputs 0 for the first nextDouble().
+        final UniformRandomProvider rng1 = new SplitMix64(0L) {
+            private double x;
+            @Override
+            public double nextDouble() {
+                final double y = x;
+                x = super.nextDouble();
+                return y;
+            }
+        };
+        final UniformRandomProvider rng2 = new SplitMix64(0L) {
+            private double x;
+            @Override
+            public double nextDouble() {
+                final double y = x;
+                x = super.nextDouble();
+                return y;
+            }
+        };
         final double low = 1.23;
         final double high = 4.56;
         final SharedStateContinuousSampler sampler1 =
