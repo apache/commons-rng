@@ -95,13 +95,15 @@ public class LevySamplersPerformance {
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = randomSource.create();
+            final double location = 0.0;
+            final double scale = 1.0;
             if ("LevySampler".equals(samplerType)) {
-                sampler = LevySampler.of(rng);
+                sampler = LevySampler.of(rng, location, scale);
             } else {
                 final ContinuousInverseCumulativeProbabilityFunction levyFunction =
                     new ContinuousInverseCumulativeProbabilityFunction() {
                         /** Use CM for the inverse CDF. null is for the unused RNG. */
-                        private final LevyDistribution dist = new LevyDistribution(null, 0.0, 1.0);
+                        private final LevyDistribution dist = new LevyDistribution(null, location, scale);
                         @Override
                         public double inverseCumulativeProbability(double p) {
                             return dist.inverseCumulativeProbability(p);
