@@ -138,6 +138,11 @@ public final class ContinuousSamplersList {
             final double cLevy = 0.76;
             add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, muLevy, cLevy),
                 RandomSource.TWO_CMRES.create());
+            // Levy sampler
+            add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, muLevy, cLevy),
+                LevySampler.of(RandomSource.JSF_64.create(), muLevy, cLevy));
+            add(LIST, new org.apache.commons.math3.distribution.LevyDistribution(unusedRng, 0.0, 1.0),
+                LevySampler.of(RandomSource.JSF_64.create(), 0.0, 1.0));
 
             // Log normal ("inverse method").
             final double scaleLogNormal = 2.345;
