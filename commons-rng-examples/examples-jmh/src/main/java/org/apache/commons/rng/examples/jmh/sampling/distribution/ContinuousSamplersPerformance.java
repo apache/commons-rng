@@ -117,10 +117,10 @@ public class ContinuousSamplersPerformance {
                 // This tests the Ahrens-Dieter algorithm since alpha < 1
                 sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 0.76, 9.8);
             } else if ("MarsagliaTsangGammaSampler".equals(samplerType)) {
-              // This tests the Marsaglia-Tsang algorithm since alpha > 1
-              sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 12.34, 9.8);
+                // This tests the Marsaglia-Tsang algorithm since alpha > 1
+                sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 12.34, 9.8);
             } else if ("LevySampler".equals(samplerType)) {
-              sampler = LevySampler.of(rng, 1.23, 4.56);
+                sampler = LevySampler.of(rng, 1.23, 4.56);
             } else if ("LogNormalBoxMullerNormalizedGaussianSampler".equals(samplerType)) {
                 sampler = LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng), 12.3, 4.6);
             } else if ("LogNormalMarsagliaNormalizedGaussianSampler".equals(samplerType)) {
