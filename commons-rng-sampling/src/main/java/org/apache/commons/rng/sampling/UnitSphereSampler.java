@@ -106,7 +106,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
 
             if (sum == 0) {
                 // Zero-norm vector is discarded.
-                return nextVector();
+                return sample();
             }
 
             final double f = 1.0 / Math.sqrt(sum);
@@ -143,7 +143,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
 
             if (sum == 0) {
                 // Zero-norm vector is discarded.
-                return nextVector();
+                return sample();
             }
 
             final double f = 1.0 / Math.sqrt(sum);
@@ -193,7 +193,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
                 // than a few such vectors. It also protects against infinite
                 // loop (in case a buggy generator is used), by eventually
                 // raising a "StackOverflowError".
-                return nextVector();
+                return sample();
             }
 
             final double f = 1 / Math.sqrt(sum);
