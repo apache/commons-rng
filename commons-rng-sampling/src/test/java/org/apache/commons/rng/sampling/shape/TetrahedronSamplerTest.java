@@ -183,12 +183,12 @@ public class TetrahedronSamplerTest {
         // To determine the sample is inside the correct tetrahedron it is projected to the
         // 4 faces of the tetrahedron along the face normals. The distance should be negative
         // when the face normals are orientated outwards.
-        final InsideTetrahedron[] insides = {new InsideTetrahedron(d, f, b, c),
-                                             new InsideTetrahedron(d, f, c, g),
-                                             new InsideTetrahedron(d, f, g, h),
-                                             new InsideTetrahedron(d, f, h, e),
-                                             new InsideTetrahedron(d, f, e, a),
-                                             new InsideTetrahedron(d, f, a, b)};
+        final Tetrahedron[] tetrahedrons = {new Tetrahedron(d, f, b, c),
+                                            new Tetrahedron(d, f, c, g),
+                                            new Tetrahedron(d, f, g, h),
+                                            new Tetrahedron(d, f, h, e),
+                                            new Tetrahedron(d, f, e, a),
+                                            new Tetrahedron(d, f, a, b)};
 
         final int samples = expected.length * samplesPerBin;
         for (int n = 0; n < 1; n++) {
@@ -198,7 +198,7 @@ public class TetrahedronSamplerTest {
             for (int i = 0; i < samples; i += 6) {
                 for (int j = 0; j < 6; j++) {
                     addObservation(samplers[j].sample(), observed, bins, binsXy,
-                                   lx, ly, lz, sx, sy, sz, insides[j]);
+                                   lx, ly, lz, sx, sy, sz, tetrahedrons[j]);
                 }
             }
             final double p = new ChiSquareTest().chiSquareTest(expected, observed);
@@ -224,17 +224,17 @@ public class TetrahedronSamplerTest {
      * @param sx the scale to convert the x coordinate to the x bin
      * @param sy the scale to convert the y coordinate to the y bin
      * @param sz the scale to convert the z coordinate to the z bin
-     * @param inside the inside tetrahedron test
+     * @param tetrahedron the tetrahedron the sample should be within
      */
     // CHECKSTYLE: stop ParameterNumberCheck
     private static void addObservation(double[] v, long[] observed,
                                        int binsX, int binsXy,
                                        double lx, double ly, double lz,
                                        double sx, double sy, double sz,
-                                       InsideTetrahedron inside) {
+                                       Tetrahedron tetrahedron) {
         Assert.assertEquals(3, v.length);
         // Test the point is inside the correct tetrahedron
-        Assert.assertTrue("Not inside the tetrahedron", inside.test(v));
+        Assert.assertTrue("Not inside the tetrahedron", tetrahedron.contains(v));
         final double x = v[0];
         final double y = v[1];
         final double z = v[2];
@@ -309,48 +309,48 @@ public class TetrahedronSamplerTest {
     }
 
     /**
-     * Test the inside tetrahedron predicate.
+     * Test the tetrahedron contains predicate.
      */
     @Test
-    public void testInsideTetrahedron() {
+    public void testTetrahedronContains() {
         final double[][] c1 = new double[][] {
             {1, 1, 1}, {1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}
         };
-        final InsideTetrahedron inside = new InsideTetrahedron(c1[0], c1[1], c1[2], c1[3]);
+        final Tetrahedron tetrahedron = new Tetrahedron(c1[0], c1[1], c1[2], c1[3]);
         // Testing points on the vertices, edges or faces are subject to floating point error
         final double epsilon = 1e-14;
         // Vertices
         for (int i = 0; i < 4; i++) {
-            Assert.assertTrue(inside.test(c1[i], epsilon));
+            Assert.assertTrue(tetrahedron.contains(c1[i], epsilon));
         }
         // Edge
-        Assert.assertTrue(inside.test(new double[] {1, 0, 0}, epsilon));
-        Assert.assertTrue(inside.test(new double[] {0.5, 0.5, 1}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {1, 0, 0}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {0.5, 0.5, 1}, epsilon));
         // Just inside the edge
-        Assert.assertTrue(inside.test(new double[] {1 - 1e-10, 0, 0}));
-        Assert.assertTrue(inside.test(new double[] {0.5, 0.5, 1 - 1e-10}));
+        Assert.assertTrue(tetrahedron.contains(new double[] {1 - 1e-10, 0, 0}));
+        Assert.assertTrue(tetrahedron.contains(new double[] {0.5, 0.5, 1 - 1e-10}));
         // Just outside the edge
-        Assert.assertFalse(inside.test(new double[] {1, 0, 1e-10}, epsilon));
-        Assert.assertFalse(inside.test(new double[] {0.5, 0.5 + 1e-10, 1}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {1, 0, 1e-10}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {0.5, 0.5 + 1e-10, 1}, epsilon));
         // Face
         double x = 1.0 / 3;
-        Assert.assertTrue(inside.test(new double[] {x, -x, x}, epsilon));
-        Assert.assertTrue(inside.test(new double[] {-x, -x, -x}, epsilon));
-        Assert.assertTrue(inside.test(new double[] {x, x, -x}, epsilon));
-        Assert.assertTrue(inside.test(new double[] {-x, x, x}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {x, -x, x}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {-x, -x, -x}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {x, x, -x}, epsilon));
+        Assert.assertTrue(tetrahedron.contains(new double[] {-x, x, x}, epsilon));
         // Just outside the face
         x += 1e-10;
-        Assert.assertFalse(inside.test(new double[] {x, -x, x}, epsilon));
-        Assert.assertFalse(inside.test(new double[] {-x, -x, -x}, epsilon));
-        Assert.assertFalse(inside.test(new double[] {x, x, -x}, epsilon));
-        Assert.assertFalse(inside.test(new double[] {-x, x, x}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {x, -x, x}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {-x, -x, -x}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {x, x, -x}, epsilon));
+        Assert.assertFalse(tetrahedron.contains(new double[] {-x, x, x}, epsilon));
         // Inside
-        Assert.assertTrue(inside.test(new double[] {0, 0, 0}));
-        Assert.assertTrue(inside.test(new double[] {0.5, 0.25, -0.1}));
+        Assert.assertTrue(tetrahedron.contains(new double[] {0, 0, 0}));
+        Assert.assertTrue(tetrahedron.contains(new double[] {0.5, 0.25, -0.1}));
         // Outside
-        Assert.assertFalse(inside.test(new double[] {0, 20, 0}));
-        Assert.assertFalse(inside.test(new double[] {-20, 0, 0}));
-        Assert.assertFalse(inside.test(new double[] {6, 6, 4}));
+        Assert.assertFalse(tetrahedron.contains(new double[] {0, 20, 0}));
+        Assert.assertFalse(tetrahedron.contains(new double[] {-20, 0, 0}));
+        Assert.assertFalse(tetrahedron.contains(new double[] {6, 6, 4}));
     }
 
     /**
@@ -376,7 +376,7 @@ public class TetrahedronSamplerTest {
      *
      * @see <a href="https://mathworld.wolfram.com/Point-PlaneDistance.html">Point-Plane distance</a>
      */
-    private static class InsideTetrahedron {
+    private static class Tetrahedron {
         /** The face normals. */
         private final double[][] n;
         /** The distance of each face from the origin. */
@@ -390,7 +390,7 @@ public class TetrahedronSamplerTest {
          * @param v3 The third vertex.
          * @param v4 The fourth vertex.
          */
-        InsideTetrahedron(double[] v1, double[] v2, double[] v3, double[] v4) {
+        Tetrahedron(double[] v1, double[] v2, double[] v3, double[] v4) {
             // Compute the centre of each face
             final double[][] x = new double[][] {
                 centre(v1, v2, v3),
@@ -511,12 +511,12 @@ public class TetrahedronSamplerTest {
         }
 
         /**
-         * Check the point is inside the tetrahedron.
+         * Check whether or not the tetrahedron contains the given point.
          *
          * @param x the coordinate
          * @return true if inside the tetrahedron
          */
-        boolean test(double[] x) {
+        boolean contains(double[] x) {
             // Must be below all the face planes
             for (int i = 0; i < 4; i++) {
                 // This distance D of a point xyz to the plane is:
@@ -532,13 +532,14 @@ public class TetrahedronSamplerTest {
         }
 
         /**
-         * Check the point is inside the tetrahedron within the given absolute epsilon.
+         * Check whether or not the tetrahedron contains the given point
+         * within the given absolute epsilon.
          *
          * @param x the coordinate
          * @param epsilon the epsilon
          * @return true if inside the tetrahedron
          */
-        boolean test(double[] x, double epsilon) {
+        boolean contains(double[] x, double epsilon) {
             for (int i = 0; i < 4; i++) {
                 // As above but with an epsilon above zero
                 if (dot(n[i], x) > epsilon - d[i]) {

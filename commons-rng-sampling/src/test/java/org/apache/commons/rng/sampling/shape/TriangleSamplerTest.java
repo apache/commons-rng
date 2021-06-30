@@ -316,19 +316,19 @@ public class TriangleSamplerTest {
         final TriangleSampler sampler1 = TriangleSampler.of(forward.apply(a), forward.apply(d), forward.apply(b), rng);
         final TriangleSampler sampler2 = TriangleSampler.of(forward.apply(b), forward.apply(c), forward.apply(e), rng);
         final TriangleSampler sampler3 = TriangleSampler.of(forward.apply(c), forward.apply(d), forward.apply(e), rng);
-        final InsideTriangle test1 = new InsideTriangle(a, d, b);
-        final InsideTriangle test2 = new InsideTriangle(b, c, e);
-        final InsideTriangle test3 = new InsideTriangle(c, d, e);
+        final Triangle triangle1 = new Triangle(a, d, b);
+        final Triangle triangle2 = new Triangle(b, c, e);
+        final Triangle triangle3 = new Triangle(c, d, e);
         final int samples = expected.length * samplesPerBin;
         for (int n = 0; n < 1; n++) {
             // Assign each coordinate to a region inside the combined rectangle
             final long[] observed = new long[expected.length];
             // Sample according to the area of each triangle (ratio 2:1:1)
             for (int i = 0; i < samples; i += 4) {
-                addObservation(reverse.apply(sampler1.sample()), observed, bins, sx, sy, test1);
-                addObservation(reverse.apply(sampler1.sample()), observed, bins, sx, sy, test1);
-                addObservation(reverse.apply(sampler2.sample()), observed, bins, sx, sy, test2);
-                addObservation(reverse.apply(sampler3.sample()), observed, bins, sx, sy, test3);
+                addObservation(reverse.apply(sampler1.sample()), observed, bins, sx, sy, triangle1);
+                addObservation(reverse.apply(sampler1.sample()), observed, bins, sx, sy, triangle1);
+                addObservation(reverse.apply(sampler2.sample()), observed, bins, sx, sy, triangle2);
+                addObservation(reverse.apply(sampler3.sample()), observed, bins, sx, sy, triangle3);
             }
             final double p = new ChiSquareTest().chiSquareTest(expected, observed);
             Assert.assertFalse("p-value too small: " + p, p < 0.001);
@@ -348,14 +348,14 @@ public class TriangleSamplerTest {
      * @param bins the numbers of bins in the x dimension
      * @param sx the scale to convert the x coordinate to the x bin
      * @param sy the scale to convert the y coordinate to the y bin
-     * @param inside the inside triangle test
+     * @param triangle the triangle the sample should be within
      */
     private static void addObservation(double[] v, long[] observed,
-            int bins, double sx, double sy, InsideTriangle inside) {
+            int bins, double sx, double sy, Triangle triangle) {
         final double x = v[0];
         final double y = v[1];
-        // Test the point is inside the triangle
-        Assert.assertTrue(inside.test(x, y));
+        // Test the point is triangle the triangle
+        Assert.assertTrue(triangle.contains(x, y));
         // Add to the correct bin after using the offset
         final int binx = (int) (x * sx);
         final int biny = (int) (y * sy);
@@ -600,33 +600,33 @@ public class TriangleSamplerTest {
     }
 
     /**
-     * Test the inside triangle predicate.
+     * Test the triangle contains predicate.
      */
     @Test
-    public void testInsideTriangle() {
-        final InsideTriangle inside = new InsideTriangle(1, 2, 3, 1, 0.5, 6);
+    public void testTriangleContains() {
+        final Triangle triangle = new Triangle(1, 2, 3, 1, 0.5, 6);
         // Vertices
-        Assert.assertTrue(inside.test(1, 2));
-        Assert.assertTrue(inside.test(3, 1));
-        Assert.assertTrue(inside.test(0.5, 6));
+        Assert.assertTrue(triangle.contains(1, 2));
+        Assert.assertTrue(triangle.contains(3, 1));
+        Assert.assertTrue(triangle.contains(0.5, 6));
         // Edge
-        Assert.assertTrue(inside.test(0.75, 4));
+        Assert.assertTrue(triangle.contains(0.75, 4));
         // Inside
-        Assert.assertTrue(inside.test(1.5, 3));
+        Assert.assertTrue(triangle.contains(1.5, 3));
         // Outside
-        Assert.assertFalse(inside.test(0, 20));
-        Assert.assertFalse(inside.test(-20, 0));
-        Assert.assertFalse(inside.test(6, 6));
+        Assert.assertFalse(triangle.contains(0, 20));
+        Assert.assertFalse(triangle.contains(-20, 0));
+        Assert.assertFalse(triangle.contains(6, 6));
         // Just outside
-        Assert.assertFalse(inside.test(0.75, 4 - 1e-10));
+        Assert.assertFalse(triangle.contains(0.75, 4 - 1e-10));
 
         // Note:
-        // Touching triangles can both have the point inside.
+        // Touching triangles can both have the point triangle.
         // This predicate is not suitable for assigning points uniquely to
         // non-overlapping triangles that share an edge.
-        final InsideTriangle inside2 = new InsideTriangle(1, 2, 3, 1, 0, -2);
-        Assert.assertTrue(inside.test(2, 1.5));
-        Assert.assertTrue(inside2.test(2, 1.5));
+        final Triangle triangle2 = new Triangle(1, 2, 3, 1, 0, -2);
+        Assert.assertTrue(triangle.contains(2, 1.5));
+        Assert.assertTrue(triangle2.contains(2, 1.5));
     }
 
     /**
@@ -721,7 +721,7 @@ public class TriangleSamplerTest {
      * Point in a triangle</a>
      * @see <a href="https://stackoverflow.com/a/34093754">Point inside triangle by Cédric Dufour</a>
      */
-    private static class InsideTriangle {
+    private static class Triangle {
         private final double p2x;
         private final double p2y;
         private final double dX21;
@@ -737,7 +737,7 @@ public class TriangleSamplerTest {
          * @param p1 triangle vertex 1
          * @param p2 triangle vertex 2
          */
-        InsideTriangle(double[] p0, double[] p1, double[] p2) {
+        Triangle(double[] p0, double[] p1, double[] p2) {
             this(p0[0], p0[1], p1[0], p1[1], p2[0], p2[1]);
         }
         /**
@@ -750,7 +750,7 @@ public class TriangleSamplerTest {
          * @param p2x triangle vertex 2 x coordinate
          * @param p2y triangle vertex 2 y coordinate
          */
-        InsideTriangle(double p0x, double p0y, double p1x, double p1y, double p2x, double p2y) {
+        Triangle(double p0x, double p0y, double p1x, double p1y, double p2x, double p2y) {
             this.p2x = p2x;
             this.p2y = p2y;
             // Precompute factors
@@ -763,13 +763,13 @@ public class TriangleSamplerTest {
         }
 
         /**
-         * Check the point is inside the triangle.
+         * Check whether or not the triangle contains the given point.
          *
          * @param px the point x coordinate
          * @param py the point y coordinate
          * @return true if inside the triangle
          */
-        boolean test(double px, double py) {
+        boolean contains(double px, double py) {
             // Barycentric coordinates:
             // p = p0 + (p1 - p0) * s + (p2 - p0) * t
             // The point p is inside the triangle if 0 <= s <= 1 and 0 <= t <= 1 and s + t <= 1
