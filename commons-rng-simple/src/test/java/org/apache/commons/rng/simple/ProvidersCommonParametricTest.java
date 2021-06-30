@@ -89,7 +89,7 @@ public class ProvidersCommonParametricTest {
         Assume.assumeTrue(originalArgs == null);
         @SuppressWarnings("deprecation")
         final UniformRandomProvider rng = RandomSource.create(originalSource);
-        Assert.assertTrue(generator.getClass().equals(rng.getClass()));
+        Assert.assertEquals(generator.getClass(), rng.getClass());
     }
 
     /**
@@ -100,7 +100,7 @@ public class ProvidersCommonParametricTest {
     public void testFactoryCreateMethodWithSeed() {
         @SuppressWarnings("deprecation")
         final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
-        Assert.assertTrue(rng1.getClass().equals(generator.getClass()));
+        Assert.assertEquals(rng1.getClass(), generator.getClass());
         // Check the output
         final UniformRandomProvider rng2 = originalSource.create(originalSeed, originalArgs);
         for (int i = 0; i < 10; i++) {
