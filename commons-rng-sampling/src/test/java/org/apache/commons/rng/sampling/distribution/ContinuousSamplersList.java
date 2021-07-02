@@ -99,6 +99,9 @@ public final class ContinuousSamplersList {
             // Exponential.
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
                 AhrensDieterExponentialSampler.of(RandomSource.MT.create(), meanExp));
+            // Exponential ("Ziggurat").
+            add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
+                ZigguratExponentialSampler.of(RandomSource.KISS.create(), meanExp));
 
             // F ("inverse method").
             final int numDofF = 4;
