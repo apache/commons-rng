@@ -127,13 +127,11 @@ public class ZigguratNormalizedGaussianSampler
      */
     private double fix(long hz,
                        int iz) {
-        double x;
-        double y;
-
-        x = hz * W[iz];
         if (iz == 0) {
             // Base strip.
             // This branch is called about 5.7624515E-4 times per sample.
+            double y;
+            double x;
             do {
                 y = -Math.log(rng.nextDouble());
                 x = -Math.log(rng.nextDouble()) * ONE_OVER_R;
@@ -144,6 +142,7 @@ public class ZigguratNormalizedGaussianSampler
         }
         // Wedge of other strips.
         // This branch is called about 0.027323 times per sample.
+        final double x = hz * W[iz];
         if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < pdf(x)) {
             return x;
         }
