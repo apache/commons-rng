@@ -42,8 +42,13 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     private static final int TWO_D = 2;
     /** The dimension for 3D sampling. */
     private static final int THREE_D = 3;
-    /** The mask to extract the lower 53-bits from a long. */
-    private static final long LOWER_53_BITS = -1L >>> 11;
+    /**
+     * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+     * Taken from o.a.c.rng.core.utils.NumberFactory.
+     *
+     * <p>This is equivalent to 1.0 / (1L << 53).
+     */
+    private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
 
     /**
      * Sample uniformly from a 1D unit line.
@@ -239,10 +244,11 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * @return the double
      */
     private static double makeSignedDouble(long bits) {
+        // As per o.a.c.rng.core.utils.NumberFactory.makeDouble(long) but using a signed 
+        // shift of 10 in place of an unsigned shift of 11.
         // Use the upper 54 bits on the assumption they are more random.
-        // The sign bit generates a value of 0 or 1 for subtraction.
-        // The next 53 bits generates a positive number in the range [0, 1).
-        // [0, 1) - (0 or 1) => [-1, 1)
-        return (((bits >>> 10) & LOWER_53_BITS) * 0x1.0p-53d) - (bits >>> 63);
+        // The sign bit is maintained by the signed shift.
+        // The next 53 bits generates a magnitude in the range [0, 2^53) or [-2^53, 0).
+        return (bits >> 10) * DOUBLE_MULTIPLIER;
     }
 }

@@ -151,13 +151,15 @@ public class UnitBallSamplerBenchmark {
     public static class Sampler1D extends SamplerData {
         /** Name for the signed double method. */
         private static final String SIGNED_DOUBLE = "signedDouble";
+        /** Name for the signed double method, version 2. */
+        private static final String SIGNED_DOUBLE2 = "signedDouble2";
         /** Name for the two doubles method. */
         private static final String TWO_DOUBLES = "twoDoubles";
         /** Name for the boolean double method. */
         private static final String BOOLEAN_DOUBLE = "booleanDouble";
 
         /** The sampler type. */
-        @Param({BASELINE, SIGNED_DOUBLE, TWO_DOUBLES, BOOLEAN_DOUBLE})
+        @Param({BASELINE, SIGNED_DOUBLE, SIGNED_DOUBLE2, TWO_DOUBLES, BOOLEAN_DOUBLE})
         private String type;
 
         /** {@inheritDoc} */
@@ -176,6 +178,14 @@ public class UnitBallSamplerBenchmark {
                     public double[] sample() {
                         // Sample [-1, 1) uniformly
                         return new double[] {makeSignedDouble(rng.nextLong())};
+                    }
+                };
+            } else if (SIGNED_DOUBLE2.equals(type)) {
+                return new Sampler() {
+                    @Override
+                    public double[] sample() {
+                        // Sample [-1, 1) uniformly
+                        return new double[] {makeSignedDouble2(rng.nextLong())};
                     }
                 };
             } else if (TWO_DOUBLES.equals(type)) {
@@ -739,6 +749,21 @@ public class UnitBallSamplerBenchmark {
      * @return the double
      */
     private static double makeSignedDouble(long bits) {
+        // As per o.a.c.rng.core.utils.NumberFactory.makeDouble(long) but using a signed
+        // shift of 10 in place of an unsigned shift of 11.
+        return (bits >> 10) * 0x1.0p-53d;
+    }
+
+    /**
+     * Creates a signed double in the range {@code [-1, 1)}. The magnitude is sampled evenly
+     * from the 2<sup>54</sup> dyadic rationals in the range.
+     *
+     * <p>Note: This method will not return samples for both -0.0 and 0.0.
+     *
+     * @param bits the bits
+     * @return the double
+     */
+    private static double makeSignedDouble2(long bits) {
         // Use the upper 54 bits on the assumption they are more random.
         // The sign bit generates a value of 0 or 1 for subtraction.
         // The next 53 bits generates a positive number in the range [0, 1).
