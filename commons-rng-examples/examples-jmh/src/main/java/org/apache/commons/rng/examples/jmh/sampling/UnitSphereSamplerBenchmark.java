@@ -125,11 +125,15 @@ public class UnitSphereSamplerBenchmark {
     public static class Sampler1D extends SamplerData {
         /** Name for the signed double method. */
         private static final String SIGNED_DOUBLE = "signedDouble";
+        /** Name for the masked int method. */
+        private static final String MASKED_INT = "maskedInt";
+        /** Name for the masked long method. */
+        private static final String MASKED_LONG = "maskedLong";
         /** Name for the boolean method. */
         private static final String BOOLEAN = "boolean";
 
         /** The sampler type. */
-        @Param({BASELINE, SIGNED_DOUBLE, BOOLEAN, ARRAY})
+        @Param({BASELINE, SIGNED_DOUBLE, MASKED_INT, MASKED_LONG, BOOLEAN, ARRAY})
         private String type;
 
         /** {@inheritDoc} */
@@ -149,6 +153,32 @@ public class UnitSphereSamplerBenchmark {
                         // (1 - 0) or (1 - 2)
                         // Use the sign bit
                         return new double[] {1.0 - ((rng.nextInt() >>> 30) & 0x2)};
+                    }
+                };
+            } else if (MASKED_INT.equals(type)) {
+                return new Sampler() {
+                    // The value 1.0 in raw long bits
+                    private final long one = Double.doubleToRawLongBits(1.0);
+                    // Mask to extract the sign bit from an integer (as a long)
+                    private final long signBit = 1L << 31;
+
+                    @Override
+                    public double[] sample() {
+                        // Shift the sign bit and combine with the bits for a double of 1.0
+                        return new double[] {Double.longBitsToDouble(one | ((rng.nextInt() & signBit) << 32))};
+                    }
+                };
+            } else if (MASKED_LONG.equals(type)) {
+                return new Sampler() {
+                    // The value 1.0 in raw long bits
+                    private final long one = Double.doubleToRawLongBits(1.0);
+                    // Mask to extract the sign bit from a long
+                    private final long signBit = 1L << 63;
+
+                    @Override
+                    public double[] sample() {
+                        // Combine the sign bit with the bits for a double of 1.0
+                        return new double[] {Double.longBitsToDouble(one | (rng.nextLong() & signBit))};
                     }
                 };
             } else if (BOOLEAN.equals(type)) {
