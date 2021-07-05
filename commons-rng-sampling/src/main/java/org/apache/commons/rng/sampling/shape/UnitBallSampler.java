@@ -244,7 +244,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * @return the double
      */
     private static double makeSignedDouble(long bits) {
-        // As per o.a.c.rng.core.utils.NumberFactory.makeDouble(long) but using a signed 
+        // As per o.a.c.rng.core.utils.NumberFactory.makeDouble(long) but using a signed
         // shift of 10 in place of an unsigned shift of 11.
         // Use the upper 54 bits on the assumption they are more random.
         // The sign bit is maintained by the signed shift.
