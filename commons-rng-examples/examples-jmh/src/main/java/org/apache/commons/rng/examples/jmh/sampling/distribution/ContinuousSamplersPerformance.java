@@ -29,6 +29,7 @@ import org.apache.commons.rng.sampling.distribution.InverseTransformParetoSample
 import org.apache.commons.rng.sampling.distribution.LevySampler;
 import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 
@@ -77,7 +78,9 @@ public class ContinuousSamplersPerformance {
         @Param({"BoxMullerNormalizedGaussianSampler",
                 "MarsagliaNormalizedGaussianSampler",
                 "ZigguratNormalizedGaussianSampler",
+                "ZigguratSampler.NormalizedGaussian",
                 "AhrensDieterExponentialSampler",
+                "ZigguratSampler.Exponential",
                 "ZigguratExponentialSampler",
                 "AhrensDieterGammaSampler",
                 "MarsagliaTsangGammaSampler",
@@ -85,10 +88,10 @@ public class ContinuousSamplersPerformance {
                 "LogNormalBoxMullerNormalizedGaussianSampler",
                 "LogNormalMarsagliaNormalizedGaussianSampler",
                 "LogNormalZigguratNormalizedGaussianSampler",
+                "LogNormalSampler.ZigguratSampler.NormalizedGaussian",
                 "ChengBetaSampler",
                 "ContinuousUniformSampler",
-                "InverseTransformParetoSampler",
-                })
+                "InverseTransformParetoSampler"})
         private String samplerType;
 
         /** The sampler. */
@@ -113,8 +116,12 @@ public class ContinuousSamplersPerformance {
                 sampler = MarsagliaNormalizedGaussianSampler.of(rng);
             } else if ("ZigguratNormalizedGaussianSampler".equals(samplerType)) {
                 sampler = ZigguratNormalizedGaussianSampler.of(rng);
+            } else if ("ZigguratSampler.NormalizedGaussian".equals(samplerType)) {
+                sampler = ZigguratSampler.NormalizedGaussian.of(rng);
             } else if ("AhrensDieterExponentialSampler".equals(samplerType)) {
                 sampler = AhrensDieterExponentialSampler.of(rng, 4.56);
+            } else if ("ZigguratSampler.Exponential".equals(samplerType)) {
+                sampler = ZigguratSampler.Exponential.of(rng, 4.56);
             } else if ("ZigguratExponentialSampler".equals(samplerType)) {
                 sampler = ZigguratExponentialSampler.of(rng, 4.56);
             } else if ("AhrensDieterGammaSampler".equals(samplerType)) {
@@ -131,6 +138,8 @@ public class ContinuousSamplersPerformance {
                 sampler = LogNormalSampler.of(MarsagliaNormalizedGaussianSampler.of(rng), 12.3, 4.6);
             } else if ("LogNormalZigguratNormalizedGaussianSampler".equals(samplerType)) {
                 sampler = LogNormalSampler.of(ZigguratNormalizedGaussianSampler.of(rng), 12.3, 4.6);
+            } else if ("LogNormalSampler.ZigguratSampler.NormalizedGaussian".equals(samplerType)) {
+                sampler = LogNormalSampler.of(ZigguratSampler.NormalizedGaussian.of(rng), 12.3, 4.6);
             } else if ("ChengBetaSampler".equals(samplerType)) {
                 sampler = ChengBetaSampler.of(rng, 0.45, 6.7);
             } else if ("ContinuousUniformSampler".equals(samplerType)) {

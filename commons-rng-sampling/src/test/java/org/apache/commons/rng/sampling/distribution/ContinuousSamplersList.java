@@ -62,6 +62,10 @@ public final class ContinuousSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
                 GaussianSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.MT.create()),
                                    meanNormal, sigmaNormal));
+            // Gaussian ("Modified ziggurat").
+            add(LIST, new org.apache.commons.math3.distribution.NormalDistribution(unusedRng, meanNormal, sigmaNormal),
+                GaussianSampler.of(ZigguratSampler.NormalizedGaussian.of(RandomSource.MT.create()),
+                                   meanNormal, sigmaNormal));
 
             // Beta ("inverse method").
             final double alphaBeta = 4.3;
@@ -102,6 +106,9 @@ public final class ContinuousSamplersList {
             // Exponential ("Ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
                 ZigguratExponentialSampler.of(RandomSource.KISS.create(), meanExp));
+            // Exponential ("Modified ziggurat").
+            add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
+                ZigguratSampler.Exponential.of(RandomSource.XO_RO_SHI_RO_128_SS.create(), meanExp));
 
             // F ("inverse method").
             final int numDofF = 4;
