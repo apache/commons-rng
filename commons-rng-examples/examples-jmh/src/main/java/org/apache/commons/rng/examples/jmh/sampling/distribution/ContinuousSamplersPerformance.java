@@ -30,7 +30,6 @@ import org.apache.commons.rng.sampling.distribution.LevySampler;
 import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
-import org.apache.commons.rng.sampling.distribution.ZigguratExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 
 import org.openjdk.jmh.annotations.Benchmark;
@@ -81,7 +80,6 @@ public class ContinuousSamplersPerformance {
                 "ZigguratSampler.NormalizedGaussian",
                 "AhrensDieterExponentialSampler",
                 "ZigguratSampler.Exponential",
-                "ZigguratExponentialSampler",
                 "AhrensDieterGammaSampler",
                 "MarsagliaTsangGammaSampler",
                 "LevySampler",
@@ -122,8 +120,6 @@ public class ContinuousSamplersPerformance {
                 sampler = AhrensDieterExponentialSampler.of(rng, 4.56);
             } else if ("ZigguratSampler.Exponential".equals(samplerType)) {
                 sampler = ZigguratSampler.Exponential.of(rng, 4.56);
-            } else if ("ZigguratExponentialSampler".equals(samplerType)) {
-                sampler = ZigguratExponentialSampler.of(rng, 4.56);
             } else if ("AhrensDieterGammaSampler".equals(samplerType)) {
                 // This tests the Ahrens-Dieter algorithm since alpha < 1
                 sampler = AhrensDieterMarsagliaTsangGammaSampler.of(rng, 0.76, 9.8);

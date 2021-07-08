@@ -103,9 +103,6 @@ public final class ContinuousSamplersList {
             // Exponential.
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
                 AhrensDieterExponentialSampler.of(RandomSource.MT.create(), meanExp));
-            // Exponential ("Ziggurat").
-            add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
-                ZigguratExponentialSampler.of(RandomSource.KISS.create(), meanExp));
             // Exponential ("Modified ziggurat").
             add(LIST, new org.apache.commons.math3.distribution.ExponentialDistribution(unusedRng, meanExp),
                 ZigguratSampler.Exponential.of(RandomSource.XO_RO_SHI_RO_128_SS.create(), meanExp));

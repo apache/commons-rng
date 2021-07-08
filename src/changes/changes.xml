@@ -85,10 +85,6 @@ as 'flaky' in the report).
          New "ZigguratSampler" implementation of the modified "Ziggurat" algorithm for
          Gaussian and exponential sampling.
       </action>
-      <action dev="aherbert" type="add" issue="149">
-         New "ZigguratExponentialSampler" implementation of the "Ziggurat" algorithm for
-         exponential sampling.
-      </action>
       <action dev="aherbert" type="fix" issue="148">
         "UnitSphereSampler": Detect and discard infinite length vectors.
       </action>
