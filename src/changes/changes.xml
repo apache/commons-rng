@@ -77,6 +77,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="151">
+         New "ZigguratSampler" implementation of the modified "Ziggurat" algorithm for
+         Gaussian and exponential sampling.
+      </action>
       <action dev="aherbert" type="update" issue="150">
         "LargeMeanPoissonSampler": Updated to use the ZigguratExponentialSampler.
       </action>
