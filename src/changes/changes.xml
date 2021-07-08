@@ -77,6 +77,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="153">
+        "UnitBallSampler": Update to use the ZigguratSampler for an exponential deviate for
+        ball point picking.
+      </action>
       <action dev="aherbert" type="update" issue="150">
         Update "LargeMeanPoissonSampler" and "GeometricSampler" to use the ZigguratSampler for
         exponential deviates.

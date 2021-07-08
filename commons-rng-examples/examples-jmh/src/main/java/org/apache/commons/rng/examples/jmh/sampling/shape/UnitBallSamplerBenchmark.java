@@ -18,9 +18,10 @@
 package org.apache.commons.rng.examples.jmh.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
+import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -426,7 +427,7 @@ public class UnitBallSamplerBenchmark {
             /** The normal distribution. */
             private final NormalizedGaussianSampler normal;
             /** The exponential distribution. */
-            private final AhrensDieterExponentialSampler exp;
+            private final ContinuousSampler exp;
 
             /**
              * @param rng the source of randomness
@@ -436,7 +437,8 @@ public class UnitBallSamplerBenchmark {
                 normal = new ZigguratNormalizedGaussianSampler(rng);
                 // Exponential(mean=2) == Chi-squared distribution(degrees freedom=2)
                 // thus is the equivalent of the HypersphereDiscardSampler.
-                exp = new AhrensDieterExponentialSampler(rng, 2.0);
+                // Here we use mean = 1 and scale the output later.
+                exp = ZigguratSampler.Exponential.of(rng);
             }
 
             @Override
@@ -444,8 +446,8 @@ public class UnitBallSamplerBenchmark {
                 final double x = normal.sample();
                 final double y = normal.sample();
                 final double z = normal.sample();
-                // Include the exponential sample
-                final double sum = exp.sample() + x * x + y * y + z * z;
+                // Include the exponential sample. It has mean 1 so multiply by 2.
+                final double sum = exp.sample() * 2 + x * x + y * y + z * z;
                 // Note: Handle the possibility of a zero sum and invalid inverse
                 if (sum == 0) {
                     return sample();
@@ -608,7 +610,7 @@ public class UnitBallSamplerBenchmark {
             /** The normal distribution. */
             private final NormalizedGaussianSampler normal;
             /** The exponential distribution. */
-            private final AhrensDieterExponentialSampler exp;
+            private final ContinuousSampler exp;
 
             /**
              * @param rng the source of randomness
@@ -620,14 +622,15 @@ public class UnitBallSamplerBenchmark {
                 normal = new ZigguratNormalizedGaussianSampler(rng);
                 // Exponential(mean=2) == Chi-squared distribution(degrees freedom=2)
                 // thus is the equivalent of the HypersphereDiscardSampler.
-                exp = new AhrensDieterExponentialSampler(rng, 2.0);
+                // Here we use mean = 1 and scale the output later.
+                exp = ZigguratSampler.Exponential.of(rng);
             }
 
             @Override
             public double[] sample() {
                 final double[] sample = new double[dimension];
-                // Include the exponential sample
-                double sum = exp.sample();
+                // Include the exponential sample. It has mean 1 so multiply by 2.
+                double sum = exp.sample() * 2;
                 for (int i = 0; i < dimension; i++) {
                     final double x = normal.sample();
                     sum += x * x;

@@ -19,8 +19,10 @@ package org.apache.commons.rng.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.SharedStateObjectSampler;
+import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
 /**
  * Generate coordinates <a href="http://mathworld.wolfram.com/BallPointPicking.html">
@@ -113,25 +115,28 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * {@link UnitBallSamplerND} for performance.
      */
     private static class UnitBallSampler3D extends UnitBallSampler {
-        /** The normal distribution. */
+        /** The standard normal distribution. */
         private final NormalizedGaussianSampler normal;
+        /** The exponential distribution (mean=1). */
+        private final ContinuousSampler exp;
 
         /**
          * @param rng Source of randomness.
          */
         UnitBallSampler3D(UniformRandomProvider rng) {
             normal = new ZigguratNormalizedGaussianSampler(rng);
+            // Require an Exponential(mean=2).
+            // Here we use mean = 1 and scale the output later.
+            exp = ZigguratSampler.Exponential.of(rng);
         }
 
         @Override
         public double[] sample() {
-            // Discard 2 samples from the coordinate but include in the sum
-            final double x0 = normal.sample();
-            final double x1 = normal.sample();
             final double x = normal.sample();
             final double y = normal.sample();
             final double z = normal.sample();
-            final double sum = x0 * x0 + x1 * x1 + x * x + y * y + z * z;
+            // Include the exponential sample. It has mean 1 so multiply by 2.
+            final double sum = exp.sample() * 2 + x * x + y * y + z * z;
             // Note: Handle the possibility of a zero sum and invalid inverse
             if (sum == 0) {
                 return sample();
@@ -147,18 +152,16 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     }
 
     /**
-     * Sample uniformly from a unit n-ball.
-     * Take a random point on the (n+1)-dimensional hypersphere and drop two coordinates.
-     * Remember that the (n+1)-hypersphere is the unit sphere of R^(n+2), i.e. the surface
-     * of the (n+2)-dimensional ball.
-     * @see <a href="https://mathoverflow.net/questions/309567/sampling-a-uniformly-distributed-point-inside-a-hypersphere">
-     * Sampling a uniformly distributed point INSIDE a hypersphere?</a>
+     * Sample using ball point picking.
+     * @see <a href="https://mathworld.wolfram.com/BallPointPicking.html">Ball point picking</a>
      */
     private static class UnitBallSamplerND extends UnitBallSampler {
         /** The dimension. */
         private final int dimension;
-        /** The normal distribution. */
+        /** The standard normal distribution. */
         private final NormalizedGaussianSampler normal;
+        /** The exponential distribution (mean=1). */
+        private final ContinuousSampler exp;
 
         /**
          * @param dimension Space dimension.
@@ -167,15 +170,16 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         UnitBallSamplerND(int dimension, UniformRandomProvider rng) {
             this.dimension  = dimension;
             normal = new ZigguratNormalizedGaussianSampler(rng);
+            // Require an Exponential(mean=2).
+            // Here we use mean = 1 and scale the output later.
+            exp = ZigguratSampler.Exponential.of(rng);
         }
 
         @Override
         public double[] sample() {
             final double[] sample = new double[dimension];
-            // Discard 2 samples from the coordinate but include in the sum
-            final double x0 = normal.sample();
-            final double x1 = normal.sample();
-            double sum = x0 * x0 + x1 * x1;
+            // Include the exponential sample. It has mean 1 so multiply by 2.
+            double sum = exp.sample() * 2;
             for (int i = 0; i < dimension; i++) {
                 final double x = normal.sample();
                 sum += x * x;
