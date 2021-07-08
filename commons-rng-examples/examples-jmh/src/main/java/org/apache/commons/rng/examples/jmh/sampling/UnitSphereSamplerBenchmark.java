@@ -19,7 +19,7 @@ package org.apache.commons.rng.examples.jmh.sampling;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
-import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -233,7 +233,7 @@ public class UnitSphereSamplerBenchmark {
              * @param rng the source of randomness
              */
             UnitSphereSampler2D(UniformRandomProvider rng) {
-                sampler = new ZigguratNormalizedGaussianSampler(rng);
+                sampler = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -291,7 +291,7 @@ public class UnitSphereSamplerBenchmark {
              * @param rng the source of randomness
              */
             UnitSphereSampler3D(UniformRandomProvider rng) {
-                sampler = new ZigguratNormalizedGaussianSampler(rng);
+                sampler = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -350,7 +350,7 @@ public class UnitSphereSamplerBenchmark {
              * @param rng the source of randomness
              */
             UnitSphereSampler4D(UniformRandomProvider rng) {
-                sampler = new ZigguratNormalizedGaussianSampler(rng);
+                sampler = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -387,7 +387,7 @@ public class UnitSphereSamplerBenchmark {
          */
         ArrayBasedUnitSphereSampler(int dimension, UniformRandomProvider rng) {
             this.dimension = dimension;
-            sampler = new ZigguratNormalizedGaussianSampler(rng);
+            sampler = ZigguratSampler.NormalizedGaussian.of(rng);
         }
 
         @Override

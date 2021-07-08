@@ -21,7 +21,6 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.SharedStateObjectSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
-import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
 /**
@@ -124,7 +123,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
          * @param rng Source of randomness.
          */
         UnitBallSampler3D(UniformRandomProvider rng) {
-            normal = new ZigguratNormalizedGaussianSampler(rng);
+            normal = ZigguratSampler.NormalizedGaussian.of(rng);
             // Require an Exponential(mean=2).
             // Here we use mean = 1 and scale the output later.
             exp = ZigguratSampler.Exponential.of(rng);
@@ -169,7 +168,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
          */
         UnitBallSamplerND(int dimension, UniformRandomProvider rng) {
             this.dimension  = dimension;
-            normal = new ZigguratNormalizedGaussianSampler(rng);
+            normal = ZigguratSampler.NormalizedGaussian.of(rng);
             // Require an Exponential(mean=2).
             // Here we use mean = 1 and scale the output later.
             exp = ZigguratSampler.Exponential.of(rng);

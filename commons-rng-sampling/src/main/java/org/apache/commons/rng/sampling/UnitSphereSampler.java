@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
-import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
 /**
  * Generate vectors <a href="http://mathworld.wolfram.com/SpherePointPicking.html">
@@ -95,7 +95,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
          * @param rng Source of randomness.
          */
         UnitSphereSampler2D(UniformRandomProvider rng) {
-            sampler = new ZigguratNormalizedGaussianSampler(rng);
+            sampler = ZigguratSampler.NormalizedGaussian.of(rng);
         }
 
         @Override
@@ -131,7 +131,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
          * @param rng Source of randomness.
          */
         UnitSphereSampler3D(UniformRandomProvider rng) {
-            sampler = new ZigguratNormalizedGaussianSampler(rng);
+            sampler = ZigguratSampler.NormalizedGaussian.of(rng);
         }
 
         @Override
@@ -171,7 +171,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
          */
         UnitSphereSamplerND(int dimension, UniformRandomProvider rng) {
             this.dimension = dimension;
-            sampler = new ZigguratNormalizedGaussianSampler(rng);
+            sampler = ZigguratSampler.NormalizedGaussian.of(rng);
         }
 
         @Override

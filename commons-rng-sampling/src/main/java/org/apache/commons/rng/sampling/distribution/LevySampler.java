@@ -42,7 +42,7 @@ public final class LevySampler implements SharedStateContinuousSampler {
     private LevySampler(UniformRandomProvider rng,
                         double location,
                         double scale) {
-        this.gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        this.gaussian = ZigguratSampler.NormalizedGaussian.of(rng);
         this.location = location;
         this.scale = scale;
         this.rng = rng;
@@ -54,7 +54,7 @@ public final class LevySampler implements SharedStateContinuousSampler {
      */
     private LevySampler(UniformRandomProvider rng,
                         LevySampler source) {
-        this.gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        this.gaussian = ZigguratSampler.NormalizedGaussian.of(rng);
         this.location = source.location;
         this.scale = source.scale;
         this.rng = rng;

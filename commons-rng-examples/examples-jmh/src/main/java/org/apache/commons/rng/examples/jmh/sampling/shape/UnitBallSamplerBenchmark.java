@@ -20,7 +20,6 @@ package org.apache.commons.rng.examples.jmh.sampling.shape;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
-import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -307,7 +306,7 @@ public class UnitBallSamplerBenchmark {
              */
             HypersphereInternalSampler(UniformRandomProvider rng) {
                 super(rng);
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -340,7 +339,7 @@ public class UnitBallSamplerBenchmark {
              */
             HypersphereDiscardSampler(UniformRandomProvider rng) {
                 super(rng);
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -434,7 +433,7 @@ public class UnitBallSamplerBenchmark {
              */
             BallPointSampler(UniformRandomProvider rng) {
                 super(rng);
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
                 // Exponential(mean=2) == Chi-squared distribution(degrees freedom=2)
                 // thus is the equivalent of the HypersphereDiscardSampler.
                 // Here we use mean = 1 and scale the output later.
@@ -472,7 +471,7 @@ public class UnitBallSamplerBenchmark {
              */
             HypersphereInternalSampler(UniformRandomProvider rng) {
                 super(rng);
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -506,7 +505,7 @@ public class UnitBallSamplerBenchmark {
              */
             HypersphereDiscardSampler(UniformRandomProvider rng) {
                 super(rng);
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -619,7 +618,7 @@ public class UnitBallSamplerBenchmark {
             BallPointSampler(UniformRandomProvider rng, int dimension) {
                 super(rng);
                 this.dimension = dimension;
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
                 // Exponential(mean=2) == Chi-squared distribution(degrees freedom=2)
                 // thus is the equivalent of the HypersphereDiscardSampler.
                 // Here we use mean = 1 and scale the output later.
@@ -670,7 +669,7 @@ public class UnitBallSamplerBenchmark {
                 super(rng);
                 this.dimension = dimension;
                 power = 1.0 / dimension;
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override
@@ -714,7 +713,7 @@ public class UnitBallSamplerBenchmark {
             HypersphereDiscardSampler(UniformRandomProvider rng, int dimension) {
                 super(rng);
                 this.dimension = dimension;
-                normal = new ZigguratNormalizedGaussianSampler(rng);
+                normal = ZigguratSampler.NormalizedGaussian.of(rng);
             }
 
             @Override

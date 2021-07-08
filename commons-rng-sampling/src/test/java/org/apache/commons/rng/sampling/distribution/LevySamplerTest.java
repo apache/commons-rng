@@ -71,7 +71,7 @@ public class LevySamplerTest {
     public void testSupport() {
         final double location = 0.0;
         final double scale = 1.0;
-        // Force the underlying ZigguratNormalizedGaussianSampler to create 0
+        // Force the underlying ZigguratSampler.NormalizedGaussian to create 0
         final LevySampler s1 = LevySampler.of(
             new SplitMix64(0L) {
                 @Override
@@ -81,34 +81,42 @@ public class LevySamplerTest {
             }, location, scale);
         Assert.assertEquals(Double.POSITIVE_INFINITY, s1.sample(), 0.0);
 
-        // Force the underlying ZigguratNormalizedGaussianSampler to create the largest value.
-        // This is 14.11
+        // Force the underlying ZigguratSampler.NormalizedGaussian to create a large
+        // sample in the tail of the distribution.
+        // The first three -1,-1,-1 values enters the tail of the distribution.
+        // Here an exponential is added to 3.6360066255.
+        // The exponential also requires -1,-1 to recurse. Each recursion adds 7.56927469415
+        // to the exponential. A value of 0 stops recursion with a sample of 0.
+        // Two exponentials are required: x and y.
+        // The exponential is multiplied by 0.275027001597525 to create x.
+        // The condition 2y >= x^x must be true to return x.
+        // Create x = 4 * 7.57 and y = 16 * 7.57
+        final long[] sequence = {
+            // Sample the Gaussian tail
+            -1, -1, -1,
+            // Exponential x = 4 * 7.57... * 0.275027001597525
+            -1, -1, -1, -1, -1, -1, -1, -1, 0,
+            // Exponential y = 16 * 7.57...
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0,
+        };
         final LevySampler s2 = LevySampler.of(
             new SplitMix64(0L) {
                 private int i;
                 @Override
                 public long next() {
-                    i++;
-                    if (i == 1) {
-                        // Set the first value to ensure we sample the tail of the ziggurat.
-                        // The lowest 7 bits are zero to select rectangle 0 from the ziggurat.
-                        return (Long.MAX_VALUE << 7) & Long.MAX_VALUE;
+                    if (i++ < sequence.length) {
+                        return sequence[i - 1];
                     }
-                    if (i == 2) {
-                        // Set the second value to generate y as the largest value possible by
-                        // ensuring Math.log is called with a small value.
-                        return 0L;
-                    }
-                    // The next value generates x which must be set to the largest value x which
-                    // satisfies the condition:
-                    // 2y >= x^2
-                    return 1377L << 11;
+                    return super.next();
                 }
             }, location, scale);
-        // The tail of the zigguart should be s=12.014118700751192
-        // expected is 1/s^2 = 0.006928132149804786
-        // This is as close to zero as the sampler can get.
-        final double expected = 0.006928132149804786;
+        // The tail of the zigguart should be approximately s=11.963
+        final double s = 4 * 7.56927469415 * 0.275027001597525 + 3.6360066255;
+        // expected is 1/s^2 = 0.006987
+        // So the sampler never achieves the lower bound of zero.
+        // It requires an extreme deviate from the Gaussian.
+        final double expected = 1 / (s * s);
         Assert.assertEquals(expected, s2.sample(), 0.0);
     }
 }

@@ -132,7 +132,7 @@ public class LargeMeanPoissonSampler
         }
         this.rng = rng;
 
-        gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        gaussian = ZigguratSampler.NormalizedGaussian.of(rng);
         exponential = ZigguratSampler.Exponential.of(rng);
         // Plain constructor uses the uncached function.
         factorialLog = NO_CACHE_FACTORIAL_LOG;
@@ -177,7 +177,7 @@ public class LargeMeanPoissonSampler
         }
         this.rng = rng;
 
-        gaussian = new ZigguratNormalizedGaussianSampler(rng);
+        gaussian = ZigguratSampler.NormalizedGaussian.of(rng);
         exponential = ZigguratSampler.Exponential.of(rng);
         // Plain constructor uses the uncached function.
         factorialLog = NO_CACHE_FACTORIAL_LOG;
