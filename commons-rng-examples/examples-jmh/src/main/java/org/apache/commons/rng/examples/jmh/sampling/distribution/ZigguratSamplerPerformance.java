@@ -236,6 +236,11 @@ public class ZigguratSamplerPerformance {
         private static final double[] W;
         /** Auxiliary table. */
         private static final double[] F;
+        /**
+         * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+         * Taken from org.apache.commons.rng.core.util.NumberFactory.
+         */
+        private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
 
         /** Underlying source of randomness. */
         private final UniformRandomProvider rng;
@@ -312,8 +317,9 @@ public class ZigguratSamplerPerformance {
                 double y;
                 double x;
                 do {
-                    y = -Math.log(rng.nextDouble());
-                    x = -Math.log(rng.nextDouble()) * ONE_OVER_R;
+                    // Avoid infinity by creating a non-zero double.
+                    y = -Math.log(makeNonZeroDouble(rng.nextLong()));
+                    x = -Math.log(makeNonZeroDouble(rng.nextLong())) * ONE_OVER_R;
                 } while (y + y < x * x);
 
                 final double out = R + x;
@@ -328,6 +334,18 @@ public class ZigguratSamplerPerformance {
             // Try again.
             // This branch is called about 0.012362 times per sample.
             return sample();
+        }
+
+        /**
+         * Creates a {@code double} in the interval {@code (0, 1]} from a {@code long} value.
+         *
+         * @param v Number.
+         * @return a {@code double} value in the interval {@code (0, 1]}.
+         */
+        private static double makeNonZeroDouble(long v) {
+            // This matches the method in o.a.c.rng.core.util.NumberFactory.makeDouble(long)
+            // but shifts the range from [0, 1) to (0, 1].
+            return ((v >>> 11) + 1L) * DOUBLE_MULTIPLIER;
         }
 
         /**
