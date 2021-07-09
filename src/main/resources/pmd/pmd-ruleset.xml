@@ -132,6 +132,12 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/LogicInversion">
+    <properties>
+      <!-- Logic inversion mimics !Double.isFinite(x) -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='GaussianSampler']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
