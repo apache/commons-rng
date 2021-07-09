@@ -68,8 +68,12 @@ public class BoxMullerGaussianSampler
         if (Double.isNaN(nextGaussian)) {
             // Generate a pair of Gaussian numbers.
 
+            // Avoid zero for the uniform deviate y.
+            // The extreme tail of the sample is:
+            // y = 2^-53
+            // r = 8.57167
             final double x = rng.nextDouble();
-            final double y = rng.nextDouble();
+            final double y = InternalUtils.makeNonZeroDouble(rng.nextLong());
             final double alpha = 2 * Math.PI * x;
             final double r = Math.sqrt(-2 * Math.log(y));
 

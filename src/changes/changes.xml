@@ -77,6 +77,11 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="154">
+        Update Gaussian samplers to avoid infinity in the tails of the distribution. Applies
+        to: ZigguratNormalisedGaussianSampler; BoxMullerNormalizedGaussianSampler; and
+        BoxMullerGaussianSampler.
+      </action>
       <action dev="aherbert" type="update" issue="153">
         "UnitBallSampler": Update to use the ZigguratSampler for an exponential deviate for
         ball point picking.

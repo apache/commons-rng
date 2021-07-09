@@ -133,8 +133,16 @@ public class ZigguratNormalizedGaussianSampler
             double y;
             double x;
             do {
-                y = -Math.log(rng.nextDouble());
-                x = -Math.log(rng.nextDouble()) * ONE_OVER_R;
+                // Avoid infinity by creating a non-zero double.
+                // Note: The extreme value y from -Math.log(2^-53) is (to 4 sf):
+                // y = 36.74
+                // The largest value x where 2y < x^2 is false is sqrt(2*36.74):
+                // x = 8.571
+                // The extreme tail is:
+                // out = +/- 12.01
+                // To generate this requires longs of 0 and then (1377 << 11).
+                y = -Math.log(InternalUtils.makeNonZeroDouble(rng.nextLong()));
+                x = -Math.log(InternalUtils.makeNonZeroDouble(rng.nextLong())) * ONE_OVER_R;
             } while (y + y < x * x);
 
             final double out = R + x;

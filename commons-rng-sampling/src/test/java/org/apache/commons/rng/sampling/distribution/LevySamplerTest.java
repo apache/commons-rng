@@ -81,18 +81,34 @@ public class LevySamplerTest {
             }, location, scale);
         Assert.assertEquals(Double.POSITIVE_INFINITY, s1.sample(), 0.0);
 
-        // Force the underlying ZigguratNormalizedGaussianSampler to create +inf
+        // Force the underlying ZigguratNormalizedGaussianSampler to create the largest value.
+        // This is 14.11
         final LevySampler s2 = LevySampler.of(
             new SplitMix64(0L) {
+                private int i;
                 @Override
                 public long next() {
-                    return (Long.MAX_VALUE << 7) & Long.MAX_VALUE;
-                }
-                @Override
-                public double nextDouble() {
-                    return 0.0;
+                    i++;
+                    if (i == 1) {
+                        // Set the first value to ensure we sample the tail of the ziggurat.
+                        // The lowest 7 bits are zero to select rectangle 0 from the ziggurat.
+                        return (Long.MAX_VALUE << 7) & Long.MAX_VALUE;
+                    }
+                    if (i == 2) {
+                        // Set the second value to generate y as the largest value possible by
+                        // ensuring Math.log is called with a small value.
+                        return 0L;
+                    }
+                    // The next value generates x which must be set to the largest value x which
+                    // satisfies the condition:
+                    // 2y >= x^2
+                    return 1377L << 11;
                 }
             }, location, scale);
-        Assert.assertEquals(0.0, s2.sample(), 0.0);
+        // The tail of the zigguart should be s=12.014118700751192
+        // expected is 1/s^2 = 0.006928132149804786
+        // This is as close to zero as the sampler can get.
+        final double expected = 0.006928132149804786;
+        Assert.assertEquals(expected, s2.sample(), 0.0);
     }
 }
