@@ -107,6 +107,7 @@ public class ZigguratNormalizedGaussianSampler
         final long j = rng.nextLong();
         final int i = ((int) j) & LAST;
         if (Math.abs(j) < K[i]) {
+            // This branch is called about 0.972101 times per sample.
             return j * W[i];
         }
         return fix(j, i);
@@ -152,6 +153,7 @@ public class ZigguratNormalizedGaussianSampler
         // This branch is called about 0.027323 times per sample.
         final double x = hz * W[iz];
         if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < pdf(x)) {
+            // This branch is called about 0.014961 times per sample.
             return x;
         }
         // Try again.
