@@ -39,6 +39,12 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
     /** The first array index with a non-zero log factorial. */
     private static final int BEGIN_LOG_FACTORIALS = 2;
 
+    /**
+     * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
+     * Taken from org.apache.commons.rng.core.util.NumberFactory.
+     */
+    private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
+
     /** Utility class. */
     private InternalUtils() {}
 
@@ -116,6 +122,18 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
                 "The underlying sampler did not create a normalized Gaussian sampler");
         }
         return (NormalizedGaussianSampler) newSampler;
+    }
+
+    /**
+     * Creates a {@code double} in the interval {@code (0, 1]} from a {@code long} value.
+     *
+     * @param v Number.
+     * @return a {@code double} value in the interval {@code (0, 1]}.
+     */
+    static double makeNonZeroDouble(long v) {
+        // This matches the method in o.a.c.rng.core.util.NumberFactory.makeDouble(long)
+        // but shifts the range from [0, 1) to (0, 1].
+        return ((v >>> 11) + 1L) * DOUBLE_MULTIPLIER;
     }
 
     /**
