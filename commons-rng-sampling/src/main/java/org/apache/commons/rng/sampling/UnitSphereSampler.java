@@ -104,8 +104,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
             final double y = sampler.sample();
             final double sum = x * x + y * y;
 
-            if (isInvalidSumForNormalization(sum)) {
-                // Invalid vector is discarded.
+            if (sum == 0) {
+                // Zero-norm vector is discarded.
                 return sample();
             }
 
@@ -141,8 +141,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
             final double z = sampler.sample();
             final double sum = x * x + y * y + z * z;
 
-            if (isInvalidSumForNormalization(sum)) {
-                // Invalid vector is discarded.
+            if (sum == 0) {
+                // Zero-norm vector is discarded.
                 return sample();
             }
 
@@ -187,8 +187,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
                 sum += x * x;
             }
 
-            if (isInvalidSumForNormalization(sum)) {
-                // Invalid vector is discarded.
+            if (sum == 0) {
+                // Zero-norm vector is discarded.
                 // Using recursion as it is highly unlikely to generate more
                 // than a few such vectors. It also protects against infinite
                 // loop (in case a buggy generator is used), by eventually
@@ -283,26 +283,5 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
             return new UnitSphereSampler3D(rng);
         }
         return new UnitSphereSamplerND(dimension, rng);
-    }
-
-    /**
-     * Returns true if the sum of squared components of a vector is invalid for
-     * normalization.
-     *
-     * <p>This is true for any sum where the factor {@code f = 1.0 / sqrt(sum)}
-     * cannot be used to create a unit length vector by multiplication. The sum
-     * is invalid if:
-     *
-     * <ul>
-     *  <li>{@code sum = 0} then {@code f = infinity}
-     *  <li>{@code sum = infinity} then {@code f = 0}
-     * </ul>
-     *
-     * @param sum Sum of squared components of a vector
-     * @return true if invalid for normalisation
-     */
-    private static boolean isInvalidSumForNormalization(double sum) {
-        // Note: Deliberate floating-point comparison with zero
-        return sum == 0 || sum == Double.POSITIVE_INFINITY;
     }
 }

@@ -388,72 +388,46 @@ public class UnitSphereSamplerTest {
     }
 
     /**
+     * Test the edge case where the normalisation sum to divide by is zero for 2D.
+     */
+    @Test
+    public void testInvalidInverseNormalisation2D() {
+        testInvalidInverseNormalisationND(2);
+    }
+
+    /**
+     * Test the edge case where the normalisation sum to divide by is zero for 3D.
+     */
+    @Test
+    public void testInvalidInverseNormalisation3D() {
+        testInvalidInverseNormalisationND(3);
+    }
+
+    /**
+     * Test the edge case where the normalisation sum to divide by is zero for 4D.
+     */
+    @Test
+    public void testInvalidInverseNormalisation4D() {
+        testInvalidInverseNormalisationND(4);
+    }
+
+    /**
      * Test the edge case where the normalisation sum to divide by is zero.
+     * This test requires generation of Gaussian samples with the value 0.
+     * See RNG-55.
      */
-    @Test
-    public void testInvalidInverseNormalisationWithZeroLength() {
-        for (int dim = 2; dim <= 4; dim++) {
-            testInvalidInverseNormalisationND(dim, true);
-        }
-    }
-
-    /**
-     * Test the edge case where the normalisation sum to divide by is infinite.
-     */
-    @Test
-    public void testInvalidInverseNormalisationWithInfiniteLength() {
-        for (int dim = 2; dim <= 4; dim++) {
-            testInvalidInverseNormalisationND(dim, false);
-        }
-    }
-
-    /**
-     * Test the edge case where the normalisation sum to divide by is zero or infinite. This
-     * test requires generation of Gaussian samples with the value 0 or infinity. See RNG-55.
-     *
-     * @param dimension the dimension
-     * @param zeroSum true if the sum for the first vector should be zero
-     */
-    private static void testInvalidInverseNormalisationND(final int dimension, boolean zeroSum) {
+    private static void testInvalidInverseNormalisationND(final int dimension) {
         // Create a provider that will create a bad first sample but then recover.
         // This checks recursion will return a good value.
+        final UniformRandomProvider bad = new SplitMix64(0x1a2b3cL) {
+            private int count = -2 * dimension;
 
-        // This sampler will createbvalues that manipulate the underlying Gaussian sampler.
-        UniformRandomProvider bad;
-        if (zeroSum) {
-            // Create Gaussian samples of zero
-            bad = new SplitMix64(0x1a2b3cL) {
-                private int count = -2 * dimension;
-
-                @Override
-                public long nextLong() {
-                    // Return enough zeros to create Gaussian samples of zero for all coordinates.
-                    return count++ < 0 ? 0 : super.nextLong();
-                }
-            };
-        } else {
-            // Create a Gaussian sample of infinity.
-            // This only requires 1 infinite value to create an infinite length vector.
-            // Assumes the ZigguratNormalizedGaussianSampler.
-            // To create infinity requires a very large long value with the lowest 7 bits as 0,
-            // then two doubles of zero.
-            bad = new SplitMix64(0x1a2b3cL) {
-                private int lcount = -1;
-                private int dcount = -2;
-
-                @Override
-                public long nextLong() {
-                    return lcount++ < 0 ?
-                        (-1L << 7) & Long.MAX_VALUE :
-                        super.nextLong();
-                }
-
-                @Override
-                public double nextDouble() {
-                    return dcount++ < 0 ? 0 : super.nextDouble();
-                }
-            };
-        }
+            @Override
+            public long nextLong() {
+                // Return enough zeros to create Gaussian samples of zero for all coordinates.
+                return count++ < 0 ? 0 : super.nextLong();
+            }
+        };
 
         final double[] vector = UnitSphereSampler.of(dimension, bad).sample();
         Assert.assertEquals(dimension, vector.length);
