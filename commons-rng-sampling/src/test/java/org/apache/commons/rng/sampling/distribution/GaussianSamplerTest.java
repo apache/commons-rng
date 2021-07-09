@@ -28,7 +28,7 @@ import org.junit.Test;
  */
 public class GaussianSamplerTest {
     /**
-     * Test the constructor with a bad standard deviation.
+     * Test the constructor with a zero standard deviation.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testConstructorThrowsWithZeroStandardDeviation() {
@@ -37,6 +37,58 @@ public class GaussianSamplerTest {
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = 0;
+        GaussianSampler.of(gauss, mean, standardDeviation);
+    }
+
+    /**
+     * Test the constructor with an infinite standard deviation.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorThrowsWithInfiniteStandardDeviation() {
+        final RestorableUniformRandomProvider rng =
+            RandomSource.SPLIT_MIX_64.create(0L);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final double mean = 1;
+        final double standardDeviation = Double.POSITIVE_INFINITY;
+        GaussianSampler.of(gauss, mean, standardDeviation);
+    }
+
+    /**
+     * Test the constructor with a NaN standard deviation.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorThrowsWithNaNStandardDeviation() {
+        final RestorableUniformRandomProvider rng =
+            RandomSource.SPLIT_MIX_64.create(0L);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final double mean = 1;
+        final double standardDeviation = Double.NaN;
+        GaussianSampler.of(gauss, mean, standardDeviation);
+    }
+
+    /**
+     * Test the constructor with an infinite mean.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorThrowsWithInfiniteMean() {
+        final RestorableUniformRandomProvider rng =
+            RandomSource.SPLIT_MIX_64.create(0L);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final double mean = Double.POSITIVE_INFINITY;
+        final double standardDeviation = 1;
+        GaussianSampler.of(gauss, mean, standardDeviation);
+    }
+
+    /**
+     * Test the constructor with a NaN mean.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorThrowsWithNaNMean() {
+        final RestorableUniformRandomProvider rng =
+            RandomSource.SPLIT_MIX_64.create(0L);
+        final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
+        final double mean = Double.NaN;
+        final double standardDeviation = 1;
         GaussianSampler.of(gauss, mean, standardDeviation);
     }
 

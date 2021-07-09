@@ -22,6 +22,14 @@ import org.apache.commons.rng.UniformRandomProvider;
  * Sampling from a Gaussian distribution with given mean and
  * standard deviation.
  *
+ * <h2>Note</h2>
+ *
+ * <p>The mean and standard deviation are validated to ensure they are finite. This prevents
+ * generation of NaN samples by avoiding invalid arithmetic (inf * 0 or inf - inf).
+ * However use of an extremely large standard deviation and/or mean may result in samples that are
+ * infinite; that is the parameters are not validated to prevent truncation of the output
+ * distribution.
+ *
  * @since 1.1
  */
 public class GaussianSampler implements SharedStateContinuousSampler {
@@ -36,14 +44,19 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
-     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0} or is infinite;
+     * or {@code mean} is infinite
      */
     public GaussianSampler(NormalizedGaussianSampler normalized,
                            double mean,
                            double standardDeviation) {
-        if (standardDeviation <= 0) {
+        if (!(standardDeviation > 0 && standardDeviation < Double.POSITIVE_INFINITY)) {
             throw new IllegalArgumentException(
-                "standard deviation is not strictly positive: " + standardDeviation);
+                "standard deviation is not strictly positive and finite: " + standardDeviation);
+        }
+        // To be replaced by JDK 1.8 Double.isFinite. This will detect NaN values.
+        if (!(Math.abs(mean) <= Double.MAX_VALUE)) {
+            throw new IllegalArgumentException("mean is not finite: " + mean);
         }
         this.normalized = normalized;
         this.mean = mean;
@@ -102,7 +115,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0} or is infinite;
+     * or {@code mean} is infinite
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
