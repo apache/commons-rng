@@ -204,9 +204,9 @@ public class ZigguratSamplerPerformance {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = randomSource.create();
             if (GAUSSIAN_128.equals(type)) {
-                sampler = ZigguratNormalizedGaussianSampler.of(rng);
+                sampler = new ZigguratNormalizedGaussianSampler128(rng);
             } else if (GAUSSIAN_256.equals(type)) {
-                sampler = new ZigguratNormalizedGaussianSampler256(rng);
+                sampler = ZigguratNormalizedGaussianSampler.of(rng);
             } else if ("Exponential".equals(type)) {
                 sampler = new ZigguratExponentialSampler(rng);
             } else if (MOD_GAUSSIAN.equals(type)) {
@@ -274,9 +274,9 @@ public class ZigguratSamplerPerformance {
             final UniformRandomProvider rng = randomSource.create();
             ContinuousSampler s = null;
             if (GAUSSIAN_128.equals(type)) {
-                s = ZigguratNormalizedGaussianSampler.of(rng);
+                s = new ZigguratNormalizedGaussianSampler128(rng);
             } else if (GAUSSIAN_256.equals(type)) {
-                s = new ZigguratNormalizedGaussianSampler256(rng);
+                s = ZigguratNormalizedGaussianSampler.of(rng);
             } else if (MOD_GAUSSIAN.equals(type)) {
                 s = ZigguratSampler.NormalizedGaussian.of(rng);
             } else {
@@ -455,13 +455,13 @@ public class ZigguratSamplerPerformance {
      *
      * <p>This is a copy of {@link ZigguratNormalizedGaussianSampler} using a table size of 256.
      */
-    static class ZigguratNormalizedGaussianSampler256 implements ContinuousSampler {
+    static class ZigguratNormalizedGaussianSampler128 implements ContinuousSampler {
         /** Start of tail. */
-        private static final double R = 3.6541528853610088;
+        private static final double R = 3.442619855899;
         /** Inverse of R. */
         private static final double ONE_OVER_R = 1 / R;
         /** Index of last entry in the tables (which have a size that is a power of 2). */
-        private static final int LAST = 255;
+        private static final int LAST = 127;
         /** Auxiliary table. */
         private static final long[] K;
         /** Auxiliary table. */
@@ -480,7 +480,7 @@ public class ZigguratSamplerPerformance {
         static {
             // Filling the tables.
             // Rectangle area.
-            final double v = 0.00492867323399;
+            final double v = 9.91256303526217e-3;
             // Direction support uses the sign bit so the maximum magnitude from the long is 2^63
             final double max = Math.pow(2, 63);
             final double oneOverMax = 1d / max;
@@ -519,7 +519,7 @@ public class ZigguratSamplerPerformance {
         /**
          * @param rng Generator of uniformly distributed random numbers.
          */
-        ZigguratNormalizedGaussianSampler256(UniformRandomProvider rng) {
+        ZigguratNormalizedGaussianSampler128(UniformRandomProvider rng) {
             this.rng = rng;
         }
 
@@ -529,6 +529,7 @@ public class ZigguratSamplerPerformance {
             final long j = rng.nextLong();
             final int i = ((int) j) & LAST;
             if (Math.abs(j) < K[i]) {
+                // This branch is called about 0.972101 times per sample.
                 return j * W[i];
             }
             return fix(j, i);
@@ -561,6 +562,7 @@ public class ZigguratSamplerPerformance {
             // This branch is called about 0.027323 times per sample.
             final double x = hz * W[iz];
             if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < pdf(x)) {
+                // This branch is called about 0.014961 times per sample.
                 return x;
             }
             // Try again.
@@ -712,6 +714,7 @@ public class ZigguratSamplerPerformance {
             return Math.exp(-x);
         }
     }
+
     /**
      * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
      *

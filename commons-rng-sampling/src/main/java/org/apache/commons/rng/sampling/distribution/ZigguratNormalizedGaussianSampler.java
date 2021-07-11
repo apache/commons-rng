@@ -40,11 +40,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 public class ZigguratNormalizedGaussianSampler
     implements NormalizedGaussianSampler, SharedStateContinuousSampler {
     /** Start of tail. */
-    private static final double R = 3.442619855899;
+    private static final double R = 3.6541528853610088;
     /** Inverse of R. */
     private static final double ONE_OVER_R = 1 / R;
     /** Index of last entry in the tables (which have a size that is a power of 2). */
-    private static final int LAST = 127;
+    private static final int LAST = 255;
     /** Auxiliary table. */
     private static final long[] K;
     /** Auxiliary table. */
@@ -58,7 +58,7 @@ public class ZigguratNormalizedGaussianSampler
     static {
         // Filling the tables.
         // Rectangle area.
-        final double v = 9.91256303526217e-3;
+        final double v = 0.00492867323399;
         // Direction support uses the sign bit so the maximum magnitude from the long is 2^63
         final double max = Math.pow(2, 63);
         final double oneOverMax = 1d / max;
@@ -107,7 +107,7 @@ public class ZigguratNormalizedGaussianSampler
         final long j = rng.nextLong();
         final int i = ((int) j) & LAST;
         if (Math.abs(j) < K[i]) {
-            // This branch is called about 0.972101 times per sample.
+            // This branch is called about 0.985086 times per sample.
             return j * W[i];
         }
         return fix(j, i);
@@ -130,7 +130,7 @@ public class ZigguratNormalizedGaussianSampler
                        int iz) {
         if (iz == 0) {
             // Base strip.
-            // This branch is called about 5.7624515E-4 times per sample.
+            // This branch is called about 2.55224E-4 times per sample.
             double y;
             double x;
             do {
@@ -150,14 +150,14 @@ public class ZigguratNormalizedGaussianSampler
             return hz > 0 ? out : -out;
         }
         // Wedge of other strips.
-        // This branch is called about 0.027323 times per sample.
+        // This branch is called about 0.0146584 times per sample.
         final double x = hz * W[iz];
         if (F[iz] + rng.nextDouble() * (F[iz - 1] - F[iz]) < pdf(x)) {
-            // This branch is called about 0.014961 times per sample.
+            // This branch is called about 0.00797887 times per sample.
             return x;
         }
         // Try again.
-        // This branch is called about 0.012362 times per sample.
+        // This branch is called about 0.00667957 times per sample.
         return sample();
     }
 

@@ -77,6 +77,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="155">
+        "ZigguratNormalizedGaussianSampler": Update to a table size of 256.
+      </action>
       <action dev="aherbert" type="update" issue="152">
         Update samplers to use ZigguratSampler.NormalizedGaussian for Gaussian deviates.
       </action>
