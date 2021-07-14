@@ -131,6 +131,10 @@ public class UnitSphereSamplerBenchmark {
         private static final String MASKED_LONG = "maskedLong";
         /** Name for the boolean method. */
         private static final String BOOLEAN = "boolean";
+        /** The value 1.0 in raw long bits. */
+        private static final long ONE = Double.doubleToRawLongBits(1.0);
+        /** Mask to extract the sign bit from an integer (as a long). */
+        private static final long SIGN_BIT = 1L << 31;
 
         /** The sampler type. */
         @Param({BASELINE, SIGNED_DOUBLE, MASKED_INT, MASKED_LONG, BOOLEAN, ARRAY})
@@ -157,28 +161,18 @@ public class UnitSphereSamplerBenchmark {
                 };
             } else if (MASKED_INT.equals(type)) {
                 return new Sampler() {
-                    // The value 1.0 in raw long bits
-                    private final long one = Double.doubleToRawLongBits(1.0);
-                    // Mask to extract the sign bit from an integer (as a long)
-                    private final long signBit = 1L << 31;
-
                     @Override
                     public double[] sample() {
                         // Shift the sign bit and combine with the bits for a double of 1.0
-                        return new double[] {Double.longBitsToDouble(one | ((rng.nextInt() & signBit) << 32))};
+                        return new double[] {Double.longBitsToDouble(ONE | ((rng.nextInt() & SIGN_BIT) << 32))};
                     }
                 };
             } else if (MASKED_LONG.equals(type)) {
                 return new Sampler() {
-                    // The value 1.0 in raw long bits
-                    private final long one = Double.doubleToRawLongBits(1.0);
-                    // Mask to extract the sign bit from a long
-                    private final long signBit = 1L << 63;
-
                     @Override
                     public double[] sample() {
                         // Combine the sign bit with the bits for a double of 1.0
-                        return new double[] {Double.longBitsToDouble(one | (rng.nextLong() & signBit))};
+                        return new double[] {Double.longBitsToDouble(ONE | (rng.nextLong() & Long.MIN_VALUE))};
                     }
                 };
             } else if (BOOLEAN.equals(type)) {
