@@ -145,7 +145,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double binHalfSize = 0.5 * binSize;
         final double norm = 1 / (binSize * numSamples);
 
-        try (PrintWriter out = new PrintWriter(outputFile)) {
+        try (PrintWriter out = new PrintWriter(outputFile, "UTF-8")) {
             // CHECKSTYLE: stop MultipleStringLiteralsCheck
             out.println("# Sampler: " + sampler);
             out.println("# Number of bins: " + numBins);
