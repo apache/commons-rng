@@ -103,12 +103,19 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Sampler$')]"/>
     </properties>
   </rule>
+  <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="//ClassOrInterfaceDeclaration[@SimpleName='ProbabilityDensityApproximationCommand']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/design.xml/NPathComplexity">
     <properties>
       <!-- Increase from default of 200 -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler' or @SimpleName='MersenneTwister']"/>
+        value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler' or @SimpleName='MersenneTwister'
+          or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/CyclomaticComplexity">
@@ -130,7 +137,8 @@
   <rule ref="category/java/design.xml/ExcessiveMethodLength">
     <properties>
       <!-- The length is due to comments -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='AliasMethodDiscreteSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='AliasMethodDiscreteSampler'
+        or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveClassLength">
