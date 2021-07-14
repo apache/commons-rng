@@ -33,7 +33,7 @@ public class DiceGame {
     /** Number of rounds in the game. */
     private final int rounds;
     /** Number of players in the game. */
-    private int players;
+    private final int players;
 
     /**
      * @param players Number of players.
