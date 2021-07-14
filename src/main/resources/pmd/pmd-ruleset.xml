@@ -78,6 +78,11 @@
           or @SimpleName='GuideTableDiscreteSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/bestpractices.xml/SystemPrintln">
+    <properties>
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='DiceGameApplication']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/codestyle.xml/ClassNamingConventions">
     <properties>
