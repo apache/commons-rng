@@ -85,6 +85,14 @@
           or @SimpleName='UniformSamplingVisualCheckCommand' or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
+  <rule ref="category/java/bestpractices.xml/UnusedPrivateField">
+    <properties>
+      <!-- Fields are used by picocli -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[
+        @SimpleName='ProbabilityDensityApproximationCommand' or @SimpleName='ExamplesStressCommand'
+        or @SimpleName='ExamplesSamplingCommand' or @SimpleName='UniformSamplingVisualCheckCommand']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/codestyle.xml/ClassNamingConventions">
     <properties>
@@ -151,6 +159,16 @@
     <properties>
       <!-- Logic inversion mimics !Double.isFinite(x) -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='GaussianSampler']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/ImmutableField">
+    <properties>
+      <!-- Fields are used by picocli -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='BridgeTestCommand'
+        or @SimpleName='ProbabilityDensityApproximationCommand' or @SimpleName='ExamplesStressCommand'
+        or @SimpleName='ListCommand' or @SimpleName='OutputCommand'
+        or @SimpleName='ResultsCommand' or @SimpleName='StressTestCommand'
+        or @SimpleName='UniformSamplingVisualCheckCommand']"/>
     </properties>
   </rule>
 
