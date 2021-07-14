@@ -66,8 +66,7 @@ final class Hex {
      * @throws IllegalArgumentException Thrown if an odd number or illegal of
      * characters is supplied
      */
-    public static byte[] decodeHex(final CharSequence data) {
-
+    static byte[] decodeHex(final CharSequence data) {
         final int len = data.length();
 
         if ((len & 0x01) != 0) {
@@ -94,7 +93,7 @@ final class Hex {
      * @return An integer
      * @throws IllegalArgumentException Thrown if ch is an illegal hex character
      */
-    protected static int toDigit(final CharSequence data, final int index) {
+    private static int toDigit(final CharSequence data, final int index) {
         final char ch = data.charAt(index);
         final int digit = Character.digit(ch, 16);
         if (digit == -1) {
