@@ -67,14 +67,16 @@
     <plugins>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <!-- The custom ApplicationException cannot be loaded by checkstyle unless the source is
-            compiled. Checkstyle runs in the validate phase and fails unless the
-            module JavadocMethod has property suppressLoadErrors=true. Workaround setting this
-            globally in the configuration file by suppressing fail locally to this module. 
-            See: https://checkstyle.sourceforge.io/config_javadoc.html#JavadocMethod -->
-          <failOnViolation>false</failOnViolation>
-        </configuration>
+        <!-- The custom ApplicationException cannot be loaded by checkstyle unless the source is
+          compiled. Checkstyle runs in the validate phase  so here we switch to verify -->
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
