@@ -610,7 +610,7 @@ class StressTestCommand implements Callable<Void> {
          *
          * @param total The total tasks.
          */
-        void setTotal(int total) {
+        synchronized void setTotal(int total) {
             this.total = total;
             startTimes = new long[total];
             sortedDurations = new long[total];
