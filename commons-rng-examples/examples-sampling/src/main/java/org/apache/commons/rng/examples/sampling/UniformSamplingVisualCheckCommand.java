@@ -63,7 +63,7 @@ class UniformSamplingVisualCheckCommand implements Callable<Void> {
     /** RNG. */
     private final UniformRandomProvider rng = RandomSource.XOR_SHIFT_1024_S_PHI.create();
     /** Samplers. */
-    private final ContinuousSampler[] samplers = new ContinuousSampler[] {
+    private final ContinuousSampler[] samplers = {
         ZigguratNormalizedGaussianSampler.of(rng),
         MarsagliaNormalizedGaussianSampler.of(rng),
         BoxMullerNormalizedGaussianSampler.of(rng),
