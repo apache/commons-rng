@@ -177,11 +177,10 @@ final class LogUtils {
     static void error(Throwable thrown, String message) {
         if (isLoggable(LogLevel.ERROR)) {
             final StringWriter sw = new StringWriter();
-            // Underlying StringWriter does not do anything in close()
-            @SuppressWarnings("resource")
-            final PrintWriter pw = createErrorPrintWriter(sw);
-            pw.print(message);
-            addStackTrace(pw, thrown);
+            try (PrintWriter pw = createErrorPrintWriter(sw)) {
+                pw.print(message);
+                addStackTrace(pw, thrown);
+            }
             println(System.err, sw.toString());
         }
     }
@@ -197,11 +196,10 @@ final class LogUtils {
     static void error(Throwable thrown, String format, Object... args) {
         if (isLoggable(LogLevel.ERROR)) {
             final StringWriter sw = new StringWriter();
-            // Underlying StringWriter does not do anything in close()
-            @SuppressWarnings("resource")
-            final PrintWriter pw = createErrorPrintWriter(sw);
-            pw.printf(format, args);
-            addStackTrace(pw, thrown);
+            try (PrintWriter pw = createErrorPrintWriter(sw)) {
+                pw.printf(format, args);
+                addStackTrace(pw, thrown);
+            }
             printf(System.err, sw.toString());
         }
     }
