@@ -115,7 +115,7 @@ class BridgeTestCommand implements Callable<Void> {
 
             // Pass the same values to the output application
             buffer.flip();
-            UniformRandomProvider rng = new IntProvider() {
+            final UniformRandomProvider rng = new IntProvider() {
                 @Override
                 public int next() {
                     return buffer.get();
