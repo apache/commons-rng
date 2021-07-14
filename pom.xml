@@ -191,24 +191,7 @@
           </ignorePathsToDelete>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${commons.spotbugs.version}</version>
-        <configuration>
-          <threshold>Normal</threshold>
-          <effort>Default</effort>
-          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- spotbugs-maven-plugin runs in JDK 8+ profile so not included here -->
       <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -327,16 +310,7 @@
           <component>${rng.jira.component}</component>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>${commons.spotbugs.version}</version>
-        <configuration>
-          <threshold>Normal</threshold>
-          <effort>Default</effort>
-          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
-        </configuration>
-      </plugin>
+      <!-- spotbugs-maven-plugin runs in JDK 8+ profile so not included here -->
       <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
@@ -599,6 +573,24 @@ Running "svn up" will download *all* the files of the live web site at
       <build>
         <plugins>
           <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${commons.spotbugs.version}</version>
+            <configuration>
+              <threshold>Normal</threshold>
+              <effort>Default</effort>
+              <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>${rng.checkstyle.version}</version>
@@ -634,6 +626,16 @@ Running "svn up" will download *all* the files of the live web site at
       </build>
       <reporting>
         <plugins>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>${commons.spotbugs.version}</version>
+            <configuration>
+              <threshold>Normal</threshold>
+              <effort>Default</effort>
+              <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+            </configuration>
+          </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
