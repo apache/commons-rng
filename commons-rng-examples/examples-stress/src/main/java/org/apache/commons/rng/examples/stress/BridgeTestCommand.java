@@ -141,8 +141,9 @@ class BridgeTestCommand implements Callable<Void> {
             if (exitValue == null) {
                 LogUtils.error("%s did not exit. Process was killed.", command.get(0));
             } else {
-                if (exitValue.intValue() != 0) {
-                    LogUtils.error("%s exit code = %d", command.get(0), exitValue.intValue());
+                final int value = exitValue;
+                if (value != 0) {
+                    LogUtils.error("%s exit code = %d", command.get(0), value);
                 }
             }
 
