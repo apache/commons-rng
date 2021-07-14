@@ -888,7 +888,7 @@ class ResultsCommand implements Callable<Void> {
     private OutputStream createOutputStream() {
         if (fileOutput != null) {
             try {
-                Files.newOutputStream(fileOutput.toPath());
+                return Files.newOutputStream(fileOutput.toPath());
             } catch (final IOException ex) {
                 throw new ApplicationException("Failed to create output: " + fileOutput, ex);
             }
