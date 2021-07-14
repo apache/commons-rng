@@ -90,7 +90,7 @@ public final class DiceGameApplication {
         }
         Arrays.sort(a, Comparator.comparingInt(x -> -x[1]));
 
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder(512);
         for (int i = 0; i < scores.length; i++) {
             result.append("Player ").append(a[i][0] + 1)
                 .append(" has ").append(a[i][1])
@@ -104,14 +104,12 @@ public final class DiceGameApplication {
      * Display JPMS information.
      */
     private void displayModuleInfo() {
-        final StringBuilder str = new StringBuilder();
-
-        for (Module mod : new Module[] {DiceGame.class.getModule(),
-                                        DiceGameApplication.class.getModule()}) {
+        for (final Module mod : new Module[] {DiceGame.class.getModule(),
+                                              DiceGameApplication.class.getModule()}) {
             System.out.println("--- " + mod + " ---");
             final ModuleDescriptor desc = mod.getDescriptor();
 
-            for (ModuleDescriptor.Requires r : desc.requires()) {
+            for (final ModuleDescriptor.Requires r : desc.requires()) {
                 System.out.println(mod.getName() + " requires " + r.name());
             }
 
