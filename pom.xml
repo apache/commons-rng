@@ -142,7 +142,7 @@
   </dependencies>
 
   <build>
-    <defaultGoal>clean verify apache-rat:check clirr:check checkstyle:check pmd:check spotbugs:check javadoc:javadoc</defaultGoal>
+    <defaultGoal>clean verify javadoc:javadoc</defaultGoal>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -200,6 +200,14 @@
           <effort>Default</effort>
           <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
       <plugin>
@@ -228,10 +236,19 @@
             <excludeRoot>target/generated-sources</excludeRoot>
           </excludeRoots>
         </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+        <!-- Note: commons-parent binds the check goal to the validate phase -->
         <configuration>
         <!--
           Needed for command-line access, e.g mvn apache-rat:rat and mvn apache-rat:check
@@ -254,6 +271,18 @@
             <exclude>**/*.patch</exclude>
           </excludes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
