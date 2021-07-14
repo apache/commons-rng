@@ -80,7 +80,9 @@
   </rule>
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='DiceGameApplication']"/>
+      <property name="violationSuppressXPath"
+        value="//ClassOrInterfaceDeclaration[@SimpleName='DiceGameApplication' or @SimpleName='ComputePi'
+          or @SimpleName='UniformSamplingVisualCheckCommand' or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
 
