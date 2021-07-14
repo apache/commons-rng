@@ -75,4 +75,18 @@
     </Or>
   </Match>
 
+  <Match>
+    <Class name="org.apache.commons.rng.examples.sampling.ProbabilityDensityApproximationCommand"/>
+    <Method name="call"/>
+    <BugPattern name="DLS_DEAD_LOCAL_STORE"/>
+  </Match>
+
+  <Match>
+    <Or>
+      <Class name="org.apache.commons.rng.examples.sampling.ProbabilityDensityApproximationCommand"/>
+      <Class name="org.apache.commons.rng.examples.stress.ExamplesStressApplication"/>
+    </Or>
+    <BugPattern name="DM_EXIT"/>
+  </Match>
+
 </FindBugsFilter>
