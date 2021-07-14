@@ -64,15 +64,15 @@ class AlphaNumericComparator implements Comparator<CharSequence>, Serializable {
 
     @Override
     public int compare(CharSequence seq1, CharSequence seq2) {
-        if (seq1 == seq2) {
-            return 0;
-        }
         // Null is less
         if (seq1 == null) {
             return -1;
         }
         if (seq2 == null) {
             return 1;
+        }
+        if (seq1.equals(seq2)) {
+            return 0;
         }
 
         int pos1 = 0;
