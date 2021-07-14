@@ -777,13 +777,13 @@ class StressTestCommand implements Callable<Void> {
 
             // Assume parallel batch execution.
             // E.g. 3 additional tasks with parallelisation 4 is 0 batches
-            int batches = pending / parallelTasks;
+            final int batches = pending / parallelTasks;
             millis += batches * taskTime;
 
             // Compute the expected end time of the final batch based on it starting when
             // a currently running task ends.
             // E.g. 3 remaining tasks requires the end time of the 3rd oldest running task.
-            int remainder = pending % parallelTasks;
+            final int remainder = pending % parallelTasks;
             if (remainder != 0) {
                 // Guard with a minimum index of zero to get a valid index.
                 final int nthOldest = Math.max(0, id - parallelTasks + remainder);
@@ -820,7 +820,7 @@ class StressTestCommand implements Callable<Void> {
             // Binary search for the approximate cut-off
             int lower = 0;
             while (lower + 1 < upper) {
-                int mid = (lower + upper) >>> 1;
+                final int mid = (lower + upper) >>> 1;
                 if (sortedDurations[mid] < halfMax) {
                     lower = mid;
                 } else {

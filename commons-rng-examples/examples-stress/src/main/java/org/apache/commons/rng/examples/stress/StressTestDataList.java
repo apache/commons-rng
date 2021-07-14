@@ -105,7 +105,7 @@ class StressTestDataList implements Iterable<StressTestData> {
      */
     private StressTestDataList subsetOf(Class<?> type) {
         final StressTestDataList subset = new StressTestDataList();
-        for (StressTestData data : list) {
+        for (final StressTestData data : list) {
             // This makes a big assumption that the two enums have the same name
             RandomSourceInternal source;
             try {

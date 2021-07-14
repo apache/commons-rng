@@ -440,7 +440,7 @@ class OutputCommand implements Callable<Void> {
                               final OutputStream out) throws IOException {
         checkCount(count, OutputFormat.BITS);
 
-        boolean asLong = rng instanceof RandomLongSource;
+        final boolean asLong = rng instanceof RandomLongSource;
 
         try (BufferedWriter output = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
             for (long c = 0; c < count; c++) {

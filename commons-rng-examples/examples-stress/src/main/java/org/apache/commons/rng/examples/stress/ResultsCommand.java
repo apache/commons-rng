@@ -1251,7 +1251,7 @@ class ResultsCommand implements Callable<Void> {
             // This will be counted as 2 failed tests. For the purpose of systematic
             // failures the name of the test is the same and should be counted once.
             final HashSet<String> unique = new HashSet<>(result.getFailedTests());
-            for (String test : unique) {
+            for (final String test : unique) {
                 map.merge(test, 1, (i, j) -> i + j);
             }
         }
@@ -1504,7 +1504,7 @@ class ResultsCommand implements Callable<Void> {
                         continue;
                     }
                     Collections.sort(failures, cmp);
-                    for (String failed : failures) {
+                    for (final String failed : failures) {
                         int i = 0;
                         columns.get(i++).add(randomSource.toString());
                         if (showBitReversedColumn) {
