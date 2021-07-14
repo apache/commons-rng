@@ -43,6 +43,28 @@
     <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
   </Match>
 
+  <!-- False positives for NPE checks. -->
+  <Match>
+    <Class name="org.apache.commons.rng.examples.stress.StressTestCommand"/>
+    <Method name="createStressTestData"/>
+    <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.rng.examples.stress.StressTestCommand$StressTestTask"/>
+    <Method name="write"/>
+    <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.rng.examples.stress.RngDataOutput"/>
+    <Method name="close"/>
+    <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.rng.examples.stress.ResultsCommand"/>
+    <Method name="readFileContents"/>
+    <BugPattern name="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+  </Match>
+
   <Match>
     <!-- Benchmark state classes can expose internal representations.
          Unwritten fields can be used for baseline values. -->
