@@ -21,6 +21,7 @@ import org.junit.Assert;
 
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.LongSampler;
 
 /**
  * Utility class for testing random samplers.
@@ -71,6 +72,20 @@ public final class RandomAssert {
      */
     public static void assertProduceSameSequence(DiscreteSampler sampler1,
                                                  DiscreteSampler sampler2) {
+        for (int i = 0; i < SAMPLES; i++) {
+            Assert.assertEquals(sampler1.sample(), sampler2.sample());
+        }
+    }
+
+    /**
+     * Exercise the {@link LongSampler} interface, and
+     * ensure that the two samplers produce the same sequence.
+     *
+     * @param sampler1 First sampler.
+     * @param sampler2 Second sampler.
+     */
+    public static void assertProduceSameSequence(LongSampler sampler1,
+                                                 LongSampler sampler2) {
         for (int i = 0; i < SAMPLES; i++) {
             Assert.assertEquals(sampler1.sample(), sampler2.sample());
         }
