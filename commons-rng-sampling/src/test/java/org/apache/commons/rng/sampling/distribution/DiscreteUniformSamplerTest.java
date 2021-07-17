@@ -63,23 +63,49 @@ public class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             Assert.assertEquals(rng1.nextInt(), sampler.sample());
         }
     }
 
+    /**
+     * Test samples with a non-power of 2 range.
+     * The output should be the same as the long values produced from a RNG
+     * based on o.a.c.rng.core.BaseProvider as the rejection algorithm is
+     * the same.
+     */
+    @Test
+    public void testSamplesWithSmallNonPowerOf2Range() {
+        final int upper = 257;
+        for (final int lower : new int[] {-13, 0, 13}) {
+            final int n = upper - lower + 1;
+            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
+            for (int i = 0; i < 10; i++) {
+                Assert.assertEquals(lower + rng1.nextInt(n), sampler.sample());
+            }
+        }
+    }
+
+    /**
+     * Test samples with a power of 2 range.
+     * This tests the minimum and maximum output should be the range limits.
+     */
     @Test
     public void testSamplesWithPowerOf2Range() {
         final UniformRandomProvider rngZeroBits = new IntProvider() {
             @Override
             public int next() {
+                // No bits
                 return 0;
             }
         };
         final UniformRandomProvider rngAllBits = new IntProvider() {
             @Override
             public int next() {
-                return 0xffffffff;
+                // All bits
+                return -1;
             }
         };
 
@@ -87,7 +113,7 @@ public class DiscreteUniformSamplerTest {
         DiscreteUniformSampler sampler;
         // The upper range for a positive integer is 2^31-1. So the max positive power of
         // 2 is 2^30. However the sampler should handle a bit shift of 31 to create a range
-        // of Integer.MIN_VALUE (0x80000000) as this is a power of 2 as an unsigned int (2^31).
+        // of Integer.MIN_VALUE as this is a power of 2 as an unsigned int (2^31).
         for (int i = 0; i < 32; i++) {
             final int range = 1 << i;
             final int upper = lower + range - 1;
@@ -95,6 +121,50 @@ public class DiscreteUniformSamplerTest {
             Assert.assertEquals("Zero bits sample", lower, sampler.sample());
             sampler = new DiscreteUniformSampler(rngAllBits, lower, upper);
             Assert.assertEquals("All bits sample", upper, sampler.sample());
+        }
+    }
+
+    /**
+     * Test samples with a power of 2 range.
+     * This tests the output is created using a bit shift.
+     */
+    @Test
+    public void testSamplesWithPowerOf2RangeIsBitShift() {
+        final int lower = 0;
+        SharedStateDiscreteSampler sampler;
+        // Power of 2 sampler used for a bit shift of 1 to 31.
+        for (int i = 1; i <= 31; i++) {
+            // Upper is inclusive so subtract 1
+            final int upper = (1 << i) - 1;
+            final int shift = 32 - i;
+            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            sampler = DiscreteUniformSampler.of(rng2, lower, upper);
+            for (int j = 0; j < 10; j++) {
+                Assert.assertEquals(rng1.nextInt() >>> shift, sampler.sample());
+            }
+        }
+    }
+
+    /**
+     * Test samples with a large non-power of 2 range.
+     * This tests the large range algorithm uses a rejection method.
+     */
+    @Test
+    public void testSamplesWithLargeNonPowerOf2RangeIsRejectionMethod() {
+        // Create a range bigger than 2^63
+        final int upper = Integer.MAX_VALUE / 2 + 1;
+        final int lower = Integer.MIN_VALUE / 2 - 1;
+        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
+        for (int i = 0; i < 10; i++) {
+            // Get the expected value by the rejection method
+            long expected;
+            do {
+                expected = rng1.nextInt();
+            } while (expected < lower || expected > upper);
+            Assert.assertEquals(expected, sampler.sample());
         }
     }
 
@@ -197,6 +267,8 @@ public class DiscreteUniformSamplerTest {
     @Test
     public void testSampleUniformityWithPowerOf2Range() {
         // Test using a RNG that outputs a counter of integers.
+        // The n most significant bits will be represented uniformly over a
+        // sequence that is a 2^n long.
         final UniformRandomProvider rng = new IntProvider() {
             private int bits = 0;
 
@@ -259,34 +331,22 @@ public class DiscreteUniformSamplerTest {
         Assert.assertEquals("Sample should be produced from 2nd value", 2, value[0]);
     }
 
-    /**
-     * Test the SharedStateSampler implementation.
-     */
     @Test
     public void testSharedStateSamplerWithSmallRange() {
         testSharedStateSampler(5, 67);
     }
 
-    /**
-     * Test the SharedStateSampler implementation.
-     */
     @Test
     public void testSharedStateSamplerWithLargeRange() {
         // Set the range so rejection below or above the threshold occurs with approximately p=0.25
         testSharedStateSampler(Integer.MIN_VALUE / 2 - 1, Integer.MAX_VALUE / 2 + 1);
     }
 
-    /**
-     * Test the SharedStateSampler implementation.
-     */
     @Test
     public void testSharedStateSamplerWithPowerOf2Range() {
         testSharedStateSampler(0, 31);
     }
 
-    /**
-     * Test the SharedStateSampler implementation.
-     */
     @Test
     public void testSharedStateSamplerWithRangeOf1() {
         testSharedStateSampler(9, 9);
@@ -330,16 +390,15 @@ public class DiscreteUniformSamplerTest {
     }
 
     /**
-     * Test the toString method. This is added to ensure coverage as the factory constructor
-     * used in other tests does not create an instance of the wrapper class.
+     * Test the toString method contains the term "uniform". This is true of all samplers
+     * even for a fixed sample from a range of 1.
      *
      * @param lower Lower.
      * @param upper Upper.
      */
     private static void assertToString(int lower, int upper) {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        final DiscreteUniformSampler sampler =
-            new DiscreteUniformSampler(rng, lower, upper);
+        final DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
         Assert.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
     }
 }

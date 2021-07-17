@@ -87,18 +87,23 @@ public class DiscreteUniformSampler
         private final int value;
 
         /**
-         * @param rng Generator of uniformly distributed random numbers.
          * @param value The value.
          */
-        FixedDiscreteUniformSampler(UniformRandomProvider rng,
-                                    int value) {
-            super(rng);
+        FixedDiscreteUniformSampler(int value) {
+            // No requirement for the RNG
+            super(null);
             this.value = value;
         }
 
         @Override
         public int sample() {
             return value;
+        }
+
+        @Override
+        public String toString() {
+            // No RNG to include in the string
+            return "Uniform deviate [X=" + value + "]";
         }
 
         @Override
@@ -305,7 +310,6 @@ public class DiscreteUniformSampler
             return offset + sampler.sample();
         }
 
-        /** {@inheritDoc} */
         @Override
         public String toString() {
             return sampler.toString();
@@ -379,7 +383,7 @@ public class DiscreteUniformSampler
         // This must be done first as the methods to handle lower == 0
         // do not handle upper == 0.
         if (upper == lower) {
-            return new FixedDiscreteUniformSampler(rng, lower);
+            return new FixedDiscreteUniformSampler(lower);
         }
 
         // Algorithms to ignore the lower bound if it is zero.

@@ -237,7 +237,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    private UniformLongSampler(UniformRandomProvider rng) {
+    UniformLongSampler(UniformRandomProvider rng) {
         this.rng = rng;
     }
 

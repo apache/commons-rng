@@ -55,7 +55,7 @@ public class UniformLongSamplerTest {
         final long lower = upper;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         final UniformLongSampler sampler = UniformLongSampler.of(rng, lower, upper);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             Assert.assertEquals(lower, sampler.sample());
         }
     }
