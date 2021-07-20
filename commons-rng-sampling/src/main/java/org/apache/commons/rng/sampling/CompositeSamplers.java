@@ -604,8 +604,9 @@ public final class CompositeSamplers {
          * @param <T> Type of sample
          * @return the factory
          */
+        @SuppressWarnings("unchecked")
         static <T> ObjectSamplerFactory<T> instance() {
-            return INSTANCE;
+            return (ObjectSamplerFactory<T>) INSTANCE;
         }
 
         @Override
@@ -655,8 +656,9 @@ public final class CompositeSamplers {
          * @param <T> Type of sample
          * @return the factory
          */
+        @SuppressWarnings("unchecked")
         static <T> SharedStateObjectSamplerFactory<T> instance() {
-            return INSTANCE;
+            return (SharedStateObjectSamplerFactory<T>) INSTANCE;
         }
 
         @Override
