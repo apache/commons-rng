@@ -75,7 +75,8 @@
       <!-- Array is generated internally in this case. -->
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
-          or @SimpleName='GuideTableDiscreteSampler' or @SimpleName='SharedStateDiscreteProbabilitySampler']"/>
+          or @SimpleName='GuideTableDiscreteSampler' or @SimpleName='SharedStateDiscreteProbabilitySampler'
+          or @SimpleName='DirichletSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
