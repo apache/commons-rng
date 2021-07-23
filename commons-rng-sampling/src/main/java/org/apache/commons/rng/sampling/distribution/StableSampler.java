@@ -225,7 +225,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         /**
          * @param rng Underlying source of randomness
          */
-        BaseStableSampler(final UniformRandomProvider rng) {
+        BaseStableSampler(UniformRandomProvider rng) {
             super(rng);
             expSampler = ZigguratSampler.Exponential.of(rng);
         }
@@ -311,7 +311,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
          * @param gamma Scale parameter. Must be strictly positive.
          * @param delta Location parameter.
          */
-        TransformedStableSampler(final StableSampler sampler, double gamma, double delta) {
+        TransformedStableSampler(StableSampler sampler, double gamma, double delta) {
             // No RNG required
             super(null);
             this.sampler = sampler;
