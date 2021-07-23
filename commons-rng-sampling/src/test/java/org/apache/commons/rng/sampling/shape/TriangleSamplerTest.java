@@ -397,19 +397,7 @@ public class TriangleSamplerTest {
         final double[] c3 = createCoordinate(-3, dimension);
         final TriangleSampler sampler1 = TriangleSampler.of(c1, c2, c3, rng1);
         final TriangleSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

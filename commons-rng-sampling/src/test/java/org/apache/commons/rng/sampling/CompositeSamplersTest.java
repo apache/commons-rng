@@ -690,17 +690,7 @@ public class CompositeSamplersTest {
 
         final SharedStateObjectSampler<Integer> sampler1 = builder.build(rng1);
         final SharedStateObjectSampler<Integer> sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(new RandomAssert.Sampler<Integer>() {
-            @Override
-            public Integer sample() {
-                return sampler1.sample();
-            }
-        }, new RandomAssert.Sampler<Integer>() {
-            @Override
-            public Integer sample() {
-                return sampler2.sample();
-            }
-        });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

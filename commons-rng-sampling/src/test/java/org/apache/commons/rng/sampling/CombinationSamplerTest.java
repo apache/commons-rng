@@ -125,19 +125,7 @@ public class CombinationSamplerTest {
         final CombinationSampler sampler1 =
             new CombinationSampler(rng1, n, k);
         final CombinationSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<int[]>() {
-                @Override
-                public int[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<int[]>() {
-                @Override
-                public int[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     //// Support methods.

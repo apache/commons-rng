@@ -184,18 +184,6 @@ public class DiscreteProbabilityCollectionSamplerTest {
                                                              items,
                                                              new double[] {0.1, 0.2, 0.3, 0.4});
         final DiscreteProbabilityCollectionSampler<Double> sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<Double>() {
-                @Override
-                public Double sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<Double>() {
-                @Override
-                public Double sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

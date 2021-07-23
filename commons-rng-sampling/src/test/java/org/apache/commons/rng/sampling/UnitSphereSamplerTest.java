@@ -524,19 +524,7 @@ public class UnitSphereSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final UnitSphereSampler sampler1 = createUnitSphereSampler(dimension, rng1, factoryConstructor);
         final UnitSphereSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

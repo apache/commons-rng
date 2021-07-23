@@ -31,20 +31,6 @@ public final class RandomAssert {
     private static final int SAMPLES = 10;
 
     /**
-     * Defines a generic sampler.
-     *
-     * @param <T> the type of the sample
-     */
-    public interface Sampler<T> {
-        /**
-         * Creates a sample.
-         *
-         * @return a sample.
-         */
-        T sample();
-    }
-
-    /**
      * Class contains only static methods.
      */
     private RandomAssert() {}
@@ -92,7 +78,7 @@ public final class RandomAssert {
     }
 
     /**
-     * Exercise the {@link Sampler} interface, and
+     * Exercise the {@link ObjectSampler} interface, and
      * ensure that the two samplers produce the same sequence.
      *
      * <p>Arrays are tested using {@link Assert#assertArrayEquals(Object[], Object[])}
@@ -101,13 +87,13 @@ public final class RandomAssert {
      * is used which makes use of {@link Object#equals(Object)}.</p>
      *
      * <p>This should be used to test samplers of any type by wrapping the sample method
-     * to an anonymous {@link Sampler} class.</p>
+     * to an anonymous {@link ObjectSampler} class.</p>
      *
      * @param sampler1 First sampler.
      * @param sampler2 Second sampler.
      */
-    public static <T> void assertProduceSameSequence(Sampler<T> sampler1,
-                                                     Sampler<T> sampler2) {
+    public static <T> void assertProduceSameSequence(ObjectSampler<T> sampler1,
+                                                     ObjectSampler<T> sampler2) {
         for (int i = 0; i < SAMPLES; i++) {
             final T value1 = sampler1.sample();
             final T value2 = sampler2.sample();

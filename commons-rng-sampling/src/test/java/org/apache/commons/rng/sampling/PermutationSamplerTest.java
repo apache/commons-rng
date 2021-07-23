@@ -198,19 +198,7 @@ public class PermutationSamplerTest {
         final PermutationSampler sampler1 =
             new PermutationSampler(rng1, n, k);
         final PermutationSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<int[]>() {
-                @Override
-                public int[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<int[]>() {
-                @Override
-                public int[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     //// Support methods.

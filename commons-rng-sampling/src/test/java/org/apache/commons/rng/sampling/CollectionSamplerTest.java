@@ -67,18 +67,6 @@ public class CollectionSamplerTest {
         final CollectionSampler<String> sampler1 =
             new CollectionSampler<String>(rng1, list);
         final CollectionSampler<String> sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<String>() {
-                @Override
-                public String sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<String>() {
-                @Override
-                public String sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 }

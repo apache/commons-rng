@@ -306,19 +306,7 @@ public class LineSamplerTest {
         final double[] c2 = createCoordinate(2, dimension);
         final LineSampler sampler1 = LineSampler.of(c1, c2, rng1);
         final LineSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**

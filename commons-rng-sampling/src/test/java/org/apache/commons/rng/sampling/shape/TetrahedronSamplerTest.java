@@ -259,19 +259,7 @@ public class TetrahedronSamplerTest {
         final double[] c4 = createCoordinate(4);
         final TetrahedronSampler sampler1 = TetrahedronSampler.of(c1, c2, c3, c4, rng1);
         final TetrahedronSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler1.sample();
-                }
-            },
-            new RandomAssert.Sampler<double[]>() {
-                @Override
-                public double[] sample() {
-                    return sampler2.sample();
-                }
-            });
+        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
     /**
