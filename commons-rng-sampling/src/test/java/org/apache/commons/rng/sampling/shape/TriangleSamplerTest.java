@@ -95,7 +95,8 @@ public class TriangleSamplerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidDimensionThrows() {
-        TriangleSampler.of(new double[1], new double[1], new double[1], null);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        TriangleSampler.of(rng, new double[1], new double[1], new double[1]);
     }
 
     /**
@@ -103,6 +104,7 @@ public class TriangleSamplerTest {
      */
     @Test
     public void testDimensionMismatchThrows() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
         for (double[][] c : new double[][][] {
@@ -114,7 +116,7 @@ public class TriangleSamplerTest {
             {c3, c2, c3},
         }) {
             try {
-                TriangleSampler.of(c[0], c[1], c[2], null);
+                TriangleSampler.of(rng, c[0], c[1], c[2]);
                 Assert.fail(String.format("Did not detect dimension mismatch: %d,%d,%d",
                         c[0].length, c[1].length, c[2].length));
             } catch (IllegalArgumentException ex) {
@@ -128,11 +130,12 @@ public class TriangleSamplerTest {
      */
     @Test
     public void testNonFiniteVertexCoordinates() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid triangle
         final double[][] c = new double[][] {
             {0, 0, 1}, {2, 1, 0}, {-1, 2, 3}
         };
-        Assert.assertNotNull(TriangleSampler.of(c[0],  c[1],  c[2], null));
+        Assert.assertNotNull(TriangleSampler.of(rng, c[0],  c[1],  c[2]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
             for (int j = 0; j < c[0].length; j++) {
@@ -140,7 +143,7 @@ public class TriangleSamplerTest {
                     final double value = c[i][j];
                     c[i][j] = d;
                     try {
-                        TriangleSampler.of(c[0], c[1], c[2], null);
+                        TriangleSampler.of(rng, c[0], c[1], c[2]);
                         Assert.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
                     } catch (IllegalArgumentException ex) {
                         // Expected
@@ -214,10 +217,10 @@ public class TriangleSamplerTest {
         Assert.assertEquals("Expect vector c - b to be infinite in the y dimension",
                 Double.NEGATIVE_INFINITY, c2[2][1] - c2[1][1], 0.0);
 
-        final TriangleSampler sampler1 = TriangleSampler.of(c1[0],  c1[1],  c1[2],
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
-        final TriangleSampler sampler2 = TriangleSampler.of(c2[0],  c2[1],  c2[2],
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
+        final TriangleSampler sampler1 = TriangleSampler.of(
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1], c1[2]);
+        final TriangleSampler sampler2 = TriangleSampler.of(
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c2[0], c2[1], c2[2]);
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -313,9 +316,9 @@ public class TriangleSamplerTest {
 
         // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
         final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xfabcab);
-        final TriangleSampler sampler1 = TriangleSampler.of(forward.apply(a), forward.apply(d), forward.apply(b), rng);
-        final TriangleSampler sampler2 = TriangleSampler.of(forward.apply(b), forward.apply(c), forward.apply(e), rng);
-        final TriangleSampler sampler3 = TriangleSampler.of(forward.apply(c), forward.apply(d), forward.apply(e), rng);
+        final TriangleSampler sampler1 = TriangleSampler.of(rng, forward.apply(a), forward.apply(d), forward.apply(b));
+        final TriangleSampler sampler2 = TriangleSampler.of(rng, forward.apply(b), forward.apply(c), forward.apply(e));
+        final TriangleSampler sampler3 = TriangleSampler.of(rng, forward.apply(c), forward.apply(d), forward.apply(e));
         final Triangle triangle1 = new Triangle(a, d, b);
         final Triangle triangle2 = new Triangle(b, c, e);
         final Triangle triangle3 = new Triangle(c, d, e);
@@ -395,7 +398,7 @@ public class TriangleSamplerTest {
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
-        final TriangleSampler sampler1 = TriangleSampler.of(c1, c2, c3, rng1);
+        final TriangleSampler sampler1 = TriangleSampler.of(rng1, c1, c2, c3);
         final TriangleSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -436,7 +439,7 @@ public class TriangleSamplerTest {
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
-        final TriangleSampler sampler1 = TriangleSampler.of(c1, c2, c3, rng1);
+        final TriangleSampler sampler1 = TriangleSampler.of(rng1, c1, c2, c3);
         // Check the input vectors are copied and not used by reference.
         // Change them in place and create a new sampler. It should have different output
         // translated by the offset.
@@ -446,7 +449,7 @@ public class TriangleSamplerTest {
             c2[i] += offset;
             c3[i] += offset;
         }
-        final TriangleSampler sampler2 = TriangleSampler.of(c1, c2, c3, rng2);
+        final TriangleSampler sampler2 = TriangleSampler.of(rng2, c1, c2, c3);
         for (int n = 0; n < 3; n++) {
             final double[] s1 = sampler1.sample();
             final double[] s2 = sampler2.sample();

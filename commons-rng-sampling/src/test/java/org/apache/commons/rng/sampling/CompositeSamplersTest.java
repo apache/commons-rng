@@ -423,7 +423,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final int before = builder.size();
         for (int i = 1; i < ticks.length; i++) {
-            final IntRangeSampler sampler = new IntRangeSampler(ticks[i - 1], ticks[i], rng);
+            final IntRangeSampler sampler = new IntRangeSampler(rng, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range);
         }
@@ -503,7 +503,7 @@ public class CompositeSamplersTest {
 
         // For double values it is extremely unlikely the same value will be generated.
         // An assertion is performed to ensure we create the correct number of samplers.
-        DoubleRangeSampler sampler = new DoubleRangeSampler(min, max, rng);
+        DoubleRangeSampler sampler = new DoubleRangeSampler(rng, min, max);
         final double[] ticks = new double[n + 1];
         ticks[0] = min;
         ticks[1] = max;
@@ -516,7 +516,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final int before = builder.size();
         for (int i = 1; i < ticks.length; i++) {
-            sampler = new DoubleRangeSampler(ticks[i - 1], ticks[i], rng);
+            sampler = new DoubleRangeSampler(rng, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range());
         }
@@ -599,7 +599,7 @@ public class CompositeSamplersTest {
 
         // For long values it is extremely unlikely the same value will be generated.
         // An assertion is performed to ensure we create the correct number of samplers.
-        LongRangeSampler sampler = new LongRangeSampler(min, max, rng);
+        LongRangeSampler sampler = new LongRangeSampler(rng, min, max);
         final long[] ticks = new long[n + 1];
         ticks[0] = min;
         ticks[1] = max;
@@ -613,7 +613,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final int before = builder.size();
         for (int i = 1; i < ticks.length; i++) {
-            sampler = new LongRangeSampler(ticks[i - 1], ticks[i], rng);
+            sampler = new LongRangeSampler(rng, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range);
         }
@@ -731,7 +731,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final int[] ticks = {-3, 5, 14, 22};
         for (int i = 1; i < ticks.length; i++) {
-            final IntRangeSampler sampler = new IntRangeSampler(ticks[i - 1], ticks[i], rng1);
+            final IntRangeSampler sampler = new IntRangeSampler(rng1, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range);
         }
@@ -780,7 +780,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final double[] ticks = {7.89, 13.99, 21.7, 35.6, 45.5};
         for (int i = 1; i < ticks.length; i++) {
-            final DoubleRangeSampler sampler = new DoubleRangeSampler(ticks[i - 1], ticks[i], rng1);
+            final DoubleRangeSampler sampler = new DoubleRangeSampler(rng1, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range());
         }
@@ -851,7 +851,7 @@ public class CompositeSamplersTest {
         // Sample within the ranges between the ticks
         final long[] ticks = {-32634628368L, 516234712, 1472839427384234L, 72364572187368423L};
         for (int i = 1; i < ticks.length; i++) {
-            final LongRangeSampler sampler = new LongRangeSampler(ticks[i - 1], ticks[i], rng1);
+            final LongRangeSampler sampler = new LongRangeSampler(rng1, ticks[i - 1], ticks[i]);
             // Weight using the range
             builder.add(sampler, sampler.range);
         }
@@ -900,11 +900,11 @@ public class CompositeSamplersTest {
         private final UniformRandomProvider rng;
 
         /**
+         * @param rng the source of randomness
          * @param min the minimum (inclusive)
          * @param max the maximum (exclusive)
-         * @param rng the source of randomness
          */
-        IntRangeSampler(int min, int max, UniformRandomProvider rng) {
+        IntRangeSampler(UniformRandomProvider rng, int min, int max) {
             this.min = min;
             this.range = max - min;
             this.rng = rng;
@@ -917,7 +917,7 @@ public class CompositeSamplersTest {
 
         @Override
         public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider generator) {
-            return new IntRangeSampler(min, min + range, generator);
+            return new IntRangeSampler(generator, min, min + range);
         }
     }
 
@@ -930,11 +930,11 @@ public class CompositeSamplersTest {
         private final UniformRandomProvider rng;
 
         /**
+         * @param rng the source of randomness
          * @param a bound a
          * @param b bound b
-         * @param rng the source of randomness
          */
-        DoubleRangeSampler(double a, double b, UniformRandomProvider rng) {
+        DoubleRangeSampler(UniformRandomProvider rng, double a, double b) {
             this.a = a;
             this.b = b;
             this.rng = rng;
@@ -958,7 +958,7 @@ public class CompositeSamplersTest {
 
         @Override
         public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider generator) {
-            return new DoubleRangeSampler(a, b, generator);
+            return new DoubleRangeSampler(generator, a, b);
         }
     }
 
@@ -971,11 +971,11 @@ public class CompositeSamplersTest {
         private final UniformRandomProvider rng;
 
         /**
+         * @param rng the source of randomness
          * @param min the minimum (inclusive)
          * @param max the maximum (exclusive)
-         * @param rng the source of randomness
          */
-        LongRangeSampler(long min, long max, UniformRandomProvider rng) {
+        LongRangeSampler(UniformRandomProvider rng, long min, long max) {
             this.min = min;
             this.range = max - min;
             this.rng = rng;
@@ -988,7 +988,7 @@ public class CompositeSamplersTest {
 
         @Override
         public SharedStateLongSampler withUniformRandomProvider(UniformRandomProvider generator) {
-            return new LongRangeSampler(min, min + range, generator);
+            return new LongRangeSampler(generator, min, min + range);
         }
     }
 }

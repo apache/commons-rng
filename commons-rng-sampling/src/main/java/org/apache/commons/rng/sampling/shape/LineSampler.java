@@ -62,11 +62,11 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double bx;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
-         * @param rng Source of randomness.
          */
-        LineSampler1D(double[] a, double[] b, UniformRandomProvider rng) {
+        LineSampler1D(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             ax = a[0];
             bx = b[0];
@@ -108,11 +108,11 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double by;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
-         * @param rng Source of randomness.
          */
-        LineSampler2D(double[] a, double[] b, UniformRandomProvider rng) {
+        LineSampler2D(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -163,11 +163,11 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double bz;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
-         * @param rng Source of randomness.
          */
-        LineSampler3D(double[] a, double[] b, UniformRandomProvider rng) {
+        LineSampler3D(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -214,11 +214,11 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double[] b;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
-         * @param rng Source of randomness.
          */
-        LineSamplerND(double[] a, double[] b, UniformRandomProvider rng) {
+        LineSamplerND(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             // Defensive copy
             this.a = a.clone();
@@ -292,16 +292,16 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
      *
      * <p>Sampling is supported in dimensions of 1 or above.
      *
+     * @param rng Source of randomness.
      * @param a The first vertex.
      * @param b The second vertex.
-     * @param rng Source of randomness.
      * @return the sampler
      * @throws IllegalArgumentException If the vertices do not have the same
      * dimension; the dimension is less than 1; or vertices have non-finite coordinates.
      */
-    public static LineSampler of(double[] a,
-                                 double[] b,
-                                 UniformRandomProvider rng) {
+    public static LineSampler of(UniformRandomProvider rng,
+                                 double[] a,
+                                 double[] b) {
         final int dimension = a.length;
         if (dimension != b.length) {
             throw new IllegalArgumentException(
@@ -313,15 +313,15 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         Coordinates.requireFinite(b, "Vertex b");
         // Low dimension specialisations
         if (dimension == TWO_D) {
-            return new LineSampler2D(a, b, rng);
+            return new LineSampler2D(rng, a, b);
         } else if (dimension == THREE_D) {
-            return new LineSampler3D(a, b, rng);
+            return new LineSampler3D(rng, a, b);
         } else if (dimension > THREE_D) {
-            return new LineSamplerND(a, b, rng);
+            return new LineSamplerND(rng, a, b);
         } else if (dimension == ONE_D) {
             // Unlikely case of 1D is placed last.
             // Use o.a.c.rng.sampling.distribution.ContinuousUniformSampler for non-array samples.
-            return new LineSampler1D(a, b, rng);
+            return new LineSampler1D(rng, a, b);
         }
         // Less than 1D
         throw new IllegalArgumentException("Unsupported dimension: " + dimension);

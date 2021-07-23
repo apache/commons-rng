@@ -208,7 +208,7 @@ public class TriangleSamplerBenchmark {
             final double[] a = s.sample();
             final double[] b = s.sample();
             final double[] c = s.sample();
-            sampler = createSampler(a, b, c, rng);
+            sampler = createSampler(rng, a, b, c);
         }
 
         /**
@@ -221,13 +221,14 @@ public class TriangleSamplerBenchmark {
         /**
          * Creates the triangle sampler.
          *
+         * @param rng the source of randomness
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
-         * @param rng the source of randomness
          * @return the sampler
          */
-        protected abstract Sampler createSampler(double[] a, double[] b, double[] c, UniformRandomProvider rng);
+        protected abstract Sampler createSampler(UniformRandomProvider rng,
+                                                 double[] a, double[] b, double[] c);
     }
 
     /**
@@ -247,8 +248,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final double[] a, final double[] b, final double[] c,
-                                        final UniformRandomProvider rng) {
+        protected Sampler createSampler(final UniformRandomProvider rng,
+                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return new Sampler() {
                     @Override
@@ -271,9 +272,9 @@ public class TriangleSamplerBenchmark {
                     }
                 };
             } else if (VECTORS.equals(type)) {
-                return new VectorTriangleSampler2D(a, b, c, rng);
+                return new VectorTriangleSampler2D(rng, a, b, c);
             } else if (COORDINATES.equals(type)) {
-                return new CoordinateTriangleSampler2D(a, b, c, rng);
+                return new CoordinateTriangleSampler2D(rng, a, b, c);
             }
             throw new IllegalStateException(UNKNOWN_SAMPLER + type);
         }
@@ -292,12 +293,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            VectorTriangleSampler2D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            VectorTriangleSampler2D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 ax = a[0];
                 ay = a[1];
@@ -328,12 +329,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            CoordinateTriangleSampler2D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            CoordinateTriangleSampler2D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 ax = a[0];
                 ay = a[1];
@@ -367,8 +368,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final double[] a, final double[] b, final double[] c,
-                                        final UniformRandomProvider rng) {
+        protected Sampler createSampler(final UniformRandomProvider rng,
+                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return new Sampler() {
                     @Override
@@ -391,9 +392,9 @@ public class TriangleSamplerBenchmark {
                     }
                 };
             } else if (VECTORS.equals(type)) {
-                return new VectorTriangleSampler3D(a, b, c, rng);
+                return new VectorTriangleSampler3D(rng, a, b, c);
             } else if (COORDINATES.equals(type)) {
-                return new CoordinateTriangleSampler3D(a, b, c, rng);
+                return new CoordinateTriangleSampler3D(rng, a, b, c);
             }
             throw new IllegalStateException(UNKNOWN_SAMPLER + type);
         }
@@ -415,12 +416,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            VectorTriangleSampler3D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            VectorTriangleSampler3D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 ax = a[0];
                 ay = a[1];
@@ -458,12 +459,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            CoordinateTriangleSampler3D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            CoordinateTriangleSampler3D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 ax = a[0];
                 ay = a[1];
@@ -505,8 +506,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final double[] a, final double[] b, final double[] c,
-                                        final UniformRandomProvider rng) {
+        protected Sampler createSampler(final UniformRandomProvider rng,
+                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return new Sampler() {
                     @Override
@@ -546,9 +547,9 @@ public class TriangleSamplerBenchmark {
                     }
                 };
             } else if (VECTORS.equals(type)) {
-                return new VectorTriangleSamplerND(a, b, c, rng);
+                return new VectorTriangleSamplerND(rng, a, b, c);
             } else if (COORDINATES.equals(type)) {
-                return new CoordinateTriangleSamplerND(a, b, c, rng);
+                return new CoordinateTriangleSamplerND(rng, a, b, c);
             }
             throw new IllegalStateException(UNKNOWN_SAMPLER + type);
         }
@@ -564,12 +565,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            VectorTriangleSamplerND(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            VectorTriangleSamplerND(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 this.a = a.clone();
                 v = new double[a.length];
@@ -601,12 +602,12 @@ public class TriangleSamplerBenchmark {
             // CHECKSTYLE: resume JavadocVariableCheck
 
             /**
+             * @param rng the source of randomness
              * @param a The first vertex.
              * @param b The second vertex.
              * @param c The third vertex.
-             * @param rng the source of randomness
              */
-            CoordinateTriangleSamplerND(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+            CoordinateTriangleSamplerND(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
                 super(rng);
                 this.a = a.clone();
                 this.b = b.clone();

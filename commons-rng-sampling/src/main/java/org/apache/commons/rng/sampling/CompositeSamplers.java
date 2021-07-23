@@ -58,9 +58,9 @@ import org.apache.commons.rng.sampling.distribution.SharedStateLongSampler;
  * double[] c = {3.45, 2.34};
  * ObjectSampler&lt;double[]&gt; sampler =
  *     CompositeSamplers.&lt;double[]&gt;newObjectSamplerBuilder()
- *         .add(LineSampler.of(a, b, rng), Math.hypot(a[0] - b[0], a[1] - b[1]))
- *         .add(LineSampler.of(b, c, rng), Math.hypot(b[0] - c[0], b[1] - c[1]))
- *         .add(LineSampler.of(c, a, rng), Math.hypot(c[0] - a[0], c[1] - a[1]))
+ *         .add(LineSampler.of(rng, a, b), Math.hypot(a[0] - b[0], a[1] - b[1]))
+ *         .add(LineSampler.of(rng, b, c), Math.hypot(b[0] - c[0], b[1] - c[1]))
+ *         .add(LineSampler.of(rng, c, a), Math.hypot(c[0] - a[0], c[1] - a[1]))
  *         .build(rng);
  * </pre>
  *

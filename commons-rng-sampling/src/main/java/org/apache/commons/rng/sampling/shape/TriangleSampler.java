@@ -97,12 +97,12 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double cy;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
-         * @param rng Source of randomness.
          */
-        TriangleSampler2D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+        TriangleSampler2D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -163,12 +163,12 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double cz;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
-         * @param rng Source of randomness.
          */
-        TriangleSampler3D(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+        TriangleSampler3D(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -223,12 +223,12 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double[] c;
 
         /**
+         * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
-         * @param rng Source of randomness.
          */
-        TriangleSamplerND(double[] a, double[] b, double[] c, UniformRandomProvider rng) {
+        TriangleSamplerND(UniformRandomProvider rng, double[] a, double[] b, double[] c) {
             super(rng);
             // Defensive copy
             this.a = a.clone();
@@ -322,18 +322,18 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
      * <p>No test for collinear points is performed. If the points are collinear the sampling
      * distribution is undefined.
      *
+     * @param rng Source of randomness.
      * @param a The first vertex.
      * @param b The second vertex.
      * @param c The third vertex.
-     * @param rng Source of randomness.
      * @return the sampler
      * @throws IllegalArgumentException If the vertices do not have the same
      * dimension; the dimension is less than 2; or vertices have non-finite coordinates
      */
-    public static TriangleSampler of(double[] a,
+    public static TriangleSampler of(UniformRandomProvider rng,
+                                     double[] a,
                                      double[] b,
-                                     double[] c,
-                                     UniformRandomProvider rng) {
+                                     double[] c) {
         final int dimension = a.length;
         if (dimension != b.length || dimension != c.length) {
             throw new IllegalArgumentException(
@@ -347,11 +347,11 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         Coordinates.requireFinite(c, "Vertex c");
         // Low dimension specialisations
         if (dimension == TWO_D) {
-            return new TriangleSampler2D(a, b, c, rng);
+            return new TriangleSampler2D(rng, a, b, c);
         } else if (dimension == THREE_D) {
-            return new TriangleSampler3D(a, b, c, rng);
+            return new TriangleSampler3D(rng, a, b, c);
         } else if (dimension > THREE_D) {
-            return new TriangleSamplerND(a, b, c, rng);
+            return new TriangleSamplerND(rng, a, b, c);
         }
         // Less than 2D
         throw new IllegalArgumentException(

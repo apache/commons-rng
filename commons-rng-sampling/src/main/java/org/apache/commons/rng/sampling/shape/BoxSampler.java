@@ -61,11 +61,11 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double by;
 
         /**
+         * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
-         * @param rng Source of randomness.
          */
-        BoxSampler2D(double[] a, double[] b, UniformRandomProvider rng) {
+        BoxSampler2D(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -116,11 +116,11 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double bz;
 
         /**
+         * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
-         * @param rng Source of randomness.
          */
-        BoxSampler3D(double[] a, double[] b, UniformRandomProvider rng) {
+        BoxSampler3D(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -167,11 +167,11 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double[] b;
 
         /**
+         * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
-         * @param rng Source of randomness.
          */
-        BoxSamplerND(double[] a, double[] b, UniformRandomProvider rng) {
+        BoxSamplerND(UniformRandomProvider rng, double[] a, double[] b) {
             super(rng);
             // Defensive copy
             this.a = a.clone();
@@ -244,16 +244,16 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
      * <p>Note: There is no requirement that {@code a <= b}. The samples will be uniformly
      * distributed in the range {@code a} to {@code b} for each dimension.
      *
+     * @param rng Source of randomness.
      * @param a Bound a.
      * @param b Bound b.
-     * @param rng Source of randomness.
      * @return the sampler
      * @throws IllegalArgumentException If the bounds do not have the same
      * dimension; the dimension is less than 2; or bounds have non-finite coordinates.
      */
-    public static BoxSampler of(double[] a,
-                                double[] b,
-                                UniformRandomProvider rng) {
+    public static BoxSampler of(UniformRandomProvider rng,
+                                double[] a,
+                                double[] b) {
         final int dimension = a.length;
         if (dimension != b.length) {
             throw new IllegalArgumentException(
@@ -265,11 +265,11 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         Coordinates.requireFinite(b, "Bound b");
         // Low dimension specialisations
         if (dimension == TWO_D) {
-            return new BoxSampler2D(a, b, rng);
+            return new BoxSampler2D(rng, a, b);
         } else if (dimension == THREE_D) {
-            return new BoxSampler3D(a, b, rng);
+            return new BoxSampler3D(rng, a, b);
         } else if (dimension > THREE_D) {
-            return new BoxSamplerND(a, b, rng);
+            return new BoxSamplerND(rng, a, b);
         }
         // Less than 2D
         throw new IllegalArgumentException("Unsupported dimension: " + dimension);

@@ -37,7 +37,8 @@ public class UnitBallSamplerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidDimensionThrows() {
-        UnitBallSampler.of(0, null);
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        UnitBallSampler.of(rng, 0);
     }
 
     /**
@@ -126,7 +127,7 @@ public class UnitBallSamplerTest {
 
         // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
         final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xa1b2c3d4L);
-        final UnitBallSampler sampler = UnitBallSampler.of(dimension, rng);
+        final UnitBallSampler sampler = UnitBallSampler.of(rng, dimension);
         for (int loop = 0; loop < 1; loop++) {
             // Assign each coordinate to a layer inside the ball and an orthant using the sign
             final long[] observed = new long[layers * orthants];
@@ -182,7 +183,7 @@ public class UnitBallSamplerTest {
             }
         };
 
-        final double[] vector = UnitBallSampler.of(dimension, bad).sample();
+        final double[] vector = UnitBallSampler.of(bad, dimension).sample();
         Assert.assertEquals(dimension, vector.length);
         // A non-zero coordinate should occur with a SplitMix which returns 0 only once.
         Assert.assertNotEquals(0.0, length(vector));
@@ -226,7 +227,7 @@ public class UnitBallSamplerTest {
     private static void testSharedStateSampler(int dimension) {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UnitBallSampler sampler1 = UnitBallSampler.of(dimension, rng1);
+        final UnitBallSampler sampler1 = UnitBallSampler.of(rng1, dimension);
         final UnitBallSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

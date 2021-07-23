@@ -163,10 +163,10 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         private final ContinuousSampler exp;
 
         /**
-         * @param dimension Space dimension.
          * @param rng Source of randomness.
+         * @param dimension Space dimension.
          */
-        UnitBallSamplerND(int dimension, UniformRandomProvider rng) {
+        UnitBallSamplerND(UniformRandomProvider rng, int dimension) {
             this.dimension  = dimension;
             normal = ZigguratSampler.NormalizedGaussian.of(rng);
             // Require an Exponential(mean=2).
@@ -197,7 +197,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
 
         @Override
         public UnitBallSampler withUniformRandomProvider(UniformRandomProvider rng) {
-            return new UnitBallSamplerND(dimension, rng);
+            return new UnitBallSamplerND(rng, dimension);
         }
     }
 
@@ -218,13 +218,13 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      *
      * <p>Sampling is supported in dimensions of 1 or above.
      *
-     * @param dimension Space dimension.
      * @param rng Source of randomness.
+     * @param dimension Space dimension.
      * @return the sampler
      * @throws IllegalArgumentException If {@code dimension <= 0}
      */
-    public static UnitBallSampler of(int dimension,
-                                     UniformRandomProvider rng) {
+    public static UnitBallSampler of(UniformRandomProvider rng,
+                                     int dimension) {
         if (dimension <= 0) {
             throw new IllegalArgumentException("Dimension must be strictly positive");
         } else if (dimension == ONE_D) {
@@ -234,7 +234,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         } else if (dimension == THREE_D) {
             return new UnitBallSampler3D(rng);
         }
-        return new UnitBallSamplerND(dimension, rng);
+        return new UnitBallSamplerND(rng, dimension);
     }
 
     /**

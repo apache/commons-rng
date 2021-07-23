@@ -69,13 +69,13 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
     private final UniformRandomProvider rng;
 
     /**
+     * @param rng Source of randomness.
      * @param a The first vertex.
      * @param b The second vertex.
      * @param c The third vertex.
      * @param d The fourth vertex.
-     * @param rng Source of randomness.
      */
-    TetrahedronSampler(double[] a, double[] b, double[] c, double[] d, UniformRandomProvider rng) {
+    TetrahedronSampler(UniformRandomProvider rng, double[] a, double[] b, double[] c, double[] d) {
         // Defensive copy
         this.a = a.clone();
         this.b = b.clone();
@@ -175,20 +175,20 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
      * <p>No test for a volume is performed. If the vertices are coplanar the sampling
      * distribution is undefined.
      *
+     * @param rng Source of randomness.
      * @param a The first vertex.
      * @param b The second vertex.
      * @param c The third vertex.
      * @param d The fourth vertex.
-     * @param rng Source of randomness.
      * @return the sampler
      * @throws IllegalArgumentException If the vertices do not have length 3;
      * or vertices have non-finite coordinates
      */
-    public static TetrahedronSampler of(double[] a,
+    public static TetrahedronSampler of(UniformRandomProvider rng,
+                                        double[] a,
                                         double[] b,
                                         double[] c,
-                                        double[] d,
-                                        UniformRandomProvider rng) {
+                                        double[] d) {
         // Must be 3D
         Coordinates.requireLength(a, THREE_D, VERTEX_A);
         Coordinates.requireLength(b, THREE_D, VERTEX_B);
@@ -199,6 +199,6 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
         Coordinates.requireFinite(b, VERTEX_B);
         Coordinates.requireFinite(c, VERTEX_C);
         Coordinates.requireFinite(d, VERTEX_D);
-        return new TetrahedronSampler(a, b, c, d, rng);
+        return new TetrahedronSampler(rng, a, b, c, d);
     }
 }

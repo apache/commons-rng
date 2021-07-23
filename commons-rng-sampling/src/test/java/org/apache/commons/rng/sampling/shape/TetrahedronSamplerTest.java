@@ -43,7 +43,7 @@ public class TetrahedronSamplerTest {
         for (int i = 0; i < c.length; i++) {
             c[i] = bad;
             try {
-                TetrahedronSampler.of(c[0], c[1], c[2], c[3], rng);
+                TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]);
                 Assert.fail(String.format("Did not detect invalid dimension for vertex: %d", i));
             } catch (IllegalArgumentException ex) {
                 // Expected
@@ -62,7 +62,7 @@ public class TetrahedronSamplerTest {
         final double[][] c = new double[][] {
             {1, 1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, -1}
         };
-        Assert.assertNotNull(TetrahedronSampler.of(c[0], c[1], c[2], c[3], rng));
+        Assert.assertNotNull(TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
             for (int j = 0; j < c[0].length; j++) {
@@ -70,7 +70,7 @@ public class TetrahedronSamplerTest {
                     final double value = c[i][j];
                     c[i][j] = d;
                     try {
-                        TetrahedronSampler.of(c[0], c[1], c[2], c[3], rng);
+                        TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]);
                         Assert.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
                     } catch (IllegalArgumentException ex) {
                         // Expected
@@ -110,10 +110,10 @@ public class TetrahedronSamplerTest {
         Assert.assertEquals("Expect vector c - b to be infinite in the z dimension",
                 Double.POSITIVE_INFINITY, c2[2][2] - c2[1][2], 0.0);
 
-        final TetrahedronSampler sampler1 = TetrahedronSampler.of(c1[0], c1[1], c1[2], c1[3],
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
-        final TetrahedronSampler sampler2 = TetrahedronSampler.of(c2[0], c2[1], c2[2], c2[3],
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed));
+        final TetrahedronSampler sampler1 = TetrahedronSampler.of(
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1], c1[2], c1[3]);
+        final TetrahedronSampler sampler2 = TetrahedronSampler.of(
+                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c2[0], c2[1], c2[2], c2[3]);
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -174,12 +174,12 @@ public class TetrahedronSamplerTest {
         // the tetrahedra all share one of the main diagonals of the box (d-f).
         // See the cuts used for the marching tetrahedra algorithm:
         // https://en.wikipedia.org/wiki/Marching_tetrahedra
-        final TetrahedronSampler[] samplers = {TetrahedronSampler.of(d, f, b, c, rng),
-                                               TetrahedronSampler.of(d, f, c, g, rng),
-                                               TetrahedronSampler.of(d, f, g, h, rng),
-                                               TetrahedronSampler.of(d, f, h, e, rng),
-                                               TetrahedronSampler.of(d, f, e, a, rng),
-                                               TetrahedronSampler.of(d, f, a, b, rng)};
+        final TetrahedronSampler[] samplers = {TetrahedronSampler.of(rng, d, f, b, c),
+                                               TetrahedronSampler.of(rng, d, f, c, g),
+                                               TetrahedronSampler.of(rng, d, f, g, h),
+                                               TetrahedronSampler.of(rng, d, f, h, e),
+                                               TetrahedronSampler.of(rng, d, f, e, a),
+                                               TetrahedronSampler.of(rng, d, f, a, b)};
         // To determine the sample is inside the correct tetrahedron it is projected to the
         // 4 faces of the tetrahedron along the face normals. The distance should be negative
         // when the face normals are orientated outwards.
@@ -257,7 +257,7 @@ public class TetrahedronSamplerTest {
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);
         final double[] c4 = createCoordinate(4);
-        final TetrahedronSampler sampler1 = TetrahedronSampler.of(c1, c2, c3, c4, rng1);
+        final TetrahedronSampler sampler1 = TetrahedronSampler.of(rng1, c1, c2, c3, c4);
         final TetrahedronSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -273,7 +273,7 @@ public class TetrahedronSamplerTest {
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);
         final double[] c4 = createCoordinate(-4);
-        final TetrahedronSampler sampler1 = TetrahedronSampler.of(c1, c2, c3, c4, rng1);
+        final TetrahedronSampler sampler1 = TetrahedronSampler.of(rng1, c1, c2, c3, c4);
         // Check the input vectors are copied and not used by reference.
         // Change them in place and create a new sampler. It should have different output
         // translated by the offset.
@@ -284,7 +284,7 @@ public class TetrahedronSamplerTest {
             c3[i] += offset;
             c4[i] += offset;
         }
-        final TetrahedronSampler sampler2 = TetrahedronSampler.of(c1, c2, c3, c4, rng2);
+        final TetrahedronSampler sampler2 = TetrahedronSampler.of(rng2, c1, c2, c3, c4);
         for (int n = 0; n < 5; n++) {
             final double[] s1 = sampler1.sample();
             final double[] s2 = sampler2.sample();

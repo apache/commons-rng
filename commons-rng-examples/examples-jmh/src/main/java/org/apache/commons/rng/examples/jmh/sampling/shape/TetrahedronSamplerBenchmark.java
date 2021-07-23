@@ -164,14 +164,14 @@ public class TetrahedronSamplerBenchmark {
         // CHECKSTYLE: resume JavadocVariableCheck
 
         /**
+         * @param rng the source of randomness
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
          * @param d The fourth vertex.
-         * @param rng Source of randomness.
          */
-        ArrayTetrahedronSampler(double[] a, double[] b, double[] c, double[] d,
-                                UniformRandomProvider rng) {
+        ArrayTetrahedronSampler(UniformRandomProvider rng,
+                                double[] a, double[] b, double[] c, double[] d) {
             super(rng);
             this.a = a.clone();
             this.b = b.clone();
@@ -207,14 +207,14 @@ public class TetrahedronSamplerBenchmark {
         // CHECKSTYLE: resume JavadocVariableCheck
 
         /**
+         * @param rng the source of randomness
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
          * @param d The fourth vertex.
-         * @param rng Source of randomness.
          */
-        NonArrayTetrahedronSampler(double[] a, double[] b, double[] c, double[] d,
-                                   UniformRandomProvider rng) {
+        NonArrayTetrahedronSampler(UniformRandomProvider rng,
+                                   double[] a, double[] b, double[] c, double[] d) {
             super(rng);
             ax = a[0];
             ay = a[1];
@@ -252,14 +252,14 @@ public class TetrahedronSamplerBenchmark {
         // CHECKSTYLE: resume JavadocVariableCheck
 
         /**
+         * @param rng the source of randomness
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
          * @param d The fourth vertex.
-         * @param rng Source of randomness.
          */
-        ArrayInlineTetrahedronSampler(double[] a, double[] b, double[] c, double[] d,
-                                           UniformRandomProvider rng) {
+        ArrayInlineTetrahedronSampler(UniformRandomProvider rng,
+                                      double[] a, double[] b, double[] c, double[] d) {
             this.a = a.clone();
             this.b = b.clone();
             this.c = c.clone();
@@ -328,14 +328,14 @@ public class TetrahedronSamplerBenchmark {
         // CHECKSTYLE: resume JavadocVariableCheck
 
         /**
+         * @param rng the source of randomness
          * @param a The first vertex.
          * @param b The second vertex.
          * @param c The third vertex.
          * @param d The fourth vertex.
-         * @param rng Source of randomness.
          */
-        NonArrayInlineTetrahedronSampler(double[] a, double[] b, double[] c, double[] d,
-                                              UniformRandomProvider rng) {
+        NonArrayInlineTetrahedronSampler(UniformRandomProvider rng,
+                                         double[] a, double[] b, double[] c, double[] d) {
             ax = a[0];
             ay = a[1];
             az = a[2];
@@ -436,7 +436,7 @@ public class TetrahedronSamplerBenchmark {
             final double[] b = s.sample();
             final double[] c = s.sample();
             final double[] d = s.sample();
-            sampler = createSampler(a, b, c, d, rng);
+            sampler = createSampler(rng, a, b, c, d);
         }
 
         /**
@@ -449,8 +449,8 @@ public class TetrahedronSamplerBenchmark {
          * @param rng the source of randomness
          * @return the sampler
          */
-        private Sampler createSampler(double[] a, double[] b, double[] c, double[] d,
-                                      final UniformRandomProvider rng) {
+        private Sampler createSampler(final UniformRandomProvider rng,
+                                      double[] a, double[] b, double[] c, double[] d) {
             if (BASELINE.equals(type)) {
                 return new Sampler() {
                     @Override
@@ -462,13 +462,13 @@ public class TetrahedronSamplerBenchmark {
                     }
                 };
             } else if (ARRAY.equals(type)) {
-                return new ArrayTetrahedronSampler(a, b, c, d, rng);
+                return new ArrayTetrahedronSampler(rng, a, b, c, d);
             } else if (NON_ARRAY.equals(type)) {
-                return new NonArrayTetrahedronSampler(a, b, c, d, rng);
+                return new NonArrayTetrahedronSampler(rng, a, b, c, d);
             } else if (ARRAY_INLINE.equals(type)) {
-                return new ArrayInlineTetrahedronSampler(a, b, c, d, rng);
+                return new ArrayInlineTetrahedronSampler(rng, a, b, c, d);
             } else if (NON_ARRAY_INLINE.equals(type)) {
-                return new NonArrayInlineTetrahedronSampler(a, b, c, d, rng);
+                return new NonArrayInlineTetrahedronSampler(rng, a, b, c, d);
             }
             throw new IllegalStateException(UNKNOWN_SAMPLER + type);
         }
