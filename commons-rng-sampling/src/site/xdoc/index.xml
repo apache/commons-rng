@@ -41,13 +41,13 @@
 
 <source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
-import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler.Gaussian;
 
 public class NormalDeviates {
     private final ContinuousSampler normalizedGaussian;
 
     public NormalDeviates(UniformRandomProvider rng) {
-        normalizedGaussian = MarsagliaNormalizedGaussianSampler.of(rng);
+        normalizedGaussian = ZigguratSampler.Gaussian.of(rng);
     }
 
     public double sample(double mean,
@@ -55,6 +55,46 @@ public class NormalDeviates {
         return mean + sigma * normalizedGaussian.sample();
     }
 }
+</source>
+      </p>
+
+      <p>
+        Utilities are provided to sample from generic collections.
+      </p>
+
+      <p>
+        Example:
+
+<source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
+import java.util.HashSet;
+import org.apache.commons.rng.sampling.CollectionSampler;
+
+HashSet&lt;String&gt; list = new HashSet&lt;String&gt;();
+list.add("Apache");
+list.add("Commons");
+list.add("RNG");
+
+CollectionSampler&lt;String&gt; sampler = new CollectionSampler&lt;String&gt;(RandomSource.MWC_256.create(),
+                                                                  list);
+String word = sampler.sample();
+</source>
+      </p>
+
+      <p>
+        The module also contains classes to generate coordinate samples from geometric shapes
+        such as inside a ball, box or triangle or on the surface of a sphere.
+      </p>
+
+      <p>
+        Example:
+
+<source class="prettyprint">import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.UnitSphereSampler;
+
+int dimension = 3;
+UnitSphereSampler sampler = new UnitSphereSampler(dimension , RandomSource.KISS.create());
+
+double[] vector = sampler.sample();
 </source>
       </p>
 

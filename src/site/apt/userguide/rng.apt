@@ -63,8 +63,9 @@
 
   * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}} (requires Java 6)
 
-  This module provides implementations that generate a sequence of numbers according to some
-  specified probability distribution, and utilities to sample from a generic collection of items.
+  This module provides implementations that: generate a sequence of numbers according to some
+  specified probability distribution; sample coordinates from geometric shapes; sample
+  from generic collections of items; and other sampling utilities.
   It is an example of usage of the API provided in the <<<commons-rng-client-api>>> module.
 
   * Examples
@@ -417,7 +418,7 @@ list.add("Commons");
 list.add("RNG");
 
 CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.MWC_256.create(),
-                                                                  list, 1);
+                                                                  list);
 String word = sampler.sample();
 +--------------------------+
 
@@ -437,6 +438,55 @@ List<String> sample = ListSampler.sample(rng, list, k);
 
 // Shuffle the list
 ListSampler.shuffle(rng, list)
++--------------------------+
+
+  * Sampling from geometric shapes:
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/shape/BoxSampler.html}Box}},
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/shape/UnitBallSampler.html}Ball}},
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/shape/LineSampler.html}Line}},
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/shape/TriangleSampler.html}Triangle}}, and
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/shape/TetrahedronSampler.html}Tetrahedron}}.
+
++--------------------------+
+import org.apache.commons.rng.sampling.shape.BoxSampler;
+
+double[] lower = {1, 2, 3};
+double[] upper = {15, 16, 17}
+BoxSampler sampler = BoxSampler.of(RandomSource.KISS.create(),
+                                   lower, upper);
+double[] coordinate = sampler.sample();
++--------------------------+
+
+  * The 
+    {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/CompositeSamplers.html}CompositeSamplers}}
+    utility class can create a composite sampler that is a weighted combination of samplers
+    that return the same type.
+
+    The following example will create a sampler to uniformly sample the border of a triangle
+    using the line segment lengths as weights:
+
++--------------------------+
+import org.apache.commons.rng.sampling.shape.LineSampler;
+
+UniformRandomProvider rng = RandomSource.JSF_64.create();
+
+// Triangle vertices
+double[] a = {1.23, 4.56};
+double[] b = {6.78, 9.01};
+double[] c = {3.45, 2.34};
+// Line lengths
+double ab = Math.hypot(a[0] - b[0], a[1] - b[1]);
+double bc = Math.hypot(b[0] - c[0], b[1] - c[1]);
+double ca = Math.hypot(c[0] - a[0], c[1] - a[1]);
+
+ObjectSampler<double[]> sampler =
+    CompositeSamplers.<double[]>newObjectSamplerBuilder()
+        .add(LineSampler.of(rng, a, b), ab)
+        .add(LineSampler.of(rng, b, c), bc)
+        .add(LineSampler.of(rng, c, a), ca)
+        .build(rng);
+
+double[] coordinate = sampler.sample();
 +--------------------------+
 
   []
