@@ -166,10 +166,10 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         private final NormalizedGaussianSampler sampler;
 
         /**
-         * @param dimension Space dimension.
          * @param rng Source of randomness.
+         * @param dimension Space dimension.
          */
-        UnitSphereSamplerND(int dimension, UniformRandomProvider rng) {
+        UnitSphereSamplerND(UniformRandomProvider rng, int dimension) {
             this.dimension = dimension;
             sampler = ZigguratSampler.NormalizedGaussian.of(rng);
         }
@@ -206,24 +206,24 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
 
         @Override
         public UnitSphereSampler withUniformRandomProvider(UniformRandomProvider rng) {
-            return new UnitSphereSamplerND(dimension, rng);
+            return new UnitSphereSamplerND(rng, dimension);
         }
     }
 
     /**
      * This instance delegates sampling. Use the factory method
-     * {@link #of(int, UniformRandomProvider)} to create an optimal sampler.
+     * {@link #of(UniformRandomProvider, int)} to create an optimal sampler.
      *
      * @param dimension Space dimension.
      * @param rng Generator for the individual components of the vectors.
      * A shallow copy will be stored in this instance.
      * @throws IllegalArgumentException If {@code dimension <= 0}
-     * @deprecated Use {@link #of(int, UniformRandomProvider)}.
+     * @deprecated Use {@link #of(UniformRandomProvider, int)}.
      */
     @Deprecated
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
-        delegate = of(dimension, rng);
+        delegate = of(rng, dimension);
     }
 
     /**
@@ -265,16 +265,16 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     /**
      * Create a unit sphere sampler for the given dimension.
      *
-     * @param dimension Space dimension.
      * @param rng Generator for the individual components of the vectors. A shallow
      * copy will be stored in the sampler.
+     * @param dimension Space dimension.
      * @return the sampler
      * @throws IllegalArgumentException If {@code dimension <= 0}
      *
      * @since 1.4
      */
-    public static UnitSphereSampler of(int dimension,
-                                       UniformRandomProvider rng) {
+    public static UnitSphereSampler of(UniformRandomProvider rng,
+                                       int dimension) {
         if (dimension <= 0) {
             throw new IllegalArgumentException("Dimension must be strictly positive");
         } else if (dimension == ONE_D) {
@@ -284,6 +284,6 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         } else if (dimension == THREE_D) {
             return new UnitSphereSampler3D(rng);
         }
-        return new UnitSphereSamplerND(dimension, rng);
+        return new UnitSphereSamplerND(rng, dimension);
     }
 }

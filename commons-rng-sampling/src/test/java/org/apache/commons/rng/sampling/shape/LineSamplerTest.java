@@ -217,7 +217,7 @@ public class LineSamplerTest {
             a = new double[] {rng.nextDouble()};
             b = new double[] {-rng.nextDouble()};
         } else {
-            final UnitSphereSampler sphere = UnitSphereSampler.of(dimension, rng);
+            final UnitSphereSampler sphere = UnitSphereSampler.of(rng, dimension);
             a = sphere.sample();
             b = sphere.sample();
         }

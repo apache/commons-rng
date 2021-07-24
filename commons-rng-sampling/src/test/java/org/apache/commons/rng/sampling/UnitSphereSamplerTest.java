@@ -45,7 +45,7 @@ public class UnitSphereSamplerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidDimensionThrowsWithFactoryConstructor() {
-        UnitSphereSampler.of(0, null);
+        UnitSphereSampler.of(null, 0);
     }
 
     /**
@@ -385,7 +385,7 @@ public class UnitSphereSamplerTest {
             }
         };
 
-        UnitSphereSampler.of(dimension, bad).sample();
+        UnitSphereSampler.of(bad, dimension).sample();
     }
 
     /**
@@ -430,7 +430,7 @@ public class UnitSphereSamplerTest {
             }
         };
 
-        final double[] vector = UnitSphereSampler.of(dimension, bad).sample();
+        final double[] vector = UnitSphereSampler.of(bad, dimension).sample();
         Assert.assertEquals(dimension, vector.length);
         Assert.assertEquals(1.0, length(vector), 1e-10);
     }
@@ -539,7 +539,7 @@ public class UnitSphereSamplerTest {
     private static UnitSphereSampler createUnitSphereSampler(int dimension, UniformRandomProvider rng,
             boolean factoryConstructor) {
         return factoryConstructor ?
-                UnitSphereSampler.of(dimension, rng) : new UnitSphereSampler(dimension, rng);
+                UnitSphereSampler.of(rng, dimension) : new UnitSphereSampler(dimension, rng);
     }
 
     /**

@@ -193,7 +193,7 @@ public class BoxSamplerTest {
     private static void testDistributionND(int dimension) {
         final UniformRandomProvider rng = RandomSource.JSF_64.create(0xdabfab);
 
-        final UnitSphereSampler sphere = UnitSphereSampler.of(dimension, rng);
+        final UnitSphereSampler sphere = UnitSphereSampler.of(rng, dimension);
         final double[] a = sphere.sample();
         final double[] b = sphere.sample();
 
