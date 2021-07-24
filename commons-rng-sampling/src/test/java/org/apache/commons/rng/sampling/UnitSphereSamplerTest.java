@@ -36,6 +36,7 @@ public class UnitSphereSamplerTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInvalidDimensionThrows() {
+        // Use instance constructor not factory constructor to exercise 1.X public API
         new UnitSphereSampler(0, null);
     }
 

@@ -218,7 +218,9 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
      * @param rng Generator for the individual components of the vectors.
      * A shallow copy will be stored in this instance.
      * @throws IllegalArgumentException If {@code dimension <= 0}
+     * @deprecated Use {@link #of(int, UniformRandomProvider)}.
      */
+    @Deprecated
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
         delegate = of(dimension, rng);
