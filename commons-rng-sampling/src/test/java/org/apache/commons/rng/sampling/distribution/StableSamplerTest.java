@@ -804,8 +804,8 @@ public class StableSamplerTest {
     @Test
     public void testD2() {
         for (final double x : new double[] {Double.MAX_VALUE, Math.log(Double.MAX_VALUE), 10, 5, 1, 0.5, 0.1, 0.05, 0.01}) {
-            Assert.assertEquals(Math.expm1(x) / x, SpecialMath.d2(x), 1e-16);
-            Assert.assertEquals(Math.expm1(-x) / -x, SpecialMath.d2(-x), 1e-16);
+            Assert.assertEquals(Math.expm1(x) / x, SpecialMath.d2(x), 1e-15);
+            Assert.assertEquals(Math.expm1(-x) / -x, SpecialMath.d2(-x), 1e-15);
         }
 
         // Negative infinity computes without correction
