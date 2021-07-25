@@ -640,8 +640,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
             // deviates u and w when the CMS formula fails.
 
             // Note the following term is subject to floating point error:
-            // final double xi = Math.atan(-zeta) / alpha;
-            // final double alphaPhiXi = alpha * (phi + xi);
+            // xi = atan(-zeta) / alpha
+            // alphaPhiXi = alpha * (phi + xi)
             // This is required: cos(phi - alphaPhiXi) > 0 => phi - alphaPhiXi in (-pi/2, pi/2).
             // Thus we compute atan(-zeta) and use it to compute two terms:
             // [1] alpha * (phi + xi) = alpha * (phi + atan(-zeta) / alpha) = alpha * phi + atan(-zeta)
