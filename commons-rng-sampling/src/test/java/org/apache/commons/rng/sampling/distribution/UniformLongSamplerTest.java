@@ -18,6 +18,7 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Assert;
@@ -87,13 +88,29 @@ public class UniformLongSamplerTest {
         final long upper = 234293789329234L;
         for (final long lower : new long[] {-13, 0, 13}) {
             final long n = upper - lower + 1;
-            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            // Use an RNG that forces the rejection path on the first sample
+            final UniformRandomProvider rng1 = createRngWithFullBitsOnFirstCall();
+            final UniformRandomProvider rng2 = createRngWithFullBitsOnFirstCall();
             final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
             for (int i = 0; i < 10; i++) {
                 Assert.assertEquals(lower + rng1.nextLong(n), sampler.sample());
             }
         }
+    }
+
+    /**
+     * Creates a RNG which will return full bits for the first sample.
+     *
+     * @return the uniform random provider
+     */
+    private static UniformRandomProvider createRngWithFullBitsOnFirstCall() {
+        return new SplitMix64(0L) {
+            private int i;
+            @Override
+            public long next() {
+                return i++ == 0 ? -1L : super.next();
+            }
+        };
     }
 
     /**
