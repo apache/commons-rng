@@ -92,7 +92,7 @@ String word = sampler.sample();
 import org.apache.commons.rng.sampling.UnitSphereSampler;
 
 int dimension = 3;
-UnitSphereSampler sampler = new UnitSphereSampler(dimension , RandomSource.KISS.create());
+UnitSphereSampler sampler = new UnitSphereSampler(dimension, RandomSource.KISS.create());
 
 double[] vector = sampler.sample();
 </source>
