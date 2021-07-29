@@ -25,6 +25,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  */
 public class Long2Int implements SeedConverter<Long, Integer> {
     /** {@inheritDoc} */
+    @SuppressWarnings("deprecation")
     @Override
     public Integer convert(Long seed) {
         return NumberFactory.makeInt(seed);
