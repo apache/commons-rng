@@ -603,6 +603,8 @@ double[] coordinate = sampler.sample();
   Performance was measured using the
   {{{http://openjdk.java.net/projects/code-tools/jmh/}Java Micro-benchmark Harness (JMH)}}.
 
+  Timings are representative of performance; the relative ranking of results may change depending on the JVM, operating system and hardware.
+
   In these tables:
 
   * The first column is the RNG identifier (see {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html}RandomSource}})
@@ -730,9 +732,9 @@ double[] coordinate = sampler.sample();
 
   Notes:
 
-  The <<<RandomSource.JDK>>> generator uses thread-safe (synchronized) <<<int>>> generation which has a performance overhead (see the <<<int>>> generation results). For the <<<boolean>>> generation the synchronization occurs 1 in 32 calls and the resulting performance is good. However the output will be low quality and this generator should not be used. See the {{{a5._Quality}Quality}} section for details.
+  The <<<RandomSource.JDK>>> generator uses thread-safe (synchronized) <<<int>>> generation which has a performance overhead (see the <<<int>>> generation results). Note that the output will be low quality and this generator should not be used. See the {{{a5._Quality}Quality}} section for details. Multi-threaded applications should use a generator for each thread.
 
-  The speed of <<<boolean>>> generation is related to the speed that the generator can be loaded to memory and used to generate a new value. This favours those with a small state such as the linear congruential based generators (<<<JDK>>>, <<<PCG>>>) and those that batch compute values into an array (<<<ISAAC>>>). A RNG to compute boolean samples should be chosen based on the {{{a5._Quality}quality}} of the output.
+  The speed of <<<boolean>>> generation is related to the base implementation that caches the 32-bit or 64-bit output from the generator. In these results the 32-bit generators have the better performance. These timings are relative and all implements are very fast. A RNG to compute boolean samples should be chosen based on the {{{a5._Quality}quality}} of the output.
 
 
 * 4.2 Generating Gaussian samples
