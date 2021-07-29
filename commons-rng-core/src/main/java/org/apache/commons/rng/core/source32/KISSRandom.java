@@ -115,8 +115,8 @@ public class KISSRandom extends IntProvider {
      * @param previous Previous value.
      * @return new value.
      */
-    private int computeNew(int mult,
-                           int previous) {
+    private static int computeNew(int mult,
+                                  int previous) {
         return mult * (previous & 65535) + (previous >>> 16);
     }
 }
