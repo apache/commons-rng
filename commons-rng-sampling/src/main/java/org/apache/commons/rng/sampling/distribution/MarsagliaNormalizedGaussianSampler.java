@@ -67,16 +67,16 @@ public class MarsagliaNormalizedGaussianSampler
 
                 // Pair is not within the unit circle: Generate another one.
             }
-        } else {
-            // Use the second element of the pair (generated at the
-            // previous invocation).
-            final double r = nextGaussian;
-
-            // Both elements of the pair have been used.
-            nextGaussian = Double.NaN;
-
-            return r;
         }
+
+        // Use the second element of the pair (generated at the
+        // previous invocation).
+        final double r = nextGaussian;
+
+        // Both elements of the pair have been used.
+        nextGaussian = Double.NaN;
+
+        return r;
     }
 
     /** {@inheritDoc} */
