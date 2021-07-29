@@ -22,6 +22,9 @@ import org.junit.Assert;
 
 import org.apache.commons.rng.UniformRandomProvider;
 
+/**
+ * Utility class for testing random generators.
+ */
 public final class RandomAssert {
     /**
      * Class contains only static methods.
