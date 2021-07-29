@@ -36,7 +36,7 @@ public class InverseTransformContinuousSamplerTest {
                 public double inverseCumulativeProbability(double p) {
                     return 456.99 * p;
                 }
-        };
+            };
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateContinuousSampler sampler1 =

@@ -36,7 +36,7 @@ public class InverseTransformDiscreteSamplerTest {
                 public int inverseCumulativeProbability(double p) {
                     return (int) Math.round(789 * p);
                 }
-        };
+            };
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler1 =
