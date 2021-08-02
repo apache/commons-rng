@@ -186,6 +186,14 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='CompositeSamplers']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/CognitiveComplexity">
+    <properties>
+      <!-- Increase from default of 200 -->
+      <property name="violationSuppressXPath"
+        value="//ClassOrInterfaceDeclaration[@SimpleName='ChengBetaSampler' or @SimpleName='LargeMeanPoissonSampler'
+          or @SimpleName='ZigguratSampler']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
@@ -209,13 +217,6 @@
     <properties>
       <!-- Allows synchronized method when it is an override of the parent class -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='JDKRandomBridge']"/>
-    </properties>
-  </rule>
-
-  <rule ref="category/java/performance.xml/AvoidUsingShortType">
-    <properties>
-      <!-- Short datatype is used to optimise 16-bit storage. -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
 
