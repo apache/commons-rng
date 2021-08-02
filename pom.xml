@@ -64,8 +64,6 @@
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
-    <!-- Version fix to support Java 11 site generation using parent-48 -->
-    <commons.spotbugs.version>3.1.11</commons.spotbugs.version>
     <!-- Fix to avoid JXR 3.0.0 forking the lifecycle phase 'compile' during site report
        jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
        depend on other packages. -->
