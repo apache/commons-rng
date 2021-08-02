@@ -88,17 +88,9 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerVersion>${maven.compiler.target}</compilerVersion>
-              <source>${maven.compiler.target}</source>
-              <target>${maven.compiler.target}</target>
-            </configuration>
-          </plugin>
-          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
+            <version>${rng.exec.version}</version>
             <executions>
               <execution>
                 <id>benchmark</id>
@@ -141,16 +133,8 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerVersion>${maven.compiler.target}</compilerVersion>
-              <source>${maven.compiler.target}</source>
-              <target>${maven.compiler.target}</target>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
+            <version>${rng.shade.version}</version>
             <executions>
               <execution>
                 <phase>package</phase>

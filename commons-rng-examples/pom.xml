@@ -47,6 +47,8 @@
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
 
     <rng.picocli.version>3.9.5</rng.picocli.version>
+    <rng.exec.version>3.0.0</rng.exec.version>
+    <rng.shade.version>3.2.4</rng.shade.version>
 
     <!-- Disable JApiCmp failures (but keep the report). The examples API is allowed to change. -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
@@ -85,13 +87,14 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
+          <version>${rng.exec.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
+        <version>${rng.pmd.version}</version>
         <configuration>
           <failOnViolation>false</failOnViolation>
         </configuration>
