@@ -184,7 +184,7 @@ public class NumberFactoryTest {
         for (int i = 0; i <= 20; i++) {
             try {
                 NumberFactory.makeIntArray(new byte[i]);
-                if (i != 0 && (i % INT_SIZE != 0)) {
+                if (i != 0 && i % INT_SIZE != 0) {
                     Assert.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {
@@ -212,7 +212,7 @@ public class NumberFactoryTest {
         for (int i = 0; i <= 20; i++) {
             try {
                 NumberFactory.makeLongArray(new byte[i]);
-                if (i != 0 && (i % LONG_SIZE != 0)) {
+                if (i != 0 && i % LONG_SIZE != 0) {
                     Assert.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {

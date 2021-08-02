@@ -516,7 +516,7 @@ public class ProvidersCommonParametricTest {
                 Arrays.fill(observed, 0);
                 for (int j = 0; j < sampleSize; j++) {
                     final long value = nextMethod.call().longValue();
-                    Assert.assertTrue("Range", (value >= 0) && (value < n));
+                    Assert.assertTrue("Range", value >= 0 && value < n);
 
                     for (int k = 0; k < numBins; k++) {
                         if (value < binUpperBounds[k]) {
