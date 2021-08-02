@@ -64,7 +64,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
     @Option(names = {"-s", "--samplers"},
             split = ",",
             description = {"The samplers (comma-delimited for multiple options).",
-                          "Valid values: ${COMPLETION-CANDIDATES}."})
+                           "Valid values: ${COMPLETION-CANDIDATES}."})
     private EnumSet<Sampler> samplers = EnumSet.noneOf(Sampler.class);
 
     /** Flag to output all samplers. */
