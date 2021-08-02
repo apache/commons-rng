@@ -611,7 +611,7 @@ Running "svn up" will download *all* the files of the live web site at
               <logViolationsToConsole>false</logViolationsToConsole>
               <failOnViolation>true</failOnViolation>
               <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
-              <excludes>**/generated/**.java</excludes>
+              <excludes>**/jmh_generated/**.java</excludes>
             </configuration>
             <executions>
               <execution>
@@ -647,7 +647,7 @@ Running "svn up" will download *all* the files of the live web site at
               <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
               <enableRulesSummary>false</enableRulesSummary>
               <includeResources>false</includeResources>
-              <excludes>**/generated/**.java</excludes>
+              <excludes>**/jmh_generated/**.java</excludes>
             </configuration>
             <reportSets>
               <reportSet>
