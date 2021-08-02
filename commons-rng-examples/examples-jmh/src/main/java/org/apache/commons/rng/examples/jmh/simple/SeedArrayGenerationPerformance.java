@@ -81,8 +81,7 @@ public class SeedArrayGenerationPerformance {
          * For seed generation only long period generators should be considered.
          */
         @Param({"WELL_44497_B",
-                "XOR_SHIFT_1024_S_PHI",
-                })
+                "XOR_SHIFT_1024_S_PHI"})
         private String randomSourceName;
 
         /** RNG. */

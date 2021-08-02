@@ -78,8 +78,7 @@ public class EnumeratedDistributionSamplersPerformance {
          */
         @Param({"WELL_44497_B",
                 "ISAAC",
-                "XO_RO_SHI_RO_128_PLUS",
-                })
+                "XO_RO_SHI_RO_128_PLUS"})
         private String randomSourceName;
 
         /** RNG. */
@@ -125,7 +124,7 @@ public class EnumeratedDistributionSamplersPerformance {
                 // A fair comparison is to use 2^alpha for the equivalent guide table method.
                 //"GuideTableDiscreteSamplerAlpha2",
                 //"GuideTableDiscreteSamplerAlpha4",
-                })
+        })
         private String samplerType;
 
         /** The factory. */
@@ -288,8 +287,7 @@ public class EnumeratedDistributionSamplersPerformance {
                 "Geometric_P0.2",
                 "4SidedLoadedDie",
                 "Poisson_Mean3.22",
-                "Poisson_Mean10_Mean20",
-                })
+                "Poisson_Mean10_Mean20"})
         private String distribution;
 
         /** {@inheritDoc} */
@@ -388,8 +386,7 @@ public class EnumeratedDistributionSamplersPerformance {
                 //"192",
                 //"384",
                 // Above 2048 forces the Alias method to use more than 64-bits for sampling
-                "3072"
-                })
+                "3072"})
         private int randomNonUniformSize;
 
         /** {@inheritDoc} */

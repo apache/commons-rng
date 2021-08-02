@@ -71,8 +71,7 @@ public class PoissonSamplersPerformance {
                 "4",
                 "8",
                 "16",
-                "32",
-                })
+                "32"})
         private double mean;
 
         /**
@@ -100,11 +99,9 @@ public class PoissonSamplersPerformance {
          * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
          *      Commons RNG user guide</a>
          */
-        @Param({
-                "WELL_44497_B",
+        @Param({"WELL_44497_B",
                 //"ISAAC",
-                "XO_RO_SHI_RO_128_PLUS",
-                })
+                "XO_RO_SHI_RO_128_PLUS"})
         private String randomSourceName;
 
         /**
@@ -117,8 +114,7 @@ public class PoissonSamplersPerformance {
                 "KempSmallMeanPoissonSamplerBinarySearch",
                 "KempSmallMeanPoissonSamplerGuideTable",
                 "LargeMeanPoissonSampler",
-                "TinyMeanPoissonSampler",
-                })
+                "TinyMeanPoissonSampler"})
         private String samplerType;
 
         /**
@@ -133,8 +129,7 @@ public class PoissonSamplersPerformance {
                 "8",
                 "16",
                 "32",
-                "64",
-                })
+                "64"})
         private double mean;
 
         /** RNG. */

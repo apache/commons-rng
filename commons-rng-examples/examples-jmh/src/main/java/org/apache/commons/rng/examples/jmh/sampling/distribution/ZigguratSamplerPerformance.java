@@ -246,7 +246,7 @@ public class ZigguratSamplerPerformance {
         @Param({"XO_RO_SHI_RO_128_PP",
                 //"MWC_256",
                 //"JDK"
-                })
+        })
         private String randomSourceName;
 
         /** The sampler type. */

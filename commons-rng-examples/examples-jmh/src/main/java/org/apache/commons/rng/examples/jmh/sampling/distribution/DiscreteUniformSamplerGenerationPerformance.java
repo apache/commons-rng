@@ -76,7 +76,7 @@ public class DiscreteUniformSamplerGenerationPerformance {
                 // Comment in for slower generators
                 //"MWC_256", "KISS", "WELL_1024_A",
                 //"WELL_44497_B"
-                })
+        })
         private String randomSourceName;
 
         /** RNG. */

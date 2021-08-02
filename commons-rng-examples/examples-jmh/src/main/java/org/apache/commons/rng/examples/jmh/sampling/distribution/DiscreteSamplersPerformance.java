@@ -96,8 +96,7 @@ public class DiscreteSamplersPerformance {
                 "MarsagliaTsangWangPoissonSampler",
                 "MarsagliaTsangWangBinomialSampler",
                 "GuideTableDiscreteSampler",
-                "AliasMethodDiscreteSampler",
-                })
+                "AliasMethodDiscreteSampler"})
         private String samplerType;
 
         /** The sampler. */
