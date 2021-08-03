@@ -51,8 +51,8 @@
     <commons.jira.id>RNG</commons.jira.id>
     <commons.jira.pid>12320623</commons.jira.pid>
     <commons.encoding>UTF-8</commons.encoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
     <rng.clirr.version>2.8</rng.clirr.version>
     <rng.pmd.version>3.14.0</rng.pmd.version>
     <rng.pmd.dep.version>6.37.0</rng.pmd.dep.version>
@@ -144,6 +144,27 @@
   <build>
     <defaultGoal>clean verify javadoc:javadoc</defaultGoal>
     <plugins>
+      <!-- Ensure maven is compatible with the plugins -->
+      <plugin>
+        <inherited>true</inherited>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <requireMavenVersion>
+              <version>3.3.9</version>
+            </requireMavenVersion>
+          </rules>
+          <fail>true</fail>
+        </configuration>
+        <executions>
+          <execution>
+            <id>enforce-maven-3</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>

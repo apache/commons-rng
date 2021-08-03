@@ -35,9 +35,6 @@
   and to help ensure correctness of the implementations.</description>
 
   <properties>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
