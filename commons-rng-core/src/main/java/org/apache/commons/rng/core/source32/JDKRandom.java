@@ -102,9 +102,8 @@ public class JDKRandom extends IntProvider {
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        try {
-            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            final ObjectOutputStream oos = new ObjectOutputStream(bos);
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(bos)) {
 
             // Serialize the "delegate".
             oos.writeObject(delegate);
@@ -133,9 +132,8 @@ public class JDKRandom extends IntProvider {
         final byte[][] c = splitStateInternal(s2[1], stateSize);
 
         // Use look-ahead deserialization to validate the state byte[] contains java.util.Random.
-        try {
-            final ByteArrayInputStream bis = new ByteArrayInputStream(c[0]);
-            final ObjectInputStream ois = new ValidatingObjectInputStream(bis);
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(c[0]);
+             ObjectInputStream ois = new ValidatingObjectInputStream(bis)) {
 
             delegate = (Random) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
