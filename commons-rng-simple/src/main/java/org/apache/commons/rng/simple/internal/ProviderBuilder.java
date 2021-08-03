@@ -646,11 +646,7 @@ public final class ProviderBuilder {
                                                               Object[] args) {
             try {
                 return (RestorableUniformRandomProvider) rng.newInstance(args);
-            } catch (InvocationTargetException e) {
-                throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
-            } catch (InstantiationException e) {
-                throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
-            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new IllegalStateException(INTERNAL_ERROR_MSG, e);
             }
         }
