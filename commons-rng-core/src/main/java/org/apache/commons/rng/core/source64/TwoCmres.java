@@ -226,7 +226,7 @@ public class TwoCmres extends LongProvider {
         /** Factory. */
         static class Factory {
             /** List of good "Cmres" subcycle generators. */
-            private static final List<Cmres> TABLE = new ArrayList<Cmres>();
+            private static final List<Cmres> TABLE = new ArrayList<>();
 
             //
             // Populates the table.
