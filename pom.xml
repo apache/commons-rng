@@ -572,10 +572,12 @@ Running "svn up" will download *all* the files of the live web site at
     <profile>
       <id>pre-jdk8</id>
       <activation>
-        <jdk>[1.6,1.8)</jdk>
+        <jdk>[1.7,1.8)</jdk>
       </activation>
       <build>
-        <!-- Alter default goal as it uses checks from Java 8 plugins. -->
+        <!-- Alter default goal to avoid javadoc generation.
+          The inclusion of MathJax may require the 'allow-script-in-comments' flag
+          depending on the JDK 7 release version. -->
         <defaultGoal>clean verify</defaultGoal>
       </build>
     </profile>
