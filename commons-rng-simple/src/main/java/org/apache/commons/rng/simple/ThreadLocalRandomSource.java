@@ -70,8 +70,7 @@ public final class ThreadLocalRandomSource {
      * <p>This should only be modified to create new instances in a synchronized block.
      */
     private static final EnumMap<RandomSource, ThreadLocal<UniformRandomProvider>> SOURCES =
-        new EnumMap<RandomSource,
-                    ThreadLocal<UniformRandomProvider>>(RandomSource.class);
+        new EnumMap<>(RandomSource.class);
 
     /** No public construction. */
     private ThreadLocalRandomSource() {}
