@@ -53,7 +53,7 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
         }
 
         this.rng = rng;
-        items = new ArrayList<T>(collection);
+        items = new ArrayList<>(collection);
     }
 
     /**

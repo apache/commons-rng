@@ -68,7 +68,7 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
 
         // Extract the items and probabilities
         final int size = collection.size();
-        items = new ArrayList<T>(size);
+        items = new ArrayList<>(size);
         final double[] probabilities = new double[size];
 
         int count = 0;
@@ -110,7 +110,7 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
                                                collection.size());
         }
         // Shallow copy the list
-        items = new ArrayList<T>(collection);
+        items = new ArrayList<>(collection);
         // Delegate sampling
         sampler = createSampler(rng, probabilities);
     }

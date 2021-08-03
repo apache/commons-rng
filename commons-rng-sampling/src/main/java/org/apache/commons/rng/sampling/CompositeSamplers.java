@@ -356,7 +356,7 @@ public final class CompositeSamplers {
                        SamplerFactory<S> compositeFactory) {
             this.specialisation = specialisation;
             this.compositeFactory = compositeFactory;
-            weightedSamplers = new ArrayList<WeightedSampler<S>>();
+            weightedSamplers = new ArrayList<>();
             factory = DiscreteProbabilitySampler.GUIDE_TABLE;
         }
 
@@ -410,7 +410,7 @@ public final class CompositeSamplers {
 
             // Extract the weights and samplers.
             final double[] weights = new double[n];
-            final ArrayList<S> samplers = new ArrayList<S>(n);
+            final ArrayList<S> samplers = new ArrayList<>(n);
             for (int i = 0; i < n; i++) {
                 final WeightedSampler<S> weightedItem = list.get(i);
                 weights[i] = weightedItem.getWeight();
@@ -1086,7 +1086,7 @@ public final class CompositeSamplers {
      */
     private static <T extends SharedStateSampler<T>> List<T> copy(List<T> samplers,
                                                                   UniformRandomProvider rng) {
-        final ArrayList<T> newSamplers = new ArrayList<T>(samplers.size());
+        final ArrayList<T> newSamplers = new ArrayList<>(samplers.size());
         for (final T s : samplers) {
             newSamplers.add(s.withUniformRandomProvider(rng));
         }

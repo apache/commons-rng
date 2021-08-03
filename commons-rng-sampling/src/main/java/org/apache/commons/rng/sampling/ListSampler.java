@@ -70,7 +70,7 @@ public final class ListSampler {
                                      int k) {
         final int n = collection.size();
         final PermutationSampler p = new PermutationSampler(rng, n, k);
-        final List<T> result = new ArrayList<T>(k);
+        final List<T> result = new ArrayList<>(k);
         final int[] index = p.sample();
 
         for (int i = 0; i < k; i++) {
