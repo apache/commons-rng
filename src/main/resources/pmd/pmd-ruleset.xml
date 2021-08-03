@@ -40,6 +40,7 @@
     <exclude name="AtLeastOneConstructor" />
     <exclude name="GenericsNaming" />
     <exclude name="OnlyOneReturn" />
+    <exclude name="UseUnderscoresInNumericLiterals" />
   </rule>
   <rule ref="category/java/design.xml">
     <exclude name="TooManyMethods" />
