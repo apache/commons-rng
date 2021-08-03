@@ -560,8 +560,7 @@ Running "svn up" will download *all* the files of the live web site at
           <plugin>
             <groupId>org.eluder.coveralls</groupId>
             <artifactId>coveralls-maven-plugin</artifactId>
-            <!-- Version for JDK 6 target. -->
-            <version>3.1.0</version>
+            <version>4.3.0</version>
             <configuration>
               <timestampFormat>${commons.coveralls.timestampFormat}</timestampFormat>
             </configuration>
