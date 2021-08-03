@@ -138,10 +138,7 @@ public class JDKRandom extends IntProvider {
             final ObjectInputStream ois = new ValidatingObjectInputStream(bis);
 
             delegate = (Random) ois.readObject();
-        } catch (ClassNotFoundException e) {
-            // Workaround checked exception.
-            throw new IllegalStateException(e);
-        } catch (IOException e) {
+        } catch (ClassNotFoundException | IOException e) {
             // Workaround checked exception.
             throw new IllegalStateException(e);
         }
