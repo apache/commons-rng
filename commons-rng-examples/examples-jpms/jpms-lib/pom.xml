@@ -26,7 +26,7 @@
 
   <artifactId>commons-rng-examples-jpms-lib</artifactId>
   <version>1.4-SNAPSHOT</version>
-  <name>JPMS module example (library)</name>
+  <name>Apache Commons RNG JPMS Module Example (Library)</name>
 
   <description>Testing JPMS. Code in this module is not part of the public API.</description>
 

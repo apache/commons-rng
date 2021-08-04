@@ -26,7 +26,7 @@
 
   <artifactId>commons-rng-examples-quadrature</artifactId>
   <version>1.4-SNAPSHOT</version>
-  <name>Quadrature example</name>
+  <name>Apache Commons RNG Quadrature Example</name>
 
   <description>Contains examples for computing numerical quadrature (integration).
   Code in this module is not part of the public API.</description>

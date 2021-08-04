@@ -26,7 +26,7 @@
 
   <artifactId>commons-rng-examples-jmh</artifactId>
   <version>1.4-SNAPSHOT</version>
-  <name>JMH Benchmark</name>
+  <name>Apache Commons RNG JMH Benchmark</name>
 
   <description>Code for running JMH benchmarks that assess the performance of the generators.
   Code in this module is not part of the public API.</description>
