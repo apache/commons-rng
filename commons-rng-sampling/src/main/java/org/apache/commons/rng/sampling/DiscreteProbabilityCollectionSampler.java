@@ -142,7 +142,7 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
      */
     @Override
     public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
-        return new DiscreteProbabilityCollectionSampler<T>(rng, this);
+        return new DiscreteProbabilityCollectionSampler<>(rng, this);
     }
 
     /**

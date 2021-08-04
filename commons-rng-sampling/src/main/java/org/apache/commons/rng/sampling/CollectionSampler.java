@@ -85,6 +85,6 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      */
     @Override
     public CollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
-        return new CollectionSampler<T>(rng, this);
+        return new CollectionSampler<>(rng, this);
     }
 }

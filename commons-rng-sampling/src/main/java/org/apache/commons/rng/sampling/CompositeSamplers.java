@@ -369,7 +369,7 @@ public final class CompositeSamplers {
         public Builder<S> add(S sampler, double weight) {
             // Ignore zero weights. The sampler and weight are validated by the WeightedSampler.
             if (weight != 0) {
-                weightedSamplers.add(new WeightedSampler<S>(weight, sampler));
+                weightedSamplers.add(new WeightedSampler<>(weight, sampler));
             }
             return this;
         }
@@ -612,7 +612,7 @@ public final class CompositeSamplers {
         @Override
         public ObjectSampler<T> createSampler(DiscreteSampler discreteSampler,
                                               List<ObjectSampler<T>> samplers) {
-            return new CompositeObjectSampler<T>(discreteSampler, samplers);
+            return new CompositeObjectSampler<>(discreteSampler, samplers);
         }
 
         /**
@@ -665,7 +665,7 @@ public final class CompositeSamplers {
         public SharedStateObjectSampler<T> createSampler(DiscreteSampler discreteSampler,
                                                          List<SharedStateObjectSampler<T>> samplers) {
             // The input discrete sampler is assumed to be a SharedStateDiscreteSampler
-            return new CompositeSharedStateObjectSampler<T>(
+            return new CompositeSharedStateObjectSampler<>(
                 (SharedStateDiscreteSampler) discreteSampler, samplers);
         }
 
@@ -697,7 +697,7 @@ public final class CompositeSamplers {
             @Override
             public CompositeSharedStateObjectSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
                 // Duplicate each sampler with the same source of randomness
-                return new CompositeSharedStateObjectSampler<T>(
+                return new CompositeSharedStateObjectSampler<>(
                     ((SharedStateDiscreteSampler) this.discreteSampler).withUniformRandomProvider(rng),
                     copy(samplers, rng));
             }
@@ -969,7 +969,7 @@ public final class CompositeSamplers {
      */
     public static <T> Builder<ObjectSampler<T>> newObjectSamplerBuilder() {
         final SamplerBuilder.SamplerFactory<ObjectSampler<T>> factory = ObjectSamplerFactory.instance();
-        return new SamplerBuilder<ObjectSampler<T>>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.NONE, factory);
     }
 
@@ -990,7 +990,7 @@ public final class CompositeSamplers {
     public static <T> Builder<SharedStateObjectSampler<T>> newSharedStateObjectSamplerBuilder() {
         final SamplerBuilder.SamplerFactory<SharedStateObjectSampler<T>> factory =
             SharedStateObjectSamplerFactory.instance();
-        return new SamplerBuilder<SharedStateObjectSampler<T>>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.SHARED_STATE_SAMPLER, factory);
     }
 
@@ -1000,7 +1000,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<DiscreteSampler> newDiscreteSamplerBuilder() {
-        return new SamplerBuilder<DiscreteSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.NONE, DiscreteSamplerFactory.INSTANCE);
     }
 
@@ -1010,7 +1010,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<SharedStateDiscreteSampler> newSharedStateDiscreteSamplerBuilder() {
-        return new SamplerBuilder<SharedStateDiscreteSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.SHARED_STATE_SAMPLER, SharedStateDiscreteSamplerFactory.INSTANCE);
     }
 
@@ -1020,7 +1020,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<ContinuousSampler> newContinuousSamplerBuilder() {
-        return new SamplerBuilder<ContinuousSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.NONE, ContinuousSamplerFactory.INSTANCE);
     }
 
@@ -1030,7 +1030,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<SharedStateContinuousSampler> newSharedStateContinuousSamplerBuilder() {
-        return new SamplerBuilder<SharedStateContinuousSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.SHARED_STATE_SAMPLER, SharedStateContinuousSamplerFactory.INSTANCE);
     }
 
@@ -1040,7 +1040,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<LongSampler> newLongSamplerBuilder() {
-        return new SamplerBuilder<LongSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.NONE, LongSamplerFactory.INSTANCE);
     }
 
@@ -1050,7 +1050,7 @@ public final class CompositeSamplers {
      * @return the builder
      */
     public static Builder<SharedStateLongSampler> newSharedStateLongSamplerBuilder() {
-        return new SamplerBuilder<SharedStateLongSampler>(
+        return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.SHARED_STATE_SAMPLER, SharedStateLongSamplerFactory.INSTANCE);
     }
 
