@@ -29,7 +29,7 @@ import java.util.concurrent.Callable;
  * <p>This command is will print the top-level help message.</p>
  */
 @Command(name = "examples-sampling",
-         description = "Apache Commons RNG Examples Stress Utilities.")
+         description = "Apache Commons RNG Examples Sampling Utilities.")
 class ExamplesSamplingCommand implements Callable<Void> {
     /** The command specification. Used to print the usage built by Picocli. */
     @Spec
