@@ -48,19 +48,14 @@ public abstract class MonteCarloIntegration {
      * @return the integral.
      */
     public double integrate(long n) {
-        double result = 0;
         long inside = 0;
-        long total = 0;
-        while (total < n) {
+        for (long i = 0; i < n; i++) {
             if (isInside(generateU01())) {
                 ++inside;
             }
-
-            ++total;
-            result = inside / (double) total;
         }
 
-        return result;
+        return inside / (double) n;
     }
 
     /**
