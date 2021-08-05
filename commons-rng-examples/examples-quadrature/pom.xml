@@ -39,6 +39,9 @@
     <commons.automatic.module.name>org.apache.commons.rng.examples.quadrature</commons.automatic.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/../..</rng.parent.dir>
+
+    <uberjar.name>examples-quadrature</uberjar.name>
+    <project.mainClass>org.apache.commons.rng.examples.quadrature.ComputePi</project.mainClass>
   </properties>
 
   <dependencies>
@@ -52,5 +55,48 @@
       <artifactId>commons-rng-sampling</artifactId>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>examples-quadrature</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>${rng.shade.version}</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>shade</goal>
+                </goals>
+                <configuration>
+                  <finalName>${uberjar.name}</finalName>
+                  <minimizeJar>true</minimizeJar>
+                  <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <mainClass>${project.mainClass}</mainClass>
+                    </transformer>
+                  </transformers>
+                  <filters>
+                    <filter>
+                      <!-- Shading signed JARs will fail without this. http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar -->
+                      <artifact>*:*</artifact>
+                      <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                      </excludes>
+                    </filter>
+                  </filters>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
