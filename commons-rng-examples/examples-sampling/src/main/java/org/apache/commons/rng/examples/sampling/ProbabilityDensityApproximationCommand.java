@@ -306,18 +306,18 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             final double levyLocation = 1.23;
             final double levyscale = 0.75;
             final double levyMin = levyLocation;
-            // Quantile 0.99
-            final double levyMax = 4.7756e+03;
+            // Quantile 0 to 0.7 (avoid long tail to infinity)
+            final double levyMax = 6.2815;
             createDensity(LevySampler.of(rng, levyLocation, levyscale),
                           levyMin, levyMax, "levy");
         }
 
         if (samplers.contains(Sampler.StableSampler)) {
             final double stableAlpha = 1.23;
-            final double stableBeta = 0.25;
-            // Quantiles 0.0005 to 0.9995
-            final double stableMin = -131.9640;
-            final double stableMax = 200.9239;
+            final double stableBeta = 0.75;
+            // Quantiles 0.05 to 0.9 (avoid long tail to infinity)
+            final double stableMin = -1.7862;
+            final double stableMax = 4.0364;
             createDensity(StableSampler.of(rng, stableAlpha, stableBeta),
                           stableMin, stableMax, "stable");
         }
