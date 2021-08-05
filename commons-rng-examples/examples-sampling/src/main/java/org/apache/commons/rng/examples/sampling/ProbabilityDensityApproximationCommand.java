@@ -70,6 +70,11 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
                            "Valid values: ${COMPLETION-CANDIDATES}."})
     private EnumSet<Sampler> samplers = EnumSet.noneOf(Sampler.class);
 
+    /** The samplers. */
+    @Option(names = {"-r", "--rng"},
+            description = {"The source of randomness (default: ${DEFAULT-VALUE})."})
+    private RandomSource randomSource = RandomSource.XOR_SHIFT_1024_S_PHI;
+
     /** Flag to output all samplers. */
     @Option(names = {"-a", "--all"},
             description = "Output all samplers")
@@ -192,7 +197,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             System.exit(1);
         }
 
-        final UniformRandomProvider rng = RandomSource.XOR_SHIFT_1024_S_PHI.create();
+        final UniformRandomProvider rng = randomSource.create();
 
         final double gaussMean = 1;
         final double gaussSigma = 2;
