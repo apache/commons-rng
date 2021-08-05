@@ -61,7 +61,7 @@ public class ComputePi extends MonteCarloIntegration {
      */
     public static void main(String[] args) {
         if (args.length != EXPECTED_ARGUMENTS) {
-            throw new IllegalStateException("Missing arguments");
+            throw new IllegalStateException("Require arguments: [points] [RNG name]");
         }
 
         final long numPoints = Long.parseLong(args[0]);
@@ -71,8 +71,8 @@ public class ComputePi extends MonteCarloIntegration {
         final double piMC = piApp.compute(numPoints);
 
         //CHECKSTYLE: stop all
-        System.out.println("After generating " + (DIMENSION * numPoints) +
-                           " random numbers, the error on 𝛑 is " + Math.abs(piMC - Math.PI));
+        System.out.printf("After generating %d random numbers, the error on |𝛑 - %s| is %s%n",
+                          DIMENSION * numPoints, piMC, Math.abs(piMC - Math.PI));
         //CHECKSTYLE: resume all
     }
 
