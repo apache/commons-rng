@@ -18,7 +18,6 @@
 package org.apache.commons.rng.examples.quadrature;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * <a href="https://en.wikipedia.org/wiki/Monte_Carlo_integration">Monte-Carlo method</a>
@@ -33,12 +32,12 @@ public abstract class MonteCarloIntegration {
     /**
      * Simulation constructor.
      *
-     * @param source RNG algorithm.
+     * @param rng RNG.
      * @param dimension Integration domain dimension.
      */
-    public MonteCarloIntegration(RandomSource source,
+    public MonteCarloIntegration(UniformRandomProvider rng,
                                  int dimension) {
-        this.rng = source.create();
+        this.rng = rng;
         this.dimension = dimension;
     }
 

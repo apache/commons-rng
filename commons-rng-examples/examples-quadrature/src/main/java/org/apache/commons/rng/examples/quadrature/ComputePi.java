@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.examples.quadrature;
 
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
@@ -39,10 +40,10 @@ public class ComputePi extends MonteCarloIntegration {
     private static final int DIMENSION = 2;
 
     /**
-     * @param source RNG algorithm.
+     * @param rng RNG.
      */
-    public ComputePi(RandomSource source) {
-        super(source, DIMENSION);
+    public ComputePi(UniformRandomProvider rng) {
+        super(rng, DIMENSION);
     }
 
     /**
@@ -67,7 +68,7 @@ public class ComputePi extends MonteCarloIntegration {
         final long numPoints = Long.parseLong(args[0]);
         final RandomSource randomSource = RandomSource.valueOf(args[1]);
 
-        final ComputePi piApp = new ComputePi(randomSource);
+        final ComputePi piApp = new ComputePi(randomSource.create());
         final double piMC = piApp.compute(numPoints);
 
         //CHECKSTYLE: stop all
