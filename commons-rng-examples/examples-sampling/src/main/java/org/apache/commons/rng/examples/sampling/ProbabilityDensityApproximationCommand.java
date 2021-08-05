@@ -79,37 +79,37 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
      * The sampler. This enum uses lower case for clarity when matching the distribution name.
      */
     enum Sampler {
-        /** The Ziggurat gaussian sampler. */
+        /** The ziggurat gaussian sampler. */
         ZigguratGaussianSampler,
         /** The Marsaglia gaussian sampler. */
         MarsagliaGaussianSampler,
-        /** The Box muller gaussian sampler. */
+        /** The Box Muller gaussian sampler. */
         BoxMullerGaussianSampler,
-        /** The modified Ziggurat gaussian sampler. */
+        /** The modified ziggurat gaussian sampler. */
         ModifiedZigguratGaussianSampler,
         /** The Cheng beta sampler case 1. */
         ChengBetaSamplerCase1,
         /** The Cheng beta sampler case 2. */
         ChengBetaSamplerCase2,
-        /** The Ahrens dieter exponential sampler. */
+        /** The Ahrens Dieter exponential sampler. */
         AhrensDieterExponentialSampler,
-        /** The modified Ziggurat exponential sampler. */
+        /** The modified ziggurat exponential sampler. */
         ModifiedZigguratExponentialSampler,
-        /** The Ahrens dieter marsaglia tsang gamma sampler small gamma. */
+        /** The Ahrens Dieter Marsaglia Tsang gamma sampler small gamma. */
         AhrensDieterMarsagliaTsangGammaSamplerCase1,
-        /** The Ahrens dieter marsaglia tsang gamma sampler large gamma. */
+        /** The Ahrens Dieter Marsaglia Tsang gamma sampler large gamma. */
         AhrensDieterMarsagliaTsangGammaSamplerCase2,
-        /** The Inverse transform pareto sampler. */
+        /** The inverse transform pareto sampler. */
         InverseTransformParetoSampler,
-        /** The Continuous uniform sampler. */
+        /** The continuous uniform sampler. */
         ContinuousUniformSampler,
-        /** The Log normal ziggurat gaussian sampler. */
+        /** The log normal ziggurat gaussian sampler. */
         LogNormalZigguratGaussianSampler,
-        /** The Log normal marsaglia gaussian sampler. */
+        /** The log normal Marsaglia gaussian sampler. */
         LogNormalMarsagliaGaussianSampler,
-        /** The Log normal box muller gaussian sampler. */
+        /** The log normal Box Muller gaussian sampler. */
         LogNormalBoxMullerGaussianSampler,
-        /** The Log normal modified ziggurat gaussian sampler. */
+        /** The log normal modified ziggurat gaussian sampler. */
         LogNormalModifiedZigguratGaussianSampler,
         /** The Levy sampler. */
         LevySampler,
