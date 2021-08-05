@@ -125,7 +125,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
      * @param max abscissa of the last bin: every sample larger than or
      * equal to that value will increment an additional bin (of infinite
      * width) placed after the last "equal-width" bin.
-     * @param outputFile Filename.
+     * @param outputFile Filename (final name is "pdf.[filename].txt").
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private void createDensity(ContinuousSampler sampler,
@@ -158,7 +158,7 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double binHalfSize = 0.5 * binSize;
         final double norm = 1 / (binSize * numSamples);
 
-        try (PrintWriter out = new PrintWriter(outputFile, "UTF-8")) {
+        try (PrintWriter out = new PrintWriter("pdf." + outputFile + ".txt", "UTF-8")) {
             // CHECKSTYLE: stop MultipleStringLiteralsCheck
             out.println("# Sampler: " + sampler);
             out.println("# Number of bins: " + numBins);
@@ -201,22 +201,22 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         if (samplers.contains(Sampler.ZigguratGaussianSampler)) {
             createDensity(GaussianSampler.of(ZigguratNormalizedGaussianSampler.of(rng),
                                              gaussMean, gaussSigma),
-                          gaussMin, gaussMax, "gauss.ziggurat.txt");
+                          gaussMin, gaussMax, "gauss.ziggurat");
         }
         if (samplers.contains(Sampler.MarsagliaGaussianSampler)) {
             createDensity(GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(rng),
                                              gaussMean, gaussSigma),
-                          gaussMin, gaussMax, "gauss.marsaglia.txt");
+                          gaussMin, gaussMax, "gauss.marsaglia");
         }
         if (samplers.contains(Sampler.BoxMullerGaussianSampler)) {
             createDensity(GaussianSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
                                              gaussMean, gaussSigma),
-                          gaussMin, gaussMax, "gauss.boxmuller.txt");
+                          gaussMin, gaussMax, "gauss.boxmuller");
         }
         if (samplers.contains(Sampler.ModifiedZigguratGaussianSampler)) {
             createDensity(GaussianSampler.of(ZigguratSampler.NormalizedGaussian.of(rng),
                                              gaussMean, gaussSigma),
-                          gaussMin, gaussMax, "gauss.modified.ziggurat.txt");
+                          gaussMin, gaussMax, "gauss.modified.ziggurat");
         }
 
         final double betaMin = 0;
@@ -225,13 +225,13 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             final double alphaBeta = 4.3;
             final double betaBeta = 2.1;
             createDensity(ChengBetaSampler.of(rng, alphaBeta, betaBeta),
-                          betaMin, betaMax, "beta.case1.txt");
+                          betaMin, betaMax, "beta.case1");
         }
         if (samplers.contains(Sampler.ChengBetaSamplerCase2)) {
             final double alphaBetaAlt = 0.5678;
             final double betaBetaAlt = 0.1234;
             createDensity(ChengBetaSampler.of(rng, alphaBetaAlt, betaBetaAlt),
-                          betaMin, betaMax, "beta.case2.txt");
+                          betaMin, betaMax, "beta.case2");
         }
 
         final double meanExp = 3.45;
@@ -239,11 +239,11 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double expMax = 60;
         if (samplers.contains(Sampler.AhrensDieterExponentialSampler)) {
             createDensity(AhrensDieterExponentialSampler.of(rng, meanExp),
-                          expMin, expMax, "exp.txt");
+                          expMin, expMax, "exp");
         }
         if (samplers.contains(Sampler.ModifiedZigguratExponentialSampler)) {
             createDensity(ZigguratSampler.Exponential.of(rng, meanExp),
-                          expMin, expMax, "exp.modified.ziggurat.txt");
+                          expMin, expMax, "exp.modified.ziggurat");
         }
 
         final double gammaMin = 0;
@@ -252,13 +252,13 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase1)) {
             final double alphaGammaSmallerThanOne = 0.1234;
             createDensity(AhrensDieterMarsagliaTsangGammaSampler.of(rng, alphaGammaSmallerThanOne, thetaGamma),
-                          gammaMin, gammaMax1, "gamma.case1.txt");
+                          gammaMin, gammaMax1, "gamma.case1");
         }
         if (samplers.contains(Sampler.AhrensDieterMarsagliaTsangGammaSamplerCase2)) {
             final double alphaGammaLargerThanOne = 2.345;
             final double gammaMax2 = 70;
             createDensity(AhrensDieterMarsagliaTsangGammaSampler.of(rng, alphaGammaLargerThanOne, thetaGamma),
-                          gammaMin, gammaMax2, "gamma.case2.txt");
+                          gammaMin, gammaMax2, "gamma.case2");
         }
 
         final double scalePareto = 23.45;
@@ -267,14 +267,14 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         final double paretoMax = 400;
         if (samplers.contains(Sampler.InverseTransformParetoSampler)) {
             createDensity(InverseTransformParetoSampler.of(rng, scalePareto, shapePareto),
-                          paretoMin, paretoMax, "pareto.txt");
+                          paretoMin, paretoMax, "pareto");
         }
 
         final double loUniform = -9.876;
         final double hiUniform = 5.432;
         if (samplers.contains(Sampler.ContinuousUniformSampler)) {
             createDensity(ContinuousUniformSampler.of(rng, loUniform, hiUniform),
-                          loUniform, hiUniform, "uniform.txt");
+                          loUniform, hiUniform, "uniform");
         }
 
         final double scaleLogNormal = 2.345;
@@ -284,22 +284,22 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         if (samplers.contains(Sampler.LogNormalZigguratGaussianSampler)) {
             createDensity(LogNormalSampler.of(ZigguratNormalizedGaussianSampler.of(rng),
                                               scaleLogNormal, shapeLogNormal),
-                          logNormalMin, logNormalMax, "lognormal.ziggurat.txt");
+                          logNormalMin, logNormalMax, "lognormal.ziggurat");
         }
         if (samplers.contains(Sampler.LogNormalMarsagliaGaussianSampler)) {
             createDensity(LogNormalSampler.of(MarsagliaNormalizedGaussianSampler.of(rng),
                                               scaleLogNormal, shapeLogNormal),
-                          logNormalMin, logNormalMax, "lognormal.marsaglia.txt");
+                          logNormalMin, logNormalMax, "lognormal.marsaglia");
         }
         if (samplers.contains(Sampler.LogNormalBoxMullerGaussianSampler)) {
             createDensity(LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
                                               scaleLogNormal, shapeLogNormal),
-                          logNormalMin, logNormalMax, "lognormal.boxmuller.txt");
+                          logNormalMin, logNormalMax, "lognormal.boxmuller");
         }
         if (samplers.contains(Sampler.LogNormalModifiedZigguratGaussianSampler)) {
             createDensity(LogNormalSampler.of(ZigguratSampler.NormalizedGaussian.of(rng),
                                               scaleLogNormal, shapeLogNormal),
-                          logNormalMin, logNormalMax, "lognormal.modified.ziggurat.txt");
+                          logNormalMin, logNormalMax, "lognormal.modified.ziggurat");
         }
 
         if (samplers.contains(Sampler.LevySampler)) {
@@ -309,17 +309,17 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             // Quantile 0.99
             final double levyMax = 4.7756e+03;
             createDensity(LevySampler.of(rng, levyLocation, levyscale),
-                          levyMin, levyMax, "levy.txt");
+                          levyMin, levyMax, "levy");
         }
 
         if (samplers.contains(Sampler.StableSampler)) {
             final double stableAlpha = 1.23;
             final double stableBeta = 0.25;
-            // Quantiles 0.0005 to 0.9995   
+            // Quantiles 0.0005 to 0.9995
             final double stableMin = -131.9640;
             final double stableMax = 200.9239;
             createDensity(StableSampler.of(rng, stableAlpha, stableBeta),
-                          stableMin, stableMax, "stable.txt");
+                          stableMin, stableMax, "stable");
         }
 
         return null;

@@ -36,7 +36,7 @@ the commands:
 The `density` command computes a histogram of the distribution and uses this to create an
 approximation of the probability denssity function for the distribution. The data is recorded to
 a file named using the sampler. For example to output a histogram of a
-`ZigguratGaussianSampler` to the file `gauss.ziggurat.txt` use:
+`ZigguratGaussianSampler` to the file `pdf.gauss.ziggurat.txt` use:
 
         java -jar target/examples-sampling.jar density -s ZigguratGaussianSampler
 
