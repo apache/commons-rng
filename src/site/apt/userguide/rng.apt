@@ -584,7 +584,6 @@ double[] coordinate = sampler.sample();
 
   []
 
-
 4. Performance
 
   This section reports
@@ -973,7 +972,37 @@ double[] coordinate = sampler.sample();
 | <<PCG_RXS_M_XS_64_OS>> | {{{../txt/userguide/stress/dh_47_1}0}}, {{{../txt/userguide/stress/dh_47_2}0}}, {{{../txt/userguide/stress/dh_47_3}0}}, {{{../txt/userguide/stress/dh_47_4}0}}, {{{../txt/userguide/stress/dh_47_5}0}} | {{{../txt/userguide/stress/tu_47_1}0}}, {{{../txt/userguide/stress/tu_47_2}0}}, {{{../txt/userguide/stress/tu_47_3}0}}, {{{../txt/userguide/stress/tu_47_4}1}}, {{{../txt/userguide/stress/tu_47_5}2}} | {{{../txt/userguide/stress/pr_47_1}-}}, {{{../txt/userguide/stress/pr_47_2}-}}, {{{../txt/userguide/stress/pr_47_3}-}} |
 *-----------------+------------+---------------------+-------------+
 
+6. Examples
 
-6. Dependencies
+  The source distribution for Apache Commons RNG contains example applications to demonstrate
+  functionality of the library. These are contained in the following modules:
+
+*----------*---------------+
+|| Example Module || Description ||
+*----------*---------------+
+| Stress | Application for calling external tools that perform stringent uniformity tests (requires Java 8+). This application is used to generate results in the {{{a5._Quality}Quality}} section. |
+*----------*---------------+
+| Sampling | Application producing output from distribution samplers to create an approximate probability density function (PDF). |
+*----------*---------------+
+| Quadrature | Application for computing numerical quadrature by Monte-Carlo (random) integration. |
+*----------*---------------+
+| JMH | Benchmarks that assess the performance of the generators using the Java Microbenchmark Harness (requires Java 8+). This application is used to generate results in the {{{a4._Performance}Performance}} section. |
+*----------*---------------+
+| JPMS | Example JPMS application using all the JPMS modules of Commons RNG (requires Java 11+). |
+*----------*---------------+
+
+  The examples can be built using profiles in the relevant module. For example to build the
+  JMH benchmarks application and show the help information:
+
+----------------------------
+cd commons-rng-examples/examples-jmh
+mvn package -P examples-jmh
+java -jar target/examples-jmh.jar -h
+----------------------------
+
+  Details of each example module is contained in a <<<HOWTO.md>>> document in the module
+  directory.
+
+7. Dependencies
 
   Apache Commons RNG requires JDK 1.7+ and has no runtime dependencies.
