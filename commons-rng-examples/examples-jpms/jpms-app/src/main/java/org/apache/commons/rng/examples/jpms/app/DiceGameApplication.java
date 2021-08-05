@@ -38,10 +38,14 @@ public final class DiceGameApplication {
      * @param numPlayers Number of players.
      * @param numRounds Number of rounds per game.
      * @param identifier RNG algorithm identifier.
+     * @param mu Mean rolls per round.
+     * @param sigma Standard deviation of rolls per round.
      */
     private DiceGameApplication(int numPlayers,
                                 int numRounds,
-                                RandomSource identifier) {
+                                RandomSource identifier,
+                                double mu,
+                                double sigma) {
         game = new DiceGame(numPlayers, numRounds,
                             identifier.create(),
                             4.3, 2.1);
@@ -66,7 +70,9 @@ public final class DiceGameApplication {
         final int numGames = Integer.parseInt(args[0]);
         final DiceGameApplication app = new DiceGameApplication(Integer.parseInt(args[1]),
                                                                 Integer.parseInt(args[2]),
-                                                                RandomSource.valueOf(args[3]));
+                                                                RandomSource.valueOf(args[3]),
+                                                                Double.parseDouble(args[4]),
+                                                                Double.parseDouble(args[5]));
 
         app.displayModuleInfo();
 

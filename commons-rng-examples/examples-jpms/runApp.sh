@@ -35,7 +35,13 @@ $TOPDIR/commons-rng-client-api/$TARGETDIR/commons-rng-client-api-$RNGVERSION.jar
 MOD=org.apache.commons.rng.examples.jpms.app/org.apache.commons.rng.examples.jpms.app.DiceGameApplication
 
 # Arguments of the application (see source).
-ARGS="3 4 19 MT"
+GAMES=3
+PLAYERS=4
+ROUNDS=19
+RANDOM_SOURCE=JSF_64
+MU=4.3
+SIGMA=2.1
+ARGS="$GAMES $PLAYERS $ROUNDS $RANDOM_SOURCE $MU $SIGMA"
 
 # Assuming Java 9 (or later).
 java --module-path $MODPATH --module $MOD $ARGS
