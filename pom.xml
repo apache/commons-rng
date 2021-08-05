@@ -274,6 +274,7 @@
             <exclude>src/site/resources/txt/userguide/stress/**</exclude>
             <exclude>dist-archive/**</exclude>
             <exclude>**/*.patch</exclude>
+            <exclude>**/pdf.*.txt</exclude>
           </excludes>
         </configuration>
       </plugin>
