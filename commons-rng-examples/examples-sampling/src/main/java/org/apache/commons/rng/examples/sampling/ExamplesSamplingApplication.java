@@ -17,7 +17,6 @@
 package org.apache.commons.rng.examples.sampling;
 
 import picocli.CommandLine;
-import picocli.CommandLine.RunLast;
 
 /**
  * Executes testing utilities for the samplers in the Commons RNG library.
@@ -25,7 +24,8 @@ import picocli.CommandLine.RunLast;
  * <p>Functionality includes:</p>
  *
  * <ul>
- *   <li>Outputting data from a random generator
+ *   <li>Creating a PDF approximation using sample data from a distribution
+ *   <li>Sampling from a small range from a distribution to visually inspect sampling density
  * </ul>
  */
 public final class ExamplesSamplingApplication {
@@ -46,6 +46,6 @@ public final class ExamplesSamplingApplication {
                 .setCaseInsensitiveEnumValuesAllowed(true);
 
         // Parse the command line and invokes the Callable program
-        cmd.parseWithHandler(new RunLast(), args);
+        cmd.execute(args);
     }
 }
