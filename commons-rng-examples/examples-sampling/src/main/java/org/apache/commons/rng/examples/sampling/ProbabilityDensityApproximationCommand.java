@@ -29,12 +29,15 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.StableSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ChengBetaSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterMarsagliaTsangGammaSampler;
 import org.apache.commons.rng.sampling.distribution.InverseTransformParetoSampler;
+import org.apache.commons.rng.sampling.distribution.LevySampler;
 import org.apache.commons.rng.sampling.distribution.LogNormalSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousUniformSampler;
 import org.apache.commons.rng.sampling.distribution.GaussianSampler;
@@ -82,12 +85,16 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         MarsagliaGaussianSampler,
         /** The Box muller gaussian sampler. */
         BoxMullerGaussianSampler,
+        /** The modified Ziggurat gaussian sampler. */
+        ModifiedZigguratGaussianSampler,
         /** The Cheng beta sampler case 1. */
         ChengBetaSamplerCase1,
         /** The Cheng beta sampler case 2. */
         ChengBetaSamplerCase2,
         /** The Ahrens dieter exponential sampler. */
         AhrensDieterExponentialSampler,
+        /** The modified Ziggurat exponential sampler. */
+        ModifiedZigguratExponentialSampler,
         /** The Ahrens dieter marsaglia tsang gamma sampler small gamma. */
         AhrensDieterMarsagliaTsangGammaSamplerCase1,
         /** The Ahrens dieter marsaglia tsang gamma sampler large gamma. */
@@ -102,6 +109,12 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         LogNormalMarsagliaGaussianSampler,
         /** The Log normal box muller gaussian sampler. */
         LogNormalBoxMullerGaussianSampler,
+        /** The Log normal modified ziggurat gaussian sampler. */
+        LogNormalModifiedZigguratGaussianSampler,
+        /** The Levy sampler. */
+        LevySampler,
+        /** The stable sampler. */
+        StableSampler,
     }
 
     /**
@@ -200,6 +213,11 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
                                              gaussMean, gaussSigma),
                           gaussMin, gaussMax, "gauss.boxmuller.txt");
         }
+        if (samplers.contains(Sampler.ModifiedZigguratGaussianSampler)) {
+            createDensity(GaussianSampler.of(ZigguratSampler.NormalizedGaussian.of(rng),
+                                             gaussMean, gaussSigma),
+                          gaussMin, gaussMax, "gauss.modified.ziggurat.txt");
+        }
 
         final double betaMin = 0;
         final double betaMax = 1;
@@ -216,12 +234,16 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
                           betaMin, betaMax, "beta.case2.txt");
         }
 
+        final double meanExp = 3.45;
+        final double expMin = 0;
+        final double expMax = 60;
         if (samplers.contains(Sampler.AhrensDieterExponentialSampler)) {
-            final double meanExp = 3.45;
-            final double expMin = 0;
-            final double expMax = 60;
             createDensity(AhrensDieterExponentialSampler.of(rng, meanExp),
                           expMin, expMax, "exp.txt");
+        }
+        if (samplers.contains(Sampler.ModifiedZigguratExponentialSampler)) {
+            createDensity(ZigguratSampler.Exponential.of(rng, meanExp),
+                          expMin, expMax, "exp.modified.ziggurat.txt");
         }
 
         final double gammaMin = 0;
@@ -273,6 +295,31 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             createDensity(LogNormalSampler.of(BoxMullerNormalizedGaussianSampler.of(rng),
                                               scaleLogNormal, shapeLogNormal),
                           logNormalMin, logNormalMax, "lognormal.boxmuller.txt");
+        }
+        if (samplers.contains(Sampler.LogNormalModifiedZigguratGaussianSampler)) {
+            createDensity(LogNormalSampler.of(ZigguratSampler.NormalizedGaussian.of(rng),
+                                              scaleLogNormal, shapeLogNormal),
+                          logNormalMin, logNormalMax, "lognormal.modified.ziggurat.txt");
+        }
+
+        if (samplers.contains(Sampler.LevySampler)) {
+            final double levyLocation = 1.23;
+            final double levyscale = 0.75;
+            final double levyMin = levyLocation;
+            // Quantile 0.99
+            final double levyMax = 4.7756e+03;
+            createDensity(LevySampler.of(rng, levyLocation, levyscale),
+                          levyMin, levyMax, "levy.txt");
+        }
+
+        if (samplers.contains(Sampler.StableSampler)) {
+            final double stableAlpha = 1.23;
+            final double stableBeta = 0.25;
+            // Quantiles 0.0005 to 0.9995   
+            final double stableMin = -131.9640;
+            final double stableMax = 200.9239;
+            createDensity(StableSampler.of(rng, stableAlpha, stableBeta),
+                          stableMin, stableMax, "stable.txt");
         }
 
         return null;
