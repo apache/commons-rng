@@ -46,7 +46,7 @@ limitations under the License.
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}../target/site</directory>
+      <directory>${project.basedir}/../target/site</directory>
       <outputDirectory>docs</outputDirectory>
       <excludes>
       </excludes>
