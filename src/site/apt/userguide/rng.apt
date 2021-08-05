@@ -976,4 +976,4 @@ double[] coordinate = sampler.sample();
 
 6. Dependencies
 
-  Apache Commons RNG requires JDK 1.6+ and has no runtime dependencies.
+  Apache Commons RNG requires JDK 1.7+ and has no runtime dependencies.
