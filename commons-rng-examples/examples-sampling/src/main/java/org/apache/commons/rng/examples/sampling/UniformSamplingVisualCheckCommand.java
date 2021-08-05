@@ -27,6 +27,7 @@ import picocli.CommandLine.Option;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
@@ -67,6 +68,7 @@ class UniformSamplingVisualCheckCommand implements Callable<Void> {
         ZigguratNormalizedGaussianSampler.of(rng),
         MarsagliaNormalizedGaussianSampler.of(rng),
         BoxMullerNormalizedGaussianSampler.of(rng),
+        ZigguratSampler.NormalizedGaussian.of(rng),
     };
 
     // Allow System.out
@@ -89,7 +91,7 @@ class UniformSamplingVisualCheckCommand implements Callable<Void> {
         }
 
         for (int n = 0; n < numSamples; n++) {
-            System.out.printf("[%d]", n, rng.nextDouble());
+            System.out.printf("[%d]", n);
 
             for (final ContinuousSampler s : samplers) {
                 double r = s.sample();
