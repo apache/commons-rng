@@ -38,9 +38,9 @@ public class DiceGame {
     /**
      * @param players Number of players.
      * @param rounds Number of rounds.
+     * @param rng RNG.
      * @param mu Mean.
      * @param sigma Standard deviation.
-     * @param rng RNG.
      */
     public DiceGame(int players,
                     int rounds,
