@@ -83,7 +83,7 @@ public class LevySamplerTest {
 
         // Force the underlying ZigguratSampler.NormalizedGaussian to create a large
         // sample in the tail of the distribution.
-        // The first three -1,-1,-1 values enters the tail of the distribution.
+        // The first two -1,-1 values enters the tail of the distribution.
         // Here an exponential is added to 3.6360066255.
         // The exponential also requires -1,-1 to recurse. Each recursion adds 7.56927469415
         // to the exponential. A value of 0 stops recursion with a sample of 0.
@@ -93,7 +93,7 @@ public class LevySamplerTest {
         // Create x = 4 * 7.57 and y = 16 * 7.57
         final long[] sequence = {
             // Sample the Gaussian tail
-            -1, -1, -1,
+            -1, -1,
             // Exponential x = 4 * 7.57... * 0.275027001597525
             -1, -1, -1, -1, -1, -1, -1, -1, 0,
             // Exponential y = 16 * 7.57...
