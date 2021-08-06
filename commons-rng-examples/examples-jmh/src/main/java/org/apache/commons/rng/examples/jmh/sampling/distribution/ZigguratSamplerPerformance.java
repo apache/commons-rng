@@ -960,7 +960,9 @@ public class ZigguratSamplerPerformance {
                 return X[i] * xx;
             }
 
-            long u1 = randomInt63();
+            // Recycle bits then advance RNG:
+            // u1 = RANDOM_INT63();
+            long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1

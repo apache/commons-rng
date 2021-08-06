@@ -78,6 +78,12 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // available in Commons RNG the c and java code output the same random
     // deviates over 2^30 cycles if identically seeded. Branch frequencies have
     // been measured and added as comments.
+    //
+    // Note: The c implementation uses a RNG where the current value can be obtained
+    // without advancing the generator. The entry point to the sample generation
+    // always has this value as a previously unused value. The RNG is advanced when new
+    // bits are required. This Java implementation will generate new values with calls
+    // to the RNG and cache the value if it is to be recycled.
     // =========================================================================
 
     /**
@@ -675,7 +681,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 return X[i] * xx;
             }
 
-            long u1 = randomInt63();
+            // Recycle bits then advance RNG:
+            // u1 = RANDOM_INT63();
+            long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
@@ -810,6 +818,11 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
     /**
      * Generates a positive {@code long} in {@code [0, 2^63)}.
+     *
+     * <p>In the c reference implementation RANDOM_INT63() obtains the current random value
+     * and then advances the RNG. This implementation obtains a new value from the RNG.
+     * Thus the java implementation must ensure a previous call to the RNG is cached
+     * if RANDOM_INT63() is called without first advancing the RNG.
      *
      * @return the long
      */
