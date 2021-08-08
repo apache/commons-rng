@@ -82,7 +82,6 @@ public class ZigguratSamplerTest {
      * Test Gaussian samples using a large number of bins based on uniformly spaced quantiles.
      * Added for RNG-159.
      */
-    @Ignore("See RNG-159")
     @Test
     public void testGaussianSamplesWithQuantiles() {
         final int bins = 2000;
@@ -125,7 +124,6 @@ public class ZigguratSamplerTest {
      * Test Gaussian samples using a large number of bins uniformly spaced in a range.
      * Added for RNG-159.
      */
-    @Ignore("See RNG-159")
     @Test
     public void testGaussianSamplesWithUniformValues() {
         final int bins = 2000;
