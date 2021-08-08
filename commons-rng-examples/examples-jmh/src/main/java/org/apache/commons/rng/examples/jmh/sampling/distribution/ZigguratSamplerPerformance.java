@@ -420,6 +420,7 @@ public class ZigguratSamplerPerformance {
                 delegate.sample();
                 delegate.sample();
                 delegate.sample();
+                delegate.sample();
                 return delegate.sample();
             }
         }
