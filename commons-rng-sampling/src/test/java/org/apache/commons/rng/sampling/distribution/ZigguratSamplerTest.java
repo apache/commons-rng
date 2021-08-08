@@ -17,7 +17,6 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import java.util.Arrays;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -90,34 +89,7 @@ public class ZigguratSamplerTest {
         for (int i = 0; i < bins; i++) {
             quantiles[i] = dist.inverseCumulativeProbability((i + 1.0) / bins);
         }
-
-        final int samples = 10000000;
-        final long[] observed = new long[bins];
-        final RestorableUniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(0xabcdefL);
-        final ZigguratSampler.NormalizedGaussian sampler = ZigguratSampler.NormalizedGaussian.of(rng);
-        for (int i = 0; i < samples; i++) {
-            final double x = sampler.sample();
-            final int index = findIndex(quantiles, x);
-            observed[index]++;
-        }
-        final double[] expected = new double[bins];
-        Arrays.fill(expected, 1.0 / bins);
-
-        final ChiSquareTest chiSquareTest = new ChiSquareTest();
-        // Pass if we cannot reject null hypothesis that the distributions are the same.
-        double chi2 = chiSquareTest.chiSquareTest(expected, observed);
-        Assert.assertFalse("Chi-square p-value = " + chi2, chi2 < 0.001);
-
-        // Test around the mean
-        for (final double range : new double[] {0.5, 0.25, 0.1, 0.05}) {
-            final int min = findIndex(quantiles, -range);
-            final int max = findIndex(quantiles, range);
-            final long[] observed2 = Arrays.copyOfRange(observed, min, max + 1);
-            final double[] expected2 = Arrays.copyOfRange(expected, min, max + 1);
-            chi2 = chiSquareTest.chiSquareTest(expected2, observed2);
-            Assert.assertFalse(String.format("(%s <= x < %s) Chi-square p-value = %s",
-                    -range, range, chi2), chi2 < 0.001);
-        }
+        testGaussianSamples(quantiles);
     }
 
     /**
@@ -133,6 +105,18 @@ public class ZigguratSamplerTest {
         for (int i = 0; i < bins; i++) {
             values[i] = minx + (maxx - minx) * (i + 1.0) / bins;
         }
+        testGaussianSamples(values);
+    }
+
+    /**
+     * Test Gaussian samples using the provided bins. Values correspond to the bin
+     * upper limit. It is assumed the values span the mean, and ideally most of the
+     * normal distribution.
+     *
+     * @param values Bin upper limits
+     */
+    private static void testGaussianSamples(double[] values) {
+        final int bins = values.length;
 
         final int samples = 10000000;
         final long[] observed = new long[bins];
@@ -154,10 +138,13 @@ public class ZigguratSamplerTest {
             x0 = x1;
         }
 
+        final double significanceLevel = 0.001;
+
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
         double chi2 = chiSquareTest.chiSquareTest(expected, observed);
-        Assert.assertFalse("Chi-square p-value = " + chi2, chi2 < 0.001);
+        Assert.assertFalse(String.format("(%s <= x < %s) Chi-square p-value = %s",
+                Double.NEGATIVE_INFINITY, values[bins - 1], chi2), chi2 < 0.001);
 
         // Test around the mean
         for (final double range : new double[] {0.5, 0.25, 0.1, 0.05}) {
@@ -167,7 +154,8 @@ public class ZigguratSamplerTest {
             final double[] expected2 = Arrays.copyOfRange(expected, min, max + 1);
             chi2 = chiSquareTest.chiSquareTest(expected2, observed2);
             Assert.assertFalse(String.format("(%s <= x < %s) Chi-square p-value = %s",
-                -range, range, chi2), chi2 < 0.001);
+                min == 0 ? Double.NEGATIVE_INFINITY : values[min - 1], values[max], chi2),
+                chi2 < significanceLevel);
         }
     }
 
