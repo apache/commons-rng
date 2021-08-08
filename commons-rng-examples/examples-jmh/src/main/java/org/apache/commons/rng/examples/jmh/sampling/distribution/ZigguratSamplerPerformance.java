@@ -429,8 +429,8 @@ public class ZigguratSamplerPerformance {
          * Create N samples from the sampler.
          */
         static class SizeNSampler extends SizeSampler {
-            /** The number of samples. */
-            private final int size;
+            /** The number of samples minus 1. */
+            private final int sizeM1;
 
             /**
              * @param delegate the sampler to create the samples
@@ -441,12 +441,12 @@ public class ZigguratSamplerPerformance {
                 if (size < 1) {
                     throw new IllegalArgumentException("Size must be above zero: " + size);
                 }
-                this.size = size;
+                this.sizeM1 = size - 1;
             }
 
             @Override
             public double sample() {
-                for (int i = size - 1; i != 0; i--) {
+                for (int i = sizeM1; i != 0; i--) {
                     delegate.sample();
                 }
                 return delegate.sample();
