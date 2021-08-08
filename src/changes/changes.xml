@@ -81,6 +81,10 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="fix" issue="159">
+        "ZigguratSampler.NormalizedGaussian": Corrected biased sampling within convex regions
+        at the edge of the ziggurat.
+      </action>
       <action dev="aherbert" type="update" issue="158">
         Update the minimum Java version to 1.7.
       </action>
