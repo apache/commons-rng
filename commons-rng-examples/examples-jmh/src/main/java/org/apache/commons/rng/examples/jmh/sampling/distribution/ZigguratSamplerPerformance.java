@@ -185,7 +185,8 @@ public class ZigguratSamplerPerformance {
          * The sampler type.
          */
         @Param({GAUSSIAN_128, GAUSSIAN_256, "Exponential", MOD_GAUSSIAN, "ModExponential",
-                "ModGaussian2", "ModExponential2"})
+                "ModGaussian2", "ModGaussianSimpleOverhangs",
+                "ModExponential2", "ModExponentialSimpleOverhangs"})
         private String type;
 
         /** The sampler. */
@@ -215,8 +216,12 @@ public class ZigguratSamplerPerformance {
                 sampler = ZigguratSampler.Exponential.of(rng);
             } else if ("ModGaussian2".equals(type)) {
                 sampler = new ModifiedZigguratNormalizedGaussianSampler(rng);
+            } else if ("ModGaussianSimpleOverhangs".equals(type)) {
+                sampler = new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
             } else if ("ModExponential2".equals(type)) {
                 sampler = new ModifiedZigguratExponentialSampler(rng);
+            } else if ("ModExponentialSimpleOverhangs".equals(type)) {
+                sampler = new ModifiedZigguratExponentialSamplerSimpleOverhangs(rng);
             } else {
                 throwIllegalStateException(type);
             }
@@ -731,24 +736,24 @@ public class ZigguratSamplerPerformance {
      */
     static class ModifiedZigguratNormalizedGaussianSampler implements ContinuousSampler {
         /** Maximum i value for early exit. */
-        private static final int I_MAX = 253;
+        protected static final int I_MAX = 253;
         /** The point where the Gaussian switches from convex to concave. */
-        private static final int J_INFLECTION = 205;
+        protected static final int J_INFLECTION = 205;
         /** Mask to create an unsigned long from a signed long. */
-        private static final long MAX_INT64 = 0x7fffffffffffffffL;
+        protected static final long MAX_INT64 = 0x7fffffffffffffffL;
         /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
-        private static final long MAX_IE = -2269182951627975918L;
+        protected static final long MAX_IE = -2269182951627975918L;
         /** Used for largest deviations of f(x) from y_i. */
-        private static final long MIN_IE = 760463704284035181L;
+        protected static final long MIN_IE = 760463704284035181L;
         /** 2^63. */
-        private static final double TWO_POW_63 = 0x1.0p63;
+        protected static final double TWO_POW_63 = 0x1.0p63;
         /** Beginning of tail. */
-        private static final double X_0 = 3.6360066255;
+        protected static final double X_0 = 3.6360066255;
         /** 1/X_0. */
-        private static final double ONE_OVER_X_0 = 1d / X_0;
+        protected static final double ONE_OVER_X_0 = 1d / X_0;
 
         /** The alias map. An integer in [0, 255] stored as a byte to save space. */
-        private static final byte[] MAP = toBytes(
+        protected static final byte[] MAP = toBytes(
             new int[] {0, 0, 239, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253,
                 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253,
                 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253, 253,
@@ -762,7 +767,7 @@ public class ZigguratSamplerPerformance {
                 250, 250, 249, 249, 249, 248, 248, 248, 247, 247, 247, 246, 246, 245, 244, 244, 243, 242, 240, 2, 2, 3,
                 3, 0, 0, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 1, 0, 0});
         /** The alias inverse PMF. */
-        private static final long[] IPMF = {9223372036854775807L, 1100243796532604147L, 7866600928978262881L,
+        protected static final long[] IPMF = {9223372036854775807L, 1100243796532604147L, 7866600928978262881L,
             6788754710654027089L, 9022865200181691852L, 6522434035205505475L, 4723064097359993915L,
             3360495653216419673L, 2289663232373874393L, 1423968905551925104L, 708364817827802907L, 106102487305606492L,
             -408333464665790208L, -853239722779020926L, -1242095211825517037L, -1585059631105792592L,
@@ -830,7 +835,7 @@ public class ZigguratSamplerPerformance {
          * The precomputed ziggurat lengths, denoted X_i in the main text. X_i = length of
          * ziggurat layer i.
          */
-        private static final double[] X = {3.94216628254e-19, 3.72049450041e-19, 3.58270244806e-19, 3.48074762365e-19,
+        protected static final double[] X = {3.94216628254e-19, 3.72049450041e-19, 3.58270244806e-19, 3.48074762365e-19,
             3.39901771719e-19, 3.33037783603e-19, 3.27094388176e-19, 3.21835771325e-19, 3.17107585418e-19,
             3.1280307407e-19, 3.08845206558e-19, 3.05176506241e-19, 3.01752902926e-19, 2.98539834407e-19,
             2.95509674628e-19, 2.92639979885e-19, 2.899122587e-19, 2.87311087802e-19, 2.84823463271e-19,
@@ -882,7 +887,7 @@ public class ZigguratSamplerPerformance {
             5.88598735756e-20, 5.66626751161e-20, 5.43018136309e-20, 5.17381717445e-20, 4.89150317224e-20,
             4.57447418908e-20, 4.20788025686e-20, 3.76259867224e-20, 3.16285898059e-20, 0.0};
         /** Overhang table. Y_i = f(X_i). */
-        private static final double[] Y = {1.45984107966e-22, 3.00666134279e-22, 4.61297288151e-22, 6.26633500492e-22,
+        protected static final double[] Y = {1.45984107966e-22, 3.00666134279e-22, 4.61297288151e-22, 6.26633500492e-22,
             7.95945247619e-22, 9.68746550217e-22, 1.14468770024e-21, 1.32350363044e-21, 1.50498576921e-21,
             1.68896530007e-21, 1.87530253827e-21, 2.06387984237e-21, 2.25459669136e-21, 2.44736615188e-21,
             2.64211227278e-21, 2.83876811879e-21, 3.03727425675e-21, 3.23757757e-21, 3.43963031579e-21,
@@ -935,9 +940,9 @@ public class ZigguratSamplerPerformance {
             9.91869058575e-20, 1.00554562713e-19, 1.02084073773e-19, 1.03903609932e-19, 1.08420217249e-19};
 
         /** Underlying source of randomness. */
-        private final UniformRandomProvider rng;
+        protected final UniformRandomProvider rng;
         /** Exponential sampler used for the long tail. */
-        private final ContinuousSampler exponential;
+        protected final ContinuousSampler exponential;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
@@ -982,17 +987,18 @@ public class ZigguratSamplerPerformance {
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     final long uDiff = randomInt63() - u1;
-                    if (uDiff > MIN_IE) {
+                    if (uDiff >= 0) {
+                        // Lower-left triangle
                         break;
                     }
-                    if (uDiff < MAX_IE) {
-                        continue;
-                    }
-                    // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                    // uy = Long.MIN_VALUE - (ux + uDiff)
-                    if (fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                    if (uDiff >= MAX_IE &&
+                        // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
+                        // uy = Long.MIN_VALUE - (ux + uDiff)
+                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
+                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j == 0) {
@@ -1043,7 +1049,7 @@ public class ZigguratSamplerPerformance {
          *
          * @return the alias
          */
-        private int normSampleA() {
+        protected int normSampleA() {
             final long x = rng.nextLong();
             // j <- I(0, 256)
             final int j = ((int) x) & 0xff;
@@ -1055,7 +1061,7 @@ public class ZigguratSamplerPerformance {
          *
          * @return the long
          */
-        private long randomInt63() {
+        protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
         }
 
@@ -1067,7 +1073,7 @@ public class ZigguratSamplerPerformance {
          * @param ux ux
          * @return the sample
          */
-        private static double fastPrngSampleX(int j, long ux) {
+        protected static double fastPrngSampleX(int j, long ux) {
             return X[j] * TWO_POW_63 + (X[j - 1] - X[j]) * ux;
         }
 
@@ -1079,7 +1085,7 @@ public class ZigguratSamplerPerformance {
          * @param uy uy
          * @return the sample
          */
-        private static double fastPrngSampleY(int i, long uy) {
+        protected static double fastPrngSampleY(int i, long uy) {
             return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
         }
 
@@ -1095,6 +1101,77 @@ public class ZigguratSamplerPerformance {
                 bytes[i] = (byte) values[i];
             }
             return bytes;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
+     *
+     * <p>Uses the algorithm from:
+     *
+     * <blockquote>
+     * McFarland, C.D. (2016)<br>
+     * "A modified ziggurat algorithm for generating exponentially and normally distributed pseudorandom numbers".<br>
+     * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
+     * </blockquote>
+     *
+     * <p>This implementation uses simple overhangs and does not exploit the precomputed
+     * distances of the concave and convex overhangs.
+     *
+     * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
+     * McFarland (2016) JSCS 86, 1281-1294</a>
+     */
+    static class ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs
+        extends ModifiedZigguratNormalizedGaussianSampler {
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            final long xx = rng.nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) xx) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                // Branch frequency: 0.988280
+                return X[i] * xx;
+            }
+
+            // Recycle bits then advance RNG:
+            // u1 = RANDOM_INT63();
+            long u1 = xx & MAX_INT64;
+            // Another squashed, recyclable bit
+            // double sign_bit = u1 & 0x100 ? 1. : -1.
+            // Use 2 - 1 or 0 - 1
+            final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
+            final int j = normSampleA();
+
+            // Simple overhangs
+            double x;
+            if (j == 0) {
+                // Tail
+                do {
+                    x = ONE_OVER_X_0 * exponential.sample();
+                } while (exponential.sample() < 0.5 * x * x);
+                x += X_0;
+            } else {
+                // Rejection sampling
+                for (;;) {
+                    x = fastPrngSampleX(j, u1);
+                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    u1 = randomInt63();
+                }
+            }
+            return signBit * x;
         }
     }
 
@@ -1308,7 +1385,7 @@ public class ZigguratSamplerPerformance {
             8.98023880577e-20, 9.24624714212e-20, 9.5919641345e-20, 1.08420217249e-19};
 
         /** Underlying source of randomness. */
-        private final UniformRandomProvider rng;
+        protected final UniformRandomProvider rng;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
@@ -1344,7 +1421,7 @@ public class ZigguratSamplerPerformance {
          *
          * @return the alias
          */
-        private int expSampleA() {
+        protected int expSampleA() {
             final long x = rng.nextLong();
             // j <- I(0, 256)
             final int j = ((int) x) & 0xff;
@@ -1357,7 +1434,7 @@ public class ZigguratSamplerPerformance {
          * @param j Index j (must be {@code > 0})
          * @return the sample
          */
-        private double expOverhang(int j) {
+        protected double expOverhang(int j) {
             // To sample a unit right-triangle:
             // U_x <- min(U_1, U_2)
             // distance <- | U_1 - U_2 |
@@ -1394,7 +1471,7 @@ public class ZigguratSamplerPerformance {
          *
          * @return the long
          */
-        private long randomInt63() {
+        protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
         }
 
@@ -1406,7 +1483,7 @@ public class ZigguratSamplerPerformance {
          * @param ux ux
          * @return the sample
          */
-        private static double fastPrngSampleX(int j, long ux) {
+        protected static double fastPrngSampleX(int j, long ux) {
             return X_I[j] * TWO_POW_63 + (X_I[j - 1] - X_I[j]) * ux;
         }
 
@@ -1418,7 +1495,7 @@ public class ZigguratSamplerPerformance {
          * @param uy uy
          * @return the sample
          */
-        private static double fastPrngSampleY(int i, long uy) {
+        static double fastPrngSampleY(int i, long uy) {
             return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
         }
 
@@ -1434,6 +1511,41 @@ public class ZigguratSamplerPerformance {
                 bytes[i] = (byte) values[i];
             }
             return bytes;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from an exponential distribution.
+     *
+     * <p>Uses the algorithm from:
+     *
+     * <blockquote>
+     * McFarland, C.D. (2016)<br>
+     * "A modified ziggurat algorithm for generating exponentially and normally distributed pseudorandom numbers".<br>
+     * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
+     * </blockquote>
+     *
+     * <p>This implementation uses simple overhangs and does not exploit the precomputed
+     * distances of the convex overhang.
+     *
+     * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
+     * McFarland (2016) JSCS 86, 1281-1294</a>
+     */
+    static class ModifiedZigguratExponentialSamplerSimpleOverhangs
+        extends ModifiedZigguratExponentialSampler {
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratExponentialSamplerSimpleOverhangs(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        protected double expOverhang(int j) {
+            final double x = fastPrngSampleX(j, randomInt63());
+            return fastPrngSampleY(j, randomInt63()) <= Math.exp(-x) ? x : expOverhang(j);
         }
     }
 

@@ -703,17 +703,18 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 for (;;) {
                     x = fastPrngSampleX(X, j, u1);
                     final long uDiff = randomInt63() - u1;
-                    if (uDiff > MIN_IE) {
+                    if (uDiff >= 0) {
+                        // Lower-left triangle
                         break;
                     }
-                    if (uDiff < MAX_IE) {
-                        continue;
-                    }
-                    // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                    // uy = Long.MIN_VALUE - (ux + uDiff)
-                    if (fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                    if (uDiff >= MAX_IE &&
+                        // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
+                        // uy = Long.MIN_VALUE - (ux + uDiff)
+                        fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
+                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j == 0) {
@@ -734,6 +735,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                     // U_y <- 1 - (U_x + distance)
                     long uDiff = randomInt63() - u1;
                     if (uDiff < 0) {
+                        // Upper-right triangle. Reflect in hypotenuse.
                         uDiff = -uDiff;
                         u1 -= uDiff;
                     }
