@@ -982,7 +982,7 @@ double[] coordinate = sampler.sample();
 *----------*---------------+
 | Stress | Application for calling external tools that perform stringent uniformity tests (requires Java 8+). This application is used to generate results in the {{{a5._Quality}Quality}} section. |
 *----------*---------------+
-| Sampling | Application producing output from distribution samplers to create an approximate probability density function (PDF). |
+| Sampling | Application producing output from distribution samplers to create an approximate probability density function (PDF) as shown {{{./dist_density_approx.html}here}}. |
 *----------*---------------+
 | Quadrature | Application for computing numerical quadrature by Monte-Carlo (random) integration. |
 *----------*---------------+
