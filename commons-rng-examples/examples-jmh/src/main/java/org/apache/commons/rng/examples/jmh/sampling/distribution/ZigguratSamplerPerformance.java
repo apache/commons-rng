@@ -59,6 +59,8 @@ public class ZigguratSamplerPerformance {
     private static final String GAUSSIAN_256 = "Gaussian256";
     /** The name for the {@link ZigguratSampler.NormalizedGaussian}. */
     private static final String MOD_GAUSSIAN = "ModGaussian";
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
+    private static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
 
     /**
      * The value.
@@ -190,8 +192,8 @@ public class ZigguratSamplerPerformance {
          * The sampler type.
          */
         @Param({GAUSSIAN_128, GAUSSIAN_256, "Exponential", MOD_GAUSSIAN, "ModExponential",
-                "ModGaussian2", "ModGaussianSimpleOverhangs", "ModGaussianIntMap",
-                "ModExponential2", "ModExponentialSimpleOverhangs", "ModExponentialSimpleOverhangsIntMap"})
+                "ModGaussian2", "ModGaussianSimpleOverhangs", MOD_GAUSSIAN_INT_MAP,
+                "ModExponential2", "ModExponentialSimpleOverhangs", "ModExponentialIntMap"})
         private String type;
 
         /** The sampler. */
@@ -223,13 +225,13 @@ public class ZigguratSamplerPerformance {
                 sampler = new ModifiedZigguratNormalizedGaussianSampler(rng);
             } else if ("ModGaussianSimpleOverhangs".equals(type)) {
                 sampler = new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
-            } else if ("ModGaussianIntMap".equals(type)) {
+            } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
                 sampler = new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
             } else if ("ModExponential2".equals(type)) {
                 sampler = new ModifiedZigguratExponentialSampler(rng);
             } else if ("ModExponentialSimpleOverhangs".equals(type)) {
                 sampler = new ModifiedZigguratExponentialSamplerSimpleOverhangs(rng);
-            } else if ("ModExponentialSimpleOverhangsIntMap".equals(type)) {
+            } else if ("ModExponentialIntMap".equals(type)) {
                 sampler = new ModifiedZigguratExponentialSamplerIntMap(rng);
             } else {
                 throwIllegalStateException(type);
@@ -264,7 +266,7 @@ public class ZigguratSamplerPerformance {
         private String randomSourceName;
 
         /** The sampler type. */
-        @Param({GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN})
+        @Param({GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN, MOD_GAUSSIAN_INT_MAP})
         private String type;
 
         /** The size. */
@@ -293,6 +295,8 @@ public class ZigguratSamplerPerformance {
                 s = ZigguratNormalizedGaussianSampler.of(rng);
             } else if (MOD_GAUSSIAN.equals(type)) {
                 s = ZigguratSampler.NormalizedGaussian.of(rng);
+            } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
+                s = new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
             } else {
                 throwIllegalStateException(type);
             }
