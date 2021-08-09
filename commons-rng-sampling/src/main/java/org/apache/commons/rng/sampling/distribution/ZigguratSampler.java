@@ -32,16 +32,21 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <p>Note: The algorithm is a modification of the
  * {@link ZigguratNormalizedGaussianSampler Marsaglia and Tsang "Ziggurat" method}.
- * The modification improves performance of the rejection method used to generate
- * samples at the edge of the ziggurat; this is the part of the area under the
- * distribution PDF that cannot be represented using rectangles of the stepped ziggurat,
- * e.g. area A:
+ * The modification improves performance by:
+ * <ol>
+ * <li>Creating layers of the ziggurat entirely inside the probability density function (area B);
+ * this allows the majority of samples to be obtained without checking if the value is in the
+ * region of the ziggurat layer that requires a rejection test.
+ * <li>For samples not within the main ziggurat (area A) alias sampling is used to choose a
+ * layer and rejection of points above the PDF is accelerated using precomputation of
+ * triangle regions entirely below or above the curve.
+ * </ol>
  *
  * <pre>
  *           \
  * ----------+\
  *           | \
- *           |A \
+ *    B      |A \
  * -------------+\
  *              | \
  * </pre>
