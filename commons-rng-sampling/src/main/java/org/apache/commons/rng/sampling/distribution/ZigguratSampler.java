@@ -798,10 +798,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                         u1 -= uDiff;
                     }
                     x = fastPrngSampleX(X, j, u1);
-                    if (uDiff > MIN_IE)  {
-                        break;
-                    }
-                    if (fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                    if (uDiff > MIN_IE ||
+                        fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
