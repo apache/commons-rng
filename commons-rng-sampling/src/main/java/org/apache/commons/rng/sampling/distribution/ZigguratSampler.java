@@ -758,6 +758,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             if (j > J_INFLECTION) {
                 // Convex overhang
                 // Branch frequency: 0.00891413
+                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = fastPrngSampleX(X, j, u1);
                     final long uDiff = randomInt63() - u1;
@@ -780,6 +781,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 // Branch frequency: 0.000277067
                 // Note: Although less frequent than the next branch, j == 0 is a subset of
                 // j < J_INFLECTION and must be first.
+                // Loop repeat frequency: 0.0634786
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
@@ -787,6 +789,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             } else if (j < J_INFLECTION) {
                 // Concave overhang
                 // Branch frequency: 0.00251223
+                // Loop repeat frequency: 0.0123784
                 for (;;) {
                     // U_x <- min(U_1, U_2)
                     // distance <- | U_1 - U_2 |
@@ -807,6 +810,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             } else {
                 // Inflection point
                 // Branch frequency: 0.0000161147
+                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = fastPrngSampleX(X, j, u1);
                     if (fastPrngSampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
