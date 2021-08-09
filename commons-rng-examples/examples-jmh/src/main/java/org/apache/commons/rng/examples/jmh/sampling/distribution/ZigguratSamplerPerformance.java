@@ -76,8 +76,6 @@ public class ZigguratSamplerPerformance {
     private static final String MOD_GAUSSIAN2 = "ModGaussian2";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs}. */
     private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS = "ModGaussianSimpleOverhangs";
-    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive}. */
-    private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE = "ModGaussianSimpleOverhangsRecursive";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
     private static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
 
@@ -223,8 +221,7 @@ public class ZigguratSamplerPerformance {
                 // Experimental Marsaglia exponential ziggurat sampler
                 EXPONENTIAL,
                 // Experimental McFarland Gaussian ziggurat samplers
-                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE,
-                MOD_GAUSSIAN_INT_MAP,
+                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INT_MAP})
         private String type;
@@ -269,8 +266,6 @@ public class ZigguratSamplerPerformance {
                 return new ModifiedZigguratNormalizedGaussianSampler(rng);
             } else if (MOD_GAUSSIAN_SIMPLE_OVERHANGS.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
-            } else if (MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE.equals(type)) {
-                return new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive(rng);
             } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
             } else if (MOD_EXPONENTIAL2.equals(type)) {
@@ -315,8 +310,7 @@ public class ZigguratSamplerPerformance {
         @Param({// Production versions
                 GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN,
                 // Experimental McFarland Gaussian ziggurat samplers
-                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE,
-                MOD_GAUSSIAN_INT_MAP})
+                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP})
         private String type;
 
         /** The size. */
@@ -1231,13 +1225,11 @@ public class ZigguratSamplerPerformance {
                 return X[i] * xx;
             }
 
-            // Recycle bits then advance RNG:
-            // u1 = RANDOM_INT63();
-            long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
-            final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
+            final double signBit = ((xx >>> 7) & 0x2) - 1.0;
+
             final int j = normSampleA();
 
             // Simple overhangs
@@ -1250,6 +1242,9 @@ public class ZigguratSamplerPerformance {
                 x += X_0;
             } else {
                 // Rejection sampling
+                // Recycle bits then advance RNG:
+                // u1 = RANDOM_INT63();
+                long u1 = xx & MAX_INT64;
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -1259,81 +1254,6 @@ public class ZigguratSamplerPerformance {
                 }
             }
             return signBit * x;
-        }
-    }
-
-    /**
-     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
-     *
-     * <p>Uses the algorithm from:
-     *
-     * <blockquote>
-     * McFarland, C.D. (2016)<br>
-     * "A modified ziggurat algorithm for generating exponentially and normally distributed pseudorandom numbers".<br>
-     * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
-     * </blockquote>
-     *
-     * <p>This implementation uses simple overhangs and does not exploit the precomputed
-     * distances of the concave and convex overhangs. The implementation uses recursive
-     * calls when samples are rejected.
-     *
-     * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
-     * McFarland (2016) JSCS 86, 1281-1294</a>
-     */
-    static class ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive
-        extends ModifiedZigguratNormalizedGaussianSampler {
-
-        /**
-         * @param rng Generator of uniformly distributed random numbers.
-         */
-        ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive(UniformRandomProvider rng) {
-            super(rng);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public double sample() {
-            final long xx = rng.nextLong();
-            // Float multiplication squashes these last 8 bits, so they can be used to sample i
-            final int i = ((int) xx) & 0xff;
-
-            if (i < I_MAX) {
-                // Early exit.
-                // Branch frequency: 0.988280
-                return X[i] * xx;
-            }
-
-            final int j = normSampleA();
-
-            // Simple overhangs
-            double x;
-            if (j == 0) {
-                // Tail
-
-                // Extract sign bit from recycled bits
-                // Use 2 - 1 or 0 - 1
-                final double signBit = ((xx >>> 7) & 0x2) - 1.0;
-
-                do {
-                    x = ONE_OVER_X_0 * exponential.sample();
-                } while (exponential.sample() < 0.5 * x * x);
-
-                return (x + X_0) * signBit;
-            }
-
-            // Rejection sampling
-
-            x = fastPrngSampleX(j, xx & MAX_INT64);
-            if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
-                // Extract sign bit from recycled bits. These are not used in the multiplication
-                // to create x which squashes the final bits.
-                // Use 2 - 1 or 0 - 1
-                final double signBit = ((xx >>> 7) & 0x2) - 1.0;
-                return x * signBit;
-            }
-
-            // Try again.
-            return sample();
         }
     }
 
