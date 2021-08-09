@@ -34,7 +34,6 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -53,16 +52,42 @@ public class ZigguratSamplerPerformance {
     /** 2^53. */
     private static final double TWO_POW_63 = 0x1.0p63;
 
-    /** The name for the {@link ZigguratNormalizedGaussianSampler}. */
+    // Production versions
+
+    /** The name for a copy of the {@link ZigguratNormalizedGaussianSampler} with a table of size 128.
+     * This matches the version in Commons RNG release v1.1 to 1.3. */
     private static final String GAUSSIAN_128 = "Gaussian128";
-    /** The name for a copy of the {@link ZigguratNormalizedGaussianSampler} with a table of size 256. */
+    /** The name for the {@link ZigguratNormalizedGaussianSampler} (table of size 256).
+     * This is the version in Commons RNG release v1.4+. */
     private static final String GAUSSIAN_256 = "Gaussian256";
     /** The name for the {@link ZigguratSampler.NormalizedGaussian}. */
     private static final String MOD_GAUSSIAN = "ModGaussian";
+    /** The name for the {@link ZigguratSampler.Exponential}. */
+    private static final String MOD_EXPONENTIAL = "ModExponential";
+
+    // Testing versions
+
+    /** The name for the {@link ZigguratExponentialSampler} with a table of size 256.
+     * This is an exponential sampler using Marsaglia's ziggurat method. */
+    private static final String EXPONENTIAL = "Exponential";
+
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSampler}.
+     * This is a base implementation of McFarland's ziggurat method. */
+    private static final String MOD_GAUSSIAN2 = "ModGaussian2";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs}. */
     private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS = "ModGaussianSimpleOverhangs";
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive}. */
+    private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE = "ModGaussianSimpleOverhangsRecursive";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
     private static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
+
+    /** The name for the {@link ModifiedZigguratExponetialSampler}.
+     * This is a base implementation of McFarland's ziggurat method. */
+    private static final String MOD_EXPONENTIAL2 = "ModExponential2";
+    /** The name for the {@link ModifiedZigguratExponentialSamplerSimpleOverhangs}. */
+    private static final String MOD_EXPONENTIAL_SIMPLE_OVERHANGS = "ModExponentialSimpleOverhangs";
+    /** The name for the {@link ModifiedZigguratExponentialSamplerIntMap}. */
+    private static final String MOD_EXPONENTIAL_INT_MAP = "ModExponentialIntMap";
 
     /**
      * The value.
@@ -193,9 +218,15 @@ public class ZigguratSamplerPerformance {
         /**
          * The sampler type.
          */
-        @Param({GAUSSIAN_128, GAUSSIAN_256, "Exponential", MOD_GAUSSIAN, "ModExponential",
-                "ModGaussian2", MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
-                "ModExponential2", "ModExponentialSimpleOverhangs", "ModExponentialIntMap"})
+        @Param({// Production versions
+                GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN, MOD_EXPONENTIAL,
+                // Experimental Marsaglia exponential ziggurat sampler
+                EXPONENTIAL,
+                // Experimental McFarland Gaussian ziggurat samplers
+                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE,
+                MOD_GAUSSIAN_INT_MAP,
+                // Experimental McFarland Gaussian ziggurat samplers
+                MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INT_MAP})
         private String type;
 
         /** The sampler. */
@@ -213,30 +244,43 @@ public class ZigguratSamplerPerformance {
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = randomSource.create();
+            sampler = createSampler(type, rng);
+        }
+
+        /**
+         * Creates the sampler.
+         *
+         * @param type Type of sampler
+         * @param rng RNG
+         * @return the sampler
+         */
+        static ContinuousSampler createSampler(String type, UniformRandomProvider rng) {
             if (GAUSSIAN_128.equals(type)) {
-                sampler = new ZigguratNormalizedGaussianSampler128(rng);
+                return new ZigguratNormalizedGaussianSampler128(rng);
             } else if (GAUSSIAN_256.equals(type)) {
-                sampler = ZigguratNormalizedGaussianSampler.of(rng);
-            } else if ("Exponential".equals(type)) {
-                sampler = new ZigguratExponentialSampler(rng);
+                return ZigguratNormalizedGaussianSampler.of(rng);
             } else if (MOD_GAUSSIAN.equals(type)) {
-                sampler = ZigguratSampler.NormalizedGaussian.of(rng);
-            } else if ("ModExponential".equals(type)) {
-                sampler = ZigguratSampler.Exponential.of(rng);
-            } else if ("ModGaussian2".equals(type)) {
-                sampler = new ModifiedZigguratNormalizedGaussianSampler(rng);
+                return ZigguratSampler.NormalizedGaussian.of(rng);
+            } else if (MOD_EXPONENTIAL.equals(type)) {
+                return ZigguratSampler.Exponential.of(rng);
+            } else if (EXPONENTIAL.equals(type)) {
+                return new ZigguratExponentialSampler(rng);
+            } else if (MOD_GAUSSIAN2.equals(type)) {
+                return new ModifiedZigguratNormalizedGaussianSampler(rng);
             } else if (MOD_GAUSSIAN_SIMPLE_OVERHANGS.equals(type)) {
-                sampler = new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
+                return new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
+            } else if (MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE.equals(type)) {
+                return new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive(rng);
             } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
-                sampler = new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
-            } else if ("ModExponential2".equals(type)) {
-                sampler = new ModifiedZigguratExponentialSampler(rng);
-            } else if ("ModExponentialSimpleOverhangs".equals(type)) {
-                sampler = new ModifiedZigguratExponentialSamplerSimpleOverhangs(rng);
-            } else if ("ModExponentialIntMap".equals(type)) {
-                sampler = new ModifiedZigguratExponentialSamplerIntMap(rng);
+                return new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
+            } else if (MOD_EXPONENTIAL2.equals(type)) {
+                return new ModifiedZigguratExponentialSampler(rng);
+            } else if (MOD_EXPONENTIAL_SIMPLE_OVERHANGS.equals(type)) {
+                return new ModifiedZigguratExponentialSamplerSimpleOverhangs(rng);
+            } else if (MOD_EXPONENTIAL_INT_MAP.equals(type)) {
+                return new ModifiedZigguratExponentialSamplerIntMap(rng);
             } else {
-                throwIllegalStateException(type);
+                throw new IllegalStateException("Unknown type: " + type);
             }
         }
     }
@@ -268,7 +312,11 @@ public class ZigguratSamplerPerformance {
         private String randomSourceName;
 
         /** The sampler type. */
-        @Param({GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP})
+        @Param({// Production versions
+                GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN,
+                // Experimental McFarland Gaussian ziggurat samplers
+                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_SIMPLE_OVERHANGS_RECURSIVE,
+                MOD_GAUSSIAN_INT_MAP})
         private String type;
 
         /** The size. */
@@ -290,20 +338,7 @@ public class ZigguratSamplerPerformance {
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = randomSource.create();
-            ContinuousSampler s = null;
-            if (GAUSSIAN_128.equals(type)) {
-                s = new ZigguratNormalizedGaussianSampler128(rng);
-            } else if (GAUSSIAN_256.equals(type)) {
-                s = ZigguratNormalizedGaussianSampler.of(rng);
-            } else if (MOD_GAUSSIAN.equals(type)) {
-                s = ZigguratSampler.NormalizedGaussian.of(rng);
-            } else if (MOD_GAUSSIAN_SIMPLE_OVERHANGS.equals(type)) {
-                s = new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
-            } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
-                s = new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
-            } else {
-                throwIllegalStateException(type);
-            }
+            final ContinuousSampler s = Sources.createSampler(type, rng);
             sampler = createSampler(size, s);
         }
 
@@ -749,6 +784,11 @@ public class ZigguratSamplerPerformance {
      * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
      * </blockquote>
      *
+     * <p>This class uses the same tables as the production version
+     * {@link org.apache.commons.rng.sampling.distribution.ZigguratSampler.NormalizedGaussian}
+     * with the overhang sampling matching the reference c implementation. Methods and members
+     * are protected to allow the implementation to be modified in sub-classes.
+     *
      * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
      * McFarland (2016) JSCS 86, 1281-1294</a>
      */
@@ -1024,6 +1064,7 @@ public class ZigguratSamplerPerformance {
             if (j > J_INFLECTION) {
                 // Convex overhang
                 // Branch frequency: 0.00891413
+                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     final long uDiff = randomInt63() - u1;
@@ -1033,6 +1074,8 @@ public class ZigguratSamplerPerformance {
                     }
                     if (uDiff >= MAX_IE &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Frequency (per upper-right triangle): 0.431497
+                        // Reject frequency: 0.489630
                         // Long.MIN_VALUE is used as an unsigned int with value 2^63:
                         // uy = Long.MIN_VALUE - (ux + uDiff)
                         fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
@@ -1044,6 +1087,9 @@ public class ZigguratSamplerPerformance {
             } else if (j == 0) {
                 // Tail
                 // Branch frequency: 0.000277067
+                // Note: Although less frequent than the next branch, j == 0 is a subset of
+                // j < J_INFLECTION and must be first.
+                // Loop repeat frequency: 0.0634786
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
@@ -1051,6 +1097,7 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 // Concave overhang
                 // Branch frequency: 0.00251223
+                // Loop repeat frequency: 0.0123784
                 for (;;) {
                     // U_x <- min(U_1, U_2)
                     // distance <- | U_1 - U_2 |
@@ -1061,10 +1108,8 @@ public class ZigguratSamplerPerformance {
                         u1 -= uDiff;
                     }
                     x = fastPrngSampleX(j, u1);
-                    if (uDiff > MIN_IE)  {
-                        break;
-                    }
-                    if (fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                    if (uDiff > MIN_IE ||
+                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1072,6 +1117,7 @@ public class ZigguratSamplerPerformance {
             } else {
                 // Inflection point
                 // Branch frequency: 0.0000161147
+                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -1156,7 +1202,8 @@ public class ZigguratSamplerPerformance {
      * </blockquote>
      *
      * <p>This implementation uses simple overhangs and does not exploit the precomputed
-     * distances of the concave and convex overhangs.
+     * distances of the concave and convex overhangs. The implementation matches the c-reference
+     * compiled using -DSIMPLE_OVERHANGS.
      *
      * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
      * McFarland (2016) JSCS 86, 1281-1294</a>
@@ -1212,6 +1259,81 @@ public class ZigguratSamplerPerformance {
                 }
             }
             return signBit * x;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
+     *
+     * <p>Uses the algorithm from:
+     *
+     * <blockquote>
+     * McFarland, C.D. (2016)<br>
+     * "A modified ziggurat algorithm for generating exponentially and normally distributed pseudorandom numbers".<br>
+     * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
+     * </blockquote>
+     *
+     * <p>This implementation uses simple overhangs and does not exploit the precomputed
+     * distances of the concave and convex overhangs. The implementation uses recursive
+     * calls when samples are rejected.
+     *
+     * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
+     * McFarland (2016) JSCS 86, 1281-1294</a>
+     */
+    static class ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive
+        extends ModifiedZigguratNormalizedGaussianSampler {
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangsRecursive(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            final long xx = rng.nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) xx) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                // Branch frequency: 0.988280
+                return X[i] * xx;
+            }
+
+            final int j = normSampleA();
+
+            // Simple overhangs
+            double x;
+            if (j == 0) {
+                // Tail
+
+                // Extract sign bit from recycled bits
+                // Use 2 - 1 or 0 - 1
+                final double signBit = ((xx >>> 7) & 0x2) - 1.0;
+
+                do {
+                    x = ONE_OVER_X_0 * exponential.sample();
+                } while (exponential.sample() < 0.5 * x * x);
+
+                return (x + X_0) * signBit;
+            }
+
+            // Rejection sampling
+
+            x = fastPrngSampleX(j, xx & MAX_INT64);
+            if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                // Extract sign bit from recycled bits. These are not used in the multiplication
+                // to create x which squashes the final bits.
+                // Use 2 - 1 or 0 - 1
+                final double signBit = ((xx >>> 7) & 0x2) - 1.0;
+                return x * signBit;
+            }
+
+            // Try again.
+            return sample();
         }
     }
 
@@ -1505,6 +1627,7 @@ public class ZigguratSamplerPerformance {
             if (j > J_INFLECTION) {
                 // Convex overhang
                 // Branch frequency: 0.00891413
+                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     final long uDiff = randomInt63() - u1;
@@ -1514,6 +1637,8 @@ public class ZigguratSamplerPerformance {
                     }
                     if (uDiff >= MAX_IE &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Frequency (per upper-right triangle): 0.431497
+                        // Reject frequency: 0.489630
                         // Long.MIN_VALUE is used as an unsigned int with value 2^63:
                         // uy = Long.MIN_VALUE - (ux + uDiff)
                         fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
@@ -1525,6 +1650,9 @@ public class ZigguratSamplerPerformance {
             } else if (j == 0) {
                 // Tail
                 // Branch frequency: 0.000277067
+                // Note: Although less frequent than the next branch, j == 0 is a subset of
+                // j < J_INFLECTION and must be first.
+                // Loop repeat frequency: 0.0634786
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
@@ -1532,6 +1660,7 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 // Concave overhang
                 // Branch frequency: 0.00251223
+                // Loop repeat frequency: 0.0123784
                 for (;;) {
                     // U_x <- min(U_1, U_2)
                     // distance <- | U_1 - U_2 |
@@ -1542,10 +1671,8 @@ public class ZigguratSamplerPerformance {
                         u1 -= uDiff;
                     }
                     x = fastPrngSampleX(j, u1);
-                    if (uDiff > MIN_IE)  {
-                        break;
-                    }
-                    if (fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                    if (uDiff > MIN_IE ||
+                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1553,6 +1680,7 @@ public class ZigguratSamplerPerformance {
             } else {
                 // Inflection point
                 // Branch frequency: 0.0000161147
+                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = fastPrngSampleX(j, u1);
                     if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -1621,6 +1749,11 @@ public class ZigguratSamplerPerformance {
      * "A modified ziggurat algorithm for generating exponentially and normally distributed pseudorandom numbers".<br>
      * <i>Journal of Statistical Computation and Simulation</i> <b>86</b>, 1281-1294.
      * </blockquote>
+     *
+     * <p>This class uses the same tables as the production version
+     * {@link org.apache.commons.rng.sampling.distribution.ZigguratSampler.Exponential}
+     * with the overhang sampling matching the reference c implementation. Methods and members
+     * are protected to allow the implementation to be modified in sub-classes.
      *
      * @see <a href="https://www.tandfonline.com/doi/abs/10.1080/00949655.2015.1060234">
      * McFarland (2016) JSCS 86, 1281-1294</a>
