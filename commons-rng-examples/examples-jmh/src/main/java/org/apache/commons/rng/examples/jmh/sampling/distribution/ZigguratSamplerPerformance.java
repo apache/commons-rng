@@ -1229,25 +1229,29 @@ public class ZigguratSamplerPerformance {
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
             final double signBit = ((xx >>> 7) & 0x2) - 1.0;
-
             final int j = normSampleA();
 
             // Simple overhangs
             double x;
             if (j == 0) {
                 // Tail
+                // Branch frequency: 0.000276321
+                // Loop repeat frequency: 0.0634091
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
                 x += X_0;
             } else {
                 // Rejection sampling
+                // Branch frequency: 0.0114405
+                // Loop repeat frequency: 0.419985
+
                 // Recycle bits then advance RNG:
                 // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = fastPrngSampleX(X, j, u1);
+                    if (fastPrngSampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
