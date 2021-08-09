@@ -1250,8 +1250,8 @@ public class ZigguratSamplerPerformance {
                 // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
-                    x = fastPrngSampleX(X, j, u1);
-                    if (fastPrngSampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = fastPrngSampleX(j, u1);
+                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
