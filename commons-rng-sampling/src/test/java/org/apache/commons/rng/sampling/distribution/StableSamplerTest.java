@@ -59,9 +59,11 @@ public class StableSamplerTest {
      * This is the gap between the 2^53 dyadic rationals in [0, 1). */
     private static final double DU = 0x1.0p-53;
     /** The smallest non-zero sample from the ZigguratSampler.Exponential sampler. */
-    private static final double SMALL_W = 7.39737323516E-19;
+    private static final double SMALL_W = 7.397373235160728E-19;
+    /** A tail sample from the ZigguratSampler.Exponential after 1 recursions of the sample method.  */
+    private static final double TAIL_W = 7.569274694148063;
     /** A largest sample from the ZigguratSampler.Exponential after 4 recursions of the sample method.  */
-    private static final double LARGE_W = 4 * 7.56927469415;
+    private static final double LARGE_W = 4 * TAIL_W;
     /** The smallest value for alpha where 1 - (1-alpha) = alpha. */
     private static final double SMALLEST_ALPHA = 1.0 - nextDown(1.0);
 
@@ -1341,7 +1343,7 @@ public class StableSamplerTest {
         // The value with all bits set generates phi/2 -> pi/4.
         // Add a long to create a big value for w of 5.
         // The parameters create cancellation in the numerator of z to create a negative z.
-        final long[] longs = {Long.MAX_VALUE, 6092639261718834176L};
+        final long[] longs = {Long.MAX_VALUE, 6092639261715210240L};
 
         final double phiby2 = PI_4 - PI_4 * DU;
         final double w = 5.0;
@@ -1502,7 +1504,7 @@ public class StableSamplerTest {
 
         // Add a long to create an ordinary value for w of 1.0.
         // u -> -pi/4
-        final long[] longs1 = {Long.MIN_VALUE + (1 << 10), 1446480648965498882L};
+        final long[] longs1 = {Long.MIN_VALUE + (1 << 10), 1446480648965178882L};
         assertUWSequence(new double[] {
             -PI_4 + PI_4 * DU, 1.0,
         }, longs1);
@@ -1511,7 +1513,7 @@ public class StableSamplerTest {
         Assert.assertTrue("Sampler did not recover", isFinite(x1));
 
         // u -> pi/4
-        final long[] longs2 = {Long.MAX_VALUE, 1446480648965498882L};
+        final long[] longs2 = {Long.MAX_VALUE, 1446480648965178882L};
         assertUWSequence(new double[] {
             PI_4 - PI_4 * DU, 1.0,
         }, longs2);
@@ -1614,11 +1616,11 @@ public class StableSamplerTest {
 
             // Add non extreme exponential deviate to test only extreme u
             // phi/2 -> -pi/4, w=1
-            Long.MIN_VALUE + (1 << 10), 1446480648965498882L,
+            Long.MIN_VALUE + (1 << 10), 1446480648965178882L,
             // phi/2 -> pi/4, w=1
-            Long.MAX_VALUE, 1446480648965498882L,
+            Long.MAX_VALUE, 1446480648965178882L,
             // phi/2=0, w=1
-            0, 1446480648965498882L,
+            0, 1446480648965178882L,
 
             // Add non extreme uniform deviate to test only extreme w
             // phi/2=pi/5, w=0
@@ -1732,15 +1734,15 @@ public class StableSamplerTest {
         // Extremes of the exponential sampler
         Assert.assertEquals(0, ZigguratSampler.Exponential.of(
                 createRngWithSequence(0L)).sample(), 0.0);
-        Assert.assertEquals(7.39737323516E-19, ZigguratSampler.Exponential.of(
+        Assert.assertEquals(SMALL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(1)).sample(), 0.0);
         Assert.assertEquals(1.0, ZigguratSampler.Exponential.of(
-                createRngWithSequence(1446480648965498882L)).sample(), 0.0);
+                createRngWithSequence(1446480648965178882L)).sample(), 0.0);
         Assert.assertEquals(5.0, ZigguratSampler.Exponential.of(
-                createRngWithSequence(6092639261718834176L)).sample(), 0.0);
-        Assert.assertEquals(7.56927469415, ZigguratSampler.Exponential.of(
+                createRngWithSequence(6092639261715210240L)).sample(), 0.0);
+        Assert.assertEquals(TAIL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(-1, -1, 0)).sample(), 0.0);
-        Assert.assertEquals(3 * 7.56927469415, ZigguratSampler.Exponential.of(
+        Assert.assertEquals(3 * TAIL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(-1, -1, -1, -1, -1, -1, 0)).sample(), 1e-14);
     }
 
@@ -1815,17 +1817,17 @@ public class StableSamplerTest {
      * 1 << 10                         d
      * Long.MIN_VALUE >>> 1            pi/5
      * Long.MAX_VALUE                  pi/4 - d
-     * 1                                                   7.39737323516E-19
-     * 1446480648965498882L                                1.0
-     * 6092639261718834176L                                5.0
-     * -1, -1, 0                                           7.56927469415
-     * -1L * 2n, 0                                         n * 7.56927469415  [2]
+     * 1                                                   7.397373235160728E-19
+     * 1446480648965178882L                                1.0
+     * 6092639261715210240L                                5.0
+     * -1, -1, 0                                           7.569274694148063
+     * -1L * 2n, 0                                         n * 7.569274694148063  [2]
      * </pre>
      *
      * <ol>
      * <li>When phi/2=-pi/4 the method will ignore the value and obtain another long value.
      * <li>To create a large value for the exponential sampler requires recursion. Each input
-     * of 2 * -1L will add 7.56927469415 to the total. A long of zero will stop recursion.
+     * of 2 * -1L will add 7.569274694148063 to the total. A long of zero will stop recursion.
      * </ol>
      *
      * @param longs the initial sequence of longs
@@ -1909,7 +1911,7 @@ public class StableSamplerTest {
         // Test alpha passing through 1 when beta!=0 (switch to an alpha=1 sampler)
         for (final double beta : new double[] {0.5, 0.2, 0.1, 0.001}) {
             testSamplerOutputIsContinuousFunction(1 + 8096 * DU, beta, 1.0, beta, 1 - 8096 * DU, beta, 0);
-            testSamplerOutputIsContinuousFunction(1 + 1024 * DU, beta, 1.0, beta, 1 - 1024 * DU, beta, 0);
+            testSamplerOutputIsContinuousFunction(1 + 1024 * DU, beta, 1.0, beta, 1 - 1024 * DU, beta, 1);
             // Not perfect when alpha -> 1
             testSamplerOutputIsContinuousFunction(1 + 128 * DU, beta, 1.0, beta, 1 - 128 * DU, beta, 1);
             testSamplerOutputIsContinuousFunction(1 + 16 * DU, beta, 1.0, beta, 1 - 16 * DU, beta, 4);
@@ -1921,10 +1923,10 @@ public class StableSamplerTest {
         for (final double alpha : new double[] {1.5, 1.2, 1.1, 1.001}) {
             testSamplerOutputIsContinuousFunction(alpha, 8096 * DU, alpha, 0, alpha, -8096 * DU, 0);
             testSamplerOutputIsContinuousFunction(alpha, 1024 * DU, alpha, 0, alpha, -1024 * DU, 0);
-            testSamplerOutputIsContinuousFunction(alpha, 128 * DU, alpha, 0, alpha, -128 * DU, 0);
+            testSamplerOutputIsContinuousFunction(alpha, 128 * DU, alpha, 0, alpha, -128 * DU, 1);
             // Not perfect when beta is very small
-            testSamplerOutputIsContinuousFunction(alpha, 16 * DU, alpha, 0, alpha, -16 * DU, 3);
-            testSamplerOutputIsContinuousFunction(alpha, DU, alpha, 0, alpha, -DU, 2);
+            testSamplerOutputIsContinuousFunction(alpha, 16 * DU, alpha, 0, alpha, -16 * DU, 64);
+            testSamplerOutputIsContinuousFunction(alpha, DU, alpha, 0, alpha, -DU, 4);
         }
 
         // Note: No test for transition to the Cauchy case (alpha=1, beta=0).
@@ -2279,7 +2281,7 @@ public class StableSamplerTest {
         final double w = ZigguratSampler.Exponential.of(rng).sample();
         Assert.assertNotEquals(0.0, w, 0.0);
         // This is the actual value; it is small but not extreme.
-        Assert.assertEquals(0.007391869818499571, w, 0.0);
+        Assert.assertEquals(0.007391869818503967, w, 0.0);
 
         final RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS;
         final long seed = 0x83762b3daf1c43L;
@@ -2405,7 +2407,7 @@ public class StableSamplerTest {
             // phi/2=pi/5, w=large
             x, -1, -1, -1, -1, -1, -1, -1, -1, 0,
             // phi/2=pi/5, w=1
-            x, 1446480648965498882L,
+            x, 1446480648965178882L,
         };
 
         // Validate series
