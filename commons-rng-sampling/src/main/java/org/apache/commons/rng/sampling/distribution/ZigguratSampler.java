@@ -768,6 +768,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                     }
                     if (uDiff >= MAX_IE &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Frequency (per upper-right triangle): 0.431497
+                        // Reject frequency: 0.489630
                         // Long.MIN_VALUE is used as an unsigned int with value 2^63:
                         // uy = Long.MIN_VALUE - (ux + uDiff)
                         fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
