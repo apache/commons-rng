@@ -302,11 +302,15 @@ public class ZigguratSamplerPerformance {
      * The samplers to use for testing the ziggurat method with sequential sample generation.
      * Defines the RandomSource and the sampler type.
      *
-     * <p>This specifically targets the Gaussian sampler. The modified ziggurat sampler
-     * for the exponential distribution is always faster than the standard zigurat sampler.
-     * The modified ziggurat sampler is faster on single samples than the standard sampler
-     * but on repeat calls to generate multiple deviates the standard sampler can be faster
-     * depending on the JDK (modern JDKs are faster with the 'old' sampler).
+     * <p>This specifically targets repeat calls to the same sampler.
+     * Performance should scale linearly with the size. A plot of size against time
+     * can identify outliers and should allow ranking of different methods.
+     *
+     * <p>Note: Testing using a single call to the sampler may return different relative
+     * performance of the samplers than when testing using multiple calls. This is due to the
+     * single calls being performed multiple times by the JMH framework rather than a
+     * single block of code. Rankings should be consistent and the optimal sampler method
+     * chosen using both sets of results.
      */
     @State(Scope.Benchmark)
     public static class SequentialSources {
@@ -326,14 +330,19 @@ public class ZigguratSamplerPerformance {
 
         /** The sampler type. */
         @Param({// Production versions
-                GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN,
+                GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN, MOD_EXPONENTIAL,
+                // Experimental Marsaglia exponential ziggurat sampler
+                EXPONENTIAL,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INLINING,
-                MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP})
+                MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
+                // Experimental McFarland Gaussian ziggurat samplers
+                MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
+                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP})
         private String type;
 
         /** The size. */
-        @Param({"1", "2", "3", "4", "5", "10", "20", "40"})
+        @Param({"1", "2", "4", "8", "16", "32", "64"})
         private int size;
 
         /** The sampler. */
