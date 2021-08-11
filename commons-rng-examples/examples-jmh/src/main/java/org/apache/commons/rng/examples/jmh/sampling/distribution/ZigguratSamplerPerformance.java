@@ -90,6 +90,8 @@ public class ZigguratSamplerPerformance {
     private static final String MOD_EXPONENTIAL_SIMPLE_OVERHANGS = "ModExponentialSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratExponentialSamplerInlining}. */
     private static final String MOD_EXPONENTIAL_INLINING = "ModExponentialInlining";
+    /** The name for the {@link ModifiedZigguratExponentialSamplerLoop}. */
+    private static final String MOD_EXPONENTIAL_LOOP = "ModExponentialLoop";
     /** The name for the {@link ModifiedZigguratExponentialSamplerRecursion}. */
     private static final String MOD_EXPONENTIAL_RECURSION = "ModExponentialRecursion";
     /** The name for the {@link ModifiedZigguratExponentialSamplerIntMap}. */
@@ -233,7 +235,7 @@ public class ZigguratSamplerPerformance {
                 MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
-                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP})
+                MOD_EXPONENTIAL_LOOP, MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP})
         private String type;
 
         /** The sampler. */
@@ -288,6 +290,8 @@ public class ZigguratSamplerPerformance {
                 return new ModifiedZigguratExponentialSamplerSimpleOverhangs(rng);
             } else if (MOD_EXPONENTIAL_INLINING.equals(type)) {
                 return new ModifiedZigguratExponentialSamplerInlining(rng);
+            } else if (MOD_EXPONENTIAL_LOOP.equals(type)) {
+                return new ModifiedZigguratExponentialSamplerLoop(rng);
             } else if (MOD_EXPONENTIAL_RECURSION.equals(type)) {
                 return new ModifiedZigguratExponentialSamplerRecursion(rng);
             } else if (MOD_EXPONENTIAL_INT_MAP.equals(type)) {
@@ -338,7 +342,7 @@ public class ZigguratSamplerPerformance {
                 MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
-                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP})
+                MOD_EXPONENTIAL_LOOP, MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP})
         private String type;
 
         /** The size. */
@@ -2001,7 +2005,7 @@ public class ZigguratSamplerPerformance {
      *
      * <p>The sampler will output different values due to the use of a bit shift to generate
      * unsigned integers. This removes the requirement to load the mask MAX_INT64
-     * and ensures the method is under 34 bytes.
+     * and ensures the method is under 35 bytes.
      */
     static class ModifiedZigguratExponentialSamplerInlining
         extends ModifiedZigguratExponentialSampler {
@@ -2043,7 +2047,7 @@ public class ZigguratSamplerPerformance {
          * @return a sample
          */
         private double edgeSample() {
-            // For the first call into createSample:
+            // For the first call into sample:
             // Tail frequency = 0.000515560
             // Overhang frequency  = 0.0151109
             final int j = expSampleA();
@@ -2072,6 +2076,88 @@ public class ZigguratSamplerPerformance {
             // Edge of the ziggurat
             final int j = expSampleA();
             return j == 0 ? sampleAdd(x0 + X_0) : x0 + expOverhang(j);
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from an exponential distribution.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This implementation separates sampling of the main ziggurat and sampling from the edge
+     * into different methods. This allows inlining of the main sample method.
+     *
+     * <p>The sampler will output different values due to the use of a bit shift to generate
+     * unsigned integers. This removes the requirement to load the mask MAX_INT64
+     * and ensures the method is under 35 bytes.
+     *
+     * <p>Tail sampling outside of the main sample method is performed in a loop.
+     */
+    static class ModifiedZigguratExponentialSamplerLoop
+        extends ModifiedZigguratExponentialSampler {
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratExponentialSamplerLoop(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            // Ideally this method byte code size should be below -XX:MaxInlineSize
+            // (which defaults to 35 bytes). This compiles to 34 bytes.
+
+            final long x = nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) x) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                // This branch is called about 0.984374 times per call into createSample.
+                // Note: Frequencies have been empirically measured for the first call to
+                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
+                return X[i] * (x >>> 1);
+            }
+
+            return edgeSample();
+        }
+
+        /**
+         * Create the sample from the edge of the ziggurat.
+         *
+         * <p>This method has been extracted to fit the main sample method within 35 bytes (the
+         * default size for a JVM to inline a method).
+         *
+         * @return a sample
+         */
+        private double edgeSample() {
+            int j = expSampleA();
+            if (j != 0) {
+                // Overhang frequency  = 0.0151109
+                return expOverhang(j);
+            }
+            // Tail frequency = 0.000515560
+
+            // Perform a new sample and add it to the start of the tail.
+            double x0 = X_0;
+            for (;;) {
+                final long x = nextLong();
+                final int i = ((int) x) & 0xff;
+
+                if (i < I_MAX) {
+                    // Early exit.
+                    return x0 + X[i] * (x >>> 1);
+                }
+                // Edge of the ziggurat
+                j = expSampleA();
+                if (j != 0) {
+                    return x0 + expOverhang(j);
+                }
+                // Another tail sample
+                x0 += X_0;
+            }
         }
     }
 
