@@ -72,7 +72,8 @@
 
   This module provides miscellaneous complete applications that illustrate usage of the library.
   Please note that this module is not part of the library's API; no compatibility should be expected
-  in successive releases of "Commons RNG".
+  in successive releases of "Commons RNG". The examples can be download in the
+  {{{https://commons.apache.org/rng/download_rng.cgi}source distribution}}.
 
   As of version 1.1, the following modules are provided:
 
@@ -974,7 +975,7 @@ double[] coordinate = sampler.sample();
 
 6. Examples
 
-  The source distribution for Apache Commons RNG contains example applications to demonstrate
+  The {{{https://commons.apache.org/rng/download_rng.cgi}source distribution}} for Apache Commons RNG contains example applications to demonstrate
   functionality of the library. These are contained in the following modules:
 
 *----------*---------------+
