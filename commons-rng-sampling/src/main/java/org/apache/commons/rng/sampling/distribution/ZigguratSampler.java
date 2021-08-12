@@ -758,6 +758,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /** {@inheritDoc} */
         @Override
         public double sample() {
+            // Ideally this method byte code size should be below -XX:MaxInlineSize
+            // (which defaults to 35 bytes). This compiles to 33 bytes.
+
             final long xx = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
             final int i = ((int) xx) & MASK_INT8;
@@ -768,6 +771,19 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 return X[i] * xx;
             }
 
+            return edgeSample(xx);
+        }
+
+        /**
+         * Create the sample from the edge of the ziggurat.
+         *
+         * <p>This method has been extracted to fit the main sample method within 35 bytes (the
+         * default size for a JVM to inline a method).
+         *
+         * @param xx Initial random deviate
+         * @return a sample
+         */
+        private double edgeSample(long xx) {
             // Recycle bits then advance RNG:
             // u1 = RANDOM_INT63()
             long u1 = xx & MAX_INT64;
@@ -807,36 +823,38 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                     // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
-            } else if (j == 0) {
-                // Tail
-                // Branch frequency: 0.000277067
-                // Note: Although less frequent than the next branch, j == 0 is a subset of
-                // j < J_INFLECTION and must be first.
-                // Loop repeat frequency: 0.0634786
-                do {
-                    x = ONE_OVER_X_0 * exponential.sample();
-                } while (exponential.sample() < 0.5 * x * x);
-                x += X_0;
             } else if (j < J_INFLECTION) {
-                // Concave overhang
-                // Branch frequency: 0.00251223
-                // Loop repeat frequency: 0.0123784
-                for (;;) {
-                    // U_x <- min(U_1, U_2)
-                    // distance <- | U_1 - U_2 |
-                    // U_y <- 1 - (U_x + distance)
-                    long uDiff = randomInt63() - u1;
-                    if (uDiff < 0) {
-                        // Upper-right triangle. Reflect in hypotenuse.
-                        uDiff = -uDiff;
-                        u1 -= uDiff;
+                if (j == 0) {
+                    // Tail
+                    // Branch frequency: 0.000277067
+                    // Note: Although less frequent than the next branch, j == 0 is a subset of
+                    // j < J_INFLECTION and must be first.
+                    // Loop repeat frequency: 0.0634786
+                    do {
+                        x = ONE_OVER_X_0 * exponential.sample();
+                    } while (exponential.sample() < 0.5 * x * x);
+                    x += X_0;
+                } else {
+                    // Concave overhang
+                    // Branch frequency: 0.00251223
+                    // Loop repeat frequency: 0.0123784
+                    for (;;) {
+                        // U_x <- min(U_1, U_2)
+                        // distance <- | U_1 - U_2 |
+                        // U_y <- 1 - (U_x + distance)
+                        long uDiff = randomInt63() - u1;
+                        if (uDiff < 0) {
+                            // Upper-right triangle. Reflect in hypotenuse.
+                            uDiff = -uDiff;
+                            u1 -= uDiff;
+                        }
+                        x = fastPrngSampleX(X, j, u1);
+                        if (uDiff > MIN_IE ||
+                            fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                            break;
+                        }
+                        u1 = randomInt63();
                     }
-                    x = fastPrngSampleX(X, j, u1);
-                    if (uDiff > MIN_IE ||
-                        fastPrngSampleY(Y, j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
-                        break;
-                    }
-                    u1 = randomInt63();
                 }
             } else {
                 // Inflection point
