@@ -40,13 +40,13 @@
 
   The library is divided into modules:
 
-  * {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}Client API}} (requires Java 6)
+  * {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/package-summary.html}Client API}} (requires Java 7)
 
   This module provides the
   {{{../commons-rng-client-api/apidocs/org/apache/commons/rng/RestorableUniformRandomProvider.html}interface}}
   to be passed as argument to a procedure that needs to access to a sequence of random numbers.
 
-  * {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}Core}} (requires Java 6)
+  * {{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}Core}} (requires Java 7)
 
   This module contains the implementations of several generators of pseudo-random sequences of numbers.
   Code in this module is intended to be internal to this library and no user code should access it
@@ -56,12 +56,12 @@
   {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/RandomSource.html}RandomSource}}
   factory.
 
-  * {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}Simple}} (requires Java 6)
+  * {{{../commons-rng-simple/apidocs/org/apache/commons/rng/simple/package-summary.html}Simple}} (requires Java 7)
 
   This module provides factory methods for creating instances of all the generators implemented
   in the <<<commons-rng-core>>> module.
 
-  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}} (requires Java 6)
+  * {{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}Sampling}} (requires Java 7)
 
   This module provides implementations that: generate a sequence of numbers according to some
   specified probability distribution; sample coordinates from geometric shapes; sample
@@ -76,7 +76,7 @@
 
   As of version 1.1, the following modules are provided:
 
-   ** <<<examples-jmh>>>: JMH benchmarking (requires Java 8)
+   ** <<<examples-jmh>>>: JMH benchmarking (requires Java 7)
 
    This module uses the {{{http://openjdk.java.net/projects/code-tools/jmh/}JMH micro-benchmark framework}}
    in order to assess the relative performance of the generators (see tables below).
@@ -91,12 +91,12 @@
    This module contains the code that generates the data used to produce the probability density
    plots shown in {{{./dist_density_approx.html}this userguide}}.
 
-   ** <<<examples-jpms>>>: JPMS integration (requires Java 9)
+   ** <<<examples-jpms>>>: JPMS integration (requires Java 11)
 
    This module implements a dummy application that shows how to use the artefacts (produced
    from the maven modules described above) as Java modules ({{{https://en.wikipedia.org/wiki/Java_Platform_Module_System}JPMS}}).
 
-   ** <<<examples-quadrature>>>: Quadrature (requires Java 8)
+   ** <<<examples-quadrature>>>: Quadrature (requires Java 7)
 
    This module contains an application that estimates the number 𝞹 using quasi-Montecarlo integration.
 
