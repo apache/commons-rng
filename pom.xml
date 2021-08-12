@@ -462,13 +462,16 @@
                 <configuration>
                   <target name="prepare-checkout" if="${perform.site.checkout}">
                     <!-- Top level directory -->
-                    <exec executable="svn">
+                    <exec executable="svn" failifexecutionfails="false">
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
                     </exec>
+                    <!-- Create the directory in the event that no svn exectuable is on the path -->
+                    <mkdir dir="${commons.scmPubCheckoutDirectory}"/>
 
                     <echo file="${commons.scmPubCheckoutDirectory}.README">The '${commons.scmPubCheckoutDirectory}' directory is controlled by "subversion".
 Running "svn up" will download *all* the files of the live web site at
     https://commons.apache.org/rng
+This is avoided by creating an empty directory when svn is not available.
                     </echo>
                   </target>
                 </configuration>
