@@ -807,9 +807,6 @@ public class ZigguratSamplerPerformance {
         }
     }
 
-    // Add test for tail recursion in exponential sampler using createSample(double)
-    // Can it then be inlined for the main sample method?
-
     /**
      * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
      *
