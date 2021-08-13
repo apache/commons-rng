@@ -33,9 +33,6 @@
   Code in this module is not part of the public API.</description>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.stress</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.stress</commons.osgi.export>
