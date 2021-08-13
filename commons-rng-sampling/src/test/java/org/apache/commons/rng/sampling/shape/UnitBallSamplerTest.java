@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
-
+import java.util.function.DoubleUnaryOperator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -110,11 +110,11 @@ public class UnitBallSamplerTest {
         final int orthants = 1 << dimension;
 
         // Compute the radius for each layer to have the same volume.
-        final double volume = createVolumeFunction(dimension).apply(1);
+        final double volume = createVolumeFunction(dimension).applyAsDouble(1);
         final DoubleUnaryOperator radius = createRadiusFunction(dimension);
         final double[] r = new double[layers];
         for (int i = 1; i < layers; i++) {
-            r[i - 1] = radius.apply(volume * ((double) i / layers));
+            r[i - 1] = radius.applyAsDouble(volume * ((double) i / layers));
         }
         // The final radius should be 1.0. Any coordinates with a radius above 1
         // should fail so explicitly set the value as 1.
@@ -273,25 +273,9 @@ public class UnitBallSamplerTest {
             final DoubleUnaryOperator volume = createVolumeFunction(n);
             final DoubleUnaryOperator radius = createRadiusFunction(n);
             for (final double r : radii) {
-                Assert.assertEquals(r, radius.apply(volume.apply(r)), 1e-10);
+                Assert.assertEquals(r, radius.applyAsDouble(volume.applyAsDouble(r)), 1e-10);
             }
         }
-    }
-
-    /**
-     * Specify computation of a double-valued result for a given double.
-     *
-     * <p>This can be replaced with java.util.function.DoubleUnaryOperator when the source
-     * requires Java 1.8.
-     */
-    private interface DoubleUnaryOperator {
-        /**
-         * Compute the result.
-         *
-         * @param value the input value
-         * @return the result
-         */
-        double apply(double value);
     }
 
     /**
@@ -303,53 +287,22 @@ public class UnitBallSamplerTest {
      * @see <a href="https://en.wikipedia.org/wiki/Volume_of_an_n-ball">Volume of an n-ball</a>
      */
     private static DoubleUnaryOperator createVolumeFunction(final int dimension) {
-        // This can be simplified using lambda functions when the source requires Java 1.8
         if (dimension == 1) {
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return r * 2;
-                }
-            };
+            return r -> r * 2;
         } else if (dimension == 2) {
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return Math.PI * r * r;
-                }
-            };
+            return r -> Math.PI * r * r;
         } else if (dimension == 3) {
             final double factor = 4 * Math.PI / 3;
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return factor * Math.pow(r, 3);
-                }
-            };
+            return r -> factor * Math.pow(r, 3);
         } else if (dimension == 4) {
             final double factor = Math.PI * Math.PI / 2;
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return factor * Math.pow(r, 4);
-                }
-            };
+            return r -> factor * Math.pow(r, 4);
         } else if (dimension == 5) {
             final double factor = 8 * Math.PI * Math.PI / 15;
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return factor * Math.pow(r, 5);
-                }
-            };
+            return r -> factor * Math.pow(r, 5);
         } else if (dimension == 6) {
             final double factor = Math.pow(Math.PI, 3) / 6;
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double r) {
-                    return factor * Math.pow(r, 6);
-                }
-            };
+            return r -> factor * Math.pow(r, 6);
         }
         throw new IllegalStateException("Unsupported dimension: " + dimension);
     }
@@ -363,53 +316,22 @@ public class UnitBallSamplerTest {
      * @see <a href="https://en.wikipedia.org/wiki/Volume_of_an_n-ball">Volume of an n-ball</a>
      */
     private static DoubleUnaryOperator createRadiusFunction(final int dimension) {
-        // This can be simplified using lambda functions when the source requires Java 1.8
         if (dimension == 1) {
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return v * 0.5;
-                }
-            };
+            return v -> v * 0.5;
         } else if (dimension == 2) {
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return Math.sqrt(v / Math.PI);
-                }
-            };
+            return v -> Math.sqrt(v / Math.PI);
         } else if (dimension == 3) {
             final double factor = 3.0 / (4 * Math.PI);
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return Math.cbrt(v * factor);
-                }
-            };
+            return v -> Math.cbrt(v * factor);
         } else if (dimension == 4) {
             final double factor = 2.0 / (Math.PI * Math.PI);
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return Math.pow(v * factor, 0.25);
-                }
-            };
+            return v -> Math.pow(v * factor, 0.25);
         } else if (dimension == 5) {
             final double factor = 15.0 / (8 * Math.PI * Math.PI);
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return Math.pow(v * factor, 0.2);
-                }
-            };
+            return v -> Math.pow(v * factor, 0.2);
         } else if (dimension == 6) {
             final double factor = 6.0 / Math.pow(Math.PI, 3);
-            return new DoubleUnaryOperator() {
-                @Override
-                public double apply(double v) {
-                    return Math.pow(v * factor, 1.0 / 6);
-                }
-            };
+            return v -> Math.pow(v * factor, 1.0 / 6);
         }
         throw new IllegalStateException("Unsupported dimension: " + dimension);
     }
