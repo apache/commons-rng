@@ -60,7 +60,7 @@ public final class NumberFactory {
      */
     @Deprecated
     public static boolean makeBoolean(int v) {
-        return (v >>> 31) != 0;
+        return v < 0;
     }
 
     /**
@@ -74,7 +74,7 @@ public final class NumberFactory {
      */
     @Deprecated
     public static boolean makeBoolean(long v) {
-        return (v >>> 63) != 0;
+        return v < 0;
     }
 
     /**
