@@ -981,16 +981,18 @@ double[] coordinate = sampler.sample();
 *----------*---------------+
 || Example Module || Description ||
 *----------*---------------+
-| Stress | Application for calling external tools that perform stringent uniformity tests (requires Java 8+). This application is used to generate results in the {{{a5._Quality}Quality}} section. |
+| Stress | Application for calling external tools that perform stringent uniformity tests. This application is used to generate results in the {{{a5._Quality}Quality}} section. |
 *----------*---------------+
 | Sampling | Application producing output from distribution samplers to create an approximate probability density function (PDF) as shown {{{./dist_density_approx.html}here}}. |
 *----------*---------------+
 | Quadrature | Application for computing numerical quadrature by Monte-Carlo (random) integration. |
 *----------*---------------+
-| JMH | Benchmarks that assess the performance of the generators using the Java Microbenchmark Harness (requires Java 8+). This application is used to generate results in the {{{a4._Performance}Performance}} section. |
+| JMH | Benchmarks that assess the performance of the generators using the Java Microbenchmark Harness. This application is used to generate results in the {{{a4._Performance}Performance}} section. |
 *----------*---------------+
 | JPMS | Example JPMS application using all the JPMS modules of Commons RNG (requires Java 11+). |
 *----------*---------------+
+
+  The examples require Java 8+ unless specifed as requiring a higher version.
 
   The examples can be built using profiles in the relevant module. For example to build the
   JMH benchmarks application and show the help information:
