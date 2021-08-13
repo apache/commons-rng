@@ -681,23 +681,15 @@ public class StableSamplerPerformance {
         public void setup() {
             final UniformRandomProvider rng = getRNG();
             if (BASELINE.equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return rng.nextDouble();
-                    }
-                };
+                sampler = rng::nextDouble;
             } else if ("nextDoubleNot0".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        // Sample the 2^53 dyadic rationals in [0, 1) with zero excluded
-                        double x;
-                        do {
-                            x = rng.nextDouble();
-                        } while (x == 0);
-                        return x - 0.5;
-                    }
+                sampler = () -> {
+                    // Sample the 2^53 dyadic rationals in [0, 1) with zero excluded
+                    double x;
+                    do {
+                        x = rng.nextDouble();
+                    } while (x == 0);
+                    return x - 0.5;
                 };
             } else if ("nextDoubleNot0Recurse".equals(method)) {
                 sampler = new ContinuousSampler() {
@@ -714,34 +706,25 @@ public class StableSamplerPerformance {
                     }
                 };
             } else if ("nextLongNot0".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        // Sample the 2^53 dyadic rationals in [0, 1) with zero excluded
-                        long x;
-                        do {
-                            x = rng.nextLong() >>> 11;
-                        } while (x == 0);
-                        return x * 0x1.0p-53 - 0.5;
-                    }
+                sampler = () -> {
+                    // Sample the 2^53 dyadic rationals in [0, 1) with zero excluded
+                    long x;
+                    do {
+                        x = rng.nextLong() >>> 11;
+                    } while (x == 0);
+                    return x * 0x1.0p-53 - 0.5;
                 };
             } else if ("nextDoubleShifted".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        // Sample the 2^52 dyadic rationals in [0, 1) and shift by 2^-53.
-                        // No infinite loop but the deviate loses 1 bit of randomness.
-                        return 0x1.0p-53 + (rng.nextLong() >>> 12) * 0x1.0p-52 - 0.5;
-                    }
+                sampler = () -> {
+                    // Sample the 2^52 dyadic rationals in [0, 1) and shift by 2^-53.
+                    // No infinite loop but the deviate loses 1 bit of randomness.
+                    return 0x1.0p-53 + (rng.nextLong() >>> 12) * 0x1.0p-52 - 0.5;
                 };
             } else if ("nextLongShifted".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        // Sample the 2^53 dyadic rationals in [0, 1) but set the lowest
-                        // bit. This result in 2^52 dyadic rationals in (0, 1) to avoid 0.
-                        return ((rng.nextLong() >>> 11) | 0x1L) * 0x1.0p-53 - 0.5;
-                    }
+                sampler = () -> {
+                    // Sample the 2^53 dyadic rationals in [0, 1) but set the lowest
+                    // bit. This result in 2^52 dyadic rationals in (0, 1) to avoid 0.
+                    return ((rng.nextLong() >>> 11) | 0x1L) * 0x1.0p-53 - 0.5;
                 };
             } else if ("signedShift".equals(method)) {
                 sampler = new ContinuousSampler() {
@@ -832,53 +815,35 @@ public class StableSamplerPerformance {
         public void setup() {
             final UniformRandomProvider rng = getRNG();
             if (BASELINE.equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        // A value in [-pi/4, pi/4]
-                        return PI_2 * (rng.nextDouble() - 0.5);
-                    }
+                sampler = () -> {
+                    // A value in [-pi/4, pi/4]
+                    return PI_2 * (rng.nextDouble() - 0.5);
                 };
             } else if ("tan".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        final double x = PI_2 * (rng.nextDouble() - 0.5);
-                        // Require tan(0) / 0 = 1 and not NaN
-                        return x == 0 ? 1.0 : Math.tan(x) / x;
-                    }
+                sampler = () -> {
+                    final double x = PI_2 * (rng.nextDouble() - 0.5);
+                    // Require tan(0) / 0 = 1 and not NaN
+                    return x == 0 ? 1.0 : Math.tan(x) / x;
                 };
             } else if ("tan4283".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        final double x = PI_2 * (rng.nextDouble() - 0.5);
-                        return x * tan4283(x);
-                    }
+                sampler = () -> {
+                    final double x = PI_2 * (rng.nextDouble() - 0.5);
+                    return x * tan4283(x);
                 };
             } else if ("tan4288".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        final double x = PI_2 * (rng.nextDouble() - 0.5);
-                        return x * tan4288(x);
-                    }
+                sampler = () -> {
+                    final double x = PI_2 * (rng.nextDouble() - 0.5);
+                    return x * tan4288(x);
                 };
             } else if ("tan4288b".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        final double x = PI_2 * (rng.nextDouble() - 0.5);
-                        return x * tan4288b(x);
-                    }
+                sampler = () -> {
+                    final double x = PI_2 * (rng.nextDouble() - 0.5);
+                    return x * tan4288b(x);
                 };
             } else if ("tan4288c".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        final double x = PI_2 * (rng.nextDouble() - 0.5);
-                        return x * tan4288c(x);
-                    }
+                sampler = () -> {
+                    final double x = PI_2 * (rng.nextDouble() - 0.5);
+                    return x * tan4288c(x);
                 };
             } else {
                 throw new IllegalStateException("Unknown tan method: " + method);
@@ -1104,40 +1069,15 @@ public class StableSamplerPerformance {
             final double s = scale;
             final UniformRandomProvider rng = getRNG();
             if (BASELINE.equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return s * (rng.nextDouble() - 0.5);
-                    }
-                };
+                sampler = () -> s * (rng.nextDouble() - 0.5);
             } else if ("expm1".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return expm1(s * (rng.nextDouble() - 0.5));
-                    }
-                };
+                sampler = () -> expm1(s * (rng.nextDouble() - 0.5));
             } else if ("expm1b".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return expm1b(s * (rng.nextDouble() - 0.5));
-                    }
-                };
+                sampler = () -> expm1b(s * (rng.nextDouble() - 0.5));
             } else if ("exp".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return exp(s * (rng.nextDouble() - 0.5));
-                    }
-                };
+                sampler = () -> exp(s * (rng.nextDouble() - 0.5));
             } else if ("hybrid".equals(method)) {
-                sampler = new ContinuousSampler() {
-                    @Override
-                    public double sample() {
-                        return hybrid(s * (rng.nextDouble() - 0.5));
-                    }
-                };
+                sampler = () -> hybrid(s * (rng.nextDouble() - 0.5));
             } else {
                 throw new IllegalStateException("Unknown d2 method: " + method);
             }

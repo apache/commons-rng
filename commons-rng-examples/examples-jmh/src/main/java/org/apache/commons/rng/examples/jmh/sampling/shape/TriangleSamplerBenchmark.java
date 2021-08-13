@@ -251,25 +251,19 @@ public class TriangleSamplerBenchmark {
         protected Sampler createSampler(final UniformRandomProvider rng,
                                         final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        final double s = rng.nextDouble();
-                        final double t = rng.nextDouble();
-                        return new double[] {s, t};
-                    }
+                return () -> {
+                    final double s = rng.nextDouble();
+                    final double t = rng.nextDouble();
+                    return new double[] {s, t};
                 };
             } else if (BASELINE_IF.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        final double s = rng.nextDouble();
-                        final double t = rng.nextDouble();
-                        if (s + t > 1) {
-                            return new double[] {s, t};
-                        }
-                        return new double[] {t, s};
+                return () -> {
+                    final double s = rng.nextDouble();
+                    final double t = rng.nextDouble();
+                    if (s + t > 1) {
+                        return new double[] {s, t};
                     }
+                    return new double[] {t, s};
                 };
             } else if (VECTORS.equals(type)) {
                 return new VectorTriangleSampler2D(rng, a, b, c);
@@ -371,25 +365,19 @@ public class TriangleSamplerBenchmark {
         protected Sampler createSampler(final UniformRandomProvider rng,
                                         final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        final double s = rng.nextDouble();
-                        final double t = rng.nextDouble();
-                        return new double[] {s, t, s};
-                    }
+                return () -> {
+                    final double s = rng.nextDouble();
+                    final double t = rng.nextDouble();
+                    return new double[] {s, t, s};
                 };
             } else if (BASELINE_IF.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        final double s = rng.nextDouble();
-                        final double t = rng.nextDouble();
-                        if (s + t > 1) {
-                            return new double[] {s, t, s};
-                        }
-                        return new double[] {t, s, t};
+                return () -> {
+                    final double s = rng.nextDouble();
+                    final double t = rng.nextDouble();
+                    if (s + t > 1) {
+                        return new double[] {s, t, s};
                     }
+                    return new double[] {t, s, t};
                 };
             } else if (VECTORS.equals(type)) {
                 return new VectorTriangleSampler3D(rng, a, b, c);
@@ -509,42 +497,36 @@ public class TriangleSamplerBenchmark {
         protected Sampler createSampler(final UniformRandomProvider rng,
                                         final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        double s = rng.nextDouble();
-                        double t = rng.nextDouble();
-                        final double[] x = new double[a.length];
-                        for (int i = 0; i < x.length; i++) {
-                            x[i] = s;
-                            s = t;
-                            t = x[i];
-                        }
-                        return x;
+                return () -> {
+                    double s = rng.nextDouble();
+                    double t = rng.nextDouble();
+                    final double[] x = new double[a.length];
+                    for (int i = 0; i < x.length; i++) {
+                        x[i] = s;
+                        s = t;
+                        t = x[i];
                     }
+                    return x;
                 };
             } else if (BASELINE_IF.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        double s = rng.nextDouble();
-                        double t = rng.nextDouble();
-                        final double[] x = new double[a.length];
-                        if (s + t > 1) {
-                            for (int i = 0; i < x.length; i++) {
-                                x[i] = t;
-                                t = s;
-                                s = x[i];
-                            }
-                            return x;
-                        }
+                return () -> {
+                    double s = rng.nextDouble();
+                    double t = rng.nextDouble();
+                    final double[] x = new double[a.length];
+                    if (s + t > 1) {
                         for (int i = 0; i < x.length; i++) {
-                            x[i] = s;
-                            s = t;
-                            t = x[i];
+                            x[i] = t;
+                            t = s;
+                            s = x[i];
                         }
                         return x;
                     }
+                    for (int i = 0; i < x.length; i++) {
+                        x[i] = s;
+                        s = t;
+                        t = x[i];
+                    }
+                    return x;
                 };
             } else if (VECTORS.equals(type)) {
                 return new VectorTriangleSamplerND(rng, a, b, c);

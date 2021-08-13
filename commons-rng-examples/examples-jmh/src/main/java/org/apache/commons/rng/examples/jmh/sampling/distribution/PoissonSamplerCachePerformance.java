@@ -307,12 +307,7 @@ public class PoissonSamplerCachePerformance {
                                   MeanRange range,
                                   Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
-        final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
-            @Override
-            public DiscreteSampler createPoissonSampler(double mean) {
-                return PoissonSampler.of(r, mean);
-            }
-        };
+        final PoissonSamplerFactory factory = mean -> PoissonSampler.of(r, mean);
         runSample(factory, range, bh);
     }
 
@@ -327,12 +322,7 @@ public class PoissonSamplerCachePerformance {
                                                 Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(0, 0);
-        final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
-            @Override
-            public DiscreteSampler createPoissonSampler(double mean) {
-                return cache.createSharedStateSampler(r, mean);
-            }
-        };
+        final PoissonSamplerFactory factory = mean -> cache.createSharedStateSampler(r, mean);
         runSample(factory, range, bh);
     }
 
@@ -348,12 +338,7 @@ public class PoissonSamplerCachePerformance {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(
                 range.getMin(), range.getMax());
-        final PoissonSamplerFactory factory = new PoissonSamplerFactory() {
-            @Override
-            public DiscreteSampler createPoissonSampler(double mean) {
-                return cache.createSharedStateSampler(r, mean);
-            }
-        };
+        final PoissonSamplerFactory factory = mean -> cache.createSharedStateSampler(r, mean);
         runSample(factory, range, bh);
     }
 }

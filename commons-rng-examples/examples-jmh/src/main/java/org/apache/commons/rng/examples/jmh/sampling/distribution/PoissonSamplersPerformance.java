@@ -177,63 +177,21 @@ public class PoissonSamplersPerformance {
 
             // This would benefit from Java 8 Supplier<DiscreteSampler> lambda function
             if ("SmallMeanPoissonSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return SmallMeanPoissonSampler.of(generator, mean);
-                    }
-                };
+                factory = () -> SmallMeanPoissonSampler.of(generator, mean);
             } else if ("KempSmallMeanPoissonSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return KempSmallMeanPoissonSampler.of(generator, mean);
-                    }
-                };
+                factory = () -> KempSmallMeanPoissonSampler.of(generator, mean);
             } else if ("BoundedKempSmallMeanPoissonSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return new BoundedKempSmallMeanPoissonSampler(generator, mean);
-                    }
-                };
+                factory = () -> new BoundedKempSmallMeanPoissonSampler(generator, mean);
             } else if ("KempSmallMeanPoissonSamplerP50".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return new KempSmallMeanPoissonSamplerP50(generator, mean);
-                    }
-                };
+                factory = () -> new KempSmallMeanPoissonSamplerP50(generator, mean);
             } else if ("KempSmallMeanPoissonSamplerBinarySearch".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return new KempSmallMeanPoissonSamplerBinarySearch(generator, mean);
-                    }
-                };
+                factory = () -> new KempSmallMeanPoissonSamplerBinarySearch(generator, mean);
             } else if ("KempSmallMeanPoissonSamplerGuideTable".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return new KempSmallMeanPoissonSamplerGuideTable(generator, mean);
-                    }
-                };
+                factory = () -> new KempSmallMeanPoissonSamplerGuideTable(generator, mean);
             } else if ("LargeMeanPoissonSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        // Note this is not valid when mean < 1
-                        return LargeMeanPoissonSampler.of(generator, mean);
-                    }
-                };
+                factory = () -> LargeMeanPoissonSampler.of(generator, mean);
             } else if ("TinyMeanPoissonSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        // Note this is only valid when mean < -Math.exp(0x1p-32) == 22.18
-                        return new TinyMeanPoissonSampler(generator, mean);
-                    }
-                };
+                factory = () -> new TinyMeanPoissonSampler(generator, mean);
             }
             sampler = factory.create();
         }

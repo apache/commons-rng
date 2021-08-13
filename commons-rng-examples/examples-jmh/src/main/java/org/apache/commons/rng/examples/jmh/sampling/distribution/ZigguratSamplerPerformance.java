@@ -133,20 +133,14 @@ public class ZigguratSamplerPerformance {
             // Use a fast generator
             final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             if ("CastMask".equals(method)) {
-                sampler = new DiscreteSampler() {
-                    @Override
-                    public int sample() {
-                        final long x = rng.nextLong();
-                        return ((int) x) & 0xff;
-                    }
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return ((int) x) & 0xff;
                 };
             } else if ("MaskCast".equals(method)) {
-                sampler = new DiscreteSampler() {
-                    @Override
-                    public int sample() {
-                        final long x = rng.nextLong();
-                        return (int) (x & 0xff);
-                    }
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return (int) (x & 0xff);
                 };
             } else {
                 throwIllegalStateException(method);
@@ -189,19 +183,9 @@ public class ZigguratSamplerPerformance {
             // Use a fast generator
             final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             if ("Mask".equals(method)) {
-                sampler = new LongSampler() {
-                    @Override
-                    public long sample() {
-                        return rng.nextLong() & Long.MAX_VALUE;
-                    }
-                };
+                sampler = () -> rng.nextLong() & Long.MAX_VALUE;
             } else if ("Shift".equals(method)) {
-                sampler = new LongSampler() {
-                    @Override
-                    public long sample() {
-                        return rng.nextLong() >>> 1;
-                    }
-                };
+                sampler = () -> rng.nextLong() >>> 1;
             } else {
                 throwIllegalStateException(method);
             }

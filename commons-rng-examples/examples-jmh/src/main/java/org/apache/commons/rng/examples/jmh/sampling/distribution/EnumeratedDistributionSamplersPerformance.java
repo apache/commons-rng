@@ -182,68 +182,23 @@ public class EnumeratedDistributionSamplersPerformance {
             final double[] probabilities) {
             // This would benefit from Java 8 lambda functions
             if ("BinarySearchDiscreteSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return new BinarySearchDiscreteSampler(rng, probabilities);
-                    }
-                };
+                factory = () -> new BinarySearchDiscreteSampler(rng, probabilities);
             } else if ("AliasMethodDiscreteSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return AliasMethodDiscreteSampler.of(rng, probabilities);
-                    }
-                };
+                factory = () -> AliasMethodDiscreteSampler.of(rng, probabilities);
             } else if ("AliasMethodDiscreteSamplerNoPad".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return AliasMethodDiscreteSampler.of(rng, probabilities, -1);
-                    }
-                };
+                factory = () -> AliasMethodDiscreteSampler.of(rng, probabilities, -1);
             } else if ("AliasMethodDiscreteSamplerAlpha1".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return AliasMethodDiscreteSampler.of(rng, probabilities, 1);
-                    }
-                };
+                factory = () -> AliasMethodDiscreteSampler.of(rng, probabilities, 1);
             } else if ("AliasMethodDiscreteSamplerAlpha2".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return AliasMethodDiscreteSampler.of(rng, probabilities, 2);
-                    }
-                };
+                factory = () -> AliasMethodDiscreteSampler.of(rng, probabilities, 2);
             } else if ("GuideTableDiscreteSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return GuideTableDiscreteSampler.of(rng, probabilities);
-                    }
-                };
+                factory = () -> GuideTableDiscreteSampler.of(rng, probabilities);
             } else if ("GuideTableDiscreteSamplerAlpha2".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return GuideTableDiscreteSampler.of(rng, probabilities, 2);
-                    }
-                };
+                factory = () -> GuideTableDiscreteSampler.of(rng, probabilities, 2);
             } else if ("GuideTableDiscreteSamplerAlpha8".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return GuideTableDiscreteSampler.of(rng, probabilities, 8);
-                    }
-                };
+                factory = () -> GuideTableDiscreteSampler.of(rng, probabilities, 8);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {
-                factory = new DiscreteSamplerFactory() {
-                    @Override
-                    public DiscreteSampler create() {
-                        return MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
-                    }
-                };
+                factory = () -> MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
             } else {
                 throw new IllegalStateException();
             }

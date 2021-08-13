@@ -144,43 +144,28 @@ public class UnitSphereSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {1.0};
-                    }
+                return () -> {
+                    return new double[] {1.0};
                 };
             } else if (SIGNED_DOUBLE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // (1 - 0) or (1 - 2)
-                        // Use the sign bit
-                        return new double[] {1.0 - ((rng.nextInt() >>> 30) & 0x2)};
-                    }
+                return () -> {
+                    // (1 - 0) or (1 - 2)
+                    // Use the sign bit
+                    return new double[] {1.0 - ((rng.nextInt() >>> 30) & 0x2)};
                 };
             } else if (MASKED_INT.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // Shift the sign bit and combine with the bits for a double of 1.0
-                        return new double[] {Double.longBitsToDouble(ONE | ((rng.nextInt() & SIGN_BIT) << 32))};
-                    }
+                return () -> {
+                    // Shift the sign bit and combine with the bits for a double of 1.0
+                    return new double[] {Double.longBitsToDouble(ONE | ((rng.nextInt() & SIGN_BIT) << 32))};
                 };
             } else if (MASKED_LONG.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // Combine the sign bit with the bits for a double of 1.0
-                        return new double[] {Double.longBitsToDouble(ONE | (rng.nextLong() & Long.MIN_VALUE))};
-                    }
+                return () -> {
+                    // Combine the sign bit with the bits for a double of 1.0
+                    return new double[] {Double.longBitsToDouble(ONE | (rng.nextLong() & Long.MIN_VALUE))};
                 };
             } else if (BOOLEAN.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {rng.nextBoolean() ? -1.0 : 1.0};
-                    }
+                return () -> {
+                    return new double[] {rng.nextBoolean() ? -1.0 : 1.0};
                 };
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(1, rng);
@@ -202,11 +187,8 @@ public class UnitSphereSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {1.0, 0.0};
-                    }
+                return () -> {
+                    return new double[] {1.0, 0.0};
                 };
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(2, rng);
@@ -260,11 +242,8 @@ public class UnitSphereSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {1.0, 0.0, 0.0};
-                    }
+                return () -> {
+                    return new double[] {1.0, 0.0, 0.0};
                 };
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(3, rng);
@@ -319,11 +298,8 @@ public class UnitSphereSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {1.0, 0.0, 0.0, 0.0};
-                    }
+                return () -> {
+                    return new double[] {1.0, 0.0, 0.0, 0.0};
                 };
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(4, rng);

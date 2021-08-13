@@ -166,45 +166,20 @@ public class UnitBallSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {0.5};
-                    }
-                };
+                return () -> new double[] {0.5};
             } else if (SIGNED_DOUBLE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // Sample [-1, 1) uniformly
-                        return new double[] {makeSignedDouble(rng.nextLong())};
-                    }
-                };
+                // Sample [-1, 1) uniformly
+                return () -> new double[] {makeSignedDouble(rng.nextLong())};
             } else if (SIGNED_DOUBLE2.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // Sample [-1, 1) uniformly
-                        return new double[] {makeSignedDouble2(rng.nextLong())};
-                    }
-                };
+                // Sample [-1, 1) uniformly
+                return () -> new double[] {makeSignedDouble2(rng.nextLong())};
             } else if (TWO_DOUBLES.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // Sample [-1, 1) excluding -0.0 but also missing the final 1.0 - 2^-53.
-                        // The 1.0 could be adjusted to 1.0 - 2^-53 to create the interval (-1, 1).
-                        return new double[] {rng.nextDouble() + rng.nextDouble() - 1.0};
-                    }
-                };
+                // Sample [-1, 1) excluding -0.0 but also missing the final 1.0 - 2^-53.
+                // The 1.0 could be adjusted to 1.0 - 2^-53 to create the interval (-1, 1).
+                return () -> new double[] {rng.nextDouble() + rng.nextDouble() - 1.0};
             } else if (BOOLEAN_DOUBLE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        // This will sample (-1, 1) including -0.0 and 0.0
-                        return new double[] {rng.nextBoolean() ? -rng.nextDouble() : rng.nextDouble()};
-                    }
-                };
+                // This will sample (-1, 1) including -0.0 and 0.0
+                return () -> new double[] {rng.nextBoolean() ? -rng.nextDouble() : rng.nextDouble()};
             }
             throw new IllegalStateException(UNKNOWN_SAMPLER + type);
         }
@@ -223,12 +198,7 @@ public class UnitBallSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {0.5, 0};
-                    }
-                };
+                return () -> new double[] {0.5, 0};
             } else if (REJECTION.equals(type)) {
                 return new RejectionSampler(rng);
             } else if (DISK_POINT.equals(type)) {
@@ -373,12 +343,7 @@ public class UnitBallSamplerBenchmark {
         @Override
         protected Sampler createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        return new double[] {0.5, 0, 0};
-                    }
-                };
+                return () -> new double[] {0.5, 0, 0};
             } else if (REJECTION.equals(type)) {
                 return new RejectionSampler(rng);
             } else if (BALL_POINT.equals(type)) {

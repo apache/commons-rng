@@ -452,14 +452,11 @@ public class TetrahedronSamplerBenchmark {
         private Sampler createSampler(final UniformRandomProvider rng,
                                       double[] a, double[] b, double[] c, double[] d) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
-                    @Override
-                    public double[] sample() {
-                        final double s = rng.nextDouble();
-                        final double t = rng.nextDouble();
-                        final double u = rng.nextDouble();
-                        return new double[] {s, t, u};
-                    }
+                return () -> {
+                    final double s = rng.nextDouble();
+                    final double t = rng.nextDouble();
+                    final double u = rng.nextDouble();
+                    return new double[] {s, t, u};
                 };
             } else if (ARRAY.equals(type)) {
                 return new ArrayTetrahedronSampler(rng, a, b, c, d);
