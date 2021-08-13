@@ -57,17 +57,17 @@ If the output is not quite correct, check for invisible trailing spaces!
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 Apache Commons RNG 1.4 contains the following library modules:
-  commons-rng-client-api (requires Java 7)
-  commons-rng-core (requires Java 7)
-  commons-rng-simple (requires Java 7)
-  commons-rng-sampling (requires Java 7)
+  commons-rng-client-api (requires Java 8)
+  commons-rng-core (requires Java 8)
+  commons-rng-simple (requires Java 8)
+  commons-rng-sampling (requires Java 8)
 The code in module 'commons-rng-core' should not be accessed
 directly by applications as a future release might make use of
 the JPMS modularization feature available in Java 11+.
 
 Additional code is provided in the following modules:
-  commons-rng-examples-quadrature (requires Java 7)
-  commons-rng-examples-jmh (requires Java 7)
+  commons-rng-examples-quadrature (requires Java 8)
+  commons-rng-examples-jmh (requires Java 8)
   commons-rng-examples-sampling (requires Java 8)
   commons-rng-examples-stress (requires Java 8)
   commons-rng-examples-jpms (requires Java 11)
@@ -81,6 +81,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="162">
+        Update the minimum Java version to 1.8.
+      </action>
       <action dev="aherbert" type="update" issue="160">
         "ZigguratSampler.NormalizedGaussian": Performance improvement by extracting ziggurat
         edge sampling to a separate method.
@@ -88,9 +91,6 @@ as 'flaky' in the report).
       <action dev="aherbert" type="fix" issue="159">
         "ZigguratSampler.NormalizedGaussian": Corrected biased sampling within convex regions
         at the edge of the ziggurat.
-      </action>
-      <action dev="aherbert" type="update" issue="158">
-        Update the minimum Java version to 1.7.
       </action>
       <action dev="aherbert" type="add" issue="156">
         New "DirichletSampler" class to sample from a Dirichlet distribution.
