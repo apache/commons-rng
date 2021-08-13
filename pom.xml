@@ -107,7 +107,7 @@
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
     <!--
-        The examples are built only upon explicit request (requires Java 1.7+).
+        The examples are built only upon explicit request (requires Java 11).
         See profiles: "commons-rng-examples"; "release"
     -->
   </modules>
