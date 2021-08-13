@@ -89,10 +89,10 @@
         Temporary workaround?
     -->
     <commons.release.name>commons-rng-${project.version}</commons.release.name>
-    <!-- Java8+ requires additional Javadoc qualifier for MathJax (default to empty). -->
-    <allowscript.javadoc.qualifier />
-    <!-- Invalid flag for old javadoc versions (default to empty). -->
-    <doclint.javadoc.qualifier />
+    <!-- MathJax script inclusion requires additional Javadoc qualifier for Java8 as of 8u121 -->
+    <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
+    <!-- Check for all javadoc errors -->
+    <doclint.javadoc.qualifier>-Xdoclint:all</doclint.javadoc.qualifier>
 
     <!-- Workaround to avoid the SVN site checkout in all modules.
          This flag should be deactivated by child modules. -->
@@ -213,8 +213,56 @@
           </ignorePathsToDelete>
         </configuration>
       </plugin>
-      <!-- spotbugs-maven-plugin runs in JDK 8+ profile so not included here -->
-      <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${commons.spotbugs.version}</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${rng.checkstyle.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${rng.checkstyle.dep.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+          <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+          <logViolationsToConsole>false</logViolationsToConsole>
+          <failOnViolation>true</failOnViolation>
+          <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
+          <excludes>**/jmh_generated/**.java</excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${rng.pmd.version}</version>
@@ -333,8 +381,36 @@
           <component>${rng.jira.component}</component>
         </configuration>
       </plugin>
-      <!-- spotbugs-maven-plugin runs in JDK 8+ profile so not included here -->
-      <!-- maven-checkstyle-plugin runs in JDK 8+ profile so not included here -->
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${commons.spotbugs.version}</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${rng.checkstyle.version}</version>
+        <configuration>
+          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
+          <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+          <enableRulesSummary>false</enableRulesSummary>
+          <includeResources>false</includeResources>
+          <excludes>**/jmh_generated/**.java</excludes>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${rng.pmd.version}</version>
@@ -577,120 +653,6 @@ This is avoided by creating an empty directory when svn is not available.
           </plugin>
         </plugins>
       </build>
-    </profile>
-    <!-- Profile for pre-Java 8 builds. -->
-    <profile>
-      <id>pre-jdk8</id>
-      <activation>
-        <jdk>[1.7,1.8)</jdk>
-      </activation>
-      <build>
-        <!-- Alter default goal to avoid javadoc generation.
-          The inclusion of MathJax may require the 'allow-script-in-comments' flag
-          depending on the JDK 7 release version. -->
-        <defaultGoal>clean verify</defaultGoal>
-      </build>
-    </profile>
-    <!-- Profile to allow the use of plugin versions that require Java 8+ -->
-    <profile>
-      <id>jdk8-plugins</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <!-- MathJax script inclusion requires additional Javadoc qualifier for Java8 as of 8u121 -->
-        <allowscript.javadoc.qualifier>--allow-script-in-comments</allowscript.javadoc.qualifier>
-        <!-- Check for all javadoc errors -->
-        <doclint.javadoc.qualifier>-Xdoclint:all</doclint.javadoc.qualifier>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-maven-plugin</artifactId>
-            <version>${commons.spotbugs.version}</version>
-            <configuration>
-              <threshold>Normal</threshold>
-              <effort>Default</effort>
-              <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>verify</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>${rng.checkstyle.version}</version>
-            <dependencies>
-              <dependency>
-                <groupId>com.puppycrawl.tools</groupId>
-                <artifactId>checkstyle</artifactId>
-                <version>${rng.checkstyle.dep.version}</version>
-              </dependency>
-            </dependencies>
-            <configuration>
-              <includeTestSourceDirectory>true</includeTestSourceDirectory>
-              <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-              <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-              <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-              <enableRulesSummary>false</enableRulesSummary>
-              <logViolationsToConsole>false</logViolationsToConsole>
-              <failOnViolation>true</failOnViolation>
-              <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
-              <excludes>**/jmh_generated/**.java</excludes>
-            </configuration>
-            <executions>
-              <execution>
-                <id>validate</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-maven-plugin</artifactId>
-            <version>${commons.spotbugs.version}</version>
-            <configuration>
-              <threshold>Normal</threshold>
-              <effort>Default</effort>
-              <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>${rng.checkstyle.version}</version>
-            <configuration>
-              <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-              <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-              <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
-              <enableRulesSummary>false</enableRulesSummary>
-              <includeResources>false</includeResources>
-              <excludes>**/jmh_generated/**.java</excludes>
-            </configuration>
-            <reportSets>
-              <reportSet>
-                <reports>
-                  <report>checkstyle</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
     <profile>
       <id>clirr-check</id>
