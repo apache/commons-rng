@@ -484,6 +484,11 @@ This is avoided by creating an empty directory when svn is not available.
     <profile>
       <!-- Allow the SVN site checkout to be removed in the clean phase. -->
       <id>clean-checkout</id>
+      <activation>
+        <file>
+          <exists>${commons.scmPubCheckoutDirectory}</exists>
+        </file>
+      </activation>
       <build>
         <plugins>
           <plugin>
@@ -499,7 +504,7 @@ This is avoided by creating an empty directory when svn is not available.
                 </goals>
                 <configuration>
                   <target name="remove-checkout">
-                    <delete dir="${commons.scmPubCheckoutDirectory}"/>
+                    <delete dir="${commons.scmPubCheckoutDirectory}" quiet="true"/>
                   </target>
                 </configuration>
               </execution>
