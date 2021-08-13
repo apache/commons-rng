@@ -18,6 +18,7 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.ArrayList;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -141,7 +142,7 @@ public final class CompositeSamplers {
         SharedStateDiscreteProbabilitySampler(DiscreteSampler sampler,
                                               DiscreteProbabilitySamplerFactory factory,
                                               double[] probabilities) {
-            this.sampler = requireNonNull(sampler, "discrete sampler");
+            this.sampler = Objects.requireNonNull(sampler, "discrete sampler");
             // Assume the factory and probabilities are not null
             this.factory = factory;
             this.probabilities = probabilities;
@@ -308,7 +309,7 @@ public final class CompositeSamplers {
              */
             WeightedSampler(double weight, S sampler) {
                 this.weight = requirePositiveFinite(weight, "weight");
-                this.sampler = requireNonNull(sampler, "sampler");
+                this.sampler = Objects.requireNonNull(sampler, "sampler");
             }
 
             /**
@@ -382,7 +383,7 @@ public final class CompositeSamplers {
          */
         @Override
         public Builder<S> setFactory(DiscreteProbabilitySamplerFactory samplerFactory) {
-            this.factory = requireNonNull(samplerFactory, "factory");
+            this.factory = Objects.requireNonNull(samplerFactory, "factory");
             return this;
         }
 
@@ -1052,27 +1053,6 @@ public final class CompositeSamplers {
     public static Builder<SharedStateLongSampler> newSharedStateLongSamplerBuilder() {
         return new SamplerBuilder<>(
             SamplerBuilder.Specialisation.SHARED_STATE_SAMPLER, SharedStateLongSamplerFactory.INSTANCE);
-    }
-
-    /**
-     * Checks that the specified object reference is not {@code null} and throws a
-     * customized {@link NullPointerException} if it is.
-     *
-     * <P>Note: This method is to be replaced with
-     * {@code java.util.Objects.requireNonNull} when the source requires Java 8.
-     *
-     * @param obj the object reference to check for nullity
-     * @param message detail message to be used in the event that a {@code
-     *                NullPointerException} is thrown
-     * @param <T> the type of the reference
-     * @return {@code obj} if not {@code null}
-     * @throws NullPointerException if {@code obj} is {@code null}
-     */
-    private static <T> T requireNonNull(T obj, String message) {
-        if (obj == null) {
-            throw new NullPointerException(message);
-        }
-        return obj;
     }
 
     /**
