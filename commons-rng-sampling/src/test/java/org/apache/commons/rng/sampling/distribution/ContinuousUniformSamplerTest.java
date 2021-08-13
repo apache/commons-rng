@@ -105,10 +105,10 @@ public class ContinuousUniformSamplerTest {
             {-Double.MIN_VALUE, Double.MIN_VALUE},
             // Same signs. Requires one double inside the range.
             // Same exponent
-            {1.23, Math.nextAfter(1.23, Double.POSITIVE_INFINITY)},
-            {1.23, Math.nextAfter(1.23, Double.NEGATIVE_INFINITY)},
+            {1.23, Math.nextUp(1.23)},
+            {1.23, Math.nextUp(1.23)},
             // Different exponent
-            {2.0, Math.nextAfter(2.0, Double.NEGATIVE_INFINITY)},
+            {2.0, Math.nextDown(2.0)},
         }) {
             final double low = interval[0];
             final double high = interval[1];
@@ -145,8 +145,8 @@ public class ContinuousUniformSamplerTest {
         for (final double expected : new double[] {
             1.23, 2, 56787.7893, 3 * x, 2 * x, x
         }) {
-            final double low = Math.nextAfter(expected, Double.POSITIVE_INFINITY);
-            final double high = Math.nextAfter(expected, Double.NEGATIVE_INFINITY);
+            final double low = Math.nextUp(expected);
+            final double high = Math.nextDown(expected);
             Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, low, high, true).sample(), 0.0);
             Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, high, low, true).sample(), 0.0);
             Assert.assertEquals(-expected, ContinuousUniformSampler.of(rng, -low, -high, true).sample(), 0.0);

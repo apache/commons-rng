@@ -443,7 +443,7 @@ public class UnitSphereSamplerTest {
     public void testNextNormSquaredAfterZeroIsValid() {
         // The sampler explicitly handles length == 0 using recursion.
         // Anything above zero should be valid.
-        final double normSq = Math.nextAfter(0.0, 1);
+        final double normSq = Math.nextUp(0.0);
         // Map to the scaling factor
         final double f = 1 / Math.sqrt(normSq);
         // As long as this is finite positive then the sampler is valid

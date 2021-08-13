@@ -54,8 +54,7 @@ public class GaussianSampler implements SharedStateContinuousSampler {
             throw new IllegalArgumentException(
                 "standard deviation is not strictly positive and finite: " + standardDeviation);
         }
-        // To be replaced by JDK 1.8 Double.isFinite. This will detect NaN values.
-        if (!(Math.abs(mean) <= Double.MAX_VALUE)) {
+        if (!Double.isFinite(mean)) {
             throw new IllegalArgumentException("mean is not finite: " + mean);
         }
         this.normalized = normalized;

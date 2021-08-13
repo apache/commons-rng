@@ -467,7 +467,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         // Validate set-up
         Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
 
-        // Search for larger p until Math.nextAfter(p, 1) produces 0
+        // Search for larger p until Math.nextUp(p) produces 0
         double upper = p * 2;
         Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, upper), 0);
 
@@ -484,7 +484,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
 
         // Re-validate
         Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
-        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, Math.nextAfter(p, 1)), 0);
+        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, Math.nextUp(p)), 0);
 
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         // This will throw if the table does not sum to 2^30

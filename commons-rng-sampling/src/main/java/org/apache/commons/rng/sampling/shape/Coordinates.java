@@ -45,22 +45,11 @@ final class Coordinates {
      */
     static double[] requireFinite(double[] values, String message) {
         for (final double value : values) {
-            if (!isFinite(value)) {
+            if (!Double.isFinite(value)) {
                 throw new IllegalArgumentException(message + " contains non-finite value: " + value);
             }
         }
         return values;
-    }
-
-    /**
-     * Checks if the value is finite.
-     * To be replaced by {@code Double.isFinite(double)} when source requires Java 8.
-     *
-     * @param value the value
-     * @return true if finite
-     */
-    private static boolean isFinite(double value) {
-        return Math.abs(value) <= Double.MAX_VALUE;
     }
 
     /**

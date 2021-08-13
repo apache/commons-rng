@@ -1483,8 +1483,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         if (!(0 < gamma && gamma <= Double.MAX_VALUE)) {
             throw new IllegalArgumentException("gamma is not strictly positive and finite: " + gamma);
         }
-        // To be replaced by !Double.isFinite(double) from JDK 1.8.
-        if (!(Math.abs(delta) <= Double.MAX_VALUE)) {
+        if (!Double.isFinite(delta)) {
             throw new IllegalArgumentException("delta is not finite: " + delta);
         }
     }

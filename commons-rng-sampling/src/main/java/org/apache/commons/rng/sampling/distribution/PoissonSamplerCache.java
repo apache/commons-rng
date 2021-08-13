@@ -301,7 +301,7 @@ public class PoissonSamplerCache {
      */
     public double getMaxMean() {
         if (isValidRange()) {
-            return Math.nextAfter(maxN + 1.0, -1);
+            return Math.nextDown(maxN + 1.0);
         }
         return 0;
     }

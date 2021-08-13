@@ -48,7 +48,7 @@ public class GeometricSamplerTest {
     public void testProbabilityOfSuccessUnderOneIsValid() {
         // The sampler explicitly handles probabilityOfSuccess == 1 as an edge case.
         // Anything under it should be valid for sampling from an ExponentialDistribution.
-        final double probabilityOfSuccess = Math.nextAfter(1, -1);
+        final double probabilityOfSuccess = Math.nextDown(1);
         // Map to the mean
         final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
         // As long as this is finite positive then the sampler is valid
