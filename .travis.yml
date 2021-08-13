@@ -21,7 +21,7 @@ cache:
     - $HOME/.m2
 jdk:
   - openjdk8
-  - oraclejdk9
+  - openjdk11
 
 # Skip the installation step:
 #   https://docs.travis-ci.com/user/job-lifecycle/#skipping-the-installation-phase
