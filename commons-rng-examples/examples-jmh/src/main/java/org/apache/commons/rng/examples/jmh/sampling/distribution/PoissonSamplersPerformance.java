@@ -163,8 +163,6 @@ public class PoissonSamplersPerformance {
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             generator = randomSource.create();
-
-            // This would benefit from Java 8 Supplier<DiscreteSampler> lambda function
             if ("SmallMeanPoissonSampler".equals(samplerType)) {
                 factory = () -> SmallMeanPoissonSampler.of(generator, mean);
             } else if ("KempSmallMeanPoissonSampler".equals(samplerType)) {

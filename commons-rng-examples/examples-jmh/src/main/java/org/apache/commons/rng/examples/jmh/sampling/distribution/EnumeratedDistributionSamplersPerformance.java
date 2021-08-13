@@ -169,7 +169,6 @@ public class EnumeratedDistributionSamplersPerformance {
          */
         private void createSamplerFactory(final UniformRandomProvider rng,
             final double[] probabilities) {
-            // This would benefit from Java 8 lambda functions
             if ("BinarySearchDiscreteSampler".equals(samplerType)) {
                 factory = () -> new BinarySearchDiscreteSampler(rng, probabilities);
             } else if ("AliasMethodDiscreteSampler".equals(samplerType)) {
