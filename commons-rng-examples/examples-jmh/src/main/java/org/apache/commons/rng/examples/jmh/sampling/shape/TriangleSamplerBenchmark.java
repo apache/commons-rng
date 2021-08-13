@@ -18,6 +18,7 @@
 package org.apache.commons.rng.examples.jmh.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.ObjectSampler;
 import org.apache.commons.rng.sampling.UnitSphereSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -57,21 +58,9 @@ public class TriangleSamplerBenchmark {
     private static final String UNKNOWN_SAMPLER = "Unknown sampler type: ";
 
     /**
-     * The sampler.
-     */
-    private interface Sampler {
-        /**
-         * Gets the next sample.
-         *
-         * @return the sample
-         */
-        double[] sample();
-    }
-
-    /**
      * Base class for a sampler using vectors: {@code p = a + sv + tw}.
      */
-    private abstract static class VectorTriangleSampler implements Sampler {
+    private abstract static class VectorTriangleSampler implements ObjectSampler<double[]> {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -115,7 +104,7 @@ public class TriangleSamplerBenchmark {
     /**
      * Base class for a sampler using coordinates: {@code a(1 - s - t) + sb + tc}.
      */
-    private abstract static class CoordinateTriangleSampler implements Sampler {
+    private abstract static class CoordinateTriangleSampler implements ObjectSampler<double[]> {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -172,7 +161,7 @@ public class TriangleSamplerBenchmark {
     @State(Scope.Benchmark)
     public abstract static class SamplerData {
         /** The sampler. */
-        private Sampler sampler;
+        private ObjectSampler<double[]> sampler;
 
         /** The number of samples. */
         @Param({"1000"})
@@ -192,7 +181,7 @@ public class TriangleSamplerBenchmark {
          *
          * @return the sampler
          */
-        public Sampler getSampler() {
+        public ObjectSampler<double[]> getSampler() {
             return sampler;
         }
 
@@ -227,8 +216,8 @@ public class TriangleSamplerBenchmark {
          * @param c The third vertex.
          * @return the sampler
          */
-        protected abstract Sampler createSampler(UniformRandomProvider rng,
-                                                 double[] a, double[] b, double[] c);
+        protected abstract ObjectSampler<double[]> createSampler(UniformRandomProvider rng,
+                                                                 double[] a, double[] b, double[] c);
     }
 
     /**
@@ -248,8 +237,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng,
-                                        final double[] a, final double[] b, final double[] c) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng,
+                                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return () -> {
                     final double s = rng.nextDouble();
@@ -362,8 +351,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng,
-                                        final double[] a, final double[] b, final double[] c) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng,
+                                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return () -> {
                     final double s = rng.nextDouble();
@@ -494,8 +483,8 @@ public class TriangleSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng,
-                                        final double[] a, final double[] b, final double[] c) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng,
+                                                        final double[] a, final double[] b, final double[] c) {
             if (BASELINE.equals(type)) {
                 return () -> {
                     double s = rng.nextDouble();
@@ -614,7 +603,7 @@ public class TriangleSamplerBenchmark {
      * @param data Input data.
      */
     private static void runSampler(Blackhole bh, SamplerData data) {
-        final Sampler sampler = data.getSampler();
+        final ObjectSampler<double[]> sampler = data.getSampler();
         for (int i = data.getSize() - 1; i >= 0; i--) {
             bh.consume(sampler.sample());
         }

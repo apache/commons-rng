@@ -18,6 +18,7 @@
 package org.apache.commons.rng.examples.jmh.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.ObjectSampler;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
@@ -64,21 +65,9 @@ public class UnitBallSamplerBenchmark {
     private static final long LOWER_53_BITS = -1L >>> 11;
 
     /**
-     * The sampler.
-     */
-    private interface Sampler {
-        /**
-         * Gets the next sample.
-         *
-         * @return the sample
-         */
-        double[] sample();
-    }
-
-    /**
      * Base class for a sampler using a provided source of randomness.
      */
-    private abstract static class BaseSampler implements Sampler {
+    private abstract static class BaseSampler implements ObjectSampler<double[]> {
         /** The source of randomness. */
         protected UniformRandomProvider rng;
 
@@ -100,7 +89,7 @@ public class UnitBallSamplerBenchmark {
     @State(Scope.Benchmark)
     public abstract static class SamplerData {
         /** The sampler. */
-        private Sampler sampler;
+        private ObjectSampler<double[]> sampler;
 
         /** The number of samples. */
         @Param({//"1",
@@ -121,7 +110,7 @@ public class UnitBallSamplerBenchmark {
          *
          * @return the sampler
          */
-        public Sampler getSampler() {
+        public ObjectSampler<double[]> getSampler() {
             return sampler;
         }
 
@@ -141,7 +130,7 @@ public class UnitBallSamplerBenchmark {
          * @param rng the source of randomness
          * @return the sampler
          */
-        protected abstract Sampler createSampler(UniformRandomProvider rng);
+        protected abstract ObjectSampler<double[]> createSampler(UniformRandomProvider rng);
     }
 
     /**
@@ -164,7 +153,7 @@ public class UnitBallSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
                 return () -> new double[] {0.5};
             } else if (SIGNED_DOUBLE.equals(type)) {
@@ -196,7 +185,7 @@ public class UnitBallSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
                 return () -> new double[] {0.5, 0};
             } else if (REJECTION.equals(type)) {
@@ -341,7 +330,7 @@ public class UnitBallSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
                 return () -> new double[] {0.5, 0, 0};
             } else if (REJECTION.equals(type)) {
@@ -506,9 +495,9 @@ public class UnitBallSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return new Sampler() {
+                return new ObjectSampler<double[]>() {
                     private final int dim = dimension;
                     @Override
                     public double[] sample() {
@@ -745,7 +734,7 @@ public class UnitBallSamplerBenchmark {
      * @param data Input data.
      */
     private static void runSampler(Blackhole bh, SamplerData data) {
-        final Sampler sampler = data.getSampler();
+        final ObjectSampler<double[]> sampler = data.getSampler();
         for (int i = data.getSize() - 1; i >= 0; i--) {
             bh.consume(sampler.sample());
         }

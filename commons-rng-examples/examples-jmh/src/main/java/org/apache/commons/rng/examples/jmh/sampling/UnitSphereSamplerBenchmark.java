@@ -18,6 +18,7 @@
 package org.apache.commons.rng.examples.jmh.sampling;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.ObjectSampler;
 import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -56,18 +57,6 @@ public class UnitSphereSamplerBenchmark {
     private static final String UNKNOWN_SAMPLER = "Unknown sampler type: ";
 
     /**
-     * The sampler.
-     */
-    private interface Sampler {
-        /**
-         * Gets the next sample.
-         *
-         * @return the sample
-         */
-        double[] sample();
-    }
-
-    /**
      * Base class for the sampler data.
      * Contains the source of randomness and the number of samples.
      * The sampler should be created by a sub-class of the data.
@@ -75,7 +64,7 @@ public class UnitSphereSamplerBenchmark {
     @State(Scope.Benchmark)
     public abstract static class SamplerData {
         /** The sampler. */
-        private Sampler sampler;
+        private ObjectSampler<double[]> sampler;
 
         /** The number of samples. */
         @Param({"100"})
@@ -95,7 +84,7 @@ public class UnitSphereSamplerBenchmark {
          *
          * @return the sampler
          */
-        public Sampler getSampler() {
+        public ObjectSampler<double[]> getSampler() {
             return sampler;
         }
 
@@ -115,7 +104,7 @@ public class UnitSphereSamplerBenchmark {
          * @param rng the source of randomness
          * @return the sampler
          */
-        protected abstract Sampler createSampler(UniformRandomProvider rng);
+        protected abstract ObjectSampler<double[]> createSampler(UniformRandomProvider rng);
     }
 
     /**
@@ -142,7 +131,7 @@ public class UnitSphereSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
                 return () -> {
                     return new double[] {1.0};
@@ -185,11 +174,9 @@ public class UnitSphereSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return () -> {
-                    return new double[] {1.0, 0.0};
-                };
+                return () -> new double[] {1.0, 0.0};
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(2, rng);
             } else if (NON_ARRAY.equals(type)) {
@@ -201,7 +188,7 @@ public class UnitSphereSamplerBenchmark {
         /**
          * Sample from a 2D unit sphere.
          */
-        private static class UnitSphereSampler2D implements Sampler {
+        private static class UnitSphereSampler2D implements ObjectSampler<double[]> {
             /** Sampler used for generating the individual components of the vectors. */
             private final NormalizedGaussianSampler sampler;
 
@@ -240,11 +227,9 @@ public class UnitSphereSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return () -> {
-                    return new double[] {1.0, 0.0, 0.0};
-                };
+                return () -> new double[] {1.0, 0.0, 0.0};
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(3, rng);
             } else if (NON_ARRAY.equals(type)) {
@@ -256,7 +241,7 @@ public class UnitSphereSamplerBenchmark {
         /**
          * Sample from a 3D unit sphere.
          */
-        private static class UnitSphereSampler3D implements Sampler {
+        private static class UnitSphereSampler3D implements ObjectSampler<double[]> {
             /** Sampler used for generating the individual components of the vectors. */
             private final NormalizedGaussianSampler sampler;
 
@@ -296,11 +281,9 @@ public class UnitSphereSamplerBenchmark {
 
         /** {@inheritDoc} */
         @Override
-        protected Sampler createSampler(final UniformRandomProvider rng) {
+        protected ObjectSampler<double[]> createSampler(final UniformRandomProvider rng) {
             if (BASELINE.equals(type)) {
-                return () -> {
-                    return new double[] {1.0, 0.0, 0.0, 0.0};
-                };
+                return () -> new double[] {1.0, 0.0, 0.0, 0.0};
             } else if (ARRAY.equals(type)) {
                 return new ArrayBasedUnitSphereSampler(4, rng);
             } else if (NON_ARRAY.equals(type)) {
@@ -312,7 +295,7 @@ public class UnitSphereSamplerBenchmark {
         /**
          * Sample from a 4D unit hypersphere.
          */
-        private static class UnitSphereSampler4D implements Sampler {
+        private static class UnitSphereSampler4D implements ObjectSampler<double[]> {
             /** Sampler used for generating the individual components of the vectors. */
             private final NormalizedGaussianSampler sampler;
 
@@ -345,7 +328,7 @@ public class UnitSphereSamplerBenchmark {
     /**
      * Sample from a unit sphere using an array based method.
      */
-    private static class ArrayBasedUnitSphereSampler implements Sampler {
+    private static class ArrayBasedUnitSphereSampler implements ObjectSampler<double[]> {
         /** Space dimension. */
         private final int dimension;
         /** Sampler used for generating the individual components of the vectors. */
@@ -394,7 +377,7 @@ public class UnitSphereSamplerBenchmark {
      * @param data Input data.
      */
     private static void runSampler(Blackhole bh, SamplerData data) {
-        final Sampler sampler = data.getSampler();
+        final ObjectSampler<double[]> sampler = data.getSampler();
         for (int i = data.getSize() - 1; i >= 0; i--) {
             bh.consume(sampler.sample());
         }

@@ -18,7 +18,7 @@
 package org.apache.commons.rng.examples.jmh.sampling.distribution;
 
 import java.util.concurrent.TimeUnit;
-
+import java.util.function.DoubleFunction;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
@@ -268,30 +268,17 @@ public class PoissonSamplerCachePerformance {
     }
 
     /**
-     * A factory for creating Poisson sampler objects.
-     */
-    private interface PoissonSamplerFactory {
-        /**
-         * Creates a new Poisson sampler object.
-         *
-         * @param mean the mean
-         * @return The sampler
-         */
-        DiscreteSampler createPoissonSampler(double mean);
-    }
-
-    /**
      * Exercises a poisson sampler created for a single use with a range of means.
      *
      * @param factory The factory.
      * @param range   The range of means.
      * @param bh      Data sink.
      */
-    private static void runSample(PoissonSamplerFactory factory,
+    private static void runSample(DoubleFunction<DiscreteSampler> factory,
                                   MeanRange range,
                                   Blackhole bh) {
         for (int i = 0; i < NUM_SAMPLES; i++) {
-            bh.consume(factory.createPoissonSampler(range.getMean(i)).sample());
+            bh.consume(factory.apply(range.getMean(i)).sample());
         }
     }
 
@@ -307,7 +294,7 @@ public class PoissonSamplerCachePerformance {
                                   MeanRange range,
                                   Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
-        final PoissonSamplerFactory factory = mean -> PoissonSampler.of(r, mean);
+        final DoubleFunction<DiscreteSampler> factory = mean -> PoissonSampler.of(r, mean);
         runSample(factory, range, bh);
     }
 
@@ -322,7 +309,7 @@ public class PoissonSamplerCachePerformance {
                                                 Blackhole bh) {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(0, 0);
-        final PoissonSamplerFactory factory = mean -> cache.createSharedStateSampler(r, mean);
+        final DoubleFunction<DiscreteSampler> factory = mean -> cache.createSharedStateSampler(r, mean);
         runSample(factory, range, bh);
     }
 
@@ -338,7 +325,7 @@ public class PoissonSamplerCachePerformance {
         final UniformRandomProvider r = sources.getGenerator();
         final PoissonSamplerCache cache = new PoissonSamplerCache(
                 range.getMin(), range.getMax());
-        final PoissonSamplerFactory factory = mean -> cache.createSharedStateSampler(r, mean);
+        final DoubleFunction<DiscreteSampler> factory = mean -> cache.createSharedStateSampler(r, mean);
         runSample(factory, range, bh);
     }
 }

@@ -37,6 +37,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Executes benchmark to compare the speed of generation of Poisson distributed random numbers.
@@ -136,22 +137,10 @@ public class PoissonSamplersPerformance {
         private UniformRandomProvider generator;
 
         /** The factory. */
-        private DiscreteSamplerFactory factory;
+        private Supplier<DiscreteSampler> factory;
 
         /** The sampler. */
         private DiscreteSampler sampler;
-
-        /**
-         * A factory for creating DiscreteSampler objects.
-         */
-        interface DiscreteSamplerFactory {
-            /**
-             * Creates the sampler.
-             *
-             * @return the sampler
-             */
-            DiscreteSampler create();
-        }
 
         /**
          * @return The RNG.
@@ -193,7 +182,7 @@ public class PoissonSamplersPerformance {
             } else if ("TinyMeanPoissonSampler".equals(samplerType)) {
                 factory = () -> new TinyMeanPoissonSampler(generator, mean);
             }
-            sampler = factory.create();
+            sampler = factory.get();
         }
 
         /**
@@ -202,7 +191,7 @@ public class PoissonSamplersPerformance {
          * @return The sampler.
          */
         public DiscreteSampler createSampler() {
-            return factory.create();
+            return factory.get();
         }
     }
 

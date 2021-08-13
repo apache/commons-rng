@@ -18,6 +18,7 @@
 package org.apache.commons.rng.examples.jmh.sampling.shape;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.ObjectSampler;
 import org.apache.commons.rng.sampling.UnitSphereSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -59,18 +60,6 @@ public class TetrahedronSamplerBenchmark {
     private static final String UNKNOWN_SAMPLER = "Unknown sampler type: ";
 
     /**
-     * The sampler.
-     */
-    private interface Sampler {
-        /**
-         * Gets the next sample.
-         *
-         * @return a random Cartesian point within the tetrahedron.
-         */
-        double[] sample();
-    }
-
-    /**
      * The base class for sampling from a tetrahedron.
      *
      * <ul>
@@ -87,7 +76,7 @@ public class TetrahedronSamplerBenchmark {
      * @see <a href="https://doi.org/10.1080/10867651.2000.10487528">
      *   Rocchini, C. &amp; Cignoni, P. (2001) Journal of Graphics Tools 5, pp. 9-12</a>
      */
-    private abstract static class TetrahedronSampler implements Sampler {
+    private abstract static class TetrahedronSampler implements ObjectSampler<double[]> {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -242,7 +231,7 @@ public class TetrahedronSamplerBenchmark {
      * Sample from a tetrahedron using array coordinates with an inline sample algorithm
      * in-place of a method call.
      */
-    private static class ArrayInlineTetrahedronSampler implements Sampler {
+    private static class ArrayInlineTetrahedronSampler implements ObjectSampler<double[]> {
         // CHECKSTYLE: stop JavadocVariableCheck
         private final double[] a;
         private final double[] b;
@@ -310,7 +299,7 @@ public class TetrahedronSamplerBenchmark {
      * Sample from a tetrahedron using non-array coordinates with an inline sample algorithm
      * in-place of a method call.
      */
-    private static class NonArrayInlineTetrahedronSampler implements Sampler {
+    private static class NonArrayInlineTetrahedronSampler implements ObjectSampler<double[]> {
         // CHECKSTYLE: stop JavadocVariableCheck
         private final double ax;
         private final double bx;
@@ -396,7 +385,7 @@ public class TetrahedronSamplerBenchmark {
     @State(Scope.Benchmark)
     public static class SamplerData {
         /** The sampler. */
-        private Sampler sampler;
+        private ObjectSampler<double[]> sampler;
 
         /** The number of samples. */
         @Param({"1", "10", "100", "1000", "10000"})
@@ -420,7 +409,7 @@ public class TetrahedronSamplerBenchmark {
          *
          * @return the sampler
          */
-        public Sampler getSampler() {
+        public ObjectSampler<double[]> getSampler() {
             return sampler;
         }
 
@@ -449,8 +438,8 @@ public class TetrahedronSamplerBenchmark {
          * @param rng the source of randomness
          * @return the sampler
          */
-        private Sampler createSampler(final UniformRandomProvider rng,
-                                      double[] a, double[] b, double[] c, double[] d) {
+        private ObjectSampler<double[]> createSampler(final UniformRandomProvider rng,
+                                                      double[] a, double[] b, double[] c, double[] d) {
             if (BASELINE.equals(type)) {
                 return () -> {
                     final double s = rng.nextDouble();
@@ -479,7 +468,7 @@ public class TetrahedronSamplerBenchmark {
      */
     @Benchmark
     public void sample(Blackhole bh, SamplerData data) {
-        final Sampler sampler = data.getSampler();
+        final ObjectSampler<double[]> sampler = data.getSampler();
         for (int i = data.getSize() - 1; i >= 0; i--) {
             bh.consume(sampler.sample());
         }

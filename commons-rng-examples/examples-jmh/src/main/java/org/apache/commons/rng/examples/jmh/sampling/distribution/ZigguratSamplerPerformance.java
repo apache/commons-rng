@@ -20,6 +20,7 @@ package org.apache.commons.rng.examples.jmh.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.LongSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -146,16 +147,6 @@ public class ZigguratSamplerPerformance {
                 throwIllegalStateException(method);
             }
         }
-    }
-
-    /**
-     * Sampler that generates values of type {@code long}.
-     */
-    interface LongSampler {
-        /**
-         * @return a sample.
-         */
-        long sample();
     }
 
     /**

@@ -43,6 +43,7 @@ import org.openjdk.jmh.annotations.Warmup;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Executes benchmark to compare the speed of generation of random numbers from an enumerated
@@ -128,22 +129,10 @@ public class EnumeratedDistributionSamplersPerformance {
         private String samplerType;
 
         /** The factory. */
-        private DiscreteSamplerFactory factory;
+        private Supplier<DiscreteSampler> factory;
 
         /** The sampler. */
         private DiscreteSampler sampler;
-
-        /**
-         * A factory for creating DiscreteSampler objects.
-         */
-        interface DiscreteSamplerFactory {
-            /**
-             * Creates the sampler.
-             *
-             * @return the sampler
-             */
-            DiscreteSampler create();
-        }
 
         /**
          * Gets the sampler.
@@ -162,7 +151,7 @@ public class EnumeratedDistributionSamplersPerformance {
 
             final double[] probabilities = createProbabilities();
             createSamplerFactory(getGenerator(), probabilities);
-            sampler = factory.create();
+            sampler = factory.get();
         }
 
         /**
@@ -210,7 +199,7 @@ public class EnumeratedDistributionSamplersPerformance {
          * @return The sampler.
          */
         public DiscreteSampler createSampler() {
-            return factory.create();
+            return factory.get();
         }
     }
 
