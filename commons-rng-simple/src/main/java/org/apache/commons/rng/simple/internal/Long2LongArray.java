@@ -32,14 +32,14 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
     /**
      * @param size Size of the output array.
      */
-    public Long2LongArray(int size) {
+    public Long2LongArray(final int size) {
         this.size = size;
     }
 
 
     /** {@inheritDoc} */
     @Override
-    public long[] convert(Long seed) {
+    public long[] convert(final Long seed) {
         return convertSeed(seed, size);
     }
 
@@ -49,7 +49,7 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
      * @since 1.3
      */
     @Override
-    public long[] convert(Long seed, int outputSize) {
+    public long[] convert(final Long seed, final int outputSize) {
         return convertSeed(seed, outputSize);
     }
 
@@ -60,7 +60,7 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
      * @param size Output array size.
      * @return the converted seed.
      */
-    private static long[] convertSeed(Long seed, int size) {
+    private static long[] convertSeed(final Long seed, final int size) {
         final long[] out = new long[size];
         final SplitMix64 rng = new SplitMix64(seed);
         for (int i = 0; i < size; i++) {

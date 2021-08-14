@@ -574,7 +574,7 @@ public enum RandomSource {
     /**
      * @param id Internal identifier.
      */
-    RandomSource(ProviderBuilder.RandomSourceInternal id) {
+    RandomSource(final ProviderBuilder.RandomSourceInternal id) {
         internalIdentifier = id;
     }
 
@@ -593,7 +593,7 @@ public enum RandomSource {
      * @return {@code true} if the type of {@code seed} is the native
      * type for this RNG source.
      */
-    public boolean isNativeSeed(Object seed) {
+    public boolean isNativeSeed(final Object seed) {
         return internalIdentifier.isNativeSeed(seed);
     }
 
@@ -638,7 +638,7 @@ public enum RandomSource {
      * @return the seed
      * @since 1.3
      */
-    public byte[] createSeed(UniformRandomProvider rng) {
+    public byte[] createSeed(final UniformRandomProvider rng) {
         return internalIdentifier.createSeedBytes(rng);
     }
 
@@ -698,7 +698,7 @@ public enum RandomSource {
      * @return the boolean value indicating whether the class of this random source
      * can be assigned to objects of the specified type
      */
-    private boolean isAssignableTo(Class<?> type) {
+    private boolean isAssignableTo(final Class<?> type) {
         return type.isAssignableFrom(internalIdentifier.getRng());
     }
 
@@ -784,8 +784,8 @@ public enum RandomSource {
      *
      * @see #create()
      */
-    public RestorableUniformRandomProvider create(Object seed,
-                                                  Object... data) {
+    public RestorableUniformRandomProvider create(final Object seed,
+                                                  final Object... data) {
         return ProviderBuilder.create(getInternalIdentifier(), seed, data);
     }
 
@@ -813,7 +813,7 @@ public enum RandomSource {
      * @deprecated It is preferred to use the {@link RandomSource#create()} instance method.
      */
     @Deprecated
-    public static RestorableUniformRandomProvider create(RandomSource source) {
+    public static RestorableUniformRandomProvider create(final RandomSource source) {
         return ProviderBuilder.create(source.getInternalIdentifier());
     }
 
@@ -875,9 +875,9 @@ public enum RandomSource {
      * @deprecated It is preferred to use the {@link RandomSource#create(Object, Object...)} instance method.
      */
     @Deprecated
-    public static RestorableUniformRandomProvider create(RandomSource source,
-                                                         Object seed,
-                                                         Object... data) {
+    public static RestorableUniformRandomProvider create(final RandomSource source,
+                                                         final Object seed,
+                                                         final Object... data) {
         return ProviderBuilder.create(source.getInternalIdentifier(), seed, data);
     }
 
@@ -905,7 +905,7 @@ public enum RandomSource {
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
-    public static int[] createIntArray(int n) {
+    public static int[] createIntArray(final int n) {
         return SeedFactory.createIntArray(n);
     }
 
@@ -915,7 +915,7 @@ public enum RandomSource {
      * @param n Size of the array to create.
      * @return an array of {@code n} random numbers.
      */
-    public static long[] createLongArray(int n) {
+    public static long[] createLongArray(final int n) {
         return SeedFactory.createLongArray(n);
     }
 
@@ -930,15 +930,15 @@ public enum RandomSource {
         return new UniformRandomProvider() {
             /** {@inheritDoc} */
             @Override
-            public void nextBytes(byte[] bytes) {
+            public void nextBytes(final byte[] bytes) {
                 delegate.nextBytes(bytes);
             }
 
             /** {@inheritDoc} */
             @Override
-            public void nextBytes(byte[] bytes,
-                                  int start,
-                                  int len) {
+            public void nextBytes(final byte[] bytes,
+                                  final int start,
+                                  final int len) {
                 delegate.nextBytes(bytes, start, len);
             }
 
@@ -950,7 +950,7 @@ public enum RandomSource {
 
             /** {@inheritDoc} */
             @Override
-            public int nextInt(int n) {
+            public int nextInt(final int n) {
                 return delegate.nextInt(n);
             }
 
@@ -962,7 +962,7 @@ public enum RandomSource {
 
             /** {@inheritDoc} */
             @Override
-            public long nextLong(long n) {
+            public long nextLong(final long n) {
                 return delegate.nextLong(n);
             }
 

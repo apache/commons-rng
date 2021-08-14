@@ -47,21 +47,21 @@ public final class JDKRandomWrapper implements UniformRandomProvider {
      * @param rng JDK {@link Random} instance to which the random number
      * generation is delegated.
      */
-    public JDKRandomWrapper(Random rng) {
+    public JDKRandomWrapper(final Random rng) {
         this.rng = rng;
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nextBytes(byte[] bytes) {
+    public void nextBytes(final byte[] bytes) {
         rng.nextBytes(bytes);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void nextBytes(byte[] bytes,
-                          int start,
-                          int len) {
+    public void nextBytes(final byte[] bytes,
+                          final int start,
+                          final int len) {
         final byte[] reduced = new byte[len];
         rng.nextBytes(reduced);
         System.arraycopy(reduced, 0, bytes, start, len);
@@ -75,7 +75,7 @@ public final class JDKRandomWrapper implements UniformRandomProvider {
 
     /** {@inheritDoc} */
     @Override
-    public int nextInt(int n) {
+    public int nextInt(final int n) {
         return rng.nextInt(n);
     }
 
@@ -87,7 +87,7 @@ public final class JDKRandomWrapper implements UniformRandomProvider {
 
     /** {@inheritDoc} */
     @Override
-    public long nextLong(long n) {
+    public long nextLong(final long n) {
         // Code copied from "o.a.c.rng.core.BaseProvider".
         if (n <= 0) {
             throw new IllegalArgumentException("Must be strictly positive: " + n);

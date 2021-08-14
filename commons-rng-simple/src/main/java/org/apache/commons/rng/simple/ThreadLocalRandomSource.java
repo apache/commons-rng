@@ -87,7 +87,7 @@ public final class ThreadLocalRandomSource {
          *
          * @param source the source
          */
-        ThreadLocalRng(RandomSource source) {
+        ThreadLocalRng(final RandomSource source) {
             this.source = source;
         }
 
@@ -110,7 +110,7 @@ public final class ThreadLocalRandomSource {
      * @return the current thread's value of the {@code source}.
      * @throws IllegalArgumentException if the source is null or the source requires arguments
      */
-    public static UniformRandomProvider current(RandomSource source) {
+    public static UniformRandomProvider current(final RandomSource source) {
         ThreadLocal<UniformRandomProvider> rng = SOURCES.get(source);
         // Implement double-checked locking:
         // https://en.wikipedia.org/wiki/Double-checked_locking#Usage_in_Java

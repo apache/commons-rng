@@ -56,8 +56,8 @@ public final class JDKRandomBridge extends Random {
      * @param source Source of randomness.
      * @param seed Seed.  Can be {@code null}.
      */
-    public JDKRandomBridge(RandomSource source,
-                           Object seed) {
+    public JDKRandomBridge(final RandomSource source,
+                           final Object seed) {
         this.source = source;
         delegate = source.create(seed);
         isInitialized = true;
@@ -65,7 +65,7 @@ public final class JDKRandomBridge extends Random {
 
     /** {@inheritDoc} */
     @Override
-    public synchronized void setSeed(long seed) {
+    public synchronized void setSeed(final long seed) {
         if (isInitialized) {
             delegate = source.create(seed);
 
@@ -90,7 +90,7 @@ public final class JDKRandomBridge extends Random {
      * pseudo-random 32-bits integer.
      */
     @Override
-    protected int next(int n) {
+    protected int next(final int n) {
         synchronized (this) {
             return delegate.nextInt() >>> (32 - n);
         }
@@ -100,7 +100,7 @@ public final class JDKRandomBridge extends Random {
      * @param output Output stream.
      * @throws IOException if an error occurs.
      */
-    private void writeObject(ObjectOutputStream output)
+    private void writeObject(final ObjectOutputStream output)
         throws IOException {
         synchronized (this) {
             // Write non-transient fields.
@@ -121,7 +121,7 @@ public final class JDKRandomBridge extends Random {
      * @throws IOException if an error occurs.
      * @throws ClassNotFoundException if an error occurs.
      */
-    private void readObject(ObjectInputStream input)
+    private void readObject(final ObjectInputStream input)
         throws IOException,
                ClassNotFoundException {
         // Read non-transient fields.

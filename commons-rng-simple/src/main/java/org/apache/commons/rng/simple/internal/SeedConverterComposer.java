@@ -35,15 +35,15 @@ public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, 
      * @param first First conversion.
      * @param second second conversion.
      */
-    public SeedConverterComposer(SeedConverter<IN, TRANS> first,
-                                 SeedConverter<TRANS, OUT> second) {
+    public SeedConverterComposer(final SeedConverter<IN, TRANS> first,
+                                 final SeedConverter<TRANS, OUT> second) {
         this.first = first;
         this.second = second;
     }
 
     /** {@inheritDoc} */
     @Override
-    public OUT convert(IN seed) {
+    public OUT convert(final IN seed) {
         final TRANS trans = first.convert(seed);
         return second.convert(trans);
     }
