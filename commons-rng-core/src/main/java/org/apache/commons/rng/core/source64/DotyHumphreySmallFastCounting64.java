@@ -48,7 +48,7 @@ public class DotyHumphreySmallFastCounting64 extends LongProvider {
      * If the length is larger than 3, only the first 3 elements will
      * be used; if smaller, the remaining elements will be automatically set.
      */
-    public DotyHumphreySmallFastCounting64(long[] seed) {
+    public DotyHumphreySmallFastCounting64(final long[] seed) {
         if (seed.length < SEED_SIZE) {
             final long[] state = new long[SEED_SIZE];
             fillState(state, seed);
@@ -63,7 +63,7 @@ public class DotyHumphreySmallFastCounting64 extends LongProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(final long[] seed) {
         a = seed[0];
         b = seed[1];
         c = seed[2];
@@ -92,7 +92,7 @@ public class DotyHumphreySmallFastCounting64 extends LongProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] parts = splitStateInternal(s, 4 * 8);
 
         final long[] tmp = NumberFactory.makeLongArray(parts[0]);

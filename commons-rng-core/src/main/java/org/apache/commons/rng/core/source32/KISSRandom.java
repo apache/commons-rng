@@ -48,7 +48,7 @@ public class KISSRandom extends IntProvider {
      * be used; if smaller, the remaining elements will be automatically
      * set.
      */
-    public KISSRandom(int[] seed) {
+    public KISSRandom(final int[] seed) {
         setSeedInternal(seed);
     }
 
@@ -61,7 +61,7 @@ public class KISSRandom extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(c[0]);
@@ -78,7 +78,7 @@ public class KISSRandom extends IntProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(int[] seed) {
+    private void setSeedInternal(final int[] seed) {
         // Reset the whole state of this RNG (i.e. the 4 state variables).
         // Filling procedure is not part of the reference code.
         final int[] tmp = new int[SEED_SIZE];
@@ -115,8 +115,8 @@ public class KISSRandom extends IntProvider {
      * @param previous Previous value.
      * @return new value.
      */
-    private static int computeNew(int mult,
-                                  int previous) {
+    private static int computeNew(final int mult,
+                                  final int previous) {
         return mult * (previous & 65535) + (previous >>> 16);
     }
 }

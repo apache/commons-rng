@@ -38,7 +38,7 @@ public class XoRoShiRo128Plus extends AbstractXoRoShiRo128 {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoRoShiRo128Plus(long[] seed) {
+    public XoRoShiRo128Plus(final long[] seed) {
         super(seed);
     }
 
@@ -49,7 +49,7 @@ public class XoRoShiRo128Plus extends AbstractXoRoShiRo128 {
      * @param seed0 Initial seed element 0.
      * @param seed1 Initial seed element 1.
      */
-    public XoRoShiRo128Plus(long seed0, long seed1) {
+    public XoRoShiRo128Plus(final long seed0, final long seed1) {
         super(seed0, seed1);
     }
 
@@ -58,7 +58,7 @@ public class XoRoShiRo128Plus extends AbstractXoRoShiRo128 {
      *
      * @param source Source to copy.
      */
-    protected XoRoShiRo128Plus(XoRoShiRo128Plus source) {
+    protected XoRoShiRo128Plus(final XoRoShiRo128Plus source) {
         super(source);
     }
 

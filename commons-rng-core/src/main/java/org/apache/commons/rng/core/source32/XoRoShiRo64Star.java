@@ -37,7 +37,7 @@ public class XoRoShiRo64Star extends AbstractXoRoShiRo64 {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoRoShiRo64Star(int[] seed) {
+    public XoRoShiRo64Star(final int[] seed) {
         super(seed);
     }
 
@@ -48,7 +48,7 @@ public class XoRoShiRo64Star extends AbstractXoRoShiRo64 {
      * @param seed0 Initial seed element 0.
      * @param seed1 Initial seed element 1.
      */
-    public XoRoShiRo64Star(int seed0, int seed1) {
+    public XoRoShiRo64Star(final int seed0, final int seed1) {
         super(seed0, seed1);
     }
 

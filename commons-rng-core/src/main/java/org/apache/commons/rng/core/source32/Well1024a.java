@@ -49,7 +49,7 @@ public class Well1024a extends AbstractWell {
      *
      * @param seed Initial seed.
      */
-    public Well1024a(int[] seed) {
+    public Well1024a(final int[] seed) {
         super(K, seed);
     }
 

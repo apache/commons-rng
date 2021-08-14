@@ -45,7 +45,7 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    AbstractXoRoShiRo64(int[] seed) {
+    AbstractXoRoShiRo64(final int[] seed) {
         if (seed.length < SEED_SIZE) {
             final int[] state = new int[SEED_SIZE];
             fillState(state, seed);
@@ -62,7 +62,7 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
      * @param seed0 Initial seed element 0.
      * @param seed1 Initial seed element 1.
      */
-    AbstractXoRoShiRo64(int seed0, int seed1) {
+    AbstractXoRoShiRo64(final int seed0, final int seed1) {
         state0 = seed0;
         state1 = seed1;
     }
@@ -72,7 +72,7 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
      *
      * @param state the new state
      */
-    private void setState(int[] state) {
+    private void setState(final int[] state) {
         state0 = state[0];
         state1 = state[1];
     }
@@ -86,7 +86,7 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 4);
 
         setState(NumberFactory.makeIntArray(c[0]));

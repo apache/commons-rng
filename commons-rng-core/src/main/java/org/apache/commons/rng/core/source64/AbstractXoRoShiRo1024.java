@@ -61,7 +61,7 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    AbstractXoRoShiRo1024(long[] seed) {
+    AbstractXoRoShiRo1024(final long[] seed) {
         setSeedInternal(seed);
     }
 
@@ -70,7 +70,7 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
      *
      * @param source Source to copy.
      */
-    protected AbstractXoRoShiRo1024(AbstractXoRoShiRo1024 source) {
+    protected AbstractXoRoShiRo1024(final AbstractXoRoShiRo1024 source) {
         super(source);
         System.arraycopy(source.state, 0, state, 0, SEED_SIZE);
         index = source.index;
@@ -88,7 +88,7 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (SEED_SIZE + 1) * 8);
 
         final long[] tmp = NumberFactory.makeLongArray(c[0]);
@@ -103,7 +103,7 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(final long[] seed) {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
         fillState(state, seed);
@@ -179,7 +179,7 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
      *
      * @param jumpCoefficients the jump coefficients
      */
-    private void performJump(long[] jumpCoefficients) {
+    private void performJump(final long[] jumpCoefficients) {
         final long[] newState = new long[SEED_SIZE];
         for (final long jc : jumpCoefficients) {
             for (int b = 0; b < 64; b++) {

@@ -58,7 +58,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XorShift1024Star(long[] seed) {
+    public XorShift1024Star(final long[] seed) {
         this(seed, 1181783497276652981L);
     }
 
@@ -72,7 +72,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * @param multiplier The multiplier for the XorShift1024 algorithm.
      * @since 1.3
      */
-    protected XorShift1024Star(long[] seed, long multiplier) {
+    protected XorShift1024Star(final long[] seed, final long multiplier) {
         setSeedInternal(seed);
         this.multiplier = multiplier;
     }
@@ -83,7 +83,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * @param source Source to copy.
      * @since 1.3
      */
-    protected XorShift1024Star(XorShift1024Star source) {
+    protected XorShift1024Star(final XorShift1024Star source) {
         super(source);
         System.arraycopy(source.state, 0, state, 0, SEED_SIZE);
         multiplier = source.multiplier;
@@ -102,7 +102,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (SEED_SIZE + 1) * 8);
 
         final long[] tmp = NumberFactory.makeLongArray(c[0]);
@@ -117,7 +117,7 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long[] seed) {
+    private void setSeedInternal(final long[] seed) {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
         fillState(state, seed);

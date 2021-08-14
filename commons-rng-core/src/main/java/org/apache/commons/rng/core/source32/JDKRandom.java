@@ -85,7 +85,7 @@ public class JDKRandom extends IntProvider {
      *
      * @param seed Initial seed.
      */
-    public JDKRandom(Long seed) {
+    public JDKRandom(final Long seed) {
         delegate = new Random(seed);
     }
 
@@ -115,7 +115,7 @@ public class JDKRandom extends IntProvider {
                                                              state);
             return composeStateInternal(sizeAndState,
                                         super.getStateInternal());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // Workaround checked exception.
             throw new IllegalStateException(e);
         }
@@ -123,7 +123,7 @@ public class JDKRandom extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         // First obtain the state size
         final byte[][] s2 = splitStateInternal(s, 4);
         final int stateSize = NumberFactory.makeInt(s2[0]);
@@ -136,7 +136,7 @@ public class JDKRandom extends IntProvider {
              ObjectInputStream ois = new ValidatingObjectInputStream(bis)) {
 
             delegate = (Random) ois.readObject();
-        } catch (ClassNotFoundException | IOException e) {
+        } catch (final ClassNotFoundException | IOException e) {
             // Workaround checked exception.
             throw new IllegalStateException(e);
         }

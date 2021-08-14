@@ -32,7 +32,7 @@ public abstract class BaseProvider
 
     /** {@inheritDoc} */
     @Override
-    public int nextInt(int n) {
+    public int nextInt(final int n) {
         if (n <= 0) {
             throw new IllegalArgumentException(NOT_POSITIVE + n);
         }
@@ -54,7 +54,7 @@ public abstract class BaseProvider
 
     /** {@inheritDoc} */
     @Override
-    public long nextLong(long n) {
+    public long nextLong(final long n) {
         if (n <= 0) {
             throw new IllegalArgumentException(NOT_POSITIVE + n);
         }
@@ -77,7 +77,7 @@ public abstract class BaseProvider
 
     /** {@inheritDoc} */
     @Override
-    public void restoreState(RandomProviderState state) {
+    public void restoreState(final RandomProviderState state) {
         if (state instanceof RandomProviderDefaultState) {
             setStateInternal(((RandomProviderDefaultState) state).getState());
         } else {
@@ -114,8 +114,8 @@ public abstract class BaseProvider
      * Bytes that belong to the local state will be stored at the
      * beginning of the resulting array.
      */
-    protected byte[] composeStateInternal(byte[] state,
-                                          byte[] parentState) {
+    protected byte[] composeStateInternal(final byte[] state,
+                                          final byte[] parentState) {
         final int len = parentState.length + state.length;
         final byte[] c = new byte[len];
         System.arraycopy(state, 0, c, 0, state.length);
@@ -147,8 +147,8 @@ public abstract class BaseProvider
      * @return the local state (in slot 0) and the parent state (in slot 1).
      * @throws IllegalStateException if {@code state.length < localStateLength}.
      */
-    protected byte[][] splitStateInternal(byte[] state,
-                                          int localStateLength) {
+    protected byte[][] splitStateInternal(final byte[] state,
+                                          final int localStateLength) {
         checkStateSize(state, localStateLength);
 
         final byte[] local = new byte[localStateLength];
@@ -181,7 +181,7 @@ public abstract class BaseProvider
      *
      * @see #checkStateSize(byte[],int)
      */
-    protected void setStateInternal(byte[] state) {
+    protected void setStateInternal(final byte[] state) {
         if (state.length != 0) {
             // This class has no state.
             throw new IllegalStateException("State not fully recovered by subclasses");
@@ -206,8 +206,8 @@ public abstract class BaseProvider
      * @param state State. Must be allocated.
      * @param seed Seed. Cannot be null.
      */
-    protected void fillState(int[] state,
-                             int[] seed) {
+    protected void fillState(final int[] state,
+                             final int[] seed) {
         final int stateSize = state.length;
         final int seedSize = seed.length;
         System.arraycopy(seed, 0, state, 0, Math.min(seedSize, stateSize));
@@ -237,8 +237,8 @@ public abstract class BaseProvider
      * @param state State. Must be allocated.
      * @param seed Seed. Cannot be null.
      */
-    protected void fillState(long[] state,
-                             long[] seed) {
+    protected void fillState(final long[] state,
+                             final long[] seed) {
         final int stateSize = state.length;
         final int seedSize = seed.length;
         System.arraycopy(seed, 0, state, 0, Math.min(seedSize, stateSize));
@@ -260,8 +260,8 @@ public abstract class BaseProvider
      * some future release.
      */
     @Deprecated
-    protected void checkStateSize(byte[] state,
-                                  int expected) {
+    protected void checkStateSize(final byte[] state,
+                                  final int expected) {
         if (state.length < expected) {
             throw new IllegalStateException("State size must be larger than " +
                                             expected + " but was " + state.length);
@@ -277,9 +277,9 @@ public abstract class BaseProvider
      * @throws IndexOutOfBoundsException if {@code index} is not within the
      * {@code [min, max]} interval.
      */
-    protected void checkIndex(int min,
-                              int max,
-                              int index) {
+    protected void checkIndex(final int min,
+                              final int max,
+                              final int index) {
         if (index < min ||
             index > max) {
             throw new IndexOutOfBoundsException(index + " is out of interval [" +
@@ -298,10 +298,10 @@ public abstract class BaseProvider
      * @param add Offset.
      * @return the transformed seed element.
      */
-    private static long scramble(long n,
-                                 long mult,
-                                 int shift,
-                                 int add) {
+    private static long scramble(final long n,
+                                 final long mult,
+                                 final int shift,
+                                 final int add) {
         // Code inspired from "AbstractWell" class.
         return mult * (n ^ (n >> shift)) + add;
     }
@@ -315,8 +315,8 @@ public abstract class BaseProvider
      * @return the transformed seed element.
      * @see #scramble(long,long,int,int)
      */
-    private static long scrambleWell(long n,
-                                     int add) {
+    private static long scrambleWell(final long n,
+                                     final int add) {
         // Code inspired from "AbstractWell" class.
         return scramble(n, 1812433253L, 30, add);
     }

@@ -56,7 +56,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    AbstractXoRoShiRo128(long[] seed) {
+    AbstractXoRoShiRo128(final long[] seed) {
         if (seed.length < SEED_SIZE) {
             final long[] state = new long[SEED_SIZE];
             fillState(state, seed);
@@ -73,7 +73,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      * @param seed0 Initial seed element 0.
      * @param seed1 Initial seed element 1.
      */
-    AbstractXoRoShiRo128(long seed0, long seed1) {
+    AbstractXoRoShiRo128(final long seed0, final long seed1) {
         state0 = seed0;
         state1 = seed1;
     }
@@ -83,7 +83,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      *
      * @param source Source to copy.
      */
-    protected AbstractXoRoShiRo128(AbstractXoRoShiRo128 source) {
+    protected AbstractXoRoShiRo128(final AbstractXoRoShiRo128 source) {
         super(source);
         state0 = source.state0;
         state1 = source.state1;
@@ -94,7 +94,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      *
      * @param state the new state
      */
-    private void setState(long[] state) {
+    private void setState(final long[] state) {
         state0 = state[0];
         state1 = state[1];
     }
@@ -108,7 +108,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, SEED_SIZE * 8);
 
         setState(NumberFactory.makeLongArray(c[0]));
@@ -182,7 +182,7 @@ abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpable
      *
      * @param jumpCoefficients Jump coefficients.
      */
-    final void performJump(long[] jumpCoefficients) {
+    final void performJump(final long[] jumpCoefficients) {
         long s0 = 0;
         long s1 = 0;
         for (final long jc : jumpCoefficients) {

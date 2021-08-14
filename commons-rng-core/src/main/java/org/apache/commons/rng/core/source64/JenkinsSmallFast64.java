@@ -41,7 +41,7 @@ public class JenkinsSmallFast64 extends LongProvider {
      *
      * @param seed Initial seed.
      */
-    public JenkinsSmallFast64(Long seed) {
+    public JenkinsSmallFast64(final Long seed) {
         setSeedInternal(seed);
     }
 
@@ -50,7 +50,7 @@ public class JenkinsSmallFast64 extends LongProvider {
      *
      * @param seed Seed.
      */
-    private void setSeedInternal(long seed) {
+    private void setSeedInternal(final long seed) {
         a = 0xf1ea5eedL;
         b = c = d = seed;
         for (int i = 0; i < 20; i++) {
@@ -78,7 +78,7 @@ public class JenkinsSmallFast64 extends LongProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] parts = splitStateInternal(s, 4 * 8);
 
         final long[] tmp = NumberFactory.makeLongArray(parts[0]);

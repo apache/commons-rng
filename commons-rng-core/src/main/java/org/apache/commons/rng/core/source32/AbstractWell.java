@@ -73,7 +73,7 @@ public abstract class AbstractWell extends IntProvider {
 
     /** {@inheritDoc} */
     @Override
-    protected void setStateInternal(byte[] s) {
+    protected void setStateInternal(final byte[] s) {
         final byte[][] c = splitStateInternal(s, (v.length + 1) * 4);
 
         final int[] tmp = NumberFactory.makeIntArray(c[0]);

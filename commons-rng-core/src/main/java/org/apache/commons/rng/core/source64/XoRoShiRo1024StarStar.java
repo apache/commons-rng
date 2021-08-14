@@ -38,7 +38,7 @@ public class XoRoShiRo1024StarStar extends AbstractXoRoShiRo1024 {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XoRoShiRo1024StarStar(long[] seed) {
+    public XoRoShiRo1024StarStar(final long[] seed) {
         super(seed);
     }
 
@@ -47,13 +47,13 @@ public class XoRoShiRo1024StarStar extends AbstractXoRoShiRo1024 {
      *
      * @param source Source to copy.
      */
-    protected XoRoShiRo1024StarStar(XoRoShiRo1024StarStar source) {
+    protected XoRoShiRo1024StarStar(final XoRoShiRo1024StarStar source) {
         super(source);
     }
 
     /** {@inheritDoc} */
     @Override
-    protected long transform(long s0, long s15) {
+    protected long transform(final long s0, final long s15) {
         return Long.rotateLeft(s0 * 5, 7) * 9;
     }
 

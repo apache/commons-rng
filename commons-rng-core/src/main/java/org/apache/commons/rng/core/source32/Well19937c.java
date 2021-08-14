@@ -38,7 +38,7 @@ public class Well19937c extends Well19937a {
      *
      * @param seed Initial seed.
      */
-    public Well19937c(int[] seed) {
+    public Well19937c(final int[] seed) {
         super(seed);
     }
 

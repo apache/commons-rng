@@ -59,7 +59,7 @@ public final class NumberFactory {
      * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
     @Deprecated
-    public static boolean makeBoolean(int v) {
+    public static boolean makeBoolean(final int v) {
         return v < 0;
     }
 
@@ -73,7 +73,7 @@ public final class NumberFactory {
      * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
     @Deprecated
-    public static boolean makeBoolean(long v) {
+    public static boolean makeBoolean(final long v) {
         return v < 0;
     }
 
@@ -83,7 +83,7 @@ public final class NumberFactory {
      * @param v Number.
      * @return a {@code double} value in the interval {@code [0, 1]}.
      */
-    public static double makeDouble(long v) {
+    public static double makeDouble(final long v) {
         // Require the least significant 53-bits so shift the higher bits across
         return (v >>> 11) * DOUBLE_MULTIPLIER;
     }
@@ -95,8 +95,8 @@ public final class NumberFactory {
      * @param w Number (low order bits).
      * @return a {@code double} value in the interval {@code [0, 1]}.
      */
-    public static double makeDouble(int v,
-                                    int w) {
+    public static double makeDouble(final int v,
+                                    final int w) {
         // Require the least significant 53-bits from a long.
         // Join the most significant 26 from v with 27 from w.
         final long high = ((long) (v >>> 6)) << 27;  // 26-bits remain
@@ -110,7 +110,7 @@ public final class NumberFactory {
      * @param v Number.
      * @return a {@code float} value in the interval {@code [0, 1]}.
      */
-    public static float makeFloat(int v) {
+    public static float makeFloat(final int v) {
         // Require the least significant 24-bits so shift the higher bits across
         return (v >>> 8) * FLOAT_MULTIPLIER;
     }
@@ -122,8 +122,8 @@ public final class NumberFactory {
      * @param w Number (low order bits).
      * @return a {@code long} value.
      */
-    public static long makeLong(int v,
-                                int w) {
+    public static long makeLong(final int v,
+                                final int w) {
         return (((long) v) << 32) | (w & 0xffffffffL);
     }
 
@@ -139,7 +139,7 @@ public final class NumberFactory {
      * <a href="https://issues.apache.org/jira/browse/RNG-57">RNG-57</a>.
      */
     @Deprecated
-    public static int makeInt(long v) {
+    public static int makeInt(final long v) {
         return extractHi(v) ^ extractLo(v);
     }
 
@@ -158,7 +158,7 @@ public final class NumberFactory {
      * @return an {@code int} value made from the most significant bits
      * of {@code v}.
      */
-    public static int extractHi(long v) {
+    public static int extractHi(final long v) {
         return (int) (v >>> 32);
     }
 
@@ -178,7 +178,7 @@ public final class NumberFactory {
      * @return an {@code int} value made from the least significant bits
      * of {@code v}.
      */
-    public static int extractLo(long v) {
+    public static int extractLo(final long v) {
         return (int) v;
     }
 
@@ -189,7 +189,7 @@ public final class NumberFactory {
      * @return the bytes that compose the given value (least-significant
      * byte first).
      */
-    public static byte[] makeByteArray(long v) {
+    public static byte[] makeByteArray(final long v) {
         final byte[] b = new byte[LONG_SIZE];
         putLong(v, b, 0);
         return b;
@@ -203,9 +203,9 @@ public final class NumberFactory {
      * @param buffer the buffer.
      * @param index  the index.
      */
-    private static void putLong(long v,
-                                byte[] buffer,
-                                int index) {
+    private static void putLong(final long v,
+                                final byte[] buffer,
+                                final int index) {
         buffer[index    ] = (byte) (v         & LONG_LOWEST_BYTE_MASK);
         buffer[index + 1] = (byte)((v >>>  8) & LONG_LOWEST_BYTE_MASK);
         buffer[index + 2] = (byte)((v >>> 16) & LONG_LOWEST_BYTE_MASK);
@@ -225,7 +225,7 @@ public final class NumberFactory {
      * first byte in the array is the least-significant).
      * @throws IllegalArgumentException if {@code input.length != 8}.
      */
-    public static long makeLong(byte[] input) {
+    public static long makeLong(final byte[] input) {
         checkSize(LONG_SIZE, input.length);
         return getLong(input, 0);
     }
@@ -240,8 +240,8 @@ public final class NumberFactory {
      * that the order is in increasing byte significance (i.e. the
      * first byte in the array is the least-significant).
      */
-    private static long getLong(byte[] input,
-                                int index) {
+    private static long getLong(final byte[] input,
+                                final int index) {
         return (input[index    ] & LONG_LOWEST_BYTE_MASK)       |
                (input[index + 1] & LONG_LOWEST_BYTE_MASK) <<  8 |
                (input[index + 2] & LONG_LOWEST_BYTE_MASK) << 16 |
@@ -260,7 +260,7 @@ public final class NumberFactory {
      * @param input Input.
      * @return an array of bytes.
      */
-    public static byte[] makeByteArray(long[] input) {
+    public static byte[] makeByteArray(final long[] input) {
         final int size = input.length * LONG_SIZE;
         final byte[] b = new byte[size];
 
@@ -281,7 +281,7 @@ public final class NumberFactory {
      * @throws IllegalArgumentException if {@code input.length} is not
      * a multiple of 8.
      */
-    public static long[] makeLongArray(byte[] input) {
+    public static long[] makeLongArray(final byte[] input) {
         final int size = input.length;
         final int num = size / LONG_SIZE;
         checkSize(num * LONG_SIZE, size);
@@ -301,7 +301,7 @@ public final class NumberFactory {
      * @return the bytes that compose the given value (least-significant
      * byte first).
      */
-    public static byte[] makeByteArray(int v) {
+    public static byte[] makeByteArray(final int v) {
         final byte[] b = new byte[INT_SIZE];
         putInt(v, b, 0);
         return b;
@@ -315,9 +315,9 @@ public final class NumberFactory {
      * @param buffer the buffer.
      * @param index  the index.
      */
-    private static void putInt(int v,
-                               byte[] buffer,
-                               int index) {
+    private static void putInt(final int v,
+                               final byte[] buffer,
+                               final int index) {
         buffer[index    ] = (byte) (v         & INT_LOWEST_BYTE_MASK);
         buffer[index + 1] = (byte)((v >>>  8) & INT_LOWEST_BYTE_MASK);
         buffer[index + 2] = (byte)((v >>> 16) & INT_LOWEST_BYTE_MASK);
@@ -332,7 +332,7 @@ public final class NumberFactory {
      * first byte in the array is the least-significant).
      * @throws IllegalArgumentException if {@code input.length != 4}.
      */
-    public static int makeInt(byte[] input) {
+    public static int makeInt(final byte[] input) {
         checkSize(INT_SIZE, input.length);
         return getInt(input, 0);
     }
@@ -347,8 +347,8 @@ public final class NumberFactory {
      * that the order is in increasing byte significance (i.e. the
      * first byte in the array is the least-significant).
      */
-    private static int getInt(byte[] input,
-                              int index) {
+    private static int getInt(final byte[] input,
+                              final int index) {
         return (input[index    ] & INT_LOWEST_BYTE_MASK)       |
                (input[index + 1] & INT_LOWEST_BYTE_MASK) <<  8 |
                (input[index + 2] & INT_LOWEST_BYTE_MASK) << 16 |
@@ -363,7 +363,7 @@ public final class NumberFactory {
      * @param input Input.
      * @return an array of bytes.
      */
-    public static byte[] makeByteArray(int[] input) {
+    public static byte[] makeByteArray(final int[] input) {
         final int size = input.length * INT_SIZE;
         final byte[] b = new byte[size];
 
@@ -384,7 +384,7 @@ public final class NumberFactory {
      * @throws IllegalArgumentException if {@code input.length} is not
      * a multiple of 4.
      */
-    public static int[] makeIntArray(byte[] input) {
+    public static int[] makeIntArray(final byte[] input) {
         final int size = input.length;
         final int num = size / INT_SIZE;
         checkSize(num * INT_SIZE, size);
@@ -402,8 +402,8 @@ public final class NumberFactory {
      * @param actual Actual value.
      * @throws IllegalArgumentException if {@code expected != actual}.
      */
-    private static void checkSize(int expected,
-                                  int actual) {
+    private static void checkSize(final int expected,
+                                  final int actual) {
         if (expected != actual) {
             throw new IllegalArgumentException("Array size: Expected " + expected +
                                                " but was " + actual);

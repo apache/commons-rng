@@ -40,7 +40,7 @@ public class XorShift1024StarPhi extends XorShift1024Star {
      * be used; if smaller, the remaining elements will be automatically
      * set. A seed containing all zeros will create a non-functional generator.
      */
-    public XorShift1024StarPhi(long[] seed) {
+    public XorShift1024StarPhi(final long[] seed) {
         super(seed, 0x9e3779b97f4a7c13L);
     }
 
@@ -49,7 +49,7 @@ public class XorShift1024StarPhi extends XorShift1024Star {
      *
      * @param source Source to copy.
      */
-    protected XorShift1024StarPhi(XorShift1024StarPhi source) {
+    protected XorShift1024StarPhi(final XorShift1024StarPhi source) {
         super(source);
     }
 
