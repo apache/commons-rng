@@ -17,7 +17,6 @@
 
 package org.apache.commons.rng.simple;
 
-import java.util.Arrays;
 import org.junit.Assert;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -75,7 +74,7 @@ public final class RandomAssert {
         for (int i = 0; i < 3; i++) {
             rng1.nextBytes(a1);
             rng2.nextBytes(a2);
-            Assert.assertTrue(Arrays.equals(a1, a2));
+            Assert.assertArrayEquals(a1, a2);
         }
 
         for (int i = 0; i < 5; i++) {
@@ -83,7 +82,7 @@ public final class RandomAssert {
             final int n = 23 + i;
             rng1.nextBytes(a1, offset, n);
             rng2.nextBytes(a2, offset, n);
-            Assert.assertTrue(Arrays.equals(a1, a2));
+            Assert.assertArrayEquals(a1, a2);
         }
     }
 }

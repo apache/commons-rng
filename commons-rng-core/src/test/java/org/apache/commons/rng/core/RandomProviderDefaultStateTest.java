@@ -16,7 +16,6 @@
  */
 package org.apache.commons.rng.core;
 
-import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.Assert;
@@ -30,6 +29,6 @@ public class RandomProviderDefaultStateTest {
         final byte[] internalState = {1, 0, -23, 67, -128, 54, 100, 127};
         final RandomProviderDefaultState state = new RandomProviderDefaultState(internalState);
 
-        Assert.assertTrue(Arrays.equals(internalState, state.getState()));
+        Assert.assertArrayEquals(internalState, state.getState());
     }
 }
