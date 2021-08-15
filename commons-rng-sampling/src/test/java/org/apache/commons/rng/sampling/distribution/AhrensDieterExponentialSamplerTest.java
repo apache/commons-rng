@@ -16,26 +16,19 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.Timeout;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link AhrensDieterExponentialSampler}. The tests hit edge cases for the sampler.
  */
 public class AhrensDieterExponentialSamplerTest {
-
-    /** The global timeout for tests. Used to kill a test stuck in an infinite loop. */
-    @Rule
-    public Timeout globalTimeout = new Timeout(50, TimeUnit.MILLISECONDS);
-
     /**
      * Test the constructor with a bad mean.
      */
@@ -76,8 +69,11 @@ public class AhrensDieterExponentialSamplerTest {
         };
         final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
         // This should not infinite loop
-        final double x = sampler.sample();
-        Assertions.assertTrue(x >= 0);
+        final double[] x = {-1};
+        Assertions.assertTimeout(Duration.ofMillis(50), () -> {
+            x[0] = sampler.sample();
+        });
+        Assertions.assertTrue(x[0] >= 0);
     }
 
     /**

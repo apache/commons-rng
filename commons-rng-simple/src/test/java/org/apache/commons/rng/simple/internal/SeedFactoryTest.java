@@ -19,7 +19,7 @@ package org.apache.commons.rng.simple.internal;
 import java.util.Map;
 import java.util.HashMap;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;

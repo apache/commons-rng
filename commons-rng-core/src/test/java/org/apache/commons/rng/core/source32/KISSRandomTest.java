@@ -17,7 +17,7 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.RandomAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KISSRandomTest {
     @Test

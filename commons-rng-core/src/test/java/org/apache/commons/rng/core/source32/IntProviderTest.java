@@ -17,7 +17,7 @@
 package org.apache.commons.rng.core.source32;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * The tests the caching of calls to {@link IntProvider#nextInt()} are used as

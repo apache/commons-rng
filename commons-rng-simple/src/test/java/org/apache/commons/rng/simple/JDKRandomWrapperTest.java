@@ -21,7 +21,7 @@ import java.util.Random;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link JDKRandomWrapper} class.

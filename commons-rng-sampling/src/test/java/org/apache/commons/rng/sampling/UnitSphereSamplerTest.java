@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.apache.commons.rng.simple.RandomSource;
 import java.util.Arrays;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;

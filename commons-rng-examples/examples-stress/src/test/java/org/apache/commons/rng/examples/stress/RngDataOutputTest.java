@@ -22,7 +22,7 @@ import org.apache.commons.rng.core.source32.RandomIntSource;
 import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

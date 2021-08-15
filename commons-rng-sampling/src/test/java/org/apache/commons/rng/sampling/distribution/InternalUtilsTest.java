@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.math3.special.Gamma;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link InternalUtils}.

@@ -17,7 +17,7 @@
 package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class XoShiRo256PlusTest {
     /** The size of the array SEED. */

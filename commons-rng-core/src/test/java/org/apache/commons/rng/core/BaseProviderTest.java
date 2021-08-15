@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 

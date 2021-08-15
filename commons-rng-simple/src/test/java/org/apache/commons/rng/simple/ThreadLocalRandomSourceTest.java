@@ -18,8 +18,8 @@ package org.apache.commons.rng.simple;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 import java.util.concurrent.ExecutionException;
@@ -39,7 +39,7 @@ public class ThreadLocalRandomSourceTest {
      */
     private static EnumSet<RandomSource> toIgnore;
 
-    @BeforeClass
+    @BeforeAll
     public static void createToIgnoreSet() {
         toIgnore = EnumSet.of(RandomSource.TWO_CMRES_SELECT);
     }

@@ -18,7 +18,7 @@ package org.apache.commons.rng.core.util;
 
 import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link NumberFactory}.

@@ -17,7 +17,7 @@
 package org.apache.commons.rng.simple;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link RandomSource}.

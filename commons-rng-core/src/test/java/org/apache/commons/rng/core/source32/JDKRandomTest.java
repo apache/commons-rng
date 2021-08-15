@@ -28,7 +28,7 @@ import org.apache.commons.rng.core.RandomAssert;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JDKRandomTest {
     /**
