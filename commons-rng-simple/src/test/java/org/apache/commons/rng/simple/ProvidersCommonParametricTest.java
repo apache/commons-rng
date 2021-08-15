@@ -105,23 +105,17 @@ public class ProvidersCommonParametricTest {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         if (originalArgs == null) {
-            try {
-                // Try passing arguments to a provider that does not require them
-                int arg1 = 123;
-                double arg2 = 456.0;
-                originalSource.create(arg1, arg2);
-                Assertions.fail("Source does not require arguments: " + originalSource);
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
+            // Try passing arguments to a provider that does not require them
+            int arg1 = 123;
+            double arg2 = 456.0;
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> originalSource.create(arg1, arg2),
+                () -> "Source does not require arguments: " + originalSource);
         } else {
-            try {
-                // Try no arguments for a provider that does require them
-                originalSource.create();
-                Assertions.fail("Source requires arguments: " + originalSource);
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
+            // Try no arguments for a provider that does require them
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> originalSource.create(),
+                () -> "Source requires arguments: " + originalSource);
         }
     }
 

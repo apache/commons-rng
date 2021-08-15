@@ -33,15 +33,14 @@ public class CoordinatesTest {
         Assertions.assertSame(c, Coordinates.requireFinite(c, message));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
+            final int ii = i;
             for (final double d : bad) {
                 final double value = c[i];
                 c[i] = d;
-                try {
-                    Coordinates.requireFinite(c, message);
-                    Assertions.fail(String.format("Did not detect non-finite coordinate: %d = %s", i, d));
-                } catch (IllegalArgumentException ex) {
-                    Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
-                }
+                final IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class,
+                    () -> Coordinates.requireFinite(c, message),
+                    () -> String.format("Did not detect non-finite coordinate: %d = %s", ii, d));
+                Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
                 c[i] = value;
             }
         }
@@ -56,18 +55,14 @@ public class CoordinatesTest {
         for (final double[] c : new double[][] {{0, 1}, {0, 1, 2}}) {
             final int length = c.length;
             Assertions.assertSame(c, Coordinates.requireLength(c, length, message));
-            try {
-                Coordinates.requireLength(c, length - 1, message);
-                Assertions.fail("Did not detect length was too long: " + (length - 1));
-            } catch (IllegalArgumentException ex) {
-                Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
-            }
-            try {
-                Coordinates.requireLength(c, length + 1, message);
-                Assertions.fail("Did not detect length was too short: " + (length + 1));
-            } catch (IllegalArgumentException ex) {
-                Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
-            }
+            IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> Coordinates.requireLength(c, length - 1, message),
+                () -> "Did not detect length was too long: " + (length - 1));
+            Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
+            ex = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> Coordinates.requireLength(c, length + 1, message),
+                () -> "Did not detect length was too short: " + (length + 1));
+            Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
         }
     }
 }

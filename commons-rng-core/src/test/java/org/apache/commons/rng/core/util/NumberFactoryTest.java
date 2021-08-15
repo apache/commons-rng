@@ -168,13 +168,12 @@ public class NumberFactoryTest {
     @Test
     public void testMakeIntPrecondition1() {
         for (int i = 0; i <= 10; i++) {
-            try {
-                NumberFactory.makeInt(new byte[i]);
-                if (i != INT_SIZE) {
-                    Assertions.fail("Exception expected");
-                }
-            } catch (IllegalArgumentException e) {
-                // Expected.
+            final byte[] bytes = new byte[i];
+            if (i != INT_SIZE) {
+                Assertions.assertThrows(IllegalArgumentException.class,
+                    () -> NumberFactory.makeInt(bytes));
+            } else {
+                Assertions.assertEquals(0, NumberFactory.makeInt(bytes));
             }
         }
     }
@@ -182,13 +181,12 @@ public class NumberFactoryTest {
     @Test
     public void testMakeIntArrayPrecondition1() {
         for (int i = 0; i <= 20; i++) {
-            try {
-                NumberFactory.makeIntArray(new byte[i]);
-                if (i != 0 && i % INT_SIZE != 0) {
-                    Assertions.fail("Exception expected");
-                }
-            } catch (IllegalArgumentException e) {
-                // Expected.
+            final byte[] bytes = new byte[i];
+            if (i != 0 && i % INT_SIZE != 0) {
+                Assertions.assertThrows(IllegalArgumentException.class,
+                    () -> NumberFactory.makeIntArray(bytes));
+            } else {
+                Assertions.assertArrayEquals(new int[i / INT_SIZE], NumberFactory.makeIntArray(bytes));
             }
         }
     }
@@ -196,13 +194,12 @@ public class NumberFactoryTest {
     @Test
     public void testMakeLongPrecondition1() {
         for (int i = 0; i <= 10; i++) {
-            try {
-                NumberFactory.makeLong(new byte[i]);
-                if (i != LONG_SIZE) {
-                    Assertions.fail("Exception expected");
-                }
-            } catch (IllegalArgumentException e) {
-                // Expected.
+            final byte[] bytes = new byte[i];
+            if (i != LONG_SIZE) {
+                Assertions.assertThrows(IllegalArgumentException.class,
+                    () -> NumberFactory.makeLong(bytes));
+            } else {
+                Assertions.assertEquals(0L, NumberFactory.makeLong(bytes));
             }
         }
     }
@@ -210,13 +207,12 @@ public class NumberFactoryTest {
     @Test
     public void testMakeLongArrayPrecondition1() {
         for (int i = 0; i <= 20; i++) {
-            try {
-                NumberFactory.makeLongArray(new byte[i]);
-                if (i != 0 && i % LONG_SIZE != 0) {
-                    Assertions.fail("Exception expected");
-                }
-            } catch (IllegalArgumentException e) {
-                // Expected.
+            final byte[] bytes = new byte[i];
+            if (i != 0 && i % LONG_SIZE != 0) {
+                Assertions.assertThrows(IllegalArgumentException.class,
+                    () -> NumberFactory.makeLongArray(bytes));
+            } else {
+                Assertions.assertArrayEquals(new long[i / LONG_SIZE], NumberFactory.makeLongArray(bytes));
             }
         }
     }

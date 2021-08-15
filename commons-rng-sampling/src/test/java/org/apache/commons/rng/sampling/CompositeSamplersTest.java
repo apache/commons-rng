@@ -100,12 +100,9 @@ public class CompositeSamplersTest {
 
         final double[] bad = {-1, Double.NaN, Double.POSITIVE_INFINITY};
         for (final double weight : bad) {
-            try {
-                builder.add(sampler, weight);
-                Assertions.fail("Did not detect invalid weight: " + weight);
-            } catch (final IllegalArgumentException ex) {
-                // Expected
-            }
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> builder.add(sampler, weight),
+                () -> "Did not detect invalid weight: " + weight);
         }
     }
 

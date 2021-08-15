@@ -75,7 +75,7 @@ public class GuideTableDiscreteSamplerTest {
     }
 
     /**
-     * Assert the factory constructor throws and {@link IllegalArgumentException}.
+     * Assert the factory constructor throws an {@link IllegalArgumentException}.
      *
      * @param probabilities the probabilities
      * @param alpha the alpha

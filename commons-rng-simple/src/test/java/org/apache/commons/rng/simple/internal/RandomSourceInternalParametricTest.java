@@ -154,12 +154,9 @@ public class RandomSourceInternalParametricTest {
     @EnumSource
     public void testCannotConvertUnsupportedSeed(RandomSourceInternal randomSourceInternal) {
         for (final Object input : UNSUPPORTED_SEEDS) {
-            try {
-                randomSourceInternal.convertSeed(input);
-                Assertions.fail(input.getClass() + " input seed was not rejected as unsupported");
-            } catch (UnsupportedOperationException ex) {
-                // This is expected
-            }
+            Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> randomSourceInternal.convertSeed(input),
+                () -> input.getClass() + " input seed was not rejected as unsupported");
         }
     }
 

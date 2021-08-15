@@ -68,12 +68,9 @@ public class TwoCmresTest {
     public void testSubcycleGeneratorsMustBeDifferent() {
         final int max = TwoCmres.numberOfSubcycleGenerators();
         for (int i = 0; i < max; i++) {
-            try {
-                new TwoCmres(-97845, i, i);
-                Assertions.fail("Exception expected");
-            } catch (IllegalArgumentException e) {
-                // Expected.
-            }
+            final int subCycle = i;
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> new TwoCmres(-97845, subCycle, subCycle));
         }
     }
 
@@ -94,25 +91,18 @@ public class TwoCmresTest {
         }
 
         for (int wrongIndex : new int[] {-1, max}) {
-            try {
-                new TwoCmres(seed, wrongIndex, 1);
-                Assertions.fail("Exception expected for index=" + wrongIndex);
-            } catch (IndexOutOfBoundsException e) {
-                // Expected.
-            }
-
-            try {
-                new TwoCmres(seed, 1, wrongIndex);
-                Assertions.fail("Exception expected for index=" + wrongIndex);
-            } catch (IndexOutOfBoundsException e) {
-                // Expected.
-            }
+            Assertions.assertThrows(IndexOutOfBoundsException.class,
+                () -> new TwoCmres(seed, wrongIndex, 1),
+                () -> "Exception expected for index i = " + wrongIndex);
+            Assertions.assertThrows(IndexOutOfBoundsException.class,
+                () -> new TwoCmres(seed, 1, wrongIndex),
+                () -> "Exception expected for index j = " + wrongIndex);
         }
     }
 
     @Test
     public void testCmresFactoryThrowsWithDuplicateMultiplier() {
-        ArrayList<Cmres> list = new ArrayList<Cmres>();
+        final ArrayList<Cmres> list = new ArrayList<>();
         final long multiply = 0;
         final int rotate = 3;
         final int start = 5;
@@ -120,11 +110,9 @@ public class TwoCmresTest {
         list.add(new Cmres(multiply, rotate, start));
 
         long nextMultiply = multiply + 1;
-        try {
-            Cmres.Factory.checkUnique(list, nextMultiply);
-        } catch (IllegalStateException ex) {
-            Assertions.fail("The next multiply should be unique: " + nextMultiply);
-        }
+        Assertions.assertDoesNotThrow(
+            () -> Cmres.Factory.checkUnique(list, nextMultiply),
+            () -> "The next multiply should be unique: " + nextMultiply);
 
         list.add(new Cmres(nextMultiply, rotate, start));
         // This should throw as the list now contains the multiply value

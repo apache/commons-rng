@@ -54,13 +54,10 @@ public class LineSamplerTest {
             {c2, c3},
             {c3, c2},
         }) {
-            try {
-                LineSampler.of(rng, c[0], c[1]);
-                Assertions.fail(String.format("Did not detect dimension mismatch: %d,%d",
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> LineSampler.of(rng, c[0], c[1]),
+                () -> String.format("Did not detect dimension mismatch: %d,%d",
                     c[0].length, c[1].length));
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
         }
     }
 
@@ -77,17 +74,16 @@ public class LineSamplerTest {
         Assertions.assertNotNull(LineSampler.of(rng, c[0],  c[1]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
+            final int ii = i;
             for (int j = 0; j < c[0].length; j++) {
+                final int jj = j;
                 for (final double d : bad) {
                     final double value = c[i][j];
                     c[i][j] = d;
-                    try {
-                        LineSampler.of(rng, c[0], c[1]);
-                        Assertions.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s",
-                            i, j, d));
-                    } catch (IllegalArgumentException ex) {
-                        // Expected
-                    }
+                    Assertions.assertThrows(IllegalArgumentException.class,
+                        () -> LineSampler.of(rng, c[0], c[1]),
+                        () -> String.format("Did not detect non-finite coordinate: %d,%d = %s",
+                            ii, jj, d));
                     c[i][j] = value;
                 }
             }

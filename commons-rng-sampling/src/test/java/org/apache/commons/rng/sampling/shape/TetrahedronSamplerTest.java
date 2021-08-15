@@ -41,13 +41,11 @@ public class TetrahedronSamplerTest {
         final double[] bad = new double[2];
         final double[][] c = {ok, ok, ok, ok};
         for (int i = 0; i < c.length; i++) {
+            final int ii = i;
             c[i] = bad;
-            try {
-                TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]);
-                Assertions.fail(String.format("Did not detect invalid dimension for vertex: %d", i));
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]),
+                () -> String.format("Did not detect invalid dimension for vertex: %d", ii));
             c[i] = ok;
         }
     }
@@ -65,16 +63,15 @@ public class TetrahedronSamplerTest {
         Assertions.assertNotNull(TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
+            final int ii = i;
             for (int j = 0; j < c[0].length; j++) {
+                final int jj = j;
                 for (final double d : bad) {
                     final double value = c[i][j];
                     c[i][j] = d;
-                    try {
-                        TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]);
-                        Assertions.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
-                    } catch (IllegalArgumentException ex) {
-                        // Expected
-                    }
+                    Assertions.assertThrows(IllegalArgumentException.class,
+                        () -> TetrahedronSampler.of(rng, c[0], c[1], c[2], c[3]),
+                        () -> String.format("Did not detect non-finite coordinate: %d,%d = %s", ii, jj, d));
                     c[i][j] = value;
                 }
             }

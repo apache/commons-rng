@@ -112,18 +112,12 @@ public class ContinuousUniformSamplerTest {
         }) {
             final double low = interval[0];
             final double high = interval[1];
-            try {
-                ContinuousUniformSampler.of(rng, low, high, true);
-                Assertions.fail("(" + low + "," + high + ")");
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
-            try {
-                ContinuousUniformSampler.of(rng, high, low, true);
-                Assertions.fail("(" + high + "," + low + ")");
-            } catch (IllegalArgumentException ex) {
-                // Expected
-            }
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ContinuousUniformSampler.of(rng, low, high, true),
+                () -> "(" + low + "," + high + ")");
+            Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ContinuousUniformSampler.of(rng, high, low, true),
+                () -> "(" + high + "," + low + ")");
         }
 
         // Valid. This will overflow if the raw long bits are extracted and
