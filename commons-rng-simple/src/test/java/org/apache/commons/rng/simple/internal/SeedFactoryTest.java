@@ -18,7 +18,7 @@ package org.apache.commons.rng.simple.internal;
 
 import java.util.Map;
 import java.util.HashMap;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
@@ -54,7 +54,7 @@ public class SeedFactoryTest {
 
         final int n = 100000;
         final long[] array = SeedFactory.createLongArray(n);
-        Assert.assertEquals(n, array.length);
+        Assertions.assertEquals(n, array.length);
 
         for (long v : array) {
             Integer count = values.get(v);
@@ -109,7 +109,7 @@ public class SeedFactoryTest {
         }
 
         if (duplicates > 0) {
-            Assert.fail(duplicates + " duplicates\n" + sb);
+            Assertions.fail(duplicates + " duplicates\n" + sb);
         }
     }
 
@@ -134,7 +134,7 @@ public class SeedFactoryTest {
      */
     private static void assertCreateIntArray(int n) {
         final int[] array = SeedFactory.createIntArray(n);
-        Assert.assertEquals("Incorrect array length", n, array.length);
+        Assertions.assertEquals(n, array.length, "Incorrect array length");
         // The bit count should be 50%.
         int bitCount = 0;
         for (final int i : array) {
@@ -165,7 +165,7 @@ public class SeedFactoryTest {
      */
     private static void assertCreateLongArray(int n) {
         final long[] array = SeedFactory.createLongArray(n);
-        Assert.assertEquals("Incorrect array length", n, array.length);
+        Assertions.assertEquals(n, array.length, "Incorrect array length");
         // The bit count should be 50%.
         int bitCount = 0;
         for (final long i : array) {
@@ -201,10 +201,10 @@ public class SeedFactoryTest {
         // (Re-runs are not configured for this test.)
         final double absSum = Math.abs(sum);
         final double max = Math.sqrt(numberOfBits) * 3.891;
-        Assert.assertTrue("Walked too far astray: " + absSum +
-                          " > " + max +
-                          " (test will fail randomly about 1 in 10,000 times)",
-                          absSum <= max);
+        Assertions.assertTrue(absSum <= max,
+            () -> "Walked too far astray: " + absSum +
+                  " > " + max +
+                  " (test will fail randomly about 1 in 10,000 times)");
     }
 
     @Test
@@ -233,7 +233,7 @@ public class SeedFactoryTest {
         final UniformRandomProvider rng = new IntProvider() {
             @Override
             public int next() {
-                Assert.fail("This method should not be used");
+                Assertions.fail("This method should not be used");
                 return 0;
             }
 
@@ -244,7 +244,7 @@ public class SeedFactoryTest {
         };
 
         final byte[] seed = SeedFactory.createByteArray(rng, expected.length);
-        Assert.assertArrayEquals(expected, seed);
+        Assertions.assertArrayEquals(expected, seed);
     }
 
     @Test
@@ -258,9 +258,9 @@ public class SeedFactoryTest {
         };
         // Test the method only replaces position 0
         final byte[] seed = SeedFactory.createByteArray(rng, 4);
-        Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
+        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
         for (int i = 1; i < seed.length; i++) {
-            Assert.assertEquals("Position above 0 should be unmodified", 0, seed[i]);
+            Assertions.assertEquals(0, seed[i], "Position above 0 should be unmodified");
         }
     }
 
@@ -278,9 +278,9 @@ public class SeedFactoryTest {
         final int[] seed = new int[] {position0, 0, 0, 0};
         final int[] before = seed.clone();
         SeedFactory.ensureNonZero(seed);
-        Assert.assertEquals("Non-zero at position 0 should be unmodified", position0, seed[0]);
+        Assertions.assertEquals(position0, seed[0], "Non-zero at position 0 should be unmodified");
         for (int i = 1; i < seed.length; i++) {
-            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
         }
     }
 
@@ -290,9 +290,9 @@ public class SeedFactoryTest {
         final int[] seed = new int[] {0, 123, 456, 789};
         final int[] before = seed.clone();
         SeedFactory.ensureNonZero(seed);
-        Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
+        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
         for (int i = 1; i < seed.length; i++) {
-            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
         }
     }
 
@@ -310,9 +310,9 @@ public class SeedFactoryTest {
         final long[] seed = new long[] {position0, 0, 0, 0};
         final long[] before = seed.clone();
         SeedFactory.ensureNonZero(seed);
-        Assert.assertEquals("Non-zero at position 0 should be unmodified", position0, seed[0]);
+        Assertions.assertEquals(position0, seed[0], "Non-zero at position 0 should be unmodified");
         for (int i = 1; i < seed.length; i++) {
-            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
         }
     }
 
@@ -322,9 +322,9 @@ public class SeedFactoryTest {
         final long[] seed = new long[] {0, 123, 456, 789};
         final long[] before = seed.clone();
         SeedFactory.ensureNonZero(seed);
-        Assert.assertNotEquals("Zero at position 0 should be modified", 0, seed[0]);
+        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
         for (int i = 1; i < seed.length; i++) {
-            Assert.assertEquals("Position above 0 should be unmodified", before[i], seed[i]);
+            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
         }
     }
 
@@ -337,11 +337,11 @@ public class SeedFactoryTest {
                 return expected;
             }
         };
-        Assert.assertEquals("Zero should be replaced using the random source",
-                expected, SeedFactory.ensureNonZero(source, 0));
+        Assertions.assertEquals(expected, SeedFactory.ensureNonZero(source, 0),
+            "Zero should be replaced using the random source");
         for (final long nonZero : new long[] {Long.MIN_VALUE, -1, 1, 9876654321L, Long.MAX_VALUE}) {
-            Assert.assertEquals("Non-zero should be unmodified",
-                    nonZero, SeedFactory.ensureNonZero(source, nonZero));
+            Assertions.assertEquals(nonZero, SeedFactory.ensureNonZero(source, nonZero),
+                "Non-zero should be unmodified");
         }
     }
 }

@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -73,18 +73,18 @@ public class TriangleSamplerTest {
         // Test that (1 - (1-s) - (1-t)) is not equal to (s + t - 1).
         // This is due to the rounding to store s + t as a double.
         final double expected = 1 - (1 - s) - (1 - t);
-        Assert.assertNotEquals(expected, spt - 1, 0.0);
-        Assert.assertNotEquals(expected, s + t - 1, 0.0);
+        Assertions.assertNotEquals(expected, spt - 1);
+        Assertions.assertNotEquals(expected, s + t - 1);
         // For any uniform deviate u in [0, 1], u - 1 is exact, thus s - 1 is exact
         // and s - 1 + t is exact.
-        Assert.assertEquals(expected, s - 1 + t, 0.0);
+        Assertions.assertEquals(expected, s - 1 + t);
 
         // Test that a(1 - s - t) + sb + tc does not overflow is s+t = 1
         final double max = Double.MAX_VALUE;
         s -= delta;
         final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
         for (int n = 0; n < 100; n++) {
-            Assert.assertNotEquals(Double.POSITIVE_INFINITY, (1 - s - t) * max + s * max + t * max, 0.0);
+            Assertions.assertNotEquals(Double.POSITIVE_INFINITY, (1 - s - t) * max + s * max + t * max);
             s = rng.nextDouble();
             t = 1.0 - s;
         }
@@ -117,7 +117,7 @@ public class TriangleSamplerTest {
         }) {
             try {
                 TriangleSampler.of(rng, c[0], c[1], c[2]);
-                Assert.fail(String.format("Did not detect dimension mismatch: %d,%d,%d",
+                Assertions.fail(String.format("Did not detect dimension mismatch: %d,%d,%d",
                         c[0].length, c[1].length, c[2].length));
             } catch (IllegalArgumentException ex) {
                 // Expected
@@ -135,7 +135,7 @@ public class TriangleSamplerTest {
         final double[][] c = new double[][] {
             {0, 0, 1}, {2, 1, 0}, {-1, 2, 3}
         };
-        Assert.assertNotNull(TriangleSampler.of(rng, c[0],  c[1],  c[2]));
+        Assertions.assertNotNull(TriangleSampler.of(rng, c[0],  c[1],  c[2]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
             for (int j = 0; j < c[0].length; j++) {
@@ -144,7 +144,7 @@ public class TriangleSamplerTest {
                     c[i][j] = d;
                     try {
                         TriangleSampler.of(rng, c[0], c[1], c[2]);
-                        Assert.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
+                        Assertions.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
                     } catch (IllegalArgumentException ex) {
                         // Expected
                     }
@@ -212,10 +212,10 @@ public class TriangleSamplerTest {
             }
         }
         // Show the triangle is too big to compute vectors between points.
-        Assert.assertEquals("Expect vector c - a to be infinite in the x dimension",
-                Double.POSITIVE_INFINITY, c2[2][0] - c2[0][0], 0.0);
-        Assert.assertEquals("Expect vector c - b to be infinite in the y dimension",
-                Double.NEGATIVE_INFINITY, c2[2][1] - c2[1][1], 0.0);
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, c2[2][0] - c2[0][0],
+            "Expect vector c - a to be infinite in the x dimension");
+        Assertions.assertEquals(Double.NEGATIVE_INFINITY, c2[2][1] - c2[1][1],
+            "Expect vector c - b to be infinite in the y dimension");
 
         final TriangleSampler sampler1 = TriangleSampler.of(
                 RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1], c1[2]);
@@ -228,7 +228,7 @@ public class TriangleSamplerTest {
             for (int i = 0; i < a.length; i++) {
                 a[i] *= scale;
             }
-            Assert.assertArrayEquals(a, b, 0.0);
+            Assertions.assertArrayEquals(a, b);
         }
     }
 
@@ -334,7 +334,7 @@ public class TriangleSamplerTest {
                 addObservation(reverse.apply(sampler3.sample()), observed, bins, sx, sy, triangle3);
             }
             final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-            Assert.assertFalse("p-value too small: " + p, p < 0.001);
+            Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
         }
     }
 
@@ -358,7 +358,7 @@ public class TriangleSamplerTest {
         final double x = v[0];
         final double y = v[1];
         // Test the point is triangle the triangle
-        Assert.assertTrue(triangle.contains(x, y));
+        Assertions.assertTrue(triangle.contains(x, y));
         // Add to the correct bin after using the offset
         final int binx = (int) (x * sx);
         final int biny = (int) (y * sy);
@@ -453,11 +453,11 @@ public class TriangleSamplerTest {
         for (int n = 0; n < 3; n++) {
             final double[] s1 = sampler1.sample();
             final double[] s2 = sampler2.sample();
-            Assert.assertEquals(s1.length, s2.length);
-            Assert.assertFalse("First sampler has used the vertices by reference",
-                    Arrays.equals(s1, s2));
+            Assertions.assertEquals(s1.length, s2.length);
+            Assertions.assertFalse(Arrays.equals(s1, s2),
+                    "First sampler has used the vertices by reference");
             for (int i = 0; i < dimension; i++) {
-                Assert.assertEquals(s1[i] + offset, s2[i], 1e-10);
+                Assertions.assertEquals(s1[i] + offset, s2[i], 1e-10);
             }
         }
     }
@@ -519,15 +519,15 @@ public class TriangleSamplerTest {
         for (int n = 0; n < 10; n++) {
             final double[] a = new double[] {rng.nextDouble(), rng.nextDouble()};
             final double[] b = forward.apply(a);
-            Assert.assertEquals(dimension, b.length);
+            Assertions.assertEquals(dimension, b.length);
             for (int i = 2; i < dimension; i++) {
                 sum += Math.abs(b[i]);
             }
             final double[] c = reverse.apply(b);
-            Assert.assertArrayEquals(a, c, 1e-10);
+            Assertions.assertArrayEquals(a, c, 1e-10);
         }
         // Check that higher dimension coordinates are generated
-        Assert.assertTrue(sum > 0.5);
+        Assertions.assertTrue(sum > 0.5);
     }
 
     /**
@@ -537,10 +537,10 @@ public class TriangleSamplerTest {
     public void testRotations3D() {
         final double[] x = {1, 0.5, 0};
         final double[] y = multiply(F3, x);
-        Assert.assertArrayEquals(new double[] {0.465475314831549, 1.004183876910958, -0.157947689551155}, y, 1e-10);
-        Assert.assertEquals(length(x), length(y), 1e-10);
+        Assertions.assertArrayEquals(new double[] {0.465475314831549, 1.004183876910958, -0.157947689551155}, y, 1e-10);
+        Assertions.assertEquals(length(x), length(y), 1e-10);
         final double[] x2 = multiply(R3, y);
-        Assert.assertArrayEquals(x, x2, 1e-10);
+        Assertions.assertArrayEquals(x, x2, 1e-10);
     }
 
     /**
@@ -550,11 +550,11 @@ public class TriangleSamplerTest {
     public void testRotations4D() {
         final double[] x = {1, 0.5, 0, 0};
         final double[] y = multiply(F4, x);
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
                 new double[] {0.676776695296637, 0.780330085889911, 0.323223304703363, -0.280330085889911}, y, 1e-10);
-        Assert.assertEquals(length(x), length(y), 1e-10);
+        Assertions.assertEquals(length(x), length(y), 1e-10);
         final double[] x2 = multiply(R4, y);
-        Assert.assertArrayEquals(x, x2, 1e-10);
+        Assertions.assertArrayEquals(x, x2, 1e-10);
     }
 
     /**
@@ -597,27 +597,27 @@ public class TriangleSamplerTest {
     public void testTriangleContains() {
         final Triangle triangle = new Triangle(1, 2, 3, 1, 0.5, 6);
         // Vertices
-        Assert.assertTrue(triangle.contains(1, 2));
-        Assert.assertTrue(triangle.contains(3, 1));
-        Assert.assertTrue(triangle.contains(0.5, 6));
+        Assertions.assertTrue(triangle.contains(1, 2));
+        Assertions.assertTrue(triangle.contains(3, 1));
+        Assertions.assertTrue(triangle.contains(0.5, 6));
         // Edge
-        Assert.assertTrue(triangle.contains(0.75, 4));
+        Assertions.assertTrue(triangle.contains(0.75, 4));
         // Inside
-        Assert.assertTrue(triangle.contains(1.5, 3));
+        Assertions.assertTrue(triangle.contains(1.5, 3));
         // Outside
-        Assert.assertFalse(triangle.contains(0, 20));
-        Assert.assertFalse(triangle.contains(-20, 0));
-        Assert.assertFalse(triangle.contains(6, 6));
+        Assertions.assertFalse(triangle.contains(0, 20));
+        Assertions.assertFalse(triangle.contains(-20, 0));
+        Assertions.assertFalse(triangle.contains(6, 6));
         // Just outside
-        Assert.assertFalse(triangle.contains(0.75, 4 - 1e-10));
+        Assertions.assertFalse(triangle.contains(0.75, 4 - 1e-10));
 
         // Note:
         // Touching triangles can both have the point triangle.
         // This predicate is not suitable for assigning points uniquely to
         // non-overlapping triangles that share an edge.
         final Triangle triangle2 = new Triangle(1, 2, 3, 1, 0, -2);
-        Assert.assertTrue(triangle.contains(2, 1.5));
-        Assert.assertTrue(triangle2.contains(2, 1.5));
+        Assertions.assertTrue(triangle.contains(2, 1.5));
+        Assertions.assertTrue(triangle2.contains(2, 1.5));
     }
 
     /**
@@ -671,11 +671,11 @@ public class TriangleSamplerTest {
 
         @Override
         public double[] apply(double[] coord) {
-            Assert.assertEquals(n, coord.length);
+            Assertions.assertEquals(n, coord.length);
             final double[] x = multiply(r, coord);
             // This should reverse the 2D transform and return to the XY plane.
             for (int i = 2; i < x.length; i++) {
-                Assert.assertEquals(0.0, x[i], 1e-14);
+                Assertions.assertEquals(0.0, x[i], 1e-14);
             }
             return new double[] {x[0], x[1]};
         }
@@ -687,7 +687,7 @@ public class TriangleSamplerTest {
     private static class Transform2Dto2D implements Transform {
         @Override
         public double[] apply(double[] coord) {
-            Assert.assertEquals(2, coord.length);
+            Assertions.assertEquals(2, coord.length);
             return coord;
         }
     }

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -28,8 +28,8 @@ public class RandomSourceTest {
         final int n = 4;
         for (int i = 0; i < n; i++) {
             // Can fail, but unlikely given the range.
-            Assert.assertNotEquals(RandomSource.createInt(),
-                                   RandomSource.createInt());
+            Assertions.assertNotEquals(RandomSource.createInt(),
+                                       RandomSource.createInt());
         }
     }
 
@@ -38,8 +38,8 @@ public class RandomSourceTest {
         final int n = 6;
         for (int i = 0; i < n; i++) {
             // Can fail, but unlikely given the range.
-            Assert.assertNotEquals(RandomSource.createLong(),
-                                   RandomSource.createLong());
+            Assertions.assertNotEquals(RandomSource.createLong(),
+                                       RandomSource.createLong());
         }
     }
 
@@ -47,11 +47,11 @@ public class RandomSourceTest {
     public void testCreateIntArray() {
         final int n = 13;
         final int[] seed = RandomSource.createIntArray(n);
-        Assert.assertEquals(n, seed.length);
+        Assertions.assertEquals(n, seed.length);
 
         for (int i = 1; i < n; i++) {
             // Can fail, but unlikely given the range.
-            Assert.assertNotEquals(seed[i - 1], seed[i]);
+            Assertions.assertNotEquals(seed[i - 1], seed[i]);
         }
     }
 
@@ -59,25 +59,25 @@ public class RandomSourceTest {
     public void testCreateLongArray() {
         final int n = 9;
         final long[] seed = RandomSource.createLongArray(n);
-        Assert.assertEquals(n, seed.length);
+        Assertions.assertEquals(n, seed.length);
 
         for (int i = 1; i < n; i++) {
             // Can fail, but unlikely given the range.
-            Assert.assertNotEquals(seed[i - 1], seed[i]);
+            Assertions.assertNotEquals(seed[i - 1], seed[i]);
         }
     }
 
     @Test
     public void testIsJumpable() {
-        Assert.assertFalse("JDK is not Jumpable", RandomSource.JDK.isJumpable());
-        Assert.assertTrue("XOR_SHIFT_1024_S_PHI is Jumpable", RandomSource.XOR_SHIFT_1024_S_PHI.isJumpable());
-        Assert.assertTrue("XO_SHI_RO_256_SS is Jumpable", RandomSource.XO_SHI_RO_256_SS.isJumpable());
+        Assertions.assertFalse(RandomSource.JDK.isJumpable(), "JDK is not Jumpable");
+        Assertions.assertTrue(RandomSource.XOR_SHIFT_1024_S_PHI.isJumpable(), "XOR_SHIFT_1024_S_PHI is Jumpable");
+        Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isJumpable(), "XO_SHI_RO_256_SS is Jumpable");
     }
 
     @Test
     public void testIsLongJumpable() {
-        Assert.assertFalse("JDK is not LongJumpable", RandomSource.JDK.isLongJumpable());
-        Assert.assertFalse("XOR_SHIFT_1024_S_PHI is not LongJumpable", RandomSource.XOR_SHIFT_1024_S_PHI.isLongJumpable());
-        Assert.assertTrue("XO_SHI_RO_256_SS is LongJumpable", RandomSource.XO_SHI_RO_256_SS.isLongJumpable());
+        Assertions.assertFalse(RandomSource.JDK.isLongJumpable(), "JDK is not LongJumpable");
+        Assertions.assertFalse(RandomSource.XOR_SHIFT_1024_S_PHI.isLongJumpable(), "XOR_SHIFT_1024_S_PHI is not LongJumpable");
+        Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isLongJumpable(), "XO_SHI_RO_256_SS is LongJumpable");
     }
 }

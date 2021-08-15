@@ -17,8 +17,8 @@
 package org.apache.commons.rng.core;
 
 import org.junit.Test;
-import org.junit.Assert;
-import org.junit.Assume;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 
 /**
  * Tests for {@link BaseProvider}.
@@ -33,7 +33,7 @@ public class BaseProviderTest {
     public void testStateSizeTooSmall() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
-        Assume.assumeTrue(size > 0);
+        Assumptions.assumeTrue(size > 0);
         dummy.restoreState(new RandomProviderDefaultState(new byte[size - 1]));
     }
 
@@ -50,15 +50,15 @@ public class BaseProviderTest {
         final int[] seed = {1, 2, 3};
 
         for (int i = 0; i < state.length; i++) {
-            Assert.assertEquals(0, state[i]);
+            Assertions.assertEquals(0, state[i]);
         }
 
         new DummyGenerator().fillState(state, seed);
         for (int i = 0; i < seed.length; i++) {
-            Assert.assertEquals(seed[i], state[i]);
+            Assertions.assertEquals(seed[i], state[i]);
         }
         for (int i = seed.length; i < state.length; i++) {
-            Assert.assertNotEquals(0, state[i]);
+            Assertions.assertNotEquals(0, state[i]);
         }
     }
 
@@ -68,15 +68,15 @@ public class BaseProviderTest {
         final long[] seed = {1, 2, 3};
 
         for (int i = 0; i < state.length; i++) {
-            Assert.assertEquals(0, state[i]);
+            Assertions.assertEquals(0, state[i]);
         }
 
         new DummyGenerator().fillState(state, seed);
         for (int i = 0; i < seed.length; i++) {
-            Assert.assertEquals(seed[i], state[i]);
+            Assertions.assertEquals(seed[i], state[i]);
         }
         for (int i = seed.length; i < state.length; i++) {
-            Assert.assertNotEquals(0, state[i]);
+            Assertions.assertNotEquals(0, state[i]);
         }
     }
 

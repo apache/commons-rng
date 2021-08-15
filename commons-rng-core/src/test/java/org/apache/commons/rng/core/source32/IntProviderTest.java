@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.core.source32;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -64,12 +64,14 @@ public class IntProviderTest {
             // Test the result for a single pass over the long
             for (int j = 0; j < Integer.SIZE; j++) {
                 final boolean expected = i == j;
-                Assert.assertEquals("Pass 1, bit " + j, expected, provider.nextBoolean());
+                final int index = j;
+                Assertions.assertEquals(expected, provider.nextBoolean(), () -> "Pass 1, bit " + index);
             }
             // The second pass should use the opposite bits
             for (int j = 0; j < Integer.SIZE; j++) {
                 final boolean expected = i != j;
-                Assert.assertEquals("Pass 2, bit " + j, expected, provider.nextBoolean());
+                final int index = j;
+                Assertions.assertEquals(expected, provider.nextBoolean(), () -> "Pass 2, bit " + index);
             }
         }
     }

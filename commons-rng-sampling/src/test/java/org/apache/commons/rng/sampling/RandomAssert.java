@@ -17,7 +17,7 @@
 
 package org.apache.commons.rng.sampling;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
@@ -45,7 +45,7 @@ public final class RandomAssert {
     public static void assertProduceSameSequence(ContinuousSampler sampler1,
                                                  ContinuousSampler sampler2) {
         for (int i = 0; i < SAMPLES; i++) {
-            Assert.assertEquals(sampler1.sample(), sampler2.sample(), 0.0);
+            Assertions.assertEquals(sampler1.sample(), sampler2.sample());
         }
     }
 
@@ -59,7 +59,7 @@ public final class RandomAssert {
     public static void assertProduceSameSequence(DiscreteSampler sampler1,
                                                  DiscreteSampler sampler2) {
         for (int i = 0; i < SAMPLES; i++) {
-            Assert.assertEquals(sampler1.sample(), sampler2.sample());
+            Assertions.assertEquals(sampler1.sample(), sampler2.sample());
         }
     }
 
@@ -73,7 +73,7 @@ public final class RandomAssert {
     public static void assertProduceSameSequence(LongSampler sampler1,
                                                  LongSampler sampler2) {
         for (int i = 0; i < SAMPLES; i++) {
-            Assert.assertEquals(sampler1.sample(), sampler2.sample());
+            Assertions.assertEquals(sampler1.sample(), sampler2.sample());
         }
     }
 
@@ -81,9 +81,9 @@ public final class RandomAssert {
      * Exercise the {@link ObjectSampler} interface, and
      * ensure that the two samplers produce the same sequence.
      *
-     * <p>Arrays are tested using {@link Assert#assertArrayEquals(Object[], Object[])}
+     * <p>Arrays are tested using {@link Assertions#assertArrayEquals(Object[], Object[])}
      * which handles primitive arrays using exact equality and objects using
-     * {@link Object#equals(Object)}. Otherwise {@link Assert#assertEquals(Object, Object)}
+     * {@link Object#equals(Object)}. Otherwise {@link Assertions#assertEquals(Object, Object)}
      * is used which makes use of {@link Object#equals(Object)}.</p>
      *
      * <p>This should be used to test samplers of any type by wrapping the sample method
@@ -99,9 +99,9 @@ public final class RandomAssert {
             final T value2 = sampler2.sample();
             if (isArray(value1) && isArray(value2)) {
                 // JUnit assertArrayEquals will handle nested primitive arrays
-                Assert.assertArrayEquals(new Object[] {value1}, new Object[] {value2});
+                Assertions.assertArrayEquals(new Object[] {value1}, new Object[] {value2});
             } else {
-                Assert.assertEquals(value1, value2);
+                Assertions.assertEquals(value1, value2);
             }
         }
     }

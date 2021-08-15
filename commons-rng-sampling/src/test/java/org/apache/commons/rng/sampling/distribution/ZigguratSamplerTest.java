@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import java.util.Arrays;
 import org.apache.commons.math3.distribution.AbstractRealDistribution;
@@ -97,8 +97,8 @@ public class ZigguratSamplerTest {
         // and leave it to a seeded RNG to select different layers.
 
         // A value of zero will create a sample of zero (42 is the seed)
-        Assert.assertEquals(0.0, expSample(42, 0), 0.0);
-        Assert.assertEquals(tailValue, expSample(42, -1, -1, 0), 0.0);
+        Assertions.assertEquals(0.0, expSample(42, 0));
+        Assertions.assertEquals(tailValue, expSample(42, -1, -1, 0));
 
         // Use different seeds to test different layers from the edge of the ziggurat.
         for (final long seed : new long[] {42, -2136612838, 2340923842L, -1263746817818681L}) {
@@ -109,11 +109,11 @@ public class ZigguratSamplerTest {
             // Recursion
             // Note the order of additions is important as the final sample is added to the
             // tail value multiple times.
-            Assert.assertEquals(x0 + tailValue, expSample(seed, -1, -1), 0.0);
-            Assert.assertEquals(x1 + tailValue, expSample(seed, -1, -1, -1), 0.0);
+            Assertions.assertEquals(x0 + tailValue, expSample(seed, -1, -1));
+            Assertions.assertEquals(x1 + tailValue, expSample(seed, -1, -1, -1));
             // Double recursion
-            Assert.assertEquals(x0 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1), 0.0);
-            Assert.assertEquals(x1 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1, -1), 0.0);
+            Assertions.assertEquals(x0 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1));
+            Assertions.assertEquals(x1 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1, -1));
         }
     }
 
@@ -244,9 +244,10 @@ public class ZigguratSamplerTest {
 
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
-        double chi2 = chiSquareTest.chiSquareTest(expected, observed);
-        Assert.assertFalse(String.format("(%s <= x < %s) Chi-square p-value = %s",
-            lowerBound, values[bins - 1], chi2), chi2 < 0.001);
+        final double chi2 = chiSquareTest.chiSquareTest(expected, observed);
+        Assertions.assertFalse(chi2 < 0.001,
+            () -> String.format("(%s <= x < %s) Chi-square p-value = %s",
+                                lowerBound, values[bins - 1], chi2));
 
         // Test bins sampled from the edge of the ziggurat. This is always around zero.
         for (final double range : new double[] {0.5, 0.25, 0.1, 0.05}) {
@@ -254,10 +255,10 @@ public class ZigguratSamplerTest {
             final int max = findIndex(values, range);
             final long[] observed2 = Arrays.copyOfRange(observed, min, max + 1);
             final double[] expected2 = Arrays.copyOfRange(expected, min, max + 1);
-            chi2 = chiSquareTest.chiSquareTest(expected2, observed2);
-            Assert.assertFalse(String.format("(%s <= x < %s) Chi-square p-value = %s",
-                min == 0 ? lowerBound : values[min - 1], values[max], chi2),
-                chi2 < significanceLevel);
+            final double chi2b = chiSquareTest.chiSquareTest(expected2, observed2);
+            Assertions.assertFalse(chi2b < significanceLevel,
+                () -> String.format("(%s <= x < %s) Chi-square p-value = %s",
+                                    min == 0 ? lowerBound : values[min - 1], values[max], chi2b));
         }
     }
 
@@ -293,9 +294,9 @@ public class ZigguratSamplerTest {
             }
         }
         // Verify the index is correct
-        Assert.assertTrue(x < data[low]);
+        Assertions.assertTrue(x < data[low]);
         if (low != 0) {
-            Assert.assertTrue(x >= data[low - 1]);
+            Assertions.assertTrue(x >= data[low - 1]);
         }
         return low;
     }

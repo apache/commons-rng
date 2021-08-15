@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.math3.special.Gamma;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -30,11 +30,11 @@ public class InternalUtilsTest {
 
     @Test
     public void testFactorial() {
-        Assert.assertEquals(1L, InternalUtils.factorial(0));
+        Assertions.assertEquals(1L, InternalUtils.factorial(0));
         long result = 1;
         for (int n = 1; n <= MAX_REPRESENTABLE; n++) {
             result *= n;
-            Assert.assertEquals(result, InternalUtils.factorial(n));
+            Assertions.assertEquals(result, InternalUtils.factorial(n));
         }
     }
 
@@ -53,11 +53,11 @@ public class InternalUtilsTest {
         // Cache size allows some of the factorials to be cached and some
         // to be under the precomputed factorials.
         FactorialLog factorialLog = FactorialLog.create().withCache(MAX_REPRESENTABLE / 2);
-        Assert.assertEquals(0, factorialLog.value(0), 1e-10);
+        Assertions.assertEquals(0, factorialLog.value(0), 1e-10);
         for (int n = 1; n <= MAX_REPRESENTABLE + 5; n++) {
             // Use Commons math to compute logGamma(1 + n);
             double expected = Gamma.logGamma(1 + n);
-            Assert.assertEquals(expected, factorialLog.value(n), 1e-10);
+            Assertions.assertEquals(expected, factorialLog.value(n), 1e-10);
         }
     }
 
@@ -68,7 +68,7 @@ public class InternalUtilsTest {
         for (int n = MAX_REPRESENTABLE; n <= limit; n++) {
             // Use Commons math to compute logGamma(1 + n);
             double expected = Gamma.logGamma(1 + n);
-            Assert.assertEquals(expected, factorialLog.value(n), 1e-10);
+            Assertions.assertEquals(expected, factorialLog.value(n), 1e-10);
         }
     }
 
@@ -88,7 +88,7 @@ public class InternalUtilsTest {
         for (int n = 1; n <= 5; n++) {
             // Use Commons math to compute logGamma(1 + n);
             double expected = Gamma.logGamma(1 + n);
-            Assert.assertEquals(expected, factorialLog.value(n), 1e-10);
+            Assertions.assertEquals(expected, factorialLog.value(n), 1e-10);
         }
     }
 

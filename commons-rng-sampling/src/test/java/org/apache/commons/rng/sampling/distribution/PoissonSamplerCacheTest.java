@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -43,7 +43,7 @@ public class PoissonSamplerCacheTest {
      */
     @Test
     public void testMinimumCachedMean() {
-        Assert.assertEquals(PoissonSampler.PIVOT, PoissonSamplerCache.getMinimumCachedMean(), 0);
+        Assertions.assertEquals(PoissonSampler.PIVOT, PoissonSamplerCache.getMinimumCachedMean());
     }
 
     // Edge cases for construction
@@ -58,9 +58,9 @@ public class PoissonSamplerCacheTest {
         final double min = 0;
         final double max = PoissonSampler.PIVOT - 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
-        Assert.assertFalse(cache.isValidRange());
-        Assert.assertEquals(0, cache.getMinMean(), 0);
-        Assert.assertEquals(0, cache.getMaxMean(), 0);
+        Assertions.assertFalse(cache.isValidRange());
+        Assertions.assertEquals(0, cache.getMinMean());
+        Assertions.assertEquals(0, cache.getMaxMean());
     }
 
     /**
@@ -73,10 +73,10 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(min, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(min, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -89,10 +89,10 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(min, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(min, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -114,10 +114,10 @@ public class PoissonSamplerCacheTest {
         final double min = -1;
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(PoissonSampler.PIVOT, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(PoissonSampler.PIVOT, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -129,9 +129,9 @@ public class PoissonSamplerCacheTest {
         final double min = -10;
         final double max = -1;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
-        Assert.assertFalse(cache.isValidRange());
-        Assert.assertEquals(0, cache.getMinMean(), 0);
-        Assert.assertEquals(0, cache.getMaxMean(), 0);
+        Assertions.assertFalse(cache.isValidRange());
+        Assertions.assertEquals(0, cache.getMinMean());
+        Assertions.assertEquals(0, cache.getMaxMean());
     }
 
     /**
@@ -144,9 +144,9 @@ public class PoissonSamplerCacheTest {
         final double min = 0;
         final double max = PoissonSampler.PIVOT - 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
-        Assert.assertFalse(cache.isValidRange());
-        Assert.assertEquals(0, cache.getMinMean(), 0);
-        Assert.assertEquals(0, cache.getMaxMean(), 0);
+        Assertions.assertFalse(cache.isValidRange());
+        Assertions.assertEquals(0, cache.getMinMean());
+        Assertions.assertEquals(0, cache.getMaxMean());
     }
 
     /**
@@ -159,10 +159,10 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(min, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(min, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -175,10 +175,10 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(min, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(min, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -200,10 +200,10 @@ public class PoissonSamplerCacheTest {
         final double min = -1;
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(PoissonSampler.PIVOT, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(PoissonSampler.PIVOT, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -214,10 +214,10 @@ public class PoissonSamplerCacheTest {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache(0, 0).withRange(min, max);
-        Assert.assertTrue(cache.isValidRange());
-        Assert.assertEquals(min, cache.getMinMean(), 0);
-        Assert.assertEquals(Math.nextDown(Math.floor(max) + 1),
-                            cache.getMaxMean(), 0);
+        Assertions.assertTrue(cache.isValidRange());
+        Assertions.assertEquals(min, cache.getMinMean());
+        Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
+                                cache.getMaxMean());
     }
 
     /**
@@ -230,11 +230,11 @@ public class PoissonSamplerCacheTest {
         final double max = PoissonSampler.PIVOT + 20;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
         // Under the pivot point is always within range
-        Assert.assertTrue(cache.withinRange(PoissonSampler.PIVOT - 1));
-        Assert.assertFalse(cache.withinRange(min - 1));
-        Assert.assertTrue(cache.withinRange(min));
-        Assert.assertTrue(cache.withinRange(max));
-        Assert.assertFalse(cache.withinRange(max + 10));
+        Assertions.assertTrue(cache.withinRange(PoissonSampler.PIVOT - 1));
+        Assertions.assertFalse(cache.withinRange(min - 1));
+        Assertions.assertTrue(cache.withinRange(min));
+        Assertions.assertTrue(cache.withinRange(max));
+        Assertions.assertFalse(cache.withinRange(max + 10));
     }
 
     // Edge cases for creating a Poisson sampler
@@ -384,7 +384,7 @@ public class PoissonSamplerCacheTest {
         final DiscreteSampler s1 = PoissonSampler.of(rng1, mean);
         final DiscreteSampler s2 = cache.createSharedStateSampler(rng2, mean);
         for (int j = 0; j < 10; j++) {
-            Assert.assertEquals(s1.sample(), s2.sample());
+            Assertions.assertEquals(s1.sample(), s2.sample());
         }
     }
 
@@ -468,7 +468,7 @@ public class PoissonSamplerCacheTest {
         }
 
         final PoissonSamplerCache cache2 = cache.withRange(minMean2, maxMean2);
-        Assert.assertNotSame("WithRange cache is the same object", cache, cache2);
+        Assertions.assertNotSame(cache, cache2, "WithRange cache is the same object");
 
         // Test all means in the test range (which may be different
         // from the cache range).
@@ -489,6 +489,6 @@ public class PoissonSamplerCacheTest {
     public void testCreatePoissonSampler() {
         final PoissonSamplerCache cache = createPoissonSamplerCache(0, 100);
         final DiscreteSampler s2 = cache.createPoissonSampler(null, 42);
-        Assert.assertTrue(s2 instanceof LargeMeanPoissonSampler);
+        Assertions.assertTrue(s2 instanceof LargeMeanPoissonSampler);
     }
 }

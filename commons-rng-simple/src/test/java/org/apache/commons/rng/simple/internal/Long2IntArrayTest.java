@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -33,11 +33,11 @@ public class Long2IntArrayTest {
     private static void testFixedLengthConversion(int length) {
         final Long seed = 567L;
         final int[] out = new Long2IntArray(length).convert(seed);
-        Assert.assertEquals(length, out.length);
+        Assertions.assertEquals(length, out.length);
         // This very seed dependent but the algorithm
         // should only produce 0 about 1 in 2^32 times.
         for (int i = 0; i < length; i++) {
-            Assert.assertNotEquals(0, out[i]);
+            Assertions.assertNotEquals(0, out[i]);
         }
     }
 }

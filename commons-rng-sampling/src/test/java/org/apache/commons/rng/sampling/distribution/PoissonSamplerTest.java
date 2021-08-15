@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 
@@ -66,6 +66,6 @@ public class PoissonSamplerTest {
     @Test
     public void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        Assert.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
+        Assertions.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
     }
 }

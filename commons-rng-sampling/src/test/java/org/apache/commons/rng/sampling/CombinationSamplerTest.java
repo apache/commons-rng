@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -66,9 +66,9 @@ public class CombinationSamplerTest {
             final int k = n;
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
             final int[] sample = sampler.sample();
-            Assert.assertEquals("Incorrect sample length", n, sample.length);
+            Assertions.assertEquals(n, sample.length, "Incorrect sample length");
             for (int i = 0; i < n; i++) {
-                Assert.assertEquals("Sample was shuffled", i, sample[i]);
+                Assertions.assertEquals(i, sample[i], "Sample was shuffled");
             }
         }
     }
@@ -138,7 +138,7 @@ public class CombinationSamplerTest {
      */
     private static void assertIsInDomain(int n, int value) {
         if (value < 0 || value >= n) {
-            Assert.fail("sample " + value + " not in the domain " + n);
+            Assertions.fail("sample " + value + " not in the domain " + n);
         }
     }
 
@@ -160,8 +160,8 @@ public class CombinationSamplerTest {
         }
 
         // The number of combinations C(n, k) is the binomial coefficient
-        Assert.assertEquals("Incorrect number of combination codes",
-                CombinatoricsUtils.binomialCoefficient(n, k), codes);
+        Assertions.assertEquals(CombinatoricsUtils.binomialCoefficient(n, k), codes,
+            "Incorrect number of combination codes");
 
         final long[] observed = new long[codes];
         final int numSamples = 6000;
@@ -177,7 +177,7 @@ public class CombinationSamplerTest {
         Arrays.fill(expected, numExpected);
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
     private static int findCode(int[] codeLookup, int[] sample) {
@@ -190,11 +190,11 @@ public class CombinationSamplerTest {
             bits |= 1 << s;
         }
         if (bits >= codeLookup.length) {
-            Assert.fail("Bad bit combination: " + Arrays.toString(sample));
+            Assertions.fail("Bad bit combination: " + Arrays.toString(sample));
         }
         final int code = codeLookup[bits];
         if (code < 0) {
-            Assert.fail("Bad bit code: " + Arrays.toString(sample));
+            Assertions.fail("Bad bit code: " + Arrays.toString(sample));
         }
         return code;
     }

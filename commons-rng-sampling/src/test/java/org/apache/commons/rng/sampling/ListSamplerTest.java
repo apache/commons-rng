@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.ListIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -66,7 +67,7 @@ public class ListSamplerTest {
         }
 
         // Pass if we cannot reject null hypothesis that distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
     @Test
@@ -76,8 +77,8 @@ public class ListSamplerTest {
         list.add("one");
 
         final List<String> one = ListSampler.sample(rng, list, 1);
-        Assert.assertEquals(1, one.size());
-        Assert.assertTrue(one.contains("one"));
+        Assertions.assertEquals(1, one.size());
+        Assertions.assertTrue(one.contains("one"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -106,13 +107,13 @@ public class ListSamplerTest {
 
         ListSampler.shuffle(rng, arrayList);
         // Ensure that at least one entry has moved.
-        Assert.assertTrue("ArrayList", compare(orig, arrayList, 0, orig.size(), false));
+        Assertions.assertTrue(compare(orig, arrayList, 0, orig.size(), false), "ArrayList");
 
         final List<Integer> linkedList = new LinkedList<Integer>(orig);
 
         ListSampler.shuffle(rng, linkedList);
         // Ensure that at least one entry has moved.
-        Assert.assertTrue("LinkedList", compare(orig, linkedList, 0, orig.size(), false));
+        Assertions.assertTrue(compare(orig, linkedList, 0, orig.size(), false), "LinkedList");
     }
 
     @Test
@@ -127,10 +128,10 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng, list, start, false);
 
         // Ensure that all entries below index "start" did not move.
-        Assert.assertTrue(compare(orig, list, 0, start, true));
+        Assertions.assertTrue(compare(orig, list, 0, start, true));
 
         // Ensure that at least one entry has moved.
-        Assert.assertTrue(compare(orig, list, start, orig.size(), false));
+        Assertions.assertTrue(compare(orig, list, start, orig.size(), false));
     }
 
     @Test
@@ -145,10 +146,10 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng, list, start, true);
 
         // Ensure that all entries above index "start" did not move.
-        Assert.assertTrue(compare(orig, list, start + 1, orig.size(), true));
+        Assertions.assertTrue(compare(orig, list, start + 1, orig.size(), true));
 
         // Ensure that at least one entry has moved.
-        Assert.assertTrue(compare(orig, list, 0, start + 1, false));
+        Assertions.assertTrue(compare(orig, list, 0, start + 1, false));
     }
 
     /**
@@ -240,8 +241,7 @@ public class ListSamplerTest {
             }
         }
 
-        Assert.fail("Sample not found: { " +
-                    samp[0] + ", " + samp[1] + " }");
+        Assertions.fail("Sample not found: { " + samp[0] + ", " + samp[1] + " }");
         return -1;
     }
 
@@ -265,10 +265,10 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng1, list);
         PermutationSampler.shuffle(rng2, array);
 
-        final String msg = "Type=" + list.getClass().getSimpleName();
+        final Supplier<String> msg = () -> "Type=" + list.getClass().getSimpleName();
         it = list.listIterator();
         for (int i = 0; i < array.length; i++) {
-            Assert.assertEquals(msg, array[i], it.next().intValue());
+            Assertions.assertEquals(array[i], it.next().intValue(), msg);
         }
     }
     /**
@@ -297,11 +297,11 @@ public class ListSamplerTest {
         ListSampler.shuffle(rng1, list, start, towardHead);
         PermutationSampler.shuffle(rng2, array, start, towardHead);
 
-        final String msg = String.format("Type=%s start=%d towardHead=%b",
+        final Supplier<String> msg = () -> String.format("Type=%s start=%d towardHead=%b",
                 list.getClass().getSimpleName(), start, towardHead);
         it = list.listIterator();
         for (int i = 0; i < array.length; i++) {
-            Assert.assertEquals(msg, array[i], it.next().intValue());
+            Assertions.assertEquals(array[i], it.next().intValue(), msg);
         }
     }
 }

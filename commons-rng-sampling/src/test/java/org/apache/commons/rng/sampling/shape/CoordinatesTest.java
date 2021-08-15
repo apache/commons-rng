@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.sampling.shape;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -30,7 +30,7 @@ public class CoordinatesTest {
     public void testRequireFiniteWithMessageThrows() {
         final double[] c = {0, 1, 2};
         final String message = "This should be prepended";
-        Assert.assertSame(c, Coordinates.requireFinite(c, message));
+        Assertions.assertSame(c, Coordinates.requireFinite(c, message));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
             for (final double d : bad) {
@@ -38,9 +38,9 @@ public class CoordinatesTest {
                 c[i] = d;
                 try {
                     Coordinates.requireFinite(c, message);
-                    Assert.fail(String.format("Did not detect non-finite coordinate: %d = %s", i, d));
+                    Assertions.fail(String.format("Did not detect non-finite coordinate: %d = %s", i, d));
                 } catch (IllegalArgumentException ex) {
-                    Assert.assertTrue("Missing message prefix", ex.getMessage().startsWith(message));
+                    Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
                 }
                 c[i] = value;
             }
@@ -55,18 +55,18 @@ public class CoordinatesTest {
         final String message = "This should be prepended";
         for (final double[] c : new double[][] {{0, 1}, {0, 1, 2}}) {
             final int length = c.length;
-            Assert.assertSame(c, Coordinates.requireLength(c, length, message));
+            Assertions.assertSame(c, Coordinates.requireLength(c, length, message));
             try {
                 Coordinates.requireLength(c, length - 1, message);
-                Assert.fail("Did not detect length was too long: " + (length - 1));
+                Assertions.fail("Did not detect length was too long: " + (length - 1));
             } catch (IllegalArgumentException ex) {
-                Assert.assertTrue("Missing message prefix", ex.getMessage().startsWith(message));
+                Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
             }
             try {
                 Coordinates.requireLength(c, length + 1, message);
-                Assert.fail("Did not detect length was too short: " + (length + 1));
+                Assertions.fail("Did not detect length was too short: " + (length + 1));
             } catch (IllegalArgumentException ex) {
-                Assert.assertTrue("Missing message prefix", ex.getMessage().startsWith(message));
+                Assertions.assertTrue(ex.getMessage().startsWith(message), "Missing message prefix");
             }
         }
     }

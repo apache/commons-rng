@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
@@ -104,9 +104,9 @@ public class DiscreteProbabilityCollectionSamplerTest {
         }
 
         final double mean = sum / n;
-        Assert.assertEquals(expectedMean, mean, 1e-3);
+        Assertions.assertEquals(expectedMean, mean, 1e-3);
         final double variance = sumOfSquares / n - mean * mean;
-        Assert.assertEquals(expectedVariance, variance, 2e-3);
+        Assertions.assertEquals(expectedVariance, variance, 2e-3);
     }
 
 
@@ -128,7 +128,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
             new DiscreteProbabilityCollectionSampler<Integer>(rng2, map);
 
         for (int i = 0; i < 50; i++) {
-            Assert.assertEquals(sampler1.sample(), sampler2.sample());
+            Assertions.assertEquals(sampler1.sample(), sampler2.sample());
         }
     }
 
@@ -165,10 +165,10 @@ public class DiscreteProbabilityCollectionSamplerTest {
         final Double item1 = sampler.sample();
         final Double item2 = sampler.sample();
         // Check they are in the list
-        Assert.assertTrue("Sample item1 is not from the list", items.contains(item1));
-        Assert.assertTrue("Sample item2 is not from the list", items.contains(item2));
+        Assertions.assertTrue(items.contains(item1), "Sample item1 is not from the list");
+        Assertions.assertTrue(items.contains(item2), "Sample item2 is not from the list");
         // Test the two samples are different items
-        Assert.assertNotSame("Item1 and 2 should be different", item1, item2);
+        Assertions.assertNotSame(item1, item2, "Item1 and 2 should be different");
     }
 
     /**

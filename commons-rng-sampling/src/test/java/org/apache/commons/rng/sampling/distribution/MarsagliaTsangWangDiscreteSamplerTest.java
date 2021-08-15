@@ -22,7 +22,7 @@ import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -75,7 +75,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] {0.5, 0.5});
         String text = sampler.toString();
         for (String item : new String[] {"Marsaglia", "Tsang", "Wang"}) {
-            Assert.assertTrue("toString missing: " + item, text.contains(item));
+            Assertions.assertTrue(text.contains(item), () -> "toString missing: " + item);
         }
     }
 
@@ -155,8 +155,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
             final int s1 = sampler1.sample() - offset1;
             final int s2 = sampler2.sample() - offset2;
             final int s3 = sampler3.sample() - offset3;
-            Assert.assertEquals("Offset sample 1 and 2 do not match", s1, s2);
-            Assert.assertEquals("Offset Sample 1 and 3 do not match", s1, s3);
+            Assertions.assertEquals(s1, s2, "Offset sample 1 and 2 do not match");
+            Assertions.assertEquals(s1, s3, "Offset Sample 1 and 3 do not match");
         }
     }
 
@@ -204,7 +204,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
 
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(probabilities, samples, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(probabilities, samples, 0.001));
     }
 
     /**
@@ -258,7 +258,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         // Check the sum is less than 2^30
         final long sum = (long) maxSamples * m;
         final int total = 1 << 30;
-        Assert.assertTrue("Worst case uniform distribution is above 2^30", sum < total);
+        Assertions.assertTrue(sum < total, "Worst case uniform distribution is above 2^30");
 
         // Get the digits as per the sampler and compute storage
         final int d1 = getBase64Digit(m, 1);
@@ -276,9 +276,9 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
             bytes = 4;
         }
         final double storageMB = bytes * 1e-6 * (d1 + d2 + d3 + d4 + d5) * maxSamples;
-        Assert.assertTrue(
-            "Worst case uniform distribution storage " + storageMB + "MB is above expected limit: " + expectedLimitMB,
-            storageMB < expectedLimitMB);
+        Assertions.assertTrue(storageMB < expectedLimitMB,
+            () -> "Worst case uniform distribution storage " + storageMB +
+                  "MB is above expected limit: " + expectedLimitMB);
     }
 
     /**
@@ -422,8 +422,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = (int) Math.floor(Math.log(Double.MIN_VALUE) / Math.log(0.5));
         final double p = 0.5;
         // Validate set-up
-        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
-        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials + 1, p), 0);
+        Assertions.assertEquals(Double.MIN_VALUE, getBinomialP0(trials, p), 0, "Invalid test set-up for p(0)");
+        Assertions.assertEquals(0, getBinomialP0(trials + 1, p), 0, "Invalid test set-up for p(0)");
 
         // This will throw if the table does not sum to 2^30
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
@@ -441,7 +441,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final int trials = 1 + (int) Math.floor(Math.log(Double.MIN_VALUE) / Math.log(0.5));
         final double p = 0.5;
         // Validate set-up
-        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, p), 0);
+        Assertions.assertEquals(0, getBinomialP0(trials, p), 0, "Invalid test set-up for p(0)");
         @SuppressWarnings("unused")
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
     }
@@ -465,11 +465,11 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         double p = 1 - Math.exp(Math.log(Double.MIN_VALUE) / trials);
 
         // Validate set-up
-        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
+        Assertions.assertEquals(Double.MIN_VALUE, getBinomialP0(trials, p), 0, "Invalid test set-up for p(0)");
 
         // Search for larger p until Math.nextUp(p) produces 0
         double upper = p * 2;
-        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, upper), 0);
+        Assertions.assertEquals(0, getBinomialP0(trials, upper), 0, "Invalid test set-up for p(0)");
 
         double lower = p;
         while (Double.doubleToRawLongBits(lower) + 1 < Double.doubleToRawLongBits(upper)) {
@@ -483,8 +483,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         p = lower;
 
         // Re-validate
-        Assert.assertEquals("Invalid test set-up for p(0)", Double.MIN_VALUE, getBinomialP0(trials, p), 0);
-        Assert.assertEquals("Invalid test set-up for p(0)", 0, getBinomialP0(trials, Math.nextUp(p)), 0);
+        Assertions.assertEquals(Double.MIN_VALUE, getBinomialP0(trials, p), 0, "Invalid test set-up for p(0)");
+        Assertions.assertEquals(0, getBinomialP0(trials, Math.nextUp(p)), 0, "Invalid test set-up for p(0)");
 
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         // This will throw if the table does not sum to 2^30
@@ -512,10 +512,10 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final double p = 0;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(0, sampler.sample());
+            Assertions.assertEquals(0, sampler.sample());
         }
         // Hit the toString() method
-        Assert.assertTrue(sampler.toString().contains("Binomial"));
+        Assertions.assertTrue(sampler.toString().contains("Binomial"));
     }
 
     /**
@@ -529,10 +529,10 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final double p = 1;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(trials, sampler.sample());
+            Assertions.assertEquals(trials, sampler.sample());
         }
         // Hit the toString() method
-        Assert.assertTrue(sampler.toString().contains("Binomial"));
+        Assertions.assertTrue(sampler.toString().contains("Binomial"));
     }
 
     /**
@@ -578,7 +578,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final double p2 = 1 - p1;
         final DiscreteSampler sampler1 = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p1);
         final DiscreteSampler sampler2 = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p2);
-        Assert.assertEquals(sampler1.toString(), sampler2.toString());
+        Assertions.assertEquals(sampler1.toString(), sampler2.toString());
     }
 
     /**

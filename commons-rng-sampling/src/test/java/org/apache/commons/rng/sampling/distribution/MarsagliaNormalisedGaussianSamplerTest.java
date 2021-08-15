@@ -20,7 +20,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -79,6 +79,6 @@ public class MarsagliaNormalisedGaussianSamplerTest {
         final double x = 2 * value - 1;
         final double r2 = x * x + x * x;
         final double expected = x * Math.sqrt(-2 * Math.log(r2) / r2);
-        Assert.assertEquals(expected, sampler.sample(), 0);
+        Assertions.assertEquals(expected, sampler.sample());
     }
 }

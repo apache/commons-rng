@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -31,7 +31,7 @@ public class SeedConverterComposerTest {
                 new SeedConverterComposer<Integer, Long, long[]>(int2Long, long2LongArray);
         final Integer in = 123;
         final Object out = composer.convert(in);
-        Assert.assertTrue("Bad type conversion", out instanceof long[]);
-        Assert.assertEquals("Incorrect long[] length", 3, ((long[])out).length);
+        Assertions.assertTrue(out instanceof long[], "Bad type conversion");
+        Assertions.assertEquals(3, ((long[])out).length, "Incorrect long[] length");
     }
 }

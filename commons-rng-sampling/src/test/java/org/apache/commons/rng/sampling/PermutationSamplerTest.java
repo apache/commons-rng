@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -46,7 +46,7 @@ public class PermutationSamplerTest {
                     continue SAMPLE;
                 }
             }
-            Assert.fail("number " + s + " not in array");
+            Assertions.fail("number " + s + " not in array");
         }
     }
 
@@ -78,8 +78,8 @@ public class PermutationSamplerTest {
         // Check size = 1 boundary case.
         final PermutationSampler sampler = new PermutationSampler(rng, 1, 1);
         final int[] perm = sampler.sample();
-        Assert.assertEquals(1, perm.length);
-        Assert.assertEquals(0, perm[0]);
+        Assertions.assertEquals(1, perm.length);
+        Assertions.assertEquals(0, perm[0]);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -113,14 +113,14 @@ public class PermutationSamplerTest {
 
         final int[] natural = PermutationSampler.natural(n);
         for (int i = 0; i < n; i++) {
-            Assert.assertEquals(expected[i], natural[i]);
+            Assertions.assertEquals(expected[i], natural[i]);
         }
     }
 
     @Test
     public void testNaturalZero() {
         final int[] natural = PermutationSampler.natural(0);
-        Assert.assertEquals(0, natural.length);
+        Assertions.assertEquals(0, natural.length);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class PermutationSamplerTest {
         }
 
         for (int i = 0; i < n; i++) {
-            Assert.assertEquals(1, count[i]);
+            Assertions.assertEquals(1, count[i]);
         }
     }
 
@@ -149,7 +149,7 @@ public class PermutationSamplerTest {
 
         // Ensure that all entries below index "start" did not move.
         for (int i = 0; i < start; i++) {
-            Assert.assertEquals(orig[i], list[i]);
+            Assertions.assertEquals(orig[i], list[i]);
         }
 
         // Ensure that at least one entry has moved.
@@ -160,7 +160,7 @@ public class PermutationSamplerTest {
                 break;
             }
         }
-        Assert.assertTrue(ok);
+        Assertions.assertTrue(ok);
     }
 
     @Test
@@ -172,7 +172,7 @@ public class PermutationSamplerTest {
 
         // Ensure that all entries above index "start" did not move.
         for (int i = start + 1; i < orig.length; i++) {
-            Assert.assertEquals(orig[i], list[i]);
+            Assertions.assertEquals(orig[i], list[i]);
         }
 
         // Ensure that at least one entry has moved.
@@ -183,7 +183,7 @@ public class PermutationSamplerTest {
                 break;
             }
         }
-        Assert.assertTrue(ok);
+        Assertions.assertTrue(ok);
     }
 
     /**
@@ -219,7 +219,7 @@ public class PermutationSamplerTest {
         }
 
         // Pass if we cannot reject null hypothesis that distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
     private static int findPerm(int[][] p,
@@ -229,7 +229,7 @@ public class PermutationSamplerTest {
                 return i;
             }
         }
-        Assert.fail("Permutation not found");
+        Assertions.fail("Permutation not found");
         return -1;
     }
 }

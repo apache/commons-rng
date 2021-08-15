@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
 import java.util.function.DoubleUnaryOperator;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -143,10 +143,10 @@ public class UnitBallSamplerTest {
                     }
                 }
                 // Radius above 1
-                Assert.fail("Invalid sample length: " + length);
+                Assertions.fail("Invalid sample length: " + length);
             }
             final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-            Assert.assertFalse("p-value too small: " + p, p < 0.001);
+            Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
         }
     }
 
@@ -184,9 +184,9 @@ public class UnitBallSamplerTest {
         };
 
         final double[] vector = UnitBallSampler.of(bad, dimension).sample();
-        Assert.assertEquals(dimension, vector.length);
+        Assertions.assertEquals(dimension, vector.length);
         // A non-zero coordinate should occur with a SplitMix which returns 0 only once.
-        Assert.assertNotEquals(0.0, length(vector));
+        Assertions.assertNotEquals(0.0, length(vector));
     }
 
     /**
@@ -273,7 +273,7 @@ public class UnitBallSamplerTest {
             final DoubleUnaryOperator volume = createVolumeFunction(n);
             final DoubleUnaryOperator radius = createRadiusFunction(n);
             for (final double r : radii) {
-                Assert.assertEquals(r, radius.applyAsDouble(volume.applyAsDouble(r)), 1e-10);
+                Assertions.assertEquals(r, radius.applyAsDouble(volume.applyAsDouble(r)), 1e-10);
             }
         }
     }

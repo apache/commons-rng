@@ -20,7 +20,7 @@ package org.apache.commons.rng.simple.internal;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -43,7 +43,7 @@ public class SeedUtilsTest {
             int observed = 0;
             for (int j = 0; j < 8; j++) {
                 final int digit = sample & 0xf;
-                Assert.assertEquals("Duplicate digit in sample", 0, observed & (1 << digit));
+                Assertions.assertEquals(0, observed & (1 << digit), "Duplicate digit in sample");
                 observed |= 1 << digit;
                 samples[j][digit]++;
                 sample >>>= 4;
@@ -55,8 +55,8 @@ public class SeedUtilsTest {
         Arrays.fill(expected, 1.0 / 16);
         // Pass if we cannot reject null hypothesis that distributions are the same.
         for (int j = 0; j < 8; j++) {
-            Assert.assertFalse("Not uniform in digit " + j,
-                    chiSquareTest.chiSquareTest(expected, samples[j], 0.001));
+            Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, samples[j], 0.001),
+                "Not uniform in digit " + j);
         }
     }
 
@@ -76,7 +76,7 @@ public class SeedUtilsTest {
             long observed = 0;
             for (int j = 0; j < 8; j++) {
                 final int digit = (int) (sample & 0xfL);
-                Assert.assertEquals("Duplicate digit in lower sample", 0, observed & (1 << digit));
+                Assertions.assertEquals(0, observed & (1 << digit), "Duplicate digit in lower sample");
                 observed |= 1 << digit;
                 samples[j][digit]++;
                 sample >>>= 4;
@@ -85,7 +85,7 @@ public class SeedUtilsTest {
             observed = 0;
             for (int j = 8; j < 16; j++) {
                 final int digit = (int) (sample & 0xfL);
-                Assert.assertEquals("Duplicate digit in upper sample", 0, observed & (1 << digit));
+                Assertions.assertEquals(0, observed & (1 << digit), "Duplicate digit in upper sample");
                 observed |= 1 << digit;
                 samples[j][digit]++;
                 sample >>>= 4;
@@ -97,8 +97,8 @@ public class SeedUtilsTest {
         Arrays.fill(expected, 1.0 / 16);
         // Pass if we cannot reject null hypothesis that distributions are the same.
         for (int j = 0; j < 16; j++) {
-            Assert.assertFalse("Not uniform in digit " + j,
-                    chiSquareTest.chiSquareTest(expected, samples[j], 0.001));
+            Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, samples[j], 0.001),
+                "Not uniform in digit " + j);
         }
     }
 }

@@ -17,7 +17,7 @@
 
 package org.apache.commons.rng.core;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +43,7 @@ public final class RandomAssert {
      * @param rng Random generator.
      */
     public static void assertEquals(int[] expected, UniformRandomProvider rng) {
-        assertEquals("Value at position ", expected, rng);
+        assertEquals(expected, rng, "Value at position ");
     }
 
     /**
@@ -54,7 +54,7 @@ public final class RandomAssert {
      * @param rng Random generator.
      */
     public static void assertEquals(long[] expected, UniformRandomProvider rng) {
-        assertEquals("Value at position ", expected, rng);
+        assertEquals(expected, rng, "Value at position ");
     }
 
     /**
@@ -62,13 +62,14 @@ public final class RandomAssert {
      * {@link UniformRandomProvider#nextInt()}.
      * The message prefix is prepended to the array index for the assertion message.
      *
-     * @param messagePrefix Message prefix.
      * @param expected Expected output.
      * @param rng Random generator.
+     * @param messagePrefix Message prefix.
      */
-    private static void assertEquals(String messagePrefix, int[] expected, UniformRandomProvider rng) {
+    private static void assertEquals(int[] expected, UniformRandomProvider rng, String messagePrefix) {
         for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals(messagePrefix + i, expected[i], rng.nextInt());
+            final int index = i;
+            Assertions.assertEquals(expected[i], rng.nextInt(), () -> messagePrefix + index);
         }
     }
 
@@ -77,13 +78,14 @@ public final class RandomAssert {
      * {@link UniformRandomProvider#nextLong()}.
      * The message prefix is prepended to the array index for the assertion message.
      *
-     * @param messagePrefix Message prefix.
      * @param expected Expected output.
      * @param rng Random generator.
+     * @param messagePrefix Message prefix.
      */
-    private static void assertEquals(String messagePrefix, long[] expected, UniformRandomProvider rng) {
+    private static void assertEquals(long[] expected, UniformRandomProvider rng, String messagePrefix) {
         for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals(messagePrefix + i, expected[i], rng.nextLong());
+            final int index = i;
+            Assertions.assertEquals(expected[i], rng.nextLong(), () -> messagePrefix + index);
         }
     }
 
@@ -100,7 +102,7 @@ public final class RandomAssert {
                 return;
             }
         }
-        Assert.fail("Expected a different nextLong output");
+        Assertions.fail("Expected a different nextLong output");
     }
 
     /**
@@ -124,10 +126,10 @@ public final class RandomAssert {
                                         int[] expectedAfter,
                                         JumpableUniformRandomProvider rng) {
         final UniformRandomProvider copy = rng.jump();
-        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
-        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
-        assertEquals("Pre-jump value at position ", expectedBefore, copy);
-        assertEquals("Post-jump value at position ", expectedAfter, rng);
+        Assertions.assertNotSame(rng, copy, "The copy instance should be a different object");
+        Assertions.assertEquals(rng.getClass(), copy.getClass(), "The copy instance should be the same class");
+        assertEquals(expectedBefore, copy, "Pre-jump value at position ");
+        assertEquals(expectedAfter, rng, "Post-jump value at position ");
     }
 
     /**
@@ -151,10 +153,10 @@ public final class RandomAssert {
                                         long[] expectedAfter,
                                         JumpableUniformRandomProvider rng) {
         final UniformRandomProvider copy = rng.jump();
-        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
-        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
-        assertEquals("Pre-jump value at position ", expectedBefore, copy);
-        assertEquals("Post-jump value at position ", expectedAfter, rng);
+        Assertions.assertNotSame(rng, copy, "The copy instance should be a different object");
+        Assertions.assertEquals(rng.getClass(), copy.getClass(), "The copy instance should be the same class");
+        assertEquals(expectedBefore, copy, "Pre-jump value at position ");
+        assertEquals(expectedAfter, rng, "Post-jump value at position ");
     }
 
     /**
@@ -178,10 +180,10 @@ public final class RandomAssert {
                                             int[] expectedAfter,
                                             LongJumpableUniformRandomProvider rng) {
         final UniformRandomProvider copy = rng.longJump();
-        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
-        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
-        assertEquals("Pre-jump value at position ", expectedBefore, copy);
-        assertEquals("Post-jump value at position ", expectedAfter, rng);
+        Assertions.assertNotSame(rng, copy, "The copy instance should be a different object");
+        Assertions.assertEquals(rng.getClass(), copy.getClass(), "The copy instance should be the same class");
+        assertEquals(expectedBefore, copy, "Pre-jump value at position ");
+        assertEquals(expectedAfter, rng, "Post-jump value at position ");
     }
 
     /**
@@ -205,10 +207,10 @@ public final class RandomAssert {
                                             long[] expectedAfter,
                                             LongJumpableUniformRandomProvider rng) {
         final UniformRandomProvider copy = rng.longJump();
-        Assert.assertNotSame("The copy instance should be a different object", rng, copy);
-        Assert.assertEquals("The copy instance should be the same class", rng.getClass(), copy.getClass());
-        assertEquals("Pre-jump value at position ", expectedBefore, copy);
-        assertEquals("Post-jump value at position ", expectedAfter, rng);
+        Assertions.assertNotSame(rng, copy, "The copy instance should be a different object");
+        Assertions.assertEquals(rng.getClass(), copy.getClass(), "The copy instance should be the same class");
+        assertEquals(expectedBefore, copy, "Pre-jump value at position ");
+        assertEquals(expectedAfter, rng, "Post-jump value at position ");
     }
 
     /**
@@ -221,7 +223,8 @@ public final class RandomAssert {
      */
     public static void assertNextIntEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
         for (int i = 0; i < cycles; i++) {
-            Assert.assertEquals("Value at position " + i, rng1.nextInt(), rng2.nextInt());
+            final int index = i;
+            Assertions.assertEquals(rng1.nextInt(), rng2.nextInt(), () -> "Value at position " + index);
         }
     }
 
@@ -235,7 +238,8 @@ public final class RandomAssert {
      */
     public static void assertNextLongEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
         for (int i = 0; i < cycles; i++) {
-            Assert.assertEquals("Value at position " + i, rng1.nextLong(), rng2.nextLong());
+            final int index = i;
+            Assertions.assertEquals(rng1.nextLong(), rng2.nextLong(), () -> "Value at position " + index);
         }
     }
 
@@ -249,7 +253,7 @@ public final class RandomAssert {
      */
     public static void assertNextIntZeroOutput(UniformRandomProvider rng, int cycles) {
         for (int i = 0; i < cycles; i++) {
-            Assert.assertEquals("Expected the generator to output zeros", 0, rng.nextInt());
+            Assertions.assertEquals(0, rng.nextInt(), "Expected the generator to output zeros");
         }
     }
 
@@ -263,7 +267,7 @@ public final class RandomAssert {
      */
     public static void assertNextLongZeroOutput(UniformRandomProvider rng, int cycles) {
         for (int i = 0; i < cycles; i++) {
-            Assert.assertEquals("Expected the generator to output zeros", 0, rng.nextLong());
+            Assertions.assertEquals(0, rng.nextLong(), "Expected the generator to output zeros");
         }
     }
 
@@ -287,7 +291,7 @@ public final class RandomAssert {
                 return;
             }
         }
-        Assert.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles");
+        Assertions.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles");
     }
 
     /**
@@ -308,7 +312,7 @@ public final class RandomAssert {
         try {
             assertNextLongNonZeroOutput(rng, warmupCycles, testCycles);
         } catch (AssertionError ex) {
-            Assert.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles. " +
+            Assertions.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles. " +
                         "Seed element [" + seedElement + "], bit=" + bit);
         }
     }
@@ -360,16 +364,11 @@ public final class RandomAssert {
                         return;
                     }
                 }
-                Assert.assertEquals("Seed element was not reset", 0, seed[i]);
+                Assertions.assertEquals(0, seed[i], "Seed element was not reset");
             }
-        } catch (IllegalAccessException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (NoSuchMethodException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (InstantiationException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (InvocationTargetException ex) {
-            Assert.fail(ex.getMessage());
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException |
+                InvocationTargetException ex) {
+            Assertions.fail(ex.getMessage());
         }
     }
 
@@ -396,16 +395,11 @@ public final class RandomAssert {
                     // Eventually reset to zero
                     seed[i] >>>= 1;
                 }
-                Assert.assertEquals("Seed element was not reset", 0L, seed[i]);
+                Assertions.assertEquals(0L, seed[i], "Seed element was not reset");
             }
-        } catch (IllegalAccessException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (NoSuchMethodException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (InstantiationException ex) {
-            Assert.fail(ex.getMessage());
-        } catch (InvocationTargetException ex) {
-            Assert.fail(ex.getMessage());
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException |
+                InvocationTargetException ex) {
+            Assertions.fail(ex.getMessage());
         }
     }
 }

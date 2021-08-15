@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
@@ -46,7 +46,7 @@ public class CollectionSamplerTest {
                 return;
             }
         }
-        Assert.fail(word + " not in list");
+        Assertions.fail(word + " not in list");
     }
 
     @Test(expected = IllegalArgumentException.class)

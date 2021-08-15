@@ -17,7 +17,7 @@
 
 package org.apache.commons.rng.simple;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 import org.apache.commons.rng.UniformRandomProvider;
 
@@ -40,31 +40,31 @@ public final class RandomAssert {
     public static void assertProduceSameSequence(UniformRandomProvider rng1,
                                                  UniformRandomProvider rng2) {
         for (int i = 0; i < 54; i++) {
-            Assert.assertEquals(rng1.nextBoolean(), rng2.nextBoolean());
+            Assertions.assertEquals(rng1.nextBoolean(), rng2.nextBoolean());
         }
         for (int i = 0; i < 23; i++) {
-            Assert.assertEquals(rng1.nextInt(), rng2.nextInt());
+            Assertions.assertEquals(rng1.nextInt(), rng2.nextInt());
         }
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 final int max = 107 * i + 374 * j + 11;
-                Assert.assertEquals(rng1.nextInt(max), rng2.nextInt(max));
+                Assertions.assertEquals(rng1.nextInt(max), rng2.nextInt(max));
             }
         }
         for (int i = 0; i < 23; i++) {
-            Assert.assertEquals(rng1.nextLong(), rng2.nextLong());
+            Assertions.assertEquals(rng1.nextLong(), rng2.nextLong());
         }
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 5; j++) {
                 final long max = (Long.MAX_VALUE << 2) + 107 * i + 374 * j + 11;
-                Assert.assertEquals(rng1.nextLong(max), rng2.nextLong(max));
+                Assertions.assertEquals(rng1.nextLong(max), rng2.nextLong(max));
             }
         }
         for (int i = 0; i < 103; i++) {
-            Assert.assertEquals(rng1.nextFloat(), rng2.nextFloat(), 0);
+            Assertions.assertEquals(rng1.nextFloat(), rng2.nextFloat());
         }
         for (int i = 0; i < 79; i++) {
-            Assert.assertEquals(rng1.nextDouble(), rng2.nextDouble(), 0);
+            Assertions.assertEquals(rng1.nextDouble(), rng2.nextDouble());
         }
 
         final int size = 345;
@@ -74,7 +74,7 @@ public final class RandomAssert {
         for (int i = 0; i < 3; i++) {
             rng1.nextBytes(a1);
             rng2.nextBytes(a2);
-            Assert.assertArrayEquals(a1, a2);
+            Assertions.assertArrayEquals(a1, a2);
         }
 
         for (int i = 0; i < 5; i++) {
@@ -82,7 +82,7 @@ public final class RandomAssert {
             final int n = 23 + i;
             rng1.nextBytes(a1, offset, n);
             rng2.nextBytes(a2, offset, n);
-            Assert.assertArrayEquals(a1, a2);
+            Assertions.assertArrayEquals(a1, a2);
         }
     }
 }

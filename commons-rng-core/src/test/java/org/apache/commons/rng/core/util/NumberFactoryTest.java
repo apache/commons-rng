@@ -17,7 +17,7 @@
 package org.apache.commons.rng.core.util;
 
 import org.apache.commons.math3.util.Precision;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -42,7 +42,7 @@ public class NumberFactoryTest {
         // Test if the bit is set differently then the booleans are opposite
         final boolean b1 = NumberFactory.makeBoolean(0);
         final boolean b2 = NumberFactory.makeBoolean(0xffffffff);
-        Assert.assertNotEquals(b1, b2);
+        Assertions.assertNotEquals(b1, b2);
     }
 
     @Test
@@ -50,20 +50,20 @@ public class NumberFactoryTest {
         // Test if the bit is set differently then the booleans are opposite
         final boolean b1 = NumberFactory.makeBoolean(0L);
         final boolean b2 = NumberFactory.makeBoolean(0xffffffffffffffffL);
-        Assert.assertNotEquals(b1, b2);
+        Assertions.assertNotEquals(b1, b2);
     }
 
     @Test
     public void testMakeIntFromLong() {
         // Test the high order bits and low order bits are xor'd together
-        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0xffffffff00000000L));
-        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0xffffffffffffffffL));
-        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0x00000000ffffffffL));
-        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0x0000000000000000L));
-        Assert.assertEquals(0x0f0f0f0f, NumberFactory.makeInt(0x0f0f0f0f00000000L));
-        Assert.assertEquals(0xf0f0f0f0, NumberFactory.makeInt(0x00000000f0f0f0f0L));
-        Assert.assertEquals(0x00000000, NumberFactory.makeInt(0x0f0f0f0f0f0f0f0fL));
-        Assert.assertEquals(0xffffffff, NumberFactory.makeInt(0x0f0f0f0ff0f0f0f0L));
+        Assertions.assertEquals(0xffffffff, NumberFactory.makeInt(0xffffffff00000000L));
+        Assertions.assertEquals(0x00000000, NumberFactory.makeInt(0xffffffffffffffffL));
+        Assertions.assertEquals(0xffffffff, NumberFactory.makeInt(0x00000000ffffffffL));
+        Assertions.assertEquals(0x00000000, NumberFactory.makeInt(0x0000000000000000L));
+        Assertions.assertEquals(0x0f0f0f0f, NumberFactory.makeInt(0x0f0f0f0f00000000L));
+        Assertions.assertEquals(0xf0f0f0f0, NumberFactory.makeInt(0x00000000f0f0f0f0L));
+        Assertions.assertEquals(0x00000000, NumberFactory.makeInt(0x0f0f0f0f0f0f0f0fL));
+        Assertions.assertEquals(0xffffffff, NumberFactory.makeInt(0x0f0f0f0ff0f0f0f0L));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class NumberFactoryTest {
             final int vH = NumberFactory.extractHi(v);
 
             final long actual = (((long) vH) << 32) | (vL & 0xffffffffL);
-            Assert.assertEquals(v, actual);
+            Assertions.assertEquals(v, actual);
         }
     }
 
@@ -83,7 +83,7 @@ public class NumberFactoryTest {
             final int vL = NumberFactory.extractLo(v);
             final int vH = NumberFactory.extractHi(v);
 
-            Assert.assertEquals(v, NumberFactory.makeLong(vH, vL));
+            Assertions.assertEquals(v, NumberFactory.makeLong(vH, vL));
         }
     }
 
@@ -95,7 +95,7 @@ public class NumberFactoryTest {
             final byte[] b = NumberFactory.makeByteArray(value);
             for (int j = 0; j < LONG_SIZE; j++) {
                 // Only one byte should be non zero
-                Assert.assertEquals(b[j] != 0, j == i);
+                Assertions.assertEquals(b[j] != 0, j == i);
             }
             // Shift to the next byte
             value <<= 8;
@@ -106,14 +106,14 @@ public class NumberFactoryTest {
     public void testLongFromByteArray2Long() {
         for (long expected : LONG_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
-            Assert.assertEquals(expected, NumberFactory.makeLong(b));
+            Assertions.assertEquals(expected, NumberFactory.makeLong(b));
         }
     }
 
     @Test
     public void testLongArrayFromByteArray2LongArray() {
         final byte[] b = NumberFactory.makeByteArray(LONG_TEST_VALUES);
-        Assert.assertArrayEquals(LONG_TEST_VALUES, NumberFactory.makeLongArray(b));
+        Assertions.assertArrayEquals(LONG_TEST_VALUES, NumberFactory.makeLongArray(b));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class NumberFactoryTest {
         for (int i = 0; i < LONG_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(LONG_TEST_VALUES[i]);
             final byte[] b2 = NumberFactory.makeByteArray(new long[] {LONG_TEST_VALUES[i]});
-            Assert.assertArrayEquals(b1, b2);
+            Assertions.assertArrayEquals(b1, b2);
         }
     }
 
@@ -134,7 +134,7 @@ public class NumberFactoryTest {
             final byte[] b = NumberFactory.makeByteArray(value);
             for (int j = 0; j < INT_SIZE; j++) {
                 // Only one byte should be non zero
-                Assert.assertEquals(b[j] != 0, j == i);
+                Assertions.assertEquals(b[j] != 0, j == i);
             }
             // Shift to the next byte
             value <<= 8;
@@ -145,14 +145,14 @@ public class NumberFactoryTest {
     public void testIntFromByteArray2Int() {
         for (int expected : INT_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
-            Assert.assertEquals(expected, NumberFactory.makeInt(b));
+            Assertions.assertEquals(expected, NumberFactory.makeInt(b));
         }
     }
 
     @Test
     public void testIntArrayFromByteArray2IntArray() {
         final byte[] b = NumberFactory.makeByteArray(INT_TEST_VALUES);
-        Assert.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
+        Assertions.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class NumberFactoryTest {
         for (int i = 0; i < INT_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(INT_TEST_VALUES[i]);
             final byte[] b2 = NumberFactory.makeByteArray(new int[] {INT_TEST_VALUES[i]});
-            Assert.assertArrayEquals(b1, b2);
+            Assertions.assertArrayEquals(b1, b2);
         }
     }
 
@@ -171,7 +171,7 @@ public class NumberFactoryTest {
             try {
                 NumberFactory.makeInt(new byte[i]);
                 if (i != INT_SIZE) {
-                    Assert.fail("Exception expected");
+                    Assertions.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {
                 // Expected.
@@ -185,7 +185,7 @@ public class NumberFactoryTest {
             try {
                 NumberFactory.makeIntArray(new byte[i]);
                 if (i != 0 && i % INT_SIZE != 0) {
-                    Assert.fail("Exception expected");
+                    Assertions.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {
                 // Expected.
@@ -199,7 +199,7 @@ public class NumberFactoryTest {
             try {
                 NumberFactory.makeLong(new byte[i]);
                 if (i != LONG_SIZE) {
-                    Assert.fail("Exception expected");
+                    Assertions.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {
                 // Expected.
@@ -213,7 +213,7 @@ public class NumberFactoryTest {
             try {
                 NumberFactory.makeLongArray(new byte[i]);
                 if (i != 0 && i % LONG_SIZE != 0) {
-                    Assert.fail("Exception expected");
+                    Assertions.fail("Exception expected");
                 }
             } catch (IllegalArgumentException e) {
                 // Expected.
@@ -235,9 +235,9 @@ public class NumberFactoryTest {
         assertCloseToNotAbove1(Float.intBitsToFloat(0x7f << 23 | allBits >>> 9) - 1.0f, 2);
 
         final int noBits = 0;
-        Assert.assertEquals(0.0f, (noBits >>> 9) * 0x1.0p-23f, 0);
-        Assert.assertEquals(0.0f, (noBits >>> 8) * 0x1.0p-24f, 0);
-        Assert.assertEquals(0.0f, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f, 0);
+        Assertions.assertEquals(0.0f, (noBits >>> 9) * 0x1.0p-23f);
+        Assertions.assertEquals(0.0f, (noBits >>> 8) * 0x1.0p-24f);
+        Assertions.assertEquals(0.0f, Float.intBitsToFloat(0x7f << 23 | noBits >>> 9) - 1.0f);
     }
 
     /**
@@ -254,9 +254,9 @@ public class NumberFactoryTest {
         assertCloseToNotAbove1(Double.longBitsToDouble(0x3ffL << 52 | allBits >>> 12) - 1.0, 2);
 
         final long noBits = 0;
-        Assert.assertEquals(0.0, (noBits >>> 12) * 0x1.0p-52d, 0);
-        Assert.assertEquals(0.0, (noBits >>> 11) * 0x1.0p-53d, 0);
-        Assert.assertEquals(0.0, Double.longBitsToDouble(0x3ffL << 52 | noBits >>> 12) - 1.0, 0);
+        Assertions.assertEquals(0.0, (noBits >>> 12) * 0x1.0p-52d);
+        Assertions.assertEquals(0.0, (noBits >>> 11) * 0x1.0p-53d);
+        Assertions.assertEquals(0.0, Double.longBitsToDouble(0x3ffL << 52 | noBits >>> 12) - 1.0);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class NumberFactoryTest {
         final long noBits = 0;
         // Within 1 ULP of 1.0
         assertCloseToNotAbove1(NumberFactory.makeDouble(allBits), 1);
-        Assert.assertEquals(0.0, NumberFactory.makeDouble(noBits), 0);
+        Assertions.assertEquals(0.0, NumberFactory.makeDouble(noBits));
     }
 
     @Test
@@ -274,7 +274,7 @@ public class NumberFactoryTest {
         final int noBits = 0;
         // Within 1 ULP of 1.0
         assertCloseToNotAbove1(NumberFactory.makeDouble(allBits, allBits), 1);
-        Assert.assertEquals(0.0, NumberFactory.makeDouble(noBits, noBits), 0);
+        Assertions.assertEquals(0.0, NumberFactory.makeDouble(noBits, noBits));
     }
 
     @Test
@@ -283,7 +283,7 @@ public class NumberFactoryTest {
         final int noBits = 0;
         // Within 1 ULP of 1.0f
         assertCloseToNotAbove1(NumberFactory.makeFloat(allBits), 1);
-        Assert.assertEquals(0.0f, NumberFactory.makeFloat(noBits), 0);
+        Assertions.assertEquals(0.0f, NumberFactory.makeFloat(noBits), 0);
     }
 
     /**
@@ -296,9 +296,9 @@ public class NumberFactoryTest {
      * @see Precision#equals(float, float, int)
      */
     private static void assertCloseToNotAbove1(float value, int maxUlps) {
-        Assert.assertTrue("Not <= 1.0f", value <= 1.0f);
-        Assert.assertTrue("Not equal to 1.0f within units of least precision: " + maxUlps,
-                          Precision.equals(1.0f, value, maxUlps));
+        Assertions.assertTrue(value <= 1.0f, "Not <= 1.0f");
+        Assertions.assertTrue(Precision.equals(1.0f, value, maxUlps),
+            () -> "Not equal to 1.0f within units of least precision: " + maxUlps);
     }
 
     /**
@@ -311,8 +311,8 @@ public class NumberFactoryTest {
      * @see Precision#equals(double, double, int)
      */
     private static void assertCloseToNotAbove1(double value, int maxUlps) {
-        Assert.assertTrue("Not <= 1.0", value <= 1.0);
-        Assert.assertTrue("Not equal to 1.0 within units of least precision: " + maxUlps,
-                          Precision.equals(1.0, value, maxUlps));
+        Assertions.assertTrue(value <= 1.0, "Not <= 1.0");
+        Assertions.assertTrue(Precision.equals(1.0, value, maxUlps),
+            () -> "Not equal to 1.0 within units of least precision: " + maxUlps);
     }
 }

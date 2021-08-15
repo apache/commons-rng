@@ -26,9 +26,9 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
-import org.junit.Assume;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -86,10 +86,10 @@ public class ProvidersCommonParametricTest {
     @Test
     public void testFactoryCreateMethod() {
         // Cannot test providers that require arguments
-        Assume.assumeTrue(originalArgs == null);
+        Assumptions.assumeTrue(originalArgs == null);
         @SuppressWarnings("deprecation")
         final UniformRandomProvider rng = RandomSource.create(originalSource);
-        Assert.assertEquals(generator.getClass(), rng.getClass());
+        Assertions.assertEquals(generator.getClass(), rng.getClass());
     }
 
     /**
@@ -100,11 +100,11 @@ public class ProvidersCommonParametricTest {
     public void testFactoryCreateMethodWithSeed() {
         @SuppressWarnings("deprecation")
         final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
-        Assert.assertEquals(rng1.getClass(), generator.getClass());
+        Assertions.assertEquals(rng1.getClass(), generator.getClass());
         // Check the output
         final UniformRandomProvider rng2 = originalSource.create(originalSeed, originalArgs);
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals(rng2.nextLong(), rng1.nextLong());
+            Assertions.assertEquals(rng2.nextLong(), rng1.nextLong());
         }
     }
 
@@ -120,7 +120,7 @@ public class ProvidersCommonParametricTest {
                 int arg1 = 123;
                 double arg2 = 456.0;
                 originalSource.create(arg1, arg2);
-                Assert.fail("Source does not require arguments: " + originalSource);
+                Assertions.fail("Source does not require arguments: " + originalSource);
             } catch (IllegalArgumentException ex) {
                 // Expected
             }
@@ -128,7 +128,7 @@ public class ProvidersCommonParametricTest {
             try {
                 // Try no arguments for a provider that does require them
                 originalSource.create();
-                Assert.fail("Source requires arguments: " + originalSource);
+                Assertions.fail("Source requires arguments: " + originalSource);
             } catch (IllegalArgumentException ex) {
                 // Expected
             }
@@ -155,9 +155,9 @@ public class ProvidersCommonParametricTest {
         for (Object s : seeds) {
             ++seedCount;
             if (originalSource.isNativeSeed(s)) {
-                Assert.assertNotNull("Identified native seed is null", s);
-                Assert.assertEquals("Incorrect identification of native seed type",
-                                    s.getClass(), originalSeed.getClass());
+                Assertions.assertNotNull(s, "Identified native seed is null");
+                Assertions.assertEquals(s.getClass(), originalSeed.getClass(),
+                    "Incorrect identification of native seed type");
             } else {
                 ++nonNativeSeedCount;
             }
@@ -165,8 +165,8 @@ public class ProvidersCommonParametricTest {
             originalSource.create(s, originalArgs);
         }
 
-        Assert.assertEquals(6, seedCount);
-        Assert.assertEquals(5, nonNativeSeedCount);
+        Assertions.assertEquals(6, seedCount);
+        Assertions.assertEquals(5, nonNativeSeedCount);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class ProvidersCommonParametricTest {
     @Test
     public void testEmptyIntArraySeed() {
         final int[] empty = new int[0];
-        Assume.assumeTrue(originalSource.isNativeSeed(empty));
+        Assumptions.assumeTrue(originalSource.isNativeSeed(empty));
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = originalSource.create(empty, originalArgs);
@@ -191,9 +191,9 @@ public class ProvidersCommonParametricTest {
     @Test
     public void testEmptyLongArraySeed() {
         final long[] empty = new long[0];
-        Assume.assumeTrue(originalSource.isNativeSeed(empty));
+        Assumptions.assumeTrue(originalSource.isNativeSeed(empty));
         // The Middle-Square Weyl Sequence generator cannot self-seed
-        Assume.assumeFalse(originalSource == RandomSource.MSWS);
+        Assumptions.assumeFalse(originalSource == RandomSource.MSWS);
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = originalSource.create(empty, originalArgs);
@@ -205,8 +205,8 @@ public class ProvidersCommonParametricTest {
         // Exercise capacity to escape all "zero" state.
         final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
-        Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
-                createsNonZeroLongOutput(rng, 2000));
+        Assumptions.assumeTrue(createsNonZeroLongOutput(rng, 2000),
+            () -> "RNG is non-functional with an all zero seed: " + originalSource);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -215,8 +215,8 @@ public class ProvidersCommonParametricTest {
         // Exercise capacity to escape all "zero" state.
         final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
-        Assume.assumeTrue("RNG is non-functional with an all zero seed: " + originalSource,
-                createsNonZeroLongOutput(rng, 2000));
+        Assumptions.assumeTrue(createsNonZeroLongOutput(rng, 2000),
+            () -> "RNG is non-functional with an all zero seed: " + originalSource);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
@@ -250,7 +250,7 @@ public class ProvidersCommonParametricTest {
         // Cast must fail.
         try {
             final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
-            Assert.fail("Cast should have failed");
+            Assertions.fail("Cast should have failed");
         } catch (ClassCastException e) {
             // Expected.
         }
@@ -278,40 +278,42 @@ public class ProvidersCommonParametricTest {
 
         // Discard a few more.
         final List<Number> listDiscard = makeList(n);
-        Assert.assertNotEquals(0, listDiscard.size());
-        Assert.assertNotEquals(listOrig, listDiscard);
+        Assertions.assertNotEquals(0, listDiscard.size());
+        Assertions.assertNotEquals(listOrig, listDiscard);
 
         // Retrieve from serialized stream.
         ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(bis);
         final RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
-        Assert.assertNotSame(stateOrig, stateNew);
+        Assertions.assertNotSame(stateOrig, stateNew);
 
         // Reset.
         restorable.restoreState(stateNew);
 
         // Replay.
         final List<Number> listReplay = makeList(n);
-        Assert.assertNotSame(listOrig, listReplay);
+        Assertions.assertNotSame(listOrig, listReplay);
 
         // Check that the serialized data recreated the orginal state.
-        Assert.assertEquals(listOrig, listReplay);
+        Assertions.assertEquals(listOrig, listReplay);
     }
 
     @Test
     public void testUnrestorableToString() {
-        Assert.assertEquals(generator.toString(),
+        Assertions.assertEquals(generator.toString(),
                             RandomSource.unrestorable(generator).toString());
     }
 
     @Test
     public void testSupportedInterfaces() {
         final UniformRandomProvider rng = originalSource.create(null, originalArgs);
-        Assert.assertEquals("isJumpable", rng instanceof JumpableUniformRandomProvider,
-                            originalSource.isJumpable());
-        Assert.assertEquals("isLongJumpable", rng instanceof LongJumpableUniformRandomProvider,
-                            originalSource.isLongJumpable());
+        Assertions.assertEquals(rng instanceof JumpableUniformRandomProvider,
+                                originalSource.isJumpable(),
+                                "isJumpable");
+        Assertions.assertEquals(rng instanceof LongJumpableUniformRandomProvider,
+                                originalSource.isLongJumpable(),
+                                "isLongJumpable");
     }
 
     ///// Support methods below.
@@ -422,7 +424,7 @@ public class ProvidersCommonParametricTest {
                 Arrays.fill(observed, 0);
                 for (int j = 0; j < sampleSize; j++) {
                     final long value = nextMethod.call().longValue();
-                    Assert.assertTrue("Range", value >= 0 && value < n);
+                    Assertions.assertTrue(value >= 0 && value < n, "Range");
 
                     for (int k = 0; k < numBins; k++) {
                         if (value < binUpperBounds[k]) {
@@ -458,7 +460,7 @@ public class ProvidersCommonParametricTest {
         // 12    0.00190
 
         if (numFailures > 11) { // Test will fail with 0.5% probability
-            Assert.fail(generator + ": Too many failures for n = " + n +
+            Assertions.fail(generator + ": Too many failures for n = " + n +
                         " (" + numFailures + " out of " + numTests + " tests failed)");
         }
     }

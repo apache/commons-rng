@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -63,10 +63,10 @@ public class SamplerBaseTest {
         final SimpleSampler sampler = new SimpleSampler(rng2);
         final int n = 256;
         for (int i = 0; i < 3; i++) {
-            Assert.assertEquals(rng1.nextDouble(), sampler.nextDouble(), 0);
-            Assert.assertEquals(rng1.nextInt(), sampler.nextInt());
-            Assert.assertEquals(rng1.nextInt(n), sampler.nextInt(n));
-            Assert.assertEquals(rng1.nextLong(), sampler.nextLong());
+            Assertions.assertEquals(rng1.nextDouble(), sampler.nextDouble());
+            Assertions.assertEquals(rng1.nextInt(), sampler.nextInt());
+            Assertions.assertEquals(rng1.nextInt(n), sampler.nextInt(n));
+            Assertions.assertEquals(rng1.nextLong(), sampler.nextLong());
         }
     }
 
@@ -74,6 +74,6 @@ public class SamplerBaseTest {
     public void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final SimpleSampler sampler = new SimpleSampler(rng);
-        Assert.assertTrue(sampler.toString().contains("rng"));
+        Assertions.assertTrue(sampler.toString().contains("rng"));
     }
 }

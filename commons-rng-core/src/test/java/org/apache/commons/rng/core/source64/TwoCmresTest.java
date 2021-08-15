@@ -18,7 +18,7 @@ package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
 import org.apache.commons.rng.core.source64.TwoCmres.Cmres;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ public class TwoCmresTest {
 
         // Try a few values.
         final int n = 1000;
-        for (int i = 0; i < n; i++) {
-            Assert.assertNotEquals("i=" + i, rng1.nextLong(), rng2.nextLong());
+        for (int[] i = {0}; i[0] < n; i[0]++) {
+            Assertions.assertNotEquals(rng1.nextLong(), rng2.nextLong(), () -> "i=" + i[0]);
         }
     }
 
@@ -70,7 +70,7 @@ public class TwoCmresTest {
         for (int i = 0; i < max; i++) {
             try {
                 new TwoCmres(-97845, i, i);
-                Assert.fail("Exception expected");
+                Assertions.fail("Exception expected");
             } catch (IllegalArgumentException e) {
                 // Expected.
             }
@@ -96,14 +96,14 @@ public class TwoCmresTest {
         for (int wrongIndex : new int[] {-1, max}) {
             try {
                 new TwoCmres(seed, wrongIndex, 1);
-                Assert.fail("Exception expected for index=" + wrongIndex);
+                Assertions.fail("Exception expected for index=" + wrongIndex);
             } catch (IndexOutOfBoundsException e) {
                 // Expected.
             }
 
             try {
                 new TwoCmres(seed, 1, wrongIndex);
-                Assert.fail("Exception expected for index=" + wrongIndex);
+                Assertions.fail("Exception expected for index=" + wrongIndex);
             } catch (IndexOutOfBoundsException e) {
                 // Expected.
             }
@@ -123,7 +123,7 @@ public class TwoCmresTest {
         try {
             Cmres.Factory.checkUnique(list, nextMultiply);
         } catch (IllegalStateException ex) {
-            Assert.fail("The next multiply should be unique: " + nextMultiply);
+            Assertions.fail("The next multiply should be unique: " + nextMultiply);
         }
 
         list.add(new Cmres(nextMultiply, rotate, start));

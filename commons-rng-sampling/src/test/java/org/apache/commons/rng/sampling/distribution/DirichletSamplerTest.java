@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import java.util.Arrays;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
@@ -148,8 +148,8 @@ public class DirichletSamplerTest {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final DirichletSampler sampler1 = DirichletSampler.symmetric(rng, 2, 1.0);
         final DirichletSampler sampler2 = DirichletSampler.of(rng, 0.5, 1, 1.5);
-        Assert.assertTrue(sampler1.toString().toLowerCase().contains("dirichlet"));
-        Assert.assertTrue(sampler2.toString().toLowerCase().contains("dirichlet"));
+        Assertions.assertTrue(sampler1.toString().toLowerCase().contains("dirichlet"));
+        Assertions.assertTrue(sampler2.toString().toLowerCase().contains("dirichlet"));
     }
 
     @Test
@@ -212,7 +212,7 @@ public class DirichletSamplerTest {
         final double[] means = getColumnMeans(samples);
         for (int i = 0; i < k; i++) {
             final double mean = alpha[i] / alpha0;
-            Assert.assertEquals("Mean", mean, means[i], mean * relativeTolerance);
+            Assertions.assertEquals(mean, means[i], mean * relativeTolerance, "Mean");
         }
 
         // Variance = alpha_i (alpha_0 - alpha_i) / alpha_0^2 (alpha_0 + 1)
@@ -221,10 +221,10 @@ public class DirichletSamplerTest {
         final double denom = alpha0 * alpha0 * (alpha0 + 1);
         for (int i = 0; i < k; i++) {
             final double var = alpha[i] * (alpha0 - alpha[i]) / denom;
-            Assert.assertEquals("Variance", var, covars[i][i], var * relativeTolerance);
+            Assertions.assertEquals(var, covars[i][i], var * relativeTolerance, "Variance");
             for (int j = i + 1; j < k; j++) {
                 final double covar = -alpha[i] * alpha[j] / denom;
-                Assert.assertEquals("Covariance", covar, covars[i][j], Math.abs(covar) * relativeTolerance);
+                Assertions.assertEquals(covar, covars[i][j], Math.abs(covar) * relativeTolerance, "Covariance");
             }
         }
     }
@@ -236,14 +236,14 @@ public class DirichletSamplerTest {
      * @param x Sample.
      */
     private static void assertSample(int k, double[] x) {
-        Assert.assertEquals("Number of categories", k, x.length);
+        Assertions.assertEquals(k, x.length, "Number of categories");
         // There are always at least 2 categories
         double sum = x[0] + x[1];
         // Sum the rest
         for (int i = 2; i < x.length; i++) {
             sum += x[i];
         }
-        Assert.assertEquals("Invalid sum", 1.0, sum, 1e-10);
+        Assertions.assertEquals(1.0, sum, 1e-10, "Invalid sum");
     }
 
     /**

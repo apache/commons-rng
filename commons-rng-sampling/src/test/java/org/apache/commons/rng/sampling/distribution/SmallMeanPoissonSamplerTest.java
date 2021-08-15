@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -73,7 +73,7 @@ public class SmallMeanPoissonSamplerTest {
         for (double mean : new double[] {0.5, 1, 1.5, 2.2}) {
             final SharedStateDiscreteSampler sampler = SmallMeanPoissonSampler.of(rng, mean);
             final int expected = (int) Math.ceil(1000 * mean);
-            Assert.assertEquals(expected, sampler.sample());
+            Assertions.assertEquals(expected, sampler.sample());
         }
     }
 

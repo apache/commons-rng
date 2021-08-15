@@ -22,7 +22,7 @@ import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -69,7 +69,7 @@ public class AliasMethodDiscreteSamplerTest {
     @Test
     public void testToString() {
         final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5});
-        Assert.assertTrue(sampler.toString().toLowerCase().contains("alias method"));
+        Assertions.assertTrue(sampler.toString().toLowerCase().contains("alias method"));
     }
 
     /**
@@ -241,13 +241,13 @@ public class AliasMethodDiscreteSamplerTest {
                 expected[mapSize] = probabilies[i];
                 observed[mapSize] = samples[i];
             } else {
-                Assert.assertEquals("No samples expected from zero probability", 0, samples[i]);
+                Assertions.assertEquals(0, samples[i], "No samples expected from zero probability");
             }
         }
 
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
     /**

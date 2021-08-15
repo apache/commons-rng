@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.examples.stress;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -64,7 +64,7 @@ public class HexTest {
         final StringBuilder sb = new StringBuilder();
         sb.append(Hex.encodeHex(bytes));
         final byte[] decoded = Hex.decodeHex(sb);
-        Assert.assertArrayEquals(bytes, decoded);
+        Assertions.assertArrayEquals(bytes, decoded);
     }
 
     /**
@@ -104,7 +104,7 @@ public class HexTest {
         final String text = String.valueOf(chars);
         final byte[] decoded = Hex.decodeHex(text);
         // Test the encoding is lower case
-        Assert.assertArrayEquals(text.toLowerCase(Locale.US).toCharArray(), Hex.encodeHex(decoded));
+        Assertions.assertArrayEquals(text.toLowerCase(Locale.US).toCharArray(), Hex.encodeHex(decoded));
     }
 
     @Test(expected = IllegalArgumentException.class)

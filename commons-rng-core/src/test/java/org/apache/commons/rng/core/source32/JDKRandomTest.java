@@ -24,9 +24,10 @@ import java.io.Serializable;
 import java.util.Random;
 
 import org.apache.commons.rng.RandomProviderState;
+import org.apache.commons.rng.core.RandomAssert;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.apache.commons.rng.core.util.NumberFactory;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 public class JDKRandomTest {
@@ -41,7 +42,7 @@ public class JDKRandomTest {
         private int state0;
         private double state1;
         private long state2;
-        private boolean stte3;
+        private boolean state3;
 
         /**
          * This simulates doing something malicious when deserializing.
@@ -53,7 +54,7 @@ public class JDKRandomTest {
         private void readObject(ObjectInputStream input)
                 throws IOException,
                        ClassNotFoundException {
-            Assert.fail("This should not be run during the test");
+            Assertions.fail("*** Malicious code ***. This should not be run during the test");
         }
     }
 
@@ -66,8 +67,8 @@ public class JDKRandomTest {
         // This is a trivial test since "JDKRandom" delegates to "Random".
 
         final int numRepeats = 1000;
-        for (int r = 0; r < numRepeats; r++) {
-            Assert.assertEquals(r + " nextInt", jdk.nextInt(), rng.nextInt());
+        for (int[] r = {0}; r[0] < numRepeats; r[0]++) {
+            Assertions.assertEquals(jdk.nextInt(), rng.nextInt(), () -> r[0] + " nextInt");
         }
     }
 
@@ -83,8 +84,8 @@ public class JDKRandomTest {
 
         // Ensure different
         final int numRepeats = 10;
-        for (int r = 0; r < numRepeats; r++) {
-            Assert.assertNotEquals(r + " nextInt", rng1.nextInt(), rng2.nextInt());
+        for (int[] r = {0}; r[0] < numRepeats; r[0]++) {
+            Assertions.assertNotEquals(rng1.nextInt(), rng2.nextInt(), () -> r[0] + " nextInt");
         }
 
         final RandomProviderState state = rng1.saveState();
@@ -94,9 +95,7 @@ public class JDKRandomTest {
         rng2.restoreState(state);
 
         // Ensure the same
-        for (int r = 0; r < numRepeats; r++) {
-            Assert.assertEquals(r + " nextInt", rng1.nextInt(), rng2.nextInt());
-        }
+        RandomAssert.assertNextIntEquals(numRepeats, rng1, rng2);
     }
 
     /**
@@ -109,9 +108,9 @@ public class JDKRandomTest {
     public void testRestoreWithInvalidClass() throws IOException  {
         // Serialize something
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(new SerializableTestObject());
-        oos.close();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(new SerializableTestObject());
+        }
 
         // Compose the size with the state.
         // This is what is expected by the JDKRandom class.

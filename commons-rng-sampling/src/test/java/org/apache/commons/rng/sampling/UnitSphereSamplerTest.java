@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.sampling;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.apache.commons.rng.simple.RandomSource;
 import java.util.Arrays;
@@ -78,13 +78,13 @@ public class UnitSphereSamplerTest {
             // Test the deprecated method once in the test suite.
             @SuppressWarnings("deprecation")
             final double[] v = generator.nextVector();
-            Assert.assertEquals(1, v.length);
+            Assertions.assertEquals(1, v.length);
             final double d = v[0];
             if (d == -1.0) {
                 count++;
             } else if (d != 1.0) {
                 // RNG-130: All samples should be 1 or -1.
-                Assert.fail("Invalid unit length: " + d);
+                Assertions.fail("Invalid unit length: " + d);
             }
         }
         // Test the number of negatives is approximately 50%
@@ -114,10 +114,9 @@ public class UnitSphereSamplerTest {
         // the p-value requires the complimentary error function.
         final double absSum = Math.abs(sum);
         final double max = Math.sqrt(numberOfBits) * 2.576;
-        Assert.assertTrue(
-                "Walked too far astray: " + absSum + " > " + max +
-                " (test will fail randomly about 1 in 100 times)",
-                absSum <= max);
+        Assertions.assertTrue(absSum <= max,
+            () -> "Walked too far astray: " + absSum + " > " + max +
+                  " (test will fail randomly about 1 in 100 times)");
     }
 
     /**
@@ -150,8 +149,8 @@ public class UnitSphereSamplerTest {
         final int steps = 100000;
         for (int i = 0; i < steps; ++i) {
             final double[] v = generator.sample();
-            Assert.assertEquals(2, v.length);
-            Assert.assertEquals(1.0, length(v), 1e-10);
+            Assertions.assertEquals(2, v.length);
+            Assertions.assertEquals(1.0, length(v), 1e-10);
             // Get the polar angle bin from xy
             final int angleBin = angleBin(angleBins, v[0], v[1]);
             observed[angleBin]++;
@@ -160,7 +159,7 @@ public class UnitSphereSamplerTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) steps / observed.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.01);
+        Assertions.assertFalse(p < 0.01, () -> "p-value too small: " + p);
     }
 
     /**
@@ -200,8 +199,8 @@ public class UnitSphereSamplerTest {
         final int steps = 1000000;
         for (int i = 0; i < steps; ++i) {
             final double[] v = generator.sample();
-            Assert.assertEquals(3, v.length);
-            Assert.assertEquals(1.0, length(v), 1e-10);
+            Assertions.assertEquals(3, v.length);
+            Assertions.assertEquals(1.0, length(v), 1e-10);
             // Get the polar angle bin from xy
             final int angleBin = angleBin(angleBins, v[0], v[1]);
             // Map cos(phi) = z from [-1, 1) to [0, 1) then assign a bin
@@ -212,7 +211,7 @@ public class UnitSphereSamplerTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) steps / observed.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.01);
+        Assertions.assertFalse(p < 0.01, () -> "p-value too small: " + p);
     }
 
     /**
@@ -271,8 +270,8 @@ public class UnitSphereSamplerTest {
         final int steps = 1000000;
         for (int i = 0; i < steps; ++i) {
             final double[] v = generator.sample();
-            Assert.assertEquals(4, v.length);
-            Assert.assertEquals(1.0, length(v), 1e-10);
+            Assertions.assertEquals(4, v.length);
+            Assertions.assertEquals(1.0, length(v), 1e-10);
             // Circle 1
             observed1[circleBin(angleBins, r, v[0], v[1])]++;
             // Circle 2
@@ -283,9 +282,9 @@ public class UnitSphereSamplerTest {
         Arrays.fill(expected, (double) steps / observed1.length);
         final ChiSquareTest chi = new ChiSquareTest();
         final double p1 = chi.chiSquareTest(expected, observed1);
-        Assert.assertFalse("Circle 1 p-value too small: " + p1, p1 < 0.01);
+        Assertions.assertFalse(p1 < 0.01, () -> "Circle 1 p-value too small: " + p1);
         final double p2 = chi.chiSquareTest(expected, observed2);
-        Assert.assertFalse("Circle 2 p-value too small: " + p2, p2 < 0.01);
+        Assertions.assertFalse(p2 < 0.01, () -> "Circle 2 p-value too small: " + p2);
     }
 
     /**
@@ -431,8 +430,8 @@ public class UnitSphereSamplerTest {
         };
 
         final double[] vector = UnitSphereSampler.of(bad, dimension).sample();
-        Assert.assertEquals(dimension, vector.length);
-        Assert.assertEquals(1.0, length(vector), 1e-10);
+        Assertions.assertEquals(dimension, vector.length);
+        Assertions.assertEquals(1.0, length(vector), 1e-10);
     }
 
     /**
@@ -447,7 +446,7 @@ public class UnitSphereSamplerTest {
         // Map to the scaling factor
         final double f = 1 / Math.sqrt(normSq);
         // As long as this is finite positive then the sampler is valid
-        Assert.assertTrue(f > 0 && f <= Double.MAX_VALUE);
+        Assertions.assertTrue(f > 0 && f <= Double.MAX_VALUE);
     }
 
     /**

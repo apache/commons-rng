@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.core.source64;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -82,10 +82,10 @@ public class LongProviderTest {
                 // Pack into upper then lower bits
                 final long value = (((long) i) << 32) | (j & 0xffffffffL);
                 final LongProvider provider = new FixedLongProvider(value);
-                Assert.assertEquals("1st call not the upper 32-bits", i, provider.nextInt());
-                Assert.assertEquals("2nd call not the lower 32-bits", j, provider.nextInt());
-                Assert.assertEquals("3rd call not the upper 32-bits", i, provider.nextInt());
-                Assert.assertEquals("4th call not the lower 32-bits", j, provider.nextInt());
+                Assertions.assertEquals(i, provider.nextInt(), "1st call not the upper 32-bits");
+                Assertions.assertEquals(j, provider.nextInt(), "2nd call not the lower 32-bits");
+                Assertions.assertEquals(i, provider.nextInt(), "3rd call not the upper 32-bits");
+                Assertions.assertEquals(j, provider.nextInt(), "4th call not the lower 32-bits");
             }
         }
     }
@@ -105,12 +105,14 @@ public class LongProviderTest {
             // Test the result for a single pass over the long
             for (int j = 0; j < Long.SIZE; j++) {
                 final boolean expected = i == j;
-                Assert.assertEquals("Pass 1, bit " + j, expected, provider.nextBoolean());
+                final int index = j;
+                Assertions.assertEquals(expected, provider.nextBoolean(), () -> "Pass 1, bit " + index);
             }
             // The second pass should use the opposite bits
             for (int j = 0; j < Long.SIZE; j++) {
                 final boolean expected = i != j;
-                Assert.assertEquals("Pass 2, bit " + j, expected, provider.nextBoolean());
+                final int index = j;
+                Assertions.assertEquals(expected, provider.nextBoolean(), () -> "Pass 2, bit " + index);
             }
         }
     }

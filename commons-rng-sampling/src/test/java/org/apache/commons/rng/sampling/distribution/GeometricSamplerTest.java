@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -36,7 +36,7 @@ public class GeometricSamplerTest {
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, 1);
         // All samples should be 0
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals("p=1 should have 0 for all samples", 0, sampler.sample());
+            Assertions.assertEquals(0, sampler.sample(), "p=1 should have 0 for all samples");
         }
     }
 
@@ -52,7 +52,7 @@ public class GeometricSamplerTest {
         // Map to the mean
         final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
         // As long as this is finite positive then the sampler is valid
-        Assert.assertTrue(exponentialMean > 0 && exponentialMean <= Double.MAX_VALUE);
+        Assertions.assertTrue(exponentialMean > 0 && exponentialMean <= Double.MAX_VALUE);
         // The internal exponential sampler validates the mean so demonstrate creating a
         // geometric sampler does not throw.
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
@@ -67,8 +67,8 @@ public class GeometricSamplerTest {
     public void testProbabilityOfSuccessIsOneSamplerToString() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(unusedRng, 1);
-        Assert.assertTrue("Missing 'Geometric' from toString",
-            sampler.toString().contains("Geometric"));
+        Assertions.assertTrue(sampler.toString().contains("Geometric"),
+            "Missing 'Geometric' from toString");
     }
 
     /**
@@ -86,8 +86,8 @@ public class GeometricSamplerTest {
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, Double.MIN_VALUE);
         // All samples should be max value
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals("p=(almost 0) should have Integer.MAX_VALUE for all samples",
-                Integer.MAX_VALUE, sampler.sample());
+            Assertions.assertEquals(Integer.MAX_VALUE, sampler.sample(),
+                "p=(almost 0) should have Integer.MAX_VALUE for all samples");
         }
     }
 

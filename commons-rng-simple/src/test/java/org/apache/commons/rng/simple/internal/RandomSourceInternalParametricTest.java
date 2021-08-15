@@ -18,13 +18,14 @@ package org.apache.commons.rng.simple.internal;
 
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.util.EnumMap;
+import java.util.function.Supplier;
 
 /**
  * Tests for the {@link ProviderBuilder.RandomSourceInternal} seed conversions. This test
@@ -136,9 +137,9 @@ public class RandomSourceInternalParametricTest {
     @Test
     public void testCreateSeed() {
         final Object seed = randomSourceInternal.createSeed();
-        Assert.assertNotNull(seed);
-        Assert.assertEquals("Seed was not the correct class", type, seed.getClass());
-        Assert.assertTrue("Seed was not identified as the native type", randomSourceInternal.isNativeSeed(seed));
+        Assertions.assertNotNull(seed);
+        Assertions.assertEquals(type, seed.getClass(), "Seed was not the correct class");
+        Assertions.assertTrue(randomSourceInternal.isNativeSeed(seed), "Seed was not identified as the native type");
     }
 
     /**
@@ -148,10 +149,10 @@ public class RandomSourceInternalParametricTest {
     public void testConvertSupportedSeed() {
         for (final Object input : SUPPORTED_SEEDS) {
             final Object seed = randomSourceInternal.convertSeed(input);
-            final String msg = input.getClass() + " input seed was not converted";
-            Assert.assertNotNull(msg, seed);
-            Assert.assertEquals(msg, type, seed.getClass());
-            Assert.assertTrue(msg, randomSourceInternal.isNativeSeed(seed));
+            final Supplier<String> msg = () -> input.getClass() + " input seed was not converted";
+            Assertions.assertNotNull(seed, msg);
+            Assertions.assertEquals(type, seed.getClass(), msg);
+            Assertions.assertTrue(randomSourceInternal.isNativeSeed(seed), msg);
         }
     }
 
@@ -163,7 +164,7 @@ public class RandomSourceInternalParametricTest {
         for (final Object input : UNSUPPORTED_SEEDS) {
             try {
                 randomSourceInternal.convertSeed(input);
-                Assert.fail(input.getClass() + " input seed was not rejected as unsupported");
+                Assertions.fail(input.getClass() + " input seed was not rejected as unsupported");
             } catch (UnsupportedOperationException ex) {
                 // This is expected
             }
@@ -180,18 +181,18 @@ public class RandomSourceInternalParametricTest {
         final byte[] seed = randomSourceInternal.createSeedBytes(new SplitMix64(12345L));
 
         final int size = seed.length;
-        Assert.assertNotEquals("Seed is empty", 0, size);
+        Assertions.assertNotEquals(0, size, "Seed is empty");
 
         if (randomSourceInternal.isNativeSeed(Integer.valueOf(0))) {
-            Assert.assertEquals("Expect 4 bytes for Integer", 4, size);
+            Assertions.assertEquals(4, size, "Expect 4 bytes for Integer");
         } else if (randomSourceInternal.isNativeSeed(Long.valueOf(0))) {
-            Assert.assertEquals("Expect 8 bytes for Long", 8, size);
+            Assertions.assertEquals(8, size, "Expect 8 bytes for Long");
         } else if (randomSourceInternal.isNativeSeed(new int[0])) {
-            Assert.assertEquals("Expect 4n bytes for int[]", 0, size % 4);
+            Assertions.assertEquals(0, size % 4, "Expect 4n bytes for int[]");
         } else if (randomSourceInternal.isNativeSeed(new long[0])) {
-            Assert.assertEquals("Expect 8n bytes for long[]", 0, size % 8);
+            Assertions.assertEquals(0, size % 8, "Expect 8n bytes for long[]");
         } else {
-            Assert.fail("Unknown native seed type");
+            Assertions.fail("Unknown native seed type");
         }
     }
 
@@ -210,8 +211,7 @@ public class RandomSourceInternalParametricTest {
         final int size = seed.length;
 
         final Integer expected = EXPECTED_SEED_BYTES.get(randomSourceInternal);
-        Assert.assertNotNull("Missing expected seed byte size: " + randomSourceInternal, expected);
-        Assert.assertEquals(randomSourceInternal.toString(),
-                            expected.intValue(), size);
+        Assertions.assertNotNull(expected, () -> "Missing expected seed byte size: " + randomSourceInternal);
+        Assertions.assertEquals(expected.intValue(), size, () -> randomSourceInternal.toString());
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -28,6 +28,6 @@ public class Long2LongArrayTest {
         final Long seed = 567L;
         final int length = 3;
         final long[] out = new Long2LongArray(length).convert(seed);
-        Assert.assertEquals(length, out.length);
+        Assertions.assertEquals(length, out.length);
     }
 }

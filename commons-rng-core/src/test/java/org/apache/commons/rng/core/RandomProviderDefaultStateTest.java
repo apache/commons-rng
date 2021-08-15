@@ -18,7 +18,7 @@ package org.apache.commons.rng.core;
 
 
 import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Tests for {@link RandomProviderDefaultState}.
@@ -29,6 +29,6 @@ public class RandomProviderDefaultStateTest {
         final byte[] internalState = {1, 0, -23, 67, -128, 54, 100, 127};
         final RandomProviderDefaultState state = new RandomProviderDefaultState(internalState);
 
-        Assert.assertArrayEquals(internalState, state.getState());
+        Assertions.assertArrayEquals(internalState, state.getState());
     }
 }

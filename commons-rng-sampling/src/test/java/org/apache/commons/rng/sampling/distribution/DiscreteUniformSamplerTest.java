@@ -20,7 +20,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.Locale;
@@ -48,7 +48,7 @@ public class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng, lower, upper);
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(lower, sampler.sample());
+            Assertions.assertEquals(lower, sampler.sample());
         }
     }
 
@@ -64,7 +64,7 @@ public class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals(rng1.nextInt(), sampler.sample());
+            Assertions.assertEquals(rng1.nextInt(), sampler.sample());
         }
     }
 
@@ -83,7 +83,7 @@ public class DiscreteUniformSamplerTest {
             final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
             final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
             for (int i = 0; i < 10; i++) {
-                Assert.assertEquals(lower + rng1.nextInt(n), sampler.sample());
+                Assertions.assertEquals(lower + rng1.nextInt(n), sampler.sample());
             }
         }
     }
@@ -118,9 +118,9 @@ public class DiscreteUniformSamplerTest {
             final int range = 1 << i;
             final int upper = lower + range - 1;
             sampler = new DiscreteUniformSampler(rngZeroBits, lower, upper);
-            Assert.assertEquals("Zero bits sample", lower, sampler.sample());
+            Assertions.assertEquals(lower, sampler.sample(), "Zero bits sample");
             sampler = new DiscreteUniformSampler(rngAllBits, lower, upper);
-            Assert.assertEquals("All bits sample", upper, sampler.sample());
+            Assertions.assertEquals(upper, sampler.sample(), "All bits sample");
         }
     }
 
@@ -141,7 +141,7 @@ public class DiscreteUniformSamplerTest {
             final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
             sampler = DiscreteUniformSampler.of(rng2, lower, upper);
             for (int j = 0; j < 10; j++) {
-                Assert.assertEquals(rng1.nextInt() >>> shift, sampler.sample());
+                Assertions.assertEquals(rng1.nextInt() >>> shift, sampler.sample());
             }
         }
     }
@@ -164,7 +164,7 @@ public class DiscreteUniformSamplerTest {
             do {
                 expected = rng1.nextInt();
             } while (expected < lower || expected > upper);
-            Assert.assertEquals(expected, sampler.sample());
+            Assertions.assertEquals(expected, sampler.sample());
         }
     }
 
@@ -200,8 +200,8 @@ public class DiscreteUniformSamplerTest {
             final int sample1 = sampler.sample();
             final int sample2 = samplerLo.sample();
             final int sample3 = samplerHi.sample();
-            Assert.assertEquals("Incorrect negative offset sample", sample1 + offsetLo, sample2);
-            Assert.assertEquals("Incorrect positive offset sample", sample1 + offsetHi, sample3);
+            Assertions.assertEquals(sample1 + offsetLo, sample2, "Incorrect negative offset sample");
+            Assertions.assertEquals(sample1 + offsetHi, sample3, "Incorrect positive offset sample");
         }
     }
 
@@ -258,7 +258,7 @@ public class DiscreteUniformSamplerTest {
             min = Math.min(min, value);
             max = Math.max(max, value);
         }
-        Assert.assertTrue("Not uniform, max = " + max + ", min=" + min, max - min <= 1);
+        Assertions.assertTrue(max - min <= 1, "Not uniform, max = " + max + ", min=" + min);
     }
 
     /**
@@ -295,7 +295,7 @@ public class DiscreteUniformSamplerTest {
 
         // This should be even across the entire range
         for (int value : histogram) {
-            Assert.assertEquals(expected, value);
+            Assertions.assertEquals(expected, value);
         }
     }
 
@@ -327,8 +327,8 @@ public class DiscreteUniformSamplerTest {
 
         final int sample = sampler.sample();
 
-        Assert.assertEquals("Sample is incorrect", 0, sample);
-        Assert.assertEquals("Sample should be produced from 2nd value", 2, value[0]);
+        Assertions.assertEquals(0, sample, "Sample is incorrect");
+        Assertions.assertEquals(2, value[0], "Sample should be produced from 2nd value");
     }
 
     @Test
@@ -399,6 +399,6 @@ public class DiscreteUniformSamplerTest {
     private static void assertToString(int lower, int upper) {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
-        Assert.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
+        Assertions.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
     }
 }

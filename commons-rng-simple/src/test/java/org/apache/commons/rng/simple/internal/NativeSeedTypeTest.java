@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -39,6 +39,6 @@ public class NativeSeedTypeTest {
     @Test
     public void testConvertSeedToBytesUsingByteArray() {
         final byte[] seed = {42, 78, 99};
-        Assert.assertSame(seed, NativeSeedType.convertSeedToBytes(seed));
+        Assertions.assertSame(seed, NativeSeedType.convertSeedToBytes(seed));
     }
 }

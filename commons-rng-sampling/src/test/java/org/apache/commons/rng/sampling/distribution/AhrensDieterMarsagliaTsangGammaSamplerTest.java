@@ -20,7 +20,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -90,7 +90,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     @Test
     public void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        Assert.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
+        Assertions.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
                 .toLowerCase().contains("gamma"));
     }
 }

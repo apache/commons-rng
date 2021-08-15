@@ -18,7 +18,7 @@ package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.RandomAssert;
 import org.apache.commons.rng.core.util.NumberFactory;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 public class MiddleSquareWeylSequenceTest {
@@ -93,7 +93,7 @@ public class MiddleSquareWeylSequenceTest {
         final MiddleSquareWeylSequence rng1 = new MiddleSquareWeylSequence(seed);
         final MiddleSquareWeylSequence rng2 = new MiddleSquareWeylSequence(seed);
         for (int i = 0; i < 50; i++) {
-            Assert.assertEquals(NumberFactory.makeLong(rng1.nextInt(), rng1.nextInt()),
+            Assertions.assertEquals(NumberFactory.makeLong(rng1.nextInt(), rng1.nextInt()),
                                 rng2.nextLong());
         }
     }

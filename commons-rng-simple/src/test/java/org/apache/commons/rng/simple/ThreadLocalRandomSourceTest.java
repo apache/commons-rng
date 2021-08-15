@@ -17,7 +17,7 @@
 package org.apache.commons.rng.simple;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -61,19 +61,21 @@ public class ThreadLocalRandomSourceTest {
         final UniformRandomProvider[] rngs = new UniformRandomProvider[sources.length];
 
         for (int i = 0; i < sources.length; i++) {
-            if (toIgnore.contains(sources[i])) {
+            final RandomSource source = sources[i];
+            if (toIgnore.contains(source)) {
                 continue;
             }
-            final UniformRandomProvider rng = getCurrent(sources[i]);
-            Assert.assertNotNull("Failed to create source: " + sources[i], rng);
+            final UniformRandomProvider rng = getCurrent(source);
+            Assertions.assertNotNull(rng, () -> "Failed to create source: " + source);
             rngs[i] = rng;
         }
         for (int i = 0; i < sources.length; i++) {
-            if (toIgnore.contains(sources[i])) {
+            final RandomSource source = sources[i];
+            if (toIgnore.contains(source)) {
                 continue;
             }
-            final UniformRandomProvider rng = getCurrent(sources[i]);
-            Assert.assertSame("Failed to return same source: " + sources[i], rngs[i], rng);
+            final UniformRandomProvider rng = getCurrent(source);
+            Assertions.assertSame(rngs[i], rng, () -> "Failed to return same source: " + source);
         }
 
         // Build on a new thread
@@ -98,10 +100,11 @@ public class ThreadLocalRandomSourceTest {
 
         // The RNG from the new thread should be different
         for (int i = 0; i < sources.length; i++) {
-            if (toIgnore.contains(sources[i])) {
+            final RandomSource source = sources[i];
+            if (toIgnore.contains(source)) {
                 continue;
             }
-            Assert.assertNotSame("Failed to return different source: " + sources[i], rngs[i], rngs2[i]);
+            Assertions.assertNotSame(rngs[i], rngs2[i], () -> "Failed to return different source: " + source);
         }
     }
 

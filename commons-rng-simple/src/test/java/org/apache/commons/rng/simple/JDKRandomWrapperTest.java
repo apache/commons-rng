@@ -20,7 +20,7 @@ import java.util.Random;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -48,31 +48,29 @@ public class JDKRandomWrapperTest {
     private static void checkSameSequence(Random rng1,
                                           UniformRandomProvider rng2) {
         for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(rng1.nextInt(),
-                                rng2.nextInt());
+            Assertions.assertEquals(rng1.nextInt(),
+                                    rng2.nextInt());
         }
         for (int i = 0; i < 7; i++) {
-            Assert.assertEquals(rng1.nextLong(),
-                                rng2.nextLong());
+            Assertions.assertEquals(rng1.nextLong(),
+                                    rng2.nextLong());
         }
         for (int i = 0; i < 9; i++) {
-            Assert.assertEquals(rng1.nextFloat(),
-                                rng2.nextFloat(),
-                                0f);
+            Assertions.assertEquals(rng1.nextFloat(),
+                                    rng2.nextFloat());
         }
         for (int i = 0; i < 12; i++) {
-            Assert.assertEquals(rng1.nextDouble(),
-                                rng2.nextDouble(),
-                                0d);
+            Assertions.assertEquals(rng1.nextDouble(),
+                                    rng2.nextDouble());
         }
         for (int i = 0; i < 18; i++) {
-            Assert.assertEquals(rng1.nextBoolean(),
-                                rng2.nextBoolean());
+            Assertions.assertEquals(rng1.nextBoolean(),
+                                    rng2.nextBoolean());
         }
         for (int i = 0; i < 19; i++) {
             final int max = i + 123456;
-            Assert.assertEquals(rng1.nextInt(max),
-                                rng2.nextInt(max));
+            Assertions.assertEquals(rng1.nextInt(max),
+                                    rng2.nextInt(max));
         }
 
         final int len = 233;
@@ -81,8 +79,8 @@ public class JDKRandomWrapperTest {
         rng1.nextBytes(store1);
         rng2.nextBytes(store2);
         for (int i = 0; i < len; i++) {
-            Assert.assertEquals(store1[i],
-                                store2[i]);
+            Assertions.assertEquals(store1[i],
+                                    store2[i]);
         }
     }
 
@@ -116,7 +114,7 @@ public class JDKRandomWrapperTest {
         //                  all code paths.
         for (final long max : new long[] {1, 256, 56757, 1L << 32, (1L << 62) + 1}) {
             for (int i = 0; i < 10; i++) {
-                Assert.assertEquals(rng1.nextLong(max),
+                Assertions.assertEquals(rng1.nextLong(max),
                                     rng2.nextLong(max));
             }
         }
@@ -163,7 +161,7 @@ public class JDKRandomWrapperTest {
         rng1.nextBytes(store1);
         rng2.nextBytes(store2, start, length);
         for (int i = 0; i < length; i++) {
-            Assert.assertEquals(store1[i],
+            Assertions.assertEquals(store1[i],
                                 store2[i + start]);
         }
     }

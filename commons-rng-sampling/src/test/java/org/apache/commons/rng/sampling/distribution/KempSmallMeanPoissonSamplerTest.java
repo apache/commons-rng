@@ -20,7 +20,7 @@ import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -94,8 +94,8 @@ public class KempSmallMeanPoissonSamplerTest {
             x = x + 1;
             p = p * mean / x;
         }
-        Assert.assertEquals("Summation is not zero", 0, u, 1e-3);
-        Assert.assertTrue("Summation is not greater than zero", u > 0);
+        Assertions.assertEquals(0, u, 1e-3, "Summation is not zero");
+        Assertions.assertTrue(u > 0, "Summation is not greater than zero");
     }
 
     /**
@@ -113,8 +113,8 @@ public class KempSmallMeanPoissonSamplerTest {
             x = x + 1;
             p = p * mean / x;
         }
-        Assert.assertEquals("Summation is not one", 1, u, 1e-3);
-        Assert.assertTrue("Summation is not less than one", u < 1);
+        Assertions.assertEquals(1, u, 1e-3, "Summation is not one");
+        Assertions.assertTrue(u < 1, "Summation is not less than one");
     }
 
     /**
@@ -173,8 +173,8 @@ public class KempSmallMeanPoissonSamplerTest {
         int lower, int upper) {
         rng.setValue(cumulativeProbability);
         final int sample = sampler.sample();
-        Assert.assertTrue(sample + " sample is not above realistic lower limit: " + lower, sample >= lower);
-        Assert.assertTrue(sample + " sample is not below realistic upper limit: " + upper, sample <= upper);
+        Assertions.assertTrue(sample >= lower, () -> sample + " sample is not above realistic lower limit: " + lower);
+        Assertions.assertTrue(sample <= upper, () -> sample + " sample is not below realistic upper limit: " + upper);
     }
 
     /**

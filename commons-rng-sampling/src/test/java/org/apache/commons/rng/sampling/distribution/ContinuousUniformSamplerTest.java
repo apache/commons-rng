@@ -20,7 +20,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -46,7 +46,7 @@ public class ContinuousUniformSamplerTest {
         final double max = Math.max(low,  high);
         for (int i = 0; i < 10; i++) {
             final double value = sampler.sample();
-            Assert.assertTrue("Value not in range", value >= min && value <= max);
+            Assertions.assertTrue(value >= min && value <= max, () -> "Value not in range: " + value);
         }
     }
 
@@ -84,7 +84,7 @@ public class ContinuousUniformSamplerTest {
         // Test the sampler excludes the end points
         for (int i = 0; i < 10; i++) {
             final double value = sampler.sample();
-            Assert.assertTrue("Value not in range: " + value, value > low && value < high);
+            Assertions.assertTrue(value > low && value < high, () -> "Value not in range: " + value);
         }
     }
 
@@ -114,13 +114,13 @@ public class ContinuousUniformSamplerTest {
             final double high = interval[1];
             try {
                 ContinuousUniformSampler.of(rng, low, high, true);
-                Assert.fail("(" + low + "," + high + ")");
+                Assertions.fail("(" + low + "," + high + ")");
             } catch (IllegalArgumentException ex) {
                 // Expected
             }
             try {
                 ContinuousUniformSampler.of(rng, high, low, true);
-                Assert.fail("(" + high + "," + low + ")");
+                Assertions.fail("(" + high + "," + low + ")");
             } catch (IllegalArgumentException ex) {
                 // Expected
             }
@@ -147,18 +147,18 @@ public class ContinuousUniformSamplerTest {
         }) {
             final double low = Math.nextUp(expected);
             final double high = Math.nextDown(expected);
-            Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, low, high, true).sample(), 0.0);
-            Assert.assertEquals(expected, ContinuousUniformSampler.of(rng, high, low, true).sample(), 0.0);
-            Assert.assertEquals(-expected, ContinuousUniformSampler.of(rng, -low, -high, true).sample(), 0.0);
-            Assert.assertEquals(-expected, ContinuousUniformSampler.of(rng, -high, -low, true).sample(), 0.0);
+            Assertions.assertEquals(expected, ContinuousUniformSampler.of(rng, low, high, true).sample());
+            Assertions.assertEquals(expected, ContinuousUniformSampler.of(rng, high, low, true).sample());
+            Assertions.assertEquals(-expected, ContinuousUniformSampler.of(rng, -low, -high, true).sample());
+            Assertions.assertEquals(-expected, ContinuousUniformSampler.of(rng, -high, -low, true).sample());
         }
 
         // Special case of sampling around zero.
         // Requires 2 doubles inside the range.
         final double y = ContinuousUniformSampler.of(rng, -x, 2 * x, true).sample();
-        Assert.assertTrue(-x < y && y < 2 * x);
+        Assertions.assertTrue(-x < y && y < 2 * x);
         final double z = ContinuousUniformSampler.of(rng, -2 * x, x, true).sample();
-        Assert.assertTrue(-2 * x < z && z < x);
+        Assertions.assertTrue(-2 * x < z && z < x);
     }
 
     /**

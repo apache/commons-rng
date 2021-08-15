@@ -16,13 +16,14 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.lang.reflect.Array;
+import java.util.function.Supplier;
 
 /**
  * Tests for the {@link NativeSeedType} seed conversions. This test
@@ -76,8 +77,8 @@ public class NativeSeedTypeParametricTest {
     public static Object[] getTypes() {
         // Check that there are enum values for all supported types.
         // This ensures the test is maintained to correspond to the enum.
-        Assert.assertEquals("Incorrect number of enum values for the supported native types",
-            SUPPORTED_NATIVE_TYPES.length, NativeSeedType.values().length);
+        Assertions.assertEquals(SUPPORTED_NATIVE_TYPES.length, NativeSeedType.values().length,
+            "Incorrect number of enum values for the supported native types");
 
         return SUPPORTED_NATIVE_TYPES;
     }
@@ -104,10 +105,10 @@ public class NativeSeedTypeParametricTest {
     public void testCreateSeed() {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
-        Assert.assertNotNull(seed);
-        Assert.assertEquals("Seed was not the correct class", type, seed.getClass());
+        Assertions.assertNotNull(seed);
+        Assertions.assertEquals(type, seed.getClass(), "Seed was not the correct class");
         if (type.isArray()) {
-            Assert.assertEquals("Seed was not created the correct length", size, Array.getLength(seed));
+            Assertions.assertEquals(size, Array.getLength(seed), "Seed was not created the correct length");
         }
     }
 
@@ -118,18 +119,18 @@ public class NativeSeedTypeParametricTest {
     public void testConvertSeedToBytes() {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
-        Assert.assertNotNull("Null seed", seed);
+        Assertions.assertNotNull(seed, "Null seed");
 
         final byte[] bytes = NativeSeedType.convertSeedToBytes(seed);
-        Assert.assertNotNull("Null byte[] seed", bytes);
+        Assertions.assertNotNull(bytes, "Null byte[] seed");
 
         final Object seed2 = nativeSeedType.convertSeed(bytes, size);
         if (type.isArray()) {
             // This handles nested primitive arrays
-            Assert.assertArrayEquals("byte[] seed was not converted back",
-                                     new Object[] {seed}, new Object[] {seed2});
+            Assertions.assertArrayEquals(new Object[] {seed}, new Object[] {seed2},
+                "byte[] seed was not converted back");
         } else {
-            Assert.assertEquals("byte[] seed was not converted back", seed, seed2);
+            Assertions.assertEquals(seed, seed2, "byte[] seed was not converted back");
         }
     }
 
@@ -142,9 +143,9 @@ public class NativeSeedTypeParametricTest {
         final int size = 3;
         for (final Object input : SUPPORTED_SEEDS) {
             final Object seed = nativeSeedType.convertSeed(input, size);
-            final String msg = input.getClass() + " input seed was not converted";
-            Assert.assertNotNull(msg, seed);
-            Assert.assertEquals(msg, type, seed.getClass());
+            final Supplier<String> msg = () -> input.getClass() + " input seed was not converted";
+            Assertions.assertNotNull(seed, msg);
+            Assertions.assertEquals(type, seed.getClass(), msg);
         }
     }
 
@@ -157,7 +158,7 @@ public class NativeSeedTypeParametricTest {
         for (final Object input : UNSUPPORTED_SEEDS) {
             try {
                 nativeSeedType.convertSeed(input, size);
-                Assert.fail(input.getClass() + " input seed was not rejected as unsupported");
+                Assertions.fail(input.getClass() + " input seed was not rejected as unsupported");
             } catch (UnsupportedOperationException ex) {
                 // This is expected
             }

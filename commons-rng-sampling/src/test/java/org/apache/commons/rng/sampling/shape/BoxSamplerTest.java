@@ -18,7 +18,7 @@ package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -55,7 +55,7 @@ public class BoxSamplerTest {
         }) {
             try {
                 BoxSampler.of(rng, c[0], c[1]);
-                Assert.fail(String.format("Did not detect dimension mismatch: %d,%d",
+                Assertions.fail(String.format("Did not detect dimension mismatch: %d,%d",
                     c[0].length, c[1].length));
             } catch (IllegalArgumentException ex) {
                 // Expected
@@ -73,7 +73,7 @@ public class BoxSamplerTest {
         final double[][] c = new double[][] {
             {0, 1, 2}, {-1, 2, 3}
         };
-        Assert.assertNotNull(BoxSampler.of(rng, c[0],  c[1]));
+        Assertions.assertNotNull(BoxSampler.of(rng, c[0],  c[1]));
         final double[] bad = {Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NaN};
         for (int i = 0; i < c.length; i++) {
             for (int j = 0; j < c[0].length; j++) {
@@ -82,7 +82,7 @@ public class BoxSamplerTest {
                     c[i][j] = d;
                     try {
                         BoxSampler.of(rng, c[0], c[1]);
-                        Assert.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
+                        Assertions.fail(String.format("Did not detect non-finite coordinate: %d,%d = %s", i, j, d));
                     } catch (IllegalArgumentException ex) {
                         // Expected
                     }
@@ -142,8 +142,8 @@ public class BoxSamplerTest {
             }
         }
         // Show the box is too big to compute vectors between points.
-        Assert.assertEquals("Expect vector b - a to be infinite in the x dimension",
-            Double.POSITIVE_INFINITY, c2[1][0] - c2[0][0], 0.0);
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, c2[1][0] - c2[0][0],
+            "Expect vector b - a to be infinite in the x dimension");
 
         final BoxSampler sampler1 = BoxSampler.of(
             RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1]);
@@ -156,7 +156,7 @@ public class BoxSamplerTest {
             for (int i = 0; i < a.length; i++) {
                 a[i] *= scale;
             }
-            Assert.assertArrayEquals(a, b, 0.0);
+            Assertions.assertArrayEquals(a, b);
         }
     }
 
@@ -227,11 +227,11 @@ public class BoxSamplerTest {
             final long[] observed = new long[expected.length];
             for (int i = 0; i < samples; i++) {
                 final double[] x = sampler.sample();
-                Assert.assertEquals(dimension, x.length);
+                Assertions.assertEquals(dimension, x.length);
                 int index = 0;
                 for (int j = 0; j < dimension; j++) {
                     final double c = (x[j] - a[j]) * scale[j];
-                    Assert.assertTrue("Not within the box", c >= 0.0 && c <= 1.0);
+                    Assertions.assertTrue(c >= 0.0 && c <= 1.0, "Not within the box");
                     // Get the bin for this dimension (assumes c != 1.0)
                     final int bin = (int) (c * bins);
                     // Add to the final bin index
@@ -241,7 +241,7 @@ public class BoxSamplerTest {
                 observed[index]++;
             }
             final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-            Assert.assertFalse("p-value too small: " + p, p < 0.001);
+            Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
         }
     }
 
@@ -330,11 +330,11 @@ public class BoxSamplerTest {
         for (int n = 0; n < 3; n++) {
             final double[] s1 = sampler1.sample();
             final double[] s2 = sampler2.sample();
-            Assert.assertEquals(s1.length, s2.length);
-            Assert.assertFalse("First sampler has used the vertices by reference",
-                Arrays.equals(s1, s2));
+            Assertions.assertEquals(s1.length, s2.length);
+            Assertions.assertFalse(Arrays.equals(s1, s2),
+                "First sampler has used the vertices by reference");
             for (int i = 0; i < dimension; i++) {
-                Assert.assertEquals(s1[i] + offset, s2[i], 1e-10);
+                Assertions.assertEquals(s1[i] + offset, s2[i], 1e-10);
             }
         }
     }

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -125,9 +125,9 @@ public class DiscreteSamplerParametricTest {
         // 3     0.0016
 
         if (numFailures > 3) { // Test will fail with 0.16% probability
-            Assert.fail(sampler + ": Too many failures for sample size = " + sampleSize +
-                        " (" + numFailures + " out of " + numTests + " tests failed, " +
-                        "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
+            Assertions.fail(sampler + ": Too many failures for sample size = " + sampleSize +
+                            " (" + numFailures + " out of " + numTests + " tests failed, " +
+                            "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
         }
     }
 }

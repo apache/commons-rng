@@ -21,7 +21,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -79,7 +79,7 @@ public class LevySamplerTest {
                     return 0L;
                 }
             }, location, scale);
-        Assert.assertEquals(Double.POSITIVE_INFINITY, s1.sample(), 0.0);
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, s1.sample());
 
         // Force the underlying ZigguratSampler.NormalizedGaussian to create a large
         // sample in the tail of the distribution.
@@ -117,6 +117,6 @@ public class LevySamplerTest {
         // So the sampler never achieves the lower bound of zero.
         // It requires an extreme deviate from the Gaussian.
         final double expected = 1 / (s * s);
-        Assert.assertEquals(expected, s2.sample(), 0.0);
+        Assertions.assertEquals(expected, s2.sample());
     }
 }

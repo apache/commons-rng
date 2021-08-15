@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
@@ -56,7 +56,7 @@ public class CompositeSamplersTest {
             for (int i = 0; i < n; i++) {
                 sum += sampler.sample();
             }
-            Assert.assertEquals(item.name(), mean, (double) sum / n, 1e-3);
+            Assertions.assertEquals(mean, (double) sum / n, 1e-3, item::name);
         }
     }
 
@@ -68,7 +68,7 @@ public class CompositeSamplersTest {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
-        Assert.assertEquals(0, builder.size());
+        Assertions.assertEquals(0, builder.size());
         builder.build(rng);
     }
 
@@ -92,15 +92,15 @@ public class CompositeSamplersTest {
                 .newSharedStateObjectSamplerBuilder();
         final RangeSampler sampler = new RangeSampler(45, 63, rng);
         // Zero weight is ignored
-        Assert.assertEquals(0, builder.size());
+        Assertions.assertEquals(0, builder.size());
         builder.add(sampler, 0.0);
-        Assert.assertEquals(0, builder.size());
+        Assertions.assertEquals(0, builder.size());
 
         final double[] bad = {-1, Double.NaN, Double.POSITIVE_INFINITY};
         for (final double weight : bad) {
             try {
                 builder.add(sampler, weight);
-                Assert.fail("Did not detect invalid weight: " + weight);
+                Assertions.fail("Did not detect invalid weight: " + weight);
             } catch (final IllegalArgumentException ex) {
                 // Expected
             }
@@ -117,9 +117,9 @@ public class CompositeSamplersTest {
                 .newSharedStateObjectSamplerBuilder();
         final RangeSampler sampler = new RangeSampler(45, 63, rng);
         builder.add(sampler, 1.0);
-        Assert.assertEquals(1, builder.size());
+        Assertions.assertEquals(1, builder.size());
         final SharedStateObjectSampler<Integer> composite = builder.build(rng);
-        Assert.assertSame(sampler, composite);
+        Assertions.assertSame(sampler, composite);
     }
 
     /**
@@ -180,7 +180,7 @@ public class CompositeSamplersTest {
         final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_256_PLUS.create(0x1f2e3d);
         assertObjectSamplerSamples(builder.build(rng).withUniformRandomProvider(rng1), min, max);
 
-        Assert.assertEquals("Factory should not be used to create the shared state sampler", 1, factoryCount.get());
+        Assertions.assertEquals(1, factoryCount.get(), "Factory should not be used to create the shared state sampler");
     }
 
     /**
@@ -219,7 +219,7 @@ public class CompositeSamplersTest {
         final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_256_PLUS.create(0x8c7b6a);
         assertObjectSamplerSamples(builder.build(rng).withUniformRandomProvider(rng1), min, max);
 
-        Assert.assertEquals("Factory should be used to create the shared state sampler", 2, factoryCount.get());
+        Assertions.assertEquals(2, factoryCount.get(), "Factory should be used to create the shared state sampler");
     }
 
     /**
@@ -254,7 +254,7 @@ public class CompositeSamplersTest {
         final double w4 = 0x1.0p1023;
         final double w2 = 0x1.0p1022;
         final double w1 = 0x1.0p1021;
-        Assert.assertEquals(Double.POSITIVE_INFINITY, w4 + w4 + w2 + w1, 0.0);
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, w4 + w4 + w2 + w1);
         builder.add(new RangeSampler(0, 40, rng), w4);
         builder.add(new RangeSampler(40, 80, rng), w4);
         builder.add(new RangeSampler(80, 100, rng), w2);
@@ -279,11 +279,11 @@ public class CompositeSamplersTest {
         final double w1 = Double.MIN_VALUE;
         final double sum = w4 + w4 + w2 + w1;
         // Cannot do a divide by multiplying by the reciprocal
-        Assert.assertEquals(Double.POSITIVE_INFINITY, 1.0 / sum, 0.0);
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, 1.0 / sum);
         // A divide works so the sampler should work
-        Assert.assertEquals(4.0 / 11, w4 / sum, 0.0);
-        Assert.assertEquals(2.0 / 11, w2 / sum, 0.0);
-        Assert.assertEquals(1.0 / 11, w1 / sum, 0.0);
+        Assertions.assertEquals(4.0 / 11, w4 / sum);
+        Assertions.assertEquals(2.0 / 11, w2 / sum);
+        Assertions.assertEquals(1.0 / 11, w1 / sum);
         builder.add(new RangeSampler(0, 40, rng), w4);
         builder.add(new RangeSampler(40, 80, rng), w4);
         builder.add(new RangeSampler(80, 100, rng), w2);
@@ -334,7 +334,7 @@ public class CompositeSamplersTest {
             builder.add(sampler, sampler.range);
         }
 
-        Assert.assertEquals("Failed to add the correct number of samplers", n, builder.size() - before);
+        Assertions.assertEquals(n, builder.size() - before, "Failed to add the correct number of samplers");
     }
 
     /**
@@ -354,7 +354,7 @@ public class CompositeSamplersTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) n / expected.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.001);
+        Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
     }
 
     /**
@@ -428,7 +428,7 @@ public class CompositeSamplersTest {
             builder.add(sampler, sampler.range);
         }
 
-        Assert.assertEquals("Failed to add the correct number of samplers", n, builder.size() - before);
+        Assertions.assertEquals(n, builder.size() - before, "Failed to add the correct number of samplers");
     }
 
     /**
@@ -448,7 +448,7 @@ public class CompositeSamplersTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) n / expected.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.001);
+        Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
     }
 
     /**
@@ -521,7 +521,7 @@ public class CompositeSamplersTest {
             builder.add(sampler, sampler.range());
         }
 
-        Assert.assertEquals("Failed to add the correct number of samplers", n, builder.size() - before);
+        Assertions.assertEquals(n, builder.size() - before, "Failed to add the correct number of samplers");
     }
 
     /**
@@ -545,7 +545,7 @@ public class CompositeSamplersTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) n / expected.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.001);
+        Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
     }
 
     /**
@@ -618,7 +618,7 @@ public class CompositeSamplersTest {
             builder.add(sampler, sampler.range);
         }
 
-        Assert.assertEquals("Failed to add the correct number of samplers", n, builder.size() - before);
+        Assertions.assertEquals(n, builder.size() - before, "Failed to add the correct number of samplers");
     }
 
     /**
@@ -641,7 +641,7 @@ public class CompositeSamplersTest {
         final double[] expected = new double[observed.length];
         Arrays.fill(expected, (double) n / expected.length);
         final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-        Assert.assertFalse("p-value too small: " + p, p < 0.001);
+        Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
     }
 
     /**

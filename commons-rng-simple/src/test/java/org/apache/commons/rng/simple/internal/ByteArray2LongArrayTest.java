@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -27,7 +27,7 @@ public class ByteArray2LongArrayTest {
     public void testSeedSizeIsMultipleOfLongSize() {
         final byte[] seed = new byte[128];
         final long[] out = new ByteArray2LongArray().convert(seed);
-        Assert.assertEquals(16, out.length);
+        Assertions.assertEquals(16, out.length);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class ByteArray2LongArrayTest {
         for (int i = 1; i < 8; i++) {
             final byte[] seed = new byte[len + i];
             final long[] out = conv.convert(seed);
-            Assert.assertEquals(3, out.length);
+            Assertions.assertEquals(3, out.length);
         }
     }
 }

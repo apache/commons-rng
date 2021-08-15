@@ -16,8 +16,8 @@
  */
 package org.apache.commons.rng.core;
 
-import org.junit.Assert;
-import org.junit.Assume;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -90,7 +90,7 @@ public class JumpableProvidersParametricTest {
      * @return the jump function
      */
     private TestJumpFunction getLongJumpFunction() {
-        Assume.assumeTrue("No long jump function", generator instanceof LongJumpableUniformRandomProvider);
+        Assumptions.assumeTrue(generator instanceof LongJumpableUniformRandomProvider, "No long jump function");
 
         final LongJumpableUniformRandomProvider rng = (LongJumpableUniformRandomProvider) generator;
         return new TestJumpFunction() {
@@ -124,8 +124,8 @@ public class JumpableProvidersParametricTest {
      */
     private void assertJumpReturnsACopy(TestJumpFunction jumpFunction) {
         final UniformRandomProvider copy = jumpFunction.jump();
-        Assert.assertNotSame("The copy instance should be a different object", generator, copy);
-        Assert.assertEquals("The copy instance should be the same class", generator.getClass(), copy.getClass());
+        Assertions.assertNotSame(generator, copy, "The copy instance should be a different object");
+        Assertions.assertEquals(generator.getClass(), copy.getClass(), "The copy instance should be the same class");
     }
 
     /**
@@ -165,7 +165,7 @@ public class JumpableProvidersParametricTest {
      * @param jumpFunction Jump function to test.
      */
     private void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction) {
-        Assume.assumeTrue("Not a restorable RNG", generator instanceof RestorableUniformRandomProvider);
+        Assumptions.assumeTrue(generator instanceof RestorableUniformRandomProvider, "Not a restorable RNG");
 
         for (int repeats = 0; repeats < 2; repeats++) {
             // Exercise the generator.
@@ -176,15 +176,15 @@ public class JumpableProvidersParametricTest {
             generator.nextBoolean();
 
             final RandomProviderState preJumpState = ((RestorableUniformRandomProvider) generator).saveState();
-            Assume.assumeTrue("Not a recognised state", preJumpState instanceof RandomProviderDefaultState);
+            Assumptions.assumeTrue(preJumpState instanceof RandomProviderDefaultState, "Not a recognised state");
 
             final UniformRandomProvider copy = jumpFunction.jump();
 
             final RandomProviderState copyState = ((RestorableUniformRandomProvider) copy).saveState();
             final RandomProviderDefaultState expected = (RandomProviderDefaultState) preJumpState;
             final RandomProviderDefaultState actual = (RandomProviderDefaultState) copyState;
-            Assert.assertArrayEquals("The copy instance state should match the state of the original",
-                expected.getState(), actual.getState());
+            Assertions.assertArrayEquals(expected.getState(), actual.getState(),
+                "The copy instance state should match the state of the original");
         }
     }
 
@@ -240,12 +240,13 @@ public class JumpableProvidersParametricTest {
             final RandomProviderState postJumpState = ((RestorableUniformRandomProvider) generator).saveState();
             final byte[] actual = ((RandomProviderDefaultState) postJumpState).getState();
 
-            Assume.assumeTrue("Implementation has removed default state", actual.length >= stateSize);
+            Assumptions.assumeTrue(actual.length >= stateSize, "Implementation has removed default state");
 
             // The implementation requires that any sub-class state is prepended to the
             // state thus the default state is at the end.
             final byte[] defaultState = Arrays.copyOfRange(actual, actual.length - stateSize, actual.length);
-            Assert.assertArrayEquals("The jump should reset the default state to zero", expected, defaultState);
+            Assertions.assertArrayEquals(expected, defaultState,
+                "The jump should reset the default state to zero");
         }
     }
 

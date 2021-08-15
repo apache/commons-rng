@@ -22,7 +22,7 @@ import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -77,7 +77,7 @@ public class GuideTableDiscreteSamplerTest {
     @Test
     public void testToString() {
         final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5}, 1.0);
-        Assert.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
+        Assertions.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
     }
 
     /**
@@ -222,7 +222,7 @@ public class GuideTableDiscreteSamplerTest {
         final long[] observed = new long[mapSize];
         for (int i = 0; i < probabilies.length; i++) {
             if (probabilies[i] == 0) {
-                Assert.assertEquals("No samples expected from zero probability", 0, samples[i]);
+                Assertions.assertEquals(0, samples[i], "No samples expected from zero probability");
             } else {
                 // This can be added for the Chi-square test
                 --mapSize;
@@ -233,7 +233,7 @@ public class GuideTableDiscreteSamplerTest {
 
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
-        Assert.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
+        Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
     /**

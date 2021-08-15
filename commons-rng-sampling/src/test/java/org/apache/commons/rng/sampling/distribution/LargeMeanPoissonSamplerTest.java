@@ -22,7 +22,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.LargeMeanPoissonSamplerState;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -135,8 +135,8 @@ public class LargeMeanPoissonSamplerTest {
         final LargeMeanPoissonSamplerState state1 = s1.getState();
         final LargeMeanPoissonSampler s2 = new LargeMeanPoissonSampler(rng2, state1, lambdaFractional);
         final LargeMeanPoissonSamplerState state2 = s2.getState();
-        Assert.assertEquals("State lambdas are not equal", state1.getLambda(), state2.getLambda());
-        Assert.assertNotSame("States are the same object", state1, state2);
+        Assertions.assertEquals(state1.getLambda(), state2.getLambda(), "State lambdas are not equal");
+        Assertions.assertNotSame(state1, state2, "States are the same object");
         RandomAssert.assertProduceSameSequence(s1, s2);
     }
 

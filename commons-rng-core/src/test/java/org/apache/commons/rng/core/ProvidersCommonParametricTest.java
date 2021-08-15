@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -121,7 +121,7 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        Assert.assertTrue(isUniformNextBytes(buffer, 0, size, nextMethod));
+        Assertions.assertTrue(isUniformNextBytes(buffer, 0, size, nextMethod));
     }
 
     @Test
@@ -140,11 +140,11 @@ public class ProvidersCommonParametricTest {
         };
 
         // Test should pass for the part of the buffer where values are put.
-        Assert.assertTrue(isUniformNextBytes(buffer, offset, offset + size, nextMethod));
+        Assertions.assertTrue(isUniformNextBytes(buffer, offset, offset + size, nextMethod));
 
         // Test must fail for the parts of the buffer where no values are put.
-        Assert.assertFalse(isUniformNextBytes(buffer, 0, offset, nextMethod));
-        Assert.assertFalse(isUniformNextBytes(buffer, offset + size, buffer.length, nextMethod));
+        Assertions.assertFalse(isUniformNextBytes(buffer, 0, offset, nextMethod));
+        Assertions.assertFalse(isUniformNextBytes(buffer, offset + size, buffer.length, nextMethod));
     }
 
     @Test
@@ -234,15 +234,15 @@ public class ProvidersCommonParametricTest {
         final List<Number> listOrig = makeList(n);
         // Discard a few more.
         final List<Number> listDiscard = makeList(n);
-        Assert.assertNotEquals(0, listDiscard.size());
-        Assert.assertNotEquals(listOrig, listDiscard);
+        Assertions.assertNotEquals(0, listDiscard.size());
+        Assertions.assertNotEquals(listOrig, listDiscard);
         // Reset.
         generator.restoreState(state);
         // Replay.
         final List<Number> listReplay = makeList(n);
-        Assert.assertNotSame(listOrig, listReplay);
+        Assertions.assertNotSame(listOrig, listReplay);
         // Check that the restored state is the same as the original.
-        Assert.assertEquals(listOrig, listReplay);
+        Assertions.assertEquals(listOrig, listReplay);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -376,10 +376,9 @@ public class ProvidersCommonParametricTest {
 
         final double actual = Math.abs(walk);
         final double max = Math.sqrt(sampleSize) * 2.576;
-        Assert.assertTrue(generator + ": Walked too far astray: " + actual +
-                          " > " + max +
-                          " (test will fail randomly about 1 in 100 times)",
-                          actual < max);
+        Assertions.assertTrue(actual < max,
+            () -> generator + ": Walked too far astray: " + actual + " > " + max +
+            " (test will fail randomly about 1 in 100 times)");
     }
 
     /**
@@ -516,7 +515,7 @@ public class ProvidersCommonParametricTest {
                 Arrays.fill(observed, 0);
                 for (int j = 0; j < sampleSize; j++) {
                     final long value = nextMethod.call().longValue();
-                    Assert.assertTrue("Range", value >= 0 && value < n);
+                    Assertions.assertTrue(value >= 0 && value < n, "Range");
 
                     for (int k = 0; k < numBins; k++) {
                         if (value < binUpperBounds[k]) {
@@ -552,8 +551,8 @@ public class ProvidersCommonParametricTest {
         // 12    0.00190
 
         if (numFailures > 11) { // Test will fail with 0.5% probability
-            Assert.fail(generator + ": Too many failures for n = " + n +
-                        " (" + numFailures + " out of " + numTests + " tests failed)");
+            Assertions.fail(generator + ": Too many failures for n = " + n +
+                            " (" + numFailures + " out of " + numTests + " tests failed)");
         }
     }
 
@@ -586,8 +585,8 @@ public class ProvidersCommonParametricTest {
         System.arraycopy(b1, b1.length - b3.length, b3, 0, b3.length);
 
         // Sequence of calls must be the same.
-        Assert.assertArrayEquals("chunkSize=" + chunkSize + " numChunks=" + numChunks,
-                                 b2, b3);
+        Assertions.assertArrayEquals(b2, b3,
+            () -> "chunkSize=" + chunkSize + " numChunks=" + numChunks);
     }
 
     /**

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -27,13 +27,13 @@ public class NoOpConverterTest {
     public void testNoOpIntegerCoversion() {
         final NoOpConverter<Integer> converter = new NoOpConverter<Integer>();
         final Integer in = 123;
-        Assert.assertSame(in, converter.convert(in));
+        Assertions.assertSame(in, converter.convert(in));
     }
 
     @Test
     public void testNoOpLongArrayCoversion() {
         final NoOpConverter<long[]> converter = new NoOpConverter<long[]>();
         final long[] in = {123L, 456L, Long.MAX_VALUE};
-        Assert.assertSame(in, converter.convert(in));
+        Assertions.assertSame(in, converter.convert(in));
     }
 }

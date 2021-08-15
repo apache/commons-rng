@@ -21,7 +21,7 @@ import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source32.RandomIntSource;
 import org.apache.commons.rng.core.source64.RandomLongSource;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -117,7 +117,7 @@ public class RngDataOutputTest {
         try {
             sink.writeInt(rng.nextInt());
         } catch (IOException e) {
-            Assert.fail();
+            Assertions.fail();
         }
     }
 
@@ -125,7 +125,7 @@ public class RngDataOutputTest {
         try {
             sink.writeLong(rng.nextLong());
         } catch (IOException e) {
-            Assert.fail();
+            Assertions.fail();
         }
     }
 
@@ -157,7 +157,7 @@ public class RngDataOutputTest {
         for (int repeats = 1; repeats <= 2; repeats++) {
             byte[] expected = createBytes(rng1, size, repeats, rngConverter, pipe);
             byte[] actual = writeRngOutput(rng2, size, repeats, byteOrder, factory);
-            Assert.assertArrayEquals(expected, actual);
+            Assertions.assertArrayEquals(expected, actual);
         }
     }
 

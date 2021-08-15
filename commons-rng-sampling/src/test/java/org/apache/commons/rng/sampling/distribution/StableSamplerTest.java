@@ -16,8 +16,9 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
+import java.util.function.Supplier;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
@@ -88,12 +89,12 @@ public class StableSamplerTest {
         // The number 1 - alpha must not be 1.
         // This is valid
         StableSampler s = createStableSampler(SMALLEST_ALPHA, VALID_BETA, VALID_GAMMA, VALID_DELTA);
-        Assert.assertNotNull(s);
+        Assertions.assertNotNull(s);
 
         // Smaller than this is still above zero but 1 - alpha == 1
         final double alphaTooSmall = SMALLEST_ALPHA / 2;
-        Assert.assertNotEquals("Expected alpha to be positive", 0.0, alphaTooSmall, 0.0);
-        Assert.assertEquals("Expected rounding to 1", 1.0, 1 - alphaTooSmall, 0.0);
+        Assertions.assertNotEquals(0.0, alphaTooSmall, "Expected alpha to be positive");
+        Assertions.assertEquals(1.0, 1 - alphaTooSmall, "Expected rounding to 1");
 
         // Because alpha is effectively zero this will throw
         createStableSampler(alphaTooSmall, VALID_BETA, VALID_GAMMA, VALID_DELTA);
@@ -184,8 +185,8 @@ public class StableSamplerTest {
 
         // alpha -> 2: tau -> 0
         // alpha -> 0: tau -> 0
-        Assert.assertEquals(0.0, CMSStableSampler.getTau(2, beta), 0.0);
-        Assert.assertEquals(0.0, CMSStableSampler.getTau(0, beta), 0.0);
+        Assertions.assertEquals(0.0, CMSStableSampler.getTau(2, beta));
+        Assertions.assertEquals(0.0, CMSStableSampler.getTau(0, beta));
 
         // Full range over 0 to 2.
         for (int i = 0; i <= 512; i++) {
@@ -193,46 +194,46 @@ public class StableSamplerTest {
             final double alpha = (double) i / 256;
             final double tau = CMSStableSampler.getTau(alpha, beta);
             final double expected = getTauOriginal(alpha, beta);
-            Assert.assertEquals(expected, tau, 1e-15);
+            Assertions.assertEquals(expected, tau, 1e-15);
 
             // Symmetric
-            Assert.assertEquals(tau, CMSStableSampler.getTau(2 - alpha, beta), 0.0);
+            Assertions.assertEquals(tau, CMSStableSampler.getTau(2 - alpha, beta));
         }
 
         // alpha -> 1: tau -> beta / (pi / 2) = 0.6366
         final double limit = beta / PI_2;
-        Assert.assertEquals(limit, CMSStableSampler.getTau(1, beta), 0.0);
+        Assertions.assertEquals(limit, CMSStableSampler.getTau(1, beta));
         for (double alpha : new double[] {1.01, 1 + 1e-6, 1, 1 - 1e-6, 0.99}) {
             final double tau = CMSStableSampler.getTau(alpha, beta);
             final double expected = getTauOriginal(alpha, beta);
-            Assert.assertEquals(expected, tau, 1e-15);
+            Assertions.assertEquals(expected, tau, 1e-15);
             // Approach the limit
-            Assert.assertEquals(limit, tau, Math.abs(1 - alpha) + 1e-15);
+            Assertions.assertEquals(limit, tau, Math.abs(1 - alpha) + 1e-15);
         }
 
         // It can be zero if beta is zero or close to zero when alpha != 1.
         // This requires we check tau==0 instead of beta==0 to switch to
         // a beta = 0 sampler.
-        Assert.assertEquals(0.0, CMSStableSampler.getTau(1.3, 0.0), 0.0);
-        Assert.assertEquals(0.0, CMSStableSampler.getTau(1.5, Double.MIN_VALUE), 0.0);
-        Assert.assertNotEquals(0.0, CMSStableSampler.getTau(1.0, Double.MIN_VALUE), 0.0);
+        Assertions.assertEquals(0.0, CMSStableSampler.getTau(1.3, 0.0));
+        Assertions.assertEquals(0.0, CMSStableSampler.getTau(1.5, Double.MIN_VALUE));
+        Assertions.assertNotEquals(0.0, CMSStableSampler.getTau(1.0, Double.MIN_VALUE));
 
         // The sign of beta determines the sign of tau.
-        Assert.assertEquals(0.5, CMSStableSampler.getTau(1.5, beta), 0.0);
-        Assert.assertEquals(0.5, CMSStableSampler.getTau(0.5, beta), 0.0);
-        Assert.assertEquals(-0.5, CMSStableSampler.getTau(1.5, -beta), 0.0);
-        Assert.assertEquals(-0.5, CMSStableSampler.getTau(0.5, -beta), 0.0);
+        Assertions.assertEquals(0.5, CMSStableSampler.getTau(1.5, beta));
+        Assertions.assertEquals(0.5, CMSStableSampler.getTau(0.5, beta));
+        Assertions.assertEquals(-0.5, CMSStableSampler.getTau(1.5, -beta));
+        Assertions.assertEquals(-0.5, CMSStableSampler.getTau(0.5, -beta));
 
         // Check monototic at the transition point to switch to a different computation.
         final double tau1 = CMSStableSampler.getTau(Math.nextDown(1.5), 1);
         final double tau2 = CMSStableSampler.getTau(1.5, 1);
         final double tau3 = CMSStableSampler.getTau(Math.nextUp(1.5), 1);
-        Assert.assertTrue(tau1 > tau2);
-        Assert.assertTrue(tau2 > tau3);
+        Assertions.assertTrue(tau1 > tau2);
+        Assertions.assertTrue(tau2 > tau3);
         // Test symmetry at the transition
-        Assert.assertEquals(tau1, CMSStableSampler.getTau(2 - Math.nextDown(1.5), 1), 0.0);
-        Assert.assertEquals(tau2, CMSStableSampler.getTau(0.5, 1), 0.0);
-        Assert.assertEquals(tau3, CMSStableSampler.getTau(2 - Math.nextUp(1.5), 1), 0.0);
+        Assertions.assertEquals(tau1, CMSStableSampler.getTau(2 - Math.nextDown(1.5), 1));
+        Assertions.assertEquals(tau2, CMSStableSampler.getTau(0.5, 1));
+        Assertions.assertEquals(tau3, CMSStableSampler.getTau(2 - Math.nextUp(1.5), 1));
     }
 
     /**
@@ -278,27 +279,27 @@ public class StableSamplerTest {
         // The extreme limit of the angle phiby2. This is ignored by the sampler
         // as it can result in cancellation of terms and invalid results.
         final double p0 = getU(Long.MIN_VALUE);
-        Assert.assertEquals(-PI_4, p0, 0.0);
+        Assertions.assertEquals(-PI_4, p0);
 
         // These are the limits to generate (-pi/4, pi/4)
         final double p1 = getU(Long.MIN_VALUE + (1 << 10));
         final double p2 = getU(Long.MAX_VALUE);
-        Assert.assertNotEquals(-PI_4, p1, 0.0);
-        Assert.assertNotEquals(PI_4, p2, 0.0);
-        Assert.assertEquals(-PI_4 + PI_4 * DU, p1, 0.0);
-        Assert.assertEquals(PI_4 - PI_4 * DU, p2, 0.0);
+        Assertions.assertNotEquals(-PI_4, p1);
+        Assertions.assertNotEquals(PI_4, p2);
+        Assertions.assertEquals(-PI_4 + PI_4 * DU, p1);
+        Assertions.assertEquals(PI_4 - PI_4 * DU, p2);
 
         for (double phiby2 : new double[] {p1, p2}) {
             // phiby2 in (-pi/4, pi/4)
             // a in (-1, 1)
             final double a = phiby2 * SpecialMath.tan2(phiby2);
-            Assert.assertEquals(Math.copySign(Math.nextDown(1.0), phiby2), a, 0.0);
+            Assertions.assertEquals(Math.copySign(Math.nextDown(1.0), phiby2), a);
             final double da = a * a;
             final double a2 = 1 - da;
             // The number is close to but not equal to zero
-            Assert.assertNotEquals(0.0, a2, 0.0);
+            Assertions.assertNotEquals(0.0, a2);
             // The minimum value of a2 is 2.220E-16 = 2^-52
-            Assert.assertEquals(0x1.0p-52, a2, 0.0);
+            Assertions.assertEquals(0x1.0p-52, a2);
         }
     }
 
@@ -319,9 +320,9 @@ public class StableSamplerTest {
         final long x00 = Long.MIN_VALUE;
         final long x0 = Long.MIN_VALUE + (1 << 10);
         final long x1 = Long.MAX_VALUE;
-        Assert.assertEquals(-PI_4, getU(x00), 0.0);
-        Assert.assertEquals(-PI_4 + DU * PI_4, getU(x0), 0.0);
-        Assert.assertEquals(PI_4 - DU * PI_4, getU(x1), 0.0);
+        Assertions.assertEquals(-PI_4, getU(x00));
+        Assertions.assertEquals(-PI_4 + DU * PI_4, getU(x0));
+        Assertions.assertEquals(PI_4 - DU * PI_4, getU(x1));
         // General case numerator:
         // b2 + 2 * phiby2 * bb * tau
         // To generate 0 numerator requires:
@@ -355,41 +356,41 @@ public class StableSamplerTest {
         // This is not true due to floating-point
         // error but the following cases are known to exhibit the result.
 
-        Assert.assertEquals(0.0, computeNumerator(0.859375, 1, x00), 0.0);
+        Assertions.assertEquals(0.0, computeNumerator(0.859375, 1, x00));
         // Even worse to have negative as the log(-ve) = nan
-        Assert.assertTrue(0.0 > computeNumerator(0.9375, 1, x00));
-        Assert.assertTrue(0.0 > computeNumerator(1.90625, 1, x00));
+        Assertions.assertTrue(0.0 > computeNumerator(0.9375, 1, x00));
+        Assertions.assertTrue(0.0 > computeNumerator(1.90625, 1, x00));
 
         // As phi reduces in magnitude the equality fails.
         // The numerator=0 can often be corrected
         // with the next random variate from the range limit.
-        Assert.assertTrue(0.0 < computeNumerator(0.859375, 1, x0));
-        Assert.assertTrue(0.0 < computeNumerator(0.9375, 1, x0));
-        Assert.assertTrue(0.0 < computeNumerator(1.90625, 1, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(0.859375, 1, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(0.9375, 1, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(1.90625, 1, x0));
 
         // WARNING:
         // Even when u is not at the limit floating point error can still create
         // a bad numerator. This is rare but shows we must still detect this edge
         // case.
-        Assert.assertTrue(0.0 > computeNumerator(0.828125, 1, x0));
-        Assert.assertTrue(0.0 > computeNumerator(1.291015625, -1, x1));
+        Assertions.assertTrue(0.0 > computeNumerator(0.828125, 1, x0));
+        Assertions.assertTrue(0.0 > computeNumerator(1.291015625, -1, x1));
 
         // beta=0 case the numerator reduces to b2:
         // b2 = 1 - tan^2((1-alpha) * phi/2)
         // requires tan(x)=1; x=pi/4.
         // Note: tan(x) = x * SpecialMath.tan2(x) returns +/-1 for u = +/-pi/4.
-        Assert.assertEquals(-1, SpecialMath.tan2(getU(x00)) * getU(x00), 0.0);
+        Assertions.assertEquals(-1, SpecialMath.tan2(getU(x00)) * getU(x00));
         // Using the next value in the range this is not an issue.
         // The beta=0 sampler does not have to check for z=0.
-        Assert.assertTrue(-1 < SpecialMath.tan2(getU(x0)) * getU(x0));
-        Assert.assertTrue(1 > SpecialMath.tan2(getU(x1)) * getU(x1));
+        Assertions.assertTrue(-1 < SpecialMath.tan2(getU(x0)) * getU(x0));
+        Assertions.assertTrue(1 > SpecialMath.tan2(getU(x1)) * getU(x1));
         // Use alpha=2 so 1-alpha (eps) is at the limit
         final double beta = 0;
-        Assert.assertEquals(0.0, computeNumerator(2, beta, x00), 0.0);
-        Assert.assertTrue(0.0 < computeNumerator(2, beta, x0));
-        Assert.assertTrue(0.0 < computeNumerator(2, beta, x1));
-        Assert.assertTrue(0.0 < computeNumerator(Math.nextDown(2), beta, x0));
-        Assert.assertTrue(0.0 < computeNumerator(Math.nextDown(2), beta, x1));
+        Assertions.assertEquals(0.0, computeNumerator(2, beta, x00));
+        Assertions.assertTrue(0.0 < computeNumerator(2, beta, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(2, beta, x1));
+        Assertions.assertTrue(0.0 < computeNumerator(Math.nextDown(2), beta, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(Math.nextDown(2), beta, x1));
 
         // alpha=1 case the numerator reduces to:
         // 1 + 2 * phi/2 * tau
@@ -402,14 +403,14 @@ public class StableSamplerTest {
         // beta = -1 => phiby2 = pi/4
         // The alpha=1 sampler does not have to check for z=0 if phiby2 excludes -pi/4.
         final double alpha = 1;
-        Assert.assertEquals(0.0, computeNumerator(alpha, 1, x00), 0.0);
+        Assertions.assertEquals(0.0, computeNumerator(alpha, 1, x00));
         // Next value of u computes above zero
-        Assert.assertTrue(0.0 < computeNumerator(alpha, 1, x0));
-        Assert.assertTrue(0.0 < computeNumerator(alpha, -1, x1));
+        Assertions.assertTrue(0.0 < computeNumerator(alpha, 1, x0));
+        Assertions.assertTrue(0.0 < computeNumerator(alpha, -1, x1));
         // beta < 1 => u < 0
         // beta > -1 => u > 1
         // z=0 not possible with any other beta
-        Assert.assertTrue(0.0 < computeNumerator(alpha, Math.nextUp(-1), x00));
+        Assertions.assertTrue(0.0 < computeNumerator(alpha, Math.nextUp(-1), x00));
     }
 
     /**
@@ -449,7 +450,7 @@ public class StableSamplerTest {
             // Finite z
             for (final double z : zs) {
                 // The result may be infinite, but not NaN
-                Assert.assertNotEquals(Double.NaN, computeD(alpha, z), 0.0);
+                Assertions.assertNotEquals(Double.NaN, computeD(alpha, z));
             }
 
             // May be invalid with z=0 or z=inf as some combinations multiply the
@@ -459,28 +460,28 @@ public class StableSamplerTest {
             final double d0 = computeD(alpha, 0);
             if (alpha < 1) {
                 // d2(-inf) * -inf = 0 * -inf = NaN
-                Assert.assertEquals(Double.NaN, d0, 0.0);
+                Assertions.assertEquals(Double.NaN, d0);
             } else if (alpha == 1) {
                 // d2(0 * -inf) -> NaN
-                Assert.assertEquals(Double.NaN, d0, 0.0);
+                Assertions.assertEquals(Double.NaN, d0);
             } else {
                 // alpha > 1
                 // d2(inf) * -inf = -inf
-                Assert.assertEquals(Double.NEGATIVE_INFINITY, d0, 0.0);
+                Assertions.assertEquals(Double.NEGATIVE_INFINITY, d0);
             }
 
             // When z=inf, log(z) = inf, d = d2(sign(1-alpha) * inf) * inf
             final double di = computeD(alpha, Double.POSITIVE_INFINITY);
             if (alpha < 1) {
                 // d2(inf) * inf = inf
-                Assert.assertEquals(Double.POSITIVE_INFINITY, di, 0.0);
+                Assertions.assertEquals(Double.POSITIVE_INFINITY, di);
             } else if (alpha == 1) {
                 // d2(0 * inf) -> NaN
-                Assert.assertEquals(Double.NaN, di, 0.0);
+                Assertions.assertEquals(Double.NaN, di);
             } else {
                 // alpha > 1
                 // d2(-inf) * inf = 0 * inf = NaN
-                Assert.assertEquals(Double.NaN, di, 0.0);
+                Assertions.assertEquals(Double.NaN, di);
             }
         }
     }
@@ -517,7 +518,7 @@ public class StableSamplerTest {
                 double beta = Math.tan(-alpha * phi) / Math.tan(alpha * PI_2);
                 double zeta = -beta * Math.tan(alpha * PI_2);
                 double atanZeta = Math.atan(-zeta);
-                Assert.assertEquals(0.0, alpha * phi + atanZeta, 0.0);
+                Assertions.assertEquals(0.0, alpha * phi + atanZeta);
             }
         }
     }
@@ -532,9 +533,9 @@ public class StableSamplerTest {
         // This is the extreme of cos(x) that should be used
         final double cosPi2 = Math.cos(PI_2);
         // The function is symmetric
-        Assert.assertEquals(cosPi2, Math.cos(-PI_2), 0.0);
+        Assertions.assertEquals(cosPi2, Math.cos(-PI_2));
         // As pi is an approximation then the cos value is not exactly 0
-        Assert.assertTrue(cosPi2 > 0);
+        Assertions.assertTrue(cosPi2 > 0);
 
         final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_SS.create();
 
@@ -625,20 +626,20 @@ public class StableSamplerTest {
         // Test it is in the interval (-pi/2, pi/2)
         double phi = getU(x) * 2;
         double value = eps * phi + alphaPi2;
-        Assert.assertTrue(value <= PI_2);
-        Assert.assertTrue(value >= -PI_2);
+        Assertions.assertTrue(value <= PI_2);
+        Assertions.assertTrue(value >= -PI_2);
         value = eps * phi - alphaPi2;
-        Assert.assertTrue(value <= PI_2);
-        Assert.assertTrue(value >= -PI_2);
+        Assertions.assertTrue(value <= PI_2);
+        Assertions.assertTrue(value >= -PI_2);
 
         // Mirror the deviate
         phi = -phi;
         value = eps * phi + alphaPi2;
-        Assert.assertTrue(value <= PI_2);
-        Assert.assertTrue(value >= -PI_2);
+        Assertions.assertTrue(value <= PI_2);
+        Assertions.assertTrue(value >= -PI_2);
         value = eps * phi - alphaPi2;
-        Assert.assertTrue(value <= PI_2);
-        Assert.assertTrue(value >= -PI_2);
+        Assertions.assertTrue(value <= PI_2);
+        Assertions.assertTrue(value >= -PI_2);
     }
     /**
      * Assumption test:
@@ -651,9 +652,9 @@ public class StableSamplerTest {
         // getU creates in the domain (-pi/4, pi/4) so double the angle.
         for (final double phi : new double[] {getU(-1) * 2, getU(1 << 10) * 2}) {
             final double x = Math.sin(SMALLEST_ALPHA * phi);
-            Assert.assertNotEquals(0.0, x, 0.0);
+            Assertions.assertNotEquals(0.0, x);
             // Value is actually:
-            Assert.assertEquals(1.9361559566769725E-32, Math.abs(x), 0.0);
+            Assertions.assertEquals(1.9361559566769725E-32, Math.abs(x));
         }
     }
 
@@ -666,15 +667,15 @@ public class StableSamplerTest {
     @Test
     public void testExpM1() {
         // Test monotonic at the switch point
-        Assert.assertEquals(d2(0.5), d2b(0.5), 0.0);
+        Assertions.assertEquals(d2(0.5), d2b(0.5));
         // When positive x -> 0 the value smaller bigger.
-        Assert.assertTrue(d2(Math.nextDown(0.5)) <= d2b(0.5));
-        Assert.assertEquals(d2(-0.5), d2b(-0.5), 0.0);
+        Assertions.assertTrue(d2(Math.nextDown(0.5)) <= d2b(0.5));
+        Assertions.assertEquals(d2(-0.5), d2b(-0.5));
         // When negative x -> 0 the value gets bigger.
-        Assert.assertTrue(d2(-Math.nextDown(0.5)) >= d2b(-0.5));
+        Assertions.assertTrue(d2(-Math.nextDown(0.5)) >= d2b(-0.5));
         // Potentially the next power of 2 could be used based on ULP errors but
         // the switch is not monotonic.
-        Assert.assertFalse(d2(Math.nextDown(0.25)) <= d2b(0.25));
+        Assertions.assertFalse(d2(Math.nextDown(0.25)) <= d2b(0.25));
     }
 
     /**
@@ -696,7 +697,7 @@ public class StableSamplerTest {
         // Note:
         // The point at which there *should* be no difference between the two is when
         // exp(x) - 1 == exp(x). This will occur at exp(x)=2^54, x = ln(2^54) = 37.43.
-        Assert.assertEquals(((double) (1L << 54)) - 1, (double) (1L << 54), 0.0);
+        Assertions.assertEquals(((double) (1L << 54)) - 1, (double) (1L << 54));
         // However since expm1 and exp are only within 1 ULP of the exact result differences
         // still occur above this threshold.
         // 2^6 = 64; 2^-4 = 0.0625
@@ -704,8 +705,8 @@ public class StableSamplerTest {
             // The exponent must be unsigned so + 1023 to the signed exponent
             final long exp = (signedExp + 1023L) << 52;
             // Test we are creating the correct numbers
-            Assert.assertEquals(signedExp, Math.getExponent(Double.longBitsToDouble(exp)));
-            Assert.assertEquals(signedExp, Math.getExponent(Double.longBitsToDouble((-1 & mask) | exp)));
+            Assertions.assertEquals(signedExp, Math.getExponent(Double.longBitsToDouble(exp)));
+            Assertions.assertEquals(signedExp, Math.getExponent(Double.longBitsToDouble((-1 & mask) | exp)));
             // Get the average and max ulp
             long sum1 = 0;
             long sum2 = 0;
@@ -806,23 +807,23 @@ public class StableSamplerTest {
     @Test
     public void testD2() {
         for (final double x : new double[] {Double.MAX_VALUE, Math.log(Double.MAX_VALUE), 10, 5, 1, 0.5, 0.1, 0.05, 0.01}) {
-            Assert.assertEquals(Math.expm1(x) / x, SpecialMath.d2(x), 1e-15);
-            Assert.assertEquals(Math.expm1(-x) / -x, SpecialMath.d2(-x), 1e-15);
+            Assertions.assertEquals(Math.expm1(x) / x, SpecialMath.d2(x), 1e-15);
+            Assertions.assertEquals(Math.expm1(-x) / -x, SpecialMath.d2(-x), 1e-15);
         }
 
         // Negative infinity computes without correction
-        Assert.assertEquals(0.0, Math.expm1(Double.NEGATIVE_INFINITY) / Double.NEGATIVE_INFINITY, 0.0);
-        Assert.assertEquals(0.0, SpecialMath.d2(Double.NEGATIVE_INFINITY), 0.0);
+        Assertions.assertEquals(0.0, Math.expm1(Double.NEGATIVE_INFINITY) / Double.NEGATIVE_INFINITY);
+        Assertions.assertEquals(0.0, SpecialMath.d2(Double.NEGATIVE_INFINITY));
 
         // NaN is returned (i.e. no correction)
-        Assert.assertEquals(Double.NaN, SpecialMath.d2(Double.NaN), 0.0);
+        Assertions.assertEquals(Double.NaN, SpecialMath.d2(Double.NaN));
 
         // Edge cases for z=0 or z==inf require correction
-        Assert.assertEquals(Double.NaN, Math.expm1(0) / 0.0, 0.0);
-        Assert.assertEquals(Double.NaN, Math.expm1(Double.POSITIVE_INFINITY) / Double.POSITIVE_INFINITY, 0.0);
+        Assertions.assertEquals(Double.NaN, Math.expm1(0) / 0.0);
+        Assertions.assertEquals(Double.NaN, Math.expm1(Double.POSITIVE_INFINITY) / Double.POSITIVE_INFINITY);
         // Corrected in the special function
-        Assert.assertEquals(1.0, SpecialMath.d2(0.0), 0.0);
-        Assert.assertEquals(Double.POSITIVE_INFINITY, SpecialMath.d2(Double.POSITIVE_INFINITY), 0.0);
+        Assertions.assertEquals(1.0, SpecialMath.d2(0.0));
+        Assertions.assertEquals(Double.POSITIVE_INFINITY, SpecialMath.d2(Double.POSITIVE_INFINITY));
     }
 
     /**
@@ -833,18 +834,18 @@ public class StableSamplerTest {
         // Test the value of tan(x) when the angle is generated in the open interval (-pi/4, pi/4)
         for (final long x : new long[] {Long.MIN_VALUE + (1 << 10), Long.MAX_VALUE}) {
             final double phiby2 = getU(x);
-            Assert.assertEquals(PI_4 - DU * PI_4, Math.abs(phiby2), 0.0);
+            Assertions.assertEquals(PI_4 - DU * PI_4, Math.abs(phiby2));
             final double a = phiby2 * SpecialMath.tan2(phiby2);
             // Check this is not 1
-            Assert.assertNotEquals(1, Math.abs(a), 0.0);
-            Assert.assertTrue(Math.abs(a) < 1.0);
+            Assertions.assertNotEquals(1, Math.abs(a));
+            Assertions.assertTrue(Math.abs(a) < 1.0);
         }
 
         // At pi/4 the function reverts to Math.tan(x) / x. Test through the transition.
         final double pi = Math.PI;
         for (final double x : new double[] {pi, pi / 2, pi / 3.99, pi / 4, pi / 4.01, pi / 8, pi / 16}) {
             final double y = Math.tan(x) / x;
-            Assert.assertEquals(y, SpecialMath.tan2(x), Math.ulp(y));
+            Assertions.assertEquals(y, SpecialMath.tan2(x), Math.ulp(y));
         }
 
         // Test this closely matches the JDK tan function.
@@ -872,7 +873,7 @@ public class StableSamplerTest {
                 ulp += u;
                 // Within 4 ulp. Note tan(x) is within 1 ulp of the result. So this
                 // is max 5 ulp from the result.
-                Assert.assertEquals(tanx, y, 4 * Math.ulp(tanx));
+                Assertions.assertEquals(tanx, y, 4 * Math.ulp(tanx));
             }
             // Test tan(x) / x
             y = tanx / x;
@@ -883,7 +884,7 @@ public class StableSamplerTest {
                 }
                 ulp2 += u;
                 // Within 3 ulp.
-                Assert.assertEquals(y, tan2x, 3 * Math.ulp(y));
+                Assertions.assertEquals(y, tan2x, 3 * Math.ulp(y));
             }
         }
         // Mean (max) ULP is very low
@@ -891,17 +892,17 @@ public class StableSamplerTest {
         //          tan(x)                    tan(x) / x
         // tan4283  93436.25534446817         201185 : 68313.16171793547         128079
         // tan4288c     0.5905972588807344         4 :     0.4047176940366626         3
-        Assert.assertTrue("Mean ULP to tan(x) is too high", (double) ulp / count < 0.6);
-        Assert.assertTrue("Mean ULP to tan(x) / x is too high", (double) ulp2 / count < 0.45);
+        Assertions.assertTrue((double) ulp / count < 0.6, "Mean ULP to tan(x) is too high");
+        Assertions.assertTrue((double) ulp2 / count < 0.45, "Mean ULP to tan(x) / x is too high");
         // If the value is under 1 then the sampler will break due to cancellation errors.
-        Assert.assertEquals("Must be exact tan(x) / x at x=0", 1.0, SpecialMath.tan2(0.0), 0.0);
-        Assert.assertEquals(4 / Math.PI, SpecialMath.tan2(PI_4), Math.ulp(4 / Math.PI));
-        Assert.assertEquals(1.0, PI_4 * SpecialMath.tan2(PI_4), Math.ulp(1.0));
+        Assertions.assertEquals(1.0, SpecialMath.tan2(0.0), "Must be exact tan(x) / x at x=0");
+        Assertions.assertEquals(4 / Math.PI, SpecialMath.tan2(PI_4), Math.ulp(4 / Math.PI));
+        Assertions.assertEquals(1.0, PI_4 * SpecialMath.tan2(PI_4), Math.ulp(1.0));
         // If this is above 1 then the sampler will break. Test at the switch point pi/4.
-        Assert.assertTrue(1.0 >= PI_4 * SpecialMath.tan2(PI_4));
-        Assert.assertTrue(1.0 >= PI_4 * SpecialMath.tan2(Math.nextDown(PI_4)));
+        Assertions.assertTrue(1.0 >= PI_4 * SpecialMath.tan2(PI_4));
+        Assertions.assertTrue(1.0 >= PI_4 * SpecialMath.tan2(Math.nextDown(PI_4)));
         // Monotonic function at the transition
-        Assert.assertTrue(SpecialMath.tan2(Math.nextUp(PI_4)) >= SpecialMath.tan2(PI_4));
+        Assertions.assertTrue(SpecialMath.tan2(Math.nextUp(PI_4)) >= SpecialMath.tan2(PI_4));
     }
 
     /**
@@ -925,10 +926,10 @@ public class StableSamplerTest {
                     for (final double u : us) {
                         final double x = sampleCMS(alpha, beta, w, u);
                         final double y = sampleWeronAlphaNot1(alpha, beta, w, u);
-                        Assert.assertEquals(x, y, Math.max(absolute, Math.abs(x) * relative));
+                        Assertions.assertEquals(x, y, Math.max(absolute, Math.abs(x) * relative));
                         // Test symmetry
                         final double z = sampleCMS(alpha, -beta, w, 1 - u);
-                        Assert.assertEquals(x, -z, 0);
+                        Assertions.assertEquals(x, -z, 0.0);
                     }
                 }
             }
@@ -955,10 +956,10 @@ public class StableSamplerTest {
                 for (final double u : us) {
                     final double x = sampleCMS(alpha, beta, w, u);
                     final double y = sampleWeronAlpha1(beta, w, u);
-                    Assert.assertEquals(x, y, Math.max(absolute, Math.abs(x) * relative));
+                    Assertions.assertEquals(x, y, Math.max(absolute, Math.abs(x) * relative));
                     // Test symmetry
                     final double z = sampleCMS(alpha, -beta, w, 1 - u);
-                    Assert.assertEquals(x, -z, 0);
+                    Assertions.assertEquals(x, -z, 0.0);
                 }
             }
         }
@@ -991,7 +992,7 @@ public class StableSamplerTest {
                     for (final double u : us) {
                         // CMS formulas
                         double x0 = sampleCMS(1, beta, w, u);
-                        Assert.assertTrue("Target must be finite", Double.isFinite(x0));
+                        Assertions.assertTrue(Double.isFinite(x0), "Target must be finite");
 
                         // Sample should approach x0 as alpha approaches 1
                         double delta = deltaStart;
@@ -1007,7 +1008,7 @@ public class StableSamplerTest {
 
                         // Weron formulas
                         x0 = sampleWeronAlpha1(beta, w, u);
-                        Assert.assertTrue("Target must be finite", Double.isFinite(x0));
+                        Assertions.assertTrue(Double.isFinite(x0), "Target must be finite");
 
                         // Sample should approach x0 as alpha approaches 1
                         delta = deltaStart;
@@ -1025,10 +1026,10 @@ public class StableSamplerTest {
             }
 
             // The CMS formala monotonically converges
-            Assert.assertEquals(0, cmsCount);
+            Assertions.assertEquals(0, cmsCount);
             // The weron formula does not monotonically converge
             // (difference to the target can be bigger when alpha moves closer to 1).
-            Assert.assertTrue(weronCount > 200);
+            Assertions.assertTrue(weronCount > 200);
         }
     }
 
@@ -1041,22 +1042,22 @@ public class StableSamplerTest {
     @Test
     public void testExtremeInputsToSample() {
         // Demonstrate instability when w = 0
-        Assert.assertEquals(Double.NaN, sampleCMS(1.3, 0.7, 0, 0.25), 0.0);
-        Assert.assertTrue(Double.isFinite(sampleCMS(1.3, 0.7, SMALL_W, 0.25)));
+        Assertions.assertEquals(Double.NaN, sampleCMS(1.3, 0.7, 0, 0.25));
+        Assertions.assertTrue(Double.isFinite(sampleCMS(1.3, 0.7, SMALL_W, 0.25)));
 
         // Demonstrate instability when u -> 0 or 1, and |beta| = 1
-        Assert.assertEquals(Double.NaN, sampleCMS(1.1, 1.0, 0.1, 0), 0.0);
-        Assert.assertTrue(Double.isFinite(sampleCMS(1.1, 1.0, 0.1, DU)));
+        Assertions.assertEquals(Double.NaN, sampleCMS(1.1, 1.0, 0.1, 0));
+        Assertions.assertTrue(Double.isFinite(sampleCMS(1.1, 1.0, 0.1, DU)));
 
         // Demonstrate instability when alpha -> 0
 
         // Small alpha does not tolerate very small w.
-        Assert.assertEquals(Double.NaN, sampleCMS(0.01, 0.7, SMALL_W, 0.5), 0.0);
+        Assertions.assertEquals(Double.NaN, sampleCMS(0.01, 0.7, SMALL_W, 0.5));
 
         // Very small alpha does not tolerate u approaching 0 or 1 (depending on the
         // skew)
-        Assert.assertEquals(Double.NaN, sampleCMS(1e-5, 0.7, 1.0, 1e-4), 0.0);
-        Assert.assertEquals(Double.NaN, sampleCMS(1e-5, -0.7, 1.0, 1 - 1e-4), 0.0);
+        Assertions.assertEquals(Double.NaN, sampleCMS(1e-5, 0.7, 1.0, 1e-4));
+        Assertions.assertEquals(Double.NaN, sampleCMS(1e-5, -0.7, 1.0, 1 - 1e-4));
 
         final double[] alphas = {Math.nextDown(2), 1.3, 1.1, Math.nextUp(1), 1, Math.nextDown(1), 0.7, 0.1, 0.05, 0.01, 0x1.0p-16};
         final double[] betas = {1, 0.9, 0.001, 0};
@@ -1091,17 +1092,18 @@ public class StableSamplerTest {
                             nan1++;
                         }
                         // The edge-case corrected Weron formula should not fail
-                        Assert.assertNotEquals(Double.NaN, x2);
+                        Assertions.assertNotEquals(Double.NaN, x2);
 
-                        // Check symmetry of each formula
-                        Assert.assertEquals(x1, -sampleCMS(alpha, -beta, w, 1 - u), 0.0);
-                        Assert.assertEquals(x2, -sampleWeron(alpha, -beta, w, 1 - u), 0.0);
+                        // Check symmetry of each formula.
+                        // Use a delta of zero to allow equality of 0.0 and -0.0.
+                        Assertions.assertEquals(x1, 0.0 - sampleCMS(alpha, -beta, w, 1 - u), 0.0);
+                        Assertions.assertEquals(x2, 0.0 - sampleWeron(alpha, -beta, w, 1 - u), 0.0);
 
                         if (Double.isInfinite(x1) && x1 != x2) {
                             // Check the Weron correction for extreme samples.
                             // The result should be at the correct *finite* support bounds.
                             // Note: This applies when alpha < 1 and beta = +/-1.
-                            Assert.assertTrue(lower <= x2 && x2 <= upper);
+                            Assertions.assertTrue(lower <= x2 && x2 <= upper);
                         }
                     }
                 }
@@ -1109,7 +1111,7 @@ public class StableSamplerTest {
         }
 
         // The CMS algorithm is expected to fail some cases
-        Assert.assertNotEquals(0, nan1);
+        Assertions.assertNotEquals(0, nan1);
     }
 
     /**
@@ -1355,7 +1357,7 @@ public class StableSamplerTest {
         // See testZIsNotAlwaysAboveZero()
         final double alpha = 1.291015625;
         final double beta = -1;
-        Assert.assertTrue(0.0 > computeNumerator(alpha, beta, Long.MAX_VALUE));
+        Assertions.assertTrue(0.0 > computeNumerator(alpha, beta, Long.MAX_VALUE));
 
         // z will be negative. Repeat computation assumed to be performed by the sampler.
         // This ensures the test should be updated if the sampler implementation changes.
@@ -1371,11 +1373,11 @@ public class StableSamplerTest {
         final double b2 = 1 - db;
         final double b2p = 1 + db;
         final double z = a2p * (b2 + 2 * phiby2 * bb * tau) / (w * a2 * b2p);
-        Assert.assertTrue(0.0 > z);
+        Assertions.assertTrue(0.0 > z);
 
         final StableSampler sampler = StableSampler.of(createRngWithSequence(longs), alpha, beta);
         // It should not be NaN or infinite
-        Assert.assertTrue("Sampler did not recover", Double.isFinite(sampler.sample()));
+        Assertions.assertTrue(Double.isFinite(sampler.sample()), "Sampler did not recover");
     }
 
     /**
@@ -1401,17 +1403,17 @@ public class StableSamplerTest {
                 final StableSampler sampler = StableSampler.of(createRngWithSequence(longs), alpha, beta);
                 final double x = sampler.sample();
                 // It should not be NaN
-                Assert.assertFalse("Sampler did not recover", Double.isNaN(x));
+                Assertions.assertFalse(Double.isNaN(x), "Sampler did not recover");
                 if (beta != 0) {
                     // The sample is extreme so should be at a limit of the support
                     if (alpha < 0) {
                         // Effectively +/- infinity
-                        Assert.assertEquals(Math.copySign(Double.POSITIVE_INFINITY, beta), x, 0.0);
+                        Assertions.assertEquals(Math.copySign(Double.POSITIVE_INFINITY, beta), x);
                     } else if (alpha > 1) {
                         // At the distribution mean
                         final double[] support = getSupport(alpha, beta);
                         final double mu = support[2];
-                        Assert.assertEquals(mu, x, 0.0);
+                        Assertions.assertEquals(mu, x);
                     }
                 }
             }
@@ -1475,17 +1477,17 @@ public class StableSamplerTest {
         final double x3 = sampler.sample();
         // Expect the limit of the support (the direction is controlled by extreme phi)
         final double max = Double.POSITIVE_INFINITY;
-        Assert.assertEquals(-max, x1, 0.0);
-        Assert.assertEquals(max, x2, 0.0);
+        Assertions.assertEquals(-max, x1);
+        Assertions.assertEquals(max, x2);
         // Expect the sampler to avoid inf * 0
-        Assert.assertNotEquals(Double.NaN, x3, 0.0);
+        Assertions.assertNotEquals(Double.NaN, x3);
         // When f=0 the sample should be in the middle (beta=0) or skewed in the direction of beta
         if (beta == 0) {
             // In the middle
-            Assert.assertEquals(0.0, x3, 0.0);
+            Assertions.assertEquals(0.0, x3);
         } else {
             // At the support limit
-            Assert.assertEquals(Math.copySign(max, beta), x3, 0.0);
+            Assertions.assertEquals(Math.copySign(max, beta), x3);
         }
     }
 
@@ -1510,7 +1512,7 @@ public class StableSamplerTest {
         }, longs1);
         final StableSampler sampler1 = StableSampler.of(createRngWithSequence(longs1), 1.0, 1.0);
         final double x1 = sampler1.sample();
-        Assert.assertTrue("Sampler did not recover", Double.isFinite(x1));
+        Assertions.assertTrue(Double.isFinite(x1), "Sampler did not recover");
 
         // u -> pi/4
         final long[] longs2 = {Long.MAX_VALUE, 1446480648965178882L};
@@ -1519,10 +1521,10 @@ public class StableSamplerTest {
         }, longs2);
         final StableSampler sampler2 = StableSampler.of(createRngWithSequence(longs2), 1.0, -1.0);
         final double x2 = sampler2.sample();
-        Assert.assertTrue("Sampler did not recover", Double.isFinite(x2));
+        Assertions.assertTrue(Double.isFinite(x2), "Sampler did not recover");
 
         // Sample should be a reflection
-        Assert.assertEquals(x1, -x2, 0.0);
+        Assertions.assertEquals(x1, -x2);
     }
 
     /**
@@ -1657,7 +1659,7 @@ public class StableSamplerTest {
         for (int i = 0; i < 100; i++) {
             final double x = sampler.sample();
             if (!(lower <= x && x <= upper)) {
-                Assert.fail(String.format("Invalid sample. alpha=%s, beta=%s, gamma=%s, delta=%s [%s, %s] x=%s",
+                Assertions.fail(String.format("Invalid sample. alpha=%s, beta=%s, gamma=%s, delta=%s [%s, %s] x=%s",
                     alpha, beta, gamma, delta, lower, upper, x));
             }
         }
@@ -1722,27 +1724,27 @@ public class StableSamplerTest {
         // Extremes of the uniform deviate generated using the same method as the sampler
         final double d = DU * PI_4;
         // Test in (-pi/4, pi/4)
-        Assert.assertNotEquals(-PI_4, getU(createRngWithSequence(Long.MIN_VALUE)), 0.0);
-        Assert.assertEquals(-PI_4 + d, getU(createRngWithSequence(Long.MIN_VALUE + (1 << 10))), 0.0);
-        Assert.assertEquals(-PI_4 / 2, getU(createRngWithSequence(Long.MIN_VALUE >> 1)), 0.0);
-        Assert.assertEquals(-d, getU(createRngWithSequence(-1)), 0.0);
-        Assert.assertEquals(0.0, getU(createRngWithSequence(0)), 0.0);
-        Assert.assertEquals(d, getU(createRngWithSequence(1 << 10)), 0.0);
-        Assert.assertEquals(PI_4 / 2, getU(createRngWithSequence(Long.MIN_VALUE >>> 1)), 0.0);
-        Assert.assertEquals(PI_4 - d, getU(createRngWithSequence(Long.MAX_VALUE)), 0.0);
+        Assertions.assertNotEquals(-PI_4, getU(createRngWithSequence(Long.MIN_VALUE)));
+        Assertions.assertEquals(-PI_4 + d, getU(createRngWithSequence(Long.MIN_VALUE + (1 << 10))));
+        Assertions.assertEquals(-PI_4 / 2, getU(createRngWithSequence(Long.MIN_VALUE >> 1)));
+        Assertions.assertEquals(-d, getU(createRngWithSequence(-1)));
+        Assertions.assertEquals(0.0, getU(createRngWithSequence(0)));
+        Assertions.assertEquals(d, getU(createRngWithSequence(1 << 10)));
+        Assertions.assertEquals(PI_4 / 2, getU(createRngWithSequence(Long.MIN_VALUE >>> 1)));
+        Assertions.assertEquals(PI_4 - d, getU(createRngWithSequence(Long.MAX_VALUE)));
 
         // Extremes of the exponential sampler
-        Assert.assertEquals(0, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(0, ZigguratSampler.Exponential.of(
                 createRngWithSequence(0L)).sample(), 0.0);
-        Assert.assertEquals(SMALL_W, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(SMALL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(1)).sample(), 0.0);
-        Assert.assertEquals(1.0, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(1.0, ZigguratSampler.Exponential.of(
                 createRngWithSequence(1446480648965178882L)).sample(), 0.0);
-        Assert.assertEquals(5.0, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(5.0, ZigguratSampler.Exponential.of(
                 createRngWithSequence(6092639261715210240L)).sample(), 0.0);
-        Assert.assertEquals(TAIL_W, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(TAIL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(-1, -1, 0)).sample(), 0.0);
-        Assert.assertEquals(3 * TAIL_W, ZigguratSampler.Exponential.of(
+        Assertions.assertEquals(3 * TAIL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(-1, -1, -1, -1, -1, -1, 0)).sample(), 1e-14);
     }
 
@@ -1893,10 +1895,10 @@ public class StableSamplerTest {
         // Validate series
         final SharedStateContinuousSampler exp = ZigguratSampler.Exponential.of(rng);
         for (int i = 0; i < expected.length; i += 2) {
-            int j = i / 2;
-            Assert.assertEquals(j + ": Incorrect u", expected[i], getU(rng), 0.0);
+            final int j = i / 2;
+            Assertions.assertEquals(expected[i], getU(rng), () -> j + ": Incorrect u");
             if (i + 1 < expected.length) {
-                Assert.assertEquals(j + ": Incorrect w", expected[i + 1], exp.sample(), 0.0);
+                Assertions.assertEquals(expected[i + 1], exp.sample(), () -> j + ": Incorrect w");
             }
         }
     }
@@ -1962,7 +1964,7 @@ public class StableSamplerTest {
         final StableSampler sampler1 = StableSampler.of(rng1, alpha1, beta1);
         final StableSampler sampler2 = StableSampler.of(rng2, alpha2, beta2);
         final StableSampler sampler3 = StableSampler.of(rng3, alpha3, beta3);
-        final String msg = String.format("alpha=%s, beta=%s", alpha2, beta2);
+        final Supplier<String> msg = () -> String.format("alpha=%s, beta=%s", alpha2, beta2);
         for (int i = 0; i < 1000; i++) {
             final double x1 = sampler1.sample();
             final double x2 = sampler2.sample();
@@ -1971,16 +1973,16 @@ public class StableSamplerTest {
             if (x3 > x1) {
                 if (x2 > x3) {
                     // Should be the same
-                    Assert.assertEquals(msg, x3, x2, ulp * Math.ulp(x3));
+                    Assertions.assertEquals(x3, x2, ulp * Math.ulp(x3), msg);
                 } else if (x2 < x1) {
-                    Assert.assertEquals(msg, x1, x2, ulp * Math.ulp(x1));
+                    Assertions.assertEquals(x1, x2, ulp * Math.ulp(x1), msg);
                 }
             } else if (x3 < x1) {
                 if (x2 < x3) {
                     // Should be the same
-                    Assert.assertEquals(msg, x3, x2, ulp * Math.ulp(x3));
+                    Assertions.assertEquals(x3, x2, ulp * Math.ulp(x3), msg);
                 } else if (x2 > x1) {
-                    Assert.assertEquals(msg, x1, x2, ulp * Math.ulp(x1));
+                    Assertions.assertEquals(x1, x2, ulp * Math.ulp(x1), msg);
                 }
             }
         }
@@ -2095,7 +2097,7 @@ public class StableSamplerTest {
             for (int i = 0; i < 10; i++) {
                 final double x1 = sampler1.sample();
                 final double x2 = sampler2.sample();
-                Assert.assertEquals(x1, x2, ulp * Math.ulp(x1));
+                Assertions.assertEquals(x1, x2, ulp * Math.ulp(x1));
             }
         }
     }
@@ -2193,7 +2195,7 @@ public class StableSamplerTest {
                         // Since mirroring applies before the shift of delta this must be negated too
                         final StableSampler s2 = StableSampler.of(reverse, alpha, -beta, gamma, -delta);
                         for (int i = 0; i < 100; i++) {
-                            Assert.assertEquals(s1.sample(), -s2.sample(), 0.0);
+                            Assertions.assertEquals(s1.sample(), -s2.sample());
                         }
                     }
                 }
@@ -2217,7 +2219,7 @@ public class StableSamplerTest {
                 // Since mirroring applies before the shift of delta this must be negated too
                 final StableSampler s2 = StableSampler.of(rng2, alpha, -beta, gamma, -delta);
                 for (int i = 0; i < 100; i++) {
-                    Assert.assertEquals(s1.sample(), -s2.sample(), 0.0);
+                    Assertions.assertEquals(s1.sample(), -s2.sample());
                 }
             }
         }
@@ -2247,7 +2249,7 @@ public class StableSamplerTest {
                 sampler = StableSampler.of(rng, p[0], p[1], p[2], p[3]);
             }
             final String s = sampler.toString().toLowerCase();
-            Assert.assertTrue(s.contains("stable"));
+            Assertions.assertTrue(s.contains("stable"));
         }
     }
 
@@ -2272,16 +2274,16 @@ public class StableSamplerTest {
         final double hi = getU(Long.MAX_VALUE & unsetHighBit);
         final double lo = getU(Long.MIN_VALUE | setLowBit);
         // The limits are roughly pi/4 and -pi/4
-        Assert.assertEquals(PI_4, hi, 2e-3);
-        Assert.assertEquals(-PI_4, lo, 2e-3);
-        Assert.assertEquals(0.0, lo + hi, 1e-3);
+        Assertions.assertEquals(PI_4, hi, 2e-3);
+        Assertions.assertEquals(-PI_4, lo, 2e-3);
+        Assertions.assertEquals(0.0, lo + hi, 1e-3);
 
         // Setting a bit ensure the exponential sampler cannot be zero
         final UniformRandomProvider rng = createRngWithSequence(setLowBit);
         final double w = ZigguratSampler.Exponential.of(rng).sample();
-        Assert.assertNotEquals(0.0, w, 0.0);
+        Assertions.assertNotEquals(0.0, w);
         // This is the actual value; it is small but not extreme.
-        Assert.assertEquals(0.007391869818503967, w, 0.0);
+        Assertions.assertEquals(0.007391869818503967, w);
 
         final RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS;
         final long seed = 0x83762b3daf1c43L;
@@ -2311,7 +2313,7 @@ public class StableSamplerTest {
 
         for (final double alpha : alphas) {
             for (final double beta : betas) {
-                final String msg = String.format("alpha=%s, beta=%s", alpha, beta);
+                final Supplier<String> msg = () -> String.format("alpha=%s, beta=%s", alpha, beta);
                 // WARNING:
                 // Created by direct access to package-private constructor.
                 // This is for testing only as these do not validate the parameters.
@@ -2327,7 +2329,7 @@ public class StableSamplerTest {
                 for (int i = 0; i < 1000; i++) {
                     final double x = s1.sample();
                     final double y = s2.sample();
-                    Assert.assertEquals(msg, x, y, Math.max(absolute, Math.abs(x) * relative));
+                    Assertions.assertEquals(x, y, Math.max(absolute, Math.abs(x) * relative), msg);
                 }
             }
         }
@@ -2418,14 +2420,14 @@ public class StableSamplerTest {
         }, longs);
 
         final double zeta = -beta * Math.tan(alpha * PI_2);
-        Assert.assertEquals(0.0, alpha * PI_4 + Math.atan(-zeta), 0.0);
+        Assertions.assertEquals(0.0, alpha * PI_4 + Math.atan(-zeta));
 
         final UniformRandomProvider rng = createRngWithSequence(longs);
         final StableSampler sampler = new WeronStableSampler(rng, alpha, beta);
         // zeta is the offset used to shift the 1-parameterization to the
         // 0-parameterization. This is returned when other terms multiply to zero.
-        Assert.assertEquals(zeta, sampler.sample(), 0.0);
-        Assert.assertEquals(zeta, sampler.sample(), 0.0);
-        Assert.assertEquals(zeta, sampler.sample(), 0.0);
+        Assertions.assertEquals(zeta, sampler.sample());
+        Assertions.assertEquals(zeta, sampler.sample());
+        Assertions.assertEquals(zeta, sampler.sample());
     }
 }

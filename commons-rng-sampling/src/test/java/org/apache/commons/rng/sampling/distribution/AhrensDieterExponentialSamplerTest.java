@@ -22,7 +22,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -77,7 +77,7 @@ public class AhrensDieterExponentialSamplerTest {
         final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
         // This should not infinite loop
         final double x = sampler.sample();
-        Assert.assertTrue(x >= 0);
+        Assertions.assertTrue(x >= 0);
     }
 
     /**
@@ -96,6 +96,6 @@ public class AhrensDieterExponentialSamplerTest {
         };
         final SharedStateContinuousSampler sampler = AhrensDieterExponentialSampler.of(rng, 1);
         final double x = sampler.sample();
-        Assert.assertTrue(x >= 0);
+        Assertions.assertTrue(x >= 0);
     }
 }

@@ -16,7 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -27,13 +27,13 @@ public class IntArray2LongArrayTest {
     public void testSeedSizeIsMultipleOfLongSize() {
         final int[] seed = new int[12];
         final long[] out = new IntArray2LongArray().convert(seed);
-        Assert.assertEquals(6, out.length);
+        Assertions.assertEquals(6, out.length);
     }
 
     @Test
     public void testSeedSizeIsNotMultipleOfLongSize() {
         final int[] seed = new int[13];
         final long[] out = new IntArray2LongArray().convert(seed);
-        Assert.assertEquals(7, out.length);
+        Assertions.assertEquals(7, out.length);
     }
 }

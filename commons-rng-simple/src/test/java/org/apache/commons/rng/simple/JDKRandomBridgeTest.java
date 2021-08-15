@@ -22,7 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.util.Random;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 /**
@@ -39,7 +39,7 @@ public class JDKRandomBridgeTest {
 
         // Reseed.
         final long newSeed = RandomSource.createLong();
-        Assert.assertNotEquals(seed, newSeed);
+        Assertions.assertNotEquals(seed, newSeed);
         rng1.setSeed(newSeed);
         rng2.setSeed(newSeed);
         checkSameSequence(rng1, rng2);
@@ -76,36 +76,33 @@ public class JDKRandomBridgeTest {
     private void checkSameSequence(Random rng1,
                                    Random rng2) {
         for (int i = 0; i < 4; i++) {
-            Assert.assertEquals(rng1.nextInt(),
-                                rng2.nextInt());
+            Assertions.assertEquals(rng1.nextInt(),
+                                    rng2.nextInt());
         }
         for (int i = 0; i < 7; i++) {
-            Assert.assertEquals(rng1.nextLong(),
-                                rng2.nextLong());
+            Assertions.assertEquals(rng1.nextLong(),
+                                    rng2.nextLong());
         }
         for (int i = 0; i < 9; i++) {
-            Assert.assertEquals(rng1.nextFloat(),
-                                rng2.nextFloat(),
-                                0f);
+            Assertions.assertEquals(rng1.nextFloat(),
+                                    rng2.nextFloat());
         }
         for (int i = 0; i < 12; i++) {
-            Assert.assertEquals(rng1.nextDouble(),
-                                rng2.nextDouble(),
-                                0d);
+            Assertions.assertEquals(rng1.nextDouble(),
+                                    rng2.nextDouble());
         }
         for (int i = 0; i < 17; i++) {
-            Assert.assertEquals(rng1.nextGaussian(),
-                                rng2.nextGaussian(),
-                                0d);
+            Assertions.assertEquals(rng1.nextGaussian(),
+                                    rng2.nextGaussian());
         }
         for (int i = 0; i < 18; i++) {
-            Assert.assertEquals(rng1.nextBoolean(),
-                                rng2.nextBoolean());
+            Assertions.assertEquals(rng1.nextBoolean(),
+                                    rng2.nextBoolean());
         }
         for (int i = 0; i < 19; i++) {
             final int max = i + 123456;
-            Assert.assertEquals(rng1.nextInt(max),
-                                rng2.nextInt(max));
+            Assertions.assertEquals(rng1.nextInt(max),
+                                    rng2.nextInt(max));
         }
 
         final int len = 233;
@@ -114,8 +111,8 @@ public class JDKRandomBridgeTest {
         rng1.nextBytes(store1);
         rng2.nextBytes(store2);
         for (int i = 0; i < len; i++) {
-            Assert.assertEquals(store1[i],
-                                store2[i]);
+            Assertions.assertEquals(store1[i],
+                                    store2[i]);
         }
     }
 }

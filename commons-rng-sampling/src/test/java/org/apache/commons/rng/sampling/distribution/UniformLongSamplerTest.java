@@ -21,7 +21,7 @@ import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Test;
 
 import java.util.Locale;
@@ -57,7 +57,7 @@ public class UniformLongSamplerTest {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         final UniformLongSampler sampler = UniformLongSampler.of(rng, lower, upper);
         for (int i = 0; i < 5; i++) {
-            Assert.assertEquals(lower, sampler.sample());
+            Assertions.assertEquals(lower, sampler.sample());
         }
     }
 
@@ -73,7 +73,7 @@ public class UniformLongSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
-            Assert.assertEquals(rng1.nextLong(), sampler.sample());
+            Assertions.assertEquals(rng1.nextLong(), sampler.sample());
         }
     }
 
@@ -93,7 +93,7 @@ public class UniformLongSamplerTest {
             final UniformRandomProvider rng2 = createRngWithFullBitsOnFirstCall();
             final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
             for (int i = 0; i < 10; i++) {
-                Assert.assertEquals(lower + rng1.nextLong(n), sampler.sample());
+                Assertions.assertEquals(lower + rng1.nextLong(n), sampler.sample());
             }
         }
     }
@@ -143,9 +143,9 @@ public class UniformLongSamplerTest {
             final long range = 1L << i;
             final long upper = lower + range - 1;
             sampler = UniformLongSampler.of(rngZeroBits, lower, upper);
-            Assert.assertEquals("Zero bits sample", lower, sampler.sample());
+            Assertions.assertEquals(lower, sampler.sample(), "Zero bits sample");
             sampler = UniformLongSampler.of(rngAllBits, lower, upper);
-            Assert.assertEquals("All bits sample", upper, sampler.sample());
+            Assertions.assertEquals(upper, sampler.sample(), "All bits sample");
         }
     }
 
@@ -166,7 +166,7 @@ public class UniformLongSamplerTest {
             final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
             sampler = UniformLongSampler.of(rng2, lower, upper);
             for (int j = 0; j < 10; j++) {
-                Assert.assertEquals(rng1.nextLong() >>> shift, sampler.sample());
+                Assertions.assertEquals(rng1.nextLong() >>> shift, sampler.sample());
             }
         }
     }
@@ -189,7 +189,7 @@ public class UniformLongSamplerTest {
             do {
                 expected = rng1.nextLong();
             } while (expected < lower || expected > upper);
-            Assert.assertEquals(expected, sampler.sample());
+            Assertions.assertEquals(expected, sampler.sample());
         }
     }
 
@@ -225,8 +225,8 @@ public class UniformLongSamplerTest {
             final long sample1 = sampler.sample();
             final long sample2 = samplerLo.sample();
             final long sample3 = samplerHi.sample();
-            Assert.assertEquals("Incorrect negative offset sample", sample1 + offsetLo, sample2);
-            Assert.assertEquals("Incorrect positive offset sample", sample1 + offsetHi, sample3);
+            Assertions.assertEquals(sample1 + offsetLo, sample2, "Incorrect negative offset sample");
+            Assertions.assertEquals(sample1 + offsetHi, sample3, "Incorrect positive offset sample");
         }
     }
 
@@ -264,7 +264,7 @@ public class UniformLongSamplerTest {
 
         // This should be even across the entire range
         for (int value : histogram) {
-            Assert.assertEquals(expected, value);
+            Assertions.assertEquals(expected, value);
         }
     }
 
@@ -336,6 +336,6 @@ public class UniformLongSamplerTest {
     private static void assertToString(long lower, long upper) {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformLongSampler sampler = UniformLongSampler.of(rng, lower, upper);
-        Assert.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
+        Assertions.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
     }
 }
