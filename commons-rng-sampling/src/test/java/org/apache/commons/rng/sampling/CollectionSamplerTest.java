@@ -49,11 +49,12 @@ public class CollectionSamplerTest {
         Assertions.fail(word + " not in list");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition() {
         // Must fail for empty collection.
-        new CollectionSampler<String>(RandomSource.SPLIT_MIX_64.create(0L),
-                                      new ArrayList<String>());
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CollectionSampler<String>(RandomSource.SPLIT_MIX_64.create(0L),
+                                                new ArrayList<String>()));
     }
 
     /**

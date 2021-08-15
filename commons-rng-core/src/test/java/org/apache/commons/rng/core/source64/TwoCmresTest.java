@@ -110,7 +110,7 @@ public class TwoCmresTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testCmresFactoryThrowsWithDuplicateMultiplier() {
         ArrayList<Cmres> list = new ArrayList<Cmres>();
         final long multiply = 0;
@@ -128,6 +128,6 @@ public class TwoCmresTest {
 
         list.add(new Cmres(nextMultiply, rotate, start));
         // This should throw as the list now contains the multiply value
-        Cmres.Factory.checkUnique(list, nextMultiply);
+        Assertions.assertThrows(IllegalStateException.class, () -> Cmres.Factory.checkUnique(list, nextMultiply));
     }
 }

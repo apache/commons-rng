@@ -74,10 +74,10 @@ public class ProvidersCommonParametricTest {
 
     // Seeding tests.
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testUnsupportedSeedType() {
         final byte seed = 123;
-        originalSource.create(seed, originalArgs);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> originalSource.create(seed, originalArgs));
     }
 
     /**

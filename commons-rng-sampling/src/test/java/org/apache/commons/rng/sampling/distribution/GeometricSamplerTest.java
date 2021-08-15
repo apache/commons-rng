@@ -94,21 +94,23 @@ public class GeometricSamplerTest {
     /**
      * Test probability of success {@code >1} is not allowed.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testProbabilityOfSuccessAboveOneThrows() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final double probabilityOfSuccess = Math.nextUp(1.0);
-        GeometricSampler.of(unusedRng, probabilityOfSuccess);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GeometricSampler.of(unusedRng, probabilityOfSuccess));
     }
 
     /**
      * Test probability of success {@code 0} is not allowed.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testProbabilityOfSuccessIsZeroThrows() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final double probabilityOfSuccess = 0;
-        GeometricSampler.of(unusedRng, probabilityOfSuccess);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GeometricSampler.of(unusedRng, probabilityOfSuccess));
     }
 
     /**

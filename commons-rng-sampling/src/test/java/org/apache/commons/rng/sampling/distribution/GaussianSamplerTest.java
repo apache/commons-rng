@@ -22,6 +22,7 @@ import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.SharedStateSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test for the {@link GaussianSampler}. The tests hit edge cases for the sampler.
@@ -30,66 +31,71 @@ public class GaussianSamplerTest {
     /**
      * Test the constructor with a zero standard deviation.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
         final double mean = 1;
         final double standardDeviation = 0;
-        GaussianSampler.of(gauss, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GaussianSampler.of(gauss, mean, standardDeviation));
     }
 
     /**
      * Test the constructor with an infinite standard deviation.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = Double.POSITIVE_INFINITY;
-        GaussianSampler.of(gauss, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GaussianSampler.of(gauss, mean, standardDeviation));
     }
 
     /**
      * Test the constructor with a NaN standard deviation.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNaNStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = Double.NaN;
-        GaussianSampler.of(gauss, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GaussianSampler.of(gauss, mean, standardDeviation));
     }
 
     /**
      * Test the constructor with an infinite mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = Double.POSITIVE_INFINITY;
         final double standardDeviation = 1;
-        GaussianSampler.of(gauss, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GaussianSampler.of(gauss, mean, standardDeviation));
     }
 
     /**
      * Test the constructor with a NaN mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNaNMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = Double.NaN;
         final double standardDeviation = 1;
-        GaussianSampler.of(gauss, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GaussianSampler.of(gauss, mean, standardDeviation));
     }
 
     /**
@@ -112,7 +118,7 @@ public class GaussianSamplerTest {
      * Test the SharedStateSampler implementation throws if the underlying sampler is
      * not a SharedStateSampler.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
@@ -125,14 +131,15 @@ public class GaussianSamplerTest {
         final double standardDeviation = 4.56;
         final SharedStateContinuousSampler sampler1 =
             GaussianSampler.of(gauss, mean, standardDeviation);
-        sampler1.withUniformRandomProvider(rng2);
+        Assertions.assertThrows(UnsupportedOperationException.class,
+            () -> sampler1.withUniformRandomProvider(rng2));
     }
 
     /**
      * Test the SharedStateSampler implementation throws if the underlying sampler is
      * a SharedStateSampler that returns an incorrect type.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
@@ -140,7 +147,8 @@ public class GaussianSamplerTest {
         final double standardDeviation = 4.56;
         final SharedStateContinuousSampler sampler1 =
             GaussianSampler.of(gauss, mean, standardDeviation);
-        sampler1.withUniformRandomProvider(rng2);
+        Assertions.assertThrows(UnsupportedOperationException.class,
+            () -> sampler1.withUniformRandomProvider(rng2));
     }
 
     /**

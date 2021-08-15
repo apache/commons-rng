@@ -30,25 +30,27 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
     /**
      * Test the constructor with a bad alpha.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 0;
         final double theta = 1;
-        AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta));
     }
 
     /**
      * Test the constructor with a bad theta.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 1;
         final double theta = 0;
-        AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> AhrensDieterMarsagliaTsangGammaSampler.of(rng, alpha, theta));
     }
 
     /**

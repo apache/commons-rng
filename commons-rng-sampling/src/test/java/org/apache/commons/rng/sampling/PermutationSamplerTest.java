@@ -82,28 +82,32 @@ public class PermutationSamplerTest {
         Assertions.assertEquals(0, perm[0]);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition1() {
         // Must fail for k > n.
-        new PermutationSampler(rng, 2, 3);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new PermutationSampler(rng, 2, 3));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition2() {
         // Must fail for n = 0.
-        new PermutationSampler(rng, 0, 0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new PermutationSampler(rng, 0, 0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition3() {
         // Must fail for k < n < 0.
-        new PermutationSampler(rng, -1, 0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new PermutationSampler(rng, -1, 0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition4() {
         // Must fail for k < n < 0.
-        new PermutationSampler(rng, 1, -1);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new PermutationSampler(rng, 1, -1));
     }
 
     @Test

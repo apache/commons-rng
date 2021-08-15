@@ -31,23 +31,25 @@ public class LevySamplerTest {
     /**
      * Test the constructor with a negative scale.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNegativeScale() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double location = 1;
         final double scale = -1e-6;
-        LevySampler.of(rng, location, scale);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> LevySampler.of(rng, location, scale));
     }
 
     /**
      * Test the constructor with a zero scale.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroScale() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double location = 1;
         final double scale = 0;
-        LevySampler.of(rng, location, scale);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> LevySampler.of(rng, location, scale));
     }
 
     /**

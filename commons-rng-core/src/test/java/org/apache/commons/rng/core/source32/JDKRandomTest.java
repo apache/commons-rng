@@ -104,7 +104,7 @@ public class JDKRandomTest {
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testRestoreWithInvalidClass() throws IOException  {
         // Serialize something
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -123,7 +123,6 @@ public class JDKRandomTest {
         final RandomProviderDefaultState dummyState = new RandomProviderDefaultState(sizeAndState);
 
         final JDKRandom rng = new JDKRandom(13L);
-        // This should throw
-        rng.restoreState(dummyState);
+        Assertions.assertThrows(IllegalStateException.class, () -> rng.restoreState(dummyState));
     }
 }

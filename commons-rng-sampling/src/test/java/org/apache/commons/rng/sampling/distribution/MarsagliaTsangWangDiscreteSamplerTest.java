@@ -32,39 +32,50 @@ import org.junit.Test;
  * <p>Statistical testing of the sampler is performed using entries in {@link DiscreteSamplersList}.</p>
  */
 public class MarsagliaTsangWangDiscreteSamplerTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
-        createDiscreteDistributionSampler(null);
+        assertEnumeratedSamplerConstructorThrows(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
-        createDiscreteDistributionSampler(new double[0]);
+        assertEnumeratedSamplerConstructorThrows(new double[0]);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
-        createDiscreteDistributionSampler(new double[] {-1, 0.1, 0.2});
+        assertEnumeratedSamplerConstructorThrows(new double[] {-1, 0.1, 0.2});
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
-        createDiscreteDistributionSampler(new double[] {0.1, Double.NaN, 0.2});
+        assertEnumeratedSamplerConstructorThrows(new double[] {0.1, Double.NaN, 0.2});
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
-        createDiscreteDistributionSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
+        assertEnumeratedSamplerConstructorThrows(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
-        createDiscreteDistributionSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
+        assertEnumeratedSamplerConstructorThrows(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
-        createDiscreteDistributionSampler(new double[4]);
+        assertEnumeratedSamplerConstructorThrows(new double[4]);
+    }
+
+    /**
+     * Assert the enumerated sampler factory constructor throws an {@link IllegalArgumentException}.
+     *
+     * @param probabilities Probabilities.
+     */
+    private static void assertEnumeratedSamplerConstructorThrows(double[] probabilities) {
+        final UniformRandomProvider rng = new SplitMix64(0L);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities));
     }
 
     /**
@@ -72,22 +83,12 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      */
     @Test
     public void testToString() {
-        final DiscreteSampler sampler = createDiscreteDistributionSampler(new double[] {0.5, 0.5});
+        final UniformRandomProvider rng = new SplitMix64(0L);
+        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, new double[] {0.5, 0.5});
         String text = sampler.toString();
         for (String item : new String[] {"Marsaglia", "Tsang", "Wang"}) {
             Assertions.assertTrue(text.contains(item), () -> "toString missing: " + item);
         }
-    }
-
-    /**
-     * Creates the sampler.
-     *
-     * @param probabilities Probabilities.
-     * @return the sampler
-     */
-    private static SharedStateDiscreteSampler createDiscreteDistributionSampler(double[] probabilities) {
-        final UniformRandomProvider rng = new SplitMix64(0L);
-        return MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
     }
 
     // Sampling tests
@@ -295,23 +296,23 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Test the Poisson distribution with a bad mean that is above the supported range.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreatePoissonDistributionThrowsWithMeanLargerThanUpperBound() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1025;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean));
     }
 
     /**
      * Test the Poisson distribution with a bad mean that is below the supported range.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreatePoissonDistributionThrowsWithZeroMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean));
     }
 
     /**
@@ -359,49 +360,49 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Test the Binomial distribution with a bad number of trials.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBinomialDistributionThrowsWithTrialsBelow0() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = -1;
         final double p = 0.5;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p));
     }
 
     /**
      * Test the Binomial distribution with an unsupported number of trials.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBinomialDistributionThrowsWithTrialsAboveMax() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1 << 16; // 2^16
         final double p = 0.5;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p));
     }
 
     /**
      * Test the Binomial distribution with probability {@code < 0}.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBinomialDistributionThrowsWithProbabilityBelow0() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1;
         final double p = -0.5;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p));
     }
 
     /**
      * Test the Binomial distribution with probability {@code > 1}.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBinomialDistributionThrowsWithProbabilityAbove1() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1;
         final double p = 1.5;
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p));
     }
 
     /**
@@ -434,7 +435,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with distribution parameters that create a p(0)
      * that is zero (thus the distribution cannot be computed).
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBinomialDistributionThrowsWhenP0IsZero() {
         final UniformRandomProvider rng = new FixedRNG();
         // As above but increase the trials so p(0) should be zero
@@ -442,8 +443,8 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
         final double p = 0.5;
         // Validate set-up
         Assertions.assertEquals(0, getBinomialP0(trials, p), 0, "Invalid test set-up for p(0)");
-        @SuppressWarnings("unused")
-        final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> MarsagliaTsangWangDiscreteSampler.Binomial.of(rng, trials, p));
     }
 
     /**

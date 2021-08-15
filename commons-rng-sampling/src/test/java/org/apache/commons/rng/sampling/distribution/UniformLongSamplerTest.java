@@ -42,12 +42,13 @@ public class UniformLongSamplerTest {
     /**
      * Test the constructor with a bad range.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithLowerAboveUpper() {
         final long upper = 55;
         final long lower = upper + 1;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        UniformLongSampler.of(rng, lower, upper);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> UniformLongSampler.of(rng, lower, upper));
     }
 
     @Test

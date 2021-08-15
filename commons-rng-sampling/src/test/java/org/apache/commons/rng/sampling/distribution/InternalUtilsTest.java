@@ -38,14 +38,16 @@ public class InternalUtilsTest {
         }
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testFactorialThrowsWhenNegative() {
-        InternalUtils.factorial(-1);
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> InternalUtils.factorial(-1));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testFactorialThrowsWhenNotRepresentableAsLong() {
-        InternalUtils.factorial(MAX_REPRESENTABLE + 1);
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> InternalUtils.factorial(MAX_REPRESENTABLE + 1));
     }
 
     @Test
@@ -92,13 +94,15 @@ public class InternalUtilsTest {
         }
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test
     public void testLogFactorialThrowsWhenNegative() {
-        FactorialLog.create().value(-1);
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> FactorialLog.create().value(-1));
     }
 
-    @Test(expected = NegativeArraySizeException.class)
+    @Test
     public void testLogFactorialWithCacheThrowsWhenNegative() {
-        FactorialLog.create().withCache(-1);
+        Assertions.assertThrows(NegativeArraySizeException.class,
+            () -> FactorialLog.create().withCache(-1));
     }
 }

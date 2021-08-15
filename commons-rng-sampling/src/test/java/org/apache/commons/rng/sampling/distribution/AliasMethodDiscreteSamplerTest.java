@@ -31,39 +31,43 @@ import java.util.Arrays;
  * Test for the {@link AliasMethodDiscreteSampler}.
  */
 public class AliasMethodDiscreteSamplerTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNullProbabilites() {
-        createSampler(null);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroLengthProbabilites() {
-        createSampler(new double[0]);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[0]));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNegativeProbabilites() {
-        createSampler(new double[] {-1, 0.1, 0.2});
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createSampler(new double[] {-1, 0.1, 0.2}));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNaNProbabilites() {
-        createSampler(new double[] {0.1, Double.NaN, 0.2});
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createSampler(new double[] {0.1, Double.NaN, 0.2}));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteProbabilites() {
-        createSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteSumProbabilites() {
-        createSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroSumProbabilites() {
-        createSampler(new double[4]);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[4]));
     }
 
     @Test

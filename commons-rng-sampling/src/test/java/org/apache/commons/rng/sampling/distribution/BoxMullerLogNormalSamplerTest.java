@@ -19,6 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test for the {@link BoxMullerLogNormalSampler}. The tests hit edge cases for the sampler.
@@ -27,28 +28,28 @@ public class BoxMullerLogNormalSamplerTest {
     /**
      * Test the constructor with a bad scale.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings({"deprecation"})
+    @Test
     public void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = -1e-6;
         final double shape = 1;
-        @SuppressWarnings({"unused", "deprecation"})
-        final BoxMullerLogNormalSampler sampler =
-            new BoxMullerLogNormalSampler(rng, scale, shape);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new BoxMullerLogNormalSampler(rng, scale, shape));
     }
 
     /**
      * Test the constructor with a bad shape.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings({"deprecation"})
+    @Test
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;
         final double shape = 0;
-        @SuppressWarnings({"unused", "deprecation"})
-        final BoxMullerLogNormalSampler sampler =
-            new BoxMullerLogNormalSampler(rng, scale, shape);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new BoxMullerLogNormalSampler(rng, scale, shape));
     }
 }

@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
@@ -26,7 +27,7 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 public class ZigguratNormalizedGaussianSamplerTest {
     // Cf. RNG-56
-    @Test(expected = StackOverflowError.class)
+    @Test
     public void testInfiniteLoop() {
         // A bad implementation whose only purpose is to force access
         // to the rarest branch.
@@ -45,7 +46,8 @@ public class ZigguratNormalizedGaussianSamplerTest {
             };
 
         // Infinite loop (in v1.1).
-        new ZigguratNormalizedGaussianSampler(bad).sample();
+        Assertions.assertThrows(StackOverflowError.class,
+            () -> new ZigguratNormalizedGaussianSampler(bad).sample());
     }
 
     /**

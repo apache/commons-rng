@@ -35,10 +35,11 @@ public class BoxSamplerTest {
     /**
      * Test an unsupported dimension.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        BoxSampler.of(rng, new double[1], new double[1]);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> BoxSampler.of(rng, new double[1], new double[1]));
     }
 
     /**

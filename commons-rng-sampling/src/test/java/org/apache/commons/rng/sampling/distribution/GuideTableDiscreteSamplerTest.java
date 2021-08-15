@@ -29,66 +29,68 @@ import org.junit.Test;
  * Test for the {@link GuideTableDiscreteSampler}.
  */
 public class GuideTableDiscreteSamplerTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNullProbabilites() {
-        createSampler(null, 1.0);
+        assertConstructorThrows(null, 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroLengthProbabilites() {
-        createSampler(new double[0], 1.0);
+        assertConstructorThrows(new double[0], 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNegativeProbabilites() {
-        createSampler(new double[] {-1, 0.1, 0.2}, 1.0);
+        assertConstructorThrows(new double[] {-1, 0.1, 0.2}, 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNaNProbabilites() {
-        createSampler(new double[] {0.1, Double.NaN, 0.2}, 1.0);
+        assertConstructorThrows(new double[] {0.1, Double.NaN, 0.2}, 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteProbabilites() {
-        createSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}, 1.0);
+        assertConstructorThrows(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}, 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithInfiniteSumProbabilites() {
-        createSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}, 1.0);
+        assertConstructorThrows(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}, 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroSumProbabilites() {
-        createSampler(new double[4], 1.0);
+        assertConstructorThrows(new double[4], 1.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroAlpha() {
-        createSampler(new double[] {0.5, 0.5}, 0.0);
+        assertConstructorThrows(new double[] {0.5, 0.5}, 0.0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNegativeAlpha() {
-        createSampler(new double[] {0.5, 0.5}, -1.0);
+        assertConstructorThrows(new double[] {0.5, 0.5}, -1.0);
+    }
+
+    /**
+     * Assert the factory constructor throws and {@link IllegalArgumentException}.
+     *
+     * @param probabilities the probabilities
+     * @param alpha the alpha
+     */
+    private static void assertConstructorThrows(double[] probabilities, double alpha) {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> GuideTableDiscreteSampler.of(rng, probabilities, alpha));
     }
 
     @Test
     public void testToString() {
-        final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5}, 1.0);
-        Assertions.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
-    }
-
-    /**
-     * Creates the sampler.
-     *
-     * @param probabilities the probabilities
-     * @return the alias method discrete sampler
-     */
-    private static SharedStateDiscreteSampler createSampler(double[] probabilities, double alpha) {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
-        return GuideTableDiscreteSampler.of(rng, probabilities, alpha);
+        final SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(rng, new double[] {0.5, 0.5}, 1.0);
+        Assertions.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
     }
 
     /**
@@ -201,7 +203,8 @@ public class GuideTableDiscreteSamplerTest {
      * @param alpha the alpha
      */
     private static void checkSamples(double[] probabilies, double alpha) {
-        final SharedStateDiscreteSampler sampler = createSampler(probabilies, alpha);
+        final UniformRandomProvider rng = RandomSource.JSF_64.create();
+        final SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(rng, probabilies, alpha);
 
         final int numberOfSamples = 10000;
         final long[] samples = new long[probabilies.length];

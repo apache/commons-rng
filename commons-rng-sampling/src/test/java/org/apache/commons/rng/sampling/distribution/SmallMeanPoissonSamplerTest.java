@@ -29,7 +29,7 @@ public class SmallMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
         final UniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
@@ -37,18 +37,20 @@ public class SmallMeanPoissonSamplerTest {
         // Note: p0 = Math.exp(-mean) => mean = -Math.log(p0).
         // Add to the limit on the mean to cause p0 to be zero.
         final double mean = -Math.log(p0) + 1;
-        SmallMeanPoissonSampler.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> SmallMeanPoissonSampler.of(rng, mean));
     }
 
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroMean() {
         final UniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
-        SmallMeanPoissonSampler.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> SmallMeanPoissonSampler.of(rng, mean));
     }
 
     /**

@@ -33,12 +33,13 @@ public class DiscreteUniformSamplerTest {
     /**
      * Test the constructor with a bad range.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithLowerAboveUpper() {
         final int upper = 55;
         final int lower = upper + 1;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DiscreteUniformSampler.of(rng, lower, upper);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DiscreteUniformSampler.of(rng, lower, upper));
     }
 
     @Test

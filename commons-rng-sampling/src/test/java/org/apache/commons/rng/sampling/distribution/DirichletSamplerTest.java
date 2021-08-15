@@ -31,52 +31,60 @@ import org.apache.commons.rng.simple.RandomSource;
  * Test for {@link DirichletSampler}.
  */
 public class DirichletSamplerTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDistributionThrowsWithInvalidNumberOfCategories() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.of(rng, 1.0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.of(rng, 1.0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDistributionThrowsWithZeroConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.of(rng, 1.0, 0.0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.of(rng, 1.0, 0.0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDistributionThrowsWithNaNConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.of(rng, 1.0, Double.NaN);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.of(rng, 1.0, Double.NaN));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDistributionThrowsWithInfiniteConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.of(rng, 1.0, Double.POSITIVE_INFINITY);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.of(rng, 1.0, Double.POSITIVE_INFINITY));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSymmetricDistributionThrowsWithInvalidNumberOfCategories() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.symmetric(rng, 1, 1.0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> DirichletSampler.symmetric(rng, 1, 1.0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSymmetricDistributionThrowsWithZeroConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.symmetric(rng, 2, 0.0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.symmetric(rng, 2, 0.0));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSymmetricDistributionThrowsWithNaNConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.symmetric(rng, 2, Double.NaN);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.symmetric(rng, 2, Double.NaN));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSymmetricDistributionThrowsWithInfiniteConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        DirichletSampler.symmetric(rng, 2, Double.POSITIVE_INFINITY);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DirichletSampler.symmetric(rng, 2, Double.POSITIVE_INFINITY));
     }
 
     /**

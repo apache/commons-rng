@@ -34,18 +34,20 @@ public class UnitSphereSamplerTest {
     /**
      * Test a non-positive dimension.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDimensionThrows() {
         // Use instance constructor not factory constructor to exercise 1.X public API
-        new UnitSphereSampler(0, null);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new UnitSphereSampler(0, null));
     }
 
     /**
      * Test a non-positive dimension.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDimensionThrowsWithFactoryConstructor() {
-        UnitSphereSampler.of(null, 0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> UnitSphereSampler.of(null, 0));
     }
 
     /**
@@ -345,25 +347,28 @@ public class UnitSphereSamplerTest {
     /**
      * Test infinite recursion occurs with a bad provider in 2D.
      */
-    @Test(expected = StackOverflowError.class)
+    @Test
     public void testBadProvider2D() {
-        testBadProvider(2);
+        Assertions.assertThrows(StackOverflowError.class,
+            () -> testBadProvider(2));
     }
 
     /**
      * Test infinite recursion occurs with a bad provider in 3D.
      */
-    @Test(expected = StackOverflowError.class)
+    @Test
     public void testBadProvider3D() {
-        testBadProvider(3);
+        Assertions.assertThrows(StackOverflowError.class,
+            () -> testBadProvider(3));
     }
 
     /**
      * Test infinite recursion occurs with a bad provider in 4D.
      */
-    @Test(expected = StackOverflowError.class)
+    @Test
     public void testBadProvider4D() {
-        testBadProvider(4);
+        Assertions.assertThrows(StackOverflowError.class,
+            () -> testBadProvider(4));
     }
 
     /**

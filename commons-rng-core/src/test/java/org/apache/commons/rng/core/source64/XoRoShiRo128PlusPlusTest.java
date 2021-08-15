@@ -18,6 +18,7 @@ package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 public class XoRoShiRo128PlusPlusTest {
     /** The size of the array SEED. */
@@ -115,8 +116,8 @@ public class XoRoShiRo128PlusPlusTest {
      * and the abstract nextOutput() method should not be used. This test checks the method
      * throws an exception if used.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testNextOutputThrows() {
-        new XoRoShiRo128PlusPlus(SEED).nextOutput();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> new XoRoShiRo128PlusPlus(SEED).nextOutput());
     }
 }

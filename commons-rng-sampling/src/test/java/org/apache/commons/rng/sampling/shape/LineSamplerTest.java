@@ -35,10 +35,11 @@ public class LineSamplerTest {
     /**
      * Test an unsupported dimension.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        LineSampler.of(rng, new double[0], new double[0]);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> LineSampler.of(rng, new double[0], new double[0]));
     }
 
     /**

@@ -81,19 +81,21 @@ public class ListSamplerTest {
         Assertions.assertTrue(one.contains("one"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition1() {
         // Must fail for sample size > collection size.
         final List<String> list = new ArrayList<String>();
         list.add("one");
-        ListSampler.sample(rng, list, 2);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> ListSampler.sample(rng, list, 2));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSamplePrecondition2() {
         // Must fail for empty collection.
         final List<String> list = new ArrayList<String>();
-        ListSampler.sample(rng, list, 1);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> ListSampler.sample(rng, list, 1));
     }
 
     @Test

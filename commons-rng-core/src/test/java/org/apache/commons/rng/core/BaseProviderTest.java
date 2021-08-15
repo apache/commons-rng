@@ -29,19 +29,21 @@ import org.junit.jupiter.api.Assumptions;
  * tests too).
  */
 public class BaseProviderTest {
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testStateSizeTooSmall() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
         Assumptions.assumeTrue(size > 0);
-        dummy.restoreState(new RandomProviderDefaultState(new byte[size - 1]));
+        final RandomProviderDefaultState state = new RandomProviderDefaultState(new byte[size - 1]);
+        Assertions.assertThrows(IllegalStateException.class, () -> dummy.restoreState(state));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testStateSizeTooLarge() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
-        dummy.restoreState(new RandomProviderDefaultState(new byte[size + 1]));
+        final RandomProviderDefaultState state = new RandomProviderDefaultState(new byte[size + 1]);
+        Assertions.assertThrows(IllegalStateException.class, () -> dummy.restoreState(state));
     }
 
     @Test

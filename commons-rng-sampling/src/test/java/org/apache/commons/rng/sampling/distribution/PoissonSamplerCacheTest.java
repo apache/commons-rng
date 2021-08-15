@@ -98,11 +98,12 @@ public class PoissonSamplerCacheTest {
     /**
      * Test the cache requires a range with {@code max >= min}.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextDown(min);
-        createPoissonSamplerCache(min, max);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createPoissonSamplerCache(min, max));
     }
 
     /**
@@ -184,11 +185,12 @@ public class PoissonSamplerCacheTest {
     /**
      * Test the cache requires a range with {@code max >= min}.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWithRangeConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextDown(min);
-        createPoissonSamplerCache().withRange(min, max);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createPoissonSamplerCache().withRange(min, max));
     }
 
     /**
@@ -244,24 +246,26 @@ public class PoissonSamplerCacheTest {
      *
      * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateSharedStateSamplerThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
-        cache.createSharedStateSampler(rng, 0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> cache.createSharedStateSampler(rng, 0));
     }
 
     /**
      * Test createSharedStateSampler() with a mean that is too large.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         final double mean = Integer.MAX_VALUE + 1.0;
-        cache.createSharedStateSampler(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> cache.createSharedStateSampler(rng, mean));
     }
 
     // Sampling tests

@@ -21,6 +21,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test for the {@link InverseTransformParetoSampler}. The tests hit edge cases for the sampler.
@@ -29,25 +30,27 @@ public class InverseTransformParetoSamplerTest {
     /**
      * Test the constructor with a bad scale.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 0;
         final double shape = 1;
-        InverseTransformParetoSampler.of(rng, scale, shape);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> InverseTransformParetoSampler.of(rng, scale, shape));
     }
 
     /**
      * Test the constructor with a bad shape.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;
         final double shape = 0;
-        InverseTransformParetoSampler.of(rng, scale, shape);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> InverseTransformParetoSampler.of(rng, scale, shape));
     }
 
     /**

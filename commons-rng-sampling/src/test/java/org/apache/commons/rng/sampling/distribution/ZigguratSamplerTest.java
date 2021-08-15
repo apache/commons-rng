@@ -36,11 +36,12 @@ public class ZigguratSamplerTest {
     /**
      * Test the exponential constructor with a bad mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testExponentialConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
-        ZigguratSampler.Exponential.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> ZigguratSampler.Exponential.of(rng, mean));
     }
 
     /**

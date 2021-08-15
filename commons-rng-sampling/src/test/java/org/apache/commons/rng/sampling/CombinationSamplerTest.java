@@ -73,44 +73,49 @@ public class CombinationSamplerTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testKgreaterThanNThrows() {
         // Must fail for k > n.
         final int n = 2;
         final int k = 3;
-        new CombinationSampler(rng, n, k);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CombinationSampler(rng, n, k));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNequalsZeroThrows() {
         // Must fail for n = 0.
         final int n = 0;
         final int k = 3;
-        new CombinationSampler(rng, n, k);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CombinationSampler(rng, n, k));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testKequalsZeroThrows() {
         // Must fail for k = 0.
         final int n = 2;
         final int k = 0;
-        new CombinationSampler(rng, n, k);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CombinationSampler(rng, n, k));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNisNegativeThrows() {
         // Must fail for n <= 0.
         final int n = -1;
         final int k = 3;
-        new CombinationSampler(rng, n, k);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CombinationSampler(rng, n, k));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testKisNegativeThrows() {
         // Must fail for k <= 0.
         final int n = 0;
         final int k = -1;
-        new CombinationSampler(rng, n, k);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new CombinationSampler(rng, n, k));
     }
 
     /**

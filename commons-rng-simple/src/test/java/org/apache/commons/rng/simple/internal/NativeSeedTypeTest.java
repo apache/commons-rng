@@ -27,9 +27,9 @@ public class NativeSeedTypeTest {
      * Test the conversion throws for an unsupported type. All supported types are
      * tested in the {@link NativeSeedTypeParametricTest}.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testConvertSeedToBytesUsingNullThrows() {
-        NativeSeedType.convertSeedToBytes(null);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> NativeSeedType.convertSeedToBytes(null));
     }
 
     /**

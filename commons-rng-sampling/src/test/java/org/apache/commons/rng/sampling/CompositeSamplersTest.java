@@ -63,23 +63,25 @@ public class CompositeSamplersTest {
     /**
      * Test an empty builder cannot build a sampler.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testEmptyBuilderThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         Assertions.assertEquals(0, builder.size());
-        builder.build(rng);
+        Assertions.assertThrows(IllegalStateException.class,
+            () -> builder.build(rng));
     }
 
     /**
      * Test adding null sampler to a builder.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testNullSharedStateObjectSamplerThrows() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
-        builder.add(null, 1.0);
+        Assertions.assertThrows(NullPointerException.class,
+            () -> builder.add(null, 1.0));
     }
 
     /**

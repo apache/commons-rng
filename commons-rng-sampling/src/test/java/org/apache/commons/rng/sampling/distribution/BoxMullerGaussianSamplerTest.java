@@ -19,6 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test for the {@link BoxMullerGaussianSampler}. The tests hit edge cases for the sampler.
@@ -27,14 +28,14 @@ public class BoxMullerGaussianSamplerTest {
     /**
      * Test the constructor with a bad standard deviation.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @SuppressWarnings({"deprecation"})
+    @Test
     public void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1;
         final double standardDeviation = 0;
-        @SuppressWarnings({"unused", "deprecation"})
-        final BoxMullerGaussianSampler sampler =
-            new BoxMullerGaussianSampler(rng, mean, standardDeviation);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> new BoxMullerGaussianSampler(rng, mean, standardDeviation));
     }
 }

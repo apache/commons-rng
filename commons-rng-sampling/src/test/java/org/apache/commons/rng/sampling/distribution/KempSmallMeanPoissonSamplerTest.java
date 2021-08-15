@@ -42,41 +42,41 @@ public class KempSmallMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final double mean = SUPPORTED_UPPER_BOUND + 1;
-        @SuppressWarnings("unused")
-        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
     }
 
     /**
      * Test the constructor with zero mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroMean() {
         final double mean = 0;
-        @SuppressWarnings("unused")
-        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
     }
 
     /**
      * Test the constructor with a negative mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithNegativeMean() {
         final double mean = -1;
-        @SuppressWarnings("unused")
-        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
     }
 
     /**
      * Test the constructor with a NaN mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorWithNaNMean() {
         final double mean = Double.NaN;
-        @SuppressWarnings("unused")
-        SharedStateDiscreteSampler sampler = KempSmallMeanPoissonSampler.of(dummyRng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
     }
 
     /**

@@ -30,25 +30,27 @@ public class ChengBetaSamplerTest {
     /**
      * Test the constructor with a bad alpha.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 0;
         final double beta = 1;
-        ChengBetaSampler.of(rng, alpha, beta);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> ChengBetaSampler.of(rng, alpha, beta));
     }
 
     /**
      * Test the constructor with a bad beta.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroBeta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 1;
         final double beta = 0;
-        ChengBetaSampler.of(rng, alpha, beta);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> ChengBetaSampler.of(rng, alpha, beta));
     }
 
     /**

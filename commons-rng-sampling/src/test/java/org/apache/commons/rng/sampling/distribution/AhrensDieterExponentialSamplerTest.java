@@ -39,12 +39,12 @@ public class AhrensDieterExponentialSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
-        AhrensDieterExponentialSampler.of(rng, mean);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> AhrensDieterExponentialSampler.of(rng, mean));
     }
 
     /**

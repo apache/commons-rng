@@ -35,10 +35,11 @@ public class UnitBallSamplerTest {
     /**
      * Test a non-positive dimension.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        UnitBallSampler.of(rng, 0);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> UnitBallSampler.of(rng, 0));
     }
 
     /**

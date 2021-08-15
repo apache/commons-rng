@@ -120,10 +120,10 @@ public class JDKRandomWrapperTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNextLongInRangeThrows() {
         final UniformRandomProvider rng1 = new JDKRandomWrapper(new Random(5675767L));
-        rng1.nextLong(0);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> rng1.nextLong(0));
     }
 
     /**

@@ -21,6 +21,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test for the {@link RejectionInversionZipfSampler}. The tests hit edge cases for the sampler.
@@ -29,25 +30,27 @@ public class RejectionInversionZipfSamplerTest {
     /**
      * Test the constructor with a bad number of elements.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroNumberOfElements() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 0;
         final double exponent = 1;
-        RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> RejectionInversionZipfSampler.of(rng, numberOfElements, exponent));
     }
 
     /**
      * Test the constructor with a bad exponent.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testConstructorThrowsWithZeroExponent() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 1;
         final double exponent = 0;
-        RejectionInversionZipfSampler.of(rng, numberOfElements, exponent);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> RejectionInversionZipfSampler.of(rng, numberOfElements, exponent));
     }
 
     /**

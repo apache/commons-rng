@@ -73,22 +73,23 @@ public class StableSamplerTest {
     private static final double VALID_GAMMA = 2.34;
     private static final double VALID_DELTA = 3.45;
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAlphaZeroThrows() {
-        createStableSampler(0.0, VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(0.0, VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAlphaBelowZeroThrows() {
-        createStableSampler(Math.nextDown(0.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(Math.nextDown(0.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAlphaTooCloseToZeroThrows() {
         // The realistic range for alpha is not Double.MIN_VALUE.
         // The number 1 - alpha must not be 1.
         // This is valid
-        StableSampler s = createStableSampler(SMALLEST_ALPHA, VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        final UniformRandomProvider rng = new SplitMix64(0L);
+        StableSampler s = StableSampler.of(rng, SMALLEST_ALPHA, VALID_BETA, VALID_GAMMA, VALID_DELTA);
         Assertions.assertNotNull(s);
 
         // Smaller than this is still above zero but 1 - alpha == 1
@@ -97,76 +98,76 @@ public class StableSamplerTest {
         Assertions.assertEquals(1.0, 1 - alphaTooSmall, "Expected rounding to 1");
 
         // Because alpha is effectively zero this will throw
-        createStableSampler(alphaTooSmall, VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(alphaTooSmall, VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAlphaAboveTwoThrows() {
-        createStableSampler(Math.nextUp(2.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(Math.nextUp(2.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAlphaNaNThrows() {
-        createStableSampler(Double.NaN, VALID_BETA, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(Double.NaN, VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testBetaBelowMinusOneThrows() {
-        createStableSampler(VALID_ALPHA, Math.nextDown(-1.0), VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, Math.nextDown(-1.0), VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testBetaAboveOneThrows() {
-        createStableSampler(VALID_ALPHA, Math.nextUp(1.0), VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, Math.nextUp(1.0), VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testBetaNaNThrows() {
-        createStableSampler(VALID_ALPHA, Double.NaN, VALID_GAMMA, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, Double.NaN, VALID_GAMMA, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGammaNotStrictlyPositiveThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, 0.0, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, 0.0, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGammaInfThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, Double.POSITIVE_INFINITY, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, Double.POSITIVE_INFINITY, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGammaNaNThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, Double.NaN, VALID_DELTA);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, Double.NaN, VALID_DELTA);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDeltaInfThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.POSITIVE_INFINITY);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.POSITIVE_INFINITY);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDeltaNegInfThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NEGATIVE_INFINITY);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NEGATIVE_INFINITY);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testDeltaNaNThrows() {
-        createStableSampler(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NaN);
+        assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NaN);
     }
 
     /**
-     * Creates the stable sampler. Used for factory constructor tests with a default RNG.
+     * Asserts the stable sampler factory constructor throws an {@link IllegalArgumentException}.
      *
      * @param alpha Stability parameter. Must be in range {@code (0, 2]}.
      * @param beta Skewness parameter. Must be in range {@code [-1, 1]}.
      * @param gamma Scale parameter. Must be strictly positive and finite.
      * @param delta Location parameter. Must be finite.
-     * @return the stable sampler
      */
-    private static StableSampler createStableSampler(double alpha, double beta, double gamma, double delta) {
+    private static void assertConstructorThrows(double alpha, double beta, double gamma, double delta) {
         final UniformRandomProvider rng = new SplitMix64(0L);
-        return StableSampler.of(rng, alpha, beta, gamma, delta);
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> StableSampler.of(rng, alpha, beta, gamma, delta));
     }
 
     /**

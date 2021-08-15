@@ -107,13 +107,13 @@ public class HexTest {
         Assertions.assertArrayEquals(text.toLowerCase(Locale.US).toCharArray(), Hex.encodeHex(decoded));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testHexThrowsWithOddNumberOfCharacters() {
-        Hex.decodeHex("0");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Hex.decodeHex("0"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testHexThrowsWithIllegalHexCharacters() {
-        Hex.decodeHex("0g");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Hex.decodeHex("0g"));
     }
 }
