@@ -22,10 +22,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
@@ -34,42 +32,30 @@ import org.apache.commons.rng.RandomProviderState;
 /**
  * Tests which all generators must pass.
  */
-@RunWith(value = Parameterized.class)
 public class ProvidersCommonParametricTest {
-    /** RNG under test. */
-    private final RestorableUniformRandomProvider generator;
-
-    /**
-     * Initializes generator instance.
-     *
-     * @param rng RNG to be tested.
-     */
-    public ProvidersCommonParametricTest(RestorableUniformRandomProvider rng) {
-        generator = rng;
-    }
-
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<RestorableUniformRandomProvider[]> getList() {
+    private static Iterable<RestorableUniformRandomProvider> getList() {
         return ProvidersList.list();
     }
 
-
     // Precondition tests
 
-    @Test
-    public void testPreconditionNextInt() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testPreconditionNextInt(UniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextInt(-1));
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextInt(0));
     }
 
-    @Test
-    public void testPreconditionNextLong() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testPreconditionNextLong(UniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextLong(-1));
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextLong(0));
     }
 
-    @Test
-    public void testPreconditionNextBytes() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testPreconditionNextBytes(UniformRandomProvider generator) {
         final int size = 10;
         final int num = 1;
         final byte[] buf = new byte[size];
@@ -80,11 +66,11 @@ public class ProvidersCommonParametricTest {
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, offset, -1));
     }
 
-
     // Uniformity tests
 
-    @Test
-    public void testUniformNextBytesFullBuffer() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextBytesFullBuffer(UniformRandomProvider generator) {
         // Value chosen to exercise all the code lines in the
         // "nextBytes" methods.
         final int size = 23;
@@ -97,11 +83,12 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        Assertions.assertTrue(isUniformNextBytes(buffer, 0, size, nextMethod));
+        Assertions.assertTrue(isUniformNextBytes(buffer, 0, size, nextMethod), generator::toString);
     }
 
-    @Test
-    public void testUniformNextBytesPartialBuffer() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextBytesPartialBuffer(UniformRandomProvider generator) {
         final int totalSize = 1234;
         final int offset = 567;
         final int size = 89;
@@ -116,52 +103,57 @@ public class ProvidersCommonParametricTest {
         };
 
         // Test should pass for the part of the buffer where values are put.
-        Assertions.assertTrue(isUniformNextBytes(buffer, offset, offset + size, nextMethod));
+        Assertions.assertTrue(isUniformNextBytes(buffer, offset, offset + size, nextMethod), generator::toString);
 
         // Test must fail for the parts of the buffer where no values are put.
         Assertions.assertFalse(isUniformNextBytes(buffer, 0, offset, nextMethod));
         Assertions.assertFalse(isUniformNextBytes(buffer, offset + size, buffer.length, nextMethod));
     }
 
-    @Test
-    public void testUniformNextIntegerInRange() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextIntegerInRange(UniformRandomProvider generator) {
         // Statistical test uses 10 bins so tests are invalid below this level
-        checkNextIntegerInRange(10, 1000);
-        checkNextIntegerInRange(12, 1000);
-        checkNextIntegerInRange(31, 1000);
-        checkNextIntegerInRange(32, 1000);
-        checkNextIntegerInRange(2016128993, 1000);
-        checkNextIntegerInRange(1834691456, 1000);
-        checkNextIntegerInRange(869657561, 1000);
-        checkNextIntegerInRange(1570504788, 1000);
+        checkNextIntegerInRange(generator, 10, 1000);
+        checkNextIntegerInRange(generator, 12, 1000);
+        checkNextIntegerInRange(generator, 31, 1000);
+        checkNextIntegerInRange(generator, 32, 1000);
+        checkNextIntegerInRange(generator, 2016128993, 1000);
+        checkNextIntegerInRange(generator, 1834691456, 1000);
+        checkNextIntegerInRange(generator, 869657561, 1000);
+        checkNextIntegerInRange(generator, 1570504788, 1000);
     }
 
-    @Test
-    public void testUniformNextLongInRange() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextLongInRange(UniformRandomProvider generator) {
         // Statistical test uses 10 bins so tests are invalid below this level
-        checkNextLongInRange(11, 1000);
-        checkNextLongInRange(19, 1000);
-        checkNextLongInRange(31, 1000);
-        checkNextLongInRange(32, 1000);
+        checkNextLongInRange(generator, 11, 1000);
+        checkNextLongInRange(generator, 19, 1000);
+        checkNextLongInRange(generator, 31, 1000);
+        checkNextLongInRange(generator, 32, 1000);
 
         final long q = Long.MAX_VALUE / 4;
-        checkNextLongInRange(q, 1000);
-        checkNextLongInRange(2 * q, 1000);
-        checkNextLongInRange(3 * q, 1000);
+        checkNextLongInRange(generator, q, 1000);
+        checkNextLongInRange(generator, 2 * q, 1000);
+        checkNextLongInRange(generator, 3 * q, 1000);
     }
 
-    @Test
-    public void testUniformNextFloat() {
-        checkNextFloat(1000);
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextFloat(UniformRandomProvider generator) {
+        checkNextFloat(generator, 1000);
     }
 
-    @Test
-    public void testUniformNextDouble() {
-        checkNextDouble(1000);
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextDouble(UniformRandomProvider generator) {
+        checkNextDouble(generator, 1000);
     }
 
-    @Test
-    public void testUniformNextIntRandomWalk() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextIntRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -169,11 +161,12 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkRandomWalk(1000, nextMethod);
+        checkRandomWalk(generator, 1000, nextMethod);
     }
 
-    @Test
-    public void testUniformNextLongRandomWalk() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextLongRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -181,11 +174,12 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkRandomWalk(1000, nextMethod);
+        checkRandomWalk(generator, 1000, nextMethod);
     }
 
-    @Test
-    public void testUniformNextBooleanRandomWalk() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testUniformNextBooleanRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -193,13 +187,14 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkRandomWalk(1000, nextMethod);
+        checkRandomWalk(generator, 1000, nextMethod);
     }
 
     // State save and restore tests.
 
-    @Test
-    public void testStateSettable() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testStateSettable(RestorableUniformRandomProvider generator) {
         // Should be fairly large in order to ensure that all the internal
         // state is away from its initial settings.
         final int n = 10000;
@@ -207,29 +202,31 @@ public class ProvidersCommonParametricTest {
         // Save.
         final RandomProviderState state = generator.saveState();
         // Store some values.
-        final List<Number> listOrig = makeList(n);
+        final List<Number> listOrig = makeList(n, generator);
         // Discard a few more.
-        final List<Number> listDiscard = makeList(n);
+        final List<Number> listDiscard = makeList(n, generator);
         Assertions.assertNotEquals(0, listDiscard.size());
         Assertions.assertNotEquals(listOrig, listDiscard);
         // Reset.
         generator.restoreState(state);
         // Replay.
-        final List<Number> listReplay = makeList(n);
+        final List<Number> listReplay = makeList(n, generator);
         Assertions.assertNotSame(listOrig, listReplay);
         // Check that the restored state is the same as the original.
         Assertions.assertEquals(listOrig, listReplay);
     }
 
-    @Test
-    public void testStateWrongSize() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testStateWrongSize(RestorableUniformRandomProvider generator) {
         final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
         Assertions.assertThrows(IllegalStateException.class, () -> generator.restoreState(state));
     }
 
-    @Test
-    public void testRestoreForeignState() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testRestoreForeignState(RestorableUniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.restoreState(new RandomProviderState() {}));
     }
 
@@ -239,10 +236,11 @@ public class ProvidersCommonParametricTest {
      * Populates a list with random numbers.
      *
      * @param n Loop counter.
+     * @param generator RNG under test.
      * @return a list containing {@code 11 * n} random numbers.
      */
-    private List<Number> makeList(int n) {
-        final List<Number> list = new ArrayList<Number>();
+    private List<Number> makeList(int n, UniformRandomProvider generator) {
+        final List<Number> list = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
             // Append 11 values.
@@ -328,11 +326,14 @@ public class ProvidersCommonParametricTest {
      * approximately equal number of counts.
      * The test uses the expectation from a fixed-step "random walk".
      *
+     * @param generator Generator.
+     * @param sampleSize Number of random values generated.
      * @param nextMethod Method that returns {@code true} if the generated
      * values are to be placed in the first bin, {@code false} if it must
      * go to the second bin.
      */
-    private void checkRandomWalk(int sampleSize,
+    private void checkRandomWalk(UniformRandomProvider generator,
+                                 int sampleSize,
                                  Callable<Boolean> nextMethod) {
         int walk = 0;
 
@@ -359,41 +360,32 @@ public class ProvidersCommonParametricTest {
     /**
      * Tests uniformity of the distribution produced by {@code nextInt(int)}.
      *
+     * @param generator Generator.
      * @param max Upper bound.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextIntegerInRange(final int max,
-                                         int sampleSize) {
-        checkNextIntegerInRange(generator, max, sampleSize);
-    }
-
-    /**
-     * Tests uniformity of the distribution produced by {@code nextInt(int)}.
-     *
-     * @param rng Generator.
-     * @param max Upper bound.
-     * @param sampleSize Number of random values generated.
-     */
-    private void checkNextIntegerInRange(final UniformRandomProvider rng,
+    private void checkNextIntegerInRange(final UniformRandomProvider generator,
                                          final int max,
                                          int sampleSize) {
         final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
-                return rng.nextInt(max);
+                return generator.nextInt(max);
             }
         };
 
-        checkNextInRange(max, sampleSize, nextMethod);
+        checkNextInRange(generator, max, sampleSize, nextMethod);
     }
 
     /**
      * Tests uniformity of the distribution produced by {@code nextLong(long)}.
      *
+     * @param generator Generator.
      * @param max Upper bound.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextLongInRange(final long max,
+    private void checkNextLongInRange(final UniformRandomProvider generator,
+                                      long max,
                                       int sampleSize) {
         final Callable<Long> nextMethod = new Callable<Long>() {
             @Override
@@ -402,15 +394,17 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkNextInRange(max, sampleSize, nextMethod);
+        checkNextInRange(generator, max, sampleSize, nextMethod);
     }
 
     /**
      * Tests uniformity of the distribution produced by {@code nextFloat()}.
      *
+     * @param generator Generator.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextFloat(int sampleSize) {
+    private void checkNextFloat(final UniformRandomProvider generator,
+                                int sampleSize) {
         final int max = 1234;
         final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
@@ -419,15 +413,17 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkNextInRange(max, sampleSize, nextMethod);
+        checkNextInRange(generator, max, sampleSize, nextMethod);
     }
 
     /**
      * Tests uniformity of the distribution produced by {@code nextDouble()}.
      *
+     * @param generator Generator.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextDouble(int sampleSize) {
+    private void checkNextDouble(final UniformRandomProvider generator,
+                                 int sampleSize) {
         final int max = 578;
         final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
@@ -436,7 +432,7 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkNextInRange(max, sampleSize, nextMethod);
+        checkNextInRange(generator, max, sampleSize, nextMethod);
     }
 
     /**
@@ -447,11 +443,13 @@ public class ProvidersCommonParametricTest {
      * Repeat tests are performed at the 1% level and the total number of failed
      * tests is tested at the 0.5% significance level.
      *
+     * @param generator Generator.
      * @param max Upper bound.
      * @param nextMethod method to call.
      * @param sampleSize Number of random values generated.
      */
-    private <T extends Number> void checkNextInRange(T max,
+    private <T extends Number> void checkNextInRange(final UniformRandomProvider generator,
+                                                     T max,
                                                      int sampleSize,
                                                      Callable<T> nextMethod) {
         final int numTests = 500;
@@ -532,27 +530,27 @@ public class ProvidersCommonParametricTest {
     }
 
     /**
-     * @param rng Generator.
+     * @param generator Generator.
      * @param chunkSize Size of the small buffer.
      * @param numChunks Number of chunks that make the large buffer.
      */
-    static void checkNextBytesChunks(RestorableUniformRandomProvider rng,
+    static void checkNextBytesChunks(RestorableUniformRandomProvider generator,
                                      int chunkSize,
                                      int numChunks) {
         final byte[] b1 = new byte[chunkSize * numChunks];
         final byte[] b2 = new byte[chunkSize];
 
-        final RandomProviderState state = rng.saveState();
+        final RandomProviderState state = generator.saveState();
 
         // Generate the chunks in a single call.
-        rng.nextBytes(b1);
+        generator.nextBytes(b1);
 
         // Reset to previous state.
-        rng.restoreState(state);
+        generator.restoreState(state);
 
         // Generate the chunks in consecutive calls.
         for (int i = 0; i < numChunks; i++) {
-            rng.nextBytes(b2);
+            generator.nextBytes(b2);
         }
 
         // Store last "chunkSize" bytes of b1 into b3.

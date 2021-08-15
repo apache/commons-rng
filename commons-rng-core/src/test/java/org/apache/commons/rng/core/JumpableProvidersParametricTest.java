@@ -18,10 +18,8 @@ package org.apache.commons.rng.core;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
 
@@ -36,7 +34,6 @@ import org.apache.commons.rng.core.source64.LongProvider;
 /**
  * Tests which all {@link JumpableUniformRandomProvider} generators must pass.
  */
-@RunWith(value = Parameterized.class)
 public class JumpableProvidersParametricTest {
     /** The size of the state for the IntProvider. */
     private static final int INT_PROVIDER_STATE_SIZE;
@@ -48,81 +45,54 @@ public class JumpableProvidersParametricTest {
         LONG_PROVIDER_STATE_SIZE = new State64Generator().getStateSize();
     }
 
-    /** RNG under test. */
-    private final JumpableUniformRandomProvider generator;
-
-    /**
-     * Initializes generator instance.
-     *
-     * @param rng RNG to be tested.
-     */
-    public JumpableProvidersParametricTest(JumpableUniformRandomProvider rng) {
-        generator = rng;
-    }
-
     /**
      * Gets the list of Jumpable generators.
      *
      * @return the list
      */
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<JumpableUniformRandomProvider[]> getList() {
+    private static Iterable<JumpableUniformRandomProvider> getJumpableProviders() {
         return ProvidersList.listJumpable();
     }
 
     /**
-     * Gets the function using the {@link JumpableUniformRandomProvider#jump()} method.
-     *
-     * @return the jump function
-     */
-    private TestJumpFunction getJumpFunction() {
-        return new TestJumpFunction() {
-            @Override
-            public UniformRandomProvider jump() {
-                return generator.jump();
-            }
-        };
-    }
-
-    /**
      * Gets the function using the {@link LongJumpableUniformRandomProvider#longJump()} method.
+     * If the RNG is not long jumpable then this will raise an exception to skip the test.
      *
+     * @param generator RNG under test.
      * @return the jump function
      */
-    private TestJumpFunction getLongJumpFunction() {
+    private static TestJumpFunction getLongJumpFunction(JumpableUniformRandomProvider generator) {
         Assumptions.assumeTrue(generator instanceof LongJumpableUniformRandomProvider, "No long jump function");
-
-        final LongJumpableUniformRandomProvider rng = (LongJumpableUniformRandomProvider) generator;
-        return new TestJumpFunction() {
-            @Override
-            public UniformRandomProvider jump() {
-                return rng.longJump();
-            }
-        };
+        final LongJumpableUniformRandomProvider rng2 = (LongJumpableUniformRandomProvider) generator;
+        return rng2::jump;
     }
 
     /**
      * Test that the random generator returned from the jump is a new instance of the same class.
      */
-    @Test
-    public void testJumpReturnsACopy() {
-        assertJumpReturnsACopy(getJumpFunction());
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testJumpReturnsACopy(JumpableUniformRandomProvider generator) {
+        assertJumpReturnsACopy(generator::jump, generator);
     }
 
     /**
      * Test that the random generator returned from the long jump is a new instance of the same class.
      */
-    @Test
-    public void testLongJumpReturnsACopy() {
-        assertJumpReturnsACopy(getLongJumpFunction());
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testLongJumpReturnsACopy(JumpableUniformRandomProvider generator) {
+        assertJumpReturnsACopy(getLongJumpFunction(generator), generator);
     }
 
     /**
      * Assert that the random generator returned from the jump function is a new instance of the same class.
      *
      * @param jumpFunction Jump function to test.
+     * @param generator RNG under test.
      */
-    private void assertJumpReturnsACopy(TestJumpFunction jumpFunction) {
+    private static void assertJumpReturnsACopy(TestJumpFunction jumpFunction,
+                                               JumpableUniformRandomProvider generator) {
         final UniformRandomProvider copy = jumpFunction.jump();
         Assertions.assertNotSame(generator, copy, "The copy instance should be a different object");
         Assertions.assertEquals(generator.getClass(), copy.getClass(), "The copy instance should be the same class");
@@ -132,18 +102,20 @@ public class JumpableProvidersParametricTest {
      * Test that the random generator state of the copy instance returned from the jump
      * matches the input state.
      */
-    @Test
-    public void testJumpCopyMatchesPreJumpState() {
-        assertCopyMatchesPreJumpState(getJumpFunction());
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
+        assertCopyMatchesPreJumpState(generator::jump, generator);
     }
 
     /**
      * Test that the random generator state of the copy instance returned from the long jump
      * matches the input state.
      */
-    @Test
-    public void testLongJumpCopyMatchesPreJumpState() {
-        assertCopyMatchesPreJumpState(getLongJumpFunction());
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testLongJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
+        assertCopyMatchesPreJumpState(getLongJumpFunction(generator), generator);
     }
 
     /**
@@ -163,8 +135,10 @@ public class JumpableProvidersParametricTest {
      * nextBoolean() and nextInt() functions.</p>
      *
      * @param jumpFunction Jump function to test.
+     * @param generator RNG under test.
      */
-    private void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction) {
+    private static void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction,
+                                                      JumpableUniformRandomProvider generator) {
         Assumptions.assumeTrue(generator instanceof RestorableUniformRandomProvider, "Not a restorable RNG");
 
         for (int repeats = 0; repeats < 2; repeats++) {
@@ -192,26 +166,20 @@ public class JumpableProvidersParametricTest {
      * Test that a jump resets the state of the default implementation of a generator in
      * {@link IntProvider} and {@link LongProvider}.
      */
-    @Test
-    public void testJumpResetsDefaultState() {
-        if (generator instanceof IntProvider) {
-            assertJumpResetsDefaultState(getJumpFunction(), INT_PROVIDER_STATE_SIZE);
-        } else if (generator instanceof LongProvider) {
-            assertJumpResetsDefaultState(getJumpFunction(), LONG_PROVIDER_STATE_SIZE);
-        }
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
+        assertJumpResetsDefaultState(generator::jump, generator);
     }
 
     /**
      * Test that a long jump resets the state of the default implementation of a generator in
      * {@link IntProvider} and {@link LongProvider}.
      */
-    @Test
-    public void testLongJumpResetsDefaultState() {
-        if (generator instanceof IntProvider) {
-            assertJumpResetsDefaultState(getLongJumpFunction(), INT_PROVIDER_STATE_SIZE);
-        } else if (generator instanceof LongProvider) {
-            assertJumpResetsDefaultState(getLongJumpFunction(), LONG_PROVIDER_STATE_SIZE);
-        }
+    @ParameterizedTest
+    @MethodSource("getJumpableProviders")
+    public void testLongJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
+        assertJumpResetsDefaultState(getLongJumpFunction(generator), generator);
     }
 
     /**
@@ -222,9 +190,18 @@ public class JumpableProvidersParametricTest {
      * {@link IntProvider} and {@link LongProvider} is reset.</p>
      *
      * @param jumpFunction Jump function to test.
-     * @param stateSize State size.
+     * @param generator RNG under test.
      */
-    private void assertJumpResetsDefaultState(TestJumpFunction jumpFunction, int stateSize) {
+    private static void assertJumpResetsDefaultState(TestJumpFunction jumpFunction,
+                                                     JumpableUniformRandomProvider generator) {
+        int stateSize;
+        if (generator instanceof IntProvider) {
+            stateSize = INT_PROVIDER_STATE_SIZE;
+        } else if (generator instanceof LongProvider) {
+            stateSize = LONG_PROVIDER_STATE_SIZE;
+        } else {
+            throw new AssertionError("Unsupported RNG");
+        }
         final byte[] expected = new byte[stateSize];
         for (int repeats = 0; repeats < 2; repeats++) {
             // Exercise the generator.

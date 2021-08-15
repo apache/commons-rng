@@ -30,8 +30,7 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 public final class DiscreteSamplersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<DiscreteSamplerTestData[]> LIST =
-        new ArrayList<DiscreteSamplerTestData[]>();
+    private static final List<DiscreteSamplerTestData> LIST = new ArrayList<>();
 
     static {
         try {
@@ -204,7 +203,7 @@ public final class DiscreteSamplersList {
      * @param points Outcomes selection.
      * @param rng Generator of uniformly distributed sequences.
      */
-    private static void add(List<DiscreteSamplerTestData[]> list,
+    private static void add(List<DiscreteSamplerTestData> list,
                             final org.apache.commons.math3.distribution.IntegerDistribution dist,
                             int[] points,
                             UniformRandomProvider rng) {
@@ -220,9 +219,9 @@ public final class DiscreteSamplersList {
                         return dist.toString();
                     }
                 });
-        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(inverseMethodSampler,
-                                                                            points,
-                                                                            getProbabilities(dist, points))});
+        list.add(new DiscreteSamplerTestData(inverseMethodSampler,
+                                             points,
+                                             getProbabilities(dist, points)));
     }
 
     /**
@@ -231,13 +230,13 @@ public final class DiscreteSamplersList {
      * @param points Outcomes selection.
      * @param sampler Sampler.
      */
-    private static void add(List<DiscreteSamplerTestData[]> list,
+    private static void add(List<DiscreteSamplerTestData> list,
                             final org.apache.commons.math3.distribution.IntegerDistribution dist,
                             int[] points,
                             final DiscreteSampler sampler) {
-        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(sampler,
-                                                                            points,
-                                                                            getProbabilities(dist, points))});
+        list.add(new DiscreteSamplerTestData(sampler,
+                                             points,
+                                             getProbabilities(dist, points)));
     }
 
     /**
@@ -245,12 +244,12 @@ public final class DiscreteSamplersList {
      * @param probabilities Probability distribution to which the samples are supposed to conform.
      * @param sampler Sampler.
      */
-    private static void add(List<DiscreteSamplerTestData[]> list,
+    private static void add(List<DiscreteSamplerTestData> list,
                             final double[] probabilities,
                             final DiscreteSampler sampler) {
-        list.add(new DiscreteSamplerTestData[] {new DiscreteSamplerTestData(sampler,
-                                                                            MathArrays.natural(probabilities.length),
-                                                                            probabilities)});
+        list.add(new DiscreteSamplerTestData(sampler,
+                                             MathArrays.natural(probabilities.length),
+                                             probabilities));
     }
 
     /**
@@ -259,7 +258,7 @@ public final class DiscreteSamplersList {
      *
      * @return the list of all generators.
      */
-    public static Iterable<DiscreteSamplerTestData[]> list() {
+    public static Iterable<DiscreteSamplerTestData> list() {
         return Collections.unmodifiableList(LIST);
     }
 

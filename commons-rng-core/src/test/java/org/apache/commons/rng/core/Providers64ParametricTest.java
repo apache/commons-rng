@@ -16,37 +16,21 @@
  */
 package org.apache.commons.rng.core;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 
 /**
  * Tests which all 64-bits based generators must pass.
  */
-@RunWith(value = Parameterized.class)
 public class Providers64ParametricTest {
-    /** RNG under test. */
-    private final RestorableUniformRandomProvider generator;
-
-    /**
-     * Initializes generator instance.
-     *
-     * @param rng RNG to be tested.
-     */
-    public Providers64ParametricTest(RestorableUniformRandomProvider rng) {
-        generator = rng;
-    }
-
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<RestorableUniformRandomProvider[]> getList() {
+    private static Iterable<RestorableUniformRandomProvider> getList() {
         return ProvidersList.list64();
     }
 
-    @Test
-    public void testNextBytesChunks() {
+    @ParameterizedTest
+    @MethodSource("getList")
+    public void testNextBytesChunks(RestorableUniformRandomProvider generator) {
         final int[] chunkSizes = {8, 16, 24};
         final int[] chunks = {1, 2, 3, 4, 5};
         for (int chunkSize : chunkSizes) {

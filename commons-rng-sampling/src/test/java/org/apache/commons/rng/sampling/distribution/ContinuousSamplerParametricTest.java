@@ -21,36 +21,21 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for random deviates generators.
  */
-@RunWith(value = Parameterized.class)
 public class ContinuousSamplerParametricTest {
-    /** Sampler under test. */
-    private final ContinuousSamplerTestData sampler;
-
-    /**
-     * Initializes the test instance.
-     *
-     * @param data sampler to be tested.
-     */
-    public ContinuousSamplerParametricTest(ContinuousSamplerTestData data) {
-        sampler = data;
-    }
-
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<ContinuousSamplerTestData[]> getList() {
+    private static Iterable<ContinuousSamplerTestData> getSamplerTestData() {
         return ContinuousSamplersList.list();
     }
 
-    @Test
-    public void testSampling() {
-        check(20000, sampler.getSampler(), sampler.getDeciles());
+    @ParameterizedTest
+    @MethodSource("getSamplerTestData")
+    public void testSampling(ContinuousSamplerTestData data) {
+        check(20000, data.getSampler(), data.getDeciles());
     }
 
     /**
@@ -85,7 +70,7 @@ public class ContinuousSamplerParametricTest {
         final double chi2CriticalValue = 21.67;
 
         // For storing chi2 larger than the critical value.
-        final List<Double> failedStat = new ArrayList<Double>();
+        final List<Double> failedStat = new ArrayList<>();
         try {
             final int lastDecileIndex = numBins - 1;
             for (int i = 0; i < numTests; i++) {

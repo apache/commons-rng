@@ -27,11 +27,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
@@ -44,51 +42,35 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 /**
  * Tests which all generators must pass.
  */
-@RunWith(value = Parameterized.class)
 public class ProvidersCommonParametricTest {
-    /** RNG under test. */
-    private final UniformRandomProvider generator;
-    /** RNG specifier. */
-    private final RandomSource originalSource;
-    /** Seed (constructor's first parameter). */
-    private final Object originalSeed;
-    /** Constructor's additional parameters. */
-    private final Object[] originalArgs;
-
-    /**
-     * Initializes the test instance.
-     *
-     * @param data Random source (and seed arguments) to be tested.
-     */
-    public ProvidersCommonParametricTest(ProvidersList.Data data) {
-        originalSource = data.getSource();
-        originalSeed = data.getSeed();
-        originalArgs = data.getArgs();
-        generator = originalSource.create(originalSeed, originalArgs);
-    }
-
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<ProvidersList.Data[]> getList() {
+    private static Iterable<ProvidersList.Data> getProvidersTestData() {
         return ProvidersList.list();
     }
 
     // Seeding tests.
 
-    @Test
-    public void testUnsupportedSeedType() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testUnsupportedSeedType(ProvidersList.Data data) {
         final byte seed = 123;
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> originalSource.create(seed, originalArgs));
+        Assertions.assertThrows(UnsupportedOperationException.class,
+            () -> data.getSource().create(seed, data.getArgs()));
     }
 
     /**
      * Test the factory create method returns the same class as the instance create method.
      */
-    @Test
-    public void testFactoryCreateMethod() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testFactoryCreateMethod(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object originalSeed = data.getSeed();
+        final Object[] originalArgs = data.getArgs();
         // Cannot test providers that require arguments
         Assumptions.assumeTrue(originalArgs == null);
         @SuppressWarnings("deprecation")
-        final UniformRandomProvider rng = RandomSource.create(originalSource);
+        final UniformRandomProvider rng = RandomSource.create(data.getSource());
+        final UniformRandomProvider generator = originalSource.create(originalSeed, originalArgs);
         Assertions.assertEquals(generator.getClass(), rng.getClass());
     }
 
@@ -96,8 +78,13 @@ public class ProvidersCommonParametricTest {
      * Test the factory create method returns the same class as the instance create method
      * and produces the same output.
      */
-    @Test
-    public void testFactoryCreateMethodWithSeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testFactoryCreateMethodWithSeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object originalSeed = data.getSeed();
+        final Object[] originalArgs = data.getArgs();
+        final UniformRandomProvider generator = originalSource.create(originalSeed, originalArgs);
         @SuppressWarnings("deprecation")
         final UniformRandomProvider rng1 = RandomSource.create(originalSource, originalSeed, originalArgs);
         Assertions.assertEquals(rng1.getClass(), generator.getClass());
@@ -112,8 +99,11 @@ public class ProvidersCommonParametricTest {
      * Test the create method throws an {@link IllegalArgumentException} if passed the wrong
      * arguments.
      */
-    @Test
-    public void testCreateMethodThrowsWithIncorrectArguments() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testCreateMethodThrowsWithIncorrectArguments(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         if (originalArgs == null) {
             try {
                 // Try passing arguments to a provider that does not require them
@@ -135,8 +125,12 @@ public class ProvidersCommonParametricTest {
         }
     }
 
-    @Test
-    public void testAllSeedTypes() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testAllSeedTypes(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object originalSeed = data.getSeed();
+        final Object[] originalArgs = data.getArgs();
         final Integer intSeed = -12131415;
         final Long longSeed = -1213141516171819L;
         final int[] intArraySeed = new int[] {0, 11, -22, 33, -44, 55, -66, 77, -88, 99};
@@ -169,8 +163,11 @@ public class ProvidersCommonParametricTest {
         Assertions.assertEquals(5, nonNativeSeedCount);
     }
 
-    @Test
-    public void testNullSeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testNullSeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         // Note: This is the only test that explicitly calls RandomSource.create() with no other arguments.
         final UniformRandomProvider rng = originalArgs == null ?
             originalSource.create() :
@@ -178,8 +175,11 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Test
-    public void testEmptyIntArraySeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testEmptyIntArraySeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         final int[] empty = new int[0];
         Assumptions.assumeTrue(originalSource.isNativeSeed(empty));
 
@@ -188,8 +188,11 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 20000);
     }
 
-    @Test
-    public void testEmptyLongArraySeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testEmptyLongArraySeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         final long[] empty = new long[0];
         Assumptions.assumeTrue(originalSource.isNativeSeed(empty));
         // The Middle-Square Weyl Sequence generator cannot self-seed
@@ -200,8 +203,11 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Test
-    public void testZeroIntArraySeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testZeroIntArraySeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         // Exercise capacity to escape all "zero" state.
         final int[] zero = new int[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
@@ -210,8 +216,11 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Test
-    public void testZeroLongArraySeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testZeroLongArraySeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         // Exercise capacity to escape all "zero" state.
         final long[] zero = new long[2000]; // Large enough to fill the entire state with zeroes.
         final UniformRandomProvider rng = originalSource.create(zero, originalArgs);
@@ -220,15 +229,21 @@ public class ProvidersCommonParametricTest {
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Test
-    public void testRandomSourceCreateSeed() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testRandomSourceCreateSeed(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         final byte[] seed = originalSource.createSeed();
         final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }
 
-    @Test
-    public void testRandomSourceCreateSeedFromRNG() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testRandomSourceCreateSeedFromRNG(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         final byte[] seed = originalSource.createSeed(new SplitMix64(RandomSource.createLong()));
         final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
@@ -236,8 +251,13 @@ public class ProvidersCommonParametricTest {
 
     // State save and restore tests.
 
-    @Test
-    public void testUnrestorable() {
+    @SuppressWarnings("unused")
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testUnrestorable(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object originalSeed = data.getSeed();
+        final Object[] originalArgs = data.getArgs();
         // Create two generators of the same type as the one being tested.
         final UniformRandomProvider rng1 = originalSource.create(originalSeed, originalArgs);
         final UniformRandomProvider rng2 = RandomSource.unrestorable(originalSource.create(originalSeed, originalArgs));
@@ -248,18 +268,18 @@ public class ProvidersCommonParametricTest {
         // Cast must work.
         final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) rng1;
         // Cast must fail.
-        try {
-            final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
-            Assertions.fail("Cast should have failed");
-        } catch (ClassCastException e) {
-            // Expected.
-        }
+        Assertions.assertThrows(ClassCastException.class, () -> {
+            RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
+        });
     }
 
-    @Test
-    public void testSerializingState()
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testSerializingState(ProvidersList.Data data)
         throws IOException,
                ClassNotFoundException {
+        final UniformRandomProvider generator = data.getSource().create(data.getSeed(), data.getArgs());
+
         // Large "n" is not necessary here as we only test the serialization.
         final int n = 100;
 
@@ -274,10 +294,10 @@ public class ProvidersCommonParametricTest {
         oos.writeObject(((RandomProviderDefaultState) stateOrig).getState());
 
         // Store some values.
-        final List<Number> listOrig = makeList(n);
+        final List<Number> listOrig = makeList(n, generator);
 
         // Discard a few more.
-        final List<Number> listDiscard = makeList(n);
+        final List<Number> listDiscard = makeList(n, generator);
         Assertions.assertNotEquals(0, listDiscard.size());
         Assertions.assertNotEquals(listOrig, listDiscard);
 
@@ -292,21 +312,26 @@ public class ProvidersCommonParametricTest {
         restorable.restoreState(stateNew);
 
         // Replay.
-        final List<Number> listReplay = makeList(n);
+        final List<Number> listReplay = makeList(n, generator);
         Assertions.assertNotSame(listOrig, listReplay);
 
         // Check that the serialized data recreated the orginal state.
         Assertions.assertEquals(listOrig, listReplay);
     }
 
-    @Test
-    public void testUnrestorableToString() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testUnrestorableToString(ProvidersList.Data data) {
+        final UniformRandomProvider generator = data.getSource().create(data.getSeed(), data.getArgs());
         Assertions.assertEquals(generator.toString(),
-                            RandomSource.unrestorable(generator).toString());
+                                RandomSource.unrestorable(generator).toString());
     }
 
-    @Test
-    public void testSupportedInterfaces() {
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    public void testSupportedInterfaces(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
+        final Object[] originalArgs = data.getArgs();
         final UniformRandomProvider rng = originalSource.create(null, originalArgs);
         Assertions.assertEquals(rng instanceof JumpableUniformRandomProvider,
                                 originalSource.isJumpable(),
@@ -330,10 +355,11 @@ public class ProvidersCommonParametricTest {
      * Populates a list with random numbers.
      *
      * @param n Loop counter.
+     * @param generator Random generator.
      * @return a list containing {@code 11 * n} random numbers.
      */
-    private List<Number> makeList(int n) {
-        final List<Number> list = new ArrayList<Number>();
+    private static List<Number> makeList(int n, UniformRandomProvider generator) {
+        final List<Number> list = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
             // Append 11 values.
@@ -359,6 +385,7 @@ public class ProvidersCommonParametricTest {
      * @param rng Generator.
      * @param max Upper bound.
      * @param sampleSize Number of random values generated.
+     * @param generator Random generator.
      */
     private void checkNextIntegerInRange(final UniformRandomProvider rng,
                                          final int max,
@@ -370,7 +397,7 @@ public class ProvidersCommonParametricTest {
             }
         };
 
-        checkNextInRange(max, sampleSize, nextMethod);
+        checkNextInRange(max, sampleSize, nextMethod, rng);
     }
 
     /**
@@ -384,10 +411,12 @@ public class ProvidersCommonParametricTest {
      * @param max Upper bound.
      * @param nextMethod method to call.
      * @param sampleSize Number of random values generated.
+     * @param generator Random generator.
      */
-    private <T extends Number> void checkNextInRange(T max,
-                                                     int sampleSize,
-                                                     Callable<T> nextMethod) {
+    private static <T extends Number> void checkNextInRange(T max,
+                                                            int sampleSize,
+                                                            Callable<T> nextMethod,
+                                                            UniformRandomProvider generator) {
         final int numTests = 500;
 
         // Do not change (statistical test assumes that dof = 9).
@@ -461,7 +490,7 @@ public class ProvidersCommonParametricTest {
 
         if (numFailures > 11) { // Test will fail with 0.5% probability
             Assertions.fail(generator + ": Too many failures for n = " + n +
-                        " (" + numFailures + " out of " + numTests + " tests failed)");
+                            " (" + numFailures + " out of " + numTests + " tests failed)");
         }
     }
 

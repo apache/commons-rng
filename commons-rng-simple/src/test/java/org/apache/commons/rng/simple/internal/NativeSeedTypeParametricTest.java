@@ -17,20 +17,21 @@
 package org.apache.commons.rng.simple.internal;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Tests for the {@link NativeSeedType} seed conversions. This test
  * ensures that a seed can be created or converted from any supported input seed to each
  * supported native seed type.
  */
-@RunWith(value = Parameterized.class)
 public class NativeSeedTypeParametricTest {
     /** This is a list of the class types that are supported native seeds. */
     private static final Object[] SUPPORTED_NATIVE_TYPES = {
@@ -53,59 +54,39 @@ public class NativeSeedTypeParametricTest {
         Double.valueOf(Math.PI),
     };
 
-    /** The native seed type enum instance. */
-    private final NativeSeedType nativeSeedType;
-    /** The class type of the native seed. */
-    private final Class<?> type;
-
     /**
-     * Initializes the test instance.
-     *
-     * @param type The type of the native seed.
+     * Check that there are enum values for all supported types.
+     * This ensures the test is maintained to correspond to the enum.
      */
-    public NativeSeedTypeParametricTest(Class<?> type) {
-        this.type = type;
-        nativeSeedType = findNativeSeedType(type);
-    }
+    @Test
+    public void testNativeSeedTypeEnum() {
+        Set<Class<?>> supported = Arrays.stream(SUPPORTED_NATIVE_TYPES)
+            .map(o -> (Class<?>) o)
+            .collect(Collectors.toSet());
+        Assertions.assertEquals(SUPPORTED_NATIVE_TYPES.length, supported.size(),
+            "Class type of supported seeds should be unique");
 
-    /**
-     * Gets the supported native seed types.
-     *
-     * @return the types
-     */
-    @Parameters
-    public static Object[] getTypes() {
-        // Check that there are enum values for all supported types.
-        // This ensures the test is maintained to correspond to the enum.
-        Assertions.assertEquals(SUPPORTED_NATIVE_TYPES.length, NativeSeedType.values().length,
+        final NativeSeedType[] values = NativeSeedType.values();
+        Assertions.assertEquals(SUPPORTED_NATIVE_TYPES.length, values.length,
             "Incorrect number of enum values for the supported native types");
 
-        return SUPPORTED_NATIVE_TYPES;
-    }
-
-    /**
-     * Creates the native seed type.
-     *
-     * @param type Class of the native seed.
-     * @return the native seed type
-     */
-    private static NativeSeedType findNativeSeedType(Class<?> type) {
-        for (final NativeSeedType nativeSeedType : NativeSeedType.values()) {
-            if (type.equals(nativeSeedType.getType())) {
-                return nativeSeedType;
-            }
-        }
-        throw new AssertionError("No enum matching the type: " + type);
+        // Remove each
+        Arrays.stream(values).map(NativeSeedType::getType).forEach(supported::remove);
+        Assertions.assertEquals(0, supported.size());
     }
 
     /**
      * Test the seed can be created as the correct type.
+     *
+     * @param nativeSeedType Native seed type.
      */
-    @Test
-    public void testCreateSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCreateSeed(NativeSeedType nativeSeedType) {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
         Assertions.assertNotNull(seed);
+        final Class<?> type = nativeSeedType.getType();
         Assertions.assertEquals(type, seed.getClass(), "Seed was not the correct class");
         if (type.isArray()) {
             Assertions.assertEquals(size, Array.getLength(seed), "Seed was not created the correct length");
@@ -114,9 +95,12 @@ public class NativeSeedTypeParametricTest {
 
     /**
      * Test the seed can be created, converted to a byte[] and then back to the native type.
+     *
+     * @param nativeSeedType Native seed type.
      */
-    @Test
-    public void testConvertSeedToBytes() {
+    @ParameterizedTest
+    @EnumSource
+    public void testConvertSeedToBytes(NativeSeedType nativeSeedType) {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
         Assertions.assertNotNull(seed, "Null seed");
@@ -125,7 +109,7 @@ public class NativeSeedTypeParametricTest {
         Assertions.assertNotNull(bytes, "Null byte[] seed");
 
         final Object seed2 = nativeSeedType.convertSeed(bytes, size);
-        if (type.isArray()) {
+        if (nativeSeedType.getType().isArray()) {
             // This handles nested primitive arrays
             Assertions.assertArrayEquals(new Object[] {seed}, new Object[] {seed2},
                 "byte[] seed was not converted back");
@@ -136,32 +120,34 @@ public class NativeSeedTypeParametricTest {
 
     /**
      * Test the seed can be converted to the correct type from any of the supported input types.
+     *
+     * @param nativeSeedType The native seed type enum instance.
      */
-    @Test
-    public void testConvertSupportedSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testConvertSupportedSeed(NativeSeedType nativeSeedType) {
         // Size can be ignored during conversion and so it not asserted
         final int size = 3;
         for (final Object input : SUPPORTED_SEEDS) {
             final Object seed = nativeSeedType.convertSeed(input, size);
             final Supplier<String> msg = () -> input.getClass() + " input seed was not converted";
             Assertions.assertNotNull(seed, msg);
-            Assertions.assertEquals(type, seed.getClass(), msg);
+            Assertions.assertEquals(nativeSeedType.getType(), seed.getClass(), msg);
         }
     }
 
     /**
      * Test unsupported input seed types are rejected.
+     *
+     * @param nativeSeedType The native seed type enum instance.
      */
-    @Test
-    public void testCannotConvertUnsupportedSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCannotConvertUnsupportedSeed(NativeSeedType nativeSeedType) {
         final int size = 3;
         for (final Object input : UNSUPPORTED_SEEDS) {
-            try {
-                nativeSeedType.convertSeed(input, size);
-                Assertions.fail(input.getClass() + " input seed was not rejected as unsupported");
-            } catch (UnsupportedOperationException ex) {
-                // This is expected
-            }
+            Assertions.assertThrows(UnsupportedOperationException.class,
+                    () -> nativeSeedType.convertSeed(input, size));
         }
     }
 }

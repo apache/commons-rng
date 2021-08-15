@@ -32,11 +32,11 @@ import java.util.Collections;
  */
 public final class ProvidersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<Data[]> LIST = new ArrayList<Data[]>();
+    private static final List<Data> LIST = new ArrayList<>();
     /** List of 32-bits based RNGs. */
-    private static final List<Data[]> LIST32 = new ArrayList<Data[]>();
+    private static final List<Data> LIST32 = new ArrayList<>();
     /** List of 64-bits based RNGs. */
-    private static final List<Data[]> LIST64 = new ArrayList<Data[]>();
+    private static final List<Data> LIST64 = new ArrayList<>();
 
     static {
         try {
@@ -115,14 +115,14 @@ public final class ProvidersList {
      * Helper to statisfy Junit requirement that each parameter set contains
      * the same number of objects.
      */
-    private static void add(List<Data[]> list,
+    private static void add(List<Data> list,
                             RandomSource source,
                             Object... data) {
         final RandomSource rng = source;
         final Object seed = data.length > 0 ? data[0] : null;
         final Object[] args = data.length > 1 ? Arrays.copyOfRange(data, 1, data.length) : null;
 
-        list.add(new Data[] {new Data(rng, seed, args)});
+        list.add(new Data(rng, seed, args));
     }
 
     /**
@@ -131,7 +131,7 @@ public final class ProvidersList {
      *
      * @return the list of all generators.
      */
-    public static Iterable<Data[]> list() {
+    public static Iterable<Data> list() {
         return Collections.unmodifiableList(LIST);
     }
 
@@ -141,7 +141,7 @@ public final class ProvidersList {
      *
      * @return the list of 32-bits based generators.
      */
-    public static Iterable<Data[]> list32() {
+    public static Iterable<Data> list32() {
         return Collections.unmodifiableList(LIST32);
     }
 
@@ -151,7 +151,7 @@ public final class ProvidersList {
      *
      * @return the list of 64-bits based generators.
      */
-    public static Iterable<Data[]> list64() {
+    public static Iterable<Data> list64() {
         return Collections.unmodifiableList(LIST64);
     }
 
@@ -160,10 +160,18 @@ public final class ProvidersList {
      * Better not to mix Junit assumptions of the usage of "Object[]".
      */
     public static class Data {
+        /** RNG specifier. */
         private final RandomSource source;
+        /** Seed (constructor's first parameter). */
         private final Object seed;
+        /** Constructor's additional parameters. */
         private final Object[] args;
 
+        /**
+         * @param source RNG specifier.
+         * @param seed Seed (constructor's first parameter).
+         * @param args Constructor's additional parameters.
+         */
         public Data(RandomSource source,
                     Object seed,
                     Object[] args) {
@@ -172,14 +180,29 @@ public final class ProvidersList {
             this.args = args;
         }
 
+        /**
+         * Gets the RNG specifier.
+         *
+         * @return RNG specifier.
+         */
         public RandomSource getSource() {
             return source;
         }
 
+        /**
+         * Gets the seed (constructor's first parameter).
+         *
+         * @return Seed
+         */
         public Object getSeed() {
             return seed;
         }
 
+        /**
+         * Gets the constructor's additional parameters.
+         *
+         * @return Additional parameters.
+         */
         public Object[] getArgs() {
             return args == null ? null : Arrays.copyOf(args, args.length);
         }

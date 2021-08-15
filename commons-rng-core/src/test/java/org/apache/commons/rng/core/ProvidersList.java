@@ -78,17 +78,13 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
  */
 public final class ProvidersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<RestorableUniformRandomProvider[]> LIST =
-        new ArrayList<RestorableUniformRandomProvider[]>();
+    private static final List<RestorableUniformRandomProvider> LIST = new ArrayList<>();
     /** List of 32-bits based RNGs. */
-    private static final List<RestorableUniformRandomProvider[]> LIST32 =
-        new ArrayList<RestorableUniformRandomProvider[]>();
+    private static final List<RestorableUniformRandomProvider> LIST32 = new ArrayList<>();
     /** List of 64-bits based RNGs. */
-    private static final List<RestorableUniformRandomProvider[]> LIST64 =
-        new ArrayList<RestorableUniformRandomProvider[]>();
+    private static final List<RestorableUniformRandomProvider> LIST64 = new ArrayList<>();
     /** List of {@link JumpableUniformRandomProvider} RNGs. */
-    private static final List<JumpableUniformRandomProvider[]> LIST_JUMP =
-        new ArrayList<JumpableUniformRandomProvider[]>();
+    private static final List<JumpableUniformRandomProvider> LIST_JUMP = new ArrayList<>();
 
     static {
         // External generator for creating a random seed.
@@ -96,57 +92,57 @@ public final class ProvidersList {
 
         try {
             // "int"-based RNGs.
-            add(LIST32, new JDKRandom(g.nextLong()));
-            add(LIST32, new MersenneTwister(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well512a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well1024a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well19937a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well19937c(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well44497a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new Well44497b(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new ISAACRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new MultiplyWithCarry256(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new KISSRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new XoRoShiRo64Star(new int[] {g.nextInt(), g.nextInt()}));
-            add(LIST32, new XoRoShiRo64StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new XoShiRo128Plus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new XoShiRo128StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
-            add(LIST32, new PcgXshRr32(new long[] {g.nextLong()}));
-            add(LIST32, new PcgXshRr32(g.nextLong()));
-            add(LIST32, new PcgXshRs32(new long[] {g.nextLong()}));
-            add(LIST32, new PcgXshRs32(g.nextLong()));
-            add(LIST32, new PcgMcgXshRr32(g.nextLong()));
-            add(LIST32, new PcgMcgXshRs32(g.nextLong()));
+            LIST32.add(new JDKRandom(g.nextLong()));
+            LIST32.add(new MersenneTwister(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well512a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well1024a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well19937a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well19937c(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well44497a(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new Well44497b(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new ISAACRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new MultiplyWithCarry256(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new KISSRandom(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new XoRoShiRo64Star(new int[] {g.nextInt(), g.nextInt()}));
+            LIST32.add(new XoRoShiRo64StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new XoShiRo128Plus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new XoShiRo128StarStar(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new PcgXshRr32(new long[] {g.nextLong()}));
+            LIST32.add(new PcgXshRr32(g.nextLong()));
+            LIST32.add(new PcgXshRs32(new long[] {g.nextLong()}));
+            LIST32.add(new PcgXshRs32(g.nextLong()));
+            LIST32.add(new PcgMcgXshRr32(g.nextLong()));
+            LIST32.add(new PcgMcgXshRs32(g.nextLong()));
             // Ensure a high complexity increment is used for the Weyl sequence
-            add(LIST32, new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
-            add(LIST32, new DotyHumphreySmallFastCounting32(new int[] {g.nextInt(), g.nextInt()}));
-            add(LIST32, new JenkinsSmallFast32(g.nextInt()));
-            add(LIST32, new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new MiddleSquareWeylSequence(new long[] {g.nextLong(), g.nextLong(), 0xb5ad4eceda1ce2a9L}));
+            LIST32.add(new DotyHumphreySmallFastCounting32(new int[] {g.nextInt(), g.nextInt()}));
+            LIST32.add(new JenkinsSmallFast32(g.nextInt()));
+            LIST32.add(new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
-            add(LIST64, new SplitMix64(g.nextLong()));
-            add(LIST64, new XorShift1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XorShift1024StarPhi(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new TwoCmres(g.nextInt()));
-            add(LIST64, new TwoCmres(g.nextInt(), 5, 8));
-            add(LIST64, new MersenneTwister64(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoRoShiRo128Plus(new long[] {g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoRoShiRo128StarStar(new long[] {g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo256Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo256StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo512Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new PcgRxsMXs64(new long[] {g.nextLong()}));
-            add(LIST64, new PcgRxsMXs64(g.nextLong()));
-            add(LIST64, new DotyHumphreySmallFastCounting64(new long[] {g.nextLong(), g.nextLong()}));
-            add(LIST64, new JenkinsSmallFast64(g.nextLong()));
-            add(LIST64, new XoRoShiRo128PlusPlus(new long[] {g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo256PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoShiRo512PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoRoShiRo1024PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoRoShiRo1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            add(LIST64, new XoRoShiRo1024StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new SplitMix64(g.nextLong()));
+            LIST64.add(new XorShift1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XorShift1024StarPhi(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new TwoCmres(g.nextInt()));
+            LIST64.add(new TwoCmres(g.nextInt(), 5, 8));
+            LIST64.add(new MersenneTwister64(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoRoShiRo128Plus(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoRoShiRo128StarStar(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo256Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo256StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo512Plus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo512StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new PcgRxsMXs64(new long[] {g.nextLong()}));
+            LIST64.add(new PcgRxsMXs64(g.nextLong()));
+            LIST64.add(new DotyHumphreySmallFastCounting64(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new JenkinsSmallFast64(g.nextLong()));
+            LIST64.add(new XoRoShiRo128PlusPlus(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo256PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoShiRo512PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoRoShiRo1024PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoRoShiRo1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new XoRoShiRo1024StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.
@@ -154,11 +150,9 @@ public final class ProvidersList {
             LIST.addAll(LIST32);
             LIST.addAll(LIST64);
             // Dynamically identify the Jumpable RNGs
-            for (RestorableUniformRandomProvider[] rng : LIST) {
-                if (rng[0] instanceof JumpableUniformRandomProvider) {
-                    add(LIST_JUMP, (JumpableUniformRandomProvider) rng[0]);
-                }
-            }
+            LIST.stream()
+                .filter(rng -> rng instanceof JumpableUniformRandomProvider)
+                .forEach(rng -> LIST_JUMP.add((JumpableUniformRandomProvider) rng));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
@@ -174,30 +168,12 @@ public final class ProvidersList {
     private ProvidersList() {}
 
     /**
-     * Helper to statisfy Junit requirement that each parameter set contains
-     * the same number of objects.
-     */
-    private static void add(List<RestorableUniformRandomProvider[]> list,
-                            RestorableUniformRandomProvider rng) {
-        list.add(new RestorableUniformRandomProvider[] {rng});
-    }
-
-    /**
-     * Helper to statisfy Junit requirement that each parameter set contains
-     * the same number of objects.
-     */
-    private static void add(List<JumpableUniformRandomProvider[]> list,
-                            JumpableUniformRandomProvider rng) {
-        list.add(new JumpableUniformRandomProvider[] {rng});
-    }
-
-    /**
      * Subclasses that are "parametric" tests can forward the call to
      * the "@Parameters"-annotated method to this method.
      *
      * @return the list of all generators.
      */
-    public static Iterable<RestorableUniformRandomProvider[]> list() {
+    public static Iterable<RestorableUniformRandomProvider> list() {
         return Collections.unmodifiableList(LIST);
     }
 
@@ -207,7 +183,7 @@ public final class ProvidersList {
      *
      * @return the list of 32-bits based generators.
      */
-    public static Iterable<RestorableUniformRandomProvider[]> list32() {
+    public static Iterable<RestorableUniformRandomProvider> list32() {
         return Collections.unmodifiableList(LIST32);
     }
 
@@ -217,7 +193,7 @@ public final class ProvidersList {
      *
      * @return the list of 64-bits based generators.
      */
-    public static Iterable<RestorableUniformRandomProvider[]> list64() {
+    public static Iterable<RestorableUniformRandomProvider> list64() {
         return Collections.unmodifiableList(LIST64);
     }
 
@@ -227,7 +203,7 @@ public final class ProvidersList {
      *
      * @return the list of {@link JumpableUniformRandomProvider} generators.
      */
-    public static Iterable<JumpableUniformRandomProvider[]> listJumpable() {
+    public static Iterable<JumpableUniformRandomProvider> listJumpable() {
         return Collections.unmodifiableList(LIST_JUMP);
     }
 }

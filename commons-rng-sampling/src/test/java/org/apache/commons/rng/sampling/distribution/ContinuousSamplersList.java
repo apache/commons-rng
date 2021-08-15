@@ -28,8 +28,7 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 public final class ContinuousSamplersList {
     /** List of all RNGs implemented in the library. */
-    private static final List<ContinuousSamplerTestData[]> LIST =
-        new ArrayList<ContinuousSamplerTestData[]>();
+    private static final List<ContinuousSamplerTestData> LIST = new ArrayList<>();
 
     static {
         try {
@@ -290,7 +289,7 @@ public final class ContinuousSamplersList {
      * @param dist Distribution to which the samples are supposed to conform.
      * @param rng Generator of uniformly distributed sequences.
      */
-    private static void add(List<ContinuousSamplerTestData[]> list,
+    private static void add(List<ContinuousSamplerTestData> list,
                             final org.apache.commons.math3.distribution.RealDistribution dist,
                             UniformRandomProvider rng) {
         final ContinuousSampler inverseMethodSampler =
@@ -305,8 +304,8 @@ public final class ContinuousSamplersList {
                         return dist.toString();
                     }
                 });
-        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(inverseMethodSampler,
-                                                                                getDeciles(dist))});
+        list.add(new ContinuousSamplerTestData(inverseMethodSampler,
+                                               getDeciles(dist)));
     }
 
     /**
@@ -314,11 +313,11 @@ public final class ContinuousSamplersList {
      * @param dist Distribution to which the samples are supposed to conform.
      * @param sampler Sampler.
      */
-    private static void add(List<ContinuousSamplerTestData[]> list,
+    private static void add(List<ContinuousSamplerTestData> list,
                             final org.apache.commons.math3.distribution.RealDistribution dist,
                             final ContinuousSampler sampler) {
-        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(sampler,
-                                                                                getDeciles(dist))});
+        list.add(new ContinuousSamplerTestData(sampler,
+                                               getDeciles(dist)));
     }
 
     /**
@@ -326,11 +325,11 @@ public final class ContinuousSamplersList {
      * @param deciles Deciles of the given distribution.
      * @param sampler Sampler.
      */
-    private static void add(List<ContinuousSamplerTestData[]> list,
+    private static void add(List<ContinuousSamplerTestData> list,
                             final double[] deciles,
                             final ContinuousSampler sampler) {
-        list.add(new ContinuousSamplerTestData[] {new ContinuousSamplerTestData(sampler,
-                                                                                deciles)});
+        list.add(new ContinuousSamplerTestData(sampler,
+                                               deciles));
     }
 
     /**
@@ -339,7 +338,7 @@ public final class ContinuousSamplersList {
      *
      * @return the list of all generators.
      */
-    public static Iterable<ContinuousSamplerTestData[]> list() {
+    public static Iterable<ContinuousSamplerTestData> list() {
         return Collections.unmodifiableList(LIST);
     }
 

@@ -21,49 +21,28 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
 /**
  * Tests for random deviates generators.
  */
-@RunWith(value = Parameterized.class)
 public class DiscreteSamplerParametricTest {
-    /** Sampler under test. */
-    private final DiscreteSamplerTestData sampler;
-
-    /**
-     * Initializes the test instance.
-     *
-     * @param data sampler to be tested.
-     */
-    public DiscreteSamplerParametricTest(DiscreteSamplerTestData data) {
-        sampler = data;
-    }
-
-    @Parameters(name = "{index}: data={0}")
-    public static Iterable<DiscreteSamplerTestData[]> getList() {
+    private static Iterable<DiscreteSamplerTestData> getSamplerTestData() {
         return DiscreteSamplersList.list();
     }
 
-    @Test
-    public void testSampling() {
+    @ParameterizedTest
+    @MethodSource("getSamplerTestData")
+    public void testSampling(DiscreteSamplerTestData data) {
         final int sampleSize = 10000;
-
-        final double[] prob = sampler.getProbabilities();
-        final int len = prob.length;
-        final double[] expected = new double[len];
-        for (int i = 0; i < len; i++) {
-            expected[i] = prob[i] * sampleSize;
-        }
+        // Probabilities are normalised by the chi-square test
         check(sampleSize,
-              sampler.getSampler(),
-              sampler.getPoints(),
-              expected);
+              data.getSampler(),
+              data.getPoints(),
+              data.getProbabilities());
     }
 
     /**

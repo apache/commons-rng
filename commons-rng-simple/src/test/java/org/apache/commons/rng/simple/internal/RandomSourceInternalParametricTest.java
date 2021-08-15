@@ -19,10 +19,8 @@ package org.apache.commons.rng.simple.internal;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.simple.internal.ProviderBuilder.RandomSourceInternal;
 import org.junit.jupiter.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;
@@ -32,7 +30,6 @@ import java.util.function.Supplier;
  * ensures that all random sources can create a seed or convert any supported seed to the
  * correct type for the constructor.
  */
-@RunWith(value = Parameterized.class)
 public class RandomSourceInternalParametricTest {
     /** The supported seeds for conversion to a native seed type. */
     private static final Object[] SUPPORTED_SEEDS = {
@@ -49,11 +46,11 @@ public class RandomSourceInternalParametricTest {
     };
     /** The expected byte size of the seed for each RandomSource. */
     private static final EnumMap<RandomSourceInternal, Integer> EXPECTED_SEED_BYTES =
-            new EnumMap<RandomSourceInternal, Integer>(RandomSourceInternal.class);
+            new EnumMap<>(RandomSourceInternal.class);
 
     static {
-        final int intBytes = 4;
-        final int longBytes = 8;
+        final int intBytes = Integer.BYTES;
+        final int longBytes = Long.BYTES;
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.JDK, longBytes * 1);
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.WELL_512_A, intBytes * 16);
         EXPECTED_SEED_BYTES.put(RandomSourceInternal.WELL_1024_A, intBytes * 32);
@@ -105,37 +102,25 @@ public class RandomSourceInternalParametricTest {
         // Verify the seed byte size is reflected in the enum javadoc for RandomSource.
     }
 
-    /** Internal identifier for the random source. */
-    private final RandomSourceInternal randomSourceInternal;
-    /** The class type of the native seed. */
-    private final Class<?> type;
-
     /**
-     * Initializes the test instance.
+     * Get the class type of the native seed for the random source.
      *
      * @param randomSourceInternal Internal identifier for the random source.
      */
-    public RandomSourceInternalParametricTest(RandomSourceInternal randomSourceInternal) {
-        this.randomSourceInternal = randomSourceInternal;
+    private static Class<?> getType(RandomSourceInternal randomSourceInternal) {
         // The first constructor argument is always the seed type
-        this.type = randomSourceInternal.getArgs()[0];
-    }
-
-    /**
-     * Gets the supported native seed types.
-     *
-     * @return the types
-     */
-    @Parameters
-    public static Object[] getTypes() {
-        return RandomSourceInternal.values();
+        return randomSourceInternal.getArgs()[0];
     }
 
     /**
      * Test the seed can be created as the correct type.
+     *
+     * @param randomSourceInternal Internal identifier for the random source.
      */
-    @Test
-    public void testCreateSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCreateSeed(RandomSourceInternal randomSourceInternal) {
+        final Class<?> type = getType(randomSourceInternal);
         final Object seed = randomSourceInternal.createSeed();
         Assertions.assertNotNull(seed);
         Assertions.assertEquals(type, seed.getClass(), "Seed was not the correct class");
@@ -144,9 +129,13 @@ public class RandomSourceInternalParametricTest {
 
     /**
      * Test the seed can be converted to the correct type from any of the supported input types.
+     *
+     * @param randomSourceInternal Internal identifier for the random source.
      */
-    @Test
-    public void testConvertSupportedSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testConvertSupportedSeed(RandomSourceInternal randomSourceInternal) {
+        final Class<?> type = getType(randomSourceInternal);
         for (final Object input : SUPPORTED_SEEDS) {
             final Object seed = randomSourceInternal.convertSeed(input);
             final Supplier<String> msg = () -> input.getClass() + " input seed was not converted";
@@ -158,9 +147,12 @@ public class RandomSourceInternalParametricTest {
 
     /**
      * Test unsupported input seed types are rejected.
+     *
+     * @param randomSourceInternal Internal identifier for the random source.
      */
-    @Test
-    public void testCannotConvertUnsupportedSeed() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCannotConvertUnsupportedSeed(RandomSourceInternal randomSourceInternal) {
         for (final Object input : UNSUPPORTED_SEEDS) {
             try {
                 randomSourceInternal.convertSeed(input);
@@ -174,9 +166,12 @@ public class RandomSourceInternalParametricTest {
     /**
      * Test the seed byte size is reported as the size of a int/long primitive for Int/Long
      * seed types and a multiple of it for int[]/long[] types.
+     *
+     * @param randomSourceInternal Internal identifier for the random source.
      */
-    @Test
-    public void testCreateSeedBytesSizeIsPositiveAndMultipleOf4Or8() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCreateSeedBytesSizeIsPositiveAndMultipleOf4Or8(RandomSourceInternal randomSourceInternal) {
         // This should be the full length seed
         final byte[] seed = randomSourceInternal.createSeedBytes(new SplitMix64(12345L));
 
@@ -203,9 +198,12 @@ public class RandomSourceInternalParametricTest {
      * for new generators. This test forms an additional cross-reference check that the
      * seed size in RandomSourceInternal has been correctly set and the size should map to
      * the array size in the RandomSource javadoc (if applicable).
+     *
+     * @param randomSourceInternal Internal identifier for the random source.
      */
-    @Test
-    public void testCreateSeedBytes() {
+    @ParameterizedTest
+    @EnumSource
+    public void testCreateSeedBytes(RandomSourceInternal randomSourceInternal) {
         // This should be the full length seed
         final byte[] seed = randomSourceInternal.createSeedBytes(new SplitMix64(12345L));
         final int size = seed.length;
