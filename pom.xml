@@ -60,6 +60,7 @@
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
     <rng.antrun.version>1.8</rng.antrun.version>
     <rng.surefire.version>3.0.0-M5</rng.surefire.version>
+    <rng.junit5.version>5.7.2</rng.junit5.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
@@ -133,9 +134,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${rng.junit5.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${rng.junit5.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
