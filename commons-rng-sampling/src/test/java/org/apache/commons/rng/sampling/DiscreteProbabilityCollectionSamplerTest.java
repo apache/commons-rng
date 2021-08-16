@@ -41,7 +41,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // Size mismatch
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(new Double[] {1d, 2d}),
+                 Arrays.asList(1d, 2d),
                  new double[] {0d}));
     }
 
@@ -50,7 +50,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // Negative probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(new Double[] {1d, 2d}),
+                 Arrays.asList(1d, 2d),
                  new double[] {0d, -1d}));
     }
 
@@ -59,7 +59,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // Probabilities do not sum above 0
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(new Double[] {1d, 2d}),
+                 Arrays.asList(1d, 2d),
                  new double[] {0d, 0d}));
     }
 
@@ -68,7 +68,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // NaN probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(new Double[] {1d, 2d}),
+                 Arrays.asList(1d, 2d),
                  new double[] {0d, Double.NaN}));
     }
 
@@ -77,7 +77,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
         // Infinite probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(new Double[] {1d, 2d}),
+                 Arrays.asList(1d, 2d),
                  new double[] {0d, Double.POSITIVE_INFINITY}));
     }
 
@@ -102,7 +102,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     public void testSample() {
         final DiscreteProbabilityCollectionSampler<Double> sampler =
             new DiscreteProbabilityCollectionSampler<>(rng,
-                                                       Arrays.asList(new Double[] {3d, -1d, 3d, 7d, -2d, 8d}),
+                                                       Arrays.asList(3d, -1d, 3d, 7d, -2d, 8d),
                                                        new double[] {0.2, 0.2, 0.3, 0.3, 0, 0});
         final double expectedMean = 3.4;
         final double expectedVariance = 7.84;
@@ -170,7 +170,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
             // CHECKSTYLE: resume all
         };
 
-        final List<Double> items = Arrays.asList(new Double[] {1d, 2d});
+        final List<Double> items = Arrays.asList(1d, 2d);
         final DiscreteProbabilityCollectionSampler<Double> sampler =
             new DiscreteProbabilityCollectionSampler<>(dummyRng,
                                                        items,
@@ -191,7 +191,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     public void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final List<Double> items = Arrays.asList(new Double[] {1d, 2d, 3d, 4d});
+        final List<Double> items = Arrays.asList(1d, 2d, 3d, 4d);
         final DiscreteProbabilityCollectionSampler<Double> sampler1 =
             new DiscreteProbabilityCollectionSampler<>(rng1,
                                                        items,
