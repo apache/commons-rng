@@ -31,12 +31,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link BoxSampler}.
  */
-public class BoxSamplerTest {
+class BoxSamplerTest {
     /**
      * Test an unsupported dimension.
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> BoxSampler.of(rng, new double[1], new double[1]));
@@ -46,7 +46,7 @@ public class BoxSamplerTest {
      * Test a dimension mismatch between vertices.
      */
     @Test
-    public void testDimensionMismatchThrows() {
+    void testDimensionMismatchThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
@@ -65,7 +65,7 @@ public class BoxSamplerTest {
      * Test non-finite vertices.
      */
     @Test
-    public void testNonFiniteVertexCoordinates() {
+    void testNonFiniteVertexCoordinates() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid box
         final double[][] c = new double[][] {
@@ -94,7 +94,7 @@ public class BoxSamplerTest {
      * {@link Double#MAX_VALUE} in 2D.
      */
     @Test
-    public void testExtremeValueCoordinates2D() {
+    void testExtremeValueCoordinates2D() {
         testExtremeValueCoordinates(2);
     }
 
@@ -103,7 +103,7 @@ public class BoxSamplerTest {
      * {@link Double#MAX_VALUE} in 3D.
      */
     @Test
-    public void testExtremeValueCoordinates3D() {
+    void testExtremeValueCoordinates3D() {
         testExtremeValueCoordinates(3);
     }
 
@@ -112,7 +112,7 @@ public class BoxSamplerTest {
      * {@link Double#MAX_VALUE} in 4D.
      */
     @Test
-    public void testExtremeValueCoordinates4D() {
+    void testExtremeValueCoordinates4D() {
         testExtremeValueCoordinates(4);
     }
 
@@ -161,7 +161,7 @@ public class BoxSamplerTest {
      * Test the distribution of points in 2D.
      */
     @Test
-    public void testDistribution2D() {
+    void testDistribution2D() {
         testDistributionND(2);
     }
 
@@ -169,7 +169,7 @@ public class BoxSamplerTest {
      * Test the distribution of points in 3D.
      */
     @Test
-    public void testDistribution3D() {
+    void testDistribution3D() {
         testDistributionND(3);
     }
 
@@ -177,7 +177,7 @@ public class BoxSamplerTest {
      * Test the distribution of points in 4D.
      */
     @Test
-    public void testDistribution4D() {
+    void testDistribution4D() {
         testDistributionND(4);
     }
 
@@ -246,7 +246,7 @@ public class BoxSamplerTest {
      * Test the SharedStateSampler implementation for 2D.
      */
     @Test
-    public void testSharedStateSampler2D() {
+    void testSharedStateSampler2D() {
         testSharedStateSampler(2);
     }
 
@@ -254,7 +254,7 @@ public class BoxSamplerTest {
      * Test the SharedStateSampler implementation for 3D.
      */
     @Test
-    public void testSharedStateSampler3D() {
+    void testSharedStateSampler3D() {
         testSharedStateSampler(3);
     }
 
@@ -262,7 +262,7 @@ public class BoxSamplerTest {
      * Test the SharedStateSampler implementation for 4D.
      */
     @Test
-    public void testSharedStateSampler4D() {
+    void testSharedStateSampler4D() {
         testSharedStateSampler(4);
     }
 
@@ -283,7 +283,7 @@ public class BoxSamplerTest {
      * Test the input vectors are copied and not used by reference for 2D.
      */
     @Test
-    public void testChangedInputCoordinates2D() {
+    void testChangedInputCoordinates2D() {
         testChangedInputCoordinates(2);
     }
 
@@ -291,7 +291,7 @@ public class BoxSamplerTest {
      * Test the input vectors are copied and not used by reference for 3D.
      */
     @Test
-    public void testChangedInputCoordinates3D() {
+    void testChangedInputCoordinates3D() {
         testChangedInputCoordinates(3);
     }
 
@@ -299,7 +299,7 @@ public class BoxSamplerTest {
      * Test the input vectors are copied and not used by reference for 4D.
      */
     @Test
-    public void testChangedInputCoordinates4D() {
+    void testChangedInputCoordinates4D() {
         testChangedInputCoordinates(4);
     }
 

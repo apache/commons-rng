@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link InverseTransformDiscreteSampler}.
  */
-public class InverseTransformDiscreteSamplerTest {
+class InverseTransformDiscreteSamplerTest {
     /**
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         DiscreteInverseCumulativeProbabilityFunction function =
             new DiscreteInverseCumulativeProbabilityFunction() {
                 @Override

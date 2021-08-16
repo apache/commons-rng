@@ -30,7 +30,7 @@ import java.util.function.Supplier;
  * ensures that all random sources can create a seed or convert any supported seed to the
  * correct type for the constructor.
  */
-public class RandomSourceInternalParametricTest {
+class RandomSourceInternalParametricTest {
     /** The supported seeds for conversion to a native seed type. */
     private static final Object[] SUPPORTED_SEEDS = {
         Integer.valueOf(1),
@@ -119,7 +119,7 @@ public class RandomSourceInternalParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCreateSeed(RandomSourceInternal randomSourceInternal) {
+    void testCreateSeed(RandomSourceInternal randomSourceInternal) {
         final Class<?> type = getType(randomSourceInternal);
         final Object seed = randomSourceInternal.createSeed();
         Assertions.assertNotNull(seed);
@@ -134,7 +134,7 @@ public class RandomSourceInternalParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testConvertSupportedSeed(RandomSourceInternal randomSourceInternal) {
+    void testConvertSupportedSeed(RandomSourceInternal randomSourceInternal) {
         final Class<?> type = getType(randomSourceInternal);
         for (final Object input : SUPPORTED_SEEDS) {
             final Object seed = randomSourceInternal.convertSeed(input);
@@ -152,7 +152,7 @@ public class RandomSourceInternalParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCannotConvertUnsupportedSeed(RandomSourceInternal randomSourceInternal) {
+    void testCannotConvertUnsupportedSeed(RandomSourceInternal randomSourceInternal) {
         for (final Object input : UNSUPPORTED_SEEDS) {
             Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> randomSourceInternal.convertSeed(input),
@@ -168,7 +168,7 @@ public class RandomSourceInternalParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCreateSeedBytesSizeIsPositiveAndMultipleOf4Or8(RandomSourceInternal randomSourceInternal) {
+    void testCreateSeedBytesSizeIsPositiveAndMultipleOf4Or8(RandomSourceInternal randomSourceInternal) {
         // This should be the full length seed
         final byte[] seed = randomSourceInternal.createSeedBytes(new SplitMix64(12345L));
 
@@ -200,7 +200,7 @@ public class RandomSourceInternalParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCreateSeedBytes(RandomSourceInternal randomSourceInternal) {
+    void testCreateSeedBytes(RandomSourceInternal randomSourceInternal) {
         // This should be the full length seed
         final byte[] seed = randomSourceInternal.createSeedBytes(new SplitMix64(12345L));
         final int size = seed.length;

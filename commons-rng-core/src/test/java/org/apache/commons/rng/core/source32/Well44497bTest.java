@@ -19,12 +19,12 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class Well44497bTest {
+class Well44497bTest {
     /** The size of the array seed. */
     private static final int SEED_SIZE = 1391;
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         final int[] base = {
             0x2c2878c6, 0x47af36c4, 0xf422e677, 0xf08fd8d3, 0xee9a47c7, 0xba983942, 0xa2a9f9a5, 0x1d443748,
             0x8fc260b2, 0x5275c681, 0x4a2f5a28, 0x2911683d, 0xa204c27e, 0xb20a6a26, 0x54ba33be, 0x67d63eb0,
@@ -301,12 +301,12 @@ public class Well44497bTest {
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new Well44497b(new int[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertIntArrayConstructorWithSingleBitInPoolIsFunctional(Well44497b.class, 44497);
     }
 }

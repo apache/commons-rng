@@ -29,14 +29,14 @@ import org.apache.commons.math3.stat.inference.ChiSquareTest;
 /**
  * Tests for random deviates generators.
  */
-public class DiscreteSamplerParametricTest {
+class DiscreteSamplerParametricTest {
     private static Iterable<DiscreteSamplerTestData> getSamplerTestData() {
         return DiscreteSamplersList.list();
     }
 
     @ParameterizedTest
     @MethodSource("getSamplerTestData")
-    public void testSampling(DiscreteSamplerTestData data) {
+    void testSampling(DiscreteSamplerTestData data) {
         final int sampleSize = 10000;
         // Probabilities are normalised by the chi-square test
         check(sampleSize,

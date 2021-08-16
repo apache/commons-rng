@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Assumptions;
  * in case of a wrong implementation (and would therefore fail other
  * tests too).
  */
-public class BaseProviderTest {
+class BaseProviderTest {
     @Test
-    public void testStateSizeTooSmall() {
+    void testStateSizeTooSmall() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
         Assumptions.assumeTrue(size > 0);
@@ -39,7 +39,7 @@ public class BaseProviderTest {
     }
 
     @Test
-    public void testStateSizeTooLarge() {
+    void testStateSizeTooLarge() {
         final DummyGenerator dummy = new DummyGenerator();
         final int size = dummy.getStateSize();
         final RandomProviderDefaultState state = new RandomProviderDefaultState(new byte[size + 1]);
@@ -47,7 +47,7 @@ public class BaseProviderTest {
     }
 
     @Test
-    public void testFillStateInt() {
+    void testFillStateInt() {
         final int[] state = new int[10];
         final int[] seed = {1, 2, 3};
 
@@ -65,7 +65,7 @@ public class BaseProviderTest {
     }
 
     @Test
-    public void testFillStateLong() {
+    void testFillStateLong() {
         final long[] state = new long[10];
         final long[] seed = {1, 2, 3};
 

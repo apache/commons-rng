@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * Test for the {@link KempSmallMeanPoissonSampler}. The tests hit edge cases for the
  * sampler and tests it functions at the supported upper bound on the mean.
  */
-public class KempSmallMeanPoissonSamplerTest {
+class KempSmallMeanPoissonSamplerTest {
     /**
      * The upper limit on the mean.
      *
@@ -43,7 +43,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the constructor with a bad mean.
      */
     @Test
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final double mean = SUPPORTED_UPPER_BOUND + 1;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
@@ -53,7 +53,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the constructor with zero mean.
      */
     @Test
-    public void testConstructorThrowsWithZeroMean() {
+    void testConstructorThrowsWithZeroMean() {
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
@@ -63,7 +63,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the constructor with a negative mean.
      */
     @Test
-    public void testConstructorThrowsWithNegativeMean() {
+    void testConstructorThrowsWithNegativeMean() {
         final double mean = -1;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
@@ -73,7 +73,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the constructor with a NaN mean.
      */
     @Test
-    public void testConstructorWithNaNMean() {
+    void testConstructorWithNaNMean() {
         final double mean = Double.NaN;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> KempSmallMeanPoissonSampler.of(dummyRng, mean));
@@ -84,7 +84,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * starting from 1.
      */
     @Test
-    public void testSummationFrom1AtUpperBound() {
+    void testSummationFrom1AtUpperBound() {
         final double mean = SUPPORTED_UPPER_BOUND;
         double u = 1;
         int x = 0;
@@ -103,7 +103,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * starting from 0.
      */
     @Test
-    public void testSummationTo1AtUpperBound() {
+    void testSummationTo1AtUpperBound() {
         final double mean = SUPPORTED_UPPER_BOUND;
         double u = 0;
         int x = 0;
@@ -121,7 +121,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the sampler functions at the upper bound on the mean.
      */
     @Test
-    public void testSamplerAtUpperBounds() {
+    void testSamplerAtUpperBounds() {
         final double mean = SUPPORTED_UPPER_BOUND;
 
         // Test some ranges for the cumulative probability
@@ -150,7 +150,7 @@ public class KempSmallMeanPoissonSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;

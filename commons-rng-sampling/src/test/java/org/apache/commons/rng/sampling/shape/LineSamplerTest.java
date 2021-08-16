@@ -31,12 +31,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link LineSampler}.
  */
-public class LineSamplerTest {
+class LineSamplerTest {
     /**
      * Test an unsupported dimension.
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> LineSampler.of(rng, new double[0], new double[0]));
@@ -46,7 +46,7 @@ public class LineSamplerTest {
      * Test a dimension mismatch between vertices.
      */
     @Test
-    public void testDimensionMismatchThrows() {
+    void testDimensionMismatchThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
@@ -65,7 +65,7 @@ public class LineSamplerTest {
      * Test non-finite vertices.
      */
     @Test
-    public void testNonFiniteVertexCoordinates() {
+    void testNonFiniteVertexCoordinates() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid line
         final double[][] c = new double[][] {
@@ -95,7 +95,7 @@ public class LineSamplerTest {
      * {@link Double#MAX_VALUE} in 1D.
      */
     @Test
-    public void testExtremeValueCoordinates1D() {
+    void testExtremeValueCoordinates1D() {
         testExtremeValueCoordinates(1);
     }
 
@@ -104,7 +104,7 @@ public class LineSamplerTest {
      * {@link Double#MAX_VALUE} in 2D.
      */
     @Test
-    public void testExtremeValueCoordinates2D() {
+    void testExtremeValueCoordinates2D() {
         testExtremeValueCoordinates(2);
     }
 
@@ -113,7 +113,7 @@ public class LineSamplerTest {
      * {@link Double#MAX_VALUE} in 3D.
      */
     @Test
-    public void testExtremeValueCoordinates3D() {
+    void testExtremeValueCoordinates3D() {
         testExtremeValueCoordinates(3);
     }
 
@@ -122,7 +122,7 @@ public class LineSamplerTest {
      * {@link Double#MAX_VALUE} in 4D.
      */
     @Test
-    public void testExtremeValueCoordinates4D() {
+    void testExtremeValueCoordinates4D() {
         testExtremeValueCoordinates(4);
     }
 
@@ -171,7 +171,7 @@ public class LineSamplerTest {
      * Test the distribution of points in 1D.
      */
     @Test
-    public void testDistribution1D() {
+    void testDistribution1D() {
         testDistributionND(1);
     }
 
@@ -179,7 +179,7 @@ public class LineSamplerTest {
      * Test the distribution of points in 2D.
      */
     @Test
-    public void testDistribution2D() {
+    void testDistribution2D() {
         testDistributionND(2);
     }
 
@@ -187,7 +187,7 @@ public class LineSamplerTest {
      * Test the distribution of points in 3D.
      */
     @Test
-    public void testDistribution3D() {
+    void testDistribution3D() {
         testDistributionND(3);
     }
 
@@ -195,7 +195,7 @@ public class LineSamplerTest {
      * Test the distribution of points in 4D.
      */
     @Test
-    public void testDistribution4D() {
+    void testDistribution4D() {
         testDistributionND(4);
     }
 
@@ -265,7 +265,7 @@ public class LineSamplerTest {
      * Test the SharedStateSampler implementation for 1D.
      */
     @Test
-    public void testSharedStateSampler1D() {
+    void testSharedStateSampler1D() {
         testSharedStateSampler(1);
     }
 
@@ -273,7 +273,7 @@ public class LineSamplerTest {
      * Test the SharedStateSampler implementation for 2D.
      */
     @Test
-    public void testSharedStateSampler2D() {
+    void testSharedStateSampler2D() {
         testSharedStateSampler(2);
     }
 
@@ -281,7 +281,7 @@ public class LineSamplerTest {
      * Test the SharedStateSampler implementation for 3D.
      */
     @Test
-    public void testSharedStateSampler3D() {
+    void testSharedStateSampler3D() {
         testSharedStateSampler(3);
     }
 
@@ -289,7 +289,7 @@ public class LineSamplerTest {
      * Test the SharedStateSampler implementation for 4D.
      */
     @Test
-    public void testSharedStateSampler4D() {
+    void testSharedStateSampler4D() {
         testSharedStateSampler(4);
     }
 
@@ -310,7 +310,7 @@ public class LineSamplerTest {
      * Test the input vectors are copied and not used by reference for 1D.
      */
     @Test
-    public void testChangedInputCoordinates1D() {
+    void testChangedInputCoordinates1D() {
         testChangedInputCoordinates(1);
     }
 
@@ -318,7 +318,7 @@ public class LineSamplerTest {
      * Test the input vectors are copied and not used by reference for 2D.
      */
     @Test
-    public void testChangedInputCoordinates2D() {
+    void testChangedInputCoordinates2D() {
         testChangedInputCoordinates(2);
     }
 
@@ -326,7 +326,7 @@ public class LineSamplerTest {
      * Test the input vectors are copied and not used by reference for 3D.
      */
     @Test
-    public void testChangedInputCoordinates3D() {
+    void testChangedInputCoordinates3D() {
         testChangedInputCoordinates(3);
     }
 
@@ -334,7 +334,7 @@ public class LineSamplerTest {
      * Test the input vectors are copied and not used by reference for 4D.
      */
     @Test
-    public void testChangedInputCoordinates4D() {
+    void testChangedInputCoordinates4D() {
         testChangedInputCoordinates(4);
     }
 

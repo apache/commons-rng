@@ -24,13 +24,13 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link BoxMullerLogNormalSampler}. The tests hit edge cases for the sampler.
  */
-public class BoxMullerLogNormalSamplerTest {
+class BoxMullerLogNormalSamplerTest {
     /**
      * Test the constructor with a bad scale.
      */
     @SuppressWarnings({"deprecation"})
     @Test
-    public void testConstructorThrowsWithNegativeScale() {
+    void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = -1e-6;
@@ -44,7 +44,7 @@ public class BoxMullerLogNormalSamplerTest {
      */
     @SuppressWarnings({"deprecation"})
     @Test
-    public void testConstructorThrowsWithZeroShape() {
+    void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;

@@ -20,9 +20,9 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class DotyHumphreySmallFastCounting64Test {
+class DotyHumphreySmallFastCounting64Test {
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * Tested with respect to PractRand::RNGs::Raw::sfc64 of the C++ implementation (v0.94).
          * See : http://pracrand.sourceforge.net/

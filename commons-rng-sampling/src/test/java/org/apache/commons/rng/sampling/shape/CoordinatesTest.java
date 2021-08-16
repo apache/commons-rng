@@ -22,12 +22,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for {@link Coordinates} utility class.
  */
-public class CoordinatesTest {
+class CoordinatesTest {
     /**
      * Test {@link Coordinates#requireFinite(double[], String)} detects infinite and NaN.
      */
     @Test
-    public void testRequireFiniteWithMessageThrows() {
+    void testRequireFiniteWithMessageThrows() {
         final double[] c = {0, 1, 2};
         final String message = "This should be prepended";
         Assertions.assertSame(c, Coordinates.requireFinite(c, message));
@@ -50,7 +50,7 @@ public class CoordinatesTest {
      * Test {@link Coordinates#requireLength(double[], int, String)} detects invalid lengths.
      */
     @Test
-    public void testRequireLengthWithMessageThrows() {
+    void testRequireLengthWithMessageThrows() {
         final String message = "This should be prepended";
         for (final double[] c : new double[][] {{0, 1}, {0, 1, 2}}) {
             final int length = c.length;

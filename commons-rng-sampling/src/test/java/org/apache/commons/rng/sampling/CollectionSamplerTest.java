@@ -28,10 +28,10 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Tests for {@link CollectionSampler}.
  */
-public class CollectionSamplerTest {
+class CollectionSamplerTest {
 
     @Test
-    public void testSampleTrivial() {
+    void testSampleTrivial() {
         final ArrayList<String> list = new ArrayList<String>();
         list.add("Apache");
         list.add("Commons");
@@ -50,7 +50,7 @@ public class CollectionSamplerTest {
     }
 
     @Test
-    public void testSamplePrecondition() {
+    void testSamplePrecondition() {
         // Must fail for empty collection.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new CollectionSampler<String>(RandomSource.SPLIT_MIX_64.create(0L),
@@ -61,7 +61,7 @@ public class CollectionSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<String> list = Arrays.asList("Apache", "Commons", "RNG");

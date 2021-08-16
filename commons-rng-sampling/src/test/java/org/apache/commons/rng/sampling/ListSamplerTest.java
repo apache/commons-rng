@@ -36,12 +36,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Tests for {@link ListSampler}.
  */
-public class ListSamplerTest {
+class ListSamplerTest {
     private final UniformRandomProvider rng = RandomSource.ISAAC.create(6543432321L);
     private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
-    public void testSample() {
+    void testSample() {
         final String[][] c = {{"0", "1"}, {"0", "2"}, {"0", "3"}, {"0", "4"},
                               {"1", "2"}, {"1", "3"}, {"1", "4"},
                               {"2", "3"}, {"2", "4"},
@@ -71,7 +71,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testSampleWhole() {
+    void testSampleWhole() {
         // Sample of size = size of collection must return the same collection.
         final List<String> list = new ArrayList<>();
         list.add("one");
@@ -82,7 +82,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testSamplePrecondition1() {
+    void testSamplePrecondition1() {
         // Must fail for sample size > collection size.
         final List<String> list = new ArrayList<>();
         list.add("one");
@@ -91,7 +91,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testSamplePrecondition2() {
+    void testSamplePrecondition2() {
         // Must fail for empty collection.
         final List<String> list = new ArrayList<>();
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -99,7 +99,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testShuffle() {
+    void testShuffle() {
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -119,7 +119,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testShuffleTail() {
+    void testShuffleTail() {
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -137,7 +137,7 @@ public class ListSamplerTest {
     }
 
     @Test
-    public void testShuffleHead() {
+    void testShuffleHead() {
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -160,7 +160,7 @@ public class ListSamplerTest {
      * output order should match.
      */
     @Test
-    public void testShuffleMatchesPermutationSamplerShuffle() {
+    void testShuffleMatchesPermutationSamplerShuffle() {
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -176,7 +176,7 @@ public class ListSamplerTest {
      * output order should match.
      */
     @Test
-    public void testShuffleMatchesPermutationSamplerShuffleDirectional() {
+    void testShuffleMatchesPermutationSamplerShuffleDirectional() {
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -193,7 +193,7 @@ public class ListSamplerTest {
      * using a RandomAccess list is faster than the one with an iterator.
      */
     @Test
-    public void testShuffleWithSmallLinkedList() {
+    void testShuffleWithSmallLinkedList() {
         final int size = 3;
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < size; i++) {

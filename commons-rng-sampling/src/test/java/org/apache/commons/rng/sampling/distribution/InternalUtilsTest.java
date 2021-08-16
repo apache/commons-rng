@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link InternalUtils}.
  */
-public class InternalUtilsTest {
+class InternalUtilsTest {
     /** The maximum value for n! that is representable as a long. */
     private static final int MAX_REPRESENTABLE = 20;
 
     @Test
-    public void testFactorial() {
+    void testFactorial() {
         Assertions.assertEquals(1L, InternalUtils.factorial(0));
         long result = 1;
         for (int n = 1; n <= MAX_REPRESENTABLE; n++) {
@@ -39,19 +39,19 @@ public class InternalUtilsTest {
     }
 
     @Test
-    public void testFactorialThrowsWhenNegative() {
+    void testFactorialThrowsWhenNegative() {
         Assertions.assertThrows(IndexOutOfBoundsException.class,
             () -> InternalUtils.factorial(-1));
     }
 
     @Test
-    public void testFactorialThrowsWhenNotRepresentableAsLong() {
+    void testFactorialThrowsWhenNotRepresentableAsLong() {
         Assertions.assertThrows(IndexOutOfBoundsException.class,
             () -> InternalUtils.factorial(MAX_REPRESENTABLE + 1));
     }
 
     @Test
-    public void testFactorialLog() {
+    void testFactorialLog() {
         // Cache size allows some of the factorials to be cached and some
         // to be under the precomputed factorials.
         FactorialLog factorialLog = FactorialLog.create().withCache(MAX_REPRESENTABLE / 2);
@@ -64,7 +64,7 @@ public class InternalUtilsTest {
     }
 
     @Test
-    public void testFactorialLogCacheSizeAboveRepresentableFactorials() {
+    void testFactorialLogCacheSizeAboveRepresentableFactorials() {
         final int limit = MAX_REPRESENTABLE + 5;
         FactorialLog factorialLog = FactorialLog.create().withCache(limit);
         for (int n = MAX_REPRESENTABLE; n <= limit; n++) {
@@ -75,7 +75,7 @@ public class InternalUtilsTest {
     }
 
     @Test
-    public void testFactorialLogCacheExpansion() {
+    void testFactorialLogCacheExpansion() {
         // There is no way to determine if the cache values were reused but this test
         // exercises the method to ensure it does not error.
         final FactorialLog factorialLog = FactorialLog.create()
@@ -95,13 +95,13 @@ public class InternalUtilsTest {
     }
 
     @Test
-    public void testLogFactorialThrowsWhenNegative() {
+    void testLogFactorialThrowsWhenNegative() {
         Assertions.assertThrows(IndexOutOfBoundsException.class,
             () -> FactorialLog.create().value(-1));
     }
 
     @Test
-    public void testLogFactorialWithCacheThrowsWhenNegative() {
+    void testLogFactorialWithCacheThrowsWhenNegative() {
         Assertions.assertThrows(NegativeArraySizeException.class,
             () -> FactorialLog.create().withCache(-1));
     }

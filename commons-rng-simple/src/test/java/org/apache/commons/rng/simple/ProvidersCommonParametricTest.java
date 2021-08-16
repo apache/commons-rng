@@ -42,7 +42,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 /**
  * Tests which all generators must pass.
  */
-public class ProvidersCommonParametricTest {
+class ProvidersCommonParametricTest {
     private static Iterable<ProvidersList.Data> getProvidersTestData() {
         return ProvidersList.list();
     }
@@ -51,7 +51,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testUnsupportedSeedType(ProvidersList.Data data) {
+    void testUnsupportedSeedType(ProvidersList.Data data) {
         final byte seed = 123;
         Assertions.assertThrows(UnsupportedOperationException.class,
             () -> data.getSource().create(seed, data.getArgs()));
@@ -62,7 +62,7 @@ public class ProvidersCommonParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testFactoryCreateMethod(ProvidersList.Data data) {
+    void testFactoryCreateMethod(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object originalSeed = data.getSeed();
         final Object[] originalArgs = data.getArgs();
@@ -80,7 +80,7 @@ public class ProvidersCommonParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testFactoryCreateMethodWithSeed(ProvidersList.Data data) {
+    void testFactoryCreateMethodWithSeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object originalSeed = data.getSeed();
         final Object[] originalArgs = data.getArgs();
@@ -101,7 +101,7 @@ public class ProvidersCommonParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testCreateMethodThrowsWithIncorrectArguments(ProvidersList.Data data) {
+    void testCreateMethodThrowsWithIncorrectArguments(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         if (originalArgs == null) {
@@ -121,7 +121,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testAllSeedTypes(ProvidersList.Data data) {
+    void testAllSeedTypes(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object originalSeed = data.getSeed();
         final Object[] originalArgs = data.getArgs();
@@ -159,7 +159,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testNullSeed(ProvidersList.Data data) {
+    void testNullSeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         // Note: This is the only test that explicitly calls RandomSource.create() with no other arguments.
@@ -171,7 +171,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testEmptyIntArraySeed(ProvidersList.Data data) {
+    void testEmptyIntArraySeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final int[] empty = new int[0];
@@ -184,7 +184,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testEmptyLongArraySeed(ProvidersList.Data data) {
+    void testEmptyLongArraySeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final long[] empty = new long[0];
@@ -199,7 +199,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testZeroIntArraySeed(ProvidersList.Data data) {
+    void testZeroIntArraySeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         // Exercise capacity to escape all "zero" state.
@@ -212,7 +212,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testZeroLongArraySeed(ProvidersList.Data data) {
+    void testZeroLongArraySeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         // Exercise capacity to escape all "zero" state.
@@ -225,7 +225,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testRandomSourceCreateSeed(ProvidersList.Data data) {
+    void testRandomSourceCreateSeed(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final byte[] seed = originalSource.createSeed();
@@ -235,7 +235,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testRandomSourceCreateSeedFromRNG(ProvidersList.Data data) {
+    void testRandomSourceCreateSeedFromRNG(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final byte[] seed = originalSource.createSeed(new SplitMix64(RandomSource.createLong()));
@@ -248,7 +248,7 @@ public class ProvidersCommonParametricTest {
     @SuppressWarnings("unused")
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testUnrestorable(ProvidersList.Data data) {
+    void testUnrestorable(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object originalSeed = data.getSeed();
         final Object[] originalArgs = data.getArgs();
@@ -269,7 +269,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testSerializingState(ProvidersList.Data data)
+    void testSerializingState(ProvidersList.Data data)
         throws IOException,
                ClassNotFoundException {
         final UniformRandomProvider generator = data.getSource().create(data.getSeed(), data.getArgs());
@@ -315,7 +315,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testUnrestorableToString(ProvidersList.Data data) {
+    void testUnrestorableToString(ProvidersList.Data data) {
         final UniformRandomProvider generator = data.getSource().create(data.getSeed(), data.getArgs());
         Assertions.assertEquals(generator.toString(),
                                 RandomSource.unrestorable(generator).toString());
@@ -323,7 +323,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
-    public void testSupportedInterfaces(ProvidersList.Data data) {
+    void testSupportedInterfaces(ProvidersList.Data data) {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final UniformRandomProvider rng = originalSource.create(null, originalArgs);

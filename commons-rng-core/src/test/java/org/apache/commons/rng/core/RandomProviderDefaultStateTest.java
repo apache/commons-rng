@@ -23,9 +23,9 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Tests for {@link RandomProviderDefaultState}.
  */
-public class RandomProviderDefaultStateTest {
+class RandomProviderDefaultStateTest {
     @Test
-    public void testConsistency() {
+    void testConsistency() {
         final byte[] internalState = {1, 0, -23, 67, -128, 54, 100, 127};
         final RandomProviderDefaultState state = new RandomProviderDefaultState(internalState);
 

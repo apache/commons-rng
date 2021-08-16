@@ -21,9 +21,9 @@ import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MiddleSquareWeylSequenceTest {
+class MiddleSquareWeylSequenceTest {
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * The data was generated using the following program based on the author's C code:
          *     https://mswsrng.wixsite.com/rand
@@ -75,7 +75,7 @@ public class MiddleSquareWeylSequenceTest {
      * statistical quality of the output is not tested.</p>
      */
     @Test
-    public void testSelfSeeding() {
+    void testSelfSeeding() {
         final int warmupCycles = 0;
         final int testCycles = 3;
         // Do not pass the Weyl increment (the 3rd value in the seed array)
@@ -88,7 +88,7 @@ public class MiddleSquareWeylSequenceTest {
      * nextLong() routine in the implementation that overrides the default.
      */
     @Test
-    public void testNextLong() {
+    void testNextLong() {
         final long[] seed = {0x012de1babb3c4104L, 0xc8161b4202294965L, 0xb5ad4eceda1ce2a9L};
         final MiddleSquareWeylSequence rng1 = new MiddleSquareWeylSequence(seed);
         final MiddleSquareWeylSequence rng2 = new MiddleSquareWeylSequence(seed);

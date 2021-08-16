@@ -29,12 +29,12 @@ import java.util.Locale;
  * Test for the {@link DiscreteUniformSampler}. The tests hit edge cases for the sampler
  * and demonstrates uniformity of output when the underlying RNG output is uniform.
  */
-public class DiscreteUniformSamplerTest {
+class DiscreteUniformSamplerTest {
     /**
      * Test the constructor with a bad range.
      */
     @Test
-    public void testConstructorThrowsWithLowerAboveUpper() {
+    void testConstructorThrowsWithLowerAboveUpper() {
         final int upper = 55;
         final int lower = upper + 1;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
@@ -43,7 +43,7 @@ public class DiscreteUniformSamplerTest {
     }
 
     @Test
-    public void testSamplesWithRangeOf1() {
+    void testSamplesWithRangeOf1() {
         final int upper = 99;
         final int lower = upper;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
@@ -58,7 +58,7 @@ public class DiscreteUniformSamplerTest {
      * The output should be the same as the int values produced from a RNG.
      */
     @Test
-    public void testSamplesWithFullRange() {
+    void testSamplesWithFullRange() {
         final int upper = Integer.MAX_VALUE;
         final int lower = Integer.MIN_VALUE;
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
@@ -76,7 +76,7 @@ public class DiscreteUniformSamplerTest {
      * the same.
      */
     @Test
-    public void testSamplesWithSmallNonPowerOf2Range() {
+    void testSamplesWithSmallNonPowerOf2Range() {
         final int upper = 257;
         for (final int lower : new int[] {-13, 0, 13}) {
             final int n = upper - lower + 1;
@@ -94,7 +94,7 @@ public class DiscreteUniformSamplerTest {
      * This tests the minimum and maximum output should be the range limits.
      */
     @Test
-    public void testSamplesWithPowerOf2Range() {
+    void testSamplesWithPowerOf2Range() {
         final UniformRandomProvider rngZeroBits = new IntProvider() {
             @Override
             public int next() {
@@ -130,7 +130,7 @@ public class DiscreteUniformSamplerTest {
      * This tests the output is created using a bit shift.
      */
     @Test
-    public void testSamplesWithPowerOf2RangeIsBitShift() {
+    void testSamplesWithPowerOf2RangeIsBitShift() {
         final int lower = 0;
         SharedStateDiscreteSampler sampler;
         // Power of 2 sampler used for a bit shift of 1 to 31.
@@ -152,7 +152,7 @@ public class DiscreteUniformSamplerTest {
      * This tests the large range algorithm uses a rejection method.
      */
     @Test
-    public void testSamplesWithLargeNonPowerOf2RangeIsRejectionMethod() {
+    void testSamplesWithLargeNonPowerOf2RangeIsRejectionMethod() {
         // Create a range bigger than 2^63
         final int upper = Integer.MAX_VALUE / 2 + 1;
         final int lower = Integer.MIN_VALUE / 2 - 1;
@@ -170,17 +170,17 @@ public class DiscreteUniformSamplerTest {
     }
 
     @Test
-    public void testOffsetSamplesWithNonPowerOf2Range() {
+    void testOffsetSamplesWithNonPowerOf2Range() {
         assertOffsetSamples(257);
     }
 
     @Test
-    public void testOffsetSamplesWithPowerOf2Range() {
+    void testOffsetSamplesWithPowerOf2Range() {
         assertOffsetSamples(256);
     }
 
     @Test
-    public void testOffsetSamplesWithRangeOf1() {
+    void testOffsetSamplesWithRangeOf1() {
         assertOffsetSamples(1);
     }
 
@@ -210,7 +210,7 @@ public class DiscreteUniformSamplerTest {
      * Test the sample uniformity when using a small range that is not a power of 2.
      */
     @Test
-    public void testSampleUniformityWithNonPowerOf2Range() {
+    void testSampleUniformityWithNonPowerOf2Range() {
         // Test using a RNG that outputs an evenly spaced set of integers.
         // Create a Weyl sequence using George Marsaglia’s increment from:
         // Marsaglia, G (July 2003). "Xorshift RNGs". Journal of Statistical Software. 8 (14).
@@ -266,7 +266,7 @@ public class DiscreteUniformSamplerTest {
      * Test the sample uniformity when using a small range that is a power of 2.
      */
     @Test
-    public void testSampleUniformityWithPowerOf2Range() {
+    void testSampleUniformityWithPowerOf2Range() {
         // Test using a RNG that outputs a counter of integers.
         // The n most significant bits will be represented uniformly over a
         // sequence that is a 2^n long.
@@ -307,7 +307,7 @@ public class DiscreteUniformSamplerTest {
      * as the first value from the RNG and tests it is rejected.
      */
     @Test
-    public void testSampleRejectionWithNonPowerOf2Range() {
+    void testSampleRejectionWithNonPowerOf2Range() {
         // Test using a RNG that returns a sequence.
         // The first value of zero should produce a sample that is rejected.
         final int[] value = new int[1];
@@ -333,23 +333,23 @@ public class DiscreteUniformSamplerTest {
     }
 
     @Test
-    public void testSharedStateSamplerWithSmallRange() {
+    void testSharedStateSamplerWithSmallRange() {
         testSharedStateSampler(5, 67);
     }
 
     @Test
-    public void testSharedStateSamplerWithLargeRange() {
+    void testSharedStateSamplerWithLargeRange() {
         // Set the range so rejection below or above the threshold occurs with approximately p=0.25
         testSharedStateSampler(Integer.MIN_VALUE / 2 - 1, Integer.MAX_VALUE / 2 + 1);
     }
 
     @Test
-    public void testSharedStateSamplerWithPowerOf2Range() {
+    void testSharedStateSamplerWithPowerOf2Range() {
         testSharedStateSampler(0, 31);
     }
 
     @Test
-    public void testSharedStateSamplerWithRangeOf1() {
+    void testSharedStateSamplerWithRangeOf1() {
         testSharedStateSampler(9, 9);
     }
 
@@ -370,23 +370,23 @@ public class DiscreteUniformSamplerTest {
     }
 
     @Test
-    public void testToStringWithSmallRange() {
+    void testToStringWithSmallRange() {
         assertToString(5, 67);
     }
 
     @Test
-    public void testToStringWithLargeRange() {
+    void testToStringWithLargeRange() {
         assertToString(-99999999, Integer.MAX_VALUE);
     }
 
     @Test
-    public void testToStringWithPowerOf2Range() {
+    void testToStringWithPowerOf2Range() {
         // Note the range is upper - lower + 1
         assertToString(0, 31);
     }
 
     @Test
-    public void testToStringWithRangeOf1() {
+    void testToStringWithRangeOf1() {
         assertToString(9, 9);
     }
 

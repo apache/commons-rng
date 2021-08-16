@@ -25,10 +25,10 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link ZigguratNormalizedGaussianSampler}.
  */
-public class ZigguratNormalizedGaussianSamplerTest {
+class ZigguratNormalizedGaussianSamplerTest {
     // Cf. RNG-56
     @Test
-    public void testInfiniteLoop() {
+    void testInfiniteLoop() {
         // A bad implementation whose only purpose is to force access
         // to the rarest branch.
         final UniformRandomProvider bad = new UniformRandomProvider() {
@@ -54,7 +54,7 @@ public class ZigguratNormalizedGaussianSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateContinuousSampler sampler1 =

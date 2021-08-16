@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  * constructor of the {@link PoissonSampler}, irrespective of the range
  * covered by the cache.
  */
-public class PoissonSamplerCacheTest {
+class PoissonSamplerCacheTest {
 
     // Set a range so that the SmallMeanPoissonSampler is also required.
 
@@ -42,7 +42,7 @@ public class PoissonSamplerCacheTest {
      * This mean is the same level as the algorithm switch point in the PoissonSampler.
      */
     @Test
-    public void testMinimumCachedMean() {
+    void testMinimumCachedMean() {
         Assertions.assertEquals(PoissonSampler.PIVOT, PoissonSamplerCache.getMinimumCachedMean());
     }
 
@@ -54,7 +54,7 @@ public class PoissonSamplerCacheTest {
      * of the SmallMeanPoissonSampler.
      */
     @Test
-    public void testConstructorWithNoCache() {
+    void testConstructorWithNoCache() {
         final double min = 0;
         final double max = PoissonSampler.PIVOT - 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -69,7 +69,7 @@ public class PoissonSamplerCacheTest {
      * in the range {@code n <= mean < n+1}.
      */
     @Test
-    public void testConstructorWhenMaxEqualsMin() {
+    void testConstructorWhenMaxEqualsMin() {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -85,7 +85,7 @@ public class PoissonSamplerCacheTest {
      * in the range {@code n <= mean < n+1}.
      */
     @Test
-    public void testConstructorWhenMaxAboveMin() {
+    void testConstructorWhenMaxAboveMin() {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -99,7 +99,7 @@ public class PoissonSamplerCacheTest {
      * Test the cache requires a range with {@code max >= min}.
      */
     @Test
-    public void testConstructorThrowsWhenMaxIsLessThanMin() {
+    void testConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextDown(min);
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -111,7 +111,7 @@ public class PoissonSamplerCacheTest {
      * In this case the range is truncated to 0.
      */
     @Test
-    public void testConstructorWhenMinBelow0() {
+    void testConstructorWhenMinBelow0() {
         final double min = -1;
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -126,7 +126,7 @@ public class PoissonSamplerCacheTest {
      * In this case the range is truncated to 0, i.e. no cache.
      */
     @Test
-    public void testConstructorWhenMaxBelow0() {
+    void testConstructorWhenMaxBelow0() {
         final double min = -10;
         final double max = -1;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -141,7 +141,7 @@ public class PoissonSamplerCacheTest {
      * of the SmallMeanPoissonSampler.
      */
     @Test
-    public void testWithRangeConstructorWithNoCache() {
+    void testWithRangeConstructorWithNoCache() {
         final double min = 0;
         final double max = PoissonSampler.PIVOT - 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
@@ -156,7 +156,7 @@ public class PoissonSamplerCacheTest {
      * in the range {@code n <= mean < n+1}.
      */
     @Test
-    public void testWithRangeConstructorWhenMaxEqualsMin() {
+    void testWithRangeConstructorWhenMaxEqualsMin() {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
@@ -172,7 +172,7 @@ public class PoissonSamplerCacheTest {
      * in the range {@code n <= mean < n+1}.
      */
     @Test
-    public void testWithRangeConstructorWhenMaxAboveMin() {
+    void testWithRangeConstructorWhenMaxAboveMin() {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
@@ -186,7 +186,7 @@ public class PoissonSamplerCacheTest {
      * Test the cache requires a range with {@code max >= min}.
      */
     @Test
-    public void testWithRangeConstructorThrowsWhenMaxIsLessThanMin() {
+    void testWithRangeConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextDown(min);
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -198,7 +198,7 @@ public class PoissonSamplerCacheTest {
      * In this case the range is truncated to 0.
      */
     @Test
-    public void testWithRangeConstructorWhenMinBelow0() {
+    void testWithRangeConstructorWhenMinBelow0() {
         final double min = -1;
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
@@ -212,7 +212,7 @@ public class PoissonSamplerCacheTest {
      * Test the cache can be created from a cache with no capacity.
      */
     @Test
-    public void testWithRangeConstructorWhenCacheHasNoCapcity() {
+    void testWithRangeConstructorWhenCacheHasNoCapcity() {
         final double min = PoissonSampler.PIVOT + 2;
         final double max = min + 10;
         final PoissonSamplerCache cache = createPoissonSamplerCache(0, 0).withRange(min, max);
@@ -227,7 +227,7 @@ public class PoissonSamplerCacheTest {
      * cost is minimal.
      */
     @Test
-    public void testWithinRange() {
+    void testWithinRange() {
         final double min = PoissonSampler.PIVOT + 10;
         final double max = PoissonSampler.PIVOT + 20;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
@@ -247,7 +247,7 @@ public class PoissonSamplerCacheTest {
      * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
      */
     @Test
-    public void testCreateSharedStateSamplerThrowsWithZeroMean() {
+    void testCreateSharedStateSamplerThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
@@ -259,7 +259,7 @@ public class PoissonSamplerCacheTest {
      * Test createSharedStateSampler() with a mean that is too large.
      */
     @Test
-    public void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
+    void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final PoissonSamplerCache cache = createPoissonSamplerCache();
@@ -275,7 +275,7 @@ public class PoissonSamplerCacheTest {
      * covers the entire range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerWithFullRangeCache() {
+    void testCanComputeSameSamplesAsPoissonSamplerWithFullRangeCache() {
         checkComputeSameSamplesAsPoissonSampler(minRange,
                                                 maxRange);
     }
@@ -285,7 +285,7 @@ public class PoissonSamplerCacheTest {
      * with no cache.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerWithNoCache() {
+    void testCanComputeSameSamplesAsPoissonSamplerWithNoCache() {
         checkComputeSameSamplesAsPoissonSampler(0,
                                                 minRange - 2);
     }
@@ -295,7 +295,7 @@ public class PoissonSamplerCacheTest {
      * partial cache covering the lower range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerWithPartialCacheCoveringLowerRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerWithPartialCacheCoveringLowerRange() {
         checkComputeSameSamplesAsPoissonSampler(minRange,
                                                 midRange);
     }
@@ -305,7 +305,7 @@ public class PoissonSamplerCacheTest {
      * partial cache covering the upper range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerWithPartialCacheCoveringUpperRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerWithPartialCacheCoveringUpperRange() {
         checkComputeSameSamplesAsPoissonSampler(midRange,
                                                 maxRange);
     }
@@ -315,7 +315,7 @@ public class PoissonSamplerCacheTest {
      * cache above the upper range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerWithCacheAboveTheUpperRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerWithCacheAboveTheUpperRange() {
         checkComputeSameSamplesAsPoissonSampler(maxRange + 10,
                                                 maxRange + 20);
     }
@@ -397,7 +397,7 @@ public class PoissonSamplerCacheTest {
      * a new cache reusing the entire range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheEntireRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerReusingCacheEntireRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
                                                             midRange,
@@ -409,7 +409,7 @@ public class PoissonSamplerCacheTest {
      * a new cache reusing none of the range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheNoRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerReusingCacheNoRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
                                                             maxRange + 10,
@@ -421,7 +421,7 @@ public class PoissonSamplerCacheTest {
      * a new cache reusing some of the lower range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheLowerRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerReusingCacheLowerRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
                                                             minRange,
@@ -433,7 +433,7 @@ public class PoissonSamplerCacheTest {
      * a new cache reusing some of the upper range.
      */
     @Test
-    public void testCanComputeSameSamplesAsPoissonSamplerReusingCacheUpperRange() {
+    void testCanComputeSameSamplesAsPoissonSamplerReusingCacheUpperRange() {
         checkComputeSameSamplesAsPoissonSamplerReusingCache(midRange,
                                                             maxRange,
                                                             maxRange - 1,
@@ -490,7 +490,7 @@ public class PoissonSamplerCacheTest {
      */
     @SuppressWarnings("deprecation")
     @Test
-    public void testCreatePoissonSampler() {
+    void testCreatePoissonSampler() {
         final PoissonSamplerCache cache = createPoissonSamplerCache(0, 100);
         final DiscreteSampler s2 = cache.createPoissonSampler(null, 42);
         Assertions.assertTrue(s2 instanceof LargeMeanPoissonSampler);

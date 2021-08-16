@@ -29,11 +29,11 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Tests for {@link CombinationSampler}.
  */
-public class CombinationSamplerTest {
+class CombinationSamplerTest {
     private final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 
     @Test
-    public void testSampleIsInDomain() {
+    void testSampleIsInDomain() {
         final int n = 6;
         for (int k = 1; k <= n; k++) {
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
@@ -45,21 +45,21 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testUniformWithKlessThanHalfN() {
+    void testUniformWithKlessThanHalfN() {
         final int n = 8;
         final int k = 2;
         assertUniformSamples(n, k);
     }
 
     @Test
-    public void testUniformWithKmoreThanHalfN() {
+    void testUniformWithKmoreThanHalfN() {
         final int n = 8;
         final int k = 6;
         assertUniformSamples(n, k);
     }
 
     @Test
-    public void testSampleWhenNequalsKIsNotShuffled() {
+    void testSampleWhenNequalsKIsNotShuffled() {
         // Check n == k boundary case.
         // This is allowed but the sample is not shuffled.
         for (int n = 1; n < 3; n++) {
@@ -74,7 +74,7 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testKgreaterThanNThrows() {
+    void testKgreaterThanNThrows() {
         // Must fail for k > n.
         final int n = 2;
         final int k = 3;
@@ -83,7 +83,7 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testNequalsZeroThrows() {
+    void testNequalsZeroThrows() {
         // Must fail for n = 0.
         final int n = 0;
         final int k = 3;
@@ -92,7 +92,7 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testKequalsZeroThrows() {
+    void testKequalsZeroThrows() {
         // Must fail for k = 0.
         final int n = 2;
         final int k = 0;
@@ -101,7 +101,7 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testNisNegativeThrows() {
+    void testNisNegativeThrows() {
         // Must fail for n <= 0.
         final int n = -1;
         final int k = 3;
@@ -110,7 +110,7 @@ public class CombinationSamplerTest {
     }
 
     @Test
-    public void testKisNegativeThrows() {
+    void testKisNegativeThrows() {
         // Must fail for k <= 0.
         final int n = 0;
         final int k = -1;
@@ -122,7 +122,7 @@ public class CombinationSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int n = 17;

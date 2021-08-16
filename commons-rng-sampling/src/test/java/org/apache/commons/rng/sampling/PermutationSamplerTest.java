@@ -29,12 +29,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Tests for {@link PermutationSampler}.
  */
-public class PermutationSamplerTest {
+class PermutationSamplerTest {
     private final UniformRandomProvider rng = RandomSource.ISAAC.create(1232343456L);
     private final ChiSquareTest chiSquareTest = new ChiSquareTest();
 
     @Test
-    public void testSampleTrivial() {
+    void testSampleTrivial() {
         final int n = 6;
         final int k = 3;
         final PermutationSampler sampler = new PermutationSampler(RandomSource.KISS.create(),
@@ -51,7 +51,7 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testSampleChiSquareTest() {
+    void testSampleChiSquareTest() {
         final int n = 3;
         final int k = 3;
         final int[][] p = {{0, 1, 2}, {0, 2, 1},
@@ -61,7 +61,7 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testSubSampleChiSquareTest() {
+    void testSubSampleChiSquareTest() {
         final int n = 4;
         final int k = 2;
         final int[][] p = {{0, 1}, {1, 0},
@@ -74,7 +74,7 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testSampleBoundaryCase() {
+    void testSampleBoundaryCase() {
         // Check size = 1 boundary case.
         final PermutationSampler sampler = new PermutationSampler(rng, 1, 1);
         final int[] perm = sampler.sample();
@@ -83,35 +83,35 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testSamplePrecondition1() {
+    void testSamplePrecondition1() {
         // Must fail for k > n.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 2, 3));
     }
 
     @Test
-    public void testSamplePrecondition2() {
+    void testSamplePrecondition2() {
         // Must fail for n = 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 0, 0));
     }
 
     @Test
-    public void testSamplePrecondition3() {
+    void testSamplePrecondition3() {
         // Must fail for k < n < 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, -1, 0));
     }
 
     @Test
-    public void testSamplePrecondition4() {
+    void testSamplePrecondition4() {
         // Must fail for k < n < 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 1, -1));
     }
 
     @Test
-    public void testNatural() {
+    void testNatural() {
         final int n = 4;
         final int[] expected = {0, 1, 2, 3};
 
@@ -122,13 +122,13 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testNaturalZero() {
+    void testNaturalZero() {
         final int[] natural = PermutationSampler.natural(0);
         Assertions.assertEquals(0, natural.length);
     }
 
     @Test
-    public void testShuffleNoDuplicates() {
+    void testShuffleNoDuplicates() {
         final int n = 100;
         final int[] orig = PermutationSampler.natural(n);
         PermutationSampler.shuffle(rng, orig);
@@ -145,7 +145,7 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testShuffleTail() {
+    void testShuffleTail() {
         final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
@@ -168,7 +168,7 @@ public class PermutationSamplerTest {
     }
 
     @Test
-    public void testShuffleHead() {
+    void testShuffleHead() {
         final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
@@ -194,7 +194,7 @@ public class PermutationSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int n = 17;

@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XoShiRo512PlusPlusTest {
+class XoShiRo512PlusPlusTest {
     /** The size of the array SEED. */
     private static final int SEED_SIZE = 8;
 
@@ -73,29 +73,29 @@ public class XoShiRo512PlusPlusTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoShiRo512PlusPlus(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoShiRo512PlusPlus(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XoShiRo512PlusPlus.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoShiRo512PlusPlus(new long[] {SEED[0]}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testElementConstructor() {
+    void testElementConstructor() {
         final XoShiRo512PlusPlus rng1 = new XoShiRo512PlusPlus(SEED);
         final XoShiRo512PlusPlus rng2 = new XoShiRo512PlusPlus(SEED[0], SEED[1], SEED[2], SEED[3],
                                                                SEED[4], SEED[5], SEED[6], SEED[7]);
@@ -103,12 +103,12 @@ public class XoShiRo512PlusPlusTest {
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoShiRo512PlusPlus(SEED));
     }
 
     @Test
-    public void testLongJump() {
+    void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoShiRo512PlusPlus(SEED));
     }
 }

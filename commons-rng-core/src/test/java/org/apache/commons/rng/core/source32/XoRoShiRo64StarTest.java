@@ -19,12 +19,12 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XoRoShiRo64StarTest {
+class XoRoShiRo64StarTest {
     /** The size of the array seed. */
     private static final int SEED_SIZE = 2;
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * Data from running the executable compiled from the author's C code:
          *   http://xoshiro.di.unimi.it/xoroshiro64star.c
@@ -50,24 +50,24 @@ public class XoRoShiRo64StarTest {
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoRoShiRo64Star(new int[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertIntArrayConstructorWithSingleBitSeedIsFunctional(XoRoShiRo64Star.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoRoShiRo64Star(new int[] {0x012de1ba}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testElementConstructor() {
+    void testElementConstructor() {
         final int[] seed = {
             0x012de1ba, 0xa5a818b8,
         };

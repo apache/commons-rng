@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  * the source for {@link IntProvider#nextInt()} and
  * {@link IntProvider#nextBoolean()}.
  */
-public class IntProviderTest {
+class IntProviderTest {
     /**
      * A simple class to flip the bits in a number as the source for
      * {@link IntProvider#next()}.
@@ -56,7 +56,7 @@ public class IntProviderTest {
      * <p>The order should be from the least-significant bit.
      */
     @Test
-    public void testNextBoolean() {
+    void testNextBoolean() {
         for (int i = 0; i < Integer.SIZE; i++) {
             // Set only a single bit in the source
             final int value = 1 << i;

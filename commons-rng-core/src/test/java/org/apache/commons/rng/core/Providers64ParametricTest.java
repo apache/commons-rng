@@ -23,14 +23,14 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 /**
  * Tests which all 64-bits based generators must pass.
  */
-public class Providers64ParametricTest {
+class Providers64ParametricTest {
     private static Iterable<RestorableUniformRandomProvider> getList() {
         return ProvidersList.list64();
     }
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testNextBytesChunks(RestorableUniformRandomProvider generator) {
+    void testNextBytesChunks(RestorableUniformRandomProvider generator) {
         final int[] chunkSizes = {8, 16, 24};
         final int[] chunks = {1, 2, 3, 4, 5};
         for (int chunkSize : chunkSizes) {

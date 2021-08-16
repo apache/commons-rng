@@ -20,9 +20,9 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class PcgRxsMXs64Test {
+class PcgRxsMXs64Test {
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * Tested with respect to pcg_engines::setseq_rxs_m_xs_64_64(x, y) of the C++ implementation.
          * See : http://www.pcg-random.org/download.html#cpp-implementation
@@ -45,7 +45,7 @@ public class PcgRxsMXs64Test {
     }
 
     @Test
-    public void testReferenceCodeFixedIncrement() {
+    void testReferenceCodeFixedIncrement() {
         /*
          * Tested with respect to pcg_engines::setseq_rxs_m_xs_64_64(x) of the C++ implementation.
          * See : http://www.pcg-random.org/download.html#cpp-implementation

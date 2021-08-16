@@ -24,9 +24,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 
-public class TwoCmresTest {
+class TwoCmresTest {
     @Test
-    public void testAsymmetric() {
+    void testAsymmetric() {
         final int index1 = 2;
         final int index2 = 5;
         final int seed = -123456789;
@@ -47,7 +47,7 @@ public class TwoCmresTest {
      * thus a change of any single bit should make a different output.
      */
     @Test
-    public void testSeedingWithASingleBitProducesDifferentOutputFromZeroSeed() {
+    void testSeedingWithASingleBitProducesDifferentOutputFromZeroSeed() {
         final int n = 100;
 
         // Output with a zero seed
@@ -65,7 +65,7 @@ public class TwoCmresTest {
     }
 
     @Test
-    public void testSubcycleGeneratorsMustBeDifferent() {
+    void testSubcycleGeneratorsMustBeDifferent() {
         final int max = TwoCmres.numberOfSubcycleGenerators();
         for (int i = 0; i < max; i++) {
             final int subCycle = i;
@@ -75,7 +75,7 @@ public class TwoCmresTest {
     }
 
     @Test
-    public void testSubcycleGeneratorsIndex() {
+    void testSubcycleGeneratorsIndex() {
         final int seed = 246810;
 
         // Valid indices are between 0 (included) and max (excluded).
@@ -101,7 +101,7 @@ public class TwoCmresTest {
     }
 
     @Test
-    public void testCmresFactoryThrowsWithDuplicateMultiplier() {
+    void testCmresFactoryThrowsWithDuplicateMultiplier() {
         final ArrayList<Cmres> list = new ArrayList<>();
         final long multiply = 0;
         final int rotate = 3;

@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link Long2LongArray} converter.
  */
-public class Long2LongArrayTest {
+class Long2LongArrayTest {
     @Test
-    public void testFixedLengthConversion() {
+    void testFixedLengthConversion() {
         final Long seed = 567L;
         final int length = 3;
         final long[] out = new Long2LongArray(length).convert(seed);

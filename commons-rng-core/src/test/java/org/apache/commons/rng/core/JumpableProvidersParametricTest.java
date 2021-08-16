@@ -34,7 +34,7 @@ import org.apache.commons.rng.core.source64.LongProvider;
 /**
  * Tests which all {@link JumpableUniformRandomProvider} generators must pass.
  */
-public class JumpableProvidersParametricTest {
+class JumpableProvidersParametricTest {
     /** The size of the state for the IntProvider. */
     private static final int INT_PROVIDER_STATE_SIZE;
     /** The size of the state for the LongProvider. */
@@ -72,7 +72,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testJumpReturnsACopy(JumpableUniformRandomProvider generator) {
+    void testJumpReturnsACopy(JumpableUniformRandomProvider generator) {
         assertJumpReturnsACopy(generator::jump, generator);
     }
 
@@ -81,7 +81,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testLongJumpReturnsACopy(JumpableUniformRandomProvider generator) {
+    void testLongJumpReturnsACopy(JumpableUniformRandomProvider generator) {
         assertJumpReturnsACopy(getLongJumpFunction(generator), generator);
     }
 
@@ -104,7 +104,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
+    void testJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
         assertCopyMatchesPreJumpState(generator::jump, generator);
     }
 
@@ -114,7 +114,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testLongJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
+    void testLongJumpCopyMatchesPreJumpState(JumpableUniformRandomProvider generator) {
         assertCopyMatchesPreJumpState(getLongJumpFunction(generator), generator);
     }
 
@@ -168,7 +168,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
+    void testJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
         assertJumpResetsDefaultState(generator::jump, generator);
     }
 
@@ -178,7 +178,7 @@ public class JumpableProvidersParametricTest {
      */
     @ParameterizedTest
     @MethodSource("getJumpableProviders")
-    public void testLongJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
+    void testLongJumpResetsDefaultState(JumpableUniformRandomProvider generator) {
         assertJumpResetsDefaultState(getLongJumpFunction(generator), generator);
     }
 

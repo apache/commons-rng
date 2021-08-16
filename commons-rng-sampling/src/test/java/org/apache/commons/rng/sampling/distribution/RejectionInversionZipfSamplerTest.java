@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link RejectionInversionZipfSampler}. The tests hit edge cases for the sampler.
  */
-public class RejectionInversionZipfSamplerTest {
+class RejectionInversionZipfSamplerTest {
     /**
      * Test the constructor with a bad number of elements.
      */
     @Test
-    public void testConstructorThrowsWithZeroNumberOfElements() {
+    void testConstructorThrowsWithZeroNumberOfElements() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 0;
@@ -44,7 +44,7 @@ public class RejectionInversionZipfSamplerTest {
      * Test the constructor with a bad exponent.
      */
     @Test
-    public void testConstructorThrowsWithZeroExponent() {
+    void testConstructorThrowsWithZeroExponent() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 1;
@@ -57,7 +57,7 @@ public class RejectionInversionZipfSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 7;

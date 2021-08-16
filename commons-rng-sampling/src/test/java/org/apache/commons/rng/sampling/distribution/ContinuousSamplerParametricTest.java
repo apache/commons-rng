@@ -27,14 +27,14 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests for random deviates generators.
  */
-public class ContinuousSamplerParametricTest {
+class ContinuousSamplerParametricTest {
     private static Iterable<ContinuousSamplerTestData> getSamplerTestData() {
         return ContinuousSamplersList.list();
     }
 
     @ParameterizedTest
     @MethodSource("getSamplerTestData")
-    public void testSampling(ContinuousSamplerTestData data) {
+    void testSampling(ContinuousSamplerTestData data) {
         check(20000, data.getSampler(), data.getDeciles());
     }
 

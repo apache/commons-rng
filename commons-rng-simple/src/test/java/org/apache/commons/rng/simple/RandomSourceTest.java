@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for {@link RandomSource}.
  */
-public class RandomSourceTest {
+class RandomSourceTest {
     @Test
-    public void testCreateInt() {
+    void testCreateInt() {
         final int n = 4;
         for (int i = 0; i < n; i++) {
             // Can fail, but unlikely given the range.
@@ -34,7 +34,7 @@ public class RandomSourceTest {
     }
 
     @Test
-    public void testCreateLong() {
+    void testCreateLong() {
         final int n = 6;
         for (int i = 0; i < n; i++) {
             // Can fail, but unlikely given the range.
@@ -44,7 +44,7 @@ public class RandomSourceTest {
     }
 
     @Test
-    public void testCreateIntArray() {
+    void testCreateIntArray() {
         final int n = 13;
         final int[] seed = RandomSource.createIntArray(n);
         Assertions.assertEquals(n, seed.length);
@@ -56,7 +56,7 @@ public class RandomSourceTest {
     }
 
     @Test
-    public void testCreateLongArray() {
+    void testCreateLongArray() {
         final int n = 9;
         final long[] seed = RandomSource.createLongArray(n);
         Assertions.assertEquals(n, seed.length);
@@ -68,14 +68,14 @@ public class RandomSourceTest {
     }
 
     @Test
-    public void testIsJumpable() {
+    void testIsJumpable() {
         Assertions.assertFalse(RandomSource.JDK.isJumpable(), "JDK is not Jumpable");
         Assertions.assertTrue(RandomSource.XOR_SHIFT_1024_S_PHI.isJumpable(), "XOR_SHIFT_1024_S_PHI is Jumpable");
         Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isJumpable(), "XO_SHI_RO_256_SS is Jumpable");
     }
 
     @Test
-    public void testIsLongJumpable() {
+    void testIsLongJumpable() {
         Assertions.assertFalse(RandomSource.JDK.isLongJumpable(), "JDK is not LongJumpable");
         Assertions.assertFalse(RandomSource.XOR_SHIFT_1024_S_PHI.isLongJumpable(), "XOR_SHIFT_1024_S_PHI is not LongJumpable");
         Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isLongJumpable(), "XO_SHI_RO_256_SS is LongJumpable");

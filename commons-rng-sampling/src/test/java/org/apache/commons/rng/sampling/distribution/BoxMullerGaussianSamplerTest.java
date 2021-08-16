@@ -24,13 +24,13 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link BoxMullerGaussianSampler}. The tests hit edge cases for the sampler.
  */
-public class BoxMullerGaussianSamplerTest {
+class BoxMullerGaussianSamplerTest {
     /**
      * Test the constructor with a bad standard deviation.
      */
     @SuppressWarnings({"deprecation"})
     @Test
-    public void testConstructorThrowsWithZeroStandardDeviation() {
+    void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1;

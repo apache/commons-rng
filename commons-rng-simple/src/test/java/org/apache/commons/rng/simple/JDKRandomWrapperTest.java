@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link JDKRandomWrapper} class.
  */
-public class JDKRandomWrapperTest {
+class JDKRandomWrapperTest {
     /**
      * Test all the methods shared by Random and UniformRandomProvider are equivalent.
      */
     @Test
-    public void testJDKRandomEquivalence() {
+    void testJDKRandomEquivalence() {
         // Initialize.
         final long seed = RandomSource.createLong();
         final Random rng1 = new Random(seed);
@@ -89,7 +89,7 @@ public class JDKRandomWrapperTest {
      * BaseProvider implementation.
      */
     @Test
-    public void testNextLongInRange() {
+    void testNextLongInRange() {
         final long seed = RandomSource.createLong();
         // This will use the RNG core BaseProvider implementation.
         // Use a LongProvider to directly use the Random::nextLong method
@@ -121,7 +121,7 @@ public class JDKRandomWrapperTest {
     }
 
     @Test
-    public void testNextLongInRangeThrows() {
+    void testNextLongInRangeThrows() {
         final UniformRandomProvider rng1 = new JDKRandomWrapper(new Random(5675767L));
         Assertions.assertThrows(IllegalArgumentException.class, () -> rng1.nextLong(0));
     }
@@ -131,7 +131,7 @@ public class JDKRandomWrapperTest {
      * {@link Random#nextBytes(byte[])}.
      */
     @Test
-    public void testNextByteInRange() {
+    void testNextByteInRange() {
         final long seed = RandomSource.createLong();
         final Random rng1 = new Random(seed);
         final UniformRandomProvider rng2 = new JDKRandomWrapper(new Random(seed));

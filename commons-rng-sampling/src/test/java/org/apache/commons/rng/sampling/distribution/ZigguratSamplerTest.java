@@ -32,12 +32,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link ZigguratSampler}.
  */
-public class ZigguratSamplerTest {
+class ZigguratSamplerTest {
     /**
      * Test the exponential constructor with a bad mean.
      */
     @Test
-    public void testExponentialConstructorThrowsWithZeroMean() {
+    void testExponentialConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -48,7 +48,7 @@ public class ZigguratSamplerTest {
      * Test the exponential SharedStateSampler implementation.
      */
     @Test
-    public void testExponentialSharedStateSampler() {
+    void testExponentialSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final ZigguratSampler.Exponential sampler1 = ZigguratSampler.Exponential.of(rng1);
@@ -60,7 +60,7 @@ public class ZigguratSamplerTest {
      * Test the exponential SharedStateSampler implementation with a mean.
      */
     @Test
-    public void testExponentialSharedStateSamplerWithMean() {
+    void testExponentialSharedStateSamplerWithMean() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;
@@ -73,7 +73,7 @@ public class ZigguratSamplerTest {
      * Test the Gaussian SharedStateSampler implementation.
      */
     @Test
-    public void testGaussianSharedStateSampler() {
+    void testGaussianSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final ZigguratSampler.NormalizedGaussian sampler1 = ZigguratSampler.NormalizedGaussian.of(rng1);
@@ -85,7 +85,7 @@ public class ZigguratSamplerTest {
      * Test the recursion in the exponential distribution.
      */
     @Test
-    public void testExponentialRecursion() {
+    void testExponentialRecursion() {
         // The exponential distribution will enter the edge of the ziggurat if the RNG
         // outputs -1 (all bits). This performs alias sampling using a long value.
         // The tail will be selected if the next output is -1.
@@ -145,7 +145,7 @@ public class ZigguratSamplerTest {
      * Added for RNG-159.
      */
     @Test
-    public void testGaussianSamplesWithQuantiles() {
+    void testGaussianSamplesWithQuantiles() {
         final int bins = 2000;
         final NormalDistribution dist = new NormalDistribution(null, 0.0, 1.0);
         final double[] quantiles = new double[bins];
@@ -160,7 +160,7 @@ public class ZigguratSamplerTest {
      * Added for RNG-159.
      */
     @Test
-    public void testGaussianSamplesWithUniformValues() {
+    void testGaussianSamplesWithUniformValues() {
         final int bins = 2000;
         final double[] values = new double[bins];
         final double minx = -8;
@@ -177,7 +177,7 @@ public class ZigguratSamplerTest {
      * Test exponential samples using a large number of bins based on uniformly spaced quantiles.
      */
     @Test
-    public void testExponentialSamplesWithQuantiles() {
+    void testExponentialSamplesWithQuantiles() {
         final int bins = 2000;
         final ExponentialDistribution dist = new ExponentialDistribution(null, 1.0);
         final double[] quantiles = new double[bins];
@@ -191,7 +191,7 @@ public class ZigguratSamplerTest {
      * Test exponential samples using a large number of bins uniformly spaced in a range.
      */
     @Test
-    public void testExponentialSamplesWithUniformValues() {
+    void testExponentialSamplesWithUniformValues() {
         final int bins = 2000;
         final double[] values = new double[bins];
         final double minx = 0;

@@ -28,14 +28,14 @@ import java.util.Arrays;
 /**
  * Tests for the {@link SeedUtils}.
  */
-public class SeedUtilsTest {
+class SeedUtilsTest {
     /**
      * Test the int hex permutation has 8 unique hex digits per permutation.
      * A uniformity test is performed on to check each hex digits is used evenly at each
      * character position.
      */
     @Test
-    public void testCreateIntHexPermutation() {
+    void testCreateIntHexPermutation() {
         final UniformRandomProvider rng = new SplitMix64(-567435247L);
         final long[][] samples = new long[8][16];
         for (int i = 0; i < 1000; i++) {
@@ -67,7 +67,7 @@ public class SeedUtilsTest {
      * character position.
      */
     @Test
-    public void testCreateLongHexPermutation() {
+    void testCreateLongHexPermutation() {
         final UniformRandomProvider rng = new SplitMix64(34645768L);
         final long[][] samples = new long[16][16];
         for (int i = 0; i < 1000; i++) {

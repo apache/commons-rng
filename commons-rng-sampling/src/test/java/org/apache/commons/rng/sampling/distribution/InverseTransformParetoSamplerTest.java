@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link InverseTransformParetoSampler}. The tests hit edge cases for the sampler.
  */
-public class InverseTransformParetoSamplerTest {
+class InverseTransformParetoSamplerTest {
     /**
      * Test the constructor with a bad scale.
      */
     @Test
-    public void testConstructorThrowsWithZeroScale() {
+    void testConstructorThrowsWithZeroScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 0;
@@ -44,7 +44,7 @@ public class InverseTransformParetoSamplerTest {
      * Test the constructor with a bad shape.
      */
     @Test
-    public void testConstructorThrowsWithZeroShape() {
+    void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1;
@@ -57,7 +57,7 @@ public class InverseTransformParetoSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double scale = 1.23;

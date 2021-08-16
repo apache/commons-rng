@@ -35,7 +35,7 @@ import java.util.function.UnaryOperator;
 /**
  * Tests for {@link RngDataOutput}.
  */
-public class RngDataOutputTest {
+class RngDataOutputTest {
     /**
      * A factory for creating RngDataOutput objects.
      */
@@ -52,7 +52,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testIntBigEndian() throws IOException {
+    void testIntBigEndian() throws IOException {
         assertRngOutput(RandomSource.PCG_MCG_XSH_RS_32,
             UnaryOperator.identity(),
             RngDataOutputTest::writeInt,
@@ -60,7 +60,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testIntLittleEndian() throws IOException {
+    void testIntLittleEndian() throws IOException {
         assertRngOutput(RandomSource.PCG_MCG_XSH_RS_32,
             RNGUtils::createReverseBytesProvider,
             RngDataOutputTest::writeInt,
@@ -68,7 +68,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testLongBigEndian() throws IOException {
+    void testLongBigEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
             UnaryOperator.identity(),
             RngDataOutputTest::writeLong,
@@ -76,7 +76,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testLongLittleEndian() throws IOException {
+    void testLongLittleEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
             RNGUtils::createReverseBytesProvider,
             RngDataOutputTest::writeLong,
@@ -84,7 +84,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testLongAsIntBigEndian() throws IOException {
+    void testLongAsIntBigEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
             // Convert SplitMix64 to an int provider so it is detected as requiring double the
             // length output.
@@ -99,7 +99,7 @@ public class RngDataOutputTest {
     }
 
     @Test
-    public void testLongAsIntLittleEndian() throws IOException {
+    void testLongAsIntLittleEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
             // Convert SplitMix64 to an int provider so it is detected as requiring double the
             // length output. Then reverse the bytes.

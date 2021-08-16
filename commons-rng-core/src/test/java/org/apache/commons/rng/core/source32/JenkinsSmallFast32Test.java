@@ -20,9 +20,9 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class JenkinsSmallFast32Test {
+class JenkinsSmallFast32Test {
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * Tested with respect to the original reference:
          * See : https://burtleburtle.net/bob/rand/smallprng.html

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
  * This test checks the {@link LargeMeanPoissonSampler} can be created
  * from a saved state.
  */
-public class LargeMeanPoissonSamplerTest {
+class LargeMeanPoissonSamplerTest {
 
     // Edge cases for construction
 
@@ -37,7 +37,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with a bad mean.
      */
     @Test
-    public void testConstructorThrowsWithMeanLargerThanUpperBound() {
+    void testConstructorThrowsWithMeanLargerThanUpperBound() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = Integer.MAX_VALUE / 2 + 1;
@@ -49,7 +49,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with a mean below 1.
      */
     @Test
-    public void testConstructorThrowsWithMeanBelow1() {
+    void testConstructorThrowsWithMeanBelow1() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = Math.nextDown(1);
@@ -61,7 +61,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor using the state with a negative fractional mean.
      */
     @Test
-    public void testConstructorThrowsWithStateAndNegativeFractionalMean() {
+    void testConstructorThrowsWithStateAndNegativeFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
@@ -73,7 +73,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with a non-fractional mean.
      */
     @Test
-    public void testConstructorThrowsWithStateAndNonFractionalMean() {
+    void testConstructorThrowsWithStateAndNonFractionalMean() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
@@ -85,7 +85,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the constructor with fractional mean of 1.
      */
     @Test
-    public void testConstructorThrowsWithStateAndFractionalMeanOne() {
+    void testConstructorThrowsWithStateAndFractionalMeanOne() {
         final RestorableUniformRandomProvider rng =
                 RandomSource.SPLIT_MIX_64.create(0L);
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
@@ -100,7 +100,7 @@ public class LargeMeanPoissonSamplerTest {
      * is created using the saved state.
      */
     @Test
-    public void testCanComputeSameSamplesWhenConstructedWithState() {
+    void testCanComputeSameSamplesWhenConstructedWithState() {
         // Two identical RNGs
         final RestorableUniformRandomProvider rng1 =
                 RandomSource.MWC_256.create();
@@ -146,7 +146,7 @@ public class LargeMeanPoissonSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithFractionalMean() {
+    void testSharedStateSamplerWithFractionalMean() {
         testSharedStateSampler(34.5);
     }
 
@@ -155,7 +155,7 @@ public class LargeMeanPoissonSamplerTest {
      * small mean sampler (i.e. no fraction part to the mean).
      */
     @Test
-    public void testSharedStateSamplerWithIntegerMean() {
+    void testSharedStateSamplerWithIntegerMean() {
         testSharedStateSampler(34.0);
     }
 

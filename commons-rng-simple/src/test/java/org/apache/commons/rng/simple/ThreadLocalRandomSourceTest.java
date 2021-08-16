@@ -32,7 +32,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Tests for {@link ThreadLocalRandomSource}.
  */
-public class ThreadLocalRandomSourceTest {
+class ThreadLocalRandomSourceTest {
     /**
      * A set of all the RandomSource options that requires arguments. This should be
      * ignored in certain tests since they are not supported.
@@ -45,18 +45,18 @@ public class ThreadLocalRandomSourceTest {
     }
 
     @Test
-    public void testCurrentThrowsForNullRandomSource() {
+    void testCurrentThrowsForNullRandomSource() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> ThreadLocalRandomSource.current(null));
     }
 
     @Test
-    public void testCurrentThrowsForRandomSourceWithDataArguments() {
+    void testCurrentThrowsForRandomSourceWithDataArguments() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> ThreadLocalRandomSource.current(RandomSource.TWO_CMRES_SELECT));
     }
 
     @Test
-    public void testCurrentForAllRandomSources()
+    void testCurrentForAllRandomSources()
             throws InterruptedException, ExecutionException, TimeoutException {
         final RandomSource[] sources = RandomSource.values();
         final UniformRandomProvider[] rngs = new UniformRandomProvider[sources.length];

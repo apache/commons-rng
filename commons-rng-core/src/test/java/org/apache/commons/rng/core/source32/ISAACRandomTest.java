@@ -364,12 +364,12 @@ public final class ISAACRandomTest {
     };
 
     @Test
-    public void testReference1() {
+    void testReference1() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE_1, new ISAACRandom(SEED_1));
     }
 
     @Test
-    public void testReference2() {
+    void testReference2() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE_2, new ISAACRandom(SEED_2));
     }
 }

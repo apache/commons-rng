@@ -30,7 +30,7 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link TriangleSampler}.
  */
-public class TriangleSamplerTest {
+class TriangleSamplerTest {
     // Precomputed 3D and 4D rotation matrices for forward and backward transforms
     // created using the matlab function by jodag:
     // https://stackoverflow.com/questions/50337642/how-to-calculate-a-rotation-matrix-in-n-dimensions-given-the-point-to-rotate-an
@@ -63,7 +63,7 @@ public class TriangleSamplerTest {
      * back inside the triangle.
      */
     @Test
-    public void testSamplingAssumptions() {
+    void testSamplingAssumptions() {
         // The separation between the 2^53 dyadic rationals in the interval [0, 1)
         final double delta = 0x1.0p-53;
         double s = 0.5;
@@ -94,7 +94,7 @@ public class TriangleSamplerTest {
      * Test an unsupported dimension.
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> TriangleSampler.of(rng, new double[1], new double[1], new double[1]));
@@ -104,7 +104,7 @@ public class TriangleSamplerTest {
      * Test a dimension mismatch between vertices.
      */
     @Test
-    public void testDimensionMismatchThrows() {
+    void testDimensionMismatchThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
@@ -127,7 +127,7 @@ public class TriangleSamplerTest {
      * Test non-finite vertices.
      */
     @Test
-    public void testNonFiniteVertexCoordinates() {
+    void testNonFiniteVertexCoordinates() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid triangle
         final double[][] c = new double[][] {
@@ -156,7 +156,7 @@ public class TriangleSamplerTest {
      * {@link Double#MAX_VALUE} in two dimensions.
      */
     @Test
-    public void testExtremeValueCoordinates2D() {
+    void testExtremeValueCoordinates2D() {
         testExtremeValueCoordinates(2);
     }
 
@@ -165,7 +165,7 @@ public class TriangleSamplerTest {
      * {@link Double#MAX_VALUE} in three dimensions.
      */
     @Test
-    public void testExtremeValueCoordinates3D() {
+    void testExtremeValueCoordinates3D() {
         testExtremeValueCoordinates(3);
     }
 
@@ -174,7 +174,7 @@ public class TriangleSamplerTest {
      * {@link Double#MAX_VALUE} in four dimensions.
      */
     @Test
-    public void testExtremeValueCoordinates4D() {
+    void testExtremeValueCoordinates4D() {
         testExtremeValueCoordinates(4);
     }
 
@@ -233,7 +233,7 @@ public class TriangleSamplerTest {
      * Test the distribution of points in two dimensions.
      */
     @Test
-    public void testDistribution2D() {
+    void testDistribution2D() {
         testDistributionND(2);
     }
 
@@ -241,7 +241,7 @@ public class TriangleSamplerTest {
      * Test the distribution of points in three dimensions.
      */
     @Test
-    public void testDistribution3D() {
+    void testDistribution3D() {
         testDistributionND(3);
     }
 
@@ -249,7 +249,7 @@ public class TriangleSamplerTest {
      * Test the distribution of points in four dimensions.
      */
     @Test
-    public void testDistribution4D() {
+    void testDistribution4D() {
         testDistributionND(4);
     }
 
@@ -366,7 +366,7 @@ public class TriangleSamplerTest {
      * Test the SharedStateSampler implementation for 2D.
      */
     @Test
-    public void testSharedStateSampler2D() {
+    void testSharedStateSampler2D() {
         testSharedStateSampler(2);
     }
 
@@ -374,7 +374,7 @@ public class TriangleSamplerTest {
      * Test the SharedStateSampler implementation for 3D.
      */
     @Test
-    public void testSharedStateSampler3D() {
+    void testSharedStateSampler3D() {
         testSharedStateSampler(3);
     }
 
@@ -382,7 +382,7 @@ public class TriangleSamplerTest {
      * Test the SharedStateSampler implementation for 4D.
      */
     @Test
-    public void testSharedStateSampler4D() {
+    void testSharedStateSampler4D() {
         testSharedStateSampler(4);
     }
 
@@ -404,7 +404,7 @@ public class TriangleSamplerTest {
      * Test the input vectors are copied and not used by reference for 2D.
      */
     @Test
-    public void testChangedInputCoordinates2D() {
+    void testChangedInputCoordinates2D() {
         testChangedInputCoordinates(2);
     }
 
@@ -412,7 +412,7 @@ public class TriangleSamplerTest {
      * Test the input vectors are copied and not used by reference for 3D.
      */
     @Test
-    public void testChangedInputCoordinates3D() {
+    void testChangedInputCoordinates3D() {
         testChangedInputCoordinates(3);
     }
 
@@ -420,7 +420,7 @@ public class TriangleSamplerTest {
      * Test the input vectors are copied and not used by reference for 4D.
      */
     @Test
-    public void testChangedInputCoordinates4D() {
+    void testChangedInputCoordinates4D() {
         testChangedInputCoordinates(4);
     }
 
@@ -479,7 +479,7 @@ public class TriangleSamplerTest {
      * Test the transform generates 3D coordinates and can reverse them.
      */
     @Test
-    public void testTransform3D() {
+    void testTransform3D() {
         testTransformND(3);
     }
 
@@ -487,7 +487,7 @@ public class TriangleSamplerTest {
      * Test the transform generates 4D coordinates and can reverse them.
      */
     @Test
-    public void testTransform4D() {
+    void testTransform4D() {
         testTransformND(4);
     }
 
@@ -531,7 +531,7 @@ public class TriangleSamplerTest {
      * Test 3D rotations forward and reverse.
      */
     @Test
-    public void testRotations3D() {
+    void testRotations3D() {
         final double[] x = {1, 0.5, 0};
         final double[] y = multiply(F3, x);
         Assertions.assertArrayEquals(new double[] {0.465475314831549, 1.004183876910958, -0.157947689551155}, y, 1e-10);
@@ -544,7 +544,7 @@ public class TriangleSamplerTest {
      * Test 4D rotations forward and reverse.
      */
     @Test
-    public void testRotations4D() {
+    void testRotations4D() {
         final double[] x = {1, 0.5, 0, 0};
         final double[] y = multiply(F4, x);
         Assertions.assertArrayEquals(
@@ -591,7 +591,7 @@ public class TriangleSamplerTest {
      * Test the triangle contains predicate.
      */
     @Test
-    public void testTriangleContains() {
+    void testTriangleContains() {
         final Triangle triangle = new Triangle(1, 2, 3, 1, 0.5, 6);
         // Vertices
         Assertions.assertTrue(triangle.contains(1, 2));

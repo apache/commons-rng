@@ -22,16 +22,16 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link IntArray2LongArray} converter.
  */
-public class IntArray2LongArrayTest {
+class IntArray2LongArrayTest {
     @Test
-    public void testSeedSizeIsMultipleOfLongSize() {
+    void testSeedSizeIsMultipleOfLongSize() {
         final int[] seed = new int[12];
         final long[] out = new IntArray2LongArray().convert(seed);
         Assertions.assertEquals(6, out.length);
     }
 
     @Test
-    public void testSeedSizeIsNotMultipleOfLongSize() {
+    void testSeedSizeIsNotMultipleOfLongSize() {
         final int[] seed = new int[13];
         final long[] out = new IntArray2LongArray().convert(seed);
         Assertions.assertEquals(7, out.length);

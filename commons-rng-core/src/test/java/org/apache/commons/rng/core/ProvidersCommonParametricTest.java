@@ -32,7 +32,7 @@ import org.apache.commons.rng.RandomProviderState;
 /**
  * Tests which all generators must pass.
  */
-public class ProvidersCommonParametricTest {
+class ProvidersCommonParametricTest {
     private static Iterable<RestorableUniformRandomProvider> getList() {
         return ProvidersList.list();
     }
@@ -41,21 +41,21 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testPreconditionNextInt(UniformRandomProvider generator) {
+    void testPreconditionNextInt(UniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextInt(-1));
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextInt(0));
     }
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testPreconditionNextLong(UniformRandomProvider generator) {
+    void testPreconditionNextLong(UniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextLong(-1));
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.nextLong(0));
     }
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testPreconditionNextBytes(UniformRandomProvider generator) {
+    void testPreconditionNextBytes(UniformRandomProvider generator) {
         final int size = 10;
         final int num = 1;
         final byte[] buf = new byte[size];
@@ -70,7 +70,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextBytesFullBuffer(UniformRandomProvider generator) {
+    void testUniformNextBytesFullBuffer(UniformRandomProvider generator) {
         // Value chosen to exercise all the code lines in the
         // "nextBytes" methods.
         final int size = 23;
@@ -88,7 +88,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextBytesPartialBuffer(UniformRandomProvider generator) {
+    void testUniformNextBytesPartialBuffer(UniformRandomProvider generator) {
         final int totalSize = 1234;
         final int offset = 567;
         final int size = 89;
@@ -112,7 +112,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextIntegerInRange(UniformRandomProvider generator) {
+    void testUniformNextIntegerInRange(UniformRandomProvider generator) {
         // Statistical test uses 10 bins so tests are invalid below this level
         checkNextIntegerInRange(generator, 10, 1000);
         checkNextIntegerInRange(generator, 12, 1000);
@@ -126,7 +126,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextLongInRange(UniformRandomProvider generator) {
+    void testUniformNextLongInRange(UniformRandomProvider generator) {
         // Statistical test uses 10 bins so tests are invalid below this level
         checkNextLongInRange(generator, 11, 1000);
         checkNextLongInRange(generator, 19, 1000);
@@ -141,19 +141,19 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextFloat(UniformRandomProvider generator) {
+    void testUniformNextFloat(UniformRandomProvider generator) {
         checkNextFloat(generator, 1000);
     }
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextDouble(UniformRandomProvider generator) {
+    void testUniformNextDouble(UniformRandomProvider generator) {
         checkNextDouble(generator, 1000);
     }
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextIntRandomWalk(UniformRandomProvider generator) {
+    void testUniformNextIntRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -166,7 +166,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextLongRandomWalk(UniformRandomProvider generator) {
+    void testUniformNextLongRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -179,7 +179,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testUniformNextBooleanRandomWalk(UniformRandomProvider generator) {
+    void testUniformNextBooleanRandomWalk(UniformRandomProvider generator) {
         final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -194,7 +194,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testStateSettable(RestorableUniformRandomProvider generator) {
+    void testStateSettable(RestorableUniformRandomProvider generator) {
         // Should be fairly large in order to ensure that all the internal
         // state is away from its initial settings.
         final int n = 10000;
@@ -218,7 +218,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testStateWrongSize(RestorableUniformRandomProvider generator) {
+    void testStateWrongSize(RestorableUniformRandomProvider generator) {
         final RandomProviderState state = new DummyGenerator().saveState();
         // Try to restore with an invalid state (wrong size).
         Assertions.assertThrows(IllegalStateException.class, () -> generator.restoreState(state));
@@ -226,7 +226,7 @@ public class ProvidersCommonParametricTest {
 
     @ParameterizedTest
     @MethodSource("getList")
-    public void testRestoreForeignState(RestorableUniformRandomProvider generator) {
+    void testRestoreForeignState(RestorableUniformRandomProvider generator) {
         Assertions.assertThrows(IllegalArgumentException.class, () -> generator.restoreState(new RandomProviderState() {}));
     }
 

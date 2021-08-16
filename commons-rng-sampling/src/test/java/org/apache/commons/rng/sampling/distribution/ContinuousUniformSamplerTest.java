@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link ContinuousUniformSampler}.
  */
-public class ContinuousUniformSamplerTest {
+class ContinuousUniformSamplerTest {
     /**
      * Test that the sampler algorithm does not require high to be above low.
      */
     @Test
-    public void testNoRestrictionOnOrderOfLowAndHighParameters() {
+    void testNoRestrictionOnOrderOfLowAndHighParameters() {
         final double low = 3.18;
         final double high = 5.23;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
@@ -55,7 +55,7 @@ public class ContinuousUniformSamplerTest {
      * that produce the limit of the uniform double output.
      */
     @Test
-    public void testExcludeBounds() {
+    void testExcludeBounds() {
         // A broken RNG that will return in an alternating sequence from 0 up or -1 down.
         // This is either zero bits or all the bits
         final UniformRandomProvider rng = new SplitMix64(0L) {
@@ -93,7 +93,7 @@ public class ContinuousUniformSamplerTest {
      * between the limits.
      */
     @Test
-    public void testInvalidOpenIntervalThrows() {
+    void testInvalidOpenIntervalThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
         for (final double[] interval : new double[][] {
             // Opposite signs. Require two doubles inside the range.
@@ -130,7 +130,7 @@ public class ContinuousUniformSamplerTest {
      * double values between the limits.
      */
     @Test
-    public void testTinyOpenIntervalSample() {
+    void testTinyOpenIntervalSample() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
 
         // Test sub-normal ranges
@@ -159,7 +159,7 @@ public class ContinuousUniformSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         testSharedStateSampler(false);
         testSharedStateSampler(true);
     }
@@ -204,7 +204,7 @@ public class ContinuousUniformSamplerTest {
      * when the generator does not produce the limit of the uniform double output.
      */
     @Test
-    public void testSamplerWithBoundsExcluded() {
+    void testSamplerWithBoundsExcluded() {
         // SplitMix64 only returns zero once in the output. Seeded with zero it outputs zero
         // at the end of the period.
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);

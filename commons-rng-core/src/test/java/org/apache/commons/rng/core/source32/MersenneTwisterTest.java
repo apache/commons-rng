@@ -20,9 +20,9 @@ import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class MersenneTwisterTest {
+class MersenneTwisterTest {
     @Test
-    public void testMakotoNishimura() {
+    void testMakotoNishimura() {
         final MersenneTwister rng = new MersenneTwister(new int[] {0x123, 0x234, 0x345, 0x456});
 
         /*
@@ -162,7 +162,7 @@ public class MersenneTwisterTest {
     }
 
     @Test
-    public void testConstructorWithEmptySeed() {
+    void testConstructorWithEmptySeed() {
         // An empty seed is allowed
         final MersenneTwister rng = new MersenneTwister(new int[0]);
         // It should be functional so check it returns different values.

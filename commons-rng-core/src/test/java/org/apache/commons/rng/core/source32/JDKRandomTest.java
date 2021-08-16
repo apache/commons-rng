@@ -30,7 +30,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class JDKRandomTest {
+class JDKRandomTest {
     /**
      * A class that is Serializable.
      * It contains member fields so there is something to serialize and malicious
@@ -59,7 +59,7 @@ public class JDKRandomTest {
     }
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         final long refSeed = -1357111213L;
         final JDKRandom rng = new JDKRandom(refSeed);
         final Random jdk = new Random(refSeed);
@@ -77,7 +77,7 @@ public class JDKRandomTest {
      * to save the state.
      */
     @Test
-    public void testRestoreToNewInstance()  {
+    void testRestoreToNewInstance()  {
         final long seed = 8796746234L;
         final JDKRandom rng1 = new JDKRandom(seed);
         final JDKRandom rng2 = new JDKRandom(seed + 1);
@@ -105,7 +105,7 @@ public class JDKRandomTest {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     @Test
-    public void testRestoreWithInvalidClass() throws IOException  {
+    void testRestoreWithInvalidClass() throws IOException  {
         // Serialize something
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {

@@ -20,9 +20,9 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class PcgMcgXshRr32Test {
+class PcgMcgXshRr32Test {
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         /*
          * Tested with respect to pcg_engines::mcg_xsh_rr_64_32 of the C++ implementation.
          * See : http://www.pcg-random.org/download.html#cpp-implementation

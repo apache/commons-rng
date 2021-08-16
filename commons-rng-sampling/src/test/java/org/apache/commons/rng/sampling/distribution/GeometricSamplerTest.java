@@ -25,13 +25,13 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link GeometricSampler}. The tests hit edge cases for the sampler.
  */
-public class GeometricSamplerTest {
+class GeometricSamplerTest {
     /**
      * Test the edge case where the probability of success is 1. This is a valid geometric
      * distribution where the sample should always be 0.
      */
     @Test
-    public void testProbabilityOfSuccessIsOneGeneratesZeroForSamples() {
+    void testProbabilityOfSuccessIsOneGeneratesZeroForSamples() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, 1);
         // All samples should be 0
@@ -45,7 +45,7 @@ public class GeometricSamplerTest {
      * mean for the exponential distribution.
      */
     @Test
-    public void testProbabilityOfSuccessUnderOneIsValid() {
+    void testProbabilityOfSuccessUnderOneIsValid() {
         // The sampler explicitly handles probabilityOfSuccess == 1 as an edge case.
         // Anything under it should be valid for sampling from an ExponentialDistribution.
         final double probabilityOfSuccess = Math.nextDown(1);
@@ -64,7 +64,7 @@ public class GeometricSamplerTest {
      * {@link Object#toString()} method to the normal case tested elsewhere.
      */
     @Test
-    public void testProbabilityOfSuccessIsOneSamplerToString() {
+    void testProbabilityOfSuccessIsOneSamplerToString() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(unusedRng, 1);
         Assertions.assertTrue(sampler.toString().contains("Geometric"),
@@ -81,7 +81,7 @@ public class GeometricSamplerTest {
      * is introduced.
      */
     @Test
-    public void testProbabilityOfSuccessIsAlmostZeroGeneratesMaxValueForSamples() {
+    void testProbabilityOfSuccessIsAlmostZeroGeneratesMaxValueForSamples() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, Double.MIN_VALUE);
         // All samples should be max value
@@ -95,7 +95,7 @@ public class GeometricSamplerTest {
      * Test probability of success {@code >1} is not allowed.
      */
     @Test
-    public void testProbabilityOfSuccessAboveOneThrows() {
+    void testProbabilityOfSuccessAboveOneThrows() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final double probabilityOfSuccess = Math.nextUp(1.0);
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -106,7 +106,7 @@ public class GeometricSamplerTest {
      * Test probability of success {@code 0} is not allowed.
      */
     @Test
-    public void testProbabilityOfSuccessIsZeroThrows() {
+    void testProbabilityOfSuccessIsZeroThrows() {
         final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
         final double probabilityOfSuccess = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -117,7 +117,7 @@ public class GeometricSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         testSharedStateSampler(0.5);
     }
 
@@ -126,7 +126,7 @@ public class GeometricSamplerTest {
      * success is {@code 1.0}.
      */
     @Test
-    public void testSharedStateSamplerWithProbabilityOfSuccessOne() {
+    void testSharedStateSamplerWithProbabilityOfSuccessOne() {
         testSharedStateSampler(1.0);
     }
 

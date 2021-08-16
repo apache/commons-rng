@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link JDKRandomBridge} adaptor class.
  */
-public class JDKRandomBridgeTest {
+class JDKRandomBridgeTest {
     @Test
-    public void testJDKRandomEquivalence() {
+    void testJDKRandomEquivalence() {
         // Initialize.
         final long seed = RandomSource.createLong();
         final Random rng1 = new Random(seed);
@@ -46,7 +46,7 @@ public class JDKRandomBridgeTest {
     }
 
     @Test
-    public void testSerialization()
+    void testSerialization()
         throws IOException,
                ClassNotFoundException {
         // Initialize.

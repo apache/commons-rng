@@ -38,12 +38,12 @@ import java.util.Locale;
  * is within the range limits. Power of two ranges are tested against a bit shift
  * of a random long.
  */
-public class UniformLongSamplerTest {
+class UniformLongSamplerTest {
     /**
      * Test the constructor with a bad range.
      */
     @Test
-    public void testConstructorThrowsWithLowerAboveUpper() {
+    void testConstructorThrowsWithLowerAboveUpper() {
         final long upper = 55;
         final long lower = upper + 1;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
@@ -52,7 +52,7 @@ public class UniformLongSamplerTest {
     }
 
     @Test
-    public void testSamplesWithRangeOf1() {
+    void testSamplesWithRangeOf1() {
         final long upper = 99;
         final long lower = upper;
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
@@ -67,7 +67,7 @@ public class UniformLongSamplerTest {
      * The output should be the same as the long values produced from a RNG.
      */
     @Test
-    public void testSamplesWithFullRange() {
+    void testSamplesWithFullRange() {
         final long upper = Long.MAX_VALUE;
         final long lower = Long.MIN_VALUE;
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
@@ -85,7 +85,7 @@ public class UniformLongSamplerTest {
      * the same.
      */
     @Test
-    public void testSamplesWithSmallNonPowerOf2Range() {
+    void testSamplesWithSmallNonPowerOf2Range() {
         final long upper = 234293789329234L;
         for (final long lower : new long[] {-13, 0, 13}) {
             final long n = upper - lower + 1;
@@ -119,7 +119,7 @@ public class UniformLongSamplerTest {
      * This tests the minimum and maximum output should be the range limits.
      */
     @Test
-    public void testSamplesWithPowerOf2Range() {
+    void testSamplesWithPowerOf2Range() {
         final UniformRandomProvider rngZeroBits = new LongProvider() {
             @Override
             public long next() {
@@ -155,7 +155,7 @@ public class UniformLongSamplerTest {
      * This tests the output is created using a bit shift.
      */
     @Test
-    public void testSamplesWithPowerOf2RangeIsBitShift() {
+    void testSamplesWithPowerOf2RangeIsBitShift() {
         final long lower = 0;
         UniformLongSampler sampler;
         // Power of 2 sampler used for a bit shift of 1 to 63.
@@ -177,7 +177,7 @@ public class UniformLongSamplerTest {
      * This tests the large range algorithm uses a rejection method.
      */
     @Test
-    public void testSamplesWithLargeNonPowerOf2RangeIsRejectionMethod() {
+    void testSamplesWithLargeNonPowerOf2RangeIsRejectionMethod() {
         // Create a range bigger than 2^63
         final long upper = Long.MAX_VALUE / 2 + 1;
         final long lower = Long.MIN_VALUE / 2 - 1;
@@ -195,17 +195,17 @@ public class UniformLongSamplerTest {
     }
 
     @Test
-    public void testOffsetSamplesWithNonPowerOf2Range() {
+    void testOffsetSamplesWithNonPowerOf2Range() {
         assertOffsetSamples(257);
     }
 
     @Test
-    public void testOffsetSamplesWithPowerOf2Range() {
+    void testOffsetSamplesWithPowerOf2Range() {
         assertOffsetSamples(256);
     }
 
     @Test
-    public void testOffsetSamplesWithRangeOf1() {
+    void testOffsetSamplesWithRangeOf1() {
         assertOffsetSamples(1);
     }
 
@@ -235,7 +235,7 @@ public class UniformLongSamplerTest {
      * Test the sample uniformity when using a small range that is a power of 2.
      */
     @Test
-    public void testSampleUniformityWithPowerOf2Range() {
+    void testSampleUniformityWithPowerOf2Range() {
         // Test using a RNG that outputs a counter of integers.
         // The n most significant bits will be represented uniformly over a
         // sequence that is a 2^n long.
@@ -270,24 +270,24 @@ public class UniformLongSamplerTest {
     }
 
     @Test
-    public void testSharedStateSamplerWithSmallRange() {
+    void testSharedStateSamplerWithSmallRange() {
         assertSharedStateSampler(5, 67);
     }
 
     @Test
-    public void testSharedStateSamplerWithLargeRange() {
+    void testSharedStateSamplerWithLargeRange() {
         // Set the range so rejection below or above the threshold occurs with approximately
         // p=0.25 for each bound.
         assertSharedStateSampler(Long.MIN_VALUE / 2 - 1, Long.MAX_VALUE / 2 + 1);
     }
 
     @Test
-    public void testSharedStateSamplerWithPowerOf2Range() {
+    void testSharedStateSamplerWithPowerOf2Range() {
         assertSharedStateSampler(0, (1L << 45) - 1);
     }
 
     @Test
-    public void testSharedStateSamplerWithRangeOf1() {
+    void testSharedStateSamplerWithRangeOf1() {
         assertSharedStateSampler(968757657572323L, 968757657572323L);
     }
 
@@ -307,23 +307,23 @@ public class UniformLongSamplerTest {
     }
 
     @Test
-    public void testToStringWithSmallRange() {
+    void testToStringWithSmallRange() {
         assertToString(5, 67);
     }
 
     @Test
-    public void testToStringWithLargeRange() {
+    void testToStringWithLargeRange() {
         assertToString(-99999999, Long.MAX_VALUE);
     }
 
     @Test
-    public void testToStringWithPowerOf2Range() {
+    void testToStringWithPowerOf2Range() {
         // Note the range is upper - lower + 1
         assertToString(0, 31);
     }
 
     @Test
-    public void testToStringWithRangeOf1() {
+    void testToStringWithRangeOf1() {
         assertToString(9, 9);
     }
 

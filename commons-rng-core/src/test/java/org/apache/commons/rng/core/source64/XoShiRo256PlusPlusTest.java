@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XoShiRo256PlusPlusTest {
+class XoShiRo256PlusPlusTest {
     /** The size of the array SEED. */
     private static final int SEED_SIZE = 4;
 
@@ -72,41 +72,41 @@ public class XoShiRo256PlusPlusTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoShiRo256PlusPlus(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoShiRo256PlusPlus(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XoShiRo256PlusPlus.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoShiRo256PlusPlus(new long[] {SEED[0]}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testElementConstructor() {
+    void testElementConstructor() {
         final XoShiRo256PlusPlus rng1 = new XoShiRo256PlusPlus(SEED);
         final XoShiRo256PlusPlus rng2 = new XoShiRo256PlusPlus(SEED[0], SEED[1], SEED[2], SEED[3]);
         RandomAssert.assertNextLongEquals(SEED.length * 2, rng1, rng2);
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoShiRo256PlusPlus(SEED));
     }
 
     @Test
-    public void testLongJump() {
+    void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoShiRo256PlusPlus(SEED));
     }
 }

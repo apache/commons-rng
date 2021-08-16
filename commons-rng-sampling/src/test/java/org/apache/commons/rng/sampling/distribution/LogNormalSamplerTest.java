@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link LogNormalSampler}. The tests hit edge cases for the sampler.
  */
-public class LogNormalSamplerTest {
+class LogNormalSamplerTest {
     /**
      * Test the constructor with a bad shape.
      */
     @Test
-    public void testConstructorThrowsWithNegativeScale() {
+    void testConstructorThrowsWithNegativeScale() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
@@ -46,7 +46,7 @@ public class LogNormalSamplerTest {
      * Test the constructor with a bad shape.
      */
     @Test
-    public void testConstructorThrowsWithZeroShape() {
+    void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
@@ -60,7 +60,7 @@ public class LogNormalSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng1);
@@ -77,7 +77,7 @@ public class LogNormalSamplerTest {
      * not a SharedStateSampler.
      */
     @Test
-    public void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
+    void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
             @Override
@@ -98,7 +98,7 @@ public class LogNormalSamplerTest {
      * a SharedStateSampler that returns an incorrect type.
      */
     @Test
-    public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
+    void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double scale = 1.23;

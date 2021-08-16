@@ -31,39 +31,39 @@ import org.junit.jupiter.api.Test;
  *
  * <p>Statistical testing of the sampler is performed using entries in {@link DiscreteSamplersList}.</p>
  */
-public class MarsagliaTsangWangDiscreteSamplerTest {
+class MarsagliaTsangWangDiscreteSamplerTest {
     @Test
-    public void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithNullProbabilites() {
         assertEnumeratedSamplerConstructorThrows(null);
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithZeroLengthProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[0]);
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithNegativeProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[] {-1, 0.1, 0.2});
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithNaNProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[] {0.1, Double.NaN, 0.2});
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithInfiniteProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2});
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithInfiniteSumProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[] {Double.MAX_VALUE, Double.MAX_VALUE});
     }
 
     @Test
-    public void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
+    void testCreateDiscreteDistributionThrowsWithZeroSumProbabilites() {
         assertEnumeratedSamplerConstructorThrows(new double[4]);
     }
 
@@ -82,7 +82,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the {@link Object#toString()} method contains the algorithm author names.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = new SplitMix64(0L);
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, new double[] {0.5, 0.5});
         String text = sampler.toString();
@@ -98,7 +98,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * storage using different offsets to control the maximum sample value.
      */
     @Test
-    public void testOffsetSamples() {
+    void testOffsetSamples() {
         // This is filled with probabilities to hit all edge cases in the fill procedure.
         // The probabilities must have a digit from each of the 5 possible.
         final int[] prob = new int[6];
@@ -180,7 +180,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test samples from a distribution expressed using {@code double} probabilities.
      */
     @Test
-    public void testRealProbabilityDistributionSamples() {
+    void testRealProbabilityDistributionSamples() {
         // These do not have to sum to 1
         final double[] probabilities = new double[11];
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
@@ -213,7 +213,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * limits described in the class Javadoc is correct.
      */
     @Test
-    public void testStorageRequirements8() {
+    void testStorageRequirements8() {
         // Max digits from 2^22:
         // (2^4 + 2^6 + 2^6 + 2^6)
         // Storage in bytes
@@ -228,7 +228,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * limits described in the class Javadoc is correct.
      */
     @Test
-    public void testStorageRequirements16() {
+    void testStorageRequirements16() {
         // Max digits from 2^14:
         // (2^2 + 2^6 + 2^6)
         // Storage in bytes
@@ -297,7 +297,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Poisson distribution with a bad mean that is above the supported range.
      */
     @Test
-    public void testCreatePoissonDistributionThrowsWithMeanLargerThanUpperBound() {
+    void testCreatePoissonDistributionThrowsWithMeanLargerThanUpperBound() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1025;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -308,7 +308,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Poisson distribution with a bad mean that is below the supported range.
      */
     @Test
-    public void testCreatePoissonDistributionThrowsWithZeroMean() {
+    void testCreatePoissonDistributionThrowsWithZeroMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -319,7 +319,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Poisson distribution with the maximum mean.
      */
     @Test
-    public void testCreatePoissonDistributionWithMaximumMean() {
+    void testCreatePoissonDistributionWithMaximumMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 1024;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
@@ -333,7 +333,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * probability sum is not 2^30.
      */
     @Test
-    public void testCreatePoissonDistributionWithSmallMean() {
+    void testCreatePoissonDistributionWithSmallMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 0.25;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
@@ -348,7 +348,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * where the loop from the mean decrements to reach zero.
      */
     @Test
-    public void testCreatePoissonDistributionWithMediumMean() {
+    void testCreatePoissonDistributionWithMediumMean() {
         final UniformRandomProvider rng = new FixedRNG();
         final double mean = 21.4;
         final DiscreteSampler sampler = MarsagliaTsangWangDiscreteSampler.Poisson.of(rng, mean);
@@ -361,7 +361,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with a bad number of trials.
      */
     @Test
-    public void testCreateBinomialDistributionThrowsWithTrialsBelow0() {
+    void testCreateBinomialDistributionThrowsWithTrialsBelow0() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = -1;
         final double p = 0.5;
@@ -373,7 +373,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with an unsupported number of trials.
      */
     @Test
-    public void testCreateBinomialDistributionThrowsWithTrialsAboveMax() {
+    void testCreateBinomialDistributionThrowsWithTrialsAboveMax() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1 << 16; // 2^16
         final double p = 0.5;
@@ -385,7 +385,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with probability {@code < 0}.
      */
     @Test
-    public void testCreateBinomialDistributionThrowsWithProbabilityBelow0() {
+    void testCreateBinomialDistributionThrowsWithProbabilityBelow0() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1;
         final double p = -0.5;
@@ -397,7 +397,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with probability {@code > 1}.
      */
     @Test
-    public void testCreateBinomialDistributionThrowsWithProbabilityAbove1() {
+    void testCreateBinomialDistributionThrowsWithProbabilityAbove1() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1;
         final double p = 1.5;
@@ -410,7 +410,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * with a high probability of success.
      */
     @Test
-    public void testCreateBinomialDistributionWithSmallestP0ValueAndHighestProbabilityOfSuccess() {
+    void testCreateBinomialDistributionWithSmallestP0ValueAndHighestProbabilityOfSuccess() {
         final UniformRandomProvider rng = new FixedRNG();
         // p(0) = Math.exp(trials * Math.log(1-p))
         // p(0) will be smaller as Math.log(1-p) is more negative, which occurs when p is
@@ -436,7 +436,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * that is zero (thus the distribution cannot be computed).
      */
     @Test
-    public void testCreateBinomialDistributionThrowsWhenP0IsZero() {
+    void testCreateBinomialDistributionThrowsWhenP0IsZero() {
         final UniformRandomProvider rng = new FixedRNG();
         // As above but increase the trials so p(0) should be zero
         final int trials = 1 + (int) Math.floor(Math.log(Double.MIN_VALUE) / Math.log(0.5));
@@ -452,7 +452,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * with a high number of trials.
      */
     @Test
-    public void testCreateBinomialDistributionWithLargestTrialsAndSmallestProbabilityOfSuccess() {
+    void testCreateBinomialDistributionWithLargestTrialsAndSmallestProbabilityOfSuccess() {
         final UniformRandomProvider rng = new FixedRNG();
         // p(0) = Math.exp(trials * Math.log(1-p))
         // p(0) will be smaller as Math.log(1-p) is more negative, which occurs when p is
@@ -507,7 +507,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the Binomial distribution with a probability of 0 where the sampler should equal 0.
      */
     @Test
-    public void testCreateBinomialDistributionWithProbability0() {
+    void testCreateBinomialDistributionWithProbability0() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1000000;
         final double p = 0;
@@ -524,7 +524,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * the number of trials.
      */
     @Test
-    public void testCreateBinomialDistributionWithProbability1() {
+    void testCreateBinomialDistributionWithProbability1() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 1000000;
         final double p = 1;
@@ -542,7 +542,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * could be used instead.
      */
     @Test
-    public void testCreateBinomialDistributionWithLargeNumberOfTrials() {
+    void testCreateBinomialDistributionWithLargeNumberOfTrials() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 65000;
         final double p = 0.01;
@@ -557,7 +557,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * search for the last probability of the Binomial distribution.
      */
     @Test
-    public void testCreateBinomialDistributionWithProbability50Percent() {
+    void testCreateBinomialDistributionWithProbability50Percent() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 10;
         final double p = 0.5;
@@ -572,7 +572,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * {@link Object#toString()}.
      */
     @Test
-    public void testBinomialSamplerToString() {
+    void testBinomialSamplerToString() {
         final UniformRandomProvider rng = new FixedRNG();
         final int trials = 10;
         final double p1 = 0.4;
@@ -586,7 +586,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the SharedStateSampler implementation with the 8-bit storage implementation.
      */
     @Test
-    public void testSharedStateSamplerWith8bitStorage() {
+    void testSharedStateSamplerWith8bitStorage() {
         testSharedStateSampler(0, new int[] {1, 2, 3, 4, 5});
     }
 
@@ -594,7 +594,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the SharedStateSampler implementation with the 16-bit storage implementation.
      */
     @Test
-    public void testSharedStateSamplerWith16bitStorage() {
+    void testSharedStateSamplerWith16bitStorage() {
         testSharedStateSampler(1 << 8, new int[] {1, 2, 3, 4, 5});
     }
 
@@ -602,7 +602,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the SharedStateSampler implementation with the 32-bit storage implementation.
      */
     @Test
-    public void testSharedStateSamplerWith32bitStorage() {
+    void testSharedStateSamplerWith32bitStorage() {
         testSharedStateSampler(1 << 16, new int[] {1, 2, 3, 4, 5});
     }
 
@@ -627,7 +627,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * Test the SharedStateSampler implementation with a Binomial distribution with a fixed result.
      */
     @Test
-    public void testSharedStateSamplerWithFixedBinomialDistribution() {
+    void testSharedStateSamplerWithFixedBinomialDistribution() {
         testSharedStateSampler(10, 1.0);
     }
 
@@ -636,7 +636,7 @@ public class MarsagliaTsangWangDiscreteSamplerTest {
      * inversion (probability of success > 0.5).
      */
     @Test
-    public void testSharedStateSamplerWithInvertedBinomialDistribution() {
+    void testSharedStateSamplerWithInvertedBinomialDistribution() {
         testSharedStateSampler(10, 0.999);
     }
 

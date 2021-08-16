@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Tests for {@link Hex}.
  */
-public class HexTest {
+class HexTest {
     /** Upper-case hex digits. */
     private static final char[] DIGITS = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -39,7 +39,7 @@ public class HexTest {
      * in the results file can be used to create the same seed.
      */
     @Test
-    public void testHexEncodeAndDecode() {
+    void testHexEncodeAndDecode() {
         // Empty bytes
         for (int size = 0; size < 10; size++) {
             assertHexEncodeAndDecode(new byte[size]);
@@ -74,7 +74,7 @@ public class HexTest {
      * can be converted to bytes and then recorded in the results file.
      */
     @Test
-    public void testHexDecodeAndEncode() {
+    void testHexDecodeAndEncode() {
         // Note: char[] must be an even length.
         // Empty chars.
         for (int size = 0; size < 10; size++) {
@@ -108,12 +108,12 @@ public class HexTest {
     }
 
     @Test
-    public void testHexThrowsWithOddNumberOfCharacters() {
+    void testHexThrowsWithOddNumberOfCharacters() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> Hex.decodeHex("0"));
     }
 
     @Test
-    public void testHexThrowsWithIllegalHexCharacters() {
+    void testHexThrowsWithIllegalHexCharacters() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> Hex.decodeHex("0g"));
     }
 }

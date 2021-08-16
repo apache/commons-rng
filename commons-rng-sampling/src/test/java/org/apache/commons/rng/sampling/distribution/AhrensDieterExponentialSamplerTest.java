@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link AhrensDieterExponentialSampler}. The tests hit edge cases for the sampler.
  */
-public class AhrensDieterExponentialSamplerTest {
+class AhrensDieterExponentialSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
     @Test
-    public void testConstructorThrowsWithZeroMean() {
+    void testConstructorThrowsWithZeroMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
@@ -44,7 +44,7 @@ public class AhrensDieterExponentialSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;
@@ -59,7 +59,7 @@ public class AhrensDieterExponentialSamplerTest {
      * See RNG-144.
      */
     @Test
-    public void testSamplerWithZeroFromRandomGenerator() {
+    void testSamplerWithZeroFromRandomGenerator() {
         // A broken generator that returns zero.
         final UniformRandomProvider rng = new SplitMix64(0) {
             @Override
@@ -81,7 +81,7 @@ public class AhrensDieterExponentialSamplerTest {
      * double will be at the top of the range {@code [0, 1]}.
      */
     @Test
-    public void testSamplerWithOneFromRandomGenerator() {
+    void testSamplerWithOneFromRandomGenerator() {
         // A broken generator that returns all the bits set.
         final UniformRandomProvider rng = new SplitMix64(0) {
             @Override

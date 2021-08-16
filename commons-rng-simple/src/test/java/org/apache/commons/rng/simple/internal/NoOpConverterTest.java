@@ -22,16 +22,16 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link NoOpConverter}.
  */
-public class NoOpConverterTest {
+class NoOpConverterTest {
     @Test
-    public void testNoOpIntegerCoversion() {
+    void testNoOpIntegerCoversion() {
         final NoOpConverter<Integer> converter = new NoOpConverter<Integer>();
         final Integer in = 123;
         Assertions.assertSame(in, converter.convert(in));
     }
 
     @Test
-    public void testNoOpLongArrayCoversion() {
+    void testNoOpLongArrayCoversion() {
         final NoOpConverter<long[]> converter = new NoOpConverter<long[]>();
         final long[] in = {123L, 456L, Long.MAX_VALUE};
         Assertions.assertSame(in, converter.convert(in));

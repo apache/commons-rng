@@ -31,12 +31,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link UnitBallSampler}.
  */
-public class UnitBallSamplerTest {
+class UnitBallSamplerTest {
     /**
      * Test a non-positive dimension.
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> UnitBallSampler.of(rng, 0));
@@ -46,7 +46,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in one dimension.
      */
     @Test
-    public void testDistribution1D() {
+    void testDistribution1D() {
         testDistributionND(1);
     }
 
@@ -54,7 +54,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in two dimensions.
      */
     @Test
-    public void testDistribution2D() {
+    void testDistribution2D() {
         testDistributionND(2);
     }
 
@@ -62,7 +62,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in three dimensions.
      */
     @Test
-    public void testDistribution3D() {
+    void testDistribution3D() {
         testDistributionND(3);
     }
 
@@ -70,7 +70,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in four dimensions.
      */
     @Test
-    public void testDistribution4D() {
+    void testDistribution4D() {
         testDistributionND(4);
     }
 
@@ -78,7 +78,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in five dimensions.
      */
     @Test
-    public void testDistribution5D() {
+    void testDistribution5D() {
         testDistributionND(5);
     }
 
@@ -86,7 +86,7 @@ public class UnitBallSamplerTest {
      * Test the distribution of points in six dimensions.
      */
     @Test
-    public void testDistribution6D() {
+    void testDistribution6D() {
         testDistributionND(6);
     }
 
@@ -155,7 +155,7 @@ public class UnitBallSamplerTest {
      * Test the edge case where the normalisation sum to divide by is zero for 3D.
      */
     @Test
-    public void testInvalidInverseNormalisation3D() {
+    void testInvalidInverseNormalisation3D() {
         testInvalidInverseNormalisationND(3);
     }
 
@@ -163,7 +163,7 @@ public class UnitBallSamplerTest {
      * Test the edge case where the normalisation sum to divide by is zero for 4D.
      */
     @Test
-    public void testInvalidInverseNormalisation4D() {
+    void testInvalidInverseNormalisation4D() {
         testInvalidInverseNormalisationND(4);
     }
 
@@ -194,7 +194,7 @@ public class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for 1D.
      */
     @Test
-    public void testSharedStateSampler1D() {
+    void testSharedStateSampler1D() {
         testSharedStateSampler(1);
     }
 
@@ -202,7 +202,7 @@ public class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for 2D.
      */
     @Test
-    public void testSharedStateSampler2D() {
+    void testSharedStateSampler2D() {
         testSharedStateSampler(2);
     }
 
@@ -210,7 +210,7 @@ public class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for 3D.
      */
     @Test
-    public void testSharedStateSampler3D() {
+    void testSharedStateSampler3D() {
         testSharedStateSampler(3);
     }
 
@@ -218,7 +218,7 @@ public class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for 4D.
      */
     @Test
-    public void testSharedStateSampler4D() {
+    void testSharedStateSampler4D() {
         testSharedStateSampler(4);
     }
 
@@ -268,7 +268,7 @@ public class UnitBallSamplerTest {
      * within the n-ball.
      */
     @Test
-    public void checkVolumeFunctions() {
+    void checkVolumeFunctions() {
         final double[] radii = {0, 0.1, 0.25, 0.5, 0.75, 1.0};
         for (int n = 1; n <= 6; n++) {
             final DoubleUnaryOperator volume = createVolumeFunction(n);

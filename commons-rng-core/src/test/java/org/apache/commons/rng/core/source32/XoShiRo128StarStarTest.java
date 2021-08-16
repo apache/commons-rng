@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XoShiRo128StarStarTest {
+class XoShiRo128StarStarTest {
     /** The size of the array seed. */
     private static final int SEED_SIZE = 4;
 
@@ -72,41 +72,41 @@ public class XoShiRo128StarStarTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoShiRo128StarStar(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoShiRo128StarStar(new int[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertIntArrayConstructorWithSingleBitSeedIsFunctional(XoShiRo128StarStar.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoShiRo128StarStar(new int[] {SEED[0]}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testElementConstructor() {
+    void testElementConstructor() {
         final XoShiRo128StarStar rng1 = new XoShiRo128StarStar(SEED);
         final XoShiRo128StarStar rng2 = new XoShiRo128StarStar(SEED[0], SEED[1], SEED[2], SEED[3]);
         RandomAssert.assertNextIntEquals(SEED.length * 2, rng1, rng2);
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoShiRo128StarStar(SEED));
     }
 
     @Test
-    public void testLongJump() {
+    void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoShiRo128StarStar(SEED));
     }
 }

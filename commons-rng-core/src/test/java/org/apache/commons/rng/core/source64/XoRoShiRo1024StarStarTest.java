@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XoRoShiRo1024StarStarTest {
+class XoRoShiRo1024StarStarTest {
     /** The size of the array SEED. */
     private static final int SEED_SIZE = 16;
 
@@ -75,34 +75,34 @@ public class XoRoShiRo1024StarStarTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoRoShiRo1024StarStar(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoRoShiRo1024StarStar(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XoRoShiRo1024StarStar.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoRoShiRo1024StarStar(new long[] {SEED[0]}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoRoShiRo1024StarStar(SEED));
     }
 
     @Test
-    public void testLongJump() {
+    void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoRoShiRo1024StarStar(SEED));
     }
 }

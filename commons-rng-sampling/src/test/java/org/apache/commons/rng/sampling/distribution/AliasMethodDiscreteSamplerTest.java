@@ -30,48 +30,48 @@ import java.util.Arrays;
 /**
  * Test for the {@link AliasMethodDiscreteSampler}.
  */
-public class AliasMethodDiscreteSamplerTest {
+class AliasMethodDiscreteSamplerTest {
     @Test
-    public void testConstructorThrowsWithNullProbabilites() {
+    void testConstructorThrowsWithNullProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(null));
     }
 
     @Test
-    public void testConstructorThrowsWithZeroLengthProbabilites() {
+    void testConstructorThrowsWithZeroLengthProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[0]));
     }
 
     @Test
-    public void testConstructorThrowsWithNegativeProbabilites() {
+    void testConstructorThrowsWithNegativeProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {-1, 0.1, 0.2}));
     }
 
     @Test
-    public void testConstructorThrowsWithNaNProbabilites() {
+    void testConstructorThrowsWithNaNProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {0.1, Double.NaN, 0.2}));
     }
 
     @Test
-    public void testConstructorThrowsWithInfiniteProbabilites() {
+    void testConstructorThrowsWithInfiniteProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}));
     }
 
     @Test
-    public void testConstructorThrowsWithInfiniteSumProbabilites() {
+    void testConstructorThrowsWithInfiniteSumProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}));
     }
 
     @Test
-    public void testConstructorThrowsWithZeroSumProbabilites() {
+    void testConstructorThrowsWithZeroSumProbabilites() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[4]));
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         final SharedStateDiscreteSampler sampler = createSampler(new double[] {0.5, 0.5});
         Assertions.assertTrue(sampler.toString().toLowerCase().contains("alias method"));
     }
@@ -91,7 +91,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test sampling from a binomial distribution.
      */
     @Test
-    public void testBinomialSamples() {
+    void testBinomialSamples() {
         final int trials = 67;
         final double probabilityOfSuccess = 0.345;
         final BinomialDistribution dist = new BinomialDistribution(trials, probabilityOfSuccess);
@@ -106,7 +106,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test sampling from a Poisson distribution.
      */
     @Test
-    public void testPoissonSamples() {
+    void testPoissonSamples() {
         final double mean = 3.14;
         final PoissonDistribution dist = new PoissonDistribution(null, mean,
             PoissonDistribution.DEFAULT_EPSILON, PoissonDistribution.DEFAULT_MAX_ITERATIONS);
@@ -122,7 +122,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test sampling from a non-uniform distribution of probabilities (these sum to 1).
      */
     @Test
-    public void testNonUniformSamplesWithProbabilities() {
+    void testNonUniformSamplesWithProbabilities() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
         checkSamples(expected);
     }
@@ -132,7 +132,7 @@ public class AliasMethodDiscreteSamplerTest {
      * the input probabilities.
      */
     @Test
-    public void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
+    void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
         checkSamples(AliasMethodDiscreteSampler.of(RandomSource.SPLIT_MIX_64.create(), expected), expected);
     }
@@ -142,7 +142,7 @@ public class AliasMethodDiscreteSamplerTest {
      * probabilities).
      */
     @Test
-    public void testNonUniformSamplesWithObservations() {
+    void testNonUniformSamplesWithObservations() {
         final double[] expected = {1, 2, 3, 1, 3 };
         checkSamples(expected);
     }
@@ -152,7 +152,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Extra zero-values are added to make the table size a power of 2.
      */
     @Test
-    public void testNonUniformSamplesWithProbabilitiesPaddedToPowerOf2() {
+    void testNonUniformSamplesWithProbabilitiesPaddedToPowerOf2() {
         final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0, 0 };
         checkSamples(expected);
     }
@@ -162,7 +162,7 @@ public class AliasMethodDiscreteSamplerTest {
      * probabilities). Extra zero-values are added to make the table size a power of 2.
      */
     @Test
-    public void testNonUniformSamplesWithObservationsPaddedToPowerOf2() {
+    void testNonUniformSamplesWithObservationsPaddedToPowerOf2() {
         final double[] expected = {1, 2, 3, 0, 1, 3, 0, 0 };
         checkSamples(expected);
     }
@@ -172,7 +172,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Extra zero-values are added.
      */
     @Test
-    public void testNonUniformSamplesWithZeroProbabilities() {
+    void testNonUniformSamplesWithZeroProbabilities() {
         final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0 };
         checkSamples(expected);
     }
@@ -182,7 +182,7 @@ public class AliasMethodDiscreteSamplerTest {
      * probabilities). Extra zero-values are added.
      */
     @Test
-    public void testNonUniformSamplesWithZeroObservations() {
+    void testNonUniformSamplesWithZeroObservations() {
         final double[] expected = {1, 2, 3, 0, 1, 3, 0 };
         checkSamples(expected);
     }
@@ -192,7 +192,7 @@ public class AliasMethodDiscreteSamplerTest {
      * are no probabilities less than the mean.
      */
     @Test
-    public void testUniformSamplesWithNoObservationLessThanTheMean() {
+    void testUniformSamplesWithNoObservationLessThanTheMean() {
         final double[] expected = {2, 2, 2, 2, 2, 2 };
         checkSamples(expected);
     }
@@ -201,7 +201,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test sampling from a non-uniform distribution which is zero-padded to a large size.
      */
     @Test
-    public void testLargeTableSize() {
+    void testLargeTableSize() {
         double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
         // Pad to a large table size not supported for fast sampling (anything > 2^11)
         expected = Arrays.copyOf(expected, 1 << 12);
@@ -258,7 +258,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test the SharedStateSampler implementation for the specialised power-of-2 table size.
      */
     @Test
-    public void testSharedStateSamplerWithPowerOf2TableSize() {
+    void testSharedStateSamplerWithPowerOf2TableSize() {
         testSharedStateSampler(new double[] {0.1, 0.2, 0.3, 0.4});
     }
 
@@ -266,7 +266,7 @@ public class AliasMethodDiscreteSamplerTest {
      * Test the SharedStateSampler implementation for the generic non power-of-2 table size.
      */
     @Test
-    public void testSharedStateSamplerWithNonPowerOf2TableSize() {
+    void testSharedStateSamplerWithNonPowerOf2TableSize() {
         testSharedStateSampler(new double[] {0.1, 0.2, 0.3});
     }
 

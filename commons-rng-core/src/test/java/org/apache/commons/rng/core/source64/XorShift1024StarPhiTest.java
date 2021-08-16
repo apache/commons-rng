@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source64;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class XorShift1024StarPhiTest {
+class XorShift1024StarPhiTest {
     /** The size of the array SEED. */
     private static final int SEED_SIZE = 16;
 
@@ -62,22 +62,22 @@ public class XorShift1024StarPhiTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XorShift1024StarPhi(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XorShift1024StarPhi(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XorShift1024StarPhi.class, SEED_SIZE);
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XorShift1024StarPhi(SEED));
     }
 }

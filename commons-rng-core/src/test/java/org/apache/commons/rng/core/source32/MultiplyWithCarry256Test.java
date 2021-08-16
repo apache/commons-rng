@@ -19,12 +19,12 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class MultiplyWithCarry256Test {
+class MultiplyWithCarry256Test {
     /** The size of the array seed. */
     private static final int SEED_SIZE = 257;
 
     @Test
-    public void testMarsaglia() {
+    void testMarsaglia() {
         final int[] seed = {
             0x000587c4, // initial carry
             0xff710353, 0x1b427020, 0xc9c59991, 0x96e511e0, 0xf1d06013, 0xe0216c68, 0x98999e3d, 0xce158f68,
@@ -197,12 +197,12 @@ public class MultiplyWithCarry256Test {
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new MultiplyWithCarry256(new int[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertIntArrayConstructorWithSingleBitSeedIsFunctional(MultiplyWithCarry256.class, SEED_SIZE);
     }
 }

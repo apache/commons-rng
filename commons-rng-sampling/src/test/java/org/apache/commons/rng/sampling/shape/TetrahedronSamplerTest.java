@@ -30,12 +30,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link TetrahedronSampler}.
  */
-public class TetrahedronSamplerTest {
+class TetrahedronSamplerTest {
     /**
      * Test invalid vertex dimensions (i.e. not 3D coordinates).
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] ok = new double[3];
         final double[] bad = new double[2];
@@ -54,7 +54,7 @@ public class TetrahedronSamplerTest {
      * Test non-finite vertices.
      */
     @Test
-    public void testNonFiniteVertexCoordinates() {
+    void testNonFiniteVertexCoordinates() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // A valid tetrahedron
         final double[][] c = new double[][] {
@@ -83,7 +83,7 @@ public class TetrahedronSamplerTest {
      * {@link Double#MAX_VALUE}.
      */
     @Test
-    public void testExtremeValueCoordinates() {
+    void testExtremeValueCoordinates() {
         // Object seed so use Long not long
         final Long seed = 876543L;
         // Create a valid tetrahedron that can be scaled
@@ -127,7 +127,7 @@ public class TetrahedronSamplerTest {
      * a box. The distribution should be uniform inside the box.
      */
     @Test
-    public void testDistribution() {
+    void testDistribution() {
         // Create the lower and upper limits of the box
         final double lx = -1;
         final double ly = -2;
@@ -247,7 +247,7 @@ public class TetrahedronSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(-1);
@@ -263,7 +263,7 @@ public class TetrahedronSamplerTest {
      * Test the input vectors are copied and not used by reference.
      */
     @Test
-    public void testChangedInputCoordinates() {
+    void testChangedInputCoordinates() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] c1 = createCoordinate(1);
@@ -297,7 +297,7 @@ public class TetrahedronSamplerTest {
      * Test the tetrahedron contains predicate.
      */
     @Test
-    public void testTetrahedronContains() {
+    void testTetrahedronContains() {
         final double[][] c1 = new double[][] {
             {1, 1, 1}, {1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}
         };

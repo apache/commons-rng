@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link SeedConverterComposer}.
  */
-public class SeedConverterComposerTest {
+class SeedConverterComposerTest {
     @Test
-    public void testComposedCoversion() {
+    void testComposedCoversion() {
         final Int2Long int2Long = new Int2Long();
         final Long2LongArray long2LongArray = new Long2LongArray(3);
         final SeedConverterComposer<Integer, Long, long[]> composer =

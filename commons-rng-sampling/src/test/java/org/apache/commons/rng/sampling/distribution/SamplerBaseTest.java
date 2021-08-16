@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * Test for the {@link SamplerBase}. The class is deprecated but is public. The methods
  * should be tested to ensure correct functionality.
  */
-public class SamplerBaseTest {
+class SamplerBaseTest {
     /**
      * Extends the {@link SamplerBase} to allow access to methods.
      */
@@ -57,7 +57,7 @@ public class SamplerBaseTest {
     }
 
     @Test
-    public void testNextMethods() {
+    void testNextMethods() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SimpleSampler sampler = new SimpleSampler(rng2);
@@ -71,7 +71,7 @@ public class SamplerBaseTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final SimpleSampler sampler = new SimpleSampler(rng);
         Assertions.assertTrue(sampler.toString().contains("rng"));

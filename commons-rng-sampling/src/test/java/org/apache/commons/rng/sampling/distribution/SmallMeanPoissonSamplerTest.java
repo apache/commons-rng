@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
  */
-public class SmallMeanPoissonSamplerTest {
+class SmallMeanPoissonSamplerTest {
     /**
      * Test the constructor with a bad mean.
      */
     @Test
-    public void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
+    void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
         final UniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double p0 = Double.MIN_VALUE;
@@ -45,7 +45,7 @@ public class SmallMeanPoissonSamplerTest {
      * Test the constructor with a bad mean.
      */
     @Test
-    public void testConstructorThrowsWithZeroMean() {
+    void testConstructorThrowsWithZeroMean() {
         final UniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 0;
@@ -57,7 +57,7 @@ public class SmallMeanPoissonSamplerTest {
      * Test the sample is bounded to 1000 * mean.
      */
     @Test
-    public void testSampleUpperBounds() {
+    void testSampleUpperBounds() {
         // If the nextDouble() is always 1 then the sample will hit the upper bounds
         final UniformRandomProvider rng = new UniformRandomProvider() {
             // CHECKSTYLE: stop all
@@ -83,7 +83,7 @@ public class SmallMeanPoissonSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double mean = 1.23;

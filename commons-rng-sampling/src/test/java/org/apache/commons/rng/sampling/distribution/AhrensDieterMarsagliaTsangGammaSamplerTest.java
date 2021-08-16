@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link AhrensDieterMarsagliaTsangGammaSampler}. The tests hit edge cases for the sampler.
  */
-public class AhrensDieterMarsagliaTsangGammaSamplerTest {
+class AhrensDieterMarsagliaTsangGammaSamplerTest {
     /**
      * Test the constructor with a bad alpha.
      */
     @Test
-    public void testConstructorThrowsWithZeroAlpha() {
+    void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 0;
@@ -44,7 +44,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * Test the constructor with a bad theta.
      */
     @Test
-    public void testConstructorThrowsWithZeroTheta() {
+    void testConstructorThrowsWithZeroTheta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 1;
@@ -57,7 +57,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaBelowOne() {
+    void testSharedStateSamplerWithAlphaBelowOne() {
         testSharedStateSampler(0.5, 3.456);
     }
 
@@ -65,7 +65,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaAboveOne() {
+    void testSharedStateSamplerWithAlphaAboveOne() {
         testSharedStateSampler(3.5, 3.456);
     }
 
@@ -90,7 +90,7 @@ public class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * used in other tests does not create an instance of the wrapper class.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
                 .toLowerCase().contains("gamma"));

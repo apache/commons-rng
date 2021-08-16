@@ -49,7 +49,7 @@ import org.apache.commons.rng.simple.RandomSource;
  * extreme values for the random deviates. This hits edges cases where the computation has
  * to be corrected.
  */
-public class StableSamplerTest {
+class StableSamplerTest {
     /** pi / 2. */
     private static final double PI_2 = Math.PI / 2;
     /** pi / 4. */
@@ -74,17 +74,17 @@ public class StableSamplerTest {
     private static final double VALID_DELTA = 3.45;
 
     @Test
-    public void testAlphaZeroThrows() {
+    void testAlphaZeroThrows() {
         assertConstructorThrows(0.0, VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testAlphaBelowZeroThrows() {
+    void testAlphaBelowZeroThrows() {
         assertConstructorThrows(Math.nextDown(0.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testAlphaTooCloseToZeroThrows() {
+    void testAlphaTooCloseToZeroThrows() {
         // The realistic range for alpha is not Double.MIN_VALUE.
         // The number 1 - alpha must not be 1.
         // This is valid
@@ -102,57 +102,57 @@ public class StableSamplerTest {
     }
 
     @Test
-    public void testAlphaAboveTwoThrows() {
+    void testAlphaAboveTwoThrows() {
         assertConstructorThrows(Math.nextUp(2.0), VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testAlphaNaNThrows() {
+    void testAlphaNaNThrows() {
         assertConstructorThrows(Double.NaN, VALID_BETA, VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testBetaBelowMinusOneThrows() {
+    void testBetaBelowMinusOneThrows() {
         assertConstructorThrows(VALID_ALPHA, Math.nextDown(-1.0), VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testBetaAboveOneThrows() {
+    void testBetaAboveOneThrows() {
         assertConstructorThrows(VALID_ALPHA, Math.nextUp(1.0), VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testBetaNaNThrows() {
+    void testBetaNaNThrows() {
         assertConstructorThrows(VALID_ALPHA, Double.NaN, VALID_GAMMA, VALID_DELTA);
     }
 
     @Test
-    public void testGammaNotStrictlyPositiveThrows() {
+    void testGammaNotStrictlyPositiveThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, 0.0, VALID_DELTA);
     }
 
     @Test
-    public void testGammaInfThrows() {
+    void testGammaInfThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, Double.POSITIVE_INFINITY, VALID_DELTA);
     }
 
     @Test
-    public void testGammaNaNThrows() {
+    void testGammaNaNThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, Double.NaN, VALID_DELTA);
     }
 
     @Test
-    public void testDeltaInfThrows() {
+    void testDeltaInfThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.POSITIVE_INFINITY);
     }
 
     @Test
-    public void testDeltaNegInfThrows() {
+    void testDeltaNegInfThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NEGATIVE_INFINITY);
     }
 
     @Test
-    public void testDeltaNaNThrows() {
+    void testDeltaNaNThrows() {
         assertConstructorThrows(VALID_ALPHA, VALID_BETA, VALID_GAMMA, Double.NaN);
     }
 
@@ -180,7 +180,7 @@ public class StableSamplerTest {
      * the choice of a beta=0 sampler must check tau and not beta.
      */
     @Test
-    public void testTauLimits() {
+    void testTauLimits() {
         // At the limit of beta, tau ranges from 2/pi to 0 as alpha moves away from 1.
         final double beta = 1;
 
@@ -276,7 +276,7 @@ public class StableSamplerTest {
      * correction of non-finite results from the CMS algorithm.
      */
     @Test
-    public void testA2IsNotZero() {
+    void testA2IsNotZero() {
         // The extreme limit of the angle phiby2. This is ignored by the sampler
         // as it can result in cancellation of terms and invalid results.
         final double p0 = getU(Long.MIN_VALUE);
@@ -315,7 +315,7 @@ public class StableSamplerTest {
      * is in the open interval {@code (0, 1)}.
      */
     @Test
-    public void testZIsNotAlwaysAboveZero() {
+    void testZIsNotAlwaysAboveZero() {
         // A long is used to create phi/2:
         // The next to limit values for the phi/2
         final long x00 = Long.MIN_VALUE;
@@ -443,7 +443,7 @@ public class StableSamplerTest {
      * the computation may multiply infinity by zero and create NaN.
      */
     @Test
-    public void testComputeDWhenZIsFiniteNonZero() {
+    void testComputeDWhenZIsFiniteNonZero() {
         final double[] zs = {Double.MIN_VALUE, Double.MAX_VALUE};
 
         final double[] alphas = {2, 1.5, 1 + 1e-6, 1, 1 - 1e-6, 0.5, 0.01, 1e-10, SMALLEST_ALPHA};
@@ -507,7 +507,7 @@ public class StableSamplerTest {
      * This applies to the Weron formula.
      */
     @Test
-    public void testSinAlphaPhiMinusAtanZeta() {
+    void testSinAlphaPhiMinusAtanZeta() {
         // Note sin(alpha * phi + atan(-zeta)) is zero when:
         // alpha * phi = -atan(-zeta)
         // tan(-alpha * phi) = -zeta
@@ -530,7 +530,7 @@ public class StableSamplerTest {
      * This applies to the Weron formula.
      */
     @Test
-    public void testCosPhiMinusAlphaPhiXi() {
+    void testCosPhiMinusAlphaPhiXi() {
         // This is the extreme of cos(x) that should be used
         final double cosPi2 = Math.cos(PI_2);
         // The function is symmetric
@@ -648,7 +648,7 @@ public class StableSamplerTest {
      * This applies to the Weron formula when {@code beta = 0}.
      */
     @Test
-    public void testSinAlphaPhi() {
+    void testSinAlphaPhi() {
         // Smallest non-zero phi.
         // getU creates in the domain (-pi/4, pi/4) so double the angle.
         for (final double phi : new double[] {getU(-1) * 2, getU(1 << 10) * 2}) {
@@ -666,7 +666,7 @@ public class StableSamplerTest {
      * point to the high precision version is monotonic.
      */
     @Test
-    public void testExpM1() {
+    void testExpM1() {
         // Test monotonic at the switch point
         Assertions.assertEquals(d2(0.5), d2b(0.5));
         // When positive x -> 0 the value smaller bigger.
@@ -688,7 +688,7 @@ public class StableSamplerTest {
      * expensive expm1 function.
      */
     //@Test
-    public void expm1ULPReport() {
+    void expm1ULPReport() {
         // Create random doubles with a given exponent. Compute the mean and max ULP difference.
         final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
         // For a quicker report set to <= 2^20.
@@ -806,7 +806,7 @@ public class StableSamplerTest {
      * The limits of the function are {@code [0, inf]} and it should return 1 when x=0.
      */
     @Test
-    public void testD2() {
+    void testD2() {
         for (final double x : new double[] {Double.MAX_VALUE, Math.log(Double.MAX_VALUE), 10, 5, 1, 0.5, 0.1, 0.05, 0.01}) {
             Assertions.assertEquals(Math.expm1(x) / x, SpecialMath.d2(x), 1e-15);
             Assertions.assertEquals(Math.expm1(-x) / -x, SpecialMath.d2(-x), 1e-15);
@@ -831,7 +831,7 @@ public class StableSamplerTest {
      * Test the tan2 function returns {@code tan(x) / x}.
      */
     @Test
-    public void testTan2() {
+    void testTan2() {
         // Test the value of tan(x) when the angle is generated in the open interval (-pi/4, pi/4)
         for (final long x : new long[] {Long.MIN_VALUE + (1 << 10), Long.MAX_VALUE}) {
             final double phiby2 = getU(x);
@@ -912,7 +912,7 @@ public class StableSamplerTest {
      * This shows the two are equivalent; they should match as the formulas are rearrangements.
      */
     @Test
-    public void testSamplesWithAlphaNot1() {
+    void testSamplesWithAlphaNot1() {
         // Use non-extreme parameters. beta and u are negated so use non-redundant values
         final double[] alphas = {0.3, 0.9, 1.1, 1.5};
         final double[] betas = {-1, -0.5, -0.3, 0};
@@ -943,7 +943,7 @@ public class StableSamplerTest {
      * This shows the two are equivalent; they should match as the formulas are rearrangements.
      */
     @Test
-    public void testSamplesWithAlpha1() {
+    void testSamplesWithAlpha1() {
         // Use non-extreme parameters. beta and u are negated so use non-redundant values
         final double[] betas = {-1, -0.5, -0.3, 0};
         final double[] ws = {0.1, 1, 3};
@@ -972,7 +972,7 @@ public class StableSamplerTest {
      * Demonstrate the Weron formula is not continuous as {@code alpha -> 1}.
      */
     @Test
-    public void testConvergenceWithAlphaCloseTo1() {
+    void testConvergenceWithAlphaCloseTo1() {
         final double[] betas = {-1, -0.5, 0, 0.3, 1};
         final double[] ws = {0.1, 1, 10};
         final double[] us = {0.1, 0.25, 0.5, 0.8};
@@ -1041,7 +1041,7 @@ public class StableSamplerTest {
      * formula can create an appropriate sample for all cases where the CMS formula fails.
      */
     @Test
-    public void testExtremeInputsToSample() {
+    void testExtremeInputsToSample() {
         // Demonstrate instability when w = 0
         Assertions.assertEquals(Double.NaN, sampleCMS(1.3, 0.7, 0, 0.25));
         Assertions.assertTrue(Double.isFinite(sampleCMS(1.3, 0.7, SMALL_W, 0.25)));
@@ -1341,7 +1341,7 @@ public class StableSamplerTest {
      * deviates that cause the value {@code z} to be negative.
      */
     @Test
-    public void testSamplesWithZBelow0() {
+    void testSamplesWithZBelow0() {
         // Call the CMS algorithm with u->1; phi/2 -> pi/4.
         // The value with all bits set generates phi/2 -> pi/4.
         // Add a long to create a big value for w of 5.
@@ -1386,7 +1386,7 @@ public class StableSamplerTest {
      * deviates that cause the value {@code z} to be infinite.
      */
     @Test
-    public void testSamplesWithZInfinite() {
+    void testSamplesWithZInfinite() {
         // Call the CMS algorithm with w=0 (and phi/2 is not extreme).
         final long[] longs = {Long.MIN_VALUE >>> 1, 0};
 
@@ -1426,7 +1426,7 @@ public class StableSamplerTest {
      * deviates that cause the value {@code d} to be infinite.
      */
     @Test
-    public void testSamplesWithDInfinite() {
+    void testSamplesWithDInfinite() {
         // beta != 0 but with low skew to allow the direction switch in
         // phi/2 to create opposite directions.
         testSamplesWithDInfinite(0.01);
@@ -1438,7 +1438,7 @@ public class StableSamplerTest {
      * deviates that cause the value {@code d} to be infinite.
      */
     @Test
-    public void testBeta0SamplesWithDInfinite() {
+    void testBeta0SamplesWithDInfinite() {
         testSamplesWithDInfinite(0.0);
     }
 
@@ -1497,7 +1497,7 @@ public class StableSamplerTest {
      * deviates that cause the value {@code phi/2} to be at the extreme limits.
      */
     @Test
-    public void testAlpha1SamplesWithExtremePhi() {
+    void testAlpha1SamplesWithExtremePhi() {
         // The numerator is:
         // 1 + 2 * phiby2 * tau
         // tau = beta / pi/2 when alpha=1
@@ -1534,7 +1534,7 @@ public class StableSamplerTest {
      * {@code |beta| = 1}.
      */
     @Test
-    public void testSupport() {
+    void testSupport() {
         testSupport(1.0, 0.0);
     }
 
@@ -1544,7 +1544,7 @@ public class StableSamplerTest {
      * {@code |beta| = 1}.
      */
     @Test
-    public void testSupportWithTransformation() {
+    void testSupportWithTransformation() {
         // This tests extreme values which should not create NaN results
         for (final double gamma : new double[] {0.78, 1.23, Double.MAX_VALUE, Double.MIN_VALUE}) {
             for (final double delta : new double[] {0.43, 12.34, Double.MAX_VALUE}) {
@@ -1721,7 +1721,7 @@ public class StableSamplerTest {
      * Test the random deviates u and w can be generated by manipulating the RNG.
      */
     @Test
-    public void testRandomDeviatesUandW() {
+    void testRandomDeviatesUandW() {
         // Extremes of the uniform deviate generated using the same method as the sampler
         final double d = DU * PI_4;
         // Test in (-pi/4, pi/4)
@@ -1910,7 +1910,7 @@ public class StableSamplerTest {
      * samplers computes a continuous function of the parameters.
      */
     @Test
-    public void testSamplerOutputIsContinuousFunction() {
+    void testSamplerOutputIsContinuousFunction() {
         // Test alpha passing through 1 when beta!=0 (switch to an alpha=1 sampler)
         for (final double beta : new double[] {0.5, 0.2, 0.1, 0.001}) {
             testSamplerOutputIsContinuousFunction(1 + 8096 * DU, beta, 1.0, beta, 1 - 8096 * DU, beta, 0);
@@ -1993,7 +1993,7 @@ public class StableSamplerTest {
      * Test the SharedStateSampler implementation for each case using a different implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         // Gaussian case
         testSharedStateSampler(2.0, 0.0);
         // Cauchy case
@@ -2041,7 +2041,7 @@ public class StableSamplerTest {
      * Test the implementation of the transformed sampler (scaled and translated).
      */
     @Test
-    public void testTransformedSampler() {
+    void testTransformedSampler() {
         // Gaussian case
         // The Gaussian case has its own scaling where the StdDev is gamma * sqrt(2).
         // (N(x) * sqrt(2)) * gamma != N(x) * (sqrt(2) * gamma)
@@ -2130,7 +2130,7 @@ public class StableSamplerTest {
      * Test symmetry when when u and beta are mirrored around 0.5 and 0 respectively.
      */
     @Test
-    public void testSymmetry() {
+    void testSymmetry() {
         final byte[] seed = RandomSource.KISS.createSeed();
         for (final double alpha : new double[] {1e-4, 0.78, 1, 1.23}) {
             for (final double beta : new double[] {-0.43, 0.23}) {
@@ -2208,7 +2208,7 @@ public class StableSamplerTest {
      * Test symmetry for the Levy case ({@code alpha = 0.5} and {@code beta = 1}.
      */
     @Test
-    public void testSymmetryLevy() {
+    void testSymmetryLevy() {
         final double alpha = 0.5;
         final double beta = 1.0;
         final byte[] seed = RandomSource.KISS.createSeed();
@@ -2232,7 +2232,7 @@ public class StableSamplerTest {
      * even for parameters that create the Gaussian, Cauchy or Levy cases.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         for (final double[] p : new double[][] {
             {1.3, 0.1},
@@ -2265,7 +2265,7 @@ public class StableSamplerTest {
      * parameters are not validated.
      */
     @Test
-    public void testImplementationsMatch() {
+    void testImplementationsMatch() {
         // Avoid extreme samples. Do this by manipulating the output of nextLong.
         // Generation of the random deviate u uses the top 54-bits of the long.
         // Unset a high bit to ensure getU cannot approach pi/4.
@@ -2345,7 +2345,7 @@ public class StableSamplerTest {
      * parameters are not validated.
      */
     @Test
-    public void testSpecializedBeta0CMSImplementation() {
+    void testSpecializedBeta0CMSImplementation() {
         final RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS;
         // Should be robust to any seed
         final byte[] seed = source.createSeed();
@@ -2372,7 +2372,7 @@ public class StableSamplerTest {
      * parameters are not validated.
      */
     @Test
-    public void testSpecializedBeta0WeronImplementation() {
+    void testSpecializedBeta0WeronImplementation() {
         final RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS;
         // Should be robust to any seed
         final byte[] seed = source.createSeed();
@@ -2397,7 +2397,7 @@ public class StableSamplerTest {
      * @see #testSinAlphaPhiMinusAtanZeta()
      */
     @Test
-    public void testWeronImplementationEdgeCase() {
+    void testWeronImplementationEdgeCase() {
         double alpha = 0.25;
         // Solved in testSinAlphaPhiMinusAtanZeta()
         double beta = -0.48021693505171;

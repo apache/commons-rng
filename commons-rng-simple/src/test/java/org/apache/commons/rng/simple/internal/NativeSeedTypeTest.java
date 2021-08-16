@@ -22,13 +22,13 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link NativeSeedType} factory seed conversions.
  */
-public class NativeSeedTypeTest {
+class NativeSeedTypeTest {
     /**
      * Test the conversion throws for an unsupported type. All supported types are
      * tested in the {@link NativeSeedTypeParametricTest}.
      */
     @Test
-    public void testConvertSeedToBytesUsingNullThrows() {
+    void testConvertSeedToBytesUsingNullThrows() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> NativeSeedType.convertSeedToBytes(null));
     }
 
@@ -37,7 +37,7 @@ public class NativeSeedTypeTest {
      * that can be converted that is not a native type.
      */
     @Test
-    public void testConvertSeedToBytesUsingByteArray() {
+    void testConvertSeedToBytesUsingByteArray() {
         final byte[] seed = {42, 78, 99};
         Assertions.assertSame(seed, NativeSeedType.convertSeedToBytes(seed));
     }

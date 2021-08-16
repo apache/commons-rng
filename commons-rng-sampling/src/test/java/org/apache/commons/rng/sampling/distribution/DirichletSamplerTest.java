@@ -30,58 +30,58 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test for {@link DirichletSampler}.
  */
-public class DirichletSamplerTest {
+class DirichletSamplerTest {
     @Test
-    public void testDistributionThrowsWithInvalidNumberOfCategories() {
+    void testDistributionThrowsWithInvalidNumberOfCategories() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0));
     }
 
     @Test
-    public void testDistributionThrowsWithZeroConcentration() {
+    void testDistributionThrowsWithZeroConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, 0.0));
     }
 
     @Test
-    public void testDistributionThrowsWithNaNConcentration() {
+    void testDistributionThrowsWithNaNConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, Double.NaN));
     }
 
     @Test
-    public void testDistributionThrowsWithInfiniteConcentration() {
+    void testDistributionThrowsWithInfiniteConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, Double.POSITIVE_INFINITY));
     }
 
     @Test
-    public void testSymmetricDistributionThrowsWithInvalidNumberOfCategories() {
+    void testSymmetricDistributionThrowsWithInvalidNumberOfCategories() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> DirichletSampler.symmetric(rng, 1, 1.0));
     }
 
     @Test
-    public void testSymmetricDistributionThrowsWithZeroConcentration() {
+    void testSymmetricDistributionThrowsWithZeroConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, 0.0));
     }
 
     @Test
-    public void testSymmetricDistributionThrowsWithNaNConcentration() {
+    void testSymmetricDistributionThrowsWithNaNConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, Double.NaN));
     }
 
     @Test
-    public void testSymmetricDistributionThrowsWithInfiniteConcentration() {
+    void testSymmetricDistributionThrowsWithInfiniteConcentration() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, Double.POSITIVE_INFINITY));
@@ -93,7 +93,7 @@ public class DirichletSamplerTest {
      * normalisation is possible.
      */
     @Test
-    public void testInvalidSampleIsIgnored() {
+    void testInvalidSampleIsIgnored() {
         // An RNG implementation which should create zero samples from the underlying
         // exponential sampler for an initial sequence.
         final UniformRandomProvider rng = new SplitMix64(0L) {
@@ -111,7 +111,7 @@ public class DirichletSamplerTest {
     }
 
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final RandomSource randomSource = RandomSource.XO_RO_SHI_RO_128_PP;
         final byte[] seed = randomSource.createSeed();
         final UniformRandomProvider rng1 = randomSource.create(seed);
@@ -122,7 +122,7 @@ public class DirichletSamplerTest {
     }
 
     @Test
-    public void testSharedStateSamplerForSymmetricCase() {
+    void testSharedStateSamplerForSymmetricCase() {
         final RandomSource randomSource = RandomSource.XO_RO_SHI_RO_128_PP;
         final byte[] seed = randomSource.createSeed();
         final UniformRandomProvider rng1 = randomSource.create(seed);
@@ -133,7 +133,7 @@ public class DirichletSamplerTest {
     }
 
     @Test
-    public void testSymmetricCaseMatchesGeneralCase() {
+    void testSymmetricCaseMatchesGeneralCase() {
         final RandomSource randomSource = RandomSource.XO_RO_SHI_RO_128_PP;
         final byte[] seed = randomSource.createSeed();
         final UniformRandomProvider rng1 = randomSource.create(seed);
@@ -152,7 +152,7 @@ public class DirichletSamplerTest {
      * Test the toString method. This is added to ensure coverage.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final DirichletSampler sampler1 = DirichletSampler.symmetric(rng, 2, 1.0);
         final DirichletSampler sampler2 = DirichletSampler.of(rng, 0.5, 1, 1.5);
@@ -161,27 +161,27 @@ public class DirichletSamplerTest {
     }
 
     @Test
-    public void testSampling1() {
+    void testSampling1() {
         assertSamples(1, 2, 3);
     }
 
     @Test
-    public void testSampling2() {
+    void testSampling2() {
         assertSamples(1, 1, 1);
     }
 
     @Test
-    public void testSampling3() {
+    void testSampling3() {
         assertSamples(0.5, 1, 1.5);
     }
 
     @Test
-    public void testSampling4() {
+    void testSampling4() {
         assertSamples(1, 3);
     }
 
     @Test
-    public void testSampling5() {
+    void testSampling5() {
         assertSamples(1, 2, 3, 4);
     }
 

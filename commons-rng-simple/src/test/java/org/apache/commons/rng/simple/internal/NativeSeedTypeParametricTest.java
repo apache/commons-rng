@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * ensures that a seed can be created or converted from any supported input seed to each
  * supported native seed type.
  */
-public class NativeSeedTypeParametricTest {
+class NativeSeedTypeParametricTest {
     /** This is a list of the class types that are supported native seeds. */
     private static final Object[] SUPPORTED_NATIVE_TYPES = {
         Integer.class,
@@ -59,7 +59,7 @@ public class NativeSeedTypeParametricTest {
      * This ensures the test is maintained to correspond to the enum.
      */
     @Test
-    public void testNativeSeedTypeEnum() {
+    void testNativeSeedTypeEnum() {
         Set<Class<?>> supported = Arrays.stream(SUPPORTED_NATIVE_TYPES)
             .map(o -> (Class<?>) o)
             .collect(Collectors.toSet());
@@ -82,7 +82,7 @@ public class NativeSeedTypeParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCreateSeed(NativeSeedType nativeSeedType) {
+    void testCreateSeed(NativeSeedType nativeSeedType) {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
         Assertions.assertNotNull(seed);
@@ -100,7 +100,7 @@ public class NativeSeedTypeParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testConvertSeedToBytes(NativeSeedType nativeSeedType) {
+    void testConvertSeedToBytes(NativeSeedType nativeSeedType) {
         final int size = 3;
         final Object seed = nativeSeedType.createSeed(size);
         Assertions.assertNotNull(seed, "Null seed");
@@ -125,7 +125,7 @@ public class NativeSeedTypeParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testConvertSupportedSeed(NativeSeedType nativeSeedType) {
+    void testConvertSupportedSeed(NativeSeedType nativeSeedType) {
         // Size can be ignored during conversion and so it not asserted
         final int size = 3;
         for (final Object input : SUPPORTED_SEEDS) {
@@ -143,7 +143,7 @@ public class NativeSeedTypeParametricTest {
      */
     @ParameterizedTest
     @EnumSource
-    public void testCannotConvertUnsupportedSeed(NativeSeedType nativeSeedType) {
+    void testCannotConvertUnsupportedSeed(NativeSeedType nativeSeedType) {
         final int size = 3;
         for (final Object input : UNSUPPORTED_SEEDS) {
             Assertions.assertThrows(UnsupportedOperationException.class,

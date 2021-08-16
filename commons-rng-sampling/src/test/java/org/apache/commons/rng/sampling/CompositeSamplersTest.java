@@ -40,12 +40,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test class for {@link CompositeSamplers}.
  */
-public class CompositeSamplersTest {
+class CompositeSamplersTest {
     /**
      * Test the default implementations of the discrete probability sampler factory.
      */
     @Test
-    public void testDiscreteProbabilitySampler() {
+    void testDiscreteProbabilitySampler() {
         final UniformRandomProvider rng = RandomSource.MWC_256.create(78979L);
         final double[] probabilities = {0.1, 0.2, 0.3, 0.4};
         final double mean = 0.2 + 2 * 0.3 + 3 * 0.4;
@@ -64,7 +64,7 @@ public class CompositeSamplersTest {
      * Test an empty builder cannot build a sampler.
      */
     @Test
-    public void testEmptyBuilderThrows() {
+    void testEmptyBuilderThrows() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
@@ -77,7 +77,7 @@ public class CompositeSamplersTest {
      * Test adding null sampler to a builder.
      */
     @Test
-    public void testNullSharedStateObjectSamplerThrows() {
+    void testNullSharedStateObjectSamplerThrows() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         Assertions.assertThrows(NullPointerException.class,
@@ -88,7 +88,7 @@ public class CompositeSamplersTest {
      * Test invalid weights (zero, negative, NaN, infinte).
      */
     @Test
-    public void testInvalidWeights() {
+    void testInvalidWeights() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
@@ -110,7 +110,7 @@ public class CompositeSamplersTest {
      * Test a single sampler added to the builder is returned without a composite.
      */
     @Test
-    public void testSingleSharedStateObjectSampler() {
+    void testSingleSharedStateObjectSampler() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
@@ -125,7 +125,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several ObjectSampler samplers.
      */
     @Test
-    public void testObjectSamplerSamples() {
+    void testObjectSamplerSamples() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.PCG_XSH_RR_32_OS.create(345);
         final int n = 15;
@@ -139,7 +139,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several SharedStateObjectSampler samplers.
      */
     @Test
-    public void testSharedStateObjectSamplerSamples() {
+    void testSharedStateObjectSamplerSamples() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.PCG_XSH_RS_32_OS.create(299);
@@ -157,7 +157,7 @@ public class CompositeSamplersTest {
      * using a custom factory that implements SharedStateDiscreteSampler.
      */
     @Test
-    public void testSharedStateObjectSamplerSamplesWithCustomSharedStateDiscreteSamplerFactory() {
+    void testSharedStateObjectSamplerSamplesWithCustomSharedStateDiscreteSamplerFactory() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         final AtomicInteger factoryCount = new AtomicInteger();
@@ -187,7 +187,7 @@ public class CompositeSamplersTest {
      * using a custom factory that implements DiscreteSampler (so must be wrapped).
      */
     @Test
-    public void testSharedStateObjectSamplerSamplesWithCustomDiscreteSamplerFactory() {
+    void testSharedStateObjectSamplerSamplesWithCustomDiscreteSamplerFactory() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         final AtomicInteger factoryCount = new AtomicInteger();
@@ -228,7 +228,7 @@ public class CompositeSamplersTest {
      * uniform.
      */
     @Test
-    public void testObjectSamplerSamplesWithUniformWeights() {
+    void testObjectSamplerSamplesWithUniformWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.JSF_64.create(678345);
         final int max = 60;
@@ -245,7 +245,7 @@ public class CompositeSamplersTest {
      * infinity.
      */
     @Test
-    public void testObjectSamplerSamplesWithVeryLargeWeights() {
+    void testObjectSamplerSamplesWithVeryLargeWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.SFC_64.create(267934293);
         // Ratio 4:4:2:1
@@ -268,7 +268,7 @@ public class CompositeSamplersTest {
      * by the reciprocal of the sum.
      */
     @Test
-    public void testObjectSamplerSamplesWithSubNormalWeights() {
+    void testObjectSamplerSamplesWithSubNormalWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.MSWS.create(6786);
         // Ratio 4:4:2:1
@@ -360,7 +360,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several DiscreteSampler samplers.
      */
     @Test
-    public void testDiscreteSamplerSamples() {
+    void testDiscreteSamplerSamples() {
         final Builder<DiscreteSampler> builder = CompositeSamplers.newDiscreteSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.PCG_XSH_RR_32_OS.create(345);
         final int n = 15;
@@ -374,7 +374,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several SharedStateDiscreteSampler samplers.
      */
     @Test
-    public void testSharedStateDiscreteSamplerSamples() {
+    void testSharedStateDiscreteSamplerSamples() {
         final Builder<SharedStateDiscreteSampler> builder = CompositeSamplers.newSharedStateDiscreteSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.PCG_XSH_RS_32_OS.create(299);
         final int n = 11;
@@ -454,7 +454,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several ContinuousSampler samplers.
      */
     @Test
-    public void testContinuousSamplerSamples() {
+    void testContinuousSamplerSamples() {
         final Builder<ContinuousSampler> builder = CompositeSamplers.newContinuousSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_PP.create(9283756);
         final int n = 15;
@@ -468,7 +468,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several SharedStateContinuousSampler samplers.
      */
     @Test
-    public void testSharedStateContinuousSamplerSamples() {
+    void testSharedStateContinuousSamplerSamples() {
         final Builder<SharedStateContinuousSampler> builder = CompositeSamplers
                 .newSharedStateContinuousSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.PCG_RXS_M_XS_64_OS.create(0x567567345L);
@@ -551,7 +551,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several LongSampler samplers.
      */
     @Test
-    public void testLongSamplerSamples() {
+    void testLongSamplerSamples() {
         final Builder<LongSampler> builder = CompositeSamplers.newLongSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.KISS.create(67842321783L);
         final int n = 15;
@@ -565,7 +565,7 @@ public class CompositeSamplersTest {
      * Test sampling is uniform across several SharedStateLongSampler samplers.
      */
     @Test
-    public void testSharedStateLongSamplerSamples() {
+    void testSharedStateLongSamplerSamples() {
         final Builder<SharedStateLongSampler> builder = CompositeSamplers.newSharedStateLongSamplerBuilder();
         final UniformRandomProvider rng = RandomSource.KISS.create(12369279382030L);
         final int n = 11;
@@ -648,7 +648,7 @@ public class CompositeSamplersTest {
      * SharedStateObjectSampler.
      */
     @Test
-    public void testSharedStateObjectSampler() {
+    void testSharedStateObjectSampler() {
         testSharedStateObjectSampler(false);
     }
 
@@ -657,7 +657,7 @@ public class CompositeSamplersTest {
      * SharedStateObjectSampler with a factory that does not support a shared state sampler.
      */
     @Test
-    public void testSharedStateObjectSamplerWithCustomFactory() {
+    void testSharedStateObjectSamplerWithCustomFactory() {
         testSharedStateObjectSampler(true);
     }
 
@@ -697,7 +697,7 @@ public class CompositeSamplersTest {
      * SharedStateDiscreteSampler.
      */
     @Test
-    public void testSharedStateDiscreteSampler() {
+    void testSharedStateDiscreteSampler() {
         testSharedStateDiscreteSampler(false);
     }
 
@@ -706,7 +706,7 @@ public class CompositeSamplersTest {
      * SharedStateDiscreteSampler with a factory that does not support a shared state sampler.
      */
     @Test
-    public void testSharedStateDiscreteSamplerWithCustomFactory() {
+    void testSharedStateDiscreteSamplerWithCustomFactory() {
         testSharedStateDiscreteSampler(true);
     }
 
@@ -745,7 +745,7 @@ public class CompositeSamplersTest {
      * SharedStateContinuousSampler.
      */
     @Test
-    public void testSharedStateContinuousSampler() {
+    void testSharedStateContinuousSampler() {
         testSharedStateContinuousSampler(false);
     }
 
@@ -754,7 +754,7 @@ public class CompositeSamplersTest {
      * SharedStateContinuousSampler with a factory that does not support a shared state sampler.
      */
     @Test
-    public void testSharedStateContinuousSamplerWithCustomFactory() {
+    void testSharedStateContinuousSamplerWithCustomFactory() {
         testSharedStateContinuousSampler(true);
     }
 
@@ -817,7 +817,7 @@ public class CompositeSamplersTest {
      * SharedStateLongSampler.
      */
     @Test
-    public void testSharedStateLongSampler() {
+    void testSharedStateLongSampler() {
         testSharedStateLongSampler(false);
     }
 
@@ -826,7 +826,7 @@ public class CompositeSamplersTest {
      * SharedStateLongSampler with a factory that does not support a shared state sampler.
      */
     @Test
-    public void testSharedStateLongSamplerWithCustomFactory() {
+    void testSharedStateLongSamplerWithCustomFactory() {
         testSharedStateLongSampler(true);
     }
 

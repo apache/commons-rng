@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Assertions;
 /**
  * Test for the {@link GaussianSampler}. The tests hit edge cases for the sampler.
  */
-public class GaussianSamplerTest {
+class GaussianSamplerTest {
     /**
      * Test the constructor with a zero standard deviation.
      */
     @Test
-    public void testConstructorThrowsWithZeroStandardDeviation() {
+    void testConstructorThrowsWithZeroStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
@@ -46,7 +46,7 @@ public class GaussianSamplerTest {
      * Test the constructor with an infinite standard deviation.
      */
     @Test
-    public void testConstructorThrowsWithInfiniteStandardDeviation() {
+    void testConstructorThrowsWithInfiniteStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
@@ -60,7 +60,7 @@ public class GaussianSamplerTest {
      * Test the constructor with a NaN standard deviation.
      */
     @Test
-    public void testConstructorThrowsWithNaNStandardDeviation() {
+    void testConstructorThrowsWithNaNStandardDeviation() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
@@ -74,7 +74,7 @@ public class GaussianSamplerTest {
      * Test the constructor with an infinite mean.
      */
     @Test
-    public void testConstructorThrowsWithInfiniteMean() {
+    void testConstructorThrowsWithInfiniteMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
@@ -88,7 +88,7 @@ public class GaussianSamplerTest {
      * Test the constructor with a NaN mean.
      */
     @Test
-    public void testConstructorThrowsWithNaNMean() {
+    void testConstructorThrowsWithNaNMean() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
@@ -102,7 +102,7 @@ public class GaussianSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng1);
@@ -119,7 +119,7 @@ public class GaussianSamplerTest {
      * not a SharedStateSampler.
      */
     @Test
-    public void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
+    void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
             @Override
@@ -140,7 +140,7 @@ public class GaussianSamplerTest {
      * a SharedStateSampler that returns an incorrect type.
      */
     @Test
-    public void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
+    void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double mean = 1.23;

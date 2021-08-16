@@ -28,49 +28,49 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link GuideTableDiscreteSampler}.
  */
-public class GuideTableDiscreteSamplerTest {
+class GuideTableDiscreteSamplerTest {
     @Test
-    public void testConstructorThrowsWithNullProbabilites() {
+    void testConstructorThrowsWithNullProbabilites() {
         assertConstructorThrows(null, 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithZeroLengthProbabilites() {
+    void testConstructorThrowsWithZeroLengthProbabilites() {
         assertConstructorThrows(new double[0], 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithNegativeProbabilites() {
+    void testConstructorThrowsWithNegativeProbabilites() {
         assertConstructorThrows(new double[] {-1, 0.1, 0.2}, 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithNaNProbabilites() {
+    void testConstructorThrowsWithNaNProbabilites() {
         assertConstructorThrows(new double[] {0.1, Double.NaN, 0.2}, 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithInfiniteProbabilites() {
+    void testConstructorThrowsWithInfiniteProbabilites() {
         assertConstructorThrows(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}, 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithInfiniteSumProbabilites() {
+    void testConstructorThrowsWithInfiniteSumProbabilites() {
         assertConstructorThrows(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}, 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithZeroSumProbabilites() {
+    void testConstructorThrowsWithZeroSumProbabilites() {
         assertConstructorThrows(new double[4], 1.0);
     }
 
     @Test
-    public void testConstructorThrowsWithZeroAlpha() {
+    void testConstructorThrowsWithZeroAlpha() {
         assertConstructorThrows(new double[] {0.5, 0.5}, 0.0);
     }
 
     @Test
-    public void testConstructorThrowsWithNegativeAlpha() {
+    void testConstructorThrowsWithNegativeAlpha() {
         assertConstructorThrows(new double[] {0.5, 0.5}, -1.0);
     }
 
@@ -87,7 +87,7 @@ public class GuideTableDiscreteSamplerTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
         final SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(rng, new double[] {0.5, 0.5}, 1.0);
         Assertions.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
@@ -97,7 +97,7 @@ public class GuideTableDiscreteSamplerTest {
      * Test sampling from a binomial distribution.
      */
     @Test
-    public void testBinomialSamples() {
+    void testBinomialSamples() {
         final int trials = 67;
         final double probabilityOfSuccess = 0.345;
         final BinomialDistribution dist = new BinomialDistribution(null, trials, probabilityOfSuccess);
@@ -112,7 +112,7 @@ public class GuideTableDiscreteSamplerTest {
      * Test sampling from a Poisson distribution.
      */
     @Test
-    public void testPoissonSamples() {
+    void testPoissonSamples() {
         final double mean = 3.14;
         final PoissonDistribution dist = new PoissonDistribution(null, mean,
             PoissonDistribution.DEFAULT_EPSILON, PoissonDistribution.DEFAULT_MAX_ITERATIONS);
@@ -128,7 +128,7 @@ public class GuideTableDiscreteSamplerTest {
      * Test sampling from a non-uniform distribution of probabilities (these sum to 1).
      */
     @Test
-    public void testNonUniformSamplesWithProbabilities() {
+    void testNonUniformSamplesWithProbabilities() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         checkSamples(expected, 1.0);
     }
@@ -138,7 +138,7 @@ public class GuideTableDiscreteSamplerTest {
      * the default.
      */
     @Test
-    public void testNonUniformSamplesWithProbabilitiesWithSmallAlpha() {
+    void testNonUniformSamplesWithProbabilitiesWithSmallAlpha() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         checkSamples(expected, 0.1);
     }
@@ -148,7 +148,7 @@ public class GuideTableDiscreteSamplerTest {
      * the default.
      */
     @Test
-    public void testNonUniformSamplesWithProbabilitiesWithLargeAlpha() {
+    void testNonUniformSamplesWithProbabilitiesWithLargeAlpha() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         checkSamples(expected, 10.0);
     }
@@ -158,7 +158,7 @@ public class GuideTableDiscreteSamplerTest {
      * probabilities).
      */
     @Test
-    public void testNonUniformSamplesWithObservations() {
+    void testNonUniformSamplesWithObservations() {
         final double[] expected = {1, 2, 3, 1, 3};
         checkSamples(expected, 1.0);
     }
@@ -168,7 +168,7 @@ public class GuideTableDiscreteSamplerTest {
      * Extra zero-values are added.
      */
     @Test
-    public void testNonUniformSamplesWithZeroProbabilities() {
+    void testNonUniformSamplesWithZeroProbabilities() {
         final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};
         checkSamples(expected, 1.0);
     }
@@ -178,7 +178,7 @@ public class GuideTableDiscreteSamplerTest {
      * probabilities). Extra zero-values are added.
      */
     @Test
-    public void testNonUniformSamplesWithZeroObservations() {
+    void testNonUniformSamplesWithZeroObservations() {
         final double[] expected = {1, 2, 3, 0, 1, 3, 0};
         checkSamples(expected, 1.0);
     }
@@ -188,7 +188,7 @@ public class GuideTableDiscreteSamplerTest {
      * are no probabilities less than the mean.
      */
     @Test
-    public void testUniformSamplesWithNoObservationLessThanTheMean() {
+    void testUniformSamplesWithNoObservationLessThanTheMean() {
         final double[] expected = {2, 2, 2, 2, 2, 2};
         checkSamples(expected, 1.0);
     }
@@ -243,7 +243,7 @@ public class GuideTableDiscreteSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double[] probabilities = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};

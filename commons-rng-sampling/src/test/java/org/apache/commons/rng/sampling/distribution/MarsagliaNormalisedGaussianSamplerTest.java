@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link MarsagliaNormalizedGaussianSampler}.
  */
-public class MarsagliaNormalisedGaussianSamplerTest {
+class MarsagliaNormalisedGaussianSamplerTest {
     /**
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateContinuousSampler sampler1 =
@@ -45,7 +45,7 @@ public class MarsagliaNormalisedGaussianSamplerTest {
      * of the pair is outside the unit circle or lies on the origin.
      */
     @Test
-    public void testSamplePairIsRejected() {
+    void testSamplePairIsRejected() {
         final double value = 0.25;
         final UniformRandomProvider rng = new IntProvider() {
             private int i;

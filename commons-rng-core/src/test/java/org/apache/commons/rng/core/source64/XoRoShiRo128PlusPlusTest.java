@@ -20,7 +20,7 @@ import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class XoRoShiRo128PlusPlusTest {
+class XoRoShiRo128PlusPlusTest {
     /** The size of the array SEED. */
     private static final int SEED_SIZE = 2;
 
@@ -73,41 +73,41 @@ public class XoRoShiRo128PlusPlusTest {
     };
 
     @Test
-    public void testReferenceCode() {
+    void testReferenceCode() {
         RandomAssert.assertEquals(EXPECTED_SEQUENCE, new XoRoShiRo128PlusPlus(SEED));
     }
 
     @Test
-    public void testConstructorWithZeroSeedIsNonFunctional() {
+    void testConstructorWithZeroSeedIsNonFunctional() {
         RandomAssert.assertNextIntZeroOutput(new XoRoShiRo128PlusPlus(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithSingleBitSeedIsFunctional() {
+    void testConstructorWithSingleBitSeedIsFunctional() {
         RandomAssert.assertLongArrayConstructorWithSingleBitSeedIsFunctional(XoRoShiRo128PlusPlus.class, SEED_SIZE);
     }
 
     @Test
-    public void testConstructorWithoutFullLengthSeed() {
+    void testConstructorWithoutFullLengthSeed() {
         // Hit the case when the input seed is self-seeded when not full length
         RandomAssert.assertNextLongNonZeroOutput(new XoRoShiRo128PlusPlus(new long[] {SEED[0]}),
                 SEED_SIZE, SEED_SIZE);
     }
 
     @Test
-    public void testElementConstructor() {
+    void testElementConstructor() {
         final XoRoShiRo128PlusPlus rng1 = new XoRoShiRo128PlusPlus(SEED);
         final XoRoShiRo128PlusPlus rng2 = new XoRoShiRo128PlusPlus(SEED[0], SEED[1]);
         RandomAssert.assertNextLongEquals(SEED.length * 2, rng1, rng2);
     }
 
     @Test
-    public void testJump() {
+    void testJump() {
         RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_JUMP, new XoRoShiRo128PlusPlus(SEED));
     }
 
     @Test
-    public void testLongJump() {
+    void testLongJump() {
         RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new XoRoShiRo128PlusPlus(SEED));
     }
 
@@ -117,7 +117,7 @@ public class XoRoShiRo128PlusPlusTest {
      * throws an exception if used.
      */
     @Test
-    public void testNextOutputThrows() {
+    void testNextOutputThrows() {
         Assertions.assertThrows(UnsupportedOperationException.class, () -> new XoRoShiRo128PlusPlus(SEED).nextOutput());
     }
 }

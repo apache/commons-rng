@@ -32,12 +32,12 @@ import org.apache.commons.rng.simple.RandomSource;
 /**
  * Test class for {@link DiscreteProbabilityCollectionSampler}.
  */
-public class DiscreteProbabilityCollectionSamplerTest {
+class DiscreteProbabilityCollectionSamplerTest {
     /** RNG. */
     private final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create();
 
     @Test
-    public void testPrecondition1() {
+    void testPrecondition1() {
         // Size mismatch
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -46,7 +46,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition2() {
+    void testPrecondition2() {
         // Negative probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -55,7 +55,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition3() {
+    void testPrecondition3() {
         // Probabilities do not sum above 0
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -64,7 +64,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition4() {
+    void testPrecondition4() {
         // NaN probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -73,7 +73,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition5() {
+    void testPrecondition5() {
         // Infinite probability
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -82,7 +82,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition6() {
+    void testPrecondition6() {
         // Empty Map<T, Double> not allowed
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -90,7 +90,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testPrecondition7() {
+    void testPrecondition7() {
         // Empty List<T> not allowed
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
@@ -99,7 +99,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
     }
 
     @Test
-    public void testSample() {
+    void testSample() {
         final DiscreteProbabilityCollectionSampler<Double> sampler =
             new DiscreteProbabilityCollectionSampler<>(rng,
                                                        Arrays.asList(3d, -1d, 3d, 7d, -2d, 8d),
@@ -124,7 +124,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
 
 
     @Test
-    public void testSampleUsingMap() {
+    void testSampleUsingMap() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<Integer> items = Arrays.asList(1, 3, 4, 6, 9);
@@ -151,7 +151,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
      * identify the end item of the cumulative probability array.
      */
     @Test
-    public void testSampleWithProbabilityAtLastItem() {
+    void testSampleWithProbabilityAtLastItem() {
         // Ensure the samples pick probability 0 (the first item) and then
         // a probability (for the second item) that hits an edge case.
         final UniformRandomProvider dummyRng = new UniformRandomProvider() {
@@ -188,7 +188,7 @@ public class DiscreteProbabilityCollectionSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<Double> items = Arrays.asList(1d, 2d, 3d, 4d);

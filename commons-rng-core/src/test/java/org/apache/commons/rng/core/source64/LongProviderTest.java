@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  * the source for {@link LongProvider#nextInt()} and
  * {@link LongProvider#nextBoolean()}.
  */
-public class LongProviderTest {
+class LongProviderTest {
     /**
      * A simple class to return a fixed value as the source for
      * {@link LongProvider#next()}.
@@ -75,7 +75,7 @@ public class LongProviderTest {
      * upper and then lower 32-bits from {@link LongProvider#nextLong()}.
      */
     @Test
-    public void testNextInt() {
+    void testNextInt() {
         final int max = 5;
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < max; j++) {
@@ -97,7 +97,7 @@ public class LongProviderTest {
      * <p>The order should be from the least-significant bit.
      */
     @Test
-    public void testNextBoolean() {
+    void testNextBoolean() {
         for (int i = 0; i < Long.SIZE; i++) {
             // Set only a single bit in the source
             final long value = 1L << i;

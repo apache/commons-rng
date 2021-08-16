@@ -28,9 +28,9 @@ import org.apache.commons.rng.core.util.NumberFactory;
 /**
  * Tests for {@link SeedFactory}.
  */
-public class SeedFactoryTest {
+class SeedFactoryTest {
     @Test
-    public void testCreateLong() {
+    void testCreateLong() {
         final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         final int n = 100000;
@@ -49,7 +49,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateLongArray() {
+    void testCreateLongArray() {
         final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         final int n = 100000;
@@ -69,7 +69,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateIntArray() {
+    void testCreateIntArray() {
         final Map<Long, Integer> values = new HashMap<Long, Integer>();
 
         for (int i = 0; i < 50000; i++) {
@@ -114,13 +114,13 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateIntArrayWithCompleteBlockSize() {
+    void testCreateIntArrayWithCompleteBlockSize() {
         // Block size is 8 for int
         assertCreateIntArray(8);
     }
 
     @Test
-    public void testCreateIntArrayWithIncompleteBlockSize() {
+    void testCreateIntArrayWithIncompleteBlockSize() {
         // Block size is 8 for int
         assertCreateIntArray(8 + 1);
     }
@@ -145,13 +145,13 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateLongArrayWithCompleteBlockSize() {
+    void testCreateLongArrayWithCompleteBlockSize() {
         // Block size is 4 for long
         assertCreateLongArray(4);
     }
 
     @Test
-    public void testCreateLongArrayWithIncompleteBlockSize() {
+    void testCreateLongArrayWithIncompleteBlockSize() {
         // Block size is 4 for long
         assertCreateLongArray(4 + 1);
     }
@@ -208,12 +208,12 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateByteArrayWithSizeZero() {
+    void testCreateByteArrayWithSizeZero() {
         assertCreateByteArray(new byte[0]);
     }
 
     @Test
-    public void testCreateByteArrayIgnoresNonZeroPositions() {
+    void testCreateByteArrayIgnoresNonZeroPositions() {
         final byte position = 123;
         int n = 3;
         for (int i = 0; i < n; i++) {
@@ -248,7 +248,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testCreateByteArrayWithAllZeroBytesUpdatesPosition0() {
+    void testCreateByteArrayWithAllZeroBytesUpdatesPosition0() {
         final UniformRandomProvider rng = new IntProvider() {
             @Override
             public int next() {
@@ -265,7 +265,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
+    void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
         final int[] seed = new int[0];
         SeedFactory.ensureNonZero(seed);
         // Note: Nothing to assert.
@@ -273,7 +273,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroIntArrayIgnoresNonZeroPosition0() {
+    void testEnsureNonZeroIntArrayIgnoresNonZeroPosition0() {
         final int position0 = 123;
         final int[] seed = new int[] {position0, 0, 0, 0};
         final int[] before = seed.clone();
@@ -285,7 +285,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroIntArrayUpdatesZeroPosition0() {
+    void testEnsureNonZeroIntArrayUpdatesZeroPosition0() {
         // Test the method replaces position 0 even if the rest of the array is non-zero
         final int[] seed = new int[] {0, 123, 456, 789};
         final int[] before = seed.clone();
@@ -297,7 +297,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroLongArrayIgnoresEmptySeed() {
+    void testEnsureNonZeroLongArrayIgnoresEmptySeed() {
         final long[] seed = new long[0];
         SeedFactory.ensureNonZero(seed);
         // Note: Nothing to assert.
@@ -305,7 +305,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroLongArrayIgnoresNonZeroPosition0() {
+    void testEnsureNonZeroLongArrayIgnoresNonZeroPosition0() {
         final long position0 = 123;
         final long[] seed = new long[] {position0, 0, 0, 0};
         final long[] before = seed.clone();
@@ -317,7 +317,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroLongArrayUpdatesZeroPosition0() {
+    void testEnsureNonZeroLongArrayUpdatesZeroPosition0() {
         // Test the method replaces position 0 even if the rest of the array is non-zero
         final long[] seed = new long[] {0, 123, 456, 789};
         final long[] before = seed.clone();
@@ -329,7 +329,7 @@ public class SeedFactoryTest {
     }
 
     @Test
-    public void testEnsureNonZeroValue() {
+    void testEnsureNonZeroValue() {
         final long expected = 345;
         RandomLongSource source = new RandomLongSource() {
             @Override

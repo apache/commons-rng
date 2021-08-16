@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for the {@link NumberFactory}.
  */
-public class NumberFactoryTest {
+class NumberFactoryTest {
     /** sizeof(int). */
     private static final int INT_SIZE = 4;
     /** sizeof(long). */
@@ -38,7 +38,7 @@ public class NumberFactoryTest {
         Integer.MAX_VALUE, Integer.MIN_VALUE, 0x9e3779b9};
 
     @Test
-    public void testMakeBooleanFromInt() {
+    void testMakeBooleanFromInt() {
         // Test if the bit is set differently then the booleans are opposite
         final boolean b1 = NumberFactory.makeBoolean(0);
         final boolean b2 = NumberFactory.makeBoolean(0xffffffff);
@@ -46,7 +46,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeBooleanFromLong() {
+    void testMakeBooleanFromLong() {
         // Test if the bit is set differently then the booleans are opposite
         final boolean b1 = NumberFactory.makeBoolean(0L);
         final boolean b2 = NumberFactory.makeBoolean(0xffffffffffffffffL);
@@ -54,7 +54,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeIntFromLong() {
+    void testMakeIntFromLong() {
         // Test the high order bits and low order bits are xor'd together
         Assertions.assertEquals(0xffffffff, NumberFactory.makeInt(0xffffffff00000000L));
         Assertions.assertEquals(0x00000000, NumberFactory.makeInt(0xffffffffffffffffL));
@@ -67,7 +67,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testExtractLoExtractHi() {
+    void testExtractLoExtractHi() {
         for (long v : LONG_TEST_VALUES) {
             final int vL = NumberFactory.extractLo(v);
             final int vH = NumberFactory.extractHi(v);
@@ -78,7 +78,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testLong2Long() {
+    void testLong2Long() {
         for (long v : LONG_TEST_VALUES) {
             final int vL = NumberFactory.extractLo(v);
             final int vH = NumberFactory.extractHi(v);
@@ -88,7 +88,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testLongToByteArraySignificanceOrder() {
+    void testLongToByteArraySignificanceOrder() {
         // Start at the least significant bit
         long value = 1;
         for (int i = 0; i < LONG_SIZE; i++) {
@@ -103,7 +103,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testLongFromByteArray2Long() {
+    void testLongFromByteArray2Long() {
         for (long expected : LONG_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
             Assertions.assertEquals(expected, NumberFactory.makeLong(b));
@@ -111,13 +111,13 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testLongArrayFromByteArray2LongArray() {
+    void testLongArrayFromByteArray2LongArray() {
         final byte[] b = NumberFactory.makeByteArray(LONG_TEST_VALUES);
         Assertions.assertArrayEquals(LONG_TEST_VALUES, NumberFactory.makeLongArray(b));
     }
 
     @Test
-    public void testLongArrayToByteArrayMatchesLongToByteArray() {
+    void testLongArrayToByteArrayMatchesLongToByteArray() {
         // Test individually the bytes are the same as the array conversion
         for (int i = 0; i < LONG_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(LONG_TEST_VALUES[i]);
@@ -127,7 +127,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testIntToByteArraySignificanceOrder() {
+    void testIntToByteArraySignificanceOrder() {
         // Start at the least significant bit
         int value = 1;
         for (int i = 0; i < INT_SIZE; i++) {
@@ -142,7 +142,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testIntFromByteArray2Int() {
+    void testIntFromByteArray2Int() {
         for (int expected : INT_TEST_VALUES) {
             final byte[] b = NumberFactory.makeByteArray(expected);
             Assertions.assertEquals(expected, NumberFactory.makeInt(b));
@@ -150,13 +150,13 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testIntArrayFromByteArray2IntArray() {
+    void testIntArrayFromByteArray2IntArray() {
         final byte[] b = NumberFactory.makeByteArray(INT_TEST_VALUES);
         Assertions.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
     }
 
     @Test
-    public void testIntArrayToByteArrayMatchesIntToByteArray() {
+    void testIntArrayToByteArrayMatchesIntToByteArray() {
         // Test individually the bytes are the same as the array conversion
         for (int i = 0; i < INT_TEST_VALUES.length; i++) {
             final byte[] b1 = NumberFactory.makeByteArray(INT_TEST_VALUES[i]);
@@ -166,7 +166,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeIntPrecondition1() {
+    void testMakeIntPrecondition1() {
         for (int i = 0; i <= 10; i++) {
             final byte[] bytes = new byte[i];
             if (i != INT_SIZE) {
@@ -179,7 +179,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeIntArrayPrecondition1() {
+    void testMakeIntArrayPrecondition1() {
         for (int i = 0; i <= 20; i++) {
             final byte[] bytes = new byte[i];
             if (i != 0 && i % INT_SIZE != 0) {
@@ -192,7 +192,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeLongPrecondition1() {
+    void testMakeLongPrecondition1() {
         for (int i = 0; i <= 10; i++) {
             final byte[] bytes = new byte[i];
             if (i != LONG_SIZE) {
@@ -205,7 +205,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeLongArrayPrecondition1() {
+    void testMakeLongArrayPrecondition1() {
         for (int i = 0; i <= 20; i++) {
             final byte[] bytes = new byte[i];
             if (i != 0 && i % LONG_SIZE != 0) {
@@ -222,7 +222,7 @@ public class NumberFactoryTest {
      * value should be in the range between 0 and 1.
      */
     @Test
-    public void testFloatGenerationMethods() {
+    void testFloatGenerationMethods() {
         final int allBits = 0xffffffff;
 
         // Not capable of generating 1. Set the delta with 1 or 2 ULP of 1.
@@ -241,7 +241,7 @@ public class NumberFactoryTest {
      * value should be in the range between 0 and 1.
      */
     @Test
-    public void testDoubleGenerationMethods() {
+    void testDoubleGenerationMethods() {
         final long allBits = 0xffffffffffffffffL;
 
         // Not capable of generating 1. Set the delta with 1 or 2 ULP of 1.
@@ -256,7 +256,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeDoubleFromLong() {
+    void testMakeDoubleFromLong() {
         final long allBits = 0xffffffffffffffffL;
         final long noBits = 0;
         // Within 1 ULP of 1.0
@@ -265,7 +265,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeDoubleFromIntInt() {
+    void testMakeDoubleFromIntInt() {
         final int allBits = 0xffffffff;
         final int noBits = 0;
         // Within 1 ULP of 1.0
@@ -274,7 +274,7 @@ public class NumberFactoryTest {
     }
 
     @Test
-    public void testMakeFloatFromInt() {
+    void testMakeFloatFromInt() {
         final int allBits = 0xffffffff;
         final int noBits = 0;
         // Within 1 ULP of 1.0f

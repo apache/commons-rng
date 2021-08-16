@@ -19,9 +19,9 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public class KISSRandomTest {
+class KISSRandomTest {
     @Test
-    public void testMarsaglia() {
+    void testMarsaglia() {
         final int[] seed = {
             0x159a55e5, 0x1f123bb5, 0x75bcd15, 0x16a81cc0
         };

@@ -26,12 +26,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link ChengBetaSampler}. The tests hit edge cases for the sampler.
  */
-public class ChengBetaSamplerTest {
+class ChengBetaSamplerTest {
     /**
      * Test the constructor with a bad alpha.
      */
     @Test
-    public void testConstructorThrowsWithZeroAlpha() {
+    void testConstructorThrowsWithZeroAlpha() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 0;
@@ -44,7 +44,7 @@ public class ChengBetaSamplerTest {
      * Test the constructor with a bad beta.
      */
     @Test
-    public void testConstructorThrowsWithZeroBeta() {
+    void testConstructorThrowsWithZeroBeta() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final double alpha = 1;
@@ -57,7 +57,7 @@ public class ChengBetaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaBelowBeta() {
+    void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaBelowBeta() {
         testSharedStateSampler(1.23, 4.56);
     }
 
@@ -65,7 +65,7 @@ public class ChengBetaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaAboveBeta() {
+    void testSharedStateSamplerWithAlphaAndBetaAbove1AndAlphaAboveBeta() {
         testSharedStateSampler(4.56, 1.23);
     }
 
@@ -73,7 +73,7 @@ public class ChengBetaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaBelowBeta() {
+    void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaBelowBeta() {
         testSharedStateSampler(0.23, 4.56);
     }
 
@@ -81,7 +81,7 @@ public class ChengBetaSamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaAboveBeta() {
+    void testSharedStateSamplerWithAlphaOrBetaBelow1AndAlphaAboveBeta() {
         testSharedStateSampler(4.56, 0.23);
     }
 
@@ -106,7 +106,7 @@ public class ChengBetaSamplerTest {
      * used in other tests does not create an instance of the wrapper class.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertTrue(new ChengBetaSampler(rng, 1.0, 2.0).toString()
                 .toLowerCase().contains("beta"));

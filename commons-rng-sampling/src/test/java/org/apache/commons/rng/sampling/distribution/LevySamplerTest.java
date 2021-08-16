@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link LevySampler}.
  */
-public class LevySamplerTest {
+class LevySamplerTest {
     /**
      * Test the constructor with a negative scale.
      */
     @Test
-    public void testConstructorThrowsWithNegativeScale() {
+    void testConstructorThrowsWithNegativeScale() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double location = 1;
         final double scale = -1e-6;
@@ -44,7 +44,7 @@ public class LevySamplerTest {
      * Test the constructor with a zero scale.
      */
     @Test
-    public void testConstructorThrowsWithZeroScale() {
+    void testConstructorThrowsWithZeroScale() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         final double location = 1;
         final double scale = 0;
@@ -56,7 +56,7 @@ public class LevySamplerTest {
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final double location = 4.56;
@@ -70,7 +70,7 @@ public class LevySamplerTest {
      * Test the support of the standard distribution is {@code [0, inf)}.
      */
     @Test
-    public void testSupport() {
+    void testSupport() {
         final double location = 0.0;
         final double scale = 1.0;
         // Force the underlying ZigguratSampler.NormalizedGaussian to create 0

@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
 /**
  * Test for the {@link BoxMullerNormalizedGaussianSampler}.
  */
-public class BoxMullerNormalisedGaussianSamplerTest {
+class BoxMullerNormalisedGaussianSamplerTest {
     /**
      * Test the SharedStateSampler implementation.
      */
     @Test
-    public void testSharedStateSampler() {
+    void testSharedStateSampler() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final SharedStateContinuousSampler sampler1 =

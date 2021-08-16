@@ -27,7 +27,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 /**
  * Test for {@link UnitSphereSampler}.
  */
-public class UnitSphereSamplerTest {
+class UnitSphereSamplerTest {
     /** 2 pi */
     private static final double TWO_PI = 2 * Math.PI;
 
@@ -35,7 +35,7 @@ public class UnitSphereSamplerTest {
      * Test a non-positive dimension.
      */
     @Test
-    public void testInvalidDimensionThrows() {
+    void testInvalidDimensionThrows() {
         // Use instance constructor not factory constructor to exercise 1.X public API
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new UnitSphereSampler(0, null));
@@ -45,7 +45,7 @@ public class UnitSphereSamplerTest {
      * Test a non-positive dimension.
      */
     @Test
-    public void testInvalidDimensionThrowsWithFactoryConstructor() {
+    void testInvalidDimensionThrowsWithFactoryConstructor() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> UnitSphereSampler.of(null, 0));
     }
@@ -54,7 +54,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in one dimension.
      */
     @Test
-    public void testDistribution1D() {
+    void testDistribution1D() {
         testDistribution1D(false);
     }
 
@@ -62,7 +62,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in one dimension with the factory constructor.
      */
     @Test
-    public void testDistribution1DWithFactoryConstructor() {
+    void testDistribution1DWithFactoryConstructor() {
         testDistribution1D(true);
     }
 
@@ -125,7 +125,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in two dimensions.
      */
     @Test
-    public void testDistribution2D() {
+    void testDistribution2D() {
         testDistribution2D(false);
     }
 
@@ -133,7 +133,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in two dimensions with the factory constructor.
      */
     @Test
-    public void testDistribution2DWithFactoryConstructor() {
+    void testDistribution2DWithFactoryConstructor() {
         testDistribution2D(true);
     }
 
@@ -168,7 +168,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in three dimensions.
      */
     @Test
-    public void testDistribution3D() {
+    void testDistribution3D() {
         testDistribution3D(false);
     }
 
@@ -176,7 +176,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in three dimensions with the factory constructor.
      */
     @Test
-    public void testDistribution3DWithFactoryConstructor() {
+    void testDistribution3DWithFactoryConstructor() {
         testDistribution3D(true);
     }
 
@@ -220,7 +220,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in four dimensions.
      */
     @Test
-    public void testDistribution4D() {
+    void testDistribution4D() {
         testDistribution4D(false);
     }
 
@@ -228,7 +228,7 @@ public class UnitSphereSamplerTest {
      * Test the distribution of points in four dimensions with the factory constructor.
      */
     @Test
-    public void testDistribution4DWithFactoryConstructor() {
+    void testDistribution4DWithFactoryConstructor() {
         testDistribution4D(true);
     }
 
@@ -348,7 +348,7 @@ public class UnitSphereSamplerTest {
      * Test infinite recursion occurs with a bad provider in 2D.
      */
     @Test
-    public void testBadProvider2D() {
+    void testBadProvider2D() {
         Assertions.assertThrows(StackOverflowError.class,
             () -> testBadProvider(2));
     }
@@ -357,7 +357,7 @@ public class UnitSphereSamplerTest {
      * Test infinite recursion occurs with a bad provider in 3D.
      */
     @Test
-    public void testBadProvider3D() {
+    void testBadProvider3D() {
         Assertions.assertThrows(StackOverflowError.class,
             () -> testBadProvider(3));
     }
@@ -366,7 +366,7 @@ public class UnitSphereSamplerTest {
      * Test infinite recursion occurs with a bad provider in 4D.
      */
     @Test
-    public void testBadProvider4D() {
+    void testBadProvider4D() {
         Assertions.assertThrows(StackOverflowError.class,
             () -> testBadProvider(4));
     }
@@ -396,7 +396,7 @@ public class UnitSphereSamplerTest {
      * Test the edge case where the normalisation sum to divide by is zero for 2D.
      */
     @Test
-    public void testInvalidInverseNormalisation2D() {
+    void testInvalidInverseNormalisation2D() {
         testInvalidInverseNormalisationND(2);
     }
 
@@ -404,7 +404,7 @@ public class UnitSphereSamplerTest {
      * Test the edge case where the normalisation sum to divide by is zero for 3D.
      */
     @Test
-    public void testInvalidInverseNormalisation3D() {
+    void testInvalidInverseNormalisation3D() {
         testInvalidInverseNormalisationND(3);
     }
 
@@ -412,7 +412,7 @@ public class UnitSphereSamplerTest {
      * Test the edge case where the normalisation sum to divide by is zero for 4D.
      */
     @Test
-    public void testInvalidInverseNormalisation4D() {
+    void testInvalidInverseNormalisation4D() {
         testInvalidInverseNormalisationND(4);
     }
 
@@ -444,7 +444,7 @@ public class UnitSphereSamplerTest {
      * zero is valid. Any norm squared after zero should produce a valid scaling factor.
      */
     @Test
-    public void testNextNormSquaredAfterZeroIsValid() {
+    void testNextNormSquaredAfterZeroIsValid() {
         // The sampler explicitly handles length == 0 using recursion.
         // Anything above zero should be valid.
         final double normSq = Math.nextUp(0.0);
@@ -458,7 +458,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 1D.
      */
     @Test
-    public void testSharedStateSampler1D() {
+    void testSharedStateSampler1D() {
         testSharedStateSampler(1, false);
     }
 
@@ -466,7 +466,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 2D.
      */
     @Test
-    public void testSharedStateSampler2D() {
+    void testSharedStateSampler2D() {
         testSharedStateSampler(2, false);
     }
 
@@ -474,7 +474,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 3D.
      */
     @Test
-    public void testSharedStateSampler3D() {
+    void testSharedStateSampler3D() {
         testSharedStateSampler(3, false);
     }
 
@@ -482,7 +482,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 4D.
      */
     @Test
-    public void testSharedStateSampler4D() {
+    void testSharedStateSampler4D() {
         testSharedStateSampler(4, false);
     }
 
@@ -490,7 +490,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 1D using the factory constructor.
      */
     @Test
-    public void testSharedStateSampler1DWithFactoryConstructor() {
+    void testSharedStateSampler1DWithFactoryConstructor() {
         testSharedStateSampler(1, true);
     }
 
@@ -498,7 +498,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 2D using the factory constructor.
      */
     @Test
-    public void testSharedStateSampler2DWithFactoryConstructor() {
+    void testSharedStateSampler2DWithFactoryConstructor() {
         testSharedStateSampler(2, true);
     }
 
@@ -506,7 +506,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 3D using the factory constructor.
      */
     @Test
-    public void testSharedStateSampler3DWithFactoryConstructor() {
+    void testSharedStateSampler3DWithFactoryConstructor() {
         testSharedStateSampler(3, true);
     }
 
@@ -514,7 +514,7 @@ public class UnitSphereSamplerTest {
      * Test the SharedStateSampler implementation for 4D using the factory constructor.
      */
     @Test
-    public void testSharedStateSampler4DWithFactoryConstructor() {
+    void testSharedStateSampler4DWithFactoryConstructor() {
         testSharedStateSampler(4, true);
     }
 

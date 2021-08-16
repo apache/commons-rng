@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Test;
  * This test checks the {@link PoissonSampler} can be created
  * from a saved state.
  */
-public class PoissonSamplerTest {
+class PoissonSamplerTest {
     /**
      * Test the SharedStateSampler implementation with a mean below 40.
      */
     @Test
-    public void testSharedStateSamplerWithSmallMean() {
+    void testSharedStateSamplerWithSmallMean() {
         testSharedStateSampler(34.5);
     }
 
@@ -40,7 +40,7 @@ public class PoissonSamplerTest {
      * Test the SharedStateSampler implementation with a mean above 40.
      */
     @Test
-    public void testSharedStateSamplerWithLargeMean() {
+    void testSharedStateSamplerWithLargeMean() {
         testSharedStateSampler(67.8);
     }
 
@@ -64,7 +64,7 @@ public class PoissonSamplerTest {
      * used in other tests does not create an instance of the wrapper class.
      */
     @Test
-    public void testToString() {
+    void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         Assertions.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
     }
