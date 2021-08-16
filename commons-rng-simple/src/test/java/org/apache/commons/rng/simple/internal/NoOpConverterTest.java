@@ -25,14 +25,14 @@ import org.junit.jupiter.api.Test;
 class NoOpConverterTest {
     @Test
     void testNoOpIntegerCoversion() {
-        final NoOpConverter<Integer> converter = new NoOpConverter<Integer>();
+        final NoOpConverter<Integer> converter = new NoOpConverter<>();
         final Integer in = 123;
         Assertions.assertSame(in, converter.convert(in));
     }
 
     @Test
     void testNoOpLongArrayCoversion() {
-        final NoOpConverter<long[]> converter = new NoOpConverter<long[]>();
+        final NoOpConverter<long[]> converter = new NoOpConverter<>();
         final long[] in = {123L, 456L, Long.MAX_VALUE};
         Assertions.assertSame(in, converter.convert(in));
     }

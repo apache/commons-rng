@@ -86,7 +86,7 @@ class DiscreteProbabilityCollectionSamplerTest {
         // Empty Map<T, Double> not allowed
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 new HashMap<Double, Double>()));
+                 new HashMap<>()));
     }
 
     @Test

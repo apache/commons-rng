@@ -28,7 +28,7 @@ class SeedConverterComposerTest {
         final Int2Long int2Long = new Int2Long();
         final Long2LongArray long2LongArray = new Long2LongArray(3);
         final SeedConverterComposer<Integer, Long, long[]> composer =
-                new SeedConverterComposer<Integer, Long, long[]>(int2Long, long2LongArray);
+                new SeedConverterComposer<>(int2Long, long2LongArray);
         final Integer in = 123;
         final Object out = composer.convert(in);
         Assertions.assertTrue(out instanceof long[], "Bad type conversion");

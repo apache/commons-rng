@@ -31,7 +31,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
 class SeedFactoryTest {
     @Test
     void testCreateLong() {
-        final Map<Long, Integer> values = new HashMap<Long, Integer>();
+        final Map<Long, Integer> values = new HashMap<>();
 
         final int n = 100000;
         for (int i = 0; i < n; i++) {
@@ -50,7 +50,7 @@ class SeedFactoryTest {
 
     @Test
     void testCreateLongArray() {
-        final Map<Long, Integer> values = new HashMap<Long, Integer>();
+        final Map<Long, Integer> values = new HashMap<>();
 
         final int n = 100000;
         final long[] array = SeedFactory.createLongArray(n);
@@ -70,7 +70,7 @@ class SeedFactoryTest {
 
     @Test
     void testCreateIntArray() {
-        final Map<Long, Integer> values = new HashMap<Long, Integer>();
+        final Map<Long, Integer> values = new HashMap<>();
 
         for (int i = 0; i < 50000; i++) {
             final int[] a = SeedFactory.createIntArray(2);

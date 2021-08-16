@@ -70,7 +70,7 @@ class DiscreteSamplerParametricTest {
         final long[] observed = new long[numBins];
 
         // For storing chi2 larger than the critical value.
-        final List<Double> failedStat = new ArrayList<Double>();
+        final List<Double> failedStat = new ArrayList<>();
         try {
             for (int i = 0; i < numTests; i++) {
                 Arrays.fill(observed, 0);

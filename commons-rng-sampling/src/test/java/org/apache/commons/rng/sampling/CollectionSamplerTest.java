@@ -32,13 +32,13 @@ class CollectionSamplerTest {
 
     @Test
     void testSampleTrivial() {
-        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayList<String> list = new ArrayList<>();
         list.add("Apache");
         list.add("Commons");
         list.add("RNG");
 
         final CollectionSampler<String> sampler =
-            new CollectionSampler<String>(RandomSource.MWC_256.create(),
+            new CollectionSampler<>(RandomSource.MWC_256.create(),
                                           list);
         final String word = sampler.sample();
         for (String w : list) {
@@ -53,8 +53,8 @@ class CollectionSamplerTest {
     void testSamplePrecondition() {
         // Must fail for empty collection.
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new CollectionSampler<String>(RandomSource.SPLIT_MIX_64.create(0L),
-                                                new ArrayList<String>()));
+            () -> new CollectionSampler<>(RandomSource.SPLIT_MIX_64.create(0L),
+                                                new ArrayList<>()));
     }
 
     /**
@@ -66,7 +66,7 @@ class CollectionSamplerTest {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final List<String> list = Arrays.asList("Apache", "Commons", "RNG");
         final CollectionSampler<String> sampler1 =
-            new CollectionSampler<String>(rng1, list);
+            new CollectionSampler<>(rng1, list);
         final CollectionSampler<String> sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
