@@ -33,7 +33,7 @@ limitations under the License.
     <fileSet>
       <directory>${project.basedir}/..</directory>
       <includes>
-        <include>LICENSE*.txt</include>
+        <include>LICENSE.txt</include>
         <include>NOTICE.txt</include>
         <include>RELEASE-NOTES.txt</include>
       </includes>
