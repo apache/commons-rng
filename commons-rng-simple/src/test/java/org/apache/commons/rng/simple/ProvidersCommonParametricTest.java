@@ -384,7 +384,7 @@ class ProvidersCommonParametricTest {
     private void checkNextIntegerInRange(final UniformRandomProvider rng,
                                          final int max,
                                          int sampleSize) {
-        final Callable<Integer> nextMethod = new Callable<>() {
+        final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return rng.nextInt(max);

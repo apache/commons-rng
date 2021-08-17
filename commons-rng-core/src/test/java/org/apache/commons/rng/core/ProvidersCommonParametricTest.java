@@ -154,7 +154,7 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getList")
     void testUniformNextIntRandomWalk(UniformRandomProvider generator) {
-        final Callable<Boolean> nextMethod = new Callable<>() {
+        final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return generator.nextInt() >= 0;
@@ -167,7 +167,7 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getList")
     void testUniformNextLongRandomWalk(UniformRandomProvider generator) {
-        final Callable<Boolean> nextMethod = new Callable<>() {
+        final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return generator.nextLong() >= 0;
@@ -180,7 +180,7 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getList")
     void testUniformNextBooleanRandomWalk(UniformRandomProvider generator) {
-        final Callable<Boolean> nextMethod = new Callable<>() {
+        final Callable<Boolean> nextMethod = new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 return generator.nextBoolean();
@@ -367,7 +367,7 @@ class ProvidersCommonParametricTest {
     private void checkNextIntegerInRange(final UniformRandomProvider generator,
                                          final int max,
                                          int sampleSize) {
-        final Callable<Integer> nextMethod = new Callable<>() {
+        final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return generator.nextInt(max);
@@ -387,7 +387,7 @@ class ProvidersCommonParametricTest {
     private void checkNextLongInRange(final UniformRandomProvider generator,
                                       long max,
                                       int sampleSize) {
-        final Callable<Long> nextMethod = new Callable<>() {
+        final Callable<Long> nextMethod = new Callable<Long>() {
             @Override
             public Long call() throws Exception {
                 return generator.nextLong(max);
@@ -406,7 +406,7 @@ class ProvidersCommonParametricTest {
     private void checkNextFloat(final UniformRandomProvider generator,
                                 int sampleSize) {
         final int max = 1234;
-        final Callable<Integer> nextMethod = new Callable<>() {
+        final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return (int) (max * generator.nextFloat());
@@ -425,7 +425,7 @@ class ProvidersCommonParametricTest {
     private void checkNextDouble(final UniformRandomProvider generator,
                                  int sampleSize) {
         final int max = 578;
-        final Callable<Integer> nextMethod = new Callable<>() {
+        final Callable<Integer> nextMethod = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 return (int) (max * generator.nextDouble());
