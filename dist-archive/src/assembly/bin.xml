@@ -46,8 +46,8 @@ limitations under the License.
       </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.basedir}/../target/site</directory>
-      <outputDirectory>docs</outputDirectory>
+      <directory>${project.basedir}/../docs-archive/target/apidocs</directory>
+      <outputDirectory>apidocs</outputDirectory>
       <excludes>
       </excludes>
     </fileSet>

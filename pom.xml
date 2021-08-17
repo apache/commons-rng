@@ -443,6 +443,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${commons.jacoco.version}</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -677,7 +678,19 @@ This is avoided by creating an empty directory when svn is not available.
         <module>commons-rng-simple</module>
         <module>commons-rng-sampling</module>
         <module>commons-rng-examples</module>
+        <module>docs-archive</module>
         <module>dist-archive</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>docs</id>
+      <modules>
+        <module>commons-rng-client-api</module>
+        <module>commons-rng-core</module>
+        <module>commons-rng-simple</module>
+        <module>commons-rng-sampling</module>
+        <module>docs-archive</module>
       </modules>
     </profile>
 
