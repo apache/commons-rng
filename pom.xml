@@ -678,12 +678,12 @@ This is avoided by creating an empty directory when svn is not available.
         <module>commons-rng-simple</module>
         <module>commons-rng-sampling</module>
         <module>commons-rng-examples</module>
-        <module>docs-archive</module>
         <module>dist-archive</module>
       </modules>
     </profile>
 
     <profile>
+      <!-- Include an aggregate module to build aggregate javadoc and test coverage reports -->
       <id>docs</id>
       <modules>
         <module>commons-rng-client-api</module>
