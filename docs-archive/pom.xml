@@ -29,7 +29,7 @@
        "Not executing Javadoc as the project is not a Java classpath-capable package" -->
 
   <name>Apache Commons RNG Documentation</name>
-  <description>This module creates the Apache Commons RNG documentation.</description>
+  <description>Aggregator module to genenerate Apache Commons RNG documentation.</description>
 
   <properties>
     <checkstyle.skip>true</checkstyle.skip>
