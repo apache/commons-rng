@@ -100,9 +100,16 @@ that the build process can create all the necessary artifacts.
   (1a)
   The command
 
-    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean test package site deploy
+    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean verify site deploy
 
   should create the artifacts in the "target/deploy" directory.
+
+  The "dist-archive/target" directory will contain those files:
+
+    commons-rng-1.3-SNAPSHOT-bin.tar.gz
+    commons-rng-1.3-SNAPSHOT-bin.zip
+    commons-rng-1.3-SNAPSHOT-src.tar.gz
+    commons-rng-1.3-SNAPSHOT-src.zip
 
   At some point when processing the above command, the GPG passphrase will be
   requested; to avoid problems, the "gpg2" executable should be specified in
@@ -119,17 +126,19 @@ that the build process can create all the necessary artifacts.
     $ export GPG_TTY=$(tty)
   in order to set up the environment for entering the passphrase.
 
+  For testing, or when GPG is not configured, this can be avoided using "-Dgpg.skip" argument
+  in the maven release dry run command.
+
   (1b)
-  When the above works, you can test the creation of the full distribution
-  files with the following commands:
+  The command (requires Java 11):
 
-    $ ( cd dist-archive && mvn assembly:single )
+    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Pcommons-rng-examples package site site:stage
 
-  The "dist-archive/target" directory will then contain those files:
-    commons-rng-1.3-SNAPSHOT-bin.tar.gz
-    commons-rng-1.3-SNAPSHOT-bin.zip
-    commons-rng-1.3-SNAPSHOT-src.tar.gz
-    commons-rng-1.3-SNAPSHOT-src.zip
+  should create the site in the "target/staging" directory. The JPMS example modules require
+  Java 11.
+
+  Note: The examples are not part of the binary distribution (release profile) but are
+  included in the site for documentation.
 
 
 (2)
@@ -350,23 +359,17 @@ the maven settings.xml file. Typically the username is the same for Nexus reposi
 settings.xml file can be used by setting the commons.distServer property for the commons release
 plugin (see https://commons.apache.org/proper/commons-release-plugin/index.html).
 
-You can then run
-
-  With site generation (the 'package' goal is required for the site report javadoc
-  of the Java 9 modules):
+You can then generate the release artifacts without the site generation:
 
   $ mvn -Duser.name="__Your_Apache_id__" [-Dcommons.distServer=apache.releases.https] \
-        -Pcommons-rng-examples -Prelease clean package site site:stage deploy
-
-  Or without the site generation:
-
-  $ mvn -Duser.name="__Your_Apache_id__" [-Dcommons.distServer=apache.releases.https] \
-        -Pcommons-rng-examples -Prelease clean deploy
-
-  The site can be generated afterwards using 'mvn -Pcommons-rng-examples package site site stage'.
+        -Prelease clean deploy
 
 which will transfer the artifacts to the Nexus repository located at
   https://repository.apache.org/index.html#stagingRepositories
+
+Note: The site should be generated separately. The release profile will not include the
+example modules as they are not part of the binary release artifacts. Site generation
+should include the examples for documentation.
 
 This process transfers more files than really needed in the the "staging" (i.e.
 non official) maven repository. The files expected in the repository are
@@ -492,9 +495,13 @@ login and copy the contents of your
 file to "SSH Key (authorized_keys line)".
 Then run these commands:
 
-  (Optional. Use this if the release step in (11) was performed without site generation.
+  Note: Site generation requires Java 11 for the examples JPMS modules.
+  With site generation the 'package' goal is required for the site report javadoc
+  of the Java 11 JPMS modules.
+
   Do not run 'clean' as it will delete the release source/binary artifacts and the release
-  plugin cannot be used to generate the template VOTE.txt file with the correct hashes.)
+  plugin cannot be used to generate the template VOTE.txt file with the correct hashes.
+
   $ mvn -Pcommons-rng-examples package site site:stage
 
   $ cd target
@@ -545,7 +552,7 @@ These are the artifacts and their SHA 512 hashes:
 <hash> commons-rng-1.3-src.tar.gz
 <hash> commons-rng-1.3-src.zip
 
-The source code contains examples that are not part of the public API. These examples contain Java 9 modules and are enabled using a profile (see below).
+The source code contains examples that are not part of the public API. These examples contain Java 11 modules and are enabled using a profile (see below).
 
 Note: Testing randomness using statistical thresholds results in failures at a given probability. The 'maven-surefire-plugin' is configured to re-run tests that fail, and pass the build if they succeed within the allotted number of reruns (the test will be marked as 'flaky' in the report).
 
@@ -557,7 +564,7 @@ I have tested this with:
 <mvn -version>
 ***
 
-Java 9 modules in the examples modules.
+Java 11 modules in the examples modules.
 
 'mvn -Pcommons-rng-examples clean install site' using:
 
