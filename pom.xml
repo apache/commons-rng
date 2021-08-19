@@ -677,7 +677,8 @@ This is avoided by creating an empty directory when svn is not available.
         <module>commons-rng-core</module>
         <module>commons-rng-simple</module>
         <module>commons-rng-sampling</module>
-        <module>commons-rng-examples</module>
+        <!-- Examples are not part of the binary release so do not include in the build.
+             Use the commons-rng-examples profile to create the site. -->
         <module>dist-archive</module>
       </modules>
     </profile>
