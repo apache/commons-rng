@@ -232,7 +232,7 @@
           <enableRulesSummary>false</enableRulesSummary>
           <logViolationsToConsole>false</logViolationsToConsole>
           <failOnViolation>true</failOnViolation>
-          <resourceExcludes>NOTICE.txt,LICENSE.txt,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
+          <resourceExcludes>NOTICE,LICENSE,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
           <excludes>**/jmh_generated/**.java</excludes>
         </configuration>
         <executions>
