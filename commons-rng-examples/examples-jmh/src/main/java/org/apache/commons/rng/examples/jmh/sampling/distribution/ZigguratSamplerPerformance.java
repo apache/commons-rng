@@ -152,6 +152,68 @@ public class ZigguratSamplerPerformance {
     }
 
     /**
+     * Defines method to use for creating an index values from a random long and comparing
+     * it to an {@code int} limit.
+     */
+    @State(Scope.Benchmark)
+    public static class IndexCompareSources {
+        /** The method to compare the index against the limit. */
+        @Param({"CastMaskIntCompare", "MaskCastIntCompare", "MaskLongCompareCast"})
+        private String method;
+
+        /** The sampler. */
+        private DiscreteSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public DiscreteSampler getSampler() {
+            return sampler;
+        }
+
+        /** Instantiates sampler. */
+        @Setup
+        public void setup() {
+            // The limit:
+            // exponential = 252
+            // gaussian = 253
+            final int limit = 253;
+            // Use a fast generator
+            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+            if ("CastMaskIntCompare".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    final int i = ((int) x) & 0xff;
+                    if (i < limit) {
+                        return i;
+                    }
+                    return 0;
+                };
+            } else if ("MaskCastIntCompare".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    final int i = (int) (x & 0xff);
+                    if (i < limit) {
+                        return i;
+                    }
+                    return 0;
+                };
+            } else if ("MaskLongCompareCast".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    final long i = x & 0xff;
+                    if (i < limit) {
+                        return (int) i;
+                    }
+                    return 0;
+                };
+            } else {
+                throwIllegalStateException(method);
+            }
+        }
+    }
+
+    /**
      * Defines method to use for creating unsigned {@code long} values.
      */
     @State(Scope.Benchmark)
@@ -3582,6 +3644,20 @@ public class ZigguratSamplerPerformance {
      */
     //@Benchmark
     public int getIndex(IndexSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Benchmark methods for obtaining an index from the lower bits of a long and
+     * comparing them to a limit then returning the index as an {@code int}.
+     *
+     * <p>Note: This is disabled as there is no measurable difference between methods.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    //@Benchmark
+    public int compareIndex(IndexCompareSources sources) {
         return sources.getSampler().sample();
     }
 
