@@ -805,7 +805,7 @@ public class ZigguratSamplerPerformance {
         /** Maximum i value for early exit. */
         protected static final int I_MAX = 253;
         /** The point where the Gaussian switches from convex to concave. */
-        protected static final int J_INFLECTION = 205;
+        protected static final int J_INFLECTION = 204;
         /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
         protected static final long MAX_IE = -2269182951627976004L;
         /** Used for largest deviations of f(x) from y_i. */
@@ -1556,7 +1556,7 @@ public class ZigguratSamplerPerformance {
         /** Maximum i value for early exit. */
         protected static final int I_MAX = 509;
         /** The point where the Gaussian switches from convex to concave. */
-        protected static final int J_INFLECTION = 410;
+        protected static final int J_INFLECTION = 409;
         /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
         protected static final long MAX_IE = -2284356979160975476L;
         /** Used for largest deviations of f(x) from y_i. */

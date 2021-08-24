@@ -514,8 +514,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         implements NormalizedGaussianSampler, SharedStateContinuousSampler {
         /** Maximum i value for early exit. */
         private static final int I_MAX = 253;
-        /** The point where the Gaussian switches from convex to concave. */
-        private static final int J_INFLECTION = 205;
+        /** The point where the Gaussian switches from convex to concave.
+         * This is the largest value of X[j] below 1. */
+        private static final int J_INFLECTION = 204;
         /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
         private static final long MAX_IE = -2269182951627976004L;
         /** Used for largest deviations of f(x) from y_i. */
