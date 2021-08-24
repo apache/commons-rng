@@ -2166,8 +2166,8 @@ public class ZigguratSamplerPerformance {
     static class ModifiedZigguratExponentialSampler implements ContinuousSampler {
         /** Maximum i value for early exit. */
         protected static final int I_MAX = 252;
-        /** Maximum distance value for early exit. */
-        protected static final long IE_MAX = 513303011048449570L;
+        /** Maximum distance value for early exit. Equal to approximately 0.0926 scaled by 2^63. */
+        protected static final long IE_MAX = 853965788476313646L;
         /** Beginning of tail. */
         protected static final double X_0 = 7.569274694148063;
 
@@ -2858,8 +2858,8 @@ public class ZigguratSamplerPerformance {
     static class ModifiedZigguratExponentialSampler512 implements ContinuousSampler {
         /** Maximum i value for early exit. */
         protected static final int I_MAX = 508;
-        /** Maximum distance value for early exit. */
-        protected static final long IE_MAX = 507874389497522840L;
+        /** Maximum distance value for early exit. Equal to approximately 0.0919 scaled by 2^63. */
+        protected static final long IE_MAX = 847415790149374212L;
         /** Beginning of tail. */
         protected static final double X_0 = 8.362025281328359;
 

@@ -121,8 +121,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     public static class Exponential extends ZigguratSampler {
         /** Maximum i value for early exit. */
         private static final int I_MAX = 252;
-        /** Maximum distance value for early exit. */
-        private static final long IE_MAX = 513303011048449570L;
+        /** Maximum distance value for early exit. Equal to approximately 0.0926 scaled by 2^63. */
+        private static final long IE_MAX = 853965788476313646L;
         /** Beginning of tail. */
         private static final double X_0 = 7.569274694148063;
 
