@@ -402,14 +402,14 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984374 times per call into createSample.
+                // This branch is called about 0.984379 times per call into createSample.
                 // Note: Frequencies have been empirically measured for the first call to
                 // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x & MAX_INT64);
             }
             // For the first call into createSample:
-            // Recursion frequency = 0.000515560
-            // Overhang frequency  = 0.0151109
+            // Recursion frequency = 0.000515503
+            // Overhang frequency  = 0.0151056
             final int j = expSampleA();
             return j == 0 ? X_0 + createSample() : expOverhang(j);
         }
@@ -447,17 +447,17 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             // _FAST_PRNG_SAMPLE_X(xj, ux)
             final double x = fastPrngSampleX(X, j, ux);
             if (uDistance >= IE_MAX) {
-                // Frequency (per call into createSample): 0.0136732
-                // Frequency (per call into expOverhang):  0.904857
+                // Frequency (per call into createSample): 0.0126230
+                // Frequency (per call into expOverhang):  0.823328
                 // Early Exit: x < y - epsilon
                 return x;
             }
             // Frequency per call into createSample:
-            // Return    = 0.00143769
-            // Recursion = 1e-8
+            // Return    = 0.00248262
+            // Recursion = 0.000226013
             // Frequency per call into expOverhang:
-            // Return    = 0.0951426
-            // Recursion = 6.61774e-07
+            // Return    = 0.161930
+            // Recursion = 0.0147417
 
             // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
             // Long.MIN_VALUE is used as an unsigned int with value 2^63:
@@ -761,14 +761,13 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         public double sample() {
             // Ideally this method byte code size should be below -XX:MaxInlineSize
             // (which defaults to 35 bytes). This compiles to 33 bytes.
-
             final long xx = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
             final int i = ((int) xx) & MASK_INT8;
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988280
+                // Branch frequency: 0.988283
                 return X[i] * xx;
             }
 
@@ -803,7 +802,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00891413
+                // Branch frequency: 0.00892897
                 // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = fastPrngSampleX(X, j, u1);
@@ -827,7 +826,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000277067
+                    // Branch frequency: 0.000276358
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
                     // Loop repeat frequency: 0.0634786
@@ -837,7 +836,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00251223
+                    // Branch frequency: 0.00249563
                     // Loop repeat frequency: 0.0123784
                     for (;;) {
                         // U_x <- min(U_1, U_2)
@@ -859,7 +858,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.0000161147
+                // Branch frequency: 0.0000159359
                 // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = fastPrngSampleX(X, j, u1);
