@@ -81,6 +81,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="163">
+        Update test suite to JUnit 5.
+      </action>
       <action dev="aherbert" due-to="Arturo Bernal" type="update">
         Simplify assertions with simpler equivalent.
       </action>
