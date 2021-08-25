@@ -35,6 +35,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -79,6 +80,8 @@ public class ZigguratSamplerPerformance {
     private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS = "ModGaussianSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInlining}. */
     private static final String MOD_GAUSSIAN_INLINING = "ModGaussianInlining";
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInliningShift}. */
+    private static final String MOD_GAUSSIAN_INLINING_SHIFT = "ModGaussianInliningShift";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInliningSimpleOverhangs}. */
     private static final String MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS = "ModGaussianInliningSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
@@ -248,6 +251,87 @@ public class ZigguratSamplerPerformance {
     }
 
     /**
+     * Defines method to use for interpolating the X or Y tables from unsigned {@code long} values.
+     */
+    @State(Scope.Benchmark)
+    public static class InterpolationSources {
+        /** The method to obtain the long. */
+        @Param({"U1", "1minusU2", "U_1minusU"})
+        private String method;
+
+        /** The sampler. */
+        private ContinuousSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public ContinuousSampler getSampler() {
+            return sampler;
+        }
+
+        /** Instantiates sampler. */
+        @Setup
+        public void setup() {
+            // Use a fast generator
+            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+            // Get an x table. This is length 254.
+            // We will sample from this internally to avoid index out-of-bounds issues.
+            final int start = 42;
+            final double[] x = Arrays.copyOfRange(
+                    ModifiedZigguratNormalizedGaussianSampler.getX(), start, start + 129);
+            final int mask = 127;
+            if ("U1".equals(method)) {
+                sampler = () -> {
+                    final long u = rng.nextLong() >>> 1;
+                    final int j = 1 + (((int) u) & mask);
+                    // double multiply
+                    // double add
+                    // double subtract
+                    // long convert to double
+                    // double multiply
+                    // int subtract
+                    // three index loads
+                    return x[j] * TWO_POW_63 + (x[j - 1] - x[j]) * u;
+                };
+            } else if ("1minusU2".equals(method)) {
+                sampler = () -> {
+                    final long u = rng.nextLong() >>> 1;
+                    final int j = 1 + (((int) u) & mask);
+                    // Since u is in [0, 2^63) to create (1 - u) using Long.MIN_VALUE
+                    // as an unsigned integer of 2^63.
+                    // double multiply
+                    // double add
+                    // double subtract
+                    // long subtract
+                    // long convert to double
+                    // double multiply
+                    // int subtract * 2
+                    // three index loads
+                    return x[j - 1] * TWO_POW_63 + (x[j] - x[j - 1]) * (Long.MIN_VALUE - u);
+                };
+            } else if ("U_1minusU".equals(method)) {
+                sampler = () -> {
+                    final long u = rng.nextLong() >>> 1;
+                    final int j = 1 + (((int) u) & mask);
+                    // Interpolation between bounds a and b using:
+                    // a * u + b * (1 - u) == b + u * (a - b)
+                    // long convert to double
+                    // double multiply
+                    // double add
+                    // long subtract
+                    // long convert to double
+                    // double multiply
+                    // int subtract
+                    // two index loads
+                    return x[j - 1] * u + x[j] * (Long.MIN_VALUE - u);
+                };
+            } else {
+                throwIllegalStateException(method);
+            }
+        }
+    }
+
+    /**
      * The samplers to use for testing the ziggurat method.
      */
     @State(Scope.Benchmark)
@@ -260,7 +344,8 @@ public class ZigguratSamplerPerformance {
                 // Experimental Marsaglia exponential ziggurat sampler
                 EXPONENTIAL,
                 // Experimental McFarland Gaussian ziggurat samplers
-                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INLINING,
+                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS,
+                MOD_GAUSSIAN_INLINING, MOD_GAUSSIAN_INLINING_SHIFT,
                 MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP, MOD_GAUSSIAN_512,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
@@ -292,6 +377,8 @@ public class ZigguratSamplerPerformance {
                 return new ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs(rng);
             } else if (MOD_GAUSSIAN_INLINING.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSamplerInlining(rng);
+            } else if (MOD_GAUSSIAN_INLINING_SHIFT.equals(type)) {
+                return new ModifiedZigguratNormalizedGaussianSamplerInliningShift(rng);
             } else if (MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSamplerInliningSimpleOverhangs(rng);
             } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
@@ -1101,6 +1188,17 @@ public class ZigguratSamplerPerformance {
             exponential = new ModifiedZigguratExponentialSampler(rng);
         }
 
+        /**
+         * Provide access to the precomputed ziggurat lengths.
+         *
+         * <p>This is package-private to allow usage in the interpolation test.
+         *
+         * @return x
+         */
+        static double[] getX() {
+            return X;
+        }
+
         /** {@inheritDoc} */
         @Override
         public double sample() {
@@ -1470,6 +1568,160 @@ public class ZigguratSamplerPerformance {
                 }
             }
             return signBit * x;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This implementation separates sampling of the main ziggurat and sampling from the edge
+     * into different methods. This allows inlining of the main sample method.
+     *
+     * <p>Positive longs are created using bit shifts (not masking). The y coordinate is
+     * generated with u2 not (1-u2) which avoids a subtraction.
+     */
+    static class ModifiedZigguratNormalizedGaussianSamplerInliningShift
+        extends ModifiedZigguratNormalizedGaussianSampler {
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratNormalizedGaussianSamplerInliningShift(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            // Ideally this method byte code size should be below -XX:MaxInlineSize
+            // (which defaults to 35 bytes). This compiles to 33 bytes.
+
+            final long xx = nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) xx) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                // Branch frequency: 0.988283
+                return X[i] * xx;
+            }
+
+            return edgeSample(xx);
+        }
+
+        /**
+         * Create the sample from the edge of the ziggurat.
+         *
+         * <p>This method has been extracted to fit the main sample method within 35 bytes (the
+         * default size for a JVM to inline a method).
+         *
+         * @param xx Initial random deviate
+         * @return a sample
+         */
+        private double edgeSample(long xx) {
+            // Recycle bits.
+            // Remove sign bit to create u1.
+            long u1 = (xx << 1) >>> 1;
+            // Extract the sign bit:
+            // Use 2 - 1 or 0 - 1
+            final double signBit = ((xx >>> 62) & 0x2) - 1.0;
+            final int j = normSampleA();
+            // Four kinds of overhangs:
+            //  j = 0                :  Sample from tail
+            //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
+            //  j = J_INFLECTION     :  Must sample from entire overhang rectangle
+            //  j > J_INFLECTION     :  Overhangs are convex; implicitly accept point in Lower-Left triangle
+            //
+            // Conditional statements are arranged such that the more likely outcomes are first.
+            double x;
+            if (j > J_INFLECTION) {
+                // Convex overhang
+                // Branch frequency: 0.00892897
+                // Loop repeat frequency: 0.389804
+                for (;;) {
+                    x = interpolateSample(X, j, u1);
+                    final long uDiff = (nextLong() >>> 1) - u1;
+                    if (uDiff >= 0) {
+                        // Lower-left triangle
+                        break;
+                    }
+                    if (uDiff >= MAX_IE &&
+                        // Within maximum distance of f(x) from the triangle hypotenuse.
+                        // Frequency (per upper-right triangle): 0.431497
+                        // Reject frequency: 0.489630
+                        // u2 = (u1 + uDiff)
+                        interpolateSample(Y, j, u1 + uDiff) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
+                    u1 = randomInt63();
+                }
+            } else if (j < J_INFLECTION) {
+                if (j == 0) {
+                    // Tail
+                    // Branch frequency: 0.000276358
+                    // Note: Although less frequent than the next branch, j == 0 is a subset of
+                    // j < J_INFLECTION and must be first.
+                    // Loop repeat frequency: 0.0634786
+                    do {
+                        x = ONE_OVER_X_0 * exponential.sample();
+                    } while (exponential.sample() < 0.5 * x * x);
+                    x += X_0;
+                } else {
+                    // Concave overhang
+                    // Branch frequency: 0.00249563
+                    // Loop repeat frequency: 0.0123784
+                    for (;;) {
+                        // U_x <- min(U_1, U_2)
+                        // distance <- | U_1 - U_2 |
+                        // U_y <- 1 - (U_x + distance)
+                        long uDiff = (nextLong() >>> 1) - u1;
+                        if (uDiff < 0) {
+                            uDiff = -uDiff;
+                            u1 -= uDiff;
+                        }
+                        x = interpolateSample(X, j, u1);
+                        if (uDiff > MIN_IE ||
+                            interpolateSample(Y, j, u1 + uDiff) < Math.exp(-0.5 * x * x)) {
+                            break;
+                        }
+                        u1 = nextLong() >>> 1;
+                    }
+                }
+            } else {
+                // Inflection point
+                // Branch frequency: 0.0000159359
+                // Loop repeat frequency: 0.500213
+                for (;;) {
+                    x = interpolateSample(X, j, u1);
+                    if (interpolateSample(Y, j, nextLong() >>> 1) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    u1 = nextLong() >>> 1;
+                }
+            }
+            return signBit * x;
+        }
+
+        /**
+         * Interpolate x from the uniform deviate.
+         * <pre>
+         *  value = x[j] + u * (x[j-1] - x[j])
+         * </pre>
+         * <p>If x is the precomputed lengths of the ziggurat (X) then x[j-1] is larger and this adds
+         * a delta to x[j].
+         * <p>If x is the precomputed pdf for the lengths of the ziggurat (Y) then x[j-1] is smaller
+         * larger and this subtracts a delta from x[j].
+         *
+         * @param x x
+         * @param j j
+         * @param u uniform deviate
+         * @return the sample
+         */
+        private static double interpolateSample(double[] x, int j, long u) {
+            return x[j] * TWO_POW_63 + (x[j - 1] - x[j]) * u;
         }
     }
 
@@ -2899,12 +3151,12 @@ public class ZigguratSamplerPerformance {
         protected double expOverhang(int j, long xx) {
             // Recycle the initial random deviate.
             // Shift right to make an unsigned long.
-            for (long ux = xx >>> 1;; ux = randomInt63()) {
+            for (long ux = xx >>> 1;; ux = nextLong() >>> 1) {
                 // To sample a unit right-triangle:
                 // U_x <- min(U_1, U_2)
                 // distance <- | U_1 - U_2 |
                 // U_y <- 1 - (U_x + distance)
-                long uDistance = randomInt63() - ux;
+                long uDistance = (nextLong() >>> 1) - ux;
                 if (uDistance < 0) {
                     uDistance = -uDistance;
                     ux -= uDistance;
@@ -3664,6 +3916,19 @@ public class ZigguratSamplerPerformance {
      */
     //@Benchmark
     public long getUnsignedLong(LongSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Benchmark methods for obtaining an interpolated value from an unsigned long.
+     *
+     * <p>Note: To be disabled. The speed is: U1, 1minusU2, U_1minusU.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    @Benchmark
+    public double interpolate(InterpolationSources sources) {
         return sources.getSampler().sample();
     }
 
