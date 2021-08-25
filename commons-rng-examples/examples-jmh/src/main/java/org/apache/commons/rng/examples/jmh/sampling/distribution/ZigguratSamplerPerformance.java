@@ -249,23 +249,9 @@ public class ZigguratSamplerPerformance {
 
     /**
      * The samplers to use for testing the ziggurat method.
-     * Defines the RandomSource and the sampler type.
      */
     @State(Scope.Benchmark)
-    public static class Sources {
-        /**
-         * RNG providers.
-         *
-         * <p>Use different speeds.</p>
-         *
-         * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
-         *      Commons RNG user guide</a>
-         */
-        @Param({"XO_RO_SHI_RO_128_PP",
-                "MWC_256",
-                "JDK"})
-        private String randomSourceName;
-
+    public abstract static class Sources {
         /**
          * The sampler type.
          */
@@ -280,25 +266,7 @@ public class ZigguratSamplerPerformance {
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
                 MOD_EXPONENTIAL_LOOP, MOD_EXPONENTIAL_LOOP2,
                 MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP, MOD_EXPONENTIAL_512})
-        private String type;
-
-        /** The sampler. */
-        private ContinuousSampler sampler;
-
-        /**
-         * @return the sampler.
-         */
-        public ContinuousSampler getSampler() {
-            return sampler;
-        }
-
-        /** Instantiates sampler. */
-        @Setup
-        public void setup() {
-            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
-            final UniformRandomProvider rng = randomSource.create();
-            sampler = createSampler(type, rng);
-        }
+        protected String type;
 
         /**
          * Creates the sampler.
@@ -353,6 +321,44 @@ public class ZigguratSamplerPerformance {
     }
 
     /**
+     * The samplers to use for testing the ziggurat method with single sample generation.
+     * Defines the RandomSource and the sampler type.
+     */
+    @State(Scope.Benchmark)
+    public static class SingleSources extends Sources {
+        /**
+         * RNG providers.
+         *
+         * <p>Use different speeds.</p>
+         *
+         * @see <a href="https://commons.apache.org/proper/commons-rng/userguide/rng.html">
+         *      Commons RNG user guide</a>
+         */
+        @Param({"XO_RO_SHI_RO_128_PP",
+                "MWC_256",
+                "JDK"})
+        private String randomSourceName;
+
+        /** The sampler. */
+        private ContinuousSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public ContinuousSampler getSampler() {
+            return sampler;
+        }
+
+        /** Instantiates sampler. */
+        @Setup
+        public void setup() {
+            final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
+            final UniformRandomProvider rng = randomSource.create();
+            sampler = createSampler(type, rng);
+        }
+    }
+
+    /**
      * The samplers to use for testing the ziggurat method with sequential sample generation.
      * Defines the RandomSource and the sampler type.
      *
@@ -367,7 +373,7 @@ public class ZigguratSamplerPerformance {
      * chosen using both sets of results.
      */
     @State(Scope.Benchmark)
-    public static class SequentialSources {
+    public static class SequentialSources extends Sources {
         /**
          * RNG providers.
          *
@@ -381,19 +387,6 @@ public class ZigguratSamplerPerformance {
                 //"JDK"
         })
         private String randomSourceName;
-
-        /** The sampler type. */
-        @Param({// Production versions
-                GAUSSIAN_128, GAUSSIAN_256, MOD_GAUSSIAN, MOD_EXPONENTIAL,
-                // Experimental Marsaglia exponential ziggurat sampler
-                EXPONENTIAL,
-                // Experimental McFarland Gaussian ziggurat samplers
-                MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INLINING,
-                MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP, MOD_GAUSSIAN_512,
-                // Experimental McFarland Gaussian ziggurat samplers
-                MOD_EXPONENTIAL_LOOP, MOD_EXPONENTIAL_LOOP2,
-                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP, MOD_EXPONENTIAL_512})
-        private String type;
 
         /** The size. */
         @Param({"1", "2", "4", "8", "16", "32", "64"})
@@ -414,8 +407,8 @@ public class ZigguratSamplerPerformance {
         public void setup() {
             final RandomSource randomSource = RandomSource.valueOf(randomSourceName);
             final UniformRandomProvider rng = randomSource.create();
-            final ContinuousSampler s = Sources.createSampler(type, rng);
-            sampler = createSampler(size, s);
+            final ContinuousSampler s = createSampler(type, rng);
+            sampler = createSequentialSampler(size, s);
         }
 
         /**
@@ -425,7 +418,7 @@ public class ZigguratSamplerPerformance {
          * @param s the sampler to create the samples
          * @return the sampler
          */
-        private static ContinuousSampler createSampler(int size, ContinuousSampler s) {
+        private static ContinuousSampler createSequentialSampler(int size, ContinuousSampler s) {
             // Create size samples
             switch (size) {
             case 1:
@@ -3681,7 +3674,7 @@ public class ZigguratSamplerPerformance {
      * @return the sample value
      */
     @Benchmark
-    public double sample(Sources sources) {
+    public double sample(SingleSources sources) {
         return sources.getSampler().sample();
     }
 
