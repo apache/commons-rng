@@ -563,15 +563,15 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
+                // Expected frequency = 0.984375
                 // Drop the sign bit to multiply by [0, 2^63).
                 return X[i] * (x & MAX_INT64);
             }
-            // For the first call into createSample:
-            // Recursion frequency = 0.000515503
-            // Overhang frequency  = 0.0151056
+            // Expected frequency = 0.015625
+
+            // Tail frequency     = 0.000516062 (recursion)
+            // Overhang frequency = 0.0151089
+
             final int j = selectRegion();
             // If the tail then exploit the memoryless property of the exponential distribution.
             // Add a new sample to the start of the tail (X_0).
@@ -622,17 +622,14 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             // _FAST_PRNG_SAMPLE_X(xj, ux)
             final double x = sampleX(X, j, u1);
             if (uDistance >= E_MAX) {
-                // Frequency (per call into createSample): 0.0126230
-                // Frequency (per call into expOverhang):  0.823328
                 // Early Exit: x < y - epsilon
                 return x;
             }
-            // Frequency per call into createSample:
-            // Return    = 0.00248262
-            // Recursion = 0.000226013
-            // Frequency per call into expOverhang:
-            // Return    = 0.161930
-            // Recursion = 0.0147417
+
+            // Note: Frequencies have been empirically measured per call into expOverhang:
+            // Early Exit = 0.823328
+            // Accept Y   = 0.161930
+            // Reject Y   = 0.0147417 (recursion)
 
             // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
             return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ?
@@ -972,7 +969,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988283
+                // Expected frequency = 0.988281
                 return X[i] * xx;
             }
 
@@ -989,6 +986,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
          * @return a sample
          */
         private double edgeSample(long xx) {
+            // Expected frequency = 0.0117188
+
             // Recycle bits then advance RNG:
             // u1 = RANDOM_INT63()
             long u1 = xx & MAX_INT64;
@@ -1007,8 +1006,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00892897
-                // Loop repeat frequency: 0.389804
+                // Expected frequency: 0.00892899
+                // Observed loop repeat frequency: 0.389804
                 for (;;) {
                     x = sampleX(X, j, u1);
                     // u2 = u1 + (u2 - u1) = u1 + uDistance
@@ -1030,18 +1029,18 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000276358
+                    // Expected frequency: 0.000276902
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
-                    // Loop repeat frequency: 0.0634786
+                    // Observed loop repeat frequency: 0.0634786
                     do {
                         x = ONE_OVER_X_0 * exponential.sample();
                     } while (exponential.sample() < 0.5 * x * x);
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00249563
-                    // Loop repeat frequency: 0.0123784
+                    // Expected frequency: 0.00249694
+                    // Observed loop repeat frequency: 0.0123784
                     for (;;) {
                         // u2 = u1 + (u2 - u1) = u1 + uDistance
                         long uDistance = randomInt63() - u1;
@@ -1061,8 +1060,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.0000159359
-                // Loop repeat frequency: 0.500213
+                // Expected frequency: 0.000015914
+                // Observed loop repeat frequency: 0.500213
                 for (;;) {
                     x = sampleX(X, j, u1);
                     if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
