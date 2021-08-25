@@ -161,7 +161,7 @@
     <properties>
       <!-- The length is due to multiple implementations as inner classes -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler'
-        or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler']"/>
+        or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler' or @SimpleName='ZigguratSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/LogicInversion">
