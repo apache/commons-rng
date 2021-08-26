@@ -1656,7 +1656,7 @@ public class ZigguratSamplerPerformance {
                         break;
                     }
                     // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
-                    u1 = randomInt63();
+                    u1 = nextLong() >>> 1;
                 }
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
