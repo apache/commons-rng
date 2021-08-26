@@ -140,6 +140,61 @@ class ZigguratSamplerTest {
         return ZigguratSampler.Exponential.of(rng).sample();
     }
 
+    // Note:
+    // The sampler samples within the box regions of the ziggurat > 98.5% of the time.
+    // The rest of the time a sample is taken from an overhang region or the tail. The proportion
+    // of samples from each of the overhangs and tail is related to the volume of those
+    // regions. The sampling within a region must fit the PDF curve of the region.
+    // We must test two items: (1) if the sampling is biased to certain overhangs;
+    // and (2) if the sampling is biased within a single overhang.
+    //
+    // The following tests check if the overall shape of the PDF is correct. Then small
+    // regions are sampled that target specific parts of the ziggurat: the overhangs and the tail.
+    // For the exponential distribution all overhangs are concave so any region can be tested.
+    // For the normal distribution the overhangs switch from convex to concave at the inflection
+    // point which is x=1. The test targets regions specifically above and below the inflection
+    // point.
+    //
+    // Testing the distribution within an overhang requires a histogram with widths smaller
+    // than the width differences in the ziggurat.
+    //
+    // For the normal distribution the widths at each end and around the inflection point are:
+    // [3.6360066255009458, 3.431550493837111, 3.3044597575834205, 3.2104230299359244]
+    // [1.0113527773194309, 1.003307168714496, 0.9951964183341382, 0.9870178156137862]
+    // [0.3881084509554052, 0.34703847379449715, 0.29172225078072095, 0.0]
+    //
+    // For the exponential:
+    // [7.569274694148063, 6.822872544335941, 6.376422694249821, 6.05490013642656]
+    // [0.18840300957360784, 0.15921172977030051, 0.12250380599214447, 0.0]
+    //
+    // Two tests are performed:
+    // (1) The bins are spaced using the quantiles of the distribution.
+    // The histogram should be uniform in frequency across all bins.
+    // (2) The bins are spaced uniformly. The frequencies should match the CDF of the function
+    // for that region. In this test the number of bins is chosen to ensure that there are multiple
+    // bins covering even the smallest gaps between ziggurat layers. Thus the bins will partition
+    // samples within a single overhang layer.
+    //
+    // Note:
+    // These tests could be improved as not all minor errors in the samplers are detected.
+    // The test does detect all the bugs that were eliminated from the algorithm during
+    // development if they are reintroduced.
+    //
+    // Bugs that cannot be detected:
+    // 1. Changing the J_INFLECTION point in the Gaussian sampler to the extremes of 1 or 253
+    //    does not fail. Thus the test cannot detect incorrect triangle sampling for
+    //    convex/concave regions. A sample that is a uniform lower-left triangle sample
+    //    for any concave region is missed by the test.
+    // 2. Changing the E_MAX threshold in the exponential sampler to 0 does not fail.
+    //    Thus the test cannot detect the difference between a uniform lower-left triangle
+    //    sample and a uniform convex region sample.
+    // This may require more samples in the histogram or a different test strategy. An example
+    // would be to force the RNG to sample outside the ziggurat boxes. The expected counts would
+    // have to be constructed using prior knowledge of the ziggurat box sizes. Thus the CDF can
+    // be computed for each overhang minus the ziggurat region underneath. No distribution
+    // exists to support this in Commons Math. A custom implementation should support computing
+    // the CDF of the ziggurat boxes from x0 to x1.
+
     /**
      * Test Gaussian samples using a large number of bins based on uniformly spaced quantiles.
      * Added for RNG-159.
@@ -152,7 +207,20 @@ class ZigguratSamplerTest {
         for (int i = 0; i < bins; i++) {
             quantiles[i] = dist.inverseCumulativeProbability((i + 1.0) / bins);
         }
-        testSamples(quantiles, false);
+        testSamples(quantiles, false,
+            // Test positive and negative ranges to check symmetry.
+            // Smallest layer is 0.292 (convex region)
+            new double[] {0, 0.2},
+            new double[] {-0.35, -0.1},
+            // Around the mean
+            new double[] {-0.1, 0.1},
+            new double[] {-0.4, 0.6},
+            // Inflection point at x=1
+            new double[] {-1.1, -0.9},
+            // A concave region
+            new double[] {2.1, 2.5},
+            // Tail = 3.64
+            new double[] {2.5, 8});
     }
 
     /**
@@ -165,12 +233,28 @@ class ZigguratSamplerTest {
         final double[] values = new double[bins];
         final double minx = -8;
         final double maxx = 8;
+        // Bin width = 16 / 2000 = 0.008
         for (int i = 0; i < bins; i++) {
             values[i] = minx + (maxx - minx) * (i + 1.0) / bins;
         }
         // Ensure upper bound is the support limit
         values[bins - 1] = Double.POSITIVE_INFINITY;
-        testSamples(values, false);
+        testSamples(values, false,
+            // Test positive and negative ranges to check symmetry.
+            // Smallest layer is 0.292 (convex region)
+            new double[] {0, 0.2},
+            new double[] {-0.35, -0.1},
+            // Around the mean
+            new double[] {-0.1, 0.1},
+            new double[] {-0.4, 0.6},
+            // Inflection point at x=1
+            new double[] {-1.01, -0.99},
+            new double[] {0.98, 1.03},
+            // A concave region
+            new double[] {1.03, 1.05},
+            // Tail = 3.64
+            new double[] {3.6, 3.8},
+            new double[] {3.7, 8});
     }
 
     /**
@@ -184,7 +268,14 @@ class ZigguratSamplerTest {
         for (int i = 0; i < bins; i++) {
             quantiles[i] = dist.inverseCumulativeProbability((i + 1.0) / bins);
         }
-        testSamples(quantiles, true);
+        testSamples(quantiles, true,
+            // Smallest layer is 0.122
+            new double[] {0, 0.1},
+            new double[] {0.05, 0.15},
+            // Around the mean
+            new double[] {0.9, 1.1},
+            // Tail = 7.57
+            new double[] {1.5, 12});
     }
 
     /**
@@ -197,24 +288,36 @@ class ZigguratSamplerTest {
         final double minx = 0;
         // Enter the tail of the distribution
         final double maxx = 12;
+        // Bin width = 12 / 2000 = 0.006
         for (int i = 0; i < bins; i++) {
             values[i] = minx + (maxx - minx) * (i + 1.0) / bins;
         }
         // Ensure upper bound is the support limit
         values[bins - 1] = Double.POSITIVE_INFINITY;
-        testSamples(values, true);
+
+        testSamples(values, true,
+            // Smallest layer is 0.122
+            new double[] {0, 0.1},
+            new double[] {0.05, 0.15},
+            // Around the mean
+            new double[] {0.9, 1.1},
+            // Tail = 7.57
+            new double[] {7.5, 7.7},
+            new double[] {7.7, 12});
     }
 
     /**
      * Test samples using the provided bins. Values correspond to the bin upper limit. It
      * is assumed the values span most of the distribution. Additional tests are performed
-     * using a region of the distribution sampled using the edge of the ziggurat.
+     * using a region of the distribution sampled.
      *
      * @param values Bin upper limits
      * @param exponential Set the true to use an exponential sampler
+     * @param ranges Ranges of the distribution to test
      */
     private static void testSamples(double[] values,
-                                    boolean exponential) {
+                                    boolean exponential,
+                                    double[]... ranges) {
         final int bins = values.length;
 
         final int samples = 10000000;
@@ -245,21 +348,28 @@ class ZigguratSamplerTest {
 
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         // Pass if we cannot reject null hypothesis that the distributions are the same.
-        final double chi2 = chiSquareTest.chiSquareTest(expected, observed);
-        Assertions.assertFalse(chi2 < 0.001,
+        final double pValue = chiSquareTest.chiSquareTest(expected, observed);
+        Assertions.assertFalse(pValue < 0.001,
             () -> String.format("(%s <= x < %s) Chi-square p-value = %s",
-                                lowerBound, values[bins - 1], chi2));
+                                lowerBound, values[bins - 1], pValue));
 
-        // Test bins sampled from the edge of the ziggurat. This is always around zero.
-        for (final double range : new double[] {0.5, 0.25, 0.1, 0.05}) {
-            final int min = findIndex(values, -range);
-            final int max = findIndex(values, range);
+        // Test regions of the ziggurat.
+        for (final double[] range : ranges) {
+            final int min = findIndex(values, range[0]);
+            final int max = findIndex(values, range[1]);
+            // Must have a range of 2
+            if (max - min + 1 < 2) {
+                // This will probably occur if the quantiles test uses too small a range
+                // for the tail. The tail is so far into the CDF that a single bin is
+                // often used to represent it.
+                Assertions.fail("Invalid range: " + Arrays.toString(range));
+            }
             final long[] observed2 = Arrays.copyOfRange(observed, min, max + 1);
             final double[] expected2 = Arrays.copyOfRange(expected, min, max + 1);
-            final double chi2b = chiSquareTest.chiSquareTest(expected2, observed2);
-            Assertions.assertFalse(chi2b < significanceLevel,
+            final double pValueB = chiSquareTest.chiSquareTest(expected2, observed2);
+            Assertions.assertFalse(pValueB < significanceLevel,
                 () -> String.format("(%s <= x < %s) Chi-square p-value = %s",
-                                    min == 0 ? lowerBound : values[min - 1], values[max], chi2b));
+                                    min == 0 ? lowerBound : values[min - 1], values[max], pValueB));
         }
     }
 
