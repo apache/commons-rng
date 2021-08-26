@@ -3922,12 +3922,12 @@ public class ZigguratSamplerPerformance {
     /**
      * Benchmark methods for obtaining an interpolated value from an unsigned long.
      *
-     * <p>Note: To be disabled. The speed is: U1, 1minusU2, U_1minusU.
+     * <p>Note: This is disabled. The speed is typically: U1, 1minusU2, U_1minusU.
      *
      * @param sources Source of randomness.
      * @return the sample value
      */
-    @Benchmark
+    //@Benchmark
     public double interpolate(InterpolationSources sources) {
         return sources.getSampler().sample();
     }
