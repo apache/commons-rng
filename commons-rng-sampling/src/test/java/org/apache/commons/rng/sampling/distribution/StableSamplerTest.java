@@ -60,7 +60,7 @@ class StableSamplerTest {
      * This is the gap between the 2^53 dyadic rationals in [0, 1). */
     private static final double DU = 0x1.0p-53;
     /** The smallest non-zero sample from the ZigguratSampler.Exponential sampler. */
-    private static final double SMALL_W = 7.397373235160728E-19;
+    private static final double SMALL_W = 6.564735882096453E-19;
     /** A tail sample from the ZigguratSampler.Exponential after 1 recursions of the sample method.  */
     private static final double TAIL_W = 7.569274694148063;
     /** A largest sample from the ZigguratSampler.Exponential after 4 recursions of the sample method.  */
@@ -1346,7 +1346,7 @@ class StableSamplerTest {
         // The value with all bits set generates phi/2 -> pi/4.
         // Add a long to create a big value for w of 5.
         // The parameters create cancellation in the numerator of z to create a negative z.
-        final long[] longs = {Long.MAX_VALUE, 6092639261715210240L};
+        final long[] longs = {Long.MAX_VALUE, -6261465550279131136L};
 
         final double phiby2 = PI_4 - PI_4 * DU;
         final double w = 5.0;
@@ -1457,7 +1457,7 @@ class StableSamplerTest {
         final long xuHi = Long.MAX_VALUE - (1023 << 10);
         // Call sampler with smallest possible w that is not 0. This creates a finite z
         // but an infinite d due to the use of alpha -> 0.
-        final long x = 1L;
+        final long x = 3L;
         final long[] longs = {xuLo, x, xuHi, x, 0, x};
 
         assertUWSequence(new double[] {
@@ -1507,7 +1507,7 @@ class StableSamplerTest {
 
         // Add a long to create an ordinary value for w of 1.0.
         // u -> -pi/4
-        final long[] longs1 = {Long.MIN_VALUE + (1 << 10), 1446480648965178882L};
+        final long[] longs1 = {Long.MIN_VALUE + (1 << 10), 2703662416942444033L};
         assertUWSequence(new double[] {
             -PI_4 + PI_4 * DU, 1.0,
         }, longs1);
@@ -1516,7 +1516,7 @@ class StableSamplerTest {
         Assertions.assertTrue(Double.isFinite(x1), "Sampler did not recover");
 
         // u -> pi/4
-        final long[] longs2 = {Long.MAX_VALUE, 1446480648965178882L};
+        final long[] longs2 = {Long.MAX_VALUE, 2703662416942444033L};
         assertUWSequence(new double[] {
             PI_4 - PI_4 * DU, 1.0,
         }, longs2);
@@ -1619,11 +1619,11 @@ class StableSamplerTest {
 
             // Add non extreme exponential deviate to test only extreme u
             // phi/2 -> -pi/4, w=1
-            Long.MIN_VALUE + (1 << 10), 1446480648965178882L,
+            Long.MIN_VALUE + (1 << 10), 2703662416942444033L,
             // phi/2 -> pi/4, w=1
-            Long.MAX_VALUE, 1446480648965178882L,
+            Long.MAX_VALUE, 2703662416942444033L,
             // phi/2=0, w=1
-            0, 1446480648965178882L,
+            0, 2703662416942444033L,
 
             // Add non extreme uniform deviate to test only extreme w
             // phi/2=pi/5, w=0
@@ -1736,15 +1736,19 @@ class StableSamplerTest {
 
         // Extremes of the exponential sampler
         Assertions.assertEquals(0, ZigguratSampler.Exponential.of(
-                createRngWithSequence(0L)).sample(), 0.0);
+                createRngWithSequence(0L)).sample());
         Assertions.assertEquals(SMALL_W, ZigguratSampler.Exponential.of(
-                createRngWithSequence(1)).sample(), 0.0);
+                createRngWithSequence(3)).sample());
+        Assertions.assertEquals(0.5, ZigguratSampler.Exponential.of(
+                createRngWithSequence(1446480648965178882L)).sample());
         Assertions.assertEquals(1.0, ZigguratSampler.Exponential.of(
-                createRngWithSequence(1446480648965178882L)).sample(), 0.0);
+            createRngWithSequence(2703662416942444033L)).sample());
+        Assertions.assertEquals(2.5, ZigguratSampler.Exponential.of(
+                createRngWithSequence(6092639261715210240L)).sample());
         Assertions.assertEquals(5.0, ZigguratSampler.Exponential.of(
-                createRngWithSequence(6092639261715210240L)).sample(), 0.0);
+            createRngWithSequence(-6261465550279131136L)).sample());
         Assertions.assertEquals(TAIL_W, ZigguratSampler.Exponential.of(
-                createRngWithSequence(-1, -1, 0)).sample(), 0.0);
+                createRngWithSequence(-1, -1, 0)).sample());
         Assertions.assertEquals(3 * TAIL_W, ZigguratSampler.Exponential.of(
                 createRngWithSequence(-1, -1, -1, -1, -1, -1, 0)).sample(), 1e-14);
     }
@@ -1820,9 +1824,11 @@ class StableSamplerTest {
      * 1 << 10                         d
      * Long.MIN_VALUE >>> 1            pi/5
      * Long.MAX_VALUE                  pi/4 - d
-     * 1                                                   7.397373235160728E-19
-     * 1446480648965178882L                                1.0
-     * 6092639261715210240L                                5.0
+     * 3                                                   6.564735882096453E-19
+     * 1446480648965178882L                                0.5
+     * 2703662416942444033L                                1.0
+     * 6092639261715210240L                                2.5
+     * -6261465550279131136L                               5.0
      * -1, -1, 0                                           7.569274694148063
      * -1L * 2n, 0                                         n * 7.569274694148063  [2]
      * </pre>
@@ -1845,18 +1851,19 @@ class StableSamplerTest {
         // To create a certain value x the input y can be obtained by reversing the
         // computation of the corresponding precomputed factor X. The lowest 8 bits of y
         // choose the index i into X so must be set as the lowest bits.
+        // The long is shifted right 1 before multiplying by X so this must be reversed.
         //
         // To find y to obtain the sample x use:
         // double[] X = { /* from ZigguratSampler.Exponential */ }
         // double x = 1.0; // or any other value < 7.5
         // for (int i = 0; i < X.length; i++) {
-        //     // Add back the index to the lowest 8 bits.
-        //     // This will work if the number is so big that the lower bits
-        //     // are zerod when casting the 53-bit mantissa to a long.
-        //     long y = (long) (x / X[i]) + i;
-        //     if (y * X[i] == x) {
-        //         // Found y!
-        //     }
+        //      // Add back the index to the lowest 8 bits.
+        //      // This will work if the number is so big that the lower bits
+        //      // are zerod when casting the 53-bit mantissa to a long.
+        //      long y = ((long) (x / X[i]) << 1) + i;
+        //      if ((y >>> 1) * X[i] == x) {
+        //          // Found y!
+        //      }
         // }
 
         // Start with a valid RNG.
@@ -2284,7 +2291,7 @@ class StableSamplerTest {
         final double w = ZigguratSampler.Exponential.of(rng).sample();
         Assertions.assertNotEquals(0.0, w);
         // This is the actual value; it is small but not extreme.
-        Assertions.assertEquals(0.007391869818503967, w);
+        Assertions.assertEquals(0.0036959349092519837, w);
 
         final RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS;
         final long seed = 0x83762b3daf1c43L;
@@ -2410,7 +2417,7 @@ class StableSamplerTest {
             // phi/2=pi/5, w=large
             x, -1, -1, -1, -1, -1, -1, -1, -1, 0,
             // phi/2=pi/5, w=1
-            x, 1446480648965178882L,
+            x, 2703662416942444033L,
         };
 
         // Validate series

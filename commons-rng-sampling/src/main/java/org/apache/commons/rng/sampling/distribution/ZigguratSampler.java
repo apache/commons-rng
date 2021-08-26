@@ -76,15 +76,16 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     //
     // https://github.com/cd-mcfarland/fast_prng
     //
-    // The adaption was faithful to the original as of July-2021.
+    // The adaption was based on the reference as of July-2021.
     // The code uses similar naming conventions from the exponential.h and normal.h
     // reference. Naming has been updated to be consistent in the exponential and normal
     // samplers. Comments from the c source have been included.
-    // When the c reference was updated to use an underlying RNG
-    // available in Commons RNG outputting the same signed and positive long values
-    // the c and java code output the same random
-    // deviates over 2^30 cycles if identically seeded. Branch frequencies have
-    // been measured and added as comments.
+    // Branch frequencies have been measured and added as comments.
+    //
+    // Notable changes based on performance tests across JDKs and platforms:
+    // The generation of unsigned longs has been changed to use bit shifts to favour
+    // the significant bits of the long. The interpolation of X and Y uses a single method.
+    // Recursion in the exponential sampler has been avoided.
     //
     // Note: The c implementation uses a RNG where the current value can be obtained
     // without advancing the generator. The entry point to the sample generation
@@ -210,6 +211,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // The expressions can be evaluated from the opposite direction using (1-u), e.g:
     // y = Y[j-1] + (1-u2) * (Y[j] - Y[j-1])
     // This allows the large value to subtract the small value before multiplying by u.
+    // This method is used in the reference c code. It uses an addition subtraction to create 1-u.
     // Note that the tables X and Y have been scaled by 2^-63. This allows U to be a uniform
     // long in [0, 2^63). Thus the value c in 'c + m * x' must be scaled up by 2^63.
     //
@@ -237,8 +239,10 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     //
     // Regions that are concave can detect a point (x,y) above the hypotenuse and reflect the
     // point in the hypotenuse by swapping u1 and u2.
+    //
     // Regions that are convex can detect a point (x,y) below the hypotenuse and immediate accept
     // the sample.
+    //
     // The maximum distance of pdf(x) from the hypotenuse can be precomputed. This can be done for
     // each region or by taking the largest distance across all regions. This value can be
     // compared to the distance between u1 and u2 and the point immediately accepted (concave)
@@ -246,7 +250,6 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // This sampler uses a single value for the maximum distance of pdf(x) from the hypotenuse.
     // For the normal distribution this is two values to separate the maximum for convex and
     // concave regions.
-    //
     // =========================================================================
 
     /**
@@ -517,7 +520,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
             @Override
             public double sample() {
-                return createSample() * mean;
+                return super.sample() * mean;
             }
 
             @Override
@@ -542,21 +545,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /** {@inheritDoc} */
         @Override
         public double sample() {
-            return createSample();
-        }
+            // Ideally this method byte code size should be below -XX:MaxInlineSize
+            // (which defaults to 35 bytes). This compiles to 35 bytes.
 
-        /**
-         * Creates the exponential sample with {@code mean = 1}.
-         *
-         * <p>Note: This has been extracted to a separate method so that the recursive call
-         * when sampling tries again targets this function. Otherwise the sub-class
-         * {@code ExponentialMean.sample()} method will recursively call
-         * the overloaded sample() method when trying again which creates a bad sample due
-         * to compound multiplication of the mean.
-         *
-         * @return the sample
-         */
-        final double createSample() {
             final long x = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
             final int i = ((int) x) & MASK_INT8;
@@ -565,17 +556,60 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 // Early exit.
                 // Expected frequency = 0.984375
                 // Drop the sign bit to multiply by [0, 2^63).
-                return X[i] * (x & MAX_INT64);
+                return X[i] * (x >>> 1);
             }
             // Expected frequency = 0.015625
 
             // Tail frequency     = 0.000516062 (recursion)
             // Overhang frequency = 0.0151089
 
-            final int j = selectRegion();
+            // Recycle x as the upper 56 bits have not been used.
+            return edgeSample(x);
+        }
+
+        /**
+         * Create the sample from the edge of the ziggurat.
+         *
+         * <p>This method has been extracted to fit the main sample method within 35 bytes (the
+         * default size for a JVM to inline a method).
+         *
+         * @param xx Initial random deviate
+         * @return a sample
+         */
+        private double edgeSample(long xx) {
+            int j = selectRegion();
+            if (j != 0) {
+                // Expected overhang frequency = 0.966972
+                return sampleOverhang(j, xx);
+            }
+            // Expected tail frequency = 0.033028 (recursion)
+
+            // xx must be discarded as the lower bits have already been used to generate i
+
             // If the tail then exploit the memoryless property of the exponential distribution.
-            // Add a new sample to the start of the tail (X_0).
-            return j == 0 ? X_0 + createSample() : sampleOverhang(j);
+            // Perform a new sample and add it to the start of the tail.
+            // This loop sums tail values until a sample can be returned from the exponential.
+            // The sum is added to the final sample on return.
+            double x0 = X_0;
+            for (;;) {
+                // Duplicate of the sample() method
+                final long x = nextLong();
+                final int i = ((int) x) & 0xff;
+
+                if (i < I_MAX) {
+                    // Early exit.
+                    return x0 + X[i] * (x >>> 1);
+                }
+
+                // Edge of the ziggurat
+                j = selectRegion();
+                if (j != 0) {
+                    return x0 + sampleOverhang(j, x);
+                }
+
+                // Add another tail sample
+                x0 += X_0;
+            }
         }
 
         /**
@@ -595,45 +629,52 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
          * Sample from overhang region {@code j}.
          *
          * @param j Index j (must be {@code > 0})
+         * @param xx Initial random deviate
          * @return the sample
          */
-        private double sampleOverhang(int j) {
-            // Sample from the triangle:
-            //    X[j],Y[j]
-            //        |\-->u1
-            //        | \  |
-            //        |  \ |
-            //        |   \|    Overhang j (with hypotenuse not pdf(x))
-            //        |    \
-            //        |    |\
-            //        |    | \
-            //        |    u2 \
-            //        +-------- X[j-1],Y[j-1]
-            // u2 = u1 + (u2 - u1) = u1 + uDistance
-            // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
-            long u1 = randomInt63();
-            long uDistance = randomInt63() - u1;
-            if (uDistance < 0) {
-                // Upper-right triangle. Reflect in hypotenuse.
-                uDistance = -uDistance;
-                // Update u1 to be min(u1, u2) by subtracting the distance between them
-                u1 -= uDistance;
-            }
-            // _FAST_PRNG_SAMPLE_X(xj, ux)
-            final double x = sampleX(X, j, u1);
-            if (uDistance >= E_MAX) {
-                // Early Exit: x < y - epsilon
-                return x;
-            }
+        private double sampleOverhang(int j, long xx) {
+            // Recycle the initial random deviate.
+            // Shift right to make an unsigned long.
+            long u1 = xx >>> 1;
+            for (;;) {
+                // Sample from the triangle:
+                //    X[j],Y[j]
+                //        |\-->u1
+                //        | \  |
+                //        |  \ |
+                //        |   \|    Overhang j (with hypotenuse not pdf(x))
+                //        |    \
+                //        |    |\
+                //        |    | \
+                //        |    u2 \
+                //        +-------- X[j-1],Y[j-1]
+                // u2 = u1 + (u2 - u1) = u1 + uDistance
+                // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
+                long uDistance = randomInt63() - u1;
+                if (uDistance < 0) {
+                    // Upper-right triangle. Reflect in hypotenuse.
+                    uDistance = -uDistance;
+                    // Update u1 to be min(u1, u2) by subtracting the distance between them
+                    u1 -= uDistance;
+                }
+                final double x = interpolate(X, j, u1);
+                if (uDistance >= E_MAX) {
+                    // Early Exit: x < y - epsilon
+                    return x;
+                }
 
-            // Note: Frequencies have been empirically measured per call into expOverhang:
-            // Early Exit = 0.823328
-            // Accept Y   = 0.161930
-            // Reject Y   = 0.0147417 (recursion)
+                // Note: Frequencies have been empirically measured per call into expOverhang:
+                // Early Exit = 0.823328
+                // Accept Y   = 0.161930
+                // Reject Y   = 0.0147417 (recursion)
 
-            // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
-            return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ?
-                x : sampleOverhang(j);
+                if (interpolate(Y, j, u1 + uDistance) <= Math.exp(-x)) {
+                    return x;
+                }
+
+                // Generate another variate for the next iteration
+                u1 = randomInt63();
+            }
         }
 
         /** {@inheritDoc} */
@@ -988,13 +1029,11 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         private double edgeSample(long xx) {
             // Expected frequency = 0.0117188
 
-            // Recycle bits then advance RNG:
-            // u1 = RANDOM_INT63()
+            // Drop the sign bit to create u:
             long u1 = xx & MAX_INT64;
-            // Another squashed, recyclable bit
-            // double sign_bit = u1 & 0x100 ? 1. : -1.
+            // Extract the sign bit for use later
             // Use 2 - 1 or 0 - 1
-            final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
+            final double signBit = ((xx >>> 62) & 0x2) - 1.0;
             final int j = selectRegion();
             // Four kinds of overhangs:
             //  j = 0                :  Sample from tail
@@ -1009,7 +1048,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 // Expected frequency: 0.00892899
                 // Observed loop repeat frequency: 0.389804
                 for (;;) {
-                    x = sampleX(X, j, u1);
+                    x = interpolate(X, j, u1);
                     // u2 = u1 + (u2 - u1) = u1 + uDistance
                     final long uDistance = randomInt63() - u1;
                     if (uDistance >= 0) {
@@ -1020,7 +1059,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                         // Within maximum distance of f(x) from the triangle hypotenuse.
                         // Frequency (per upper-right triangle): 0.431497
                         // Reject frequency: 0.489630
-                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                        interpolate(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     // uDistance < MAX_IE (upper-right triangle) or rejected as above the curve
@@ -1050,9 +1089,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                             // Update u1 to be min(u1, u2) by subtracting the distance between them
                             u1 -= uDistance;
                         }
-                        x = sampleX(X, j, u1);
+                        x = interpolate(X, j, u1);
                         if (uDistance > CONCAVE_E_MAX ||
-                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                            interpolate(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = randomInt63();
@@ -1063,8 +1102,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 // Expected frequency: 0.000015914
                 // Observed loop repeat frequency: 0.500213
                 for (;;) {
-                    x = sampleX(X, j, u1);
-                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = interpolate(X, j, u1);
+                    if (interpolate(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1140,71 +1179,50 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
      * @return the long
      */
     long randomInt63() {
-        return rng.nextLong() & MAX_INT64;
+        return rng.nextLong() >>> 1;
     }
 
     /**
-     * Compute the x value of the point in the overhang region from the uniform deviate.
-     * <pre>{@code
-     *    X[j],Y[j]
-     *        |\
-     *        | \
-     *        |  \
-     *        |   \    Overhang j (with hypotenuse not pdf(x))
-     *        |    \
-     *        |     \
-     *        |      \
-     *        |-->u1  \
-     *        +-------- X[j-1],Y[j-1]
+     * Compute the value of a point using linear interpolation of a data table of values
+     * using the provided uniform deviate.
+     * <pre>
+     *  value = v[j] + u * (v[j-1] - v[j])
+     * </pre>
      *
-     *   x = X[j] + u1 * (X[j-1] - X[j])
-     * }</pre>
-     * <p>See Fig. 2 in the main text.
+     * <p>This can be used to generate the (x,y) coordinates of a point in a rectangle
+     * with the upper-left corner at {@code j} and lower-right corner at {@code j-1}:
      *
-     * @param x Precomputed ziggurat lengths, X_j = length of ziggurat layer j.
-     * @param j j
-     * @param u1 u1
-     * @return x
-     */
-    static double sampleX(double[] x, int j, long u1) {
-        return x[j] * TWO_POW_63 + u1 * (x[j - 1] - x[j]);
-    }
-
-    /**
-     * Compute the y value of the point in the overhang region from the uniform deviate.
      * <pre>{@code
      *    X[j],Y[j]
      *        |\ |
      *        | \|
      *        |  \
-     *        |  |\    Overhang j (with hypotenuse not pdf(x))
+     *        |  |\    Ziggurat overhang j (with hypotenuse not pdf(x))
      *        |  | \
      *        |  u2 \
      *        |      \
-     *        |       \
+     *        |-->u1  \
      *        +-------- X[j-1],Y[j-1]
      *
-     *   y = Y[j-1] + (1-u2) * (Y[j] - Y[j-1])
+     *   x = X[j] + u1 * (X[j-1] - X[j])
+     *   y = Y[j] + u2 * (Y[j-1] - Y[j])
      * }</pre>
-     * <p>See Fig. 2 in the main text.
      *
-     * @param y Overhang table. Y_j = f(X_j).
-     * @param j j
-     * @param u2 u2
-     * @return y
+     * @param v Ziggurat data table. Values assumed to be scaled by 2^-63.
+     * @param j Index j. Value assumed to be above zero.
+     * @param u Uniform deviate. Value assumed to be in {@code [0, 2^63)}.
+     * @return value
      */
-    static double sampleY(double[] y, int j, long u2) {
-        // Note: u2 is in [0, 2^63)
-        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-        // 1 - u2 = Long.MIN_VALUE - u2
-        //
-        // The subtraction from 1 can be avoided with:
-        // y = Y[j] + u2 * (Y[j-1] - Y[j])
-        // This is effectively sampleX(y, j, u2)
+    static double interpolate(double[] v, int j, long u) {
+        // Note:
+        // The reference code used two methods to interpolate X and Y separately.
+        // The c language exploited declared pointers to X and Y and used a #define construct.
+        // This computed X identically to this method but Y as:
+        // y = Y[j-1] + (1-u2) * (Y[j] - Y[j-1])
+        // Using a single method here clarifies the code. It avoids generating (1-u).
         // Tests show the alternative is 1 ULP different with approximately 3% frequency.
-        // It is never more than 1 ULP different.
-
-        return y[j - 1] * TWO_POW_63 + (Long.MIN_VALUE - u2) * (y[j] - y[j - 1]);
+        // It has not been measured more than 1 ULP different.
+        return v[j] * TWO_POW_63 + u * (v[j - 1] - v[j]);
     }
 
     /**

@@ -108,13 +108,13 @@ class ZigguratSamplerTest {
             // Edge value
             final double x1 = expSample(seed, -1);
             // Recursion
-            // Note the order of additions is important as the final sample is added to the
-            // tail value multiple times.
             Assertions.assertEquals(x0 + tailValue, expSample(seed, -1, -1));
             Assertions.assertEquals(x1 + tailValue, expSample(seed, -1, -1, -1));
             // Double recursion
-            Assertions.assertEquals(x0 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1));
-            Assertions.assertEquals(x1 + tailValue + tailValue, expSample(seed, -1, -1, -1, -1, -1));
+            // Note the order of additions is important as the final sample is added to
+            // a summation of the tail value.
+            Assertions.assertEquals(tailValue + tailValue + x0, expSample(seed, -1, -1, -1, -1));
+            Assertions.assertEquals(tailValue + tailValue + x1, expSample(seed, -1, -1, -1, -1, -1));
         }
     }
 
