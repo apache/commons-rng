@@ -291,6 +291,7 @@ public class ZigguratSamplerPerformance {
                     // double multiply
                     // int subtract
                     // three index loads
+                    // Same as sampleX(x, j, u)
                     return x[j] * TWO_POW_63 + (x[j - 1] - x[j]) * u;
                 };
             } else if ("1minusU2".equals(method)) {
@@ -307,6 +308,7 @@ public class ZigguratSamplerPerformance {
                     // double multiply
                     // int subtract * 2
                     // three index loads
+                    // Same as sampleY(x, j, u)
                     return x[j - 1] * TWO_POW_63 + (x[j] - x[j - 1]) * (Long.MIN_VALUE - u);
                 };
             } else if ("U_1minusU".equals(method)) {
@@ -949,18 +951,31 @@ public class ZigguratSamplerPerformance {
      * McFarland (2016) JSCS 86, 1281-1294</a>
      */
     static class ModifiedZigguratNormalizedGaussianSampler implements ContinuousSampler {
-        /** Maximum i value for early exit. */
+        // Ziggurat volumes:
+        // Inside the layers              = 98.8281%  (253/256)
+        // Fraction outside the layers:
+        // concave overhangs              = 76.1941%
+        // inflection overhang            =  0.1358%
+        // convex overhangs               = 21.3072%
+        // tail                           =  2.3629%
+
+        /** The number of layers in the ziggurat. Maximum i value for early exit. */
         protected static final int I_MAX = 253;
-        /** The point where the Gaussian switches from convex to concave. */
+        /** The point where the Gaussian switches from convex to concave.
+         * This is the largest value of X[j] below 1. */
         protected static final int J_INFLECTION = 204;
-        /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
-        protected static final long MAX_IE = -2269182951627976004L;
-        /** Used for largest deviations of f(x) from y_i. */
-        protected static final long MIN_IE = 760463704284035184L;
-        /** Beginning of tail. */
+        /** Maximum epsilon distance of convex pdf(x) above the hypotenuse value for early rejection.
+         * Equal to approximately 0.2460 scaled by 2^63. This is negated on purpose as the
+         * distance for a point (x,y) above the hypotenuse is negative:
+         * {@code (|d| < max) == (d >= -max)}. */
+        protected static final long CONVEX_E_MAX = -2269182951627976004L;
+        /** Maximum distance of concave pdf(x) below the hypotenuse value for early exit.
+         * Equal to approximately 0.08244 scaled by 2^63. */
+        protected static final long CONCAVE_E_MAX = 760463704284035184L;
+        /** Beginning of tail. Equal to X[0] * 2^63. */
         protected static final double X_0 = 3.6360066255009455861;
-        /** 1/X_0. */
-        protected static final double ONE_OVER_X_0 = 1d / X_0;
+        /** 1/X_0. Used for tail sampling. */
+        protected static final double ONE_OVER_X_0 = 1.0 / X_0;
 
         /** The alias map. An integer in [0, 255] stored as a byte to save space. */
         protected static final byte[] MAP = toBytes(
@@ -1043,7 +1058,7 @@ public class ZigguratSamplerPerformance {
             -9223372036854775808L, -9223372036854775808L};
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text. X_i = length of
-         * ziggurat layer i.
+         * ziggurat layer i. Values have been scaled by 2^-63.
          */
         protected static final double[] X = {3.9421662825398133E-19, 3.720494500411901E-19, 3.582702448062868E-19,
             3.480747623654025E-19, 3.3990177171882136E-19, 3.330377836034014E-19, 3.270943881761755E-19,
@@ -1109,7 +1124,8 @@ public class ZigguratSamplerPerformance {
             6.092168754828126E-20, 5.885987357557682E-20, 5.666267511609098E-20, 5.430181363089457E-20,
             5.173817174449422E-20, 4.8915031722398545E-20, 4.57447418907553E-20, 4.2078802568583416E-20,
             3.762598672240476E-20, 3.162858980588188E-20, 0.0};
-        /** Overhang table. Y_i = f(X_i). */
+        /** The precomputed ziggurat heights, denoted Y_i in the main text. Y_i = f(X_i).
+         * Values have been scaled by 2^-63. */
         protected static final double[] Y = {1.4598410796619063E-22, 3.0066613427942797E-22, 4.612972881510347E-22,
             6.266335004923436E-22, 7.959452476188154E-22, 9.687465502170504E-22, 1.144687700237944E-21,
             1.3235036304379167E-21, 1.504985769205313E-21, 1.6889653000719298E-21, 1.8753025382711626E-21,
@@ -1219,7 +1235,7 @@ public class ZigguratSamplerPerformance {
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
             final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
             // Four kinds of overhangs:
             //  j = 0                :  Sample from tail
             //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
@@ -1233,22 +1249,18 @@ public class ZigguratSamplerPerformance {
                 // Branch frequency: 0.00892897
                 // Loop repeat frequency: 0.389804
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    final long uDiff = randomInt63() - u1;
-                    if (uDiff >= 0) {
+                    x = sampleX(X, j, u1);
+                    final long uDistance = randomInt63() - u1;
+                    if (uDistance >= 0) {
                         // Lower-left triangle
                         break;
                     }
-                    if (uDiff >= MAX_IE &&
+                    if (uDistance >= CONVEX_E_MAX &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
-                        // Frequency (per upper-right triangle): 0.431497
-                        // Reject frequency: 0.489630
-                        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                        // uy = Long.MIN_VALUE - (ux + uDiff)
-                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
-                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
+                    // uDistance < E_MAX (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j < J_INFLECTION) {
@@ -1270,15 +1282,15 @@ public class ZigguratSamplerPerformance {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
                         // U_y <- 1 - (U_x + distance)
-                        long uDiff = randomInt63() - u1;
-                        if (uDiff < 0) {
+                        long uDistance = randomInt63() - u1;
+                        if (uDistance < 0) {
                             // Upper-right triangle. Reflect in hypotenuse.
-                            uDiff = -uDiff;
-                            u1 -= uDiff;
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
                         }
-                        x = fastPrngSampleX(j, u1);
-                        if (uDiff > MIN_IE ||
-                            fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        x = sampleX(X, j, u1);
+                        if (uDistance > CONCAVE_E_MAX ||
+                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = randomInt63();
@@ -1289,8 +1301,8 @@ public class ZigguratSamplerPerformance {
                 // Branch frequency: 0.0000159359
                 // Loop repeat frequency: 0.500213
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1300,15 +1312,15 @@ public class ZigguratSamplerPerformance {
         }
 
         /**
-         * Alias sampling.
-         * See http://scorevoting.net/WarrenSmithPages/homepage/sampling.abs
+         * Select the overhang region or the tail using alias sampling.
          *
-         * @return the alias
+         * @return the region
          */
-        protected int normSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 256)
+            // j in [0, 256)
             final int j = ((int) x) & 0xff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] & 0xff : j;
         }
 
@@ -1328,30 +1340,6 @@ public class ZigguratSamplerPerformance {
          */
         protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param j j
-         * @param ux ux
-         * @return the sample
-         */
-        protected static double fastPrngSampleX(int j, long ux) {
-            return X[j] * TWO_POW_63 + (X[j - 1] - X[j]) * ux;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param i i
-         * @param uy uy
-         * @return the sample
-         */
-        protected static double fastPrngSampleY(int i, long uy) {
-            return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
         }
 
         /**
@@ -1405,7 +1393,7 @@ public class ZigguratSamplerPerformance {
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
             final double signBit = ((xx >>> 7) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
 
             // Simple overhangs
             double x;
@@ -1426,8 +1414,8 @@ public class ZigguratSamplerPerformance {
                 // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1491,7 +1479,7 @@ public class ZigguratSamplerPerformance {
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
             final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
             // Four kinds of overhangs:
             //  j = 0                :  Sample from tail
             //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
@@ -1505,22 +1493,18 @@ public class ZigguratSamplerPerformance {
                 // Branch frequency: 0.00892897
                 // Loop repeat frequency: 0.389804
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    final long uDiff = randomInt63() - u1;
-                    if (uDiff >= 0) {
+                    x = sampleX(X, j, u1);
+                    final long uDistance = randomInt63() - u1;
+                    if (uDistance >= 0) {
                         // Lower-left triangle
                         break;
                     }
-                    if (uDiff >= MAX_IE &&
+                    if (uDistance >= CONVEX_E_MAX &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
-                        // Frequency (per upper-right triangle): 0.431497
-                        // Reject frequency: 0.489630
-                        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                        // uy = Long.MIN_VALUE - (ux + uDiff)
-                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
-                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
+                    // uDistance < CONVEX_E_MAX (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j < J_INFLECTION) {
@@ -1542,14 +1526,14 @@ public class ZigguratSamplerPerformance {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
                         // U_y <- 1 - (U_x + distance)
-                        long uDiff = randomInt63() - u1;
-                        if (uDiff < 0) {
-                            uDiff = -uDiff;
-                            u1 -= uDiff;
+                        long uDistance = randomInt63() - u1;
+                        if (uDistance < 0) {
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
                         }
-                        x = fastPrngSampleX(j, u1);
-                        if (uDiff > MIN_IE ||
-                            fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        x = sampleX(X, j, u1);
+                        if (uDistance > CONCAVE_E_MAX ||
+                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = randomInt63();
@@ -1560,8 +1544,8 @@ public class ZigguratSamplerPerformance {
                 // Branch frequency: 0.0000159359
                 // Loop repeat frequency: 0.500213
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1627,7 +1611,7 @@ public class ZigguratSamplerPerformance {
             // Extract the sign bit:
             // Use 2 - 1 or 0 - 1
             final double signBit = ((xx >>> 62) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
             // Four kinds of overhangs:
             //  j = 0                :  Sample from tail
             //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
@@ -1642,20 +1626,20 @@ public class ZigguratSamplerPerformance {
                 // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = interpolateSample(X, j, u1);
-                    final long uDiff = (nextLong() >>> 1) - u1;
-                    if (uDiff >= 0) {
+                    final long uDistance = (nextLong() >>> 1) - u1;
+                    if (uDistance >= 0) {
                         // Lower-left triangle
                         break;
                     }
-                    if (uDiff >= MAX_IE &&
+                    if (uDistance >= CONVEX_E_MAX &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
                         // Frequency (per upper-right triangle): 0.431497
                         // Reject frequency: 0.489630
-                        // u2 = (u1 + uDiff)
-                        interpolateSample(Y, j, u1 + uDiff) < Math.exp(-0.5 * x * x)) {
+                        // u2 = (u1 + uDistance)
+                        interpolateSample(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
-                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
+                    // uDistance < CONVEX_E_MAX (upper-right triangle) or rejected as above the curve
                     u1 = nextLong() >>> 1;
                 }
             } else if (j < J_INFLECTION) {
@@ -1677,14 +1661,14 @@ public class ZigguratSamplerPerformance {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
                         // U_y <- 1 - (U_x + distance)
-                        long uDiff = (nextLong() >>> 1) - u1;
-                        if (uDiff < 0) {
-                            uDiff = -uDiff;
-                            u1 -= uDiff;
+                        long uDistance = (nextLong() >>> 1) - u1;
+                        if (uDistance < 0) {
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
                         }
                         x = interpolateSample(X, j, u1);
-                        if (uDiff > MIN_IE ||
-                            interpolateSample(Y, j, u1 + uDiff) < Math.exp(-0.5 * x * x)) {
+                        if (uDistance > CONCAVE_E_MAX ||
+                            interpolateSample(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = nextLong() >>> 1;
@@ -1780,7 +1764,7 @@ public class ZigguratSamplerPerformance {
             // double sign_bit = u1 & 0x100 ? 1. : -1.
             // Use 2 - 1 or 0 - 1
             final double signBit = ((xx >>> 7) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
 
             // Simple overhangs
             double x;
@@ -1801,8 +1785,8 @@ public class ZigguratSamplerPerformance {
                 // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -1849,10 +1833,11 @@ public class ZigguratSamplerPerformance {
 
         /** {@inheritDoc} */
         @Override
-        protected int normSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 256)
+            // j in [0, 256)
             final int j = ((int) x) & 0xff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? INT_MAP[j] : j;
         }
     }
@@ -1866,18 +1851,31 @@ public class ZigguratSamplerPerformance {
      * a table size of 512.
      */
     static class ModifiedZigguratNormalizedGaussianSampler512 implements ContinuousSampler {
-        /** Maximum i value for early exit. */
+        // Ziggurat volumes:
+        // Inside the layers              = 99.4141%  (509/512)
+        // Fraction outside the layers:
+        // concave overhangs              = 75.5775%
+        // inflection overhang            =  0.0675%
+        // convex overhangs               = 22.2196%
+        // tail                           =  2.1354%
+
+        /** The number of layers in the ziggurat. Maximum i value for early exit. */
         protected static final int I_MAX = 509;
-        /** The point where the Gaussian switches from convex to concave. */
+        /** The point where the Gaussian switches from convex to concave.
+         * This is the largest value of X[j] below 1. */
         protected static final int J_INFLECTION = 409;
-        /** Used for largest deviations of f(x) from y_i. This is negated on purpose. */
-        protected static final long MAX_IE = -2284356979160975476L;
-        /** Used for largest deviations of f(x) from y_i. */
-        protected static final long MIN_IE = 764138791244619676L;
-        /** Beginning of tail. */
+        /** Maximum epsilon distance of convex pdf(x) above the hypotenuse value for early rejection.
+         * Equal to approximately 0.2477 scaled by 2^63. This is negated on purpose as the
+         * distance for a point (x,y) above the hypotenuse is negative:
+         * {@code (|d| < max) == (d >= -max)}. */
+        protected static final long CONVEX_E_MAX = -2284356979160975476L;
+        /** Maximum distance of concave pdf(x) below the hypotenuse value for early exit.
+         * Equal to approximately 0.08284 scaled by 2^63. */
+        protected static final long CONCAVE_E_MAX = 764138791244619676L;
+        /** Beginning of tail. Equal to X[0] * 2^63. */
         protected static final double X_0 = 3.8358644648571882;
-        /** 1/X_0. */
-        protected static final double ONE_OVER_X_0 = 1d / X_0;
+        /** 1/X_0. Used for tail sampling. */
+        protected static final double ONE_OVER_X_0 = 1.0 / X_0;
 
         /** The alias map. */
         private static final int[] MAP = {0, 0, 480, 2, 3, 4, 5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -2035,7 +2033,7 @@ public class ZigguratSamplerPerformance {
             -9223372036854775808L};
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text. X_i = length of
-         * ziggurat layer i.
+         * ziggurat layer i. Values have been scaled by 2^-63.
          */
         private static final double[] X = {4.1588525861581104e-19, 3.9503459916661627e-19, 3.821680975424891e-19,
             3.727004572118549e-19, 3.6514605982514084e-19, 3.5882746800626676e-19, 3.533765597048754e-19,
@@ -2165,7 +2163,8 @@ public class ZigguratSamplerPerformance {
             4.756003683510097e-20, 4.5967194527575314e-20, 4.4263619567465964e-20, 4.242592320713738e-20,
             4.042157155716674e-20, 3.820304293025196e-20, 3.5696135223547374e-20, 3.277315994615917e-20,
             2.9176892376585344e-20, 2.4195231151204545e-20, 0.0};
-        /** Overhang table. Y_i = f(X_i). */
+        /** The precomputed ziggurat heights, denoted Y_i in the main text. Y_i = f(X_i).
+         * Values have been scaled by 2^-63. */
         private static final double[] Y = {6.918899098832948e-23, 1.4202990535697683e-22, 2.1732316399259404e-22,
             2.9452908326033447e-22, 3.733322926509216e-22, 4.535231475217251e-22, 5.349509633185051e-22,
             6.175015744699501e-22, 7.01085131749555e-22, 7.856288599286739e-22, 8.710724705333867e-22,
@@ -2327,7 +2326,7 @@ public class ZigguratSamplerPerformance {
             // Another squashed, recyclable bit
             // Use 2 - 1 or 0 - 1
             final double signBit = ((u1 >>> 8) & 0x2) - 1.0;
-            final int j = normSampleA();
+            final int j = selectRegion();
             // Four kinds of overhangs:
             //  j = 0                :  Sample from tail
             //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
@@ -2341,20 +2340,18 @@ public class ZigguratSamplerPerformance {
                 // Branch frequency: 0.00442507
                 // Loop repeat frequency: 0.400480
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    final long uDiff = randomInt63() - u1;
-                    if (uDiff >= 0) {
+                    x = sampleX(X, j, u1);
+                    final long uDistance = randomInt63() - u1;
+                    if (uDistance >= 0) {
                         // Lower-left triangle
                         break;
                     }
-                    if (uDiff >= MAX_IE &&
+                    if (uDistance >= CONVEX_E_MAX &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
-                        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                        // uy = Long.MIN_VALUE - (ux + uDiff)
-                        fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
-                    // uDiff < MAX_IE (upper-right triangle) or rejected as above the curve
+                    // uDistance < E_MAX (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j < J_INFLECTION) {
@@ -2374,14 +2371,14 @@ public class ZigguratSamplerPerformance {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
                         // U_y <- 1 - (U_x + distance)
-                        long uDiff = randomInt63() - u1;
-                        if (uDiff < 0) {
-                            uDiff = -uDiff;
-                            u1 -= uDiff;
+                        long uDistance = randomInt63() - u1;
+                        if (uDistance < 0) {
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
                         }
-                        x = fastPrngSampleX(j, u1);
-                        if (uDiff > MIN_IE ||
-                            fastPrngSampleY(j, Long.MIN_VALUE - (u1 + uDiff)) < Math.exp(-0.5 * x * x)) {
+                        x = sampleX(X, j, u1);
+                        if (uDistance > CONCAVE_E_MAX ||
+                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = randomInt63();
@@ -2391,8 +2388,8 @@ public class ZigguratSamplerPerformance {
                 // Inflection point
                 // Branch frequency: 0.00000394229
                 for (;;) {
-                    x = fastPrngSampleX(j, u1);
-                    if (fastPrngSampleY(j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
                     u1 = randomInt63();
@@ -2402,15 +2399,15 @@ public class ZigguratSamplerPerformance {
         }
 
         /**
-         * Alias sampling.
-         * See http://scorevoting.net/WarrenSmithPages/homepage/sampling.abs
+         * Select the overhang region or the tail using alias sampling.
          *
-         * @return the alias
+         * @return the region
          */
-        protected int normSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 512)
+            // j in [0, 512)
             final int j = ((int) x) & 0x1ff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] : j;
         }
 
@@ -2430,30 +2427,6 @@ public class ZigguratSamplerPerformance {
          */
         protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param j j
-         * @param ux ux
-         * @return the sample
-         */
-        protected static double fastPrngSampleX(int j, long ux) {
-            return X[j] * TWO_POW_63 + (X[j - 1] - X[j]) * ux;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param i i
-         * @param uy uy
-         * @return the sample
-         */
-        protected static double fastPrngSampleY(int i, long uy) {
-            return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
         }
     }
 
@@ -2477,11 +2450,18 @@ public class ZigguratSamplerPerformance {
      * McFarland (2016) JSCS 86, 1281-1294</a>
      */
     static class ModifiedZigguratExponentialSampler implements ContinuousSampler {
-        /** Maximum i value for early exit. */
+        // Ziggurat volumes:
+        // Inside the layers              = 98.4375%  (252/256)
+        // Fraction outside the layers:
+        // concave overhangs              = 96.6972%
+        // tail                           =  3.3028%
+
+        /** The number of layers in the ziggurat. Maximum i value for early exit. */
         protected static final int I_MAX = 252;
-        /** Maximum distance value for early exit. Equal to approximately 0.0926 scaled by 2^63. */
-        protected static final long IE_MAX = 853965788476313646L;
-        /** Beginning of tail. */
+        /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit.
+         * Equal to approximately 0.0926 scaled by 2^63. */
+        protected static final long E_MAX = 853965788476313646L;
+        /** Beginning of tail. Equal to X[0] * 2^63. */
         protected static final double X_0 = 7.569274694148063;
 
         /** The alias map. An integer in [0, 255] stored as a byte to save space. */
@@ -2564,7 +2544,7 @@ public class ZigguratSamplerPerformance {
             -9223372036854775808L};
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text. X_i = length of
-         * ziggurat layer i.
+         * ziggurat layer i. Values have been scaled by 2^-63.
          */
         protected static final double[] X = {8.206624067534882E-19, 7.397373235160728E-19, 6.913331337791529E-19,
             6.564735882096453E-19, 6.291253995981851E-19, 6.065722412960496E-19, 5.873527610373727E-19,
@@ -2630,7 +2610,8 @@ public class ZigguratSamplerPerformance {
             3.4067836691100565E-20, 3.2128447641564046E-20, 3.0095646916399994E-20, 2.794846945559833E-20,
             2.5656913048718645E-20, 2.317520975680391E-20, 2.042669522825129E-20, 1.7261770330213488E-20,
             1.3281889259442579E-20, 0.0};
-        /** Overhang table. Y_i = f(X_i). */
+        /** The precomputed ziggurat heights, denoted Y_i in the main text. Y_i = f(X_i).
+         * Values have been scaled by 2^-63. */
         protected static final double[] Y = {5.595205495112736E-23, 1.1802509982703313E-22, 1.844442338673583E-22,
             2.543903046669831E-22, 3.2737694311509334E-22, 4.0307732132706715E-22, 4.812547831949511E-22,
             5.617291489658331E-22, 6.443582054044353E-22, 7.290266234346368E-22, 8.156388845632194E-22,
@@ -2745,59 +2726,56 @@ public class ZigguratSamplerPerformance {
             // For the first call into createSample:
             // Recursion frequency = 0.000515503
             // Overhang frequency  = 0.0151056
-            final int j = expSampleA();
-            return j == 0 ? X_0 + createSample() : expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? X_0 + createSample() : sampleOverhang(j);
         }
 
         /**
-         * Alias sampling.
-         * See http://scorevoting.net/WarrenSmithPages/homepage/sampling.abs
+         * Select the overhang region or the tail using alias sampling.
          *
-         * @return the alias
+         * @return the region
          */
-        protected int expSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 256)
+            // j in [0, 256)
             final int j = ((int) x) & 0xff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] & 0xff : j;
         }
 
         /**
-         * Draws a PRN from overhang.
+         * Sample from overhang region {@code j}.
          *
          * @param j Index j (must be {@code > 0})
          * @return the sample
          */
-        protected double expOverhang(int j) {
-            // To sample a unit right-triangle:
-            // U_x <- min(U_1, U_2)
-            // distance <- | U_1 - U_2 |
-            // U_y <- 1 - (U_x + distance)
-            long ux = randomInt63();
-            long uDistance = randomInt63() - ux;
+        protected double sampleOverhang(int j) {
+            // Sample from the triangle:
+            //    X[j],Y[j]
+            //        |\-->u1
+            //        | \  |
+            //        |  \ |
+            //        |   \|    Overhang j (with hypotenuse not pdf(x))
+            //        |    \
+            //        |    |\
+            //        |    | \
+            //        |    u2 \
+            //        +-------- X[j-1],Y[j-1]
+            // u2 = u1 + (u2 - u1) = u1 + uDistance
+            // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
+            long u1 = randomInt63();
+            long uDistance = randomInt63() - u1;
             if (uDistance < 0) {
                 uDistance = -uDistance;
-                ux -= uDistance;
+                u1 -= uDistance;
             }
-            // _FAST_PRNG_SAMPLE_X(xj, ux)
-            final double x = fastPrngSampleX(j, ux);
-            if (uDistance >= IE_MAX) {
-                // Frequency (per call into createSample): 0.0126230
-                // Frequency (per call into expOverhang):  0.823328
+            final double x = sampleX(X, j, u1);
+            if (uDistance >= E_MAX) {
                 // Early Exit: x < y - epsilon
                 return x;
             }
-            // Frequency per call into createSample:
-            // Return    = 0.00248262
-            // Recursion = 0.000226013
-            // Frequency per call into expOverhang:
-            // Return    = 0.161930
-            // Recursion = 0.0147417
 
-            // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
-            // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-            // uy = Long.MIN_VALUE - (ux + uDistance)
-            return fastPrngSampleY(j, Long.MIN_VALUE - (ux + uDistance)) <= Math.exp(-x) ? x : expOverhang(j);
+            return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ? x : sampleOverhang(j);
         }
 
         /**
@@ -2816,30 +2794,6 @@ public class ZigguratSamplerPerformance {
          */
         protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param j j
-         * @param ux ux
-         * @return the sample
-         */
-        protected static double fastPrngSampleX(int j, long ux) {
-            return X[j] * TWO_POW_63 + (X[j - 1] - X[j]) * ux;
-        }
-
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param i i
-         * @param uy uy
-         * @return the sample
-         */
-        static double fastPrngSampleY(int i, long uy) {
-            return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
         }
 
         /**
@@ -2882,9 +2836,9 @@ public class ZigguratSamplerPerformance {
 
         /** {@inheritDoc} */
         @Override
-        protected double expOverhang(int j) {
-            final double x = fastPrngSampleX(j, randomInt63());
-            return fastPrngSampleY(j, randomInt63()) <= Math.exp(-x) ? x : expOverhang(j);
+        protected double sampleOverhang(int j) {
+            final double x = sampleX(X, j, randomInt63());
+            return sampleY(Y, j, randomInt63()) <= Math.exp(-x) ? x : sampleOverhang(j);
         }
     }
 
@@ -2943,8 +2897,8 @@ public class ZigguratSamplerPerformance {
             // For the first call into sample:
             // Tail frequency = 0.000515503
             // Overhang frequency = 0.0151056
-            final int j = expSampleA();
-            return j == 0 ? sampleAdd(X_0) : expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? sampleAdd(X_0) : sampleOverhang(j);
         }
 
         /**
@@ -2967,8 +2921,8 @@ public class ZigguratSamplerPerformance {
                 return x0 + X[i] * (x >>> 1);
             }
             // Edge of the ziggurat
-            final int j = expSampleA();
-            return j == 0 ? sampleAdd(x0 + X_0) : x0 + expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? sampleAdd(x0 + X_0) : x0 + sampleOverhang(j);
         }
     }
 
@@ -3026,10 +2980,10 @@ public class ZigguratSamplerPerformance {
          * @return a sample
          */
         private double edgeSample() {
-            int j = expSampleA();
+            int j = selectRegion();
             if (j != 0) {
                 // Overhang frequency = 0.0151056
-                return expOverhang(j);
+                return sampleOverhang(j);
             }
             // Tail frequency = 0.000515503
 
@@ -3044,9 +2998,9 @@ public class ZigguratSamplerPerformance {
                     return x0 + X[i] * (x >>> 1);
                 }
                 // Edge of the ziggurat
-                j = expSampleA();
+                j = selectRegion();
                 if (j != 0) {
-                    return x0 + expOverhang(j);
+                    return x0 + sampleOverhang(j);
                 }
                 // Another tail sample
                 x0 += X_0;
@@ -3112,10 +3066,10 @@ public class ZigguratSamplerPerformance {
          * @return a sample
          */
         private double edgeSample(long xx) {
-            int j = expSampleA();
+            int j = selectRegion();
             if (j != 0) {
                 // Overhang frequency = 0.0151056
-                return expOverhang(j, xx);
+                return sampleOverhang(j, xx);
             }
             // Tail frequency = 0.000515503
 
@@ -3130,9 +3084,9 @@ public class ZigguratSamplerPerformance {
                     return x0 + X[i] * (x >>> 1);
                 }
                 // Edge of the ziggurat
-                j = expSampleA();
+                j = selectRegion();
                 if (j != 0) {
-                    return x0 + expOverhang(j, x);
+                    return x0 + sampleOverhang(j, x);
                 }
                 // Another tail sample
                 x0 += X_0;
@@ -3140,7 +3094,7 @@ public class ZigguratSamplerPerformance {
         }
 
         /**
-         * Draws a PRN from overhang.
+         * Sample from overhang region {@code j}.
          *
          * <p>This does not use recursion.
          *
@@ -3148,38 +3102,34 @@ public class ZigguratSamplerPerformance {
          * @param xx Initial random deviate
          * @return the sample
          */
-        protected double expOverhang(int j, long xx) {
+        protected double sampleOverhang(int j, long xx) {
             // Recycle the initial random deviate.
             // Shift right to make an unsigned long.
-            for (long ux = xx >>> 1;; ux = nextLong() >>> 1) {
-                // To sample a unit right-triangle:
-                // U_x <- min(U_1, U_2)
-                // distance <- | U_1 - U_2 |
-                // U_y <- 1 - (U_x + distance)
-                long uDistance = (nextLong() >>> 1) - ux;
+            for (long u1 = xx >>> 1;; u1 = nextLong() >>> 1) {
+                // Sample from the triangle:
+                //    X[j],Y[j]
+                //        |\-->u1
+                //        | \  |
+                //        |  \ |
+                //        |   \|    Overhang j (with hypotenuse not pdf(x))
+                //        |    \
+                //        |    |\
+                //        |    | \
+                //        |    u2 \
+                //        +-------- X[j-1],Y[j-1]
+                // u2 = u1 + (u2 - u1) = u1 + uDistance
+                // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
+                long uDistance = (nextLong() >>> 1) - u1;
                 if (uDistance < 0) {
                     uDistance = -uDistance;
-                    ux -= uDistance;
+                    u1 -= uDistance;
                 }
-                // _FAST_PRNG_SAMPLE_X(xj, ux)
-                final double x = fastPrngSampleX(j, ux);
-                if (uDistance >= IE_MAX) {
-                    // Frequency (per call into createSample): 0.0126230
-                    // Frequency (per call into expOverhang):  0.823328
+                final double x = sampleX(X, j, u1);
+                if (uDistance >= E_MAX) {
                     // Early Exit: x < y - epsilon
                     return x;
                 }
-                // Frequency per call into createSample:
-                // Return    = 0.00248262
-                // Recursion = 0.000226013
-                // Frequency per call into expOverhang:
-                // Return    = 0.161930
-                // Recursion = 0.0147417
-
-                // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
-                // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-                // uy = Long.MIN_VALUE - (ux + uDistance)
-                if (fastPrngSampleY(j, Long.MIN_VALUE - (ux + uDistance)) <= Math.exp(-x)) {
+                if (sampleY(Y, j, u1 + uDistance) <= Math.exp(-x)) {
                     return x;
                 }
             }
@@ -3221,8 +3171,8 @@ public class ZigguratSamplerPerformance {
             // For the first call into createSample:
             // Tail frequency = 0.000515503
             // Overhang frequency = 0.0151056
-            final int j = expSampleA();
-            return j == 0 ? sampleAdd(X_0) : expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? sampleAdd(X_0) : sampleOverhang(j);
         }
 
         /**
@@ -3245,8 +3195,8 @@ public class ZigguratSamplerPerformance {
                 return X[i] * (x & MAX_INT64);
             }
             // Edge of the ziggurat
-            final int j = expSampleA();
-            return j == 0 ? sampleAdd(x0 + X_0) : x0 + expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? sampleAdd(x0 + X_0) : x0 + sampleOverhang(j);
         }
     }
 
@@ -3284,10 +3234,11 @@ public class ZigguratSamplerPerformance {
 
         /** {@inheritDoc} */
         @Override
-        protected int expSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 256)
+            // j in [0, 256)
             final int j = ((int) x) & 0xff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? INT_MAP[j] : j;
         }
     }
@@ -3301,11 +3252,18 @@ public class ZigguratSamplerPerformance {
      * a table size of 512.
      */
     static class ModifiedZigguratExponentialSampler512 implements ContinuousSampler {
-        /** Maximum i value for early exit. */
+        // Ziggurat volumes:
+        // Inside the layers              = 99.2188%  (508/512)
+        // Fraction outside the layers:
+        // concave overhangs              = 97.0103%
+        // tail                           =  2.9897%
+
+        /** The number of layers in the ziggurat. Maximum i value for early exit. */
         protected static final int I_MAX = 508;
-        /** Maximum distance value for early exit. Equal to approximately 0.0919 scaled by 2^63. */
-        protected static final long IE_MAX = 847415790149374212L;
-        /** Beginning of tail. */
+        /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit.
+         * Equal to approximately 0.0919 scaled by 2^63. */
+        protected static final long E_MAX = 847415790149374212L;
+        /** Beginning of tail. Equal to X[0] * 2^63. */
         protected static final double X_0 = 8.362025281328359;
 
         /** The alias map. */
@@ -3462,7 +3420,7 @@ public class ZigguratSamplerPerformance {
             -9223372036854775808L};
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text. X_i = length of
-         * ziggurat layer i.
+         * ziggurat layer i. Values have been scaled by 2^-63.
          */
         private static final double[] X = {9.066125976394918e-19, 8.263176964596684e-19, 7.784282104206918e-19,
             7.440138137244747e-19, 7.170634551247567e-19, 6.948734962698102e-19, 6.759905994143853e-19,
@@ -3592,7 +3550,8 @@ public class ZigguratSamplerPerformance {
             2.303828920285994e-20, 2.1739999061414015e-20, 2.037142499071807e-20, 1.8916669455626665e-20,
             1.7352728004959384e-20, 1.56439466915464e-20, 1.3729109753658277e-20, 1.1483304366567183e-20,
             8.53241131926212e-21, 0.0};
-        /** Overhang table. Y_i = f(X_i). */
+        /** The precomputed ziggurat heights, denoted Y_i in the main text. Y_i = f(X_i).
+         * Values have been scaled by 2^-63. */
         private static final double[] Y = {2.532379772713818e-23, 5.310835823923221e-23, 8.26022457065042e-23,
             1.134603744347431e-22, 1.4547828564666417e-22, 1.7851865078182134e-22, 2.1248195450141036e-22,
             2.472922973401801e-22, 2.8288961626257085e-22, 3.1922503684288075e-22, 3.5625791217647975e-22,
@@ -3771,50 +3730,55 @@ public class ZigguratSamplerPerformance {
             // For the first call into createSample:
             // Recursion frequency = 0.000232209
             // Overhang frequency  = 0.00757617
-            final int j = expSampleA();
-            return j == 0 ? X_0 + createSample() : expOverhang(j);
+            final int j = selectRegion();
+            return j == 0 ? X_0 + createSample() : sampleOverhang(j);
         }
 
         /**
-         * Alias sampling.
-         * See http://scorevoting.net/WarrenSmithPages/homepage/sampling.abs
+         * Select the overhang region or the tail using alias sampling.
          *
-         * @return the alias
+         * @return the region
          */
-        protected int expSampleA() {
+        protected int selectRegion() {
             final long x = nextLong();
-            // j <- I(0, 512)
+            // j in [0, 512)
             final int j = ((int) x) & 0x1ff;
+            // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] : j;
         }
 
         /**
-         * Draws a PRN from overhang.
+         * Sample from overhang region {@code j}.
          *
          * @param j Index j (must be {@code > 0})
          * @return the sample
          */
-        protected double expOverhang(int j) {
-            // To sample a unit right-triangle:
-            // U_x <- min(U_1, U_2)
-            // distance <- | U_1 - U_2 |
-            // U_y <- 1 - (U_x + distance)
-            long ux = randomInt63();
-            long uDistance = randomInt63() - ux;
+        protected double sampleOverhang(int j) {
+            // Sample from the triangle:
+            //    X[j],Y[j]
+            //        |\-->u1
+            //        | \  |
+            //        |  \ |
+            //        |   \|    Overhang j (with hypotenuse not pdf(x))
+            //        |    \
+            //        |    |\
+            //        |    | \
+            //        |    u2 \
+            //        +-------- X[j-1],Y[j-1]
+            // u2 = u1 + (u2 - u1) = u1 + uDistance
+            // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
+            long u1 = randomInt63();
+            long uDistance = randomInt63() - u1;
             if (uDistance < 0) {
                 uDistance = -uDistance;
-                ux -= uDistance;
+                u1 -= uDistance;
             }
-            // _FAST_PRNG_SAMPLE_X(xj, ux)
-            final double x = fastPrngSampleX(j, ux);
-            if (uDistance >= IE_MAX) {
+            final double x = sampleX(X, j, u1);
+            if (uDistance >= E_MAX) {
                 // Early Exit: x < y - epsilon
                 return x;
             }
-            // _FAST_PRNG_SAMPLE_Y(j, pow(2, 63) - (ux + uDistance))
-            // Long.MIN_VALUE is used as an unsigned int with value 2^63:
-            // uy = Long.MIN_VALUE - (ux + uDistance)
-            return fastPrngSampleY(j, Long.MIN_VALUE - (ux + uDistance)) <= Math.exp(-x) ? x : expOverhang(j);
+            return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ? x : sampleOverhang(j);
         }
 
         /**
@@ -3834,30 +3798,67 @@ public class ZigguratSamplerPerformance {
         protected long randomInt63() {
             return rng.nextLong() & MAX_INT64;
         }
+    }
 
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param j j
-         * @param ux ux
-         * @return the sample
-         */
-        protected static double fastPrngSampleX(int j, long ux) {
-            return X[j] * TWO_POW_63 + (X[j - 1] - X[j]) * ux;
-        }
+    /**
+     * Compute the x value of the point in the overhang region from the uniform deviate.
+     * <pre>{@code
+     *    X[j],Y[j]
+     *        |\ |
+     *        | \|
+     *        |  \
+     *        |  |\    Ziggurat overhang j (with hypotenuse not pdf(x))
+     *        |  | \
+     *        |  u2 \
+     *        |      \
+     *        |-->u1  \
+     *        +-------- X[j-1],Y[j-1]
+     *
+     *   x = X[j] + u1 * (X[j-1] - X[j])
+     * }</pre>
+     *
+     * @param x Ziggurat data table X. Values assumed to be scaled by 2^-63.
+     * @param j Index j. Value assumed to be above zero.
+     * @param u1 Uniform deviate. Value assumed to be in {@code [0, 2^63)}.
+     * @return y
+     */
+    static double sampleX(double[] x, int j, long u1) {
+        return x[j] * TWO_POW_63 + u1 * (x[j - 1] - x[j]);
+    }
 
-        /**
-         * Auxilary function to see if rejection sampling is required in the overhang.
-         * See Fig. 2 in the main text.
-         *
-         * @param i i
-         * @param uy uy
-         * @return the sample
-         */
-        static double fastPrngSampleY(int i, long uy) {
-            return Y[i - 1] * TWO_POW_63 + (Y[i] - Y[i - 1]) * uy;
-        }
+    /**
+     * Compute the y value of the point in the overhang region from the uniform deviate.
+     * <pre>{@code
+     *    X[j],Y[j]
+     *        |\ |
+     *        | \|
+     *        |  \
+     *        |  |\    Ziggurat overhang j (with hypotenuse not pdf(x))
+     *        |  | \
+     *        |  u2 \
+     *        |      \
+     *        |-->u1  \
+     *        +-------- X[j-1],Y[j-1]
+     *
+     *   y = Y[j-1] + (1-u2) * (Y[j] - Y[j-1])
+     * }</pre>
+     *
+     * @param y Ziggurat data table Y. Values assumed to be scaled by 2^-63.
+     * @param j Index j. Value assumed to be above zero.
+     * @param u2 Uniform deviate. Value assumed to be in {@code [0, 2^63)}.
+     * @return y
+     */
+    static double sampleY(double[] y, int j, long u2) {
+        // Note: u2 is in [0, 2^63)
+        // Long.MIN_VALUE is used as an unsigned int with value 2^63:
+        // 1 - u2 = Long.MIN_VALUE - u2
+        //
+        // The subtraction from 1 can be avoided with:
+        // y = Y[j] + u2 * (Y[j-1] - Y[j])
+        // This is effectively sampleX(y, j, u2)
+        // Tests show the alternative is 1 ULP different with approximately 3% frequency.
+        // It has not been measured more than 1 ULP different.
+        return y[j - 1] * TWO_POW_63 + (Long.MIN_VALUE - u2) * (y[j] - y[j - 1]);
     }
 
     /**
