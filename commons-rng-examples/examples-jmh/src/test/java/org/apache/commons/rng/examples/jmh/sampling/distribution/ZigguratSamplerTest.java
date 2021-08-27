@@ -46,8 +46,14 @@ class ZigguratSamplerTest {
      *
      * <p>This has been chosen to allow the test to pass with all generators.
      * Set to null test with a random seed.
+     *
+     * <p>Note that the p-value of the chi-square test is 0.001. There are multiple assertions
+     * per test and multiple samplers. The total number of chi-square tests is above 100
+     * and failure of a chosen random seed on a few tests is common. When using a random
+     * seed re-run the test multiple times. Systematic failure of the same sampler
+     * should be investigated further.
      */
-    private static final Long SEED = 0L;
+    private static final Long SEED = 0xd1342543de82ef95L;
 
     /**
      * Create arguments with the name of the factory.
