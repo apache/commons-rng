@@ -1062,7 +1062,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                         interpolate(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
                     }
-                    // uDistance < MAX_IE (upper-right triangle) or rejected as above the curve
+                    // uDistance < E_MAX (upper-right triangle) or rejected as above the curve
                     u1 = randomInt63();
                 }
             } else if (j < J_INFLECTION) {
