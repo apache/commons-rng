@@ -1225,12 +1225,10 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988280
                 return X[i] * xx;
             }
 
             // Recycle bits then advance RNG:
-            // u1 = RANDOM_INT63()
             long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // double sign_bit = u1 & 0x100 ? 1. : -1.
@@ -1247,8 +1245,6 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00892897
-                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = sampleX(X, j, u1);
                     final long uDistance = randomInt63() - u1;
@@ -1267,18 +1263,14 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000276358
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
-                    // Loop repeat frequency: 0.0634786
                     do {
                         x = ONE_OVER_X_0 * exponential.sample();
                     } while (exponential.sample() < 0.5 * x * x);
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00249563
-                    // Loop repeat frequency: 0.0123784
                     for (;;) {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
@@ -1299,8 +1291,6 @@ public class ZigguratSamplerPerformance {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.0000159359
-                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = sampleX(X, j, u1);
                     if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -1386,7 +1376,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988283
                 return X[i] * xx;
             }
 
@@ -1400,19 +1389,14 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j == 0) {
                 // Tail
-                // Branch frequency: 0.000276321
-                // Loop repeat frequency: 0.0634091
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
                 x += X_0;
             } else {
                 // Rejection sampling
-                // Branch frequency: 0.0114405
-                // Loop repeat frequency: 0.419985
 
                 // Recycle bits then advance RNG:
-                // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
                     x = sampleX(X, j, u1);
@@ -1456,7 +1440,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988283
                 return X[i] * xx;
             }
 
@@ -1474,7 +1457,6 @@ public class ZigguratSamplerPerformance {
          */
         private double edgeSample(long xx) {
             // Recycle bits then advance RNG:
-            // u1 = RANDOM_INT63();
             long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // double sign_bit = u1 & 0x100 ? 1. : -1.
@@ -1491,8 +1473,6 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00892897
-                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = sampleX(X, j, u1);
                     final long uDistance = randomInt63() - u1;
@@ -1511,18 +1491,14 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000276358
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
-                    // Loop repeat frequency: 0.0634786
                     do {
                         x = ONE_OVER_X_0 * exponential.sample();
                     } while (exponential.sample() < 0.5 * x * x);
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00249563
-                    // Loop repeat frequency: 0.0123784
                     for (;;) {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
@@ -1542,8 +1518,6 @@ public class ZigguratSamplerPerformance {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.0000159359
-                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = sampleX(X, j, u1);
                     if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -1589,7 +1563,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988283
                 return X[i] * xx;
             }
 
@@ -1623,8 +1596,6 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00892897
-                // Loop repeat frequency: 0.389804
                 for (;;) {
                     x = interpolateSample(X, j, u1);
                     final long uDistance = (nextLong() >>> 1) - u1;
@@ -1634,8 +1605,6 @@ public class ZigguratSamplerPerformance {
                     }
                     if (uDistance >= CONVEX_E_MAX &&
                         // Within maximum distance of f(x) from the triangle hypotenuse.
-                        // Frequency (per upper-right triangle): 0.431497
-                        // Reject frequency: 0.489630
                         // u2 = (u1 + uDistance)
                         interpolateSample(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
                         break;
@@ -1646,18 +1615,14 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000276358
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
-                    // Loop repeat frequency: 0.0634786
                     do {
                         x = ONE_OVER_X_0 * exponential.sample();
                     } while (exponential.sample() < 0.5 * x * x);
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00249563
-                    // Loop repeat frequency: 0.0123784
                     for (;;) {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
@@ -1677,8 +1642,6 @@ public class ZigguratSamplerPerformance {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.0000159359
-                // Loop repeat frequency: 0.500213
                 for (;;) {
                     x = interpolateSample(X, j, u1);
                     if (interpolateSample(Y, j, nextLong() >>> 1) < Math.exp(-0.5 * x * x)) {
@@ -1744,7 +1707,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.988283
                 return X[i] * xx;
             }
 
@@ -1771,19 +1733,14 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j == 0) {
                 // Tail
-                // Branch frequency: 0.000276321
-                // Loop repeat frequency: 0.0634091
                 do {
                     x = ONE_OVER_X_0 * exponential.sample();
                 } while (exponential.sample() < 0.5 * x * x);
                 x += X_0;
             } else {
                 // Rejection sampling
-                // Branch frequency: 0.0114405
-                // Loop repeat frequency: 0.419985
 
                 // Recycle bits then advance RNG:
-                // u1 = RANDOM_INT63();
                 long u1 = xx & MAX_INT64;
                 for (;;) {
                     x = sampleX(X, j, u1);
@@ -2317,12 +2274,10 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // Branch frequency: 0.994145
                 return X[i] * xx;
             }
 
             // Recycle bits then advance RNG:
-            // u1 = RANDOM_INT63();
             long u1 = xx & MAX_INT64;
             // Another squashed, recyclable bit
             // Use 2 - 1 or 0 - 1
@@ -2338,8 +2293,6 @@ public class ZigguratSamplerPerformance {
             double x;
             if (j > J_INFLECTION) {
                 // Convex overhang
-                // Branch frequency: 0.00442507
-                // Loop repeat frequency: 0.400480
                 for (;;) {
                     x = sampleX(X, j, u1);
                     final long uDistance = randomInt63() - u1;
@@ -2358,7 +2311,6 @@ public class ZigguratSamplerPerformance {
             } else if (j < J_INFLECTION) {
                 if (j == 0) {
                     // Tail
-                    // Branch frequency: 0.000124818
                     // Note: Although less frequent than the next branch, j == 0 is a subset of
                     // j < J_INFLECTION and must be first.
                     do {
@@ -2367,7 +2319,6 @@ public class ZigguratSamplerPerformance {
                     x += X_0;
                 } else {
                     // Concave overhang
-                    // Branch frequency: 0.00130121
                     for (;;) {
                         // U_x <- min(U_1, U_2)
                         // distance <- | U_1 - U_2 |
@@ -2387,7 +2338,6 @@ public class ZigguratSamplerPerformance {
                 }
             } else {
                 // Inflection point
-                // Branch frequency: 0.00000394229
                 for (;;) {
                     x = sampleX(X, j, u1);
                     if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
@@ -2719,14 +2669,8 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x & MAX_INT64);
             }
-            // For the first call into createSample:
-            // Recursion frequency = 0.000515503
-            // Overhang frequency  = 0.0151056
             final int j = selectRegion();
             return j == 0 ? X_0 + createSample() : sampleOverhang(j);
         }
@@ -2877,9 +2821,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x >>> 1);
             }
 
@@ -2895,9 +2836,6 @@ public class ZigguratSamplerPerformance {
          * @return a sample
          */
         private double edgeSample() {
-            // For the first call into sample:
-            // Tail frequency = 0.000515503
-            // Overhang frequency = 0.0151056
             final int j = selectRegion();
             return j == 0 ? sampleAdd(X_0) : sampleOverhang(j);
         }
@@ -2963,9 +2901,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x >>> 1);
             }
 
@@ -2983,10 +2918,8 @@ public class ZigguratSamplerPerformance {
         private double edgeSample() {
             int j = selectRegion();
             if (j != 0) {
-                // Overhang frequency = 0.0151056
                 return sampleOverhang(j);
             }
-            // Tail frequency = 0.000515503
 
             // Perform a new sample and add it to the start of the tail.
             double x0 = X_0;
@@ -3046,9 +2979,6 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x >>> 1);
             }
 
@@ -3069,10 +2999,8 @@ public class ZigguratSamplerPerformance {
         private double edgeSample(long xx) {
             int j = selectRegion();
             if (j != 0) {
-                // Overhang frequency = 0.0151056
                 return sampleOverhang(j, xx);
             }
-            // Tail frequency = 0.000515503
 
             // Perform a new sample and add it to the start of the tail.
             double x0 = X_0;
@@ -3164,14 +3092,8 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.984379 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x & MAX_INT64);
             }
-            // For the first call into createSample:
-            // Tail frequency = 0.000515503
-            // Overhang frequency = 0.0151056
             final int j = selectRegion();
             return j == 0 ? sampleAdd(X_0) : sampleOverhang(j);
         }
@@ -3723,14 +3645,8 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                // This branch is called about 0.992192 times per call into createSample.
-                // Note: Frequencies have been empirically measured for the first call to
-                // createSample; recursion due to retries have been ignored. Frequencies sum to 1.
                 return X[i] * (x & MAX_INT64);
             }
-            // For the first call into createSample:
-            // Recursion frequency = 0.000232209
-            // Overhang frequency  = 0.00757617
             final int j = selectRegion();
             return j == 0 ? X_0 + createSample() : sampleOverhang(j);
         }
