@@ -49,63 +49,64 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @Fork(value = 1, jvmArgs = {"-server", "-Xms128M", "-Xmx128M"})
 public class ZigguratSamplerPerformance {
-    /** Mask to create an unsigned long from a signed long. */
-    private static final long MAX_INT64 = 0x7fffffffffffffffL;
-    /** 2^53. */
-    private static final double TWO_POW_63 = 0x1.0p63;
 
     // Production versions
 
     /** The name for a copy of the {@link ZigguratNormalizedGaussianSampler} with a table of size 128.
      * This matches the version in Commons RNG release v1.1 to 1.3. */
-    private static final String GAUSSIAN_128 = "Gaussian128";
+    static final String GAUSSIAN_128 = "Gaussian128";
     /** The name for the {@link ZigguratNormalizedGaussianSampler} (table of size 256).
      * This is the version in Commons RNG release v1.4+. */
-    private static final String GAUSSIAN_256 = "Gaussian256";
-    /** The name for the {@link ZigguratSampler.NormalizedGaussian}. */
-    private static final String MOD_GAUSSIAN = "ModGaussian";
-    /** The name for the {@link ZigguratSampler.Exponential}. */
-    private static final String MOD_EXPONENTIAL = "ModExponential";
+    static final String GAUSSIAN_256 = "Gaussian256";
+    /** The name for the {@link org.apache.commons.rng.sampling.distribution.ZigguratSampler.NormalizedGaussian}. */
+    static final String MOD_GAUSSIAN = "ModGaussian";
+    /** The name for the {@link org.apache.commons.rng.sampling.distribution.ZigguratSampler.Exponential}. */
+    static final String MOD_EXPONENTIAL = "ModExponential";
 
     // Testing versions
 
     /** The name for the {@link ZigguratExponentialSampler} with a table of size 256.
      * This is an exponential sampler using Marsaglia's ziggurat method. */
-    private static final String EXPONENTIAL = "Exponential";
+    static final String EXPONENTIAL = "Exponential";
 
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSampler}.
      * This is a base implementation of McFarland's ziggurat method. */
-    private static final String MOD_GAUSSIAN2 = "ModGaussian2";
+    static final String MOD_GAUSSIAN2 = "ModGaussian2";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs}. */
-    private static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS = "ModGaussianSimpleOverhangs";
+    static final String MOD_GAUSSIAN_SIMPLE_OVERHANGS = "ModGaussianSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInlining}. */
-    private static final String MOD_GAUSSIAN_INLINING = "ModGaussianInlining";
+    static final String MOD_GAUSSIAN_INLINING = "ModGaussianInlining";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInliningShift}. */
-    private static final String MOD_GAUSSIAN_INLINING_SHIFT = "ModGaussianInliningShift";
+    static final String MOD_GAUSSIAN_INLINING_SHIFT = "ModGaussianInliningShift";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerInliningSimpleOverhangs}. */
-    private static final String MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS = "ModGaussianInliningSimpleOverhangs";
+    static final String MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS = "ModGaussianInliningSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
-    private static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
+    static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSampler512} using a table size of 512. */
-    private static final String MOD_GAUSSIAN_512 = "ModGaussian512";
+    static final String MOD_GAUSSIAN_512 = "ModGaussian512";
 
-    /** The name for the {@link ModifiedZigguratExponetialSampler}.
+    /** The name for the {@link ModifiedZigguratExponentialSampler}.
      * This is a base implementation of McFarland's ziggurat method. */
-    private static final String MOD_EXPONENTIAL2 = "ModExponential2";
+    static final String MOD_EXPONENTIAL2 = "ModExponential2";
     /** The name for the {@link ModifiedZigguratExponentialSamplerSimpleOverhangs}. */
-    private static final String MOD_EXPONENTIAL_SIMPLE_OVERHANGS = "ModExponentialSimpleOverhangs";
+    static final String MOD_EXPONENTIAL_SIMPLE_OVERHANGS = "ModExponentialSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratExponentialSamplerInlining}. */
-    private static final String MOD_EXPONENTIAL_INLINING = "ModExponentialInlining";
+    static final String MOD_EXPONENTIAL_INLINING = "ModExponentialInlining";
     /** The name for the {@link ModifiedZigguratExponentialSamplerLoop}. */
-    private static final String MOD_EXPONENTIAL_LOOP = "ModExponentialLoop";
+    static final String MOD_EXPONENTIAL_LOOP = "ModExponentialLoop";
     /** The name for the {@link ModifiedZigguratExponentialSamplerLoop2}. */
-    private static final String MOD_EXPONENTIAL_LOOP2 = "ModExponentialLoop2";
+    static final String MOD_EXPONENTIAL_LOOP2 = "ModExponentialLoop2";
     /** The name for the {@link ModifiedZigguratExponentialSamplerRecursion}. */
-    private static final String MOD_EXPONENTIAL_RECURSION = "ModExponentialRecursion";
+    static final String MOD_EXPONENTIAL_RECURSION = "ModExponentialRecursion";
     /** The name for the {@link ModifiedZigguratExponentialSamplerIntMap}. */
-    private static final String MOD_EXPONENTIAL_INT_MAP = "ModExponentialIntMap";
+    static final String MOD_EXPONENTIAL_INT_MAP = "ModExponentialIntMap";
     /** The name for the {@link ModifiedZigguratExponentialSampler512} using a table size of 512. */
-    private static final String MOD_EXPONENTIAL_512 = "ModExponential512";
+    static final String MOD_EXPONENTIAL_512 = "ModExponential512";
+
+    /** Mask to create an unsigned long from a signed long. */
+    private static final long MAX_INT64 = 0x7fffffffffffffffL;
+    /** 2^53. */
+    private static final double TWO_POW_63 = 0x1.0p63;
 
     /**
      * The value.
@@ -3192,7 +3193,7 @@ public class ZigguratSamplerPerformance {
 
             if (i < I_MAX) {
                 // Early exit.
-                return X[i] * (x & MAX_INT64);
+                return x0 + X[i] * (x & MAX_INT64);
             }
             // Edge of the ziggurat
             final int j = selectRegion();

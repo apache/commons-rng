@@ -14,10 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.rng.sampling.distribution;
+package org.apache.commons.rng.examples.jmh.sampling.distribution;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,12 +30,14 @@ import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.core.source64.SplitMix64;
-import org.apache.commons.rng.sampling.RandomAssert;
+import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.simple.RandomSource;
 
 /**
- * Test for {@link ZigguratSampler}.
+ * Test for ziggurat samplers in the {@link ZigguratSamplerPerformance} class.
+ *
+ * <p>This test is copied from the {@code commons-rng-sampling} module to ensure all implementations
+ * correctly sample from the distribution.
  */
 class ZigguratSamplerTest {
 
@@ -46,169 +47,22 @@ class ZigguratSamplerTest {
      * <p>This has been chosen to allow the test to pass with all generators.
      * Set to null test with a random seed.
      */
-    private static final Long SEED = 0xabcdefL;
+    private static final Long SEED = 0L;
 
     /**
-     * Test the exponential constructor with a bad mean.
-     */
-    @Test
-    void testExponentialConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        final double mean = 0;
-        Assertions.assertThrows(IllegalArgumentException.class,
-            () -> ZigguratSampler.Exponential.of(rng, mean));
-    }
-
-    /**
-     * Test the exponential SharedStateSampler implementation.
-     */
-    @Test
-    void testExponentialSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final ZigguratSampler.Exponential sampler1 = ZigguratSampler.Exponential.of(rng1);
-        final ZigguratSampler.Exponential sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
-    }
-
-    /**
-     * Test the exponential SharedStateSampler implementation with a mean.
-     */
-    @Test
-    void testExponentialSharedStateSamplerWithMean() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final double mean = 1.23;
-        final ZigguratSampler.Exponential sampler1 = ZigguratSampler.Exponential.of(rng1, mean);
-        final ZigguratSampler.Exponential sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
-    }
-
-    /**
-     * Test the Gaussian SharedStateSampler implementation.
-     */
-    @Test
-    void testGaussianSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final ZigguratSampler.NormalizedGaussian sampler1 = ZigguratSampler.NormalizedGaussian.of(rng1);
-        final ZigguratSampler.NormalizedGaussian sampler2 = sampler1.withUniformRandomProvider(rng2);
-        RandomAssert.assertProduceSameSequence(sampler1, sampler2);
-    }
-
-    /**
-     * Test the recursion in the exponential distribution.
-     */
-    @Test
-    void testExponentialRecursion() {
-        // The exponential distribution will enter the edge of the ziggurat if the RNG
-        // outputs -1 (all bits). This performs alias sampling using a long value.
-        // The tail will be selected if the next output is -1.
-        // Thus two -1 values enter recursion where a new exponential sample is added
-        // to the tail value:
-        final double tailValue = 7.569274694148063;
-
-        // Alias sampling assigns the ziggurat layer using the lower 8 bits.
-        // The rest determine if the layer or the alias are used. We do not control this
-        // and leave it to a seeded RNG to select different layers.
-
-        // A value of zero will create a sample of zero (42 is the seed)
-        Assertions.assertEquals(0.0, expSample(42, 0));
-        Assertions.assertEquals(tailValue, expSample(42, -1, -1, 0));
-
-        // Use different seeds to test different layers from the edge of the ziggurat.
-        for (final long seed : new long[] {42, -2136612838, 2340923842L, -1263746817818681L}) {
-            // Base value
-            final double x0 = expSample(seed);
-            // Edge value
-            final double x1 = expSample(seed, -1);
-            // Recursion
-            Assertions.assertEquals(x0 + tailValue, expSample(seed, -1, -1));
-            Assertions.assertEquals(x1 + tailValue, expSample(seed, -1, -1, -1));
-            // Double recursion
-            // Note the order of additions is important as the final sample is added to
-            // a summation of the tail value.
-            Assertions.assertEquals(tailValue + tailValue + x0, expSample(seed, -1, -1, -1, -1));
-            Assertions.assertEquals(tailValue + tailValue + x1, expSample(seed, -1, -1, -1, -1, -1));
-        }
-    }
-
-    /**
-     * Create an exponential sample from the sequence of longs, then revert to a seed RNG.
+     * Create arguments with the name of the factory.
      *
-     * @param seed the seed
-     * @param longs the longs
-     * @return the sample
+     * @param name Name of the factory
+     * @param factory Factory to create the sampler
+     * @return the arguments
      */
-    private static double expSample(long seed, final long... longs) {
-        final SplitMix64 rng = new SplitMix64(seed) {
-            private int i;
-            @Override
-            public long next() {
-                if (i == longs.length) {
-                    // Revert to seeded RNG
-                    return super.next();
-                }
-                return longs[i++];
-            }
-        };
-        return ZigguratSampler.Exponential.of(rng).sample();
+    private static Arguments args(String name) {
+        // Create the factory.
+        // Here we delegate to the static method used to create all the samplers for testing.
+        final Function<UniformRandomProvider, ContinuousSampler> factory =
+            rng -> ZigguratSamplerPerformance.Sources.createSampler(name, rng);
+        return Arguments.of(name, factory);
     }
-
-    // Note:
-    // The sampler samples within the box regions of the ziggurat > 98.5% of the time.
-    // The rest of the time a sample is taken from an overhang region or the tail. The proportion
-    // of samples from each of the overhangs and tail is related to the volume of those
-    // regions. The sampling within a region must fit the PDF curve of the region.
-    // We must test two items: (1) if the sampling is biased to certain overhangs;
-    // and (2) if the sampling is biased within a single overhang.
-    //
-    // The following tests check if the overall shape of the PDF is correct. Then small
-    // regions are sampled that target specific parts of the ziggurat: the overhangs and the tail.
-    // For the exponential distribution all overhangs are concave so any region can be tested.
-    // For the normal distribution the overhangs switch from convex to concave at the inflection
-    // point which is x=1. The test targets regions specifically above and below the inflection
-    // point.
-    //
-    // Testing the distribution within an overhang requires a histogram with widths smaller
-    // than the width differences in the ziggurat.
-    //
-    // For the normal distribution the widths at each end and around the inflection point are:
-    // [3.6360066255009458, 3.431550493837111, 3.3044597575834205, 3.2104230299359244]
-    // [1.0113527773194309, 1.003307168714496, 0.9951964183341382, 0.9870178156137862]
-    // [0.3881084509554052, 0.34703847379449715, 0.29172225078072095, 0.0]
-    //
-    // For the exponential:
-    // [7.569274694148063, 6.822872544335941, 6.376422694249821, 6.05490013642656]
-    // [0.18840300957360784, 0.15921172977030051, 0.12250380599214447, 0.0]
-    //
-    // Two tests are performed:
-    // (1) The bins are spaced using the quantiles of the distribution.
-    // The histogram should be uniform in frequency across all bins.
-    // (2) The bins are spaced uniformly. The frequencies should match the CDF of the function
-    // for that region. In this test the number of bins is chosen to ensure that there are multiple
-    // bins covering even the smallest gaps between ziggurat layers. Thus the bins will partition
-    // samples within a single overhang layer.
-    //
-    // Note:
-    // These tests could be improved as not all minor errors in the samplers are detected.
-    // The test does detect all the bugs that were eliminated from the algorithm during
-    // development if they are reintroduced.
-    //
-    // Bugs that cannot be detected:
-    // 1. Changing the J_INFLECTION point in the Gaussian sampler to the extremes of 1 or 253
-    //    does not fail. Thus the test cannot detect incorrect triangle sampling for
-    //    convex/concave regions. A sample that is a uniform lower-left triangle sample
-    //    for any concave region is missed by the test.
-    // 2. Changing the E_MAX threshold in the exponential sampler to 0 does not fail.
-    //    Thus the test cannot detect the difference between a uniform lower-left triangle
-    //    sample and a uniform convex region sample.
-    // This may require more samples in the histogram or a different test strategy. An example
-    // would be to force the RNG to sample outside the ziggurat boxes. The expected counts would
-    // have to be constructed using prior knowledge of the ziggurat box sizes. Thus the CDF can
-    // be computed for each overhang minus the ziggurat region underneath. No distribution
-    // exists to support this in Commons Math. A custom implementation should support computing
-    // the CDF of the ziggurat boxes from x0 to x1.
 
     /**
      * Create a stream of constructors of a Gaussian sampler.
@@ -219,8 +73,17 @@ class ZigguratSamplerTest {
      * @return the stream of constructors
      */
     private static Stream<Arguments> gaussianSamplers() {
-        final Function<UniformRandomProvider, ContinuousSampler> factory = ZigguratSampler.NormalizedGaussian::of;
-        return Stream.of(Arguments.of("NormalizedGaussian", factory));
+        // Test all but MOD_GAUSSIAN (tested in the common-rng-sampling module)
+        return Stream.of(
+            args(ZigguratSamplerPerformance.GAUSSIAN_128),
+            args(ZigguratSamplerPerformance.GAUSSIAN_256),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN2),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_SIMPLE_OVERHANGS),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_INLINING),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_INLINING_SHIFT),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_INT_MAP),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_512));
     }
 
     /**
@@ -232,9 +95,23 @@ class ZigguratSamplerTest {
      * @return the stream of constructors
      */
     private static Stream<Arguments> exponentialSamplers() {
-        final Function<UniformRandomProvider, ContinuousSampler> factory = ZigguratSampler.Exponential::of;
-        return Stream.of(Arguments.of("Exponential", factory));
+        // Test all but MOD_EXPONENTIAL (tested in the common-rng-sampling module)
+        return Stream.of(
+                args(ZigguratSamplerPerformance.EXPONENTIAL),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL2),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_SIMPLE_OVERHANGS),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_INLINING),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_LOOP),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_LOOP2),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_RECURSION),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_INT_MAP),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_512));
     }
+
+    // -------------------------------------------------------------------------
+    // All code below here is copied from:
+    // commons-rng-sampling/src/test/java/org/apache/commons/rng/sampling/distribution/ZigguratSamplerTest.java
+    // -------------------------------------------------------------------------
 
     /**
      * Creates the gaussian distribution.
