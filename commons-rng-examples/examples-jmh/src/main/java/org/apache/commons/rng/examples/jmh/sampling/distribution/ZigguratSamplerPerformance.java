@@ -36,6 +36,7 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -182,7 +183,7 @@ public class ZigguratSamplerPerformance {
             // exponential = 252
             // gaussian = 253
             final int limit = 253;
-            // Use a fast generator
+            // Use a fast generator:
             final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             if ("CastMaskIntCompare".equals(method)) {
                 sampler = () -> {
@@ -239,12 +240,22 @@ public class ZigguratSamplerPerformance {
         /** Instantiates sampler. */
         @Setup
         public void setup() {
-            // Use a fast generator
-            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+            // Use a fast generator:
+            // Here we use a simple linear congruential generator
+            // which should have constant speed and a random upper bit.
+            final long[] s = {ThreadLocalRandom.current().nextLong()};
             if ("Mask".equals(method)) {
-                sampler = () -> rng.nextLong() & Long.MAX_VALUE;
+                sampler = () -> {
+                    final long x = s[0];
+                    s[0] = updateLCG(x);
+                    return x & Long.MAX_VALUE;
+                };
             } else if ("Shift".equals(method)) {
-                sampler = () -> rng.nextLong() >>> 1;
+                sampler = () -> {
+                    final long x = s[0];
+                    s[0] = updateLCG(x);
+                    return x >>> 1;
+                };
             } else {
                 throwIllegalStateException(method);
             }
@@ -256,7 +267,7 @@ public class ZigguratSamplerPerformance {
      */
     @State(Scope.Benchmark)
     public static class InterpolationSources {
-        /** The method to obtain the long. */
+        /** The method to perform interpolation. */
         @Param({"U1", "1minusU2", "U_1minusU"})
         private String method;
 
@@ -273,7 +284,7 @@ public class ZigguratSamplerPerformance {
         /** Instantiates sampler. */
         @Setup
         public void setup() {
-            // Use a fast generator
+            // Use a fast generator:
             final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
             // Get an x table. This is length 254.
             // We will sample from this internally to avoid index out-of-bounds issues.
@@ -283,7 +294,7 @@ public class ZigguratSamplerPerformance {
             final int mask = 127;
             if ("U1".equals(method)) {
                 sampler = () -> {
-                    final long u = rng.nextLong() >>> 1;
+                    final long u = rng.nextLong();
                     final int j = 1 + (((int) u) & mask);
                     // double multiply
                     // double add
@@ -297,7 +308,7 @@ public class ZigguratSamplerPerformance {
                 };
             } else if ("1minusU2".equals(method)) {
                 sampler = () -> {
-                    final long u = rng.nextLong() >>> 1;
+                    final long u = rng.nextLong();
                     final int j = 1 + (((int) u) & mask);
                     // Since u is in [0, 2^63) to create (1 - u) using Long.MIN_VALUE
                     // as an unsigned integer of 2^63.
@@ -314,7 +325,7 @@ public class ZigguratSamplerPerformance {
                 };
             } else if ("U_1minusU".equals(method)) {
                 sampler = () -> {
-                    final long u = rng.nextLong() >>> 1;
+                    final long u = rng.nextLong();
                     final int j = 1 + (((int) u) & mask);
                     // Interpolation between bounds a and b using:
                     // a * u + b * (1 - u) == b + u * (a - b)
@@ -332,6 +343,83 @@ public class ZigguratSamplerPerformance {
                 throwIllegalStateException(method);
             }
         }
+    }
+
+    /**
+     * Defines method to extract a sign bit from a {@code long} value.
+     */
+    @State(Scope.Benchmark)
+    public static class SignBitSources {
+        /** The method to obtain the sign bit. */
+        @Param({"ifNegative", "ifSignBit", "ifBit", "bitSubtract", "signBitSubtract"})
+        private String method;
+
+        /** The sampler. */
+        private ContinuousSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public ContinuousSampler getSampler() {
+            return sampler;
+        }
+
+        /** Instantiates sampler. */
+        @Setup
+        public void setup() {
+            // Use a fast generator:
+            final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+
+            if ("ifNegative".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return x < 0 ? -1.0 : 1.0;
+                };
+            } else if ("ifSignBit".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return (x >>> 63) == 0 ? -1.0 : 1.0;
+                };
+            } else if ("ifBit".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return (x & 0x100) == 0 ? -1.0 : 1.0;
+                };
+            } else if ("bitSubtract".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return ((x >>> 7) & 0x2) - 1.0;
+                };
+            } else if ("signBitSubtract".equals(method)) {
+                sampler = () -> {
+                    final long x = rng.nextLong();
+                    return ((x >>> 62) & 0x2) - 1.0;
+                };
+            } else {
+                throwIllegalStateException(method);
+            }
+        }
+    }
+
+    /**
+     * Update the state of the linear congruential generator.
+     * <pre>
+     *  s = m*s + a
+     * </pre>
+     *
+     * <p>This can be used when the upper bits of the long are important.
+     * The lower bits will not be very random. Each bit has a period of
+     * 2^p where p is the bit significance.
+     *
+     * @param state the state
+     * @return the new state
+     */
+    private static long updateLCG(long state) {
+        // m is the multiplier used for the LCG component of the JDK 17 generators.
+        // a can be any odd number.
+        // Use the golden ratio from a SplitMix64 generator.
+        return 0xd1342543de82ef95L * state + 0x9e3779b97f4a7c15L;
+
     }
 
     /**
@@ -3827,7 +3915,8 @@ public class ZigguratSamplerPerformance {
     /**
      * Benchmark methods for obtaining an unsigned long.
      *
-     * <p>Note: This is disabled as there is no measurable difference between methods.
+     * <p>Note: This is disabled. Either there is no measurable difference between methods
+     * or the bit shift method is marginally faster depending on JDK and platform.
      *
      * @param sources Source of randomness.
      * @return the sample value
@@ -3847,6 +3936,20 @@ public class ZigguratSamplerPerformance {
      */
     //@Benchmark
     public double interpolate(InterpolationSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Benchmark methods for obtaining a sign value from a long.
+     *
+     * <p>Note: This is disabled. The branchless versions using a subtraction of
+     * 2 - 1 or 0 - 1 are faster.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    //@Benchmark
+    public double signBit(SignBitSources sources) {
         return sources.getSampler().sample();
     }
 
