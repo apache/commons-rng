@@ -4018,7 +4018,7 @@ public class ZigguratSamplerPerformance {
      *
      * <p>Note: This is disabled. On JDK 8 FastMath is faster. On JDK 11 Math.exp is
      * a hotspot intrinsic and is faster. Example result:
-     * 
+     *
      * <pre>
      *                     JDK 8             JDK 11
      * noop                4.523              4.351
@@ -4031,12 +4031,12 @@ public class ZigguratSamplerPerformance {
      * maximum difference between pdf(x) and the triangle hypotenuse. Example data
      * of the frequency that Math.exp is called per sample from the base
      * implementations (using n=2^31):
-     * 
+     *
      * <pre>
      *            Calls            FastOverhangs     SimpleOverhangs
      * Exp        exp(-x)          0.00271           0.0307
      * Normal     exp(-0.5*x*x)    0.00359           0.0197*
-     * 
+     *
      * * Increases to 0.0198 if the tail exponential sampler uses simple overhangs
      * </pre>
      *
