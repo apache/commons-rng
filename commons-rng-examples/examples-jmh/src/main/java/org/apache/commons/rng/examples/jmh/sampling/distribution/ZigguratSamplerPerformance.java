@@ -17,6 +17,7 @@
 
 package org.apache.commons.rng.examples.jmh.sampling.distribution;
 
+import org.apache.commons.math3.util.FastMath;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
@@ -394,6 +395,59 @@ public class ZigguratSamplerPerformance {
                 sampler = () -> {
                     final long x = rng.nextLong();
                     return ((x >>> 62) & 0x2) - 1.0;
+                };
+            } else {
+                throwIllegalStateException(method);
+            }
+        }
+    }
+
+    /**
+     * Defines method to use for computing {@code exp(x)} when {@code -8 <= x <= 0}.
+     */
+    @State(Scope.Benchmark)
+    public static class ExpSources {
+        /** The method to compute exp(x). */
+        @Param({"noop", "Math.exp", "FastMath.exp"})
+        private String method;
+
+        /** The sampler. */
+        private ContinuousSampler sampler;
+
+        /**
+         * @return the sampler.
+         */
+        public ContinuousSampler getSampler() {
+            return sampler;
+        }
+
+        /** Instantiates sampler. */
+        @Setup
+        public void setup() {
+            // Use a fast generator:
+            // Here we use a simple linear congruential generator
+            // which should have constant speed and a random upper bit.
+            final long[] s = {ThreadLocalRandom.current().nextLong()};
+            // From a random long we create a value in (-8, 0] by using the
+            // method to generate [0, 1) and then multiplying by -8:
+            // (x >>> 11) * 0x1.0p-53 * -0x1.0p3
+            if ("noop".equals(method)) {
+                sampler = () -> {
+                    final long x = s[0];
+                    s[0] = updateLCG(x);
+                    return (x >>> 11) * -0x1.0p-50;
+                };
+            } else if ("Math.exp".equals(method)) {
+                sampler = () -> {
+                    final long x = s[0];
+                    s[0] = updateLCG(x);
+                    return Math.exp((x >>> 11) * -0x1.0p-50);
+                };
+            } else if ("FastMath.exp".equals(method)) {
+                sampler = () -> {
+                    final long x = s[0];
+                    s[0] = updateLCG(x);
+                    return FastMath.exp((x >>> 11) * -0x1.0p-50);
                 };
             } else {
                 throwIllegalStateException(method);
@@ -1443,7 +1497,10 @@ public class ZigguratSamplerPerformance {
      *
      * <p>This implementation uses simple overhangs and does not exploit the precomputed
      * distances of the concave and convex overhangs. The implementation matches the c-reference
-     * compiled using -DSIMPLE_OVERHANGS.
+     * compiled using -DSIMPLE_OVERHANGS for the non-tail overhangs.
+     *
+     * <p>Note: The tail exponential sampler does not use simple overhangs. This facilitates
+     * performance comparison to the fast overhang method by keeping tail sampling the same.
      */
     static class ModifiedZigguratNormalizedGaussianSamplerSimpleOverhangs
         extends ModifiedZigguratNormalizedGaussianSampler {
@@ -1771,7 +1828,10 @@ public class ZigguratSamplerPerformance {
      *
      * <p>This implementation uses simple overhangs and does not exploit the precomputed
      * distances of the concave and convex overhangs. The implementation matches the c-reference
-     * compiled using -DSIMPLE_OVERHANGS.
+     * compiled using -DSIMPLE_OVERHANGS for the non-tail overhangs.
+     *
+     * <p>Note: The tail exponential sampler does not use simple overhangs. This facilitates
+     * performance comparison to the fast overhang method by keeping tail sampling the same.
      */
     static class ModifiedZigguratNormalizedGaussianSamplerInliningSimpleOverhangs
         extends ModifiedZigguratNormalizedGaussianSampler {
@@ -3950,6 +4010,55 @@ public class ZigguratSamplerPerformance {
      */
     //@Benchmark
     public double signBit(SignBitSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Benchmark methods for obtaining {@code exp(z)} when {@code -8 <= z <= 0}.
+     *
+     * <p>Note: This is disabled. On JDK 8 FastMath is faster. On JDK 11 Math.exp is
+     * a hotspot intrinsic and is faster. Example result:
+     * 
+     * <pre>
+     *                     JDK 8             JDK 11
+     * noop                4.523              4.351
+     * Math.exp           61.350             22.552
+     * FastMath.exp       33.858             31.396
+     * </pre>
+     *
+     * <p>The ziggurat sampler avoids calls to Math.exp in the majority of cases
+     * when using McFarland's fast method for overhangs which exploit the known
+     * maximum difference between pdf(x) and the triangle hypotenuse. Example data
+     * of the frequency that Math.exp is called per sample from the base
+     * implementations (using n=2^31):
+     * 
+     * <pre>
+     *            Calls            FastOverhangs     SimpleOverhangs
+     * Exp        exp(-x)          0.00271           0.0307
+     * Normal     exp(-0.5*x*x)    0.00359           0.0197*
+     * 
+     * * Increases to 0.0198 if the tail exponential sampler uses simple overhangs
+     * </pre>
+     *
+     * <p>Note that the maximum difference between pdf(x) and the triangle
+     * hypotenuse is smaller for the exponential distribution; thus the fast method
+     * can avoid using Math.exp more often. In the case of simple overhangs the
+     * normal distribution has more region covered by the ziggurat thus has a lower
+     * frequency of overhang sampling.
+     *
+     * <p>A significant speed-up of the exp function may improve run-time of the
+     * simple overhangs method. Any effect on the fast method is less likely to be
+     * noticed. This is observed in benchmark times which show an improvement of the
+     * simple overhangs method for the exponential relative to other methods on JDK
+     * 11 vs 8. However the simple overhangs is still slower as the exponential
+     * distribution is always concave and upper-right triangle samples are avoided
+     * by the fast overhang method.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    //@Benchmark
+    public double exp(ExpSources sources) {
         return sources.getSampler().sample();
     }
 
