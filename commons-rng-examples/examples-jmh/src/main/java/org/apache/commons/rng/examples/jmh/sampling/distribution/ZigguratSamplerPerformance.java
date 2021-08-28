@@ -4017,13 +4017,15 @@ public class ZigguratSamplerPerformance {
      * Benchmark methods for obtaining {@code exp(z)} when {@code -8 <= z <= 0}.
      *
      * <p>Note: This is disabled. On JDK 8 FastMath is faster. On JDK 11 Math.exp is
-     * a hotspot intrinsic and is faster. Example result:
+     * a hotspot intrinsic and may be faster based on the platform architecture.
+     * Example results:
      *
      * <pre>
-     *                     JDK 8             JDK 11
-     * noop                4.523              4.351
-     * Math.exp           61.350             22.552
-     * FastMath.exp       33.858             31.396
+     *                     JDK 8                     JDK 11
+     *                     i7-6820HQ     E5-1680     i7-6820HQ     E5-1680     3960X
+     * noop                    4.523       3.871         4.351       4.206     3.936
+     * Math.exp               61.350      48.519        22.552      19.195    12.568
+     * FastMath.exp           33.858      24.469        31.396      24.568    11.159
      * </pre>
      *
      * <p>The ziggurat sampler avoids calls to Math.exp in the majority of cases
