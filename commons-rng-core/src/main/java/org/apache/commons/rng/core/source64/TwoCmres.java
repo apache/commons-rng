@@ -284,7 +284,7 @@ public class TwoCmres extends LongProvider {
             private static void add(long multiply,
                                     int rotate,
                                     int start) {
-                // Sanity check: if there are duplicates, the class initialization
+                // Validity check: if there are duplicates, the class initialization
                 // will fail (and the JVM will report "NoClassDefFoundError").
                 checkUnique(TABLE, multiply);
 

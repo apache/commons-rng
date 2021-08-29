@@ -316,12 +316,12 @@ import org.apache.commons.rng.simple.RandomSource;
 
 RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
 
-JumpableUniformRandomProvider master = (JumpableUniformRandomProvider) source.create();
+JumpableUniformRandomProvider primary = (JumpableUniformRandomProvider) source.create();
 
 // For use in parallel
 UniformRandomProvider[] rngs = new UniformRandomProvider[10];
 for (int i = 0; i < rngs.length; i++) {
-    rngs[i] = master.jump();
+    rngs[i] = primary.jump();
 }
 +--------------------------+
 
