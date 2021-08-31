@@ -84,6 +84,10 @@ public class ZigguratSamplerPerformance {
     static final String MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS = "ModGaussianInliningSimpleOverhangs";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerIntMap}. */
     static final String MOD_GAUSSIAN_INT_MAP = "ModGaussianIntMap";
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerEMaxTable}. */
+    static final String MOD_GAUSSIAN_E_MAX_TABLE = "ModGaussianEMaxTable";
+    /** The name for the {@link ModifiedZigguratNormalizedGaussianSamplerEMax2}. */
+    static final String MOD_GAUSSIAN_E_MAX_2 = "ModGaussianEMax2";
     /** The name for the {@link ModifiedZigguratNormalizedGaussianSampler512} using a table size of 512. */
     static final String MOD_GAUSSIAN_512 = "ModGaussian512";
 
@@ -102,6 +106,10 @@ public class ZigguratSamplerPerformance {
     static final String MOD_EXPONENTIAL_RECURSION = "ModExponentialRecursion";
     /** The name for the {@link ModifiedZigguratExponentialSamplerIntMap}. */
     static final String MOD_EXPONENTIAL_INT_MAP = "ModExponentialIntMap";
+    /** The name for the {@link ModifiedZigguratExponentialSamplerEMaxTable}. */
+    static final String MOD_EXPONENTIAL_E_MAX_TABLE = "ModExponentialEmaxTable";
+    /** The name for the {@link ModifiedZigguratExponentialSamplerEMax2}. */
+    static final String MOD_EXPONENTIAL_E_MAX_2 = "ModExponentialEmax2";
     /** The name for the {@link ModifiedZigguratExponentialSampler512} using a table size of 512. */
     static final String MOD_EXPONENTIAL_512 = "ModExponential512";
 
@@ -491,11 +499,13 @@ public class ZigguratSamplerPerformance {
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_GAUSSIAN2, MOD_GAUSSIAN_SIMPLE_OVERHANGS,
                 MOD_GAUSSIAN_INLINING, MOD_GAUSSIAN_INLINING_SHIFT,
-                MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP, MOD_GAUSSIAN_512,
+                MOD_GAUSSIAN_INLINING_SIMPLE_OVERHANGS, MOD_GAUSSIAN_INT_MAP,
+                MOD_GAUSSIAN_E_MAX_TABLE, MOD_GAUSSIAN_E_MAX_2, MOD_GAUSSIAN_512,
                 // Experimental McFarland Gaussian ziggurat samplers
                 MOD_EXPONENTIAL2, MOD_EXPONENTIAL_SIMPLE_OVERHANGS, MOD_EXPONENTIAL_INLINING,
                 MOD_EXPONENTIAL_LOOP, MOD_EXPONENTIAL_LOOP2,
-                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP, MOD_EXPONENTIAL_512})
+                MOD_EXPONENTIAL_RECURSION, MOD_EXPONENTIAL_INT_MAP,
+                MOD_EXPONENTIAL_E_MAX_TABLE, MOD_EXPONENTIAL_E_MAX_2, MOD_EXPONENTIAL_512})
         protected String type;
 
         /**
@@ -528,6 +538,10 @@ public class ZigguratSamplerPerformance {
                 return new ModifiedZigguratNormalizedGaussianSamplerInliningSimpleOverhangs(rng);
             } else if (MOD_GAUSSIAN_INT_MAP.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSamplerIntMap(rng);
+            } else if (MOD_GAUSSIAN_E_MAX_TABLE.equals(type)) {
+                return new ModifiedZigguratNormalizedGaussianSamplerEMaxTable(rng);
+            } else if (MOD_GAUSSIAN_E_MAX_2.equals(type)) {
+                return new ModifiedZigguratNormalizedGaussianSamplerEMax2(rng);
             } else if (MOD_GAUSSIAN_512.equals(type)) {
                 return new ModifiedZigguratNormalizedGaussianSampler512(rng);
             } else if (MOD_EXPONENTIAL2.equals(type)) {
@@ -544,6 +558,10 @@ public class ZigguratSamplerPerformance {
                 return new ModifiedZigguratExponentialSamplerRecursion(rng);
             } else if (MOD_EXPONENTIAL_INT_MAP.equals(type)) {
                 return new ModifiedZigguratExponentialSamplerIntMap(rng);
+            } else if (MOD_EXPONENTIAL_E_MAX_TABLE.equals(type)) {
+                return new ModifiedZigguratExponentialSamplerEMaxTable(rng);
+            } else if (MOD_EXPONENTIAL_E_MAX_2.equals(type)) {
+                return new ModifiedZigguratExponentialSamplerEMax2(rng);
             } else if (MOD_EXPONENTIAL_512.equals(type)) {
                 return new ModifiedZigguratExponentialSampler512(rng);
             } else {
@@ -1954,6 +1972,332 @@ public class ZigguratSamplerPerformance {
      * <p>Uses the algorithm from McFarland, C.D. (2016).
      *
      * <p>This is a copy of {@link ModifiedZigguratNormalizedGaussianSampler} using
+     * a table to store the maximum epsilon value for each overhang.
+     */
+    static class ModifiedZigguratNormalizedGaussianSamplerEMaxTable
+        extends ModifiedZigguratNormalizedGaussianSampler {
+
+        /** The deviation of concave pdf(x) below the hypotenuse value for early exit scaled by 2^63.
+         * 253 entries with overhang {@code j} corresponding to entry {@code j-1}.
+         *
+         * <p>Stored as absolute distances. These are negated for the convex overhangs on initialization. */
+        private static final long[] E_MAX_TABLE = {760463704284035184L, 448775940668074322L, 319432059030582634L,
+            248136886892509167L, 202879887821507213L, 171571664564813181L, 148614265661634224L, 131055242060438178L,
+            117188580518411866L, 105959220286966343L, 96679401617437000L, 88881528890695590L, 82236552845322455L,
+            76506171300171850L, 71513549901780258L, 67124696158442860L, 63236221616146940L, 59767073533081827L,
+            56652810532069337L, 53841553364303819L, 51291065360753073L, 48966611131444450L, 46839361730231995L,
+            44885190189779505L, 43083750299904955L, 41417763838249446L, 39872463215195657L, 38435151378929884L,
+            37094851170183015L, 35842023608135061L, 34668339797973811L, 33566494917490850L, 32530055495300595L,
+            31553333229961898L, 30631280119818406L, 29759400819129686L, 28933679006953617L, 28150515222628953L,
+            27406674137103216L, 26699239630262959L, 26025576358437882L, 25383296743791121L, 24770232513666098L,
+            24184410074620943L, 23624029131570806L, 23087444063833159L, 22573147652048958L, 22079756816885946L,
+            21606000085203013L, 21150706544370418L, 20712796082591192L, 20291270743857678L, 19885207051787867L,
+            19493749177966922L, 19116102848340569L, 18751529896268709L, 18399343383557859L, 18058903221544231L,
+            17729612233426885L, 17410912606822884L, 17102282692149351L, 16803234108116672L, 16513309120493202L,
+            16232078264496960L, 15959138184784472L, 15694109670143667L, 15436635862703561L, 15186380623831584L,
+            14943027040942155L, 14706276061226881L, 14475845239883253L, 14251467591786361L, 14032890536754294L,
+            13819874929609696L, 13612194167177793L, 13409633365176500L, 13211988598685834L, 13019066200522936L,
+            12830682112422215L, 12646661284424425L, 12466837118331739L, 12291050951483677L, 12119151577470956L,
+            11950994800721809L, 11786443022181594L, 11625364853565635L, 11467634757892067L, 11313132714210236L,
+            11161743904626184L, 11013358421893618L, 10867870995988906L, 10725180738227453L, 10585190901599062L,
+            10447808656112693L, 10312944878042918L, 10180513952058881L, 10050433585302955L, 9922624632558803L,
+            9797010931719358L, 9673519148825347L, 9552078632004422L, 9432621273689757L, 9315081380547200L,
+            9199395550580725L, 9085502556926974L, 8973343237884485L, 8862860392758412L, 8753998683127701L,
+            8646704539174329L, 8540926070735305L, 8436612982764049L, 8333716494908564L, 8232189264931586L,
+            8131985315719003L, 8033059965636513L, 7935369762012110L, 7838872417532931L, 7743526749360846L,
+            7649292620780855L, 7556130885207418L, 7464003332385685L, 7372872636629289L, 7282702306949403L,
+            7193456638934045L, 7105100668244386L, 7017600125602463L, 6930921393146734L, 6845031462041107L,
+            6759897891224838L, 6675488767195822L, 6591772664721566L, 6508718608380146L, 6426296034828168L,
+            6344474755702722L, 6263224921061057L, 6182516983265422L, 6102321661219813L, 6022609904868391L,
+            5943352859861905L, 5864521832301635L, 5786088253467533L, 5708023644436456L, 5630299580496017L,
+            5552887655255304L, 5475759444352708L, 5398886468659678L, 5322240156870143L, 5245791807368878L,
+            5169512549259789L, 5093373302437038L, 5017344736568650L, 4941397228861186L, 4865500820464432L,
+            4789625171364815L, 4713739513611018L, 4637812602700734L, 4561812666947717L, 4485707354637964L,
+            4409463678763447L, 4333047959114789L, 4256425761488008L, 4179561833749943L, 4102420038479365L,
+            4024963281881178L, 3947153438645186L, 3868951272390456L, 3790316351307711L, 3711206958575720L,
+            3631579997089249L, 3551390887994563L, 3470593462479259L, 3389139846213138L, 3306980335775941L,
+            3224063266344542L, 3140334869838942L, 3055739122646026L, 2970217581950400L, 2883709209602502L,
+            2796150182338912L, 2707473687051021L, 2617609699653324L, 2526484745953020L, 2434021642745634L,
+            2340139217177559L, 2244752002202266L, 2147769905731505L, 2049097850839701L, 1948635384132493L,
+            1846276249145715L, 1741907921439271L, 1635411101964517L, 1526659165422377L, 1415517561001961L,
+            1301843164664438L, 1185483586365029L, 1066276445521246L, 944048652015702L, 818615792062560L,
+            689781896027189L, 557340453963802L, 421079947136144L, 280810745547724L, 136572537955918L, 20305634136204L,
+            169472579551785L, 328795810543866L, 494085614296539L, 665530089254391L, 843517138081672L, 1028504363150172L,
+            1221002487033413L, 1421575123173034L, 1630842969010940L, 1849490036801539L, 2078271380701587L,
+            2318022280314205L, 2569669030578262L, 2834241595132002L, 3112888469933608L, 3406894199714926L,
+            3717700104287726L, 4046928914960108L, 4396414204558612L, 4768235732059441L, 5164762133803925L,
+            5588702804307930L, 6043171358058752L, 6531763802579722L, 7058655558989014L, 7628722851132691L,
+            8247695913715760L, 8922354192593482L, 9660777606582816L, 10472673600425443L, 11369808078043702L,
+            12366580875504986L, 13480805713009702L, 14734784789701036L, 16156816731707853L, 17783356724741365L,
+            19662183995497761L, 21857171972777613L, 24455696683167282L, 27580563854327149L, 31410046818804399L,
+            36213325371048583L, 42417257237736629L, 50742685211596715L, 62513643454971809L, 80469460944360062L,
+            111428640794724271L, 179355568638601057L, 2269182951627976004L};
+
+        static {
+            // Negate the E_MAX table for the convex overhangs
+            for (int j = J_INFLECTION; j < E_MAX_TABLE.length; j++) {
+                E_MAX_TABLE[j] = -E_MAX_TABLE[j];
+            }
+        }
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratNormalizedGaussianSamplerEMaxTable(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            final long xx = nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) xx) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                return X[i] * xx;
+            }
+
+            // Recycle bits then advance RNG:
+            long u1 = xx & MAX_INT64;
+            // Another squashed, recyclable bit
+            // double sign_bit = u1 & 0x100 ? 1. : -1.
+            // Use 2 - 1 or 0 - 1
+            final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
+            final int j = selectRegion();
+            // Four kinds of overhangs:
+            //  j = 0                :  Sample from tail
+            //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
+            //  j = J_INFLECTION     :  Must sample from entire overhang rectangle
+            //  j > J_INFLECTION     :  Overhangs are convex; implicitly accept point in Lower-Left triangle
+            //
+            // Conditional statements are arranged such that the more likely outcomes are first.
+            double x;
+            if (j > J_INFLECTION) {
+                // Convex overhang
+                final long eMax = E_MAX_TABLE[j - 1];
+                for (;;) {
+                    x = sampleX(X, j, u1);
+                    final long uDistance = randomInt63() - u1;
+                    if (uDistance >= 0) {
+                        // Lower-left triangle
+                        break;
+                    }
+                    if (uDistance >= eMax &&
+                        // Within maximum distance of f(x) from the triangle hypotenuse.
+                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    // uDistance < E_MAX (upper-right triangle) or rejected as above the curve
+                    u1 = randomInt63();
+                }
+            } else if (j < J_INFLECTION) {
+                if (j == 0) {
+                    // Tail
+                    // Note: Although less frequent than the next branch, j == 0 is a subset of
+                    // j < J_INFLECTION and must be first.
+                    do {
+                        x = ONE_OVER_X_0 * exponential.sample();
+                    } while (exponential.sample() < 0.5 * x * x);
+                    x += X_0;
+                } else {
+                    // Concave overhang
+                    final long eMax = E_MAX_TABLE[j - 1];
+                    for (;;) {
+                        // U_x <- min(U_1, U_2)
+                        // distance <- | U_1 - U_2 |
+                        // U_y <- 1 - (U_x + distance)
+                        long uDistance = randomInt63() - u1;
+                        if (uDistance < 0) {
+                            // Upper-right triangle. Reflect in hypotenuse.
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
+                        }
+                        x = sampleX(X, j, u1);
+                        if (uDistance > eMax ||
+                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                            break;
+                        }
+                        u1 = randomInt63();
+                    }
+                }
+            } else {
+                // Inflection point
+                for (;;) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    u1 = randomInt63();
+                }
+            }
+            return signBit * x;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This is a copy of {@link ModifiedZigguratNormalizedGaussianSampler} using
+     * two thresholds for the maximum epsilon value for convex and concave overhangs.
+     *
+     * <p>Note: The normal curve is very well approximated by the straight line of
+     * the triangle hypotenuse in the majority of cases. As the convex overhang approaches x=0
+     * the curve is significantly different. For the concave overhangs the curve is increasingly
+     * different approaching the tail. This can be exploited using two maximum deviation thresholds.
+     */
+    static class ModifiedZigguratNormalizedGaussianSamplerEMax2
+        extends ModifiedZigguratNormalizedGaussianSampler {
+
+        // Ziggurat volumes:
+        // Inside the layers              = 98.8281%  (253/256)
+        // Fraction outside the layers:
+        // concave overhangs              = 76.1941%
+        // inflection overhang            =  0.1358%
+        // convex overhangs               = 21.3072%
+        // tail                           =  2.3629%
+
+        // Separation of convex overhangs:
+        // (Cut made to separate large final overhang with a very different E max.)
+        //                                                E_MAX
+        // j = 253                        = 72.0882%      0.246
+        // 204 < j < 253                  = 27.9118%      0.0194
+
+        // Separation of concave overhangs:
+        // (Cut made between overhangs requiring above or below 0.02 for E max.
+        // This choice is somewhat arbitrary. Increasing j will reduce the second E max but makes
+        // the branch less predictable as the major path is used less.)
+        // 1 <= j <= 5                    = 12.5257%      0.0824
+        // 5 < j < 204                    = 87.4743%      0.0186
+
+        /** The convex overhang region j below which the second maximum deviation constant is valid. */
+        private static final int CONVEX_J2 = 253;
+        /** The concave overhang region j above which the second maximum deviation constant is valid. */
+        private static final int CONCAVE_J2 = 5;
+
+        /** Maximum epsilon distance of convex pdf(x) above the hypotenuse value for early rejection
+         * for overhangs {@code 204 < j < 253}.
+         * Equal to approximately 0.0194 scaled by 2^63. This is negated on purpose.
+         *
+         * <p>This threshold increases the area of the early reject triangle by:
+         * (1-0.0194)^2 / (1-0.246)^2 = 69.1%. */
+        private static final long CONVEX_E_MAX_2 = -179355568638601057L;
+
+        /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit
+         * for overhangs {@code 5 < j < 204}.
+         * Equal to approximately 0.0186 scaled by 2^63.
+         *
+         * <p>This threshold increases the area of the early exit triangle by:
+         * (1-0.0186)^2 / (1-0.0824)^2 = 14.4%. */
+        private static final long CONCAVE_E_MAX_2 = 171571664564813181L;
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratNormalizedGaussianSamplerEMax2(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public double sample() {
+            final long xx = nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) xx) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                return X[i] * xx;
+            }
+
+            // Recycle bits then advance RNG:
+            long u1 = xx & MAX_INT64;
+            // Another squashed, recyclable bit
+            // double sign_bit = u1 & 0x100 ? 1. : -1.
+            // Use 2 - 1 or 0 - 1
+            final double signBit = ((u1 >>> 7) & 0x2) - 1.0;
+            final int j = selectRegion();
+            // Four kinds of overhangs:
+            //  j = 0                :  Sample from tail
+            //  0 < j < J_INFLECTION :  Overhang is concave; only sample from Lower-Left triangle
+            //  j = J_INFLECTION     :  Must sample from entire overhang rectangle
+            //  j > J_INFLECTION     :  Overhangs are convex; implicitly accept point in Lower-Left triangle
+            //
+            // Conditional statements are arranged such that the more likely outcomes are first.
+            double x;
+            if (j > J_INFLECTION) {
+                // Convex overhang:
+                // j < J2 frequency: 0.279118
+                final long eMax = j < CONVEX_J2 ? CONVEX_E_MAX_2 : CONVEX_E_MAX;
+                for (;;) {
+                    x = sampleX(X, j, u1);
+                    final long uDistance = randomInt63() - u1;
+                    if (uDistance >= 0) {
+                        // Lower-left triangle
+                        break;
+                    }
+                    if (uDistance >= eMax &&
+                        // Within maximum distance of f(x) from the triangle hypotenuse.
+                        sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    // uDistance < E_MAX (upper-right triangle) or rejected as above the curve
+                    u1 = randomInt63();
+                }
+            } else if (j < J_INFLECTION) {
+                if (j == 0) {
+                    // Tail
+                    // Note: Although less frequent than the next branch, j == 0 is a subset of
+                    // j < J_INFLECTION and must be first.
+                    do {
+                        x = ONE_OVER_X_0 * exponential.sample();
+                    } while (exponential.sample() < 0.5 * x * x);
+                    x += X_0;
+                } else {
+                    // Concave overhang
+                    // j > J2 frequency: 0.874743
+                    final long eMax = j > CONCAVE_J2 ? CONCAVE_E_MAX_2 : CONCAVE_E_MAX;
+                    for (;;) {
+                        // U_x <- min(U_1, U_2)
+                        // distance <- | U_1 - U_2 |
+                        // U_y <- 1 - (U_x + distance)
+                        long uDistance = randomInt63() - u1;
+                        if (uDistance < 0) {
+                            // Upper-right triangle. Reflect in hypotenuse.
+                            uDistance = -uDistance;
+                            u1 -= uDistance;
+                        }
+                        x = sampleX(X, j, u1);
+                        if (uDistance > eMax ||
+                            sampleY(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                            break;
+                        }
+                        u1 = randomInt63();
+                    }
+                }
+            } else {
+                // Inflection point
+                for (;;) {
+                    x = sampleX(X, j, u1);
+                    if (sampleY(Y, j, randomInt63()) < Math.exp(-0.5 * x * x)) {
+                        break;
+                    }
+                    u1 = randomInt63();
+                }
+            }
+            return signBit * x;
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from a Gaussian distribution with mean 0 and standard deviation 1.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This is a copy of {@link ModifiedZigguratNormalizedGaussianSampler} using
      * a table size of 512.
      */
     static class ModifiedZigguratNormalizedGaussianSampler512 implements ContinuousSampler {
@@ -2810,7 +3154,7 @@ public class ZigguratSamplerPerformance {
          *
          * @return the sample
          */
-        final double createSample() {
+        protected double createSample() {
             final long x = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
             final int i = ((int) x) & 0xff;
@@ -3320,6 +3664,199 @@ public class ZigguratSamplerPerformance {
      * <p>Uses the algorithm from McFarland, C.D. (2016).
      *
      * <p>This is a copy of {@link ModifiedZigguratExponentialSampler} using
+     * a table to store the maximum epsilon value for each overhang.
+     */
+    static class ModifiedZigguratExponentialSamplerEMaxTable
+        extends ModifiedZigguratExponentialSampler {
+
+        /** The deviation of concave pdf(x) below the hypotenuse value for early exit scaled by 2^63.
+         * 252 entries with overhang {@code j} corresponding to entry {@code j-1}. */
+        private static final long[] E_MAX_TABLE = {853965788476313647L, 513303011048449571L, 370159258027176883L,
+            290559192811411702L, 239682322342140259L, 204287432757591023L, 178208980447816578L, 158179811652601808L,
+            142304335868356315L, 129406004988661986L, 118715373346558305L, 109707765835789898L, 102012968856398207L,
+            95362200070363889L, 89555545194518719L, 84441195786718132L, 79901778875942314L, 75845102376072521L,
+            72197735928174183L, 68900462142397564L, 65904991388597543L, 63171548466382494L, 60667072432484929L,
+            58363855085733832L, 56238498180198598L, 54271105522401119L, 52444650416313533L, 50744475573288311L,
+            49157894191680121L, 47673869089531616L, 46282752622782375L, 44976074355904424L, 43746366552358124L,
+            42587019846569729L, 41492163173714974L, 40456563326820177L, 39475540494600872L, 38544896888152443L,
+            37660856147942019L, 36820011676708837L, 36019282399893713L, 35255874736108745L, 34527249783140581L,
+            33831094903027707L, 33165299032708110L, 32527931162123068L, 31917221515265728L, 31331545045961871L,
+            30769406922648640L, 30229429727799711L, 29710342140081525L, 29210968902516770L, 28730221909221458L,
+            28267092267755223L, 27820643214642802L, 27390003778888310L, 26974363102873684L, 26572965342371777L,
+            26185105077881714L, 25810123178421168L, 25447403066532673L, 25096367339794542L, 24756474709733050L,
+            24427217223862121L, 24108117740746397L, 23798727631587496L, 23498624684961198L, 23207411194051023L,
+            22924712208092083L, 22650173931802985L, 22383462258391643L, 22124261423306770L, 21872272767292587L,
+            21627213598531964L, 21388816144739113L, 21156826587012934L, 20931004168108672L, 20711120368524119L,
+            20496958144463729L, 20288311222329444L, 20084983444908931L, 19886788164900174L, 19693547681827322L,
+            19505092718772996L, 19321261935686425L, 19141901476327133L, 18966864546167569L, 18796011018823163L,
+            18629207068791541L, 18466324828481792L, 18307242067684946L, 18151841893803319L, 18000012471293326L,
+            17851646758910343L, 17706642263461846L, 17564900808880742L, 17426328319528561L, 17290834616728420L,
+            17158333227603225L, 17028741205374556L, 16901978960337609L, 16777970100794092L, 16656641283277552L,
+            16537922071455934L, 16421744803147429L, 16308044464921141L, 16196758573800601L, 16087827065618528L,
+            15981192189607877L, 15876798408841619L, 15774592306164744L, 15674522495285722L, 15576539536717537L,
+            15480595858282956L, 15386645679917351L, 15294644942520693L, 15204551240628355L, 15116323758686143L,
+            15029923210730485L, 14945311783286871L, 14862453081314005L, 14781312077032665L, 14701855061488253L,
+            14624049598708474L, 14547864482325100L, 14473269694538314L, 14400236367311981L, 14328736745694203L,
+            14258744153165819L, 14190232958926857L, 14123178547035436L, 14057557287324133L, 13993346508018831L,
+            13930524469996132L, 13869070342616606L, 13808964181079506L, 13750186905245534L, 13692720279883516L,
+            13636546896296650L, 13581650155291926L, 13528014251457894L, 13475624158722351L, 13424465617162582L,
+            13374525121048117L, 13325789908096374L, 13278247949928556L, 13231887943714024L, 13186699304997313L,
+            13142672161706220L, 13099797349339341L, 13058066407342105L, 13017471576677033L, 12978005798604683L,
+            12939662714691649L, 12902436668069432L, 12866322705969175L, 12831316583568516L, 12797414769185138L,
+            12764614450860914L, 12732913544387857L, 12702310702829356L, 12672805327602182L, 12644397581185285L,
+            12617088401539963L, 12590879518319943L, 12565773470976553L, 12541773628858256L, 12518884213426018L,
+            12497110322714335L, 12476457958178394L, 12456934054089150L, 12438546509646839L, 12421304224007330L,
+            12405217134429885L, 12390296257782254L, 12376553735658483L, 12364002883391013L, 12352658243275075L,
+            12342535642345809L, 12333652255094142L, 12326026671543609L, 12319678971157050L, 12314630803093705L,
+            12310905473395866L, 12308528039744429L, 12307525414502757L, 12307926476843287L, 12309762194847939L,
+            12313065758579233L, 12317872725234489L, 12324221177635088L, 12332151897455469L, 12341708554772055L,
+            12352937915715590L, 12365890070240929L, 12380618682293187L, 12397181264956129L, 12415639483521735L,
+            12436059489828363L, 12458512291688487L, 12483074161780576L, 12509827091021440L, 12538859292191186L,
+            12570265760462982L, 12604148898533980L, 12640619215280889L, 12679796108318231L, 12721808742570859L,
+            12766797039034927L, 12814912790376408L, 12866320922993068L, 12921200928753560L, 12979748493987873L,
+            13042177358607040L, 13108721444725108L, 13179637302147239L, 13255206927961732L, 13335741029756972L,
+            13421582817340701L, 13513112427153506L, 13610752108037106L, 13714972328197193L, 13826299003251241L,
+            13945322097066639L, 14072705914699465L, 14209201495705644L, 14355661634264763L, 14513059211087015L,
+            14682509737034964L, 14865299303251008L, 15062919542085557L, 15277111779554570L, 15509923383418374L,
+            15763780505978643L, 16041583185668067L, 16346831428994830L, 16683794981864260L, 17057745936956694L,
+            17475283735768697L, 17944799475531562L, 18477156350176671L, 19086716702655372L, 19792946841346963L,
+            20623030105811966L, 21616339529831424L, 22832582766564173L, 24367856249313960L, 26389803907514902L,
+            29226958795272911L, 33654855924781132L, 42320562697765039L, 141207843617418268L};
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratExponentialSamplerEMaxTable(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        @Override
+        protected double sampleOverhang(int j) {
+            // Look-up E_MAX
+            return sampleOverhang(j, E_MAX_TABLE[j - 1]);
+        }
+
+        /**
+         * Sample from overhang region {@code j}.
+         *
+         * @param j Index j (must be {@code > 0})
+         * @param eMax Maximum deviation of concave pdf(x) below the hypotenuse value for early exit
+         * @return the sample
+         */
+        private double sampleOverhang(int j, long eMax) {
+            long u1 = randomInt63();
+            long uDistance = randomInt63() - u1;
+            if (uDistance < 0) {
+                uDistance = -uDistance;
+                u1 -= uDistance;
+            }
+            final double x = sampleX(X, j, u1);
+            if (uDistance >= eMax) {
+                // Early Exit: x < y - epsilon
+                return x;
+            }
+
+            return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ? x : sampleOverhang(j, eMax);
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from an exponential distribution.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This is a copy of {@link ModifiedZigguratExponentialSampler} using
+     * two values for the maximum epsilon value for the overhangs.
+     *
+     * <p>Note: The exponential curve is very well approximated by the straight line of
+     * the triangle hypotenuse in the majority of cases. Only as the overhang approaches the
+     * tail or close to x=0 does the curve differ more than 0.01 (expressed as a fraction of
+     * the triangle height). This can be exploited using two maximum deviation thresholds.
+     */
+    static class ModifiedZigguratExponentialSamplerEMax2
+        extends ModifiedZigguratExponentialSampler {
+
+        // Ziggurat volumes:
+        // Inside the layers              = 98.4375%  (252/256)
+        // Fraction outside the layers:
+        // concave overhangs              = 96.6972%
+        // tail (j=0)                     =  3.3028%
+        //
+        // Separation of tail with large maximum deviation from hypotenuse
+        // 0 <= j <= 8                    =  7.9913%
+        // 1 <= j <= 8                    =  4.6885%
+        // 9 <= j                         = 92.0087%
+
+        /** The overhang region j where the second maximum deviation constant is valid. */
+        private static final int J2 = 9;
+
+        /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit
+         * for overhangs {@code 9 <= j <= 253}.
+         * Equal to approximately 0.0154 scaled by 2^63.
+         *
+         * <p>This threshold increases the area of the early exit triangle by:
+         * (1-0.0154)^2 / (1-0.0926)^2 = 17.74%. */
+        private static final long E_MAX_2 = 142304335868356315L;
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        ModifiedZigguratExponentialSamplerEMax2(UniformRandomProvider rng) {
+            super(rng);
+        }
+
+        @Override
+        protected double createSample() {
+            final long x = nextLong();
+            // Float multiplication squashes these last 8 bits, so they can be used to sample i
+            final int i = ((int) x) & 0xff;
+
+            if (i < I_MAX) {
+                // Early exit.
+                return X[i] * (x & MAX_INT64);
+            }
+            final int j = selectRegion();
+
+            if (j < J2) {
+                // Long tail frequency: 0.0799
+                // j==0 (tail) frequency: 0.033028
+                return j == 0 ? X_0 + createSample() : sampleOverhang(j, E_MAX);
+            }
+            // Majority of curve can use a smaller threshold.
+            // Frequency: 0.920087
+            return sampleOverhang(j, E_MAX_2);
+        }
+
+        /**
+         * Sample from overhang region {@code j}.
+         *
+         * @param j Index j (must be {@code > 0})
+         * @param eMax Maximum deviation of concave pdf(x) below the hypotenuse value for early exit
+         * @return the sample
+         */
+        private double sampleOverhang(int j, long eMax) {
+            long u1 = randomInt63();
+            long uDistance = randomInt63() - u1;
+            if (uDistance < 0) {
+                uDistance = -uDistance;
+                u1 -= uDistance;
+            }
+            final double x = sampleX(X, j, u1);
+            if (uDistance >= eMax) {
+                // Early Exit: x < y - epsilon
+                return x;
+            }
+
+            return sampleY(Y, j, u1 + uDistance) <= Math.exp(-x) ? x : sampleOverhang(j, eMax);
+        }
+    }
+
+    /**
+     * Modified Ziggurat method for sampling from an exponential distribution.
+     *
+     * <p>Uses the algorithm from McFarland, C.D. (2016).
+     *
+     * <p>This is a copy of {@link ModifiedZigguratExponentialSampler} using
      * a table size of 512.
      */
     static class ModifiedZigguratExponentialSampler512 implements ContinuousSampler {
@@ -3333,7 +3870,7 @@ public class ZigguratSamplerPerformance {
         protected static final int I_MAX = 508;
         /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit.
          * Equal to approximately 0.0919 scaled by 2^63. */
-        protected static final long E_MAX = 847415790149374212L;
+        protected static final long E_MAX = 847415790149374213L;
         /** Beginning of tail. Equal to X[0] * 2^63. */
         protected static final double X_0 = 8.362025281328359;
 

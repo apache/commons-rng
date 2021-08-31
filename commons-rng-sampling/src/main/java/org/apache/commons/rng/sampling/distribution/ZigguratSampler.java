@@ -266,7 +266,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         private static final int I_MAX = 252;
         /** Maximum deviation of concave pdf(x) below the hypotenuse value for early exit.
          * Equal to approximately 0.0926 scaled by 2^63. */
-        private static final long E_MAX = 853965788476313646L;
+        private static final long E_MAX = 853965788476313647L;
         /** Beginning of tail. Equal to X[0] * 2^63. */
         private static final double X_0 = 7.569274694148063;
 
