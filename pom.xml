@@ -313,6 +313,7 @@
                  some default development tools files (see RAT-126) -->
             <exclude>.ekstazi/**</exclude>
             <exclude>**/site-content/**</exclude>
+            <exclude>**/site-content.README</exclude>
             <exclude>**/.classpath</exclude>
             <exclude>**/.project</exclude>
             <exclude>**/.settings/**</exclude>
@@ -358,6 +359,7 @@
                  some default development tools files (see RAT-126) -->
             <exclude>.ekstazi/**</exclude>
             <exclude>**/site-content/**</exclude>
+            <exclude>**/site-content.README</exclude>
             <exclude>**/.classpath</exclude>
             <exclude>**/.project</exclude>
             <exclude>**/.settings/**</exclude>
@@ -366,6 +368,8 @@
             <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
             <exclude>src/site/resources/txt/userguide/stress/**</exclude>
             <exclude>dist-archive/**</exclude>
+            <exclude>**/*.patch</exclude>
+            <exclude>**/pdf.*.txt</exclude>
           </excludes>
         </configuration>
       </plugin>
