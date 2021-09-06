@@ -722,6 +722,7 @@ public enum RandomSource {
      * to a seed.
      *
      * @see #create(Object,Object[])
+     * @since 1.4
      */
     public RestorableUniformRandomProvider create() {
         return ProviderBuilder.create(getInternalIdentifier());
@@ -783,6 +784,7 @@ public enum RandomSource {
      * is invalid.
      *
      * @see #create()
+     * @since 1.4
      */
     public RestorableUniformRandomProvider create(Object seed,
                                                   Object... data) {
