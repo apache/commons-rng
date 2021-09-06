@@ -1008,4 +1008,4 @@ java -jar target/examples-jmh.jar -h
 
 7. Dependencies
 
-  Apache Commons RNG requires JDK 1.7+ and has no runtime dependencies.
+  Apache Commons RNG requires JDK 1.8+ and has no runtime dependencies.
