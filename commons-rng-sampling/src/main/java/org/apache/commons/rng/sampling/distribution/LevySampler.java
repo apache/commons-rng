@@ -21,8 +21,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 /**
  * Sampling from a Lévy distribution.
  *
- * @since 1.4
  * @see <a href="https://en.wikipedia.org/wiki/L%C3%A9vy_distribution">Lévy distribution</a>
+ * @since 1.4
  */
 public final class LevySampler implements SharedStateContinuousSampler {
     /** Gaussian sampler. */
