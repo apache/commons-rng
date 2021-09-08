@@ -38,8 +38,8 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  *  final int[] seed = RandomSource.createIntArray(256);
  *  UniformRandomProvider rng = RandomSource.MT.create(seed);
  * </code></pre>
- * where the first argument to method {@code create} is the identifier
- * of the generator's concrete implementation, and the second the is the
+ * where the enum value is the identifier of the generator's concrete
+ * implementation, and the argument to method {@code create} is the
  * (optional) seed.
  *
  * <p>
@@ -48,6 +48,7 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  * is explicitly generated in the third form.
  * </p>
  *
+ * <h2>Seeding</h2>
  * <p>
  * Seeding is the procedure by which a value (or set of values) is
  * used to <i>initialize</i> a generator instance.
@@ -104,8 +105,8 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  * <p>
  * This class provides methods to generate random seeds (single values
  * or arrays of values, of {@code int} or {@code long} types) that can
- * be passed to the {@link RandomSource#create(RandomSource,Object,Object[])
- * generators factory method}.
+ * be passed to the {@link RandomSource#create(Object,Object[])
+ * generator's factory method}.
  * </p>
  * <p>
  * Although the seed-generating methods defined in this class will likely
@@ -131,13 +132,6 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  * </ul>
  *
  * <p>
- * The current implementations have no provision for producing non-overlapping
- * sequences.
- * For parallel applications, a possible workaround is that each thread uses
- * a generator of a different type (see {@link #TWO_CMRES_SELECT}).
- * </p>
- *
- * <p>
  * <b>Note:</b>
  * Seeding is not equivalent to restoring the internal state of an
  * <i>already initialized</i> generator.
@@ -152,6 +146,32 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  * to "replay" all the calls performed by that other instance (and it
  * would require to know the number of calls to the primary source of
  * randomness, which is also not usually accessible).
+ * </p>
+ *
+ * <h2>Parallel applications</h2>
+ * <p>
+ * For parallel applications, some implementations have provision for producing
+ * non-overlapping sequences by copying the generator and then advancing a large number
+ * of steps in the generator sequence. Repeated jumps can create a series of
+ * child generators that will output non-overlapping sequences over a specified number
+ * of outputs. These implementations are identified using the {@link #isJumpable()}
+ * and {@link #isLongJumpable()} methods.
+ * </p>
+ * <pre><code>
+ *  RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
+ *
+ *  JumpableUniformRandomProvider jumpable = (JumpableUniformRandomProvider) source.create();
+ *
+ *  // For use in parallel
+ *  UniformRandomProvider[] rngs = new UniformRandomProvider[10];
+ *  for (int i = 0; i &lt; rngs.length; i++) {
+ *      rngs[i] = jumpable.jump();
+ *  }
+ * </code></pre>
+ * <p>
+ * For implementations that have no provision for producing non-overlapping
+ * sequences, a possible workaround is that each thread uses
+ * a generator of a different type (see {@link #TWO_CMRES_SELECT}).
  * </p>
  *
  * @since 1.0
@@ -722,6 +742,7 @@ public enum RandomSource {
      * to a seed.
      *
      * @see #create(Object,Object[])
+     * @since 1.4
      */
     public RestorableUniformRandomProvider create() {
         return ProviderBuilder.create(getInternalIdentifier());
@@ -783,6 +804,7 @@ public enum RandomSource {
      * is invalid.
      *
      * @see #create()
+     * @since 1.4
      */
     public RestorableUniformRandomProvider create(Object seed,
                                                   Object... data) {

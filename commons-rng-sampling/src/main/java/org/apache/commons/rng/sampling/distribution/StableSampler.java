@@ -49,12 +49,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  *      random variables". Statistics &amp; Probability Letters. 28 (2): 165–171.
  * </ul>
  *
- * @since 1.4
  * @see <a href="https://en.wikipedia.org/wiki/Stable_distribution">Stable distribution (Wikipedia)</a>
  * @see <a href="https://link.springer.com/book/10.1007/978-3-030-52915-4">Nolan (2020) Univariate Stable Distributions</a>
  * @see <a href="https://doi.org/10.1080%2F01621459.1976.10480344">Chambers et al (1976) JOASA 71: 340-344</a>
  * @see <a href="https://doi.org/10.1016%2F0167-7152%2895%2900113-1">Weron (1996).
  * Statistics &amp; Probability Letters. 28 (2): 165–171.</a>
+ * @since 1.4
  */
 public abstract class StableSampler implements SharedStateContinuousSampler {
     /** pi / 2. */
