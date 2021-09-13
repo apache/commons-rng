@@ -69,6 +69,21 @@ This process allows:
  - if necessary to have multiple release managers or help on the
    release as the X.Y-release branch is shared
 
+NOTE
+----
+
+When performing a release it is good practice to edit a copy of these notes during the process
+and merge the updated document into the repository following a release. To assist in this process
+a find-and-replace can be performed to update all the version numbers in order. For example
+based on a previous release of 1.4:
+
+- Next development version  : 1.5 -> 1.6
+- Next release version      : 1.4 -> 1.5
+- Previous release version  : 1.3 -> 1.4
+- Release candidate version : RC1 -> RC2   (if applicable)
+
+This allows the included commands to be coped during the release process.
+
 
 (0)
 Preliminary checks:
@@ -165,16 +180,6 @@ to be used for the release.
 Switch to the release branch:
 
   $ git checkout 1.4-release
-
-
-(3a) TODO: For the next release update this document to change the tag format
-to match the updated standard for commons:
-
-RNG_1_4_RC1 -> commons-rng-1.4-RC1
-
-Release tag:
-
-rel/commons-rng-1.4
 
 
 (4)
@@ -296,7 +301,7 @@ Then, assuming the first candidate, the suffix will be "RC1" (this should
 be the same as in the "<properties>" in the "pom.xml"), and the command
 will be:
 
-  $ git tag -u "__Your_key_id__" -s -m "RC1." RNG_1_4_RC1
+  $ git tag -u "__Your_key_id__" -s -m "RC1." commons-rng-1.4-RC1
 
 If you have several GPG keys, you may prefer to use "-u keyId" to select a specific
 key for signing the tag instead of "-s" which select automatically one key
@@ -304,13 +309,13 @@ from the configured e-mail address.
 
 Check the tag GPG signature:
 
-  $ git tag -v RNG_1_4_RC1
+  $ git tag -v commons-rng-1.4-RC1
 
 You will get something like:
 
   object cf4a9d70c9ac24dd7196995390171150e4e56451
   type commit
-  tag RNG_1_4_RC1
+  tag commons-rng-1.4-RC1
   tagger YourName <YourApacheEmail> 1418934614 +0100
 
   RC1.
@@ -330,7 +335,7 @@ Switch to a new directory out of your regular workspace, and retrieve
 the official tag from the Apache repository:
 
   $ cd /tmp
-  $ git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch RNG_1_4_RC1
+  $ git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.4-RC1
 
 In the command above, the --branch option accepts both branch names and tags names,
 so we specify directly the tag here. Git will warn that the resulting workspace
@@ -551,7 +556,7 @@ Template the vote using this command (run from the dist-archive module):
 
   $ mvn org.apache.commons:commons-release-plugin:vote-txt \
         -Dcommons.nexus.repo.id=1568 \
-        -Dgit.tag.commit=RNG_1_4_RC1
+        -Dgit.tag.commit=commons-rng-1.4-RC1
 
 See target/VOTE.txt. This must be heavily edited. It is useful to generate the release hashes.
 
@@ -565,12 +570,12 @@ Apache Commons RNG 1.4 RC1 is available for review here:
     https://dist.apache.org/repos/dist/dev/commons/rng/1.4-RC1 (svn revision 49724)
     https://home.apache.org/~aherbert/commons-rng-1.4-RC1-site/
 
-The Git tag commit for this RC is RNG_1_4_RC1 which you can browse here:
-    https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=RNG_1_4_RC1
+The Git tag commit for this RC is commons-rng-1.4-RC1 which you can browse here:
+    https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=commons-rng-1.4-RC1
 
 You may checkout this tag using:
-    git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch RNG_1_4_RC1 commons-rng-1.4-RC1
-(signature can be checked from git using 'git tag -v RNG_1_4_RC1')
+    git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.4-RC1 commons-rng-1.4-RC1
+(signature can be checked from git using 'git tag -v commons-rng-1.4-RC1')
 
 Commit ID the tag points at:
     6f2e939bc1ae5d7c1317d4fb1af9ef3ac8d45e54
@@ -832,7 +837,7 @@ in the SVN repository.
 In the git repository, put the official final tag to point at the same commit
 as the **last release candidate** tag:
 
-  $ git tag -v RNG_1_4_RCX
+  $ git tag -v commons-rng-1.4-RC1
 
 Check the commit hash then add the release tag.
 Note: The 'rel/' prefix adds the tag to the release section of the tags.
@@ -840,7 +845,7 @@ This cannot be deleted once pushed to the main repository due to restrictions
 on this section of the tag namespace (preventing deletion of official release
 tags).
 
-  $ git tag -u "__Your_key_id__" -s -m "RCX becomes v1.4 official release." rel/commons-rng-1.4 [commit hash]
+  $ git tag -u "__Your_key_id__" -s -m "RC1 becomes v1.4 official release." rel/commons-rng-1.4 [commit hash]
   $ git tag -v rel/commons-rng-1.4
   $ git log -1
   $ git push --tags
