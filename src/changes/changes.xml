@@ -53,7 +53,37 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.4" date="TBD" description="
+    <release version="1.5" date="TBD" description="
+This is a minor release of Apache Commons RNG, containing a
+few new features and performance improvements.
+Apache Commons RNG 1.4 contains the following library modules:
+  commons-rng-client-api (requires Java 8)
+  commons-rng-core (requires Java 8)
+  commons-rng-simple (requires Java 8)
+  commons-rng-sampling (requires Java 8)
+The code in module 'commons-rng-core' should not be accessed
+directly by applications as a future release might make use of
+the JPMS modularization feature available in Java 11+.
+
+Additional code is provided in the following modules:
+  commons-rng-examples-quadrature (requires Java 8)
+  commons-rng-examples-jmh (requires Java 8)
+  commons-rng-examples-sampling (requires Java 8)
+  commons-rng-examples-stress (requires Java 8)
+  commons-rng-examples-jpms (requires Java 11)
+It is however not part of the official API and no compatibility
+should be expected in subsequent releases.
+
+It must be noted that, due to the nature of random number
+generation, some unit tests are bound to fail with some
+probability.  The 'maven-surefire-plugin' is configured to
+re-run tests that fail, and pass the build if they succeed
+within the allotted number of reruns (the test will be marked
+as 'flaky' in the report).
+">
+</release>
+
+    <release version="1.4" date="2021-09-13" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
 Apache Commons RNG 1.4 contains the following library modules:
