@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>commons-rng-parent</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG</name>
   <description>The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.</description>
@@ -99,7 +99,7 @@
     <perform.site.checkout>true</perform.site.checkout>
 
     <!-- Set by modules to create a custom jira report -->
-    <rng.jira.component></rng.jira.component>
+    <rng.jira.component />
   </properties>
 
   <modules>
@@ -523,9 +523,8 @@
                 </goals>
                 <configuration>
                   <target name="empty-checkout" unless="${perform.site.checkout}">
-                    <mkdir dir="${commons.scmPubCheckoutDirectory}"/>
-                    <echo file="${commons.scmPubCheckoutDirectory}${file.separator}README"
-                          message="The '${commons.scmPubCheckoutDirectory}' directory is empty in child modules."/>
+                    <mkdir dir="${commons.scmPubCheckoutDirectory}" />
+                    <echo file="${commons.scmPubCheckoutDirectory}${file.separator}README" message="The '${commons.scmPubCheckoutDirectory}' directory is empty in child modules." />
                   </target>
                 </configuration>
               </execution>
@@ -543,7 +542,7 @@
                       <arg line="checkout --depth immediates ${commons.scmPubUrl} ${commons.scmPubCheckoutDirectory}" />
                     </exec>
                     <!-- Create the directory in the event that no svn exectuable is on the path -->
-                    <mkdir dir="${commons.scmPubCheckoutDirectory}"/>
+                    <mkdir dir="${commons.scmPubCheckoutDirectory}" />
 
                     <echo file="${commons.scmPubCheckoutDirectory}.README">The '${commons.scmPubCheckoutDirectory}' directory is controlled by "subversion".
 Running "svn up" will download *all* the files of the live web site at
@@ -581,8 +580,8 @@ This is avoided by creating an empty directory when svn is not available.
                 </goals>
                 <configuration>
                   <target name="remove-checkout">
-                    <delete dir="${commons.scmPubCheckoutDirectory}" quiet="true"/>
-                    <delete file="${commons.scmPubCheckoutDirectory}.README" quiet="true"/>
+                    <delete dir="${commons.scmPubCheckoutDirectory}" quiet="true" />
+                    <delete file="${commons.scmPubCheckoutDirectory}.README" quiet="true" />
                   </target>
                 </configuration>
               </execution>
