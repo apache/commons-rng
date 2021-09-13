@@ -46,7 +46,7 @@ Stress test example
 [![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-stress/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-stress/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-stress/1.3.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-stress/1.3)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-stress/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-stress/1.4)
 
 Application for calling external tools that perform stringent uniformity tests.
   Code in this module is not part of the public API.
@@ -68,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-examples-stress</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 ```
 

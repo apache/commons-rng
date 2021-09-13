@@ -47,7 +47,7 @@ Apache Commons RNG
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=commons-rng&metric=alert_status)](https://sonarcloud.io/dashboard?id=commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-simple/1.3.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-simple/1.3)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-simple/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-simple/1.4)
 [![Code Quality: Java](https://img.shields.io/lgtm/grade/java/g/apache/commons-rng.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/apache/commons-rng/context:java)
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
@@ -74,12 +74,12 @@ Alternatively you can pull it from the central Maven repositories, e.g.:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-simple</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-sampling</artifactId>
-  <version>1.3</version>
+  <version>1.4</version>
 </dependency>
 ```
 
