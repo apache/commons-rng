@@ -938,7 +938,7 @@ https://reference.apache.org/committer/email#sendingemailfromyourapacheorgemaila
 You can use the following message as a template:
 
 Subject:
-[ANNOUNCEMENT] Apache Commons RNG Version 1.4 Released
+[ANNOUNCE] Apache Commons RNG 1.4 released
 ----------
 The Apache Commons Team is pleased to announce the availability of
 version 1.4 of "Apache Commons RNG".
