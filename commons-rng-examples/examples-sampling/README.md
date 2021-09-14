@@ -53,7 +53,7 @@ Documentation
 -------------
 
 More information can be found on the [Apache Commons RNG homepage](https://commons.apache.org/proper/commons-rng).
-The [Javadoc](https://commons.apache.org/proper/commons-rng/commons-rng-examples-sampling/apidocs/) can be browsed.
+The [Javadoc](https://commons.apache.org/proper/commons-rng/commons-rng-examples/commons-rng-examples-sampling/apidocs/) can be browsed.
 Questions related to the usage of Sampling example should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
