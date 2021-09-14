@@ -43,7 +43,7 @@
 Sampling example
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-rng.svg)](https://travis-ci.org/apache/commons-rng)
+[![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-sampling/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-sampling/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-sampling/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-sampling/1.4)
