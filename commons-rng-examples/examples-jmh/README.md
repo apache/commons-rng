@@ -43,9 +43,6 @@
 JMH Benchmark
 ===================
 
-[![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
-
 Code for running JMH benchmarks that assess the performance of the generators.
   Code in this module is not part of the public API.
 

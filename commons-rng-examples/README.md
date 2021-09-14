@@ -43,9 +43,6 @@
 Apache Commons RNG Examples
 ===================
 
-[![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
-
 Examples of use of the "Commons RNG" library.
   Codes in this module and its sub-modules are not part of the library.
   They provide checking, benchmarking tools to enhance the documentation
