@@ -1333,7 +1333,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
      * standardized sampler.
      *
      * <p>The random variable \( X \) has
-     * the stable distribution \( S(\alpha, \beta, \gamma, \sigma; 0) \) if:
+     * the stable distribution \( S(\alpha, \beta, \gamma, \delta; 0) \) if:
      *
      * <p>\[ X = \gamma Z_0 + \delta \]
      *
