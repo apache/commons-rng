@@ -933,7 +933,10 @@ send (from your apache account) a release announcement to the following ML:
 If you don't have it setup already you can follow these instructions to send
 email from your apache account:
 
-https://reference.apache.org/committer/email#sendingemailfromyourapacheorgemailaddress
+https://infra.apache.org/committer-email.html
+
+The mail should be sent as text/plain. A text/html message will be refused by the Apache
+mailer daemon.
 
 You can use the following message as a template:
 
