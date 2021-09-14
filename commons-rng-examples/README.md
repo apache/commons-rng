@@ -45,7 +45,6 @@ Apache Commons RNG Examples
 
 [![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples/)
 
 Examples of use of the "Commons RNG" library.
   Codes in this module and its sub-modules are not part of the library.
@@ -62,16 +61,6 @@ Questions related to the usage of Apache Commons RNG Examples should be posted t
 Where can I get the latest release?
 -----------------------------------
 You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-rng/download_rng.cgi).
-
-Alternatively you can pull it from the central Maven repositories:
-
-```xml
-<dependency>
-  <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-examples</artifactId>
-  <version>1.4</version>
-</dependency>
-```
 
 Contributing
 ------------

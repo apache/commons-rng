@@ -45,8 +45,6 @@ JMH Benchmark
 
 [![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jmh/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-examples-jmh/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-examples-jmh/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-examples-jmh/1.4)
 
 Code for running JMH benchmarks that assess the performance of the generators.
   Code in this module is not part of the public API.
@@ -61,16 +59,6 @@ Questions related to the usage of JMH Benchmark should be posted to the [user ma
 Where can I get the latest release?
 -----------------------------------
 You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-rng/download_rng.cgi).
-
-Alternatively you can pull it from the central Maven repositories:
-
-```xml
-<dependency>
-  <groupId>org.apache.commons</groupId>
-  <artifactId>commons-rng-examples-jmh</artifactId>
-  <version>1.4</version>
-</dependency>
-```
 
 Contributing
 ------------
