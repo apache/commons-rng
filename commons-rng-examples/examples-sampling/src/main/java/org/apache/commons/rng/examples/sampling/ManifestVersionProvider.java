@@ -19,6 +19,7 @@ package org.apache.commons.rng.examples.sampling;
 import picocli.CommandLine.IVersionProvider;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.jar.Attributes;
@@ -40,12 +41,12 @@ class ManifestVersionProvider implements IVersionProvider {
                                            .getResources("META-INF/MANIFEST.MF");
         while (resources.hasMoreElements()) {
             final URL url = resources.nextElement();
-            try {
-                final Manifest manifest = new Manifest(url.openStream());
+            try (InputStream stream = url.openStream()) {
+                final Manifest manifest = new Manifest(stream);
                 if (isApplicableManifest(manifest)) {
                     final Attributes attr = manifest.getMainAttributes();
                     return new String[] {get(attr, "Implementation-Title") + " version \"" +
-                            get(attr, "Implementation-Version") + "\""};
+                                         get(attr, "Implementation-Version") + "\""};
                 }
             } catch (final IOException ex) {
                 return new String[] {"Unable to read from " + url + ". " + ex};
