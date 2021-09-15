@@ -91,6 +91,7 @@ class ZigguratSamplerTest {
             args(ZigguratSamplerPerformance.MOD_GAUSSIAN_INT_MAP),
             args(ZigguratSamplerPerformance.MOD_GAUSSIAN_E_MAX_TABLE),
             args(ZigguratSamplerPerformance.MOD_GAUSSIAN_E_MAX_2),
+            args(ZigguratSamplerPerformance.MOD_GAUSSIAN_TERNARY),
             args(ZigguratSamplerPerformance.MOD_GAUSSIAN_512));
     }
 
@@ -115,6 +116,7 @@ class ZigguratSamplerTest {
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_INT_MAP),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_E_MAX_TABLE),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_E_MAX_2),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_TERNARY),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_512));
     }
 
