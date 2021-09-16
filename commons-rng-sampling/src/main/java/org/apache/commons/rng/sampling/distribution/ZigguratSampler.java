@@ -754,9 +754,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         // Ziggurat volumes:
         // Inside the layers              = 98.8281%  (253/256)
         // Fraction outside the layers:
-        // concave overhangs              = 76.1941%
+        // convex overhangs               = 76.1941%
         // inflection overhang            =  0.1358%
-        // convex overhangs               = 21.3072%
+        // concave overhangs              = 21.3072%
         // tail                           =  2.3629%
 
         /** The number of layers in the ziggurat. Maximum i value for early exit. */
