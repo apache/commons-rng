@@ -117,6 +117,7 @@ class ZigguratSamplerTest {
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_E_MAX_TABLE),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_E_MAX_2),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_TERNARY),
+                args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_TERNARY_SUBTRACT),
                 args(ZigguratSamplerPerformance.MOD_EXPONENTIAL_512));
     }
 
