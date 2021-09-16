@@ -20,47 +20,20 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.spy;
 
 /**
  * Test for the {@link SamplerBase}. The class is deprecated but is public. The methods
  * should be tested to ensure correct functionality.
  */
 class SamplerBaseTest {
-    /**
-     * Extends the {@link SamplerBase} to allow access to methods.
-     */
-    @SuppressWarnings("deprecation")
-    private static class SimpleSampler extends SamplerBase {
-        SimpleSampler(UniformRandomProvider rng) {
-            super(rng);
-        }
-
-        @Override
-        public double nextDouble() {
-            return super.nextDouble();
-        }
-
-        @Override
-        public int nextInt() {
-            return super.nextInt();
-        }
-
-        @Override
-        public int nextInt(int max) {
-            return super.nextInt(max);
-        }
-
-        @Override
-        public long nextLong() {
-            return super.nextLong();
-        }
-    }
 
     @Test
     void testNextMethods() {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final SimpleSampler sampler = new SimpleSampler(rng2);
+        // Construct mock object
+        final SamplerBase sampler = spy(new SamplerBase(rng2));
         final int n = 256;
         for (int i = 0; i < 3; i++) {
             Assertions.assertEquals(rng1.nextDouble(), sampler.nextDouble());
@@ -73,7 +46,8 @@ class SamplerBaseTest {
     @Test
     void testToString() {
         final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
-        final SimpleSampler sampler = new SimpleSampler(rng);
+        // Construct mock object
+        final SamplerBase sampler = spy(new SamplerBase(rng));
         Assertions.assertTrue(sampler.toString().contains("rng"));
     }
 }
