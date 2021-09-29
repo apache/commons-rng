@@ -123,6 +123,9 @@ public final class DiscreteSamplersList {
             add(LIST, new org.apache.commons.math3.distribution.ZipfDistribution(unusedRng, numElementsZipf, exponentCloseToOneZipf),
                 MathArrays.sequence(5, 1, 1),
                 RejectionInversionZipfSampler.of(RandomSource.WELL_19937_C.create(), numElementsZipf, exponentCloseToOneZipf));
+            // Zipf (exponent = 0).
+            add(LIST, MathArrays.sequence(5, 1, 1), new double[] {0.2, 0.2, 0.2, 0.2, 0.2},
+                RejectionInversionZipfSampler.of(RandomSource.XO_RO_SHI_RO_128_PP.create(), numElementsZipf, 0.0));
 
             // Poisson ("inverse method").
             final double epsilonPoisson = org.apache.commons.math3.distribution.PoissonDistribution.DEFAULT_EPSILON;
@@ -176,12 +179,13 @@ public final class DiscreteSamplersList {
                 MarsagliaTsangWangDiscreteSampler.Poisson.of(RandomSource.XO_RO_SHI_RO_64_SS.create(), veryLargeMeanPoisson));
 
             // Any discrete distribution
-            final double[] discreteProbabilities = new double[] {0.1, 0.2, 0.3, 0.4, 0.5};
-            add(LIST, discreteProbabilities,
+            final int[] discretePoints = {0, 1, 2, 3, 4};
+            final double[] discreteProbabilities = {0.1, 0.2, 0.3, 0.4, 0.5};
+            add(LIST, discretePoints, discreteProbabilities,
                 MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.XO_SHI_RO_512_PLUS.create(), discreteProbabilities));
-            add(LIST, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities,
                 GuideTableDiscreteSampler.of(RandomSource.XO_SHI_RO_512_SS.create(), discreteProbabilities));
-            add(LIST, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities,
                 AliasMethodDiscreteSampler.of(RandomSource.KISS.create(), discreteProbabilities));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
@@ -241,14 +245,16 @@ public final class DiscreteSamplersList {
 
     /**
      * @param list List of data (one the "parameters" tested by the Junit parametric test).
+     * @param points Outcomes selection.
      * @param probabilities Probability distribution to which the samples are supposed to conform.
      * @param sampler Sampler.
      */
     private static void add(List<DiscreteSamplerTestData> list,
+                            int[] points,
                             final double[] probabilities,
                             final DiscreteSampler sampler) {
         list.add(new DiscreteSamplerTestData(sampler,
-                                             MathArrays.natural(probabilities.length),
+                                             points,
                                              probabilities));
     }
 

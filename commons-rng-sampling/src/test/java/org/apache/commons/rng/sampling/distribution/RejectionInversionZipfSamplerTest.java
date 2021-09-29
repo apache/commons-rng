@@ -44,11 +44,11 @@ class RejectionInversionZipfSamplerTest {
      * Test the constructor with a bad exponent.
      */
     @Test
-    void testConstructorThrowsWithZeroExponent() {
+    void testConstructorThrowsWithNegativeExponent() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final int numberOfElements = 1;
-        final double exponent = 0;
+        final double exponent = Math.nextDown(0);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> RejectionInversionZipfSampler.of(rng, numberOfElements, exponent));
     }
@@ -58,13 +58,41 @@ class RejectionInversionZipfSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
+        testSharedStateSampler(7, 1.23);
+    }
+
+    /**
+     * Special case: Test the SharedStateSampler implementation with a zero exponent.
+     */
+    @Test
+    void testSharedStateSamplerWithZeroExponent() {
+        testSharedStateSampler(7, 0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation for the specified parameters.
+     *
+     * @param numberOfElements Number of elements
+     * @param exponent Exponent
+     */
+    private static void testSharedStateSampler(int numberOfElements, double exponent) {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
-        final int numberOfElements = 7;
-        final double exponent = 1.23;
-        final SharedStateDiscreteSampler sampler1 =
-            RejectionInversionZipfSampler.of(rng1, numberOfElements, exponent);
+        // Use instance constructor not factory constructor to exercise 1.X public API
+        final RejectionInversionZipfSampler sampler1 =
+            new RejectionInversionZipfSampler(rng1, numberOfElements, exponent);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
+    }
+
+    /**
+     * Test the toString method. This is added to ensure coverage as the factory constructor
+     * used in other tests does not create an instance of the wrapper class.
+     */
+    @Test
+    void testToString() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        Assertions.assertTrue(new RejectionInversionZipfSampler(rng, 10, 2.0).toString()
+                .toLowerCase().contains("zipf"));
     }
 }
