@@ -676,17 +676,14 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 //        |    | \
                 //        |    u2 \
                 //        +-------- X[j-1],Y[j-1]
-                // u2 = u1 + (u2 - u1) = u1 + uDistance
+                // Create a second uniform deviate (as u1 is recycled).
+                final long u = randomInt63();
                 // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
-                long uDistance = randomInt63() - u1;
-                if (uDistance < 0) {
-                    // Upper-right triangle. Reflect in hypotenuse.
-                    uDistance = -uDistance;
-                    // Update u1 to be min(u1, u2) by subtracting the distance between them
-                    u1 -= uDistance;
-                }
+                // Use conditional ternary to avoid a 50/50 branch statement to swap the pair.
+                final long u2 = u1 < u ? u : u1;
+                u1 = u1 < u ? u1 : u;
                 final double x = interpolate(X, j, u1);
-                if (uDistance >= E_MAX) {
+                if (u2 - u1 >= E_MAX) {
                     // Early Exit: x < y - epsilon
                     return x;
                 }
@@ -696,7 +693,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                 // Accept Y   = 0.161930
                 // Reject Y   = 0.0147417 (recursion)
 
-                if (interpolate(Y, j, u1 + uDistance) <= Math.exp(-x)) {
+                if (interpolate(Y, j, u2) <= Math.exp(-x)) {
                     return x;
                 }
 
@@ -1136,17 +1133,15 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
                     // Expected frequency: 0.00249694
                     // Observed loop repeat frequency: 0.0123784
                     for (;;) {
-                        // u2 = u1 + (u2 - u1) = u1 + uDistance
-                        long uDistance = randomInt63() - u1;
-                        if (uDistance < 0) {
-                            // Upper-right triangle. Reflect in hypotenuse.
-                            uDistance = -uDistance;
-                            // Update u1 to be min(u1, u2) by subtracting the distance between them
-                            u1 -= uDistance;
-                        }
+                        // Create a second uniform deviate (as u1 is recycled).
+                        final long u = randomInt63();
+                        // If u2 < u1 then reflect in the hypotenuse by swapping u1 and u2.
+                        // Use conditional ternary to avoid a 50/50 branch statement to swap the pair.
+                        final long u2 = u1 < u ? u : u1;
+                        u1 = u1 < u ? u1 : u;
                         x = interpolate(X, j, u1);
-                        if (uDistance > CONCAVE_E_MAX ||
-                            interpolate(Y, j, u1 + uDistance) < Math.exp(-0.5 * x * x)) {
+                        if (u2 - u1 > CONCAVE_E_MAX ||
+                            interpolate(Y, j, u2) < Math.exp(-0.5 * x * x)) {
                             break;
                         }
                         u1 = randomInt63();
