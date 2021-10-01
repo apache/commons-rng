@@ -24,30 +24,27 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @since 1.1
  */
 public class LogNormalSampler implements SharedStateContinuousSampler {
-    /** Scale. */
-    private final double scale;
-    /** Shape. */
-    private final double shape;
+    /** Mean of the natural logarithm of the distribution values. */
+    private final double mu;
+    /** Standard deviation of the natural logarithm of the distribution values. */
+    private final double sigma;
     /** Gaussian sampling. */
     private final NormalizedGaussianSampler gaussian;
 
     /**
      * @param gaussian N(0,1) generator.
-     * @param scale Scale of the log-normal distribution.
-     * @param shape Shape of the log-normal distribution.
-     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
+     * @param mu Mean of the natural logarithm of the distribution values.
+     * @param sigma Standard deviation of the natural logarithm of the distribution values.
+     * @throws IllegalArgumentException if {@code sigma <= 0}.
      */
     public LogNormalSampler(NormalizedGaussianSampler gaussian,
-                            double scale,
-                            double shape) {
-        if (scale < 0) {
-            throw new IllegalArgumentException("scale is not positive: " + scale);
+                            double mu,
+                            double sigma) {
+        if (sigma <= 0) {
+            throw new IllegalArgumentException("sigma is not strictly positive: " + sigma);
         }
-        if (shape <= 0) {
-            throw new IllegalArgumentException("shape is not strictly positive: " + shape);
-        }
-        this.scale = scale;
-        this.shape = shape;
+        this.mu = mu;
+        this.sigma = sigma;
         this.gaussian = gaussian;
     }
 
@@ -57,15 +54,15 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      */
     private LogNormalSampler(UniformRandomProvider rng,
                              LogNormalSampler source) {
-        this.scale = source.scale;
-        this.shape = source.shape;
+        this.mu = source.mu;
+        this.sigma = source.sigma;
         this.gaussian = InternalUtils.newNormalizedGaussianSampler(source.gaussian, rng);
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return Math.exp(scale + shape * gaussian.sample());
+        return Math.exp(mu + sigma * gaussian.sample());
     }
 
     /** {@inheritDoc} */
@@ -100,16 +97,16 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * Otherwise a run-time exception will be thrown when the sampler is used to share state.</p>
      *
      * @param gaussian N(0,1) generator.
-     * @param scale Scale of the log-normal distribution.
-     * @param shape Shape of the log-normal distribution.
+     * @param mu Mean of the natural logarithm of the distribution values.
+     * @param sigma Standard deviation of the natural logarithm of the distribution values.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
+     * @throws IllegalArgumentException if {@code sigma <= 0}.
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(NormalizedGaussianSampler gaussian,
-                                                  double scale,
-                                                  double shape) {
-        return new LogNormalSampler(gaussian, scale, shape);
+                                                  double mu,
+                                                  double sigma) {
+        return new LogNormalSampler(gaussian, mu, sigma);
     }
 }

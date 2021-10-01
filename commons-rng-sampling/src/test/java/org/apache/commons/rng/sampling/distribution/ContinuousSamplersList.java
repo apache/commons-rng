@@ -151,25 +151,31 @@ public final class ContinuousSamplersList {
                 LevySampler.of(RandomSource.JSF_64.create(), 0.0, 1.0));
 
             // Log normal ("inverse method").
-            final double scaleLogNormal = 2.345;
-            final double shapeLogNormal = 0.1234;
-            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
+            final double muLogNormal = 2.345;
+            final double sigmaLogNormal = 0.1234;
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal, sigmaLogNormal),
                 RandomSource.KISS.create());
             // Log-normal (DEPRECATED "Box-Muller").
-            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
-                new BoxMullerLogNormalSampler(RandomSource.XOR_SHIFT_1024_S_PHI.create(), scaleLogNormal, shapeLogNormal));
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal, sigmaLogNormal),
+                new BoxMullerLogNormalSampler(RandomSource.XOR_SHIFT_1024_S_PHI.create(), muLogNormal, sigmaLogNormal));
             // Log-normal ("Box-Muller").
-            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal, sigmaLogNormal),
                 LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(RandomSource.XOR_SHIFT_1024_S_PHI.create()),
-                                    scaleLogNormal, shapeLogNormal));
+                                    muLogNormal, sigmaLogNormal));
             // Log-normal ("Marsaglia").
-            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal, sigmaLogNormal),
                 LogNormalSampler.of(new MarsagliaNormalizedGaussianSampler(RandomSource.MT_64.create()),
-                                    scaleLogNormal, shapeLogNormal));
+                                    muLogNormal, sigmaLogNormal));
             // Log-normal ("Ziggurat").
-            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, scaleLogNormal, shapeLogNormal),
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal, sigmaLogNormal),
                 LogNormalSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.MWC_256.create()),
-                                    scaleLogNormal, shapeLogNormal));
+                                    muLogNormal, sigmaLogNormal));
+            // Log-normal negative mean
+            final double muLogNormal2 = -1.1;
+            final double sigmaLogNormal2 = 2.3;
+            add(LIST, new org.apache.commons.math3.distribution.LogNormalDistribution(unusedRng, muLogNormal2, sigmaLogNormal2),
+                    LogNormalSampler.of(new ZigguratNormalizedGaussianSampler(RandomSource.MWC_256.create()),
+                                        muLogNormal2, sigmaLogNormal2));
 
             // Logistic ("inverse method").
             final double muLogistic = -123.456;

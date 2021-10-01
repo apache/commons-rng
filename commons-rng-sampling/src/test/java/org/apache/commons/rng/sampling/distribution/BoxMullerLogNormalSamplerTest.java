@@ -26,30 +26,16 @@ import org.junit.jupiter.api.Assertions;
  */
 class BoxMullerLogNormalSamplerTest {
     /**
-     * Test the constructor with a bad scale.
-     */
-    @SuppressWarnings({"deprecation"})
-    @Test
-    void testConstructorThrowsWithNegativeScale() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
-        final double scale = -1e-6;
-        final double shape = 1;
-        Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new BoxMullerLogNormalSampler(rng, scale, shape));
-    }
-
-    /**
-     * Test the constructor with a bad shape.
+     * Test the constructor with a bad standard deviation.
      */
     @SuppressWarnings({"deprecation"})
     @Test
     void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
-        final double scale = 1;
-        final double shape = 0;
+        final double mu = 1;
+        final double sigma = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new BoxMullerLogNormalSampler(rng, scale, shape));
+            () -> new BoxMullerLogNormalSampler(rng, mu, sigma));
     }
 }

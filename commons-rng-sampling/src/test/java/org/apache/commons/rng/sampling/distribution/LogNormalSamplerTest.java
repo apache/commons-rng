@@ -29,31 +29,17 @@ import org.junit.jupiter.api.Assertions;
  */
 class LogNormalSamplerTest {
     /**
-     * Test the constructor with a bad shape.
-     */
-    @Test
-    void testConstructorThrowsWithNegativeScale() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
-        final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
-        final double scale = -1e-6;
-        final double shape = 1;
-        Assertions.assertThrows(IllegalArgumentException.class,
-            () -> LogNormalSampler.of(gauss, scale, shape));
-    }
-
-    /**
-     * Test the constructor with a bad shape.
+     * Test the constructor with a bad standard deviation.
      */
     @Test
     void testConstructorThrowsWithZeroShape() {
         final RestorableUniformRandomProvider rng =
             RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
-        final double scale = 1;
-        final double shape = 0;
+        final double mu = 1;
+        final double sigma = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> LogNormalSampler.of(gauss, scale, shape));
+            () -> LogNormalSampler.of(gauss, mu, sigma));
     }
 
     /**
@@ -64,10 +50,11 @@ class LogNormalSamplerTest {
         final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng1);
-        final double scale = 1.23;
-        final double shape = 4.56;
+        // Test a negative mean is allowed (see RNG-166)
+        final double mu = -1.23;
+        final double sigma = 4.56;
         final SharedStateContinuousSampler sampler1 =
-            LogNormalSampler.of(gauss, scale, shape);
+            LogNormalSampler.of(gauss, mu, sigma);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
@@ -85,10 +72,10 @@ class LogNormalSamplerTest {
                 return 0;
             }
         };
-        final double scale = 1.23;
-        final double shape = 4.56;
+        final double mu = 1.23;
+        final double sigma = 4.56;
         final SharedStateContinuousSampler sampler1 =
-            LogNormalSampler.of(gauss, scale, shape);
+            LogNormalSampler.of(gauss, mu, sigma);
         Assertions.assertThrows(UnsupportedOperationException.class,
             () -> sampler1.withUniformRandomProvider(rng2));
     }
@@ -101,10 +88,10 @@ class LogNormalSamplerTest {
     void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
         final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
-        final double scale = 1.23;
-        final double shape = 4.56;
+        final double mu = 1.23;
+        final double sigma = 4.56;
         final SharedStateContinuousSampler sampler1 =
-            LogNormalSampler.of(gauss, scale, shape);
+            LogNormalSampler.of(gauss, mu, sigma);
         Assertions.assertThrows(UnsupportedOperationException.class,
             () -> sampler1.withUniformRandomProvider(rng2));
     }

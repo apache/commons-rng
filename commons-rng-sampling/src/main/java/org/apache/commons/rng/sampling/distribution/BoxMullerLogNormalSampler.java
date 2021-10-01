@@ -38,16 +38,16 @@ public class BoxMullerLogNormalSampler
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
-     * @param scale Scale of the log-normal distribution.
-     * @param shape Shape of the log-normal distribution.
-     * @throws IllegalArgumentException if {@code scale < 0} or {@code shape <= 0}.
+     * @param mu Mean of the natural logarithm of the distribution values.
+     * @param sigma Standard deviation of the natural logarithm of the distribution values.
+     * @throws IllegalArgumentException if {@code sigma <= 0}.
      */
     public BoxMullerLogNormalSampler(UniformRandomProvider rng,
-                                     double scale,
-                                     double shape) {
+                                     double mu,
+                                     double sigma) {
         super(null);
         sampler = LogNormalSampler.of(new BoxMullerNormalizedGaussianSampler(rng),
-                                      scale, shape);
+                                      mu, sigma);
     }
 
     /** {@inheritDoc} */
