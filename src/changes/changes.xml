@@ -81,6 +81,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="fix" issue="165">
+        "RejectionInversionZipfSampler": Allow a zero exponent in the Zipf sampler.
+      </action>
       <action dev="aherbert" type="update" issue="160">
         "ZigguratSampler": Performance improvement using ternary operator to sort values.
       </action>
