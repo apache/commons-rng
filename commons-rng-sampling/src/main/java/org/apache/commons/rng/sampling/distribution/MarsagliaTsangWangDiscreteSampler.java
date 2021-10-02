@@ -630,7 +630,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * is the sum is positive.</p>
          *
          * <p>The sum of the probabilities is normalised to 2<sup>30</sup>. Note that
-         * probabilities are adjusted to the nearest 1<sup>-30</sup> due to round-off during
+         * probabilities are adjusted to the nearest 2<sup>-30</sup> due to round-off during
          * the normalisation conversion. Consequently any probability less than 2<sup>-31</sup>
          * will not be observed in samples.</p>
          *
