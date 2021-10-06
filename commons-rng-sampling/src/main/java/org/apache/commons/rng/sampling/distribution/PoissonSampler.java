@@ -68,8 +68,8 @@ public class PoissonSampler
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
-     * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code mean >} {@link Integer#MAX_VALUE}.
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 0.5 *}
+     * {@link Integer#MAX_VALUE}.
      */
     public PoissonSampler(UniformRandomProvider rng,
                           double mean) {
@@ -108,7 +108,7 @@ public class PoissonSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean >}
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 0.5 *}
      * {@link Integer#MAX_VALUE}.
      * @since 1.3
      */
