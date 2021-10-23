@@ -164,6 +164,12 @@
         or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler' or @SimpleName='ZigguratSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/ExcessiveParameterList">
+    <properties>
+      <!-- The length is due to the size of the internal state saved in the state object -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler']"/>
+    </properties>
+  </rule>
   <rule ref="category/java/design.xml/LogicInversion">
     <properties>
       <!-- Logic inversion allows detection of NaN for parameters that are expected in a range -->

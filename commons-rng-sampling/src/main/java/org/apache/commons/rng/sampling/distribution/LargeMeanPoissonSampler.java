@@ -91,6 +91,8 @@ public class LargeMeanPoissonSampler
     private final double delta;
     /** Algorithm constant: {@code delta / 2}. */
     private final double halfDelta;
+    /** Algorithm constant: {@code Math.sqrt(lambda + halfDelta)}. */
+    private final double sqrtLambdaPlusHalfDelta;
     /** Algorithm constant: {@code 2 * lambda + delta}. */
     private final double twolpd;
     /**
@@ -143,6 +145,7 @@ public class LargeMeanPoissonSampler
         logLambdaFactorial = getFactorialLog((int) lambda);
         delta = Math.sqrt(lambda * Math.log(32 * lambda / Math.PI + 1));
         halfDelta = delta / 2;
+        sqrtLambdaPlusHalfDelta = Math.sqrt(lambda + halfDelta);
         twolpd = 2 * lambda + delta;
         c1 = 1 / (8 * lambda);
         final double a1 = Math.sqrt(Math.PI * twolpd) * Math.exp(c1);
@@ -188,6 +191,7 @@ public class LargeMeanPoissonSampler
         logLambdaFactorial = state.getLogLambdaFactorial();
         delta = state.getDelta();
         halfDelta = state.getHalfDelta();
+        sqrtLambdaPlusHalfDelta = state.getSqrtLambdaPlusHalfDelta();
         twolpd = state.getTwolpd();
         p1 = state.getP1();
         p2 = state.getP2();
@@ -217,6 +221,7 @@ public class LargeMeanPoissonSampler
         logLambdaFactorial = source.logLambdaFactorial;
         delta = source.delta;
         halfDelta = source.halfDelta;
+        sqrtLambdaPlusHalfDelta = source.sqrtLambdaPlusHalfDelta;
         twolpd = source.twolpd;
         p1 = source.p1;
         p2 = source.p2;
@@ -245,7 +250,7 @@ public class LargeMeanPoissonSampler
             if (u <= p1) {
                 // Step 2:
                 final double n = gaussian.sample();
-                x = n * Math.sqrt(lambda + halfDelta) - 0.5d;
+                x = n * sqrtLambdaPlusHalfDelta - 0.5d;
                 if (x > delta || x < -lambda) {
                     continue;
                 }
@@ -349,7 +354,7 @@ public class LargeMeanPoissonSampler
      */
     LargeMeanPoissonSamplerState getState() {
         return new LargeMeanPoissonSamplerState(lambda, logLambda, logLambdaFactorial,
-                delta, halfDelta, twolpd, p1, p2, c1);
+                delta, halfDelta, sqrtLambdaPlusHalfDelta, twolpd, p1, p2, c1);
     }
 
     /**
@@ -371,6 +376,8 @@ public class LargeMeanPoissonSampler
         private final double delta;
         /** Algorithm constant {@code halfDelta}. */
         private final double halfDelta;
+        /** Algorithm constant {@code sqrtLambdaPlusHalfDelta}. */
+        private final double sqrtLambdaPlusHalfDelta;
         /** Algorithm constant {@code twolpd}. */
         private final double twolpd;
         /** Algorithm constant {@code p1}. */
@@ -391,19 +398,22 @@ public class LargeMeanPoissonSampler
          * @param logLambdaFactorial the log lambda factorial
          * @param delta the delta
          * @param halfDelta the half delta
+         * @param sqrtLambdaPlusHalfDelta the sqrt(lambda+half delta)
          * @param twolpd the two lambda plus delta
          * @param p1 the p1 constant
          * @param p2 the p2 constant
          * @param c1 the c1 constant
          */
         LargeMeanPoissonSamplerState(double lambda, double logLambda,
-                double logLambdaFactorial, double delta, double halfDelta, double twolpd,
+                double logLambdaFactorial, double delta, double halfDelta,
+                double sqrtLambdaPlusHalfDelta, double twolpd,
                 double p1, double p2, double c1) {
             this.lambda = lambda;
             this.logLambda = logLambda;
             this.logLambdaFactorial = logLambdaFactorial;
             this.delta = delta;
             this.halfDelta = halfDelta;
+            this.sqrtLambdaPlusHalfDelta = sqrtLambdaPlusHalfDelta;
             this.twolpd = twolpd;
             this.p1 = p1;
             this.p2 = p2;
@@ -453,6 +463,13 @@ public class LargeMeanPoissonSampler
          */
         double getHalfDelta() {
             return halfDelta;
+        }
+
+        /**
+         * @return algorithm constant {@code sqrtLambdaPlusHalfDelta}
+         */
+        double getSqrtLambdaPlusHalfDelta() {
+            return sqrtLambdaPlusHalfDelta;
         }
 
         /**
