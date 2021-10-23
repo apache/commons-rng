@@ -334,6 +334,7 @@ public class LargeMeanPoissonSampler
                                                 double mean) {
         return new LargeMeanPoissonSampler(rng, mean);
     }
+
     /**
      * Gets the initialisation state of the sampler.
      *
