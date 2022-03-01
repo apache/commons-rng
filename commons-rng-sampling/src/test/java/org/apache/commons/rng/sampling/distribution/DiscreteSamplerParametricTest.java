@@ -85,8 +85,9 @@ class DiscreteSamplerParametricTest {
                     }
                 }
 
-                if (chiSquareTest.chiSquareTest(expected, observed, 0.01)) {
-                    failedStat.add(chiSquareTest.chiSquareTest(expected, observed));
+                final double p = chiSquareTest.chiSquareTest(expected, observed);
+                if (p < 0.01) {
+                    failedStat.add(p);
                     ++numFailures;
                 }
             }
@@ -104,9 +105,11 @@ class DiscreteSamplerParametricTest {
         // 3     0.0016
 
         if (numFailures > 3) { // Test will fail with 0.16% probability
-            Assertions.fail(sampler + ": Too many failures for sample size = " + sampleSize +
-                            " (" + numFailures + " out of " + numTests + " tests failed, " +
-                            "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])));
+            Assertions.fail(String.format(
+                    "%s: Too many failures for sample size = %d " +
+                    " (%d out of %d tests failed, chi2=%s",
+                    sampler, sampleSize, numFailures, numTests,
+                    Arrays.toString(failedStat.toArray(new Double[0]))));
         }
     }
 }
