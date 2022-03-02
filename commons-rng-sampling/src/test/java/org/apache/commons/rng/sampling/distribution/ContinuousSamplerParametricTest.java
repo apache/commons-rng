@@ -60,14 +60,12 @@ class ContinuousSamplerParametricTest {
         int numFailures = 0;
 
         final double[] expected = new double[numBins];
-        for (int k = 0; k < numBins; k++) {
-            expected[k] = sampleSize / (double) numBins;
-        }
+        Arrays.fill(expected, sampleSize / (double) numBins);
 
         final long[] observed = new long[numBins];
         // Chi-square critical value with 9 degrees of freedom
         // and 1% significance level.
-        final double chi2CriticalValue = 21.67;
+        final double chi2CriticalValue = 21.665994333461924;
 
         // For storing chi2 larger than the critical value.
         final List<Double> failedStat = new ArrayList<>();
@@ -114,9 +112,11 @@ class ContinuousSamplerParametricTest {
         // 3     0.0016
 
         if (numFailures > 3) { // Test will fail with 0.16% probability
-            Assertions.fail(sampler + ": Too many failures for sample size = " + sampleSize +
-                            " (" + numFailures + " out of " + numTests + " tests failed, " +
-                            "chi2=" + Arrays.toString(failedStat.toArray(new Double[0])) + ")");
+            Assertions.fail(String.format(
+                    "%s: Too many failures for sample size = %d " +
+                    " (%d out of %d tests failed, chi2 > %.3f=%s)",
+                    sampler, sampleSize, numFailures, numTests, chi2CriticalValue,
+                    Arrays.toString(failedStat.toArray(new Double[0]))));
         }
     }
 }
