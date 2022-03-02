@@ -95,6 +95,12 @@
         or @SimpleName='ExamplesSamplingCommand' or @SimpleName='UniformSamplingVisualCheckCommand']"/>
     </properties>
   </rule>
+  <rule ref="category/java/bestpractices.xml/AccessorClassGeneration">
+    <properties>
+      <!-- False positive -->
+      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='TSampler']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/codestyle.xml/ClassNamingConventions">
     <properties>

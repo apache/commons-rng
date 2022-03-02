@@ -81,6 +81,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="add" issue="167">
+        New "TSampler" class to sample from Student's t-distribution.
+      </action>
       <action dev="aherbert" type="fix" issue="166">
         Update "LogNormalSampler" and "BoxMullerLogNormalSampler" to allow a negative mean for
         the natural logarithm of the distribution values.

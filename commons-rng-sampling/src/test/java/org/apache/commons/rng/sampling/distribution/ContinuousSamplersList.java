@@ -254,6 +254,21 @@ public final class ContinuousSamplersList {
             final double dofT = 0.76543;
             add(LIST, new org.apache.commons.math3.distribution.TDistribution(unusedRng, dofT),
                 RandomSource.ISAAC.create());
+            // T.
+            add(LIST, new org.apache.commons.math3.distribution.TDistribution(unusedRng, dofT),
+                TSampler.of(RandomSource.SFC_64.create(), dofT));
+            // T with 'large' degrees of freedom.
+            final double dofTlarge = 30;
+            add(LIST, new org.apache.commons.math3.distribution.TDistribution(unusedRng, dofTlarge),
+                TSampler.of(RandomSource.XO_SHI_RO_256_PP.create(), dofTlarge));
+            // T with 'huge' degrees of freedom (approaches a normal distribution).
+            // Deciles are computed incorrectly using Commons Math; values computed using Matlab.
+            // Note: DF is below the switch to using a normal distribution.
+            final double dofTHuge = 1e15;
+            add(LIST, new double[] {-1.2815515655446015, -0.84162123357291463, -0.52440051270804089,
+                -0.25334710313579983, 0, 0.25334710313579983, 0.52440051270804089, 0.84162123357291474,
+                1.2815515655446015, Double.POSITIVE_INFINITY},
+                TSampler.of(RandomSource.XO_SHI_RO_256_SS.create(), dofTHuge));
 
             // Triangular ("inverse method").
             final double aTriangle = -0.76543;
