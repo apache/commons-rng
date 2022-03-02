@@ -32,6 +32,7 @@ import org.apache.commons.rng.sampling.distribution.ZigguratNormalizedGaussianSa
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.StableSampler;
+import org.apache.commons.rng.sampling.distribution.TSampler;
 import org.apache.commons.rng.sampling.distribution.BoxMullerNormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ChengBetaSampler;
 import org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler;
@@ -48,7 +49,7 @@ import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
  */
 @Command(name = "density",
          description = {"Approximate the probability density of samplers."})
-class ProbabilityDensityApproximationCommand  implements Callable<Void> {
+class ProbabilityDensityApproximationCommand implements Callable<Void> {
     /** The standard options. */
     @Mixin
     private StandardOptions reusableOptions;
@@ -120,6 +121,8 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
         LevySampler,
         /** The stable sampler. */
         StableSampler,
+        /** The t sampler. */
+        TSampler,
     }
 
     /**
@@ -325,6 +328,15 @@ class ProbabilityDensityApproximationCommand  implements Callable<Void> {
             final double stableMax = 4.0364;
             createDensity(StableSampler.of(rng, stableAlpha, stableBeta),
                           stableMin, stableMax, "stable");
+        }
+
+        if (samplers.contains(Sampler.TSampler)) {
+            final double tDegreesOfFreedom = 1.23;
+            // Quantiles 0.02 to 0.98 (avoid long tail to infinity)
+            final double tMin = -9.9264;
+            final double tMax = 9.9264;
+            createDensity(TSampler.of(rng, tDegreesOfFreedom),
+                          tMin, tMax, "t");
         }
 
         return null;
