@@ -61,6 +61,13 @@ import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.JenkinsSmallFast64;
+import org.apache.commons.rng.core.source64.L128X1024Mix;
+import org.apache.commons.rng.core.source64.L128X128Mix;
+import org.apache.commons.rng.core.source64.L128X256Mix;
+import org.apache.commons.rng.core.source64.L64X1024Mix;
+import org.apache.commons.rng.core.source64.L64X128Mix;
+import org.apache.commons.rng.core.source64.L64X128StarStar;
+import org.apache.commons.rng.core.source64.L64X256Mix;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
@@ -143,6 +150,13 @@ public final class ProvidersList {
             LIST64.add(new XoRoShiRo1024PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new XoRoShiRo1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new XoRoShiRo1024StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X128StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X128Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X256Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X128Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X256Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.

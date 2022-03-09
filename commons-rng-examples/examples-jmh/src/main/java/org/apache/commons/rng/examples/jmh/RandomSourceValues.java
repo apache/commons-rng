@@ -84,7 +84,14 @@ public class RandomSourceValues {
             "XO_RO_SHI_RO_1024_SS",
             "PCG_XSH_RR_32_OS",
             "PCG_XSH_RS_32_OS",
-            "PCG_RXS_M_XS_64_OS"})
+            "PCG_RXS_M_XS_64_OS",
+            "L64_X128_SS",
+            "L64_X128_MIX",
+            "L64_X256_MIX",
+            "L64_X1024_MIX",
+            "L128_X128_MIX",
+            "L128_X256_MIX",
+            "L128_X1024_MIX"})
     private String randomSourceName;
 
     /** The RandomSource. */

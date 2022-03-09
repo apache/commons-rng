@@ -81,6 +81,17 @@
        mvn test -DskipTests=false
     -->
     <skipTests>true</skipTests>
+
+    <!-- Java language level.
+        Increase to allow benchmarking with new JDK methods
+        for example Math.multiplyHigh (JDK 9) or Math.unsignedMultiplyHigh (JDK 18)
+        in LXMBenchmark. -->
+    <!--
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+    <animal.sniffer.skip>true</animal.sniffer.skip>
+    -->
+
   </properties>
 
   <profiles>

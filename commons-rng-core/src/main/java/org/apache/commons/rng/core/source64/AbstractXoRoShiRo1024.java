@@ -49,9 +49,9 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
         0x92a65bca41852cc1L, 0xf46820dd0509c12aL, 0x52b00c35fbf92185L, 0x1e5b3b7f589e03c1L,
     };
     /** State. */
-    private final long[] state = new long[SEED_SIZE];
+    protected final long[] state = new long[SEED_SIZE];
     /** Index in "state" array. */
-    private int index;
+    protected int index;
 
     /**
      * Creates a new instance.
@@ -191,6 +191,8 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
                 next();
             }
         }
+        // Note: Calling the next() function updates 'index'.
+        // The present index effectively becomes 0.
         for (int j = 0; j < 16; j++) {
             state[(j + index) & 15] = newState[j];
         }

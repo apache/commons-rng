@@ -91,6 +91,13 @@ public final class ProvidersList {
             add(LIST64, RandomSource.XO_RO_SHI_RO_1024_S, new long[] {-1574314L, 7879874453221215L, -7894343883216L});
             add(LIST64, RandomSource.XO_RO_SHI_RO_1024_SS, new long[] {-41514541234654321L, -12146412316546L, 7984134134L});
             add(LIST64, RandomSource.PCG_RXS_M_XS_64_OS, -34657834534L);
+            add(LIST64, RandomSource.L64_X128_SS, new long[] {-2379479823783L, -235642384324L, 123678172804389L});
+            add(LIST64, RandomSource.L64_X128_MIX, new long[] {-9723846672394L, 623748567398002L, -23678792345897934L});
+            add(LIST64, RandomSource.L64_X256_MIX, new long[] {236784568279L, 237894579279L, -2378945793L});
+            add(LIST64, RandomSource.L64_X1024_MIX, new long[] {279834579232345L, -2374689578237L, -2347895789327L});
+            add(LIST64, RandomSource.L128_X128_MIX, new long[] {236748567823789L, 237485792375L, 2374895789324L});
+            add(LIST64, RandomSource.L128_X256_MIX, new long[] {-829345782324L, -92304897238673245L, 28974785792345L});
+            add(LIST64, RandomSource.L128_X1024_MIX, new long[] {-6563745678920234L, 7348578274523L, 234523455234L});
             // ... add more here.
 
             // Do not modify the remaining statements.

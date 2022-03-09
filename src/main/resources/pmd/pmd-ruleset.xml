@@ -101,6 +101,17 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='TSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters">
+    <properties>
+      <!-- Constructors can reassign their seed parameter after expanding it to the correct length -->
+      <!-- Mixers are optimised for code inlining -->
+      <property name="violationSuppressXPath"
+         value="./ancestor::ConstructorDeclaration[
+           (matches(@Image, 'L(64|128)X[0-9]+(StarStar|Mix)') and @Arity=1 and @Public=true())
+           or @Image='AbstractL64X128'] |
+           ./ancestor::MethodDeclaration[@Name='stafford13' or @Name='lea64']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/codestyle.xml/ClassNamingConventions">
     <properties>
@@ -109,7 +120,7 @@
         value="//ClassOrInterfaceDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
           or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath'
-          or @SimpleName='Conversions']"/>
+          or @SimpleName='Conversions' or @SimpleName='LXMSupport']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
