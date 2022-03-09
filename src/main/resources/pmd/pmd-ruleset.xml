@@ -103,9 +103,13 @@
   </rule>
   <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters">
     <properties>
+      <!-- Constructors can reassign their seed parameter after expanding it to the correct length -->
       <!-- Hash functions are optimised for minimum byte size to allow inlining -->
       <property name="violationSuppressXPath"
-        value="./ancestor::MethodDeclaration[@Name='stafford13' or @Name='murmur3']"/>
+         value="./ancestor::ConstructorDeclaration[
+           (matches(@Image, 'L(64|128)X[0-9]+(StarStar|Mix)') and @Arity=1 and @Public=true())
+           or @Image='AbstractL64X128'] |
+           ./ancestor::MethodDeclaration[@Name='stafford13' or @Name='lea64' or @Name='lea32'or @Name='murmur3']"/>
     </properties>
   </rule>
 
@@ -116,7 +120,7 @@
         value="//ClassOrInterfaceDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
           or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath'
-          or @SimpleName='Conversions' or @SimpleName='MixFunctions']"/>
+          or @SimpleName='Conversions' or @SimpleName='MixFunctions' or @SimpleName='LXMSupport']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
@@ -213,6 +217,13 @@
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@SimpleName='ChengBetaSampler' or @SimpleName='LargeMeanPoissonSampler'
           or @SimpleName='ZigguratSampler']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/UselessOverridingMethod">
+    <properties>
+      <!-- Methods document the size of the jump functions -->
+      <property name="violationSuppressXPath"
+        value="../MethodDeclaration[@Name='jump' or @Name='longJump']"/>
     </properties>
   </rule>
 

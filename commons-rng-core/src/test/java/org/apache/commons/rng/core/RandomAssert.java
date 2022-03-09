@@ -273,6 +273,29 @@ public final class RandomAssert {
 
     /**
      * Assert that following a set number of warm-up cycles the random generator produces
+     * at least one non-zero output for {@link UniformRandomProvider#nextInt()} over the
+     * given number of test cycles. This is used to test a poorly seeded generator can recover
+     * internal state to generate "random" output.
+     *
+     * @param rng Random generator.
+     * @param warmupCycles Number of warm-up cycles.
+     * @param testCycles Number of test cycles.
+     */
+    public static void assertNextIntNonZeroOutput(UniformRandomProvider rng,
+                                                  int warmupCycles, int testCycles) {
+        for (int i = 0; i < warmupCycles; i++) {
+            rng.nextInt();
+        }
+        for (int i = 0; i < testCycles; i++) {
+            if (rng.nextInt() != 0) {
+                return;
+            }
+        }
+        Assertions.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles");
+    }
+
+    /**
+     * Assert that following a set number of warm-up cycles the random generator produces
      * at least one non-zero output for {@link UniformRandomProvider#nextLong()} over the
      * given number of test cycles. This is used to test a poorly seeded generator can recover
      * internal state to generate "random" output.

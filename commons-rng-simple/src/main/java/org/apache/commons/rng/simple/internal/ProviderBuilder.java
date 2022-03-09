@@ -46,6 +46,7 @@ import org.apache.commons.rng.core.source32.PcgMcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
 import org.apache.commons.rng.core.source32.DotyHumphreySmallFastCounting32;
 import org.apache.commons.rng.core.source32.JenkinsSmallFast32;
+import org.apache.commons.rng.core.source32.L32X64Mix;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
@@ -66,6 +67,13 @@ import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
 import org.apache.commons.rng.core.source64.JenkinsSmallFast64;
+import org.apache.commons.rng.core.source64.L64X1024Mix;
+import org.apache.commons.rng.core.source64.L64X128Mix;
+import org.apache.commons.rng.core.source64.L64X128StarStar;
+import org.apache.commons.rng.core.source64.L64X256Mix;
+import org.apache.commons.rng.core.source64.L128X1024Mix;
+import org.apache.commons.rng.core.source64.L128X128Mix;
+import org.apache.commons.rng.core.source64.L128X256Mix;
 
 /**
  * RNG builder.
@@ -397,7 +405,39 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link PcgRxsMXs64}. */
         PCG_RXS_M_XS_64_OS(PcgRxsMXs64.class,
                 1,
-                NativeSeedType.LONG);
+                NativeSeedType.LONG),
+        /** Source of randomness is {@link L64X128StarStar}. */
+        L64_X128_SS(L64X128StarStar.class,
+                4, 2, 4,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L64X128Mix}. */
+        L64_X128_MIX(L64X128Mix.class,
+                4, 2, 4,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L64X256Mix}. */
+        L64_X256_MIX(L64X256Mix.class,
+                6, 2, 6,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L64X1024Mix}. */
+        L64_X1024_MIX(L64X1024Mix.class,
+                18, 2, 18,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L128X128Mix}. */
+        L128_X128_MIX(L128X128Mix.class,
+                6, 4, 6,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L128X256Mix}. */
+        L128_X256_MIX(L128X256Mix.class,
+                8, 4, 8,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L128X1024Mix}. */
+        L128_X1024_MIX(L128X1024Mix.class,
+                20, 4, 20,
+                NativeSeedType.LONG_ARRAY),
+        /** Source of randomness is {@link L32X64Mix}. */
+        L32_X64_MIX(L32X64Mix.class,
+                4, 2, 4,
+                NativeSeedType.INT_ARRAY);
 
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;

@@ -191,6 +191,8 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
                 next();
             }
         }
+        // Note: Calling the next() function updates 'index'.
+        // The present index effectively becomes 0.
         for (int j = 0; j < 16; j++) {
             state[(j + index) & 15] = newState[j];
         }

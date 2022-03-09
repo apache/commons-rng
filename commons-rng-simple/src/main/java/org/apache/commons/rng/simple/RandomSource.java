@@ -586,7 +586,79 @@ public enum RandomSource {
      * </ul>
      * @since 1.4
      */
-    PCG_RXS_M_XS_64_OS(ProviderBuilder.RandomSourceInternal.PCG_RXS_M_XS_64_OS);
+    PCG_RXS_M_XS_64_OS(ProviderBuilder.RandomSourceInternal.PCG_RXS_M_XS_64_OS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L64X128StarStar}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 4.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L64_X128_SS(ProviderBuilder.RandomSourceInternal.L64_X128_SS),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L64X128Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 4.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L64_X128_MIX(ProviderBuilder.RandomSourceInternal.L64_X128_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L64X256Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 6.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L64_X256_MIX(ProviderBuilder.RandomSourceInternal.L64_X256_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L64X1024Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 18.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L64_X1024_MIX(ProviderBuilder.RandomSourceInternal.L64_X1024_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L128X128Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 6.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L128_X128_MIX(ProviderBuilder.RandomSourceInternal.L128_X128_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L128X256Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 8.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L128_X256_MIX(ProviderBuilder.RandomSourceInternal.L128_X256_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.L128X1024Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 20.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L128_X1024_MIX(ProviderBuilder.RandomSourceInternal.L128_X1024_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.L32X64Mix}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 4.</li>
+     * </ul>
+     * @since 1.5
+     */
+    L32_X64_MIX(ProviderBuilder.RandomSourceInternal.L32_X64_MIX);
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;

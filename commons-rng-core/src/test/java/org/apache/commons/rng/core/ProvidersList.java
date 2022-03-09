@@ -39,6 +39,7 @@ import org.apache.commons.rng.core.source32.MersenneTwister;
 import org.apache.commons.rng.core.source32.MiddleSquareWeylSequence;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
 import org.apache.commons.rng.core.source32.KISSRandom;
+import org.apache.commons.rng.core.source32.L32X64Mix;
 import org.apache.commons.rng.core.source32.PcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgXshRs32;
 import org.apache.commons.rng.core.source32.DotyHumphreySmallFastCounting32;
@@ -61,6 +62,13 @@ import org.apache.commons.rng.core.source64.XoShiRo512Plus;
 import org.apache.commons.rng.core.source64.XoShiRo512PlusPlus;
 import org.apache.commons.rng.core.source64.XoShiRo512StarStar;
 import org.apache.commons.rng.core.source64.JenkinsSmallFast64;
+import org.apache.commons.rng.core.source64.L128X1024Mix;
+import org.apache.commons.rng.core.source64.L128X128Mix;
+import org.apache.commons.rng.core.source64.L128X256Mix;
+import org.apache.commons.rng.core.source64.L64X1024Mix;
+import org.apache.commons.rng.core.source64.L64X128Mix;
+import org.apache.commons.rng.core.source64.L64X128StarStar;
+import org.apache.commons.rng.core.source64.L64X256Mix;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
@@ -118,6 +126,7 @@ public final class ProvidersList {
             LIST32.add(new DotyHumphreySmallFastCounting32(new int[] {g.nextInt(), g.nextInt()}));
             LIST32.add(new JenkinsSmallFast32(g.nextInt()));
             LIST32.add(new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
+            LIST32.add(new L32X64Mix(new int[] {g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -143,6 +152,14 @@ public final class ProvidersList {
             LIST64.add(new XoRoShiRo1024PlusPlus(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new XoRoShiRo1024Star(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new XoRoShiRo1024StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X128StarStar(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            // LXM family must have non-zero XBG state; use a shortened array to default fill
+            LIST64.add(new L64X128Mix(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X256Mix(new long[] {g.nextLong(), g.nextLong()}));
+            LIST64.add(new L64X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X128Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X256Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new L128X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.
