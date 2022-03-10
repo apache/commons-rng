@@ -49,7 +49,7 @@ in a variety of formats. To create a random file of 16K (2 buffers of 8196 bytes
 
 To output numbers from the `KISS` generator as raw bits, integers and unsigned integers:
 
-    java -jar target/examples-stress.jar output -f BITS -x 0123456789abcdef
+    java -jar target/examples-stress.jar output KISS -f BITS -x 0123456789abcdef
 
 Since the seed is provided this output should be reproducible across platforms:
 
