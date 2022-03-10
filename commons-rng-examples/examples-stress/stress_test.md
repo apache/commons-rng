@@ -153,6 +153,12 @@ This will produce a list of generators:
         2      WELL_512_A             1
         ...
 
+A subset range of the `RandomSource` enum can be specified using a minimum and/or maximum
+entry in the enum order, starting from 1. This can be used to create a list of recently
+added generators, for example:
+
+        java -jar target/examples-stress.jar list --min 34
+
 Arguments can be specified for those generators that require them. Note that the identifier for
 each line, corresponding to a tested generator, must be unique. The identifier will be used to name
 the output results file for the generator.

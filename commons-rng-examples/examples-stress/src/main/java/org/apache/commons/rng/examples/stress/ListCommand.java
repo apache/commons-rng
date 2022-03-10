@@ -58,6 +58,16 @@ class ListCommand implements Callable<Void> {
             paramLabel = "<provider>")
     private ProviderType providerType = ProviderType.ALL;
 
+    /** The minimum entry in the provider enum. */
+    @Option(names = {"--min"},
+            description = {"The minimum entry in the provider enum (inclusive)."})
+    private int min = 0;
+
+    /** The maximum entry in the provider enum. */
+    @Option(names = {"--max"},
+            description = {"The maximum entry in the provider enum (inclusive)."})
+    private int max = Integer.MAX_VALUE;
+
     /** The prefix for each ID in the template list of random generators. */
     @Option(names = {"-p", "--prefix"},
             description = {"The ID prefix.",
@@ -103,6 +113,9 @@ class ListCommand implements Callable<Void> {
             list = list.subsetIntSource();
         } else if (providerType == ProviderType.LONG) {
             list = list.subsetLongSource();
+        }
+        if (min != 0 || max != Integer.MAX_VALUE) {
+            list = list.subsetRandomSource(min, max);
         }
         // Write in one call to the output
         final StringBuilder sb = new StringBuilder();
@@ -168,7 +181,7 @@ class ListCommand implements Callable<Void> {
     static void writeStressTestData(Appendable appendable,
                                     Iterable<StressTestData> testData) throws IOException {
         // Build the widths for each column
-        int idWidth = 0;
+        int idWidth = 1;
         int randomSourceWidth = 15;
         for (final StressTestData data : testData) {
             idWidth = Math.max(idWidth, data.getId().length());

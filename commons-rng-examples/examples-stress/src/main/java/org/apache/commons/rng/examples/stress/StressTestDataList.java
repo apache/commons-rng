@@ -119,4 +119,23 @@ class StressTestDataList implements Iterable<StressTestData> {
         }
         return subset;
     }
+
+    /**
+     * Create a subset of the list containing only instances of RandomSource within the
+     * specified range of the enum. The first value in the enum corresponds to entry 1.
+     *
+     * @param min Minimum entry (inclusive)
+     * @param max Maximum entry (inclusive)
+     * @return the stress test data list
+     */
+    public StressTestDataList subsetRandomSource(int min, int max) {
+        final StressTestDataList subset = new StressTestDataList();
+        for (final StressTestData data : list) {
+            final int entry = data.getRandomSource().ordinal() + 1;
+            if (min <= entry && entry <= max) {
+                subset.list.add(data);
+            }
+        }
+        return subset;
+    }
 }
