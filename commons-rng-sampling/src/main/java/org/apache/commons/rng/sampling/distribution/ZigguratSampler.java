@@ -222,8 +222,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // positive is below.
     //
     // The pdf(x) may lie completely above or below the hypotenuse. If the region under the pdf
-    // is inside then this is referred to as convex (above) and concave (below). The
-    // exponential function is concave for all regions. The normal function is convex below
+    // is the inside then the curve is referred to as either convex (above) or concave (below).
+    // The exponential function is concave for all regions. The normal function is convex below
     // x=1, and concave above x=1. x=1 is the point of inflection.
     //
     //        Concave                   Convex
@@ -240,7 +240,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // Regions that are concave can detect a point (x,y) above the hypotenuse and reflect the
     // point in the hypotenuse by swapping u1 and u2.
     //
-    // Regions that are convex can detect a point (x,y) below the hypotenuse and immediate accept
+    // Regions that are convex can detect a point (x,y) below the hypotenuse and immediately accept
     // the sample.
     //
     // The maximum distance of pdf(x) from the hypotenuse can be precomputed. This can be done for
@@ -253,14 +253,14 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     // =========================================================================
 
     /**
-     * Modified ziggurat method for sampling from an exponential distributions.
+     * Modified ziggurat method for sampling from an exponential distribution.
      */
     public static class Exponential extends ZigguratSampler {
         // Ziggurat volumes:
         // Inside the layers              = 98.4375%  (252/256)
         // Fraction outside the layers:
         // concave overhangs              = 96.6972%
-        // tail                           =  3.3028%
+        // tail                           =  3.3028%  (x > 7.56...)
 
         /** The number of layers in the ziggurat. Maximum i value for early exit. */
         private static final int I_MAX = 252;
@@ -751,10 +751,10 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         // Ziggurat volumes:
         // Inside the layers              = 98.8281%  (253/256)
         // Fraction outside the layers:
-        // convex overhangs               = 76.1941%
-        // inflection overhang            =  0.1358%
-        // concave overhangs              = 21.3072%
-        // tail                           =  2.3629%
+        // convex overhangs               = 76.1941%  (x < 1)
+        // inflection overhang            =  0.1358%  (x ~ 1)
+        // concave overhangs              = 21.3072%  (x > 1)
+        // tail                           =  2.3629%  (x > 3.63...)
 
         /** The number of layers in the ziggurat. Maximum i value for early exit. */
         private static final int I_MAX = 253;
