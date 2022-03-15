@@ -254,7 +254,7 @@ public enum NativeSeedType {
             return convert((byte[]) seed, size);
         }
 
-        throw new UnsupportedOperationException(UNRECOGNISED_SEED + seed);
+        throw new UnsupportedOperationException(unrecognisedSeedMessage(seed));
     }
 
     /**
@@ -322,6 +322,16 @@ public enum NativeSeedType {
             return (byte[]) seed;
         }
 
-        throw new UnsupportedOperationException(UNRECOGNISED_SEED + seed);
+        throw new UnsupportedOperationException(unrecognisedSeedMessage(seed));
+    }
+
+    /**
+     * Create an unrecognised seed message. This will add the class type of the seed.
+     *
+     * @param seed the seed
+     * @return the message
+     */
+    private static String unrecognisedSeedMessage(Object seed) {
+        return UNRECOGNISED_SEED + ((seed == null) ? "null" : seed.getClass().getName());
     }
 }

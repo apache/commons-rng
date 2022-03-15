@@ -16,20 +16,51 @@
  */
 package org.apache.commons.rng.simple.internal;
 
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the {@link NativeSeedType} factory seed conversions.
+ *
+ * <p>Note:  All supported types are tested in the {@link NativeSeedTypeParametricTest}
  */
 class NativeSeedTypeTest {
     /**
-     * Test the conversion throws for an unsupported type. All supported types are
-     * tested in the {@link NativeSeedTypeParametricTest}.
+     * Test the conversion throws for an unsupported seed type.
+     * The error message should contain the type, not the string representation of the seed.
      */
-    @Test
-    void testConvertSeedToBytesUsingNullThrows() {
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> NativeSeedType.convertSeedToBytes(null));
+    @ParameterizedTest
+    @MethodSource
+    void testConvertSeedToBytesUsingUnsupportedSeedThrows(Object seed) {
+        final UnsupportedOperationException ex = Assertions.assertThrows(
+            UnsupportedOperationException.class, () -> NativeSeedType.convertSeedToBytes(seed));
+        if (seed == null) {
+            Assertions.assertTrue(ex.getMessage().contains("null"));
+        } else {
+            Assertions.assertTrue(ex.getMessage().contains(seed.getClass().getName()));
+        }
+    }
+
+    /**
+     * Return an array of unsupported seed objects.
+     *
+     * @return the seeds
+     */
+    static Object[] testConvertSeedToBytesUsingUnsupportedSeedThrows() {
+        return new Object[] {
+            null,
+            BigDecimal.ONE,
+            "The quick brown fox jumped over the lazy dog",
+            new Object() {
+                @Override
+                public String toString() {
+                    throw new IllegalStateException("error message should not call toString()");
+                }
+            }
+        };
     }
 
     /**
