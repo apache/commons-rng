@@ -16,40 +16,69 @@
  */
 package org.apache.commons.rng.core.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the {@link NumberFactory}.
  */
 class NumberFactoryTest {
-    /** sizeof(int). */
-    private static final int INT_SIZE = 4;
-    /** sizeof(long). */
-    private static final int LONG_SIZE = 8;
+    /** sizeof(int) in bytes. */
+    private static final int INT_SIZE = Integer.BYTES;
+    /** sizeof(long) in bytes. */
+    private static final int LONG_SIZE = Long.BYTES;
 
     /** Test values. */
     private static final long[] LONG_TEST_VALUES = new long[] {0L, 1L, -1L, 19337L, 1234567891011213L,
-        -11109876543211L, Long.valueOf(Integer.MAX_VALUE), Long.valueOf(Integer.MIN_VALUE), Long.MAX_VALUE,
+        -11109876543211L, Integer.MAX_VALUE, Integer.MIN_VALUE, Long.MAX_VALUE,
         Long.MIN_VALUE, 0x9e3779b97f4a7c13L};
     /** Test values. */
     private static final int[] INT_TEST_VALUES = new int[] {0, 1, -1, 19337, 1234567891, -1110987656,
         Integer.MAX_VALUE, Integer.MIN_VALUE, 0x9e3779b9};
 
-    @Test
-    void testMakeBooleanFromInt() {
+    /**
+     * Provide a stream of the test values for long conversion.
+     *
+     * @return the stream
+     */
+    static LongStream longTestValues() {
+        return Arrays.stream(LONG_TEST_VALUES);
+    }
+
+    /**
+     * Provide a stream of the test values for long conversion.
+     *
+     * @return the stream
+     */
+    static IntStream intTestValues() {
+        return Arrays.stream(INT_TEST_VALUES);
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"intTestValues"})
+    void testMakeBooleanFromInt(int v) {
         // Test if the bit is set differently then the booleans are opposite
-        final boolean b1 = NumberFactory.makeBoolean(0);
-        final boolean b2 = NumberFactory.makeBoolean(0xffffffff);
+        final boolean b1 = NumberFactory.makeBoolean(v);
+        final boolean b2 = NumberFactory.makeBoolean(~v);
         Assertions.assertNotEquals(b1, b2);
     }
 
-    @Test
-    void testMakeBooleanFromLong() {
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testMakeBooleanFromLong(long v) {
         // Test if the bit is set differently then the booleans are opposite
-        final boolean b1 = NumberFactory.makeBoolean(0L);
-        final boolean b2 = NumberFactory.makeBoolean(0xffffffffffffffffL);
+        final boolean b1 = NumberFactory.makeBoolean(v);
+        final boolean b2 = NumberFactory.makeBoolean(~v);
         Assertions.assertNotEquals(b1, b2);
     }
 
@@ -66,25 +95,23 @@ class NumberFactoryTest {
         Assertions.assertEquals(0xffffffff, NumberFactory.makeInt(0x0f0f0f0ff0f0f0f0L));
     }
 
-    @Test
-    void testExtractLoExtractHi() {
-        for (long v : LONG_TEST_VALUES) {
-            final int vL = NumberFactory.extractLo(v);
-            final int vH = NumberFactory.extractHi(v);
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testExtractLoExtractHi(long v) {
+        final int vL = NumberFactory.extractLo(v);
+        final int vH = NumberFactory.extractHi(v);
 
-            final long actual = (((long) vH) << 32) | (vL & 0xffffffffL);
-            Assertions.assertEquals(v, actual);
-        }
+        final long actual = (((long) vH) << 32) | (vL & 0xffffffffL);
+        Assertions.assertEquals(v, actual);
     }
 
-    @Test
-    void testLong2Long() {
-        for (long v : LONG_TEST_VALUES) {
-            final int vL = NumberFactory.extractLo(v);
-            final int vH = NumberFactory.extractHi(v);
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testLong2Long(long v) {
+        final int vL = NumberFactory.extractLo(v);
+        final int vH = NumberFactory.extractHi(v);
 
-            Assertions.assertEquals(v, NumberFactory.makeLong(vH, vL));
-        }
+        Assertions.assertEquals(v, NumberFactory.makeLong(vH, vL));
     }
 
     @Test
@@ -102,12 +129,32 @@ class NumberFactoryTest {
         }
     }
 
-    @Test
-    void testLongFromByteArray2Long() {
-        for (long expected : LONG_TEST_VALUES) {
-            final byte[] b = NumberFactory.makeByteArray(expected);
-            Assertions.assertEquals(expected, NumberFactory.makeLong(b));
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testLongToBytesIsLittleEndian(long v) {
+        final ByteBuffer bb = ByteBuffer.allocate(LONG_SIZE).order(ByteOrder.LITTLE_ENDIAN);
+        bb.putLong(v);
+        Assertions.assertArrayEquals(bb.array(), NumberFactory.makeByteArray(v));
+    }
+
+    @RepeatedTest(value = 5)
+    void testByteArrayToLongArrayIsLittleEndian() {
+        final int n = 5;
+        byte[] bytes = new byte[n * LONG_SIZE];
+        ThreadLocalRandom.current().nextBytes(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+        final long[] data = NumberFactory.makeLongArray(bytes);
+        for (int i = 0; i < n; i++) {
+            Assertions.assertEquals(bb.getLong(), data[i]);
         }
+        Assertions.assertArrayEquals(bytes, NumberFactory.makeByteArray(data));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testLongFromByteArray2Long(long expected) {
+        final byte[] b = NumberFactory.makeByteArray(expected);
+        Assertions.assertEquals(expected, NumberFactory.makeLong(b));
     }
 
     @Test
@@ -116,14 +163,13 @@ class NumberFactoryTest {
         Assertions.assertArrayEquals(LONG_TEST_VALUES, NumberFactory.makeLongArray(b));
     }
 
-    @Test
-    void testLongArrayToByteArrayMatchesLongToByteArray() {
+    @ParameterizedTest
+    @MethodSource(value = {"longTestValues"})
+    void testLongArrayToByteArrayMatchesLongToByteArray(long v) {
         // Test individually the bytes are the same as the array conversion
-        for (int i = 0; i < LONG_TEST_VALUES.length; i++) {
-            final byte[] b1 = NumberFactory.makeByteArray(LONG_TEST_VALUES[i]);
-            final byte[] b2 = NumberFactory.makeByteArray(new long[] {LONG_TEST_VALUES[i]});
-            Assertions.assertArrayEquals(b1, b2);
-        }
+        final byte[] b1 = NumberFactory.makeByteArray(v);
+        final byte[] b2 = NumberFactory.makeByteArray(new long[] {v});
+        Assertions.assertArrayEquals(b1, b2);
     }
 
     @Test
@@ -141,12 +187,32 @@ class NumberFactoryTest {
         }
     }
 
-    @Test
-    void testIntFromByteArray2Int() {
-        for (int expected : INT_TEST_VALUES) {
-            final byte[] b = NumberFactory.makeByteArray(expected);
-            Assertions.assertEquals(expected, NumberFactory.makeInt(b));
+    @ParameterizedTest
+    @MethodSource(value = {"intTestValues"})
+    void testIntToBytesIsLittleEndian(int v) {
+        final ByteBuffer bb = ByteBuffer.allocate(INT_SIZE).order(ByteOrder.LITTLE_ENDIAN);
+        bb.putInt(v);
+        Assertions.assertArrayEquals(bb.array(), NumberFactory.makeByteArray(v));
+    }
+
+    @RepeatedTest(value = 5)
+    void testByteArrayToIntArrayIsLittleEndian() {
+        final int n = 5;
+        byte[] bytes = new byte[n * INT_SIZE];
+        ThreadLocalRandom.current().nextBytes(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+        final int[] data = NumberFactory.makeIntArray(bytes);
+        for (int i = 0; i < n; i++) {
+            Assertions.assertEquals(bb.getInt(), data[i]);
         }
+        Assertions.assertArrayEquals(bytes, NumberFactory.makeByteArray(data));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"intTestValues"})
+    void testIntFromByteArray2Int(int expected) {
+        final byte[] b = NumberFactory.makeByteArray(expected);
+        Assertions.assertEquals(expected, NumberFactory.makeInt(b));
     }
 
     @Test
@@ -155,14 +221,13 @@ class NumberFactoryTest {
         Assertions.assertArrayEquals(INT_TEST_VALUES, NumberFactory.makeIntArray(b));
     }
 
-    @Test
-    void testIntArrayToByteArrayMatchesIntToByteArray() {
+    @ParameterizedTest
+    @MethodSource(value = {"intTestValues"})
+    void testIntArrayToByteArrayMatchesIntToByteArray(int v) {
         // Test individually the bytes are the same as the array conversion
-        for (int i = 0; i < INT_TEST_VALUES.length; i++) {
-            final byte[] b1 = NumberFactory.makeByteArray(INT_TEST_VALUES[i]);
-            final byte[] b2 = NumberFactory.makeByteArray(new int[] {INT_TEST_VALUES[i]});
-            Assertions.assertArrayEquals(b1, b2);
-        }
+        final byte[] b1 = NumberFactory.makeByteArray(v);
+        final byte[] b2 = NumberFactory.makeByteArray(new int[] {v});
+        Assertions.assertArrayEquals(b1, b2);
     }
 
     @Test
@@ -279,7 +344,7 @@ class NumberFactoryTest {
         final int noBits = 0;
         // Within 1 ULP of 1.0f
         assertCloseToNotAbove1(NumberFactory.makeFloat(allBits), 1);
-        Assertions.assertEquals(0.0f, NumberFactory.makeFloat(noBits), 0);
+        Assertions.assertEquals(0.0f, NumberFactory.makeFloat(noBits));
     }
 
     /**
