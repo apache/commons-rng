@@ -22,7 +22,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import java.util.Arrays;
 
 /**
@@ -100,5 +101,29 @@ class SeedUtilsTest {
             Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, samples[j], 0.001),
                 "Not uniform in digit " + j);
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Integer.MAX_VALUE})
+    void testIntSizeFromByteSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / Integer.BYTES), SeedUtils.intSizeFromByteSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, Integer.MAX_VALUE})
+    void testLongSizeFromByteSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / Long.BYTES), SeedUtils.longSizeFromByteSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Integer.MAX_VALUE})
+    void testIntSizeFromLongSize(int size) {
+        Assertions.assertEquals((int) Math.min(size * 2L, Integer.MAX_VALUE), SeedUtils.intSizeFromLongSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, Integer.MAX_VALUE})
+    void testLongSizeFromIntSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / 2), SeedUtils.longSizeFromIntSize(size));
     }
 }

@@ -16,24 +16,55 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
  * Creates an {@code int[]} from a {@code long[]}.
  *
+ * <p>Note: From version 1.5 this conversion uses the long bytes in little-endian order.
+ * The output {@code int[]} can be converted back using {@link IntArray2LongArray}.
+ *
  * @since 1.0
  */
-public class LongArray2IntArray implements SeedConverter<long[], int[]> {
+public class LongArray2IntArray implements Seed2ArrayConverter<long[], int[]> {
     /** {@inheritDoc} */
     @Override
     public int[] convert(long[] seed) {
-        final int[] out = new int[seed.length * 2];
-        for (int i = 0; i < seed.length; i++) {
-            final long current = seed[i];
-            out[i] = NumberFactory.extractLo(current);
-            out[seed.length + i] = NumberFactory.extractHi(current);
+        // Full length conversion
+        return convertSeed(seed, SeedUtils.intSizeFromLongSize(seed.length));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.5
+     */
+    @Override
+    public int[] convert(long[] seed, int outputSize) {
+        return convertSeed(seed, outputSize);
+    }
+
+    /**
+     * Creates an array of {@code int} values from a sequence of bytes. The integers are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input bytes
+     * @param length Output length
+     * @return an array of {@code int}.
+     */
+    private static int[] convertSeed(long[] input, int length) {
+        final int[] output = new int[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length * 2L, length);
+        // Little-endian fill
+        // Alternate low/high 32-bits from each long
+        for (int i = 0; i < n; i++) {
+            // i              = int index
+            // i >> 1         = long index
+            // i & 0x1        = int number in the long  [0, 1]
+            // (i & 0x1) << 5 = little-endian long shift to the int {0, 32}
+            output[i] = (int)((input[i >> 1]) >>> ((i & 0x1) << 5));
         }
 
-        return out;
+        return output;
     }
 }

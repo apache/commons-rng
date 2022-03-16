@@ -81,6 +81,18 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="169">
+        "RandomSource.create": Update array seed conversion to use optimum seed length.
+        Avoid duplication of input bytes and conversion of bytes that will be discarded.
+        This introduces a behavioural change for int[] to long[] and long[] to int[]
+        seed conversions. All array-to-array seed conversions now use little endian format,
+        matching the byte[] conversion behaviour since 1.0.
+        Any fixed seeds from previous versions in byte[], Long, Int, or the native seed type
+        will create the same RNG state. Any int[] or long[] fixed seeds converted to long[]
+        or int[] native seeds use the same number of bits from the seed but arranged in a
+        different order after conversion. Seeds larger than the native seed size will use
+        a different subset of the bits.
+      </action>
       <action dev="aherbert" type="fix" issue="170">
         Update implementations of "UniformRandomProvider.nextBytes" with a range
         [start, start + length) to be consistent with the exception conditions of the

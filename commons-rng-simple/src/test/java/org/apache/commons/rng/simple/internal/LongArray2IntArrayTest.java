@@ -25,76 +25,80 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
- * Tests for the {@link IntArray2LongArray} converter.
+ * Tests for the {@link LongArray2IntArray} converter.
  */
-class IntArray2LongArrayTest {
+class LongArray2IntArrayTest {
     /**
-     * Gets the lengths for the int[] seeds to convert.
+     * Gets the lengths for the output int[] seeds.
      *
      * @return the lengths
      */
     static IntStream getLengths() {
-        return IntStream.rangeClosed(0, (Long.BYTES / Integer.BYTES) * 2);
+        return IntStream.rangeClosed(0, 5);
     }
 
     /**
-     * Gets the expected output length.
+     * Gets the expected input length to produce the specified number of ints.
      *
      * @param ints Number of ints
-     * @return the output length
+     * @return the input length
      */
-    private static int getOutputLength(int ints) {
-        return (int) Math.ceil((double) ints / 2);
+    private static int getInputLength(int ints) {
+        return (int) Math.ceil((double) ints / Integer.BYTES);
     }
 
     @ParameterizedTest
     @MethodSource(value = {"getLengths"})
-    void testSeedSizeIsMultipleOfIntSize(int ints) {
-        final int[] seed = new int[ints];
+    void testIntSizeIsMultipleOfSeedSize(int ints) {
+        final long[] seed = new long[getInputLength(ints)];
 
         // This calls convert without a length
-        final long[] out = new IntArray2LongArray().convert(seed);
-        Assertions.assertEquals(getOutputLength(ints), out.length);
+        final int[] out = new LongArray2IntArray().convert(seed);
+        Assertions.assertEquals(seed.length * 2, out.length);
     }
 
     @ParameterizedTest
     @MethodSource(value = {"getLengths"})
     void testSeedConversion(int ints) {
-        assertSeedConversion(ints, getOutputLength(ints));
+        assertSeedConversion(ints, getInputLength(ints));
     }
 
     @ParameterizedTest
     @MethodSource(value = {"getLengths"})
     void testFilledSeedConversion(int ints) {
-        assertSeedConversion(ints, ints / 3);
+        assertSeedConversion(ints, getInputLength(ints) / 3);
     }
 
     @ParameterizedTest
     @MethodSource(value = {"getLengths"})
     void testTruncatedSeedConversion(int ints) {
-        assertSeedConversion(ints, ints * 3);
+        assertSeedConversion(ints, getInputLength(ints) * 3);
     }
 
-    private static void assertSeedConversion(int ints, int outLength) {
-        final int[] seed = ThreadLocalRandom.current().ints(ints).toArray();
+    private static void assertSeedConversion(int ints, int inLength) {
+        final long[] seed = ThreadLocalRandom.current().longs(inLength).toArray();
 
         // Convert to little-endian int array
-        final int[] filledSeed = Arrays.copyOf(seed, outLength * 2);
-        final long[] expected = new long[filledSeed.length / 2];
+        final long[] filledSeed = Arrays.copyOf(seed, ints * 2);
+        final int[] expected = new int[ints];
         for (int i = 0; i < expected.length; i++) {
-            expected[i] = NumberFactory.makeLong(filledSeed[2 * i + 1], filledSeed[2 * i]);
+            if ((i & 1) == 0) {
+                expected[i] = NumberFactory.extractLo(filledSeed[i >> 1]);
+            } else {
+                expected[i] = NumberFactory.extractHi(filledSeed[i >> 1]);
+            }
         }
 
         // This calls convert with a length
-        final long[] out = new IntArray2LongArray().convert(seed, outLength);
+        final int[] out = new LongArray2IntArray().convert(seed, ints);
         Assertions.assertArrayEquals(expected, out);
     }
 
     @ParameterizedTest
     @MethodSource(value = {"getLengths"})
-    void testIntArrayToLongArrayToIntArray(int ints) {
-        final int[] expected = ThreadLocalRandom.current().ints(ints).toArray();
-        final int[] out = new LongArray2IntArray().convert(new IntArray2LongArray().convert(expected), ints);
+    void testLongArrayToIntArrayToIntArray(int ints) {
+        final long[] expected = ThreadLocalRandom.current().longs(ints / 2).toArray();
+        final long[] out = new IntArray2LongArray().convert(new LongArray2IntArray().convert(expected));
         Assertions.assertArrayEquals(expected, out);
     }
 }

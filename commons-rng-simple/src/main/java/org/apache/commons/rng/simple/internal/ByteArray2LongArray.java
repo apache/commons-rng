@@ -16,26 +16,51 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import java.util.Arrays;
-
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
  * Creates a {@code long[]} from a {@code byte[]}.
  *
  * @since 1.0
  */
-public class ByteArray2LongArray implements SeedConverter<byte[], long[]> {
-    /** Number of bytes in a {@code long}. */
-    private static final int LONG_SIZE = 8;
-
+public class ByteArray2LongArray implements Seed2ArrayConverter<byte[], long[]> {
     /** {@inheritDoc} */
     @Override
     public long[] convert(byte[] seed) {
-        final byte[] tmp = seed.length % LONG_SIZE == 0 ?
-            seed :
-            Arrays.copyOf(seed, LONG_SIZE * ((seed.length + LONG_SIZE - 1) / LONG_SIZE));
+        // Full length conversion
+        return convertSeed(seed, SeedUtils.longSizeFromByteSize(seed.length));
+    }
 
-        return NumberFactory.makeLongArray(tmp);
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.5
+     */
+    @Override
+    public long[] convert(byte[] seed, int outputSize) {
+        return convertSeed(seed, outputSize);
+    }
+
+    /**
+     * Creates an array of {@code long} values from a sequence of bytes. The longs are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input bytes
+     * @param length Output length
+     * @return an array of {@code long}.
+     */
+    private static long[] convertSeed(byte[] input, int length) {
+        final long[] output = new long[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * (long) Long.BYTES);
+        // Little-endian fill
+        for (int i = 0; i < n; i++) {
+            // i              = byte index
+            // i >> 3         = long index
+            // i & 0x7        = byte number in the long  [0, 7]
+            // (i & 0x7) << 3 = little-endian byte shift to the long {0, 8, 16, 24, 32, 36, 40, 48, 56}
+            output[i >> 3] |= (input[i] & 0xffL) << ((i & 0x7) << 3);
+        }
+
+        return output;
     }
 }

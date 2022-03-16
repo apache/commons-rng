@@ -16,25 +16,55 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
  * Creates a {@code long[]} from an {@code int[]}.
  *
+ * <p>Note: From version 1.5 this conversion uses the int bytes to compose the long bytes
+ * in little-endian order.
+ * The output {@code long[]} can be converted back using {@link LongArray2IntArray}.
+ *
  * @since 1.0
  */
-public class IntArray2LongArray implements SeedConverter<int[], long[]> {
+public class IntArray2LongArray implements Seed2ArrayConverter<int[], long[]> {
     /** {@inheritDoc} */
     @Override
     public long[] convert(int[] seed) {
-        final int outSize = (seed.length + 1) / 2;
-        final long[] out = new long[outSize];
-        for (int i = 0; i < outSize; i++) {
-            final int lo = seed[i];
-            final int hi = outSize + i < seed.length ? seed[outSize + i] : 0;
-            out[i] = NumberFactory.makeLong(hi, lo);
+        // Full length conversion
+        return convertSeed(seed, SeedUtils.longSizeFromIntSize(seed.length));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.5
+     */
+    @Override
+    public long[] convert(int[] seed, int outputSize) {
+        return convertSeed(seed, outputSize);
+    }
+
+    /**
+     * Creates an array of {@code long} values from a sequence of ints. The longs are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input bytes
+     * @param length Output length
+     * @return an array of {@code long}.
+     */
+    private static long[] convertSeed(int[] input, int length) {
+        final long[] output = new long[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * 2L);
+        // Little-endian fill
+        for (int i = 0; i < n; i++) {
+            // i              = int index
+            // i >> 1         = long index
+            // i & 0x1        = int number in the long  [0, 1]
+            // (i & 0x1) << 5 = little-endian byte shift to the long {0, 32}
+            output[i >> 1] |= (input[i] & 0xffffffffL) << ((i & 0x1) << 5);
         }
 
-        return out;
+        return output;
     }
 }

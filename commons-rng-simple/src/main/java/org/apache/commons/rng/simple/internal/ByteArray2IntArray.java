@@ -16,26 +16,51 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import java.util.Arrays;
-
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
  * Creates a {@code int[]} from a {@code byte[]}.
  *
  * @since 1.0
  */
-public class ByteArray2IntArray implements SeedConverter<byte[], int[]> {
-    /** Number of bytes in an {@code int}. */
-    private static final int INT_SIZE = 4;
-
+public class ByteArray2IntArray implements Seed2ArrayConverter<byte[], int[]> {
     /** {@inheritDoc} */
     @Override
     public int[] convert(byte[] seed) {
-        final byte[] tmp = seed.length % INT_SIZE == 0 ?
-            seed :
-            Arrays.copyOf(seed, INT_SIZE * ((seed.length + INT_SIZE - 1) / INT_SIZE));
+        // Full length conversion
+        return convertSeed(seed, SeedUtils.intSizeFromByteSize(seed.length));
+    }
 
-        return NumberFactory.makeIntArray(tmp);
+    /**
+     * {@inheritDoc}
+     *
+     * @since 1.5
+     */
+    @Override
+    public int[] convert(byte[] seed, int outputSize) {
+        return convertSeed(seed, outputSize);
+    }
+
+    /**
+     * Creates an array of {@code int} values from a sequence of bytes. The integers are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input bytes
+     * @param length Output length
+     * @return an array of {@code int}.
+     */
+    private static int[] convertSeed(byte[] input, int length) {
+        final int[] output = new int[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * (long) Integer.BYTES);
+        // Little-endian fill
+        for (int i = 0; i < n; i++) {
+            // i              = byte index
+            // i >> 2         = integer index
+            // i & 0x3        = byte number in the integer  [0, 3]
+            // (i & 0x3) << 3 = little-endian byte shift to the integer {0, 8, 16, 24}
+            output[i >> 2] |= (input[i] & 0xff) << ((i & 0x3) << 3);
+        }
+
+        return output;
     }
 }
