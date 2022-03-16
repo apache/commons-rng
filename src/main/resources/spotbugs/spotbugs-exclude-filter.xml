@@ -107,4 +107,14 @@
     <BugPattern name="FE_FLOATING_POINT_EQUALITY"/>
   </Match>
 
+  <!-- False positives for range checks. The return value matches the argument. -->
+  <Match>
+    <Or>
+      <Class name="org.apache.commons.rng.core.source32.IntProvider"/>
+      <Class name="org.apache.commons.rng.core.source64.LongProvider"/>
+    </Or>
+    <Method name="nextBytes"/>
+    <BugPattern name="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/>
+  </Match>
+
 </FindBugsFilter>

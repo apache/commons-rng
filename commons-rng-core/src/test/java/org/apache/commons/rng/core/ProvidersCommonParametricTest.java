@@ -56,14 +56,31 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getList")
     void testPreconditionNextBytes(UniformRandomProvider generator) {
+        Assertions.assertThrows(NullPointerException.class, () -> generator.nextBytes(null, 0, 0));
         final int size = 10;
         final int num = 1;
         final byte[] buf = new byte[size];
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, -1, num));
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, size, 0));
+        // Edge-case allowed by JDK range checks (see RNG-170)
+        generator.nextBytes(buf, size, 0);
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, size, 1));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, size, -1));
         final int offset = 2;
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, offset, size - offset + 1));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, offset, -1));
+        // offset + length overflows
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(buf, offset, Integer.MAX_VALUE));
+        // Should be OK
+        generator.nextBytes(buf, 0, size);
+        generator.nextBytes(buf, 0, size - offset);
+        generator.nextBytes(buf, offset, size - offset);
+        // Should be consistent with no length
+        final byte[] empty = {};
+        generator.nextBytes(empty);
+        generator.nextBytes(empty, 0, 0);
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(empty, 0, 1));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(empty, 0, -1));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> generator.nextBytes(empty, -1, 0));
     }
 
     // Uniformity tests

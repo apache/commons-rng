@@ -184,9 +184,7 @@ public abstract class LongProvider
     public void nextBytes(byte[] bytes,
                           int start,
                           int len) {
-        checkIndex(0, bytes.length - 1, start);
-        checkIndex(0, bytes.length - start, len);
-
+        checkFromIndexSize(start, len, bytes.length);
         nextBytesFill(this, bytes, start, len);
     }
 
@@ -241,5 +239,42 @@ public abstract class LongProvider
                 }
             }
         }
+    }
+
+    /**
+     * Checks if the sub-range from fromIndex (inclusive) to fromIndex + size (exclusive) is
+     * within the bounds of range from 0 (inclusive) to length (exclusive).
+     *
+     * <p>This function provides the functionality of
+     * {@code java.utils.Objects.checkFromIndexSize} introduced in JDK 9. The
+     * <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Objects.html#checkFromIndexSize(int,int,int)">Objects</a>
+     * javadoc has been reproduced for reference.
+     *
+     * <p>The sub-range is defined to be out of bounds if any of the following inequalities
+     * is true:
+     * <ul>
+     * <li>{@code fromIndex < 0}
+     * <li>{@code size < 0}
+     * <li>{@code fromIndex + size > length}, taking into account integer overflow
+     * <li>{@code length < 0}, which is implied from the former inequalities
+     * </ul>
+     *
+     * @param fromIndex the lower-bound (inclusive) of the sub-interval
+     * @param size the size of the sub-range
+     * @param length the upper-bound (exclusive) of the range
+     * @return the fromIndex
+     * @throws IndexOutOfBoundsException if the sub-range is out of bounds
+     */
+    private static int checkFromIndexSize(int fromIndex, int size, int length) {
+        // check for any negatives,
+        // or overflow safe length check given the values are all positive
+        // remaining = length - fromIndex
+        if ((fromIndex | size | length) < 0 || size > length - fromIndex) {
+            throw new IndexOutOfBoundsException(
+                    // Note: %<d is 'relative indexing' to re-use the last argument
+                String.format("Range [%d, %<d + %d) out of bounds for length %d",
+                    fromIndex, size, length));
+        }
+        return fromIndex;
     }
 }

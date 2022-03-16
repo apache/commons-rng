@@ -83,6 +83,51 @@ class BaseProviderTest {
     }
 
     /**
+     * Test the checkIndex method. This is not used by any RNG implementations
+     * as it has been superseded by the equivalent of JDK 9 Objects.checkFromIndexSize.
+     */
+    @Test
+    void testCheckIndex() {
+        final BaseProvider rng = new BaseProvider() {
+            @Override
+            public void nextBytes(byte[] bytes) { /* noop */ }
+            @Override
+            public void nextBytes(byte[] bytes, int start, int len) { /* noop */ }
+            @Override
+            public int nextInt() {
+                return 0;
+            }
+            @Override
+            public long nextLong() {
+                return 0;
+            }
+            @Override
+            public boolean nextBoolean() {
+                return false;
+            }
+            @Override
+            public float nextFloat() {
+                return 0;
+            }
+            @Override
+            public double nextDouble() {
+                return 0;
+            }
+        };
+        // Arguments are (min, max, index)
+        // index must be in [min, max]
+        rng.checkIndex(-10, 5, 0);
+        rng.checkIndex(-10, 5, -10);
+        rng.checkIndex(-10, 5, 5);
+        rng.checkIndex(Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE);
+        rng.checkIndex(Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, -11));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, 6));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, Integer.MIN_VALUE));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, Integer.MAX_VALUE));
+    }
+
+    /**
      * Dummy class for checking the behaviorof the IntProvider. Tests:
      * <ul>
      *  <li>an incomplete implementation</li>

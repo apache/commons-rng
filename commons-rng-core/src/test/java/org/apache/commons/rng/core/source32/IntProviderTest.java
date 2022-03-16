@@ -18,6 +18,8 @@ package org.apache.commons.rng.core.source32;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * The tests the caching of calls to {@link IntProvider#nextInt()} are used as
@@ -74,5 +76,38 @@ class IntProviderTest {
                 Assertions.assertEquals(expected, provider.nextBoolean(), () -> "Pass 2, bit " + index);
             }
         }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        // OK
+        "10, 0, 10",
+        "10, 5, 5",
+        "10, 9, 1",
+        // Allowed edge cases
+        "0, 0, 0",
+        "10, 10, 0",
+        // Bad
+        "10, 0, 11",
+        "10, 10, 1",
+        "10, 10, 2147483647",
+        "10, 0, -1",
+        "10, 5, -1",
+    })
+    void testNextBytesIndices(int size, int start, int len) {
+        final FlipIntProvider rng = new FlipIntProvider(999);
+        final byte[] bytes = new byte[size];
+        // Be consistent with System.arraycopy
+        try {
+            System.arraycopy(bytes, start, bytes, start, len);
+        } catch (IndexOutOfBoundsException ex) {
+            // nextBytes should throw under the same conditions.
+            // Note: This is not ArrayIndexOutOfBoundException to be
+            // future compatible with Objects.checkFromIndexSize.
+            Assertions.assertThrows(IndexOutOfBoundsException.class, () ->
+                rng.nextBytes(bytes, start, len));
+            return;
+        }
+        rng.nextBytes(bytes, start, len);
     }
 }
