@@ -106,12 +106,13 @@ final class Conversions {
      *
      * <p>This is ranked first of the top 14 Stafford mixers.
      *
-     * @param x the input value
+     * @param z the input value
      * @return the output value
      * @see <a href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
      *      Bit Mixing - Improving on MurmurHash3&#39;s 64-bit Finalizer.</a>
      */
-    private static long stafford13(long x) {
+    private static long stafford13(long z) {
+        long x = z;
         x = (x ^ (x >>> 30)) * 0xbf58476d1ce4e5b9L;
         x = (x ^ (x >>> 27)) * 0x94d049bb133111ebL;
         return x ^ (x >>> 31);
@@ -182,7 +183,7 @@ final class Conversions {
         // Process pairs
         final int n = length & ~0x1;
         for (int i = 0; i < n; i += 2) {
-            long x = stafford13(v += GOLDEN_RATIO);
+            final long x = stafford13(v += GOLDEN_RATIO);
             output[i] = (int) x;
             output[i + 1] = (int) (x >>> 32);
         }
