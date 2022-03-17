@@ -22,7 +22,11 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import org.apache.commons.rng.core.source64.SplitMix64;
+import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -46,6 +50,72 @@ class ConversionsTest {
      */
     static IntStream getIntLengths() {
         return IntStream.rangeClosed(0, (Long.BYTES / Integer.BYTES) * 2);
+    }
+
+    @RepeatedTest(value = 5)
+    void testInt2Long() {
+        final int v = ThreadLocalRandom.current().nextInt();
+        Assertions.assertEquals(new SplitMix64(v).nextLong(), Conversions.int2long(v));
+    }
+
+    @RepeatedTest(value = 5)
+    void testInt2IntArray() {
+        final int v = ThreadLocalRandom.current().nextInt();
+        getIntLengths().forEach(len -> {
+            Assertions.assertArrayEquals(Conversions.long2intArray(v, len),
+                                         Conversions.int2intArray(v, len));
+        });
+    }
+
+    @RepeatedTest(value = 5)
+    void testInt2LongArray() {
+        final int v = ThreadLocalRandom.current().nextInt();
+        getIntLengths().forEach(len -> {
+            final long[] a = Conversions.int2longArray(v, len);
+            Assertions.assertArrayEquals(Conversions.long2longArray(v, len), a);
+            if (len != 0) {
+                // Special case of expansion to length 1
+                // Expandion is done by mixing
+                Assertions.assertEquals(Conversions.int2long(v), a[0]);
+            }
+        });
+    }
+
+    @RepeatedTest(value = 5)
+    void testLong2Int() {
+        final long v = ThreadLocalRandom.current().nextLong();
+        Assertions.assertEquals(NumberFactory.makeInt(v), Conversions.long2int(v));
+    }
+
+    @RepeatedTest(value = 5)
+    void testLong2IntArray() {
+        final long v = ThreadLocalRandom.current().nextLong();
+        getIntLengths().forEach(len -> {
+            final int longs = SeedUtils.longSizeFromIntSize(len);
+            // Little-endian conversion
+            final ByteBuffer bb = ByteBuffer.allocate(longs * Long.BYTES).order(ByteOrder.LITTLE_ENDIAN);
+            LongStream.generate(new SplitMix64(v)::nextLong).limit(longs).forEach(bb::putLong);
+            bb.clear();
+            final int[] expected = new int[len];
+            for (int i = 0; i < len; i++) {
+                expected[i] = bb.getInt();
+            }
+            Assertions.assertArrayEquals(expected,
+                Conversions.long2intArray(v, len));
+
+            // Note:
+            // long -> int[] position[0] != long -> int
+            // Reduction is done by folding upper and lower using xor
+        });
+    }
+
+    @RepeatedTest(value = 5)
+    void testLong2LongArray() {
+        final long v = ThreadLocalRandom.current().nextLong();
+        getIntLengths().forEach(len -> {
+            Assertions.assertArrayEquals(LongStream.generate(new SplitMix64(v)::nextLong).limit(len).toArray(),
+                Conversions.long2longArray(v, len));
+        });
     }
 
     @ParameterizedTest

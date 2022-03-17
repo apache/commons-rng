@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
  * Converts a {@code Integer} to an {@code Long}.
  *
@@ -27,7 +25,6 @@ public class Int2Long implements SeedConverter<Integer, Long> {
     /** {@inheritDoc} */
     @Override
     public Long convert(Integer seed) {
-        final int s = seed;
-        return NumberFactory.makeLong(s, ~s);
+        return Conversions.int2long(seed);
     }
 }

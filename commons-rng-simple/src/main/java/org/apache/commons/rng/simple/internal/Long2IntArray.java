@@ -16,11 +16,9 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.core.source64.SplitMix64;
-import org.apache.commons.rng.core.util.NumberFactory;
-
 /**
- * Uses a {@code long} value to seed a {@link SplitMix64} RNG and
+ * Uses a {@code long} value to seed a
+ * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64} RNG and
  * create a {@code int[]} with the requested number of random
  * values.
  *
@@ -40,7 +38,7 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
     /** {@inheritDoc} */
     @Override
     public int[] convert(Long seed) {
-        return convertSeed(seed, size);
+        return Conversions.long2intArray(seed, size);
     }
 
     /**
@@ -50,30 +48,6 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
      */
     @Override
     public int[] convert(Long seed, int outputSize) {
-        return convertSeed(seed, outputSize);
-    }
-
-    /**
-     * Convert the seed.
-     *
-     * @param seed Input seed.
-     * @param size Output array size.
-     * @return the converted seed.
-     */
-    private static int[] convertSeed(Long seed, int size) {
-        final int[] out = new int[size];
-        final SplitMix64 rng = new SplitMix64(seed);
-        // Fill pairs of ints from a long.
-        // The array is filled from the end towards the start.
-        for (int i = size - 1; i > 0; i -= 2) {
-            final long v = rng.nextLong();
-            out[i] = NumberFactory.extractHi(v);
-            out[i - 1] = NumberFactory.extractLo(v);
-        }
-        // An odd size requires a final single int at the start
-        if ((size & 1) == 1) {
-            out[0] = NumberFactory.extractHi(rng.nextLong());
-        }
-        return out;
+        return Conversions.long2intArray(seed, outputSize);
     }
 }

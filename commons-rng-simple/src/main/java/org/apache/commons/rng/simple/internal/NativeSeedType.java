@@ -54,7 +54,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Integer convert(Long seed, int size) {
-            return LONG_TO_INT.convert(seed);
+            return Conversions.long2int(seed);
         }
         @Override
         protected Integer convert(int[] seed, int size) {
@@ -77,7 +77,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Long convert(Integer seed, int size) {
-            return INT_TO_LONG.convert(seed);
+            return Conversions.int2long(seed);
         }
         @Override
         protected Long convert(Long seed, int size) {
@@ -106,11 +106,11 @@ public enum NativeSeedType {
         }
         @Override
         protected int[] convert(Integer seed, int size) {
-            return LONG_TO_INT_ARRAY.convert(INT_TO_LONG.convert(seed), size);
+            return Conversions.int2intArray(seed, size);
         }
         @Override
         protected int[] convert(Long seed, int size) {
-            return LONG_TO_INT_ARRAY.convert(seed, size);
+            return Conversions.long2intArray(seed, size);
         }
         @Override
         protected int[] convert(int[] seed, int size) {
@@ -139,11 +139,11 @@ public enum NativeSeedType {
         }
         @Override
         protected long[] convert(Integer seed, int size) {
-            return LONG_TO_LONG_ARRAY.convert(INT_TO_LONG.convert(seed), size);
+            return Conversions.int2longArray(seed, size);
         }
         @Override
         protected long[] convert(Long seed, int size) {
-            return LONG_TO_LONG_ARRAY.convert(seed, size);
+            return Conversions.long2longArray(seed, size);
         }
         @Override
         protected long[] convert(int[] seed, int size) {
@@ -169,12 +169,6 @@ public enum NativeSeedType {
     private static final int RANDOM_SEED_ARRAY_SIZE = 128;
     /** Convert {@code Long} to {@code Integer}. */
     private static final Long2Int LONG_TO_INT = new Long2Int();
-    /** Convert {@code Integer} to {@code Long}. */
-    private static final Int2Long INT_TO_LONG = new Int2Long();
-    /** Convert {@code Long} to {@code int[]}. */
-    private static final Long2IntArray LONG_TO_INT_ARRAY = new Long2IntArray(0);
-    /** Convert {@code Long} to {@code long[]}. */
-    private static final Long2LongArray LONG_TO_LONG_ARRAY = new Long2LongArray(0);
     /** Convert {@code long[]} to {@code Long}. */
     private static final LongArray2Long LONG_ARRAY_TO_LONG = new LongArray2Long();
     /** Convert {@code int[]} to {@code Integer}. */

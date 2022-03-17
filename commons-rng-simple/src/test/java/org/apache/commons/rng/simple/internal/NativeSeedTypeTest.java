@@ -45,7 +45,7 @@ class NativeSeedTypeTest {
     /**
      * Perform the reference int to long conversion.
      * This may change between release versions.
-     * The reference implementation is in the Int2LongConverter.
+     * The reference implementation is in the Int2Long converter.
      *
      * @param v Value
      * @return the result
@@ -57,7 +57,7 @@ class NativeSeedTypeTest {
     /**
      * Perform the reference long to int[] conversion.
      * This may change between release versions.
-     * The reference implementation is in the Long2IntArray.
+     * The reference implementation is in the Long2IntArray converter.
      *
      * @param v Value
      * @param length Array length
@@ -70,7 +70,7 @@ class NativeSeedTypeTest {
     /**
      * Perform the reference long to long[] conversion.
      * This may change between release versions.
-     * The reference implementation is in the Long2LongArray.
+     * The reference implementation is in the Long2LongArray converter.
      *
      * @param v Value
      * @param length Array length
@@ -278,6 +278,9 @@ class NativeSeedTypeTest {
     //   The Long2LongArray converter is the reference implementation.
     // - long to int[] conversion seeds a RNG then expands.
     //   The Long2IntArray converter is the reference implementation.
+    // - Primitive expansion should produce equivalent output bits
+    //   for all larger output seed types,
+    //   i.e. int -> long == int -> int[0]+int[1] == int -> long[0]
     // - int[] to int conversion uses ^ of all the bits
     // - long[] to long conversion uses ^ of all the bits
     // - Array-to-array conversions are little-endian.
@@ -302,14 +305,14 @@ class NativeSeedTypeTest {
     // byte[] -> F long[] -> int
     //
     // int[]
-    // int    -> long -> int[]
+    // int    -> int[]
     // long   -> int[]
     // int[]  -> int[]
     // long[] -> T int[]
     // byte[] -> T int[]
     //
     // int[]
-    // int    -> long -> long[]
+    // int    -> long[]
     // long   -> long[]
     // int[]  -> T long[]
     // long[] -> long[]
@@ -318,8 +321,33 @@ class NativeSeedTypeTest {
     // Notes:
     // 1. The actual implementation may be optimised to avoid redundant steps.
     // 2. Primitive type native seed use all bits from an array (F).
-    // 3. Array type native seed use only the initial n bytes from an array (T) required
+    // 3. Array type native seeds use only the initial n bytes from an array (T) required
     //    to satisfy the native seed length n
+    // 4. Expansion of primitive seeds to a different native type should be consistent.
+    //    Seeding an integer to create an int[] should match the byte output of
+    //    using the same integer (or long) to create a long[] of equivalent length
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testPrimitiveSeedExpansion(int seed) {
+        for (int i = 1; i < 3; i++) {
+            final long l1 = (Long) NativeSeedType.LONG.convert(seed, i);
+            final int[] ia1 = (int[]) NativeSeedType.INT_ARRAY.convert(seed, i * 2);
+            final long[] la1 = (long[]) NativeSeedType.LONG_ARRAY.convert(seed, i);
+            final int[] ia2 = (int[]) NativeSeedType.INT_ARRAY.convert(Long.valueOf(seed), i * 2);
+            final long[] la2 = (long[]) NativeSeedType.LONG_ARRAY.convert(Long.valueOf(seed), i);
+            Assertions.assertEquals(i, la1.length);
+            Assertions.assertEquals(l1, la1[0], "int -> long != int -> long[0]");
+            Assertions.assertArrayEquals(ia1, ia2, "int -> int[] != long -> int[]");
+            Assertions.assertArrayEquals(la1, la2, "int -> long[] != long -> long[]");
+            final ByteBuffer bb = ByteBuffer.allocate(i * Long.BYTES).order(ByteOrder.LITTLE_ENDIAN);
+            Arrays.stream(ia1).forEach(bb::putInt);
+            bb.flip();
+            for (int j = 0; j < i; j++) {
+                Assertions.assertEquals(bb.getLong(), la1[j]);
+            }
+        }
+    }
 
     @ParameterizedTest
     @MethodSource(value = {"getIntSeeds"})
@@ -333,7 +361,7 @@ class NativeSeedTypeTest {
 
     @ParameterizedTest
     @MethodSource(value = {"getIntSeeds"})
-    void testIntNativeSeedWithInt(long seed) {
+    void testIntNativeSeedWithLong(long seed) {
         // Primitive conversion: Note: >>> takes precendence over ^
         final Integer l = (int) (seed ^ seed >>> 32);
         for (int i = 0; i < 3; i++) {
@@ -429,9 +457,9 @@ class NativeSeedTypeTest {
     @MethodSource(value = {"getIntSeeds"})
     void testIntArrayNativeSeedWithInt(int seed) {
         // Full-length conversion
-        final long l = int2long(seed);
         for (int i = 0; i < 3; i++) {
-            Assertions.assertArrayEquals(long2intArray(l, i),
+            // Note: int seed is expanded using the same method as a long seed
+            Assertions.assertArrayEquals(long2intArray(seed, i),
                 (int[]) NativeSeedType.INT_ARRAY.convert(seed, i));
         }
     }
@@ -492,9 +520,9 @@ class NativeSeedTypeTest {
     @MethodSource(value = {"getIntSeeds"})
     void testLongArrayNativeSeedWithInt(int seed) {
         // Full-length conversion
-        final long l = int2long(seed);
         for (int i = 0; i < 3; i++) {
-            Assertions.assertArrayEquals(long2longArray(l, i),
+            // Note: int seed is expanded using the same method as a long seed
+            Assertions.assertArrayEquals(long2longArray(seed, i),
                 (long[]) NativeSeedType.LONG_ARRAY.convert(seed, i));
         }
     }

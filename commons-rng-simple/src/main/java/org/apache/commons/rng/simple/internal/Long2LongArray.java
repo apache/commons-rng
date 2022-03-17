@@ -16,10 +16,9 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import org.apache.commons.rng.core.source64.SplitMix64;
-
 /**
- * Uses a {@code Long} value to seed a {@link SplitMix64} RNG and
+ * Uses a {@code Long} value to seed a
+ * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64} RNG and
  * create a {@code long[]} with the requested number of random
  * values.
  *
@@ -40,7 +39,7 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
     /** {@inheritDoc} */
     @Override
     public long[] convert(Long seed) {
-        return convertSeed(seed, size);
+        return Conversions.long2longArray(seed, size);
     }
 
     /**
@@ -50,23 +49,6 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
      */
     @Override
     public long[] convert(Long seed, int outputSize) {
-        return convertSeed(seed, outputSize);
-    }
-
-    /**
-     * Convert the seed.
-     *
-     * @param seed Input seed.
-     * @param size Output array size.
-     * @return the converted seed.
-     */
-    private static long[] convertSeed(Long seed, int size) {
-        final long[] out = new long[size];
-        final SplitMix64 rng = new SplitMix64(seed);
-        for (int i = 0; i < size; i++) {
-            out[i] = rng.nextLong();
-        }
-
-        return out;
+        return Conversions.long2longArray(seed, outputSize);
     }
 }
