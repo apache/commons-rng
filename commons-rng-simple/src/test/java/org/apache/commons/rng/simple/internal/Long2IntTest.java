@@ -16,39 +16,18 @@
  */
 package org.apache.commons.rng.simple.internal;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 /**
- * Uses a {@code Long} value to seed a
- * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64} RNG and
- * create a {@code long[]} with the requested number of random
- * values.
- *
- * @since 1.0
+ * Tests for the {@link Long2Int} converter to ensure code coverage.
  */
-public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
-    /** Size of the output array. */
-    private final int size;
-
-    /**
-     * @param size Size of the output array.
-     */
-    public Long2LongArray(int size) {
-        this.size = size;
-    }
-
-
-    /** {@inheritDoc} */
-    @Override
-    public long[] convert(Long seed) {
-        return convert(seed, size);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.3
-     */
-    @Override
-    public long[] convert(Long seed, int outputSize) {
-        return Conversions.long2LongArray(seed, outputSize);
+class Long2IntTest {
+    @Test
+    void testConversion() {
+        final Long2Int c = new Long2Int();
+        for (final long l : new long[] {2637678842234L, -62374682438234L, -1L, 0}) {
+            Assertions.assertEquals(Conversions.long2Int(l), c.convert(l));
+        }
     }
 }

@@ -21,21 +21,11 @@ package org.apache.commons.rng.simple.internal;
  *
  * @since 1.0
  */
-public class ByteArray2LongArray implements Seed2ArrayConverter<byte[], long[]> {
+public class ByteArray2LongArray implements SeedConverter<byte[], long[]> {
     /** {@inheritDoc} */
     @Override
     public long[] convert(byte[] seed) {
         // Full length conversion
         return Conversions.byteArray2LongArray(seed, Conversions.longSizeFromByteSize(seed.length));
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.5
-     */
-    @Override
-    public long[] convert(byte[] seed, int outputSize) {
-        return Conversions.byteArray2LongArray(seed, outputSize);
     }
 }

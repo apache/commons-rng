@@ -25,21 +25,11 @@ package org.apache.commons.rng.simple.internal;
  *
  * @since 1.0
  */
-public class IntArray2LongArray implements Seed2ArrayConverter<int[], long[]> {
+public class IntArray2LongArray implements SeedConverter<int[], long[]> {
     /** {@inheritDoc} */
     @Override
     public long[] convert(int[] seed) {
         // Full length conversion
         return Conversions.intArray2LongArray(seed, Conversions.longSizeFromIntSize(seed.length));
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @since 1.5
-     */
-    @Override
-    public long[] convert(int[] seed, int outputSize) {
-        return Conversions.intArray2LongArray(seed, outputSize);
     }
 }

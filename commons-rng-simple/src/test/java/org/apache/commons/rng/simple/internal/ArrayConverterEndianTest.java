@@ -71,7 +71,6 @@ class ArrayConverterEndianTest {
         Assertions.assertArrayEquals(expectedLong, (long[]) NativeSeedType.LONG_ARRAY.convert(expectedInt, expectedLong.length));
 
         // long[] -> int[]
-        Assertions.assertArrayEquals(expectedInt, new LongArray2IntArray().convert(expectedLong, expectedInt.length));
         Assertions.assertArrayEquals(expectedInt, (int[]) NativeSeedType.INT_ARRAY.convert(expectedLong, expectedInt.length));
     }
 }

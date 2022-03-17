@@ -16,10 +16,7 @@
  */
 package org.apache.commons.rng.simple.internal;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
-import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -52,37 +49,7 @@ class ByteArray2LongArrayTest {
     void testSeedSizeIsMultipleOfIntSize(int bytes) {
         final byte[] seed = new byte[bytes];
 
-        // This calls convert without a length
         final long[] out = new ByteArray2LongArray().convert(seed);
         Assertions.assertEquals(getOutputLength(bytes), out.length);
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"getLengths"})
-    void testSeedConversion(int bytes) {
-        assertSeedConversion(bytes, getOutputLength(bytes));
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"getLengths"})
-    void testFilledSeedConversion(int bytes) {
-        assertSeedConversion(bytes, bytes / 3);
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"getLengths"})
-    void testTruncatedSeedConversion(int bytes) {
-        assertSeedConversion(bytes, bytes * 3);
-    }
-
-    private static void assertSeedConversion(int bytes, int outLength) {
-        final byte[] seed = new byte[bytes];
-        ThreadLocalRandom.current().nextBytes(seed);
-        final byte[] filledSeed = Arrays.copyOf(seed, outLength * Long.BYTES);
-        final long[] expected = NumberFactory.makeLongArray(filledSeed);
-
-        // This calls convert with a length
-        final long[] out = new ByteArray2LongArray().convert(seed, outLength);
-        Assertions.assertArrayEquals(expected, out);
     }
 }
