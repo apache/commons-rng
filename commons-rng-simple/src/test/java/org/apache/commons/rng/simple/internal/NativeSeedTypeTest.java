@@ -187,7 +187,7 @@ class NativeSeedTypeTest {
     void testConvertByteArrayToIntArray(int byteSize, int intSize) {
         final byte[] bytes = new byte[byteSize];
         // Get the maximum number of ints to use all the bytes
-        final int size = SeedUtils.intSizeFromByteSize(byteSize);
+        final int size = Conversions.intSizeFromByteSize(byteSize);
         // If the size is too big, fill the remaining bytes with non-zero values.
         // These should not be used during conversion.
         if (size > intSize) {
@@ -216,7 +216,7 @@ class NativeSeedTypeTest {
     void testConvertByteArrayToLongArray(int byteSize, int longSize) {
         final byte[] bytes = new byte[byteSize];
         // Get the maximum number of longs to use all the bytes
-        final long size = SeedUtils.longSizeFromByteSize(byteSize);
+        final long size = Conversions.longSizeFromByteSize(byteSize);
         // If the size is too big, fill the remaining bytes with non-zero values.
         // These should not be used during conversion.
         if (size > longSize) {
@@ -245,7 +245,7 @@ class NativeSeedTypeTest {
     void testConvertIntArrayToLongArray(int intSize, int longSize) {
         final int[] ints = new int[intSize];
         // Get the maximum number of longs to use all the ints
-        final long size = SeedUtils.longSizeFromIntSize(intSize);
+        final long size = Conversions.longSizeFromIntSize(intSize);
         // If the size is too big, fill the remaining ints with non-zero values.
         // These should not be used during conversion.
         if (size > longSize) {
@@ -278,7 +278,7 @@ class NativeSeedTypeTest {
         // If the size is too big, fill the remaining longs with non-zero values.
         // These should not be used during conversion.
         if (size > intSize) {
-            Arrays.fill(longs, SeedUtils.longSizeFromIntSize(intSize), longs.length, -1);
+            Arrays.fill(longs, Conversions.longSizeFromIntSize(intSize), longs.length, -1);
         }
         final int expected = Math.min(size, intSize);
         final int[] ints = (int[]) NativeSeedType.INT_ARRAY.convert(longs, intSize);
@@ -397,8 +397,8 @@ class NativeSeedTypeTest {
         ThreadLocalRandom.current().nextBytes(byteSeed);
 
         // Get the bytes as each array type
-        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
-        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final int longSize = Conversions.longSizeFromByteSize(bytes);
+        final int intSize = Conversions.intSizeFromByteSize(bytes);
         final ByteBuffer bb = ByteBuffer.wrap(
                 Arrays.copyOf(byteSeed, longSize * Long.BYTES))
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -449,8 +449,8 @@ class NativeSeedTypeTest {
         ThreadLocalRandom.current().nextBytes(byteSeed);
 
         // Get the bytes as each array type
-        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
-        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final int longSize = Conversions.longSizeFromByteSize(bytes);
+        final int intSize = Conversions.intSizeFromByteSize(bytes);
         final ByteBuffer bb = ByteBuffer.wrap(
                 Arrays.copyOf(byteSeed, longSize * Long.BYTES))
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -502,8 +502,8 @@ class NativeSeedTypeTest {
         ThreadLocalRandom.current().nextBytes(byteSeed);
 
         // Get the bytes as each array type
-        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
-        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final int longSize = Conversions.longSizeFromByteSize(bytes);
+        final int intSize = Conversions.intSizeFromByteSize(bytes);
         final ByteBuffer bb = ByteBuffer.wrap(
                 Arrays.copyOf(byteSeed, longSize * Long.BYTES))
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -565,8 +565,8 @@ class NativeSeedTypeTest {
         ThreadLocalRandom.current().nextBytes(byteSeed);
 
         // Get the bytes as each array type
-        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
-        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final int longSize = Conversions.longSizeFromByteSize(bytes);
+        final int intSize = Conversions.intSizeFromByteSize(bytes);
         final ByteBuffer bb = ByteBuffer.wrap(
                 Arrays.copyOf(byteSeed, longSize * Long.BYTES))
                 .order(ByteOrder.LITTLE_ENDIAN);

@@ -46,11 +46,11 @@ class ArrayConverterEndianTest {
 
         // Reference implementation using a ByteBuffer
         final ByteBuffer bb = ByteBuffer.wrap(
-            Arrays.copyOf(seedBytes, SeedUtils.longSizeFromByteSize(bytes) * Long.BYTES))
+            Arrays.copyOf(seedBytes, Conversions.longSizeFromByteSize(bytes) * Long.BYTES))
             .order(ByteOrder.LITTLE_ENDIAN);
 
         // byte[] -> int[]
-        final int[] expectedInt = new int[SeedUtils.intSizeFromByteSize(bytes)];
+        final int[] expectedInt = new int[Conversions.intSizeFromByteSize(bytes)];
         for (int i = 0; i < expectedInt.length; i++) {
             expectedInt[i] = bb.getInt();
         }
@@ -59,7 +59,7 @@ class ArrayConverterEndianTest {
 
         // byte[] -> long[]
         bb.clear();
-        final long[] expectedLong = new long[SeedUtils.longSizeFromByteSize(bytes)];
+        final long[] expectedLong = new long[Conversions.longSizeFromByteSize(bytes)];
         for (int i = 0; i < expectedLong.length; i++) {
             expectedLong[i] = bb.getLong();
         }

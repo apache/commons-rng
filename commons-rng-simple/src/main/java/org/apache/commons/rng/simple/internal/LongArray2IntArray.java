@@ -29,7 +29,7 @@ public class LongArray2IntArray implements Seed2ArrayConverter<long[], int[]> {
     @Override
     public int[] convert(long[] seed) {
         // Full length conversion
-        return Conversions.longArray2IntArray(seed, SeedUtils.intSizeFromLongSize(seed.length));
+        return Conversions.longArray2IntArray(seed, Conversions.intSizeFromLongSize(seed.length));
     }
 
     /**

@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link Conversions}.
@@ -59,6 +60,30 @@ class ConversionsTest {
      */
     static IntStream getLongLengths() {
         return IntStream.rangeClosed(0, 2);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Integer.MAX_VALUE})
+    void testIntSizeFromByteSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / Integer.BYTES), Conversions.intSizeFromByteSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, Integer.MAX_VALUE})
+    void testLongSizeFromByteSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / Long.BYTES), Conversions.longSizeFromByteSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Integer.MAX_VALUE})
+    void testIntSizeFromLongSize(int size) {
+        Assertions.assertEquals((int) Math.min(size * 2L, Integer.MAX_VALUE), Conversions.intSizeFromLongSize(size));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, Integer.MAX_VALUE})
+    void testLongSizeFromIntSize(int size) {
+        Assertions.assertEquals((int) Math.ceil((double) size / 2), Conversions.longSizeFromIntSize(size));
     }
 
     @RepeatedTest(value = 5)
@@ -100,7 +125,7 @@ class ConversionsTest {
     void testLong2IntArray() {
         final long v = ThreadLocalRandom.current().nextLong();
         getIntLengths().forEach(len -> {
-            final int longs = SeedUtils.longSizeFromIntSize(len);
+            final int longs = Conversions.longSizeFromIntSize(len);
             // Little-endian conversion
             final ByteBuffer bb = ByteBuffer.allocate(longs * Long.BYTES).order(ByteOrder.LITTLE_ENDIAN);
             LongStream.generate(new SplitMix64(v)::nextLong).limit(longs).forEach(bb::putLong);
@@ -146,7 +171,7 @@ class ConversionsTest {
 
         // int[] -> long[] -> long
         // Concatenate all ints in little-endian order to bytes
-        final int outLength = SeedUtils.longSizeFromIntSize(ints);
+        final int outLength = Conversions.longSizeFromIntSize(ints);
         final int[] filledSeed = Arrays.copyOf(seed, outLength * 2);
         final ByteBuffer bb = ByteBuffer.allocate(filledSeed.length * Integer.BYTES)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -176,7 +201,7 @@ class ConversionsTest {
         final int[] seed = ThreadLocalRandom.current().ints(ints).toArray();
 
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.longSizeFromIntSize(ints);
+        final int outLength = Conversions.longSizeFromIntSize(ints);
         final ByteBuffer bb = ByteBuffer.allocate(outLength * Long.BYTES)
                 .order(ByteOrder.LITTLE_ENDIAN);
         Arrays.stream(seed).forEach(bb::putInt);
@@ -226,7 +251,7 @@ class ConversionsTest {
         final long[] seed = ThreadLocalRandom.current().longs(longs).toArray();
 
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.intSizeFromLongSize(longs);
+        final int outLength = Conversions.intSizeFromLongSize(longs);
         final ByteBuffer bb = ByteBuffer.allocate(longs * Long.BYTES)
                 .order(ByteOrder.LITTLE_ENDIAN);
         Arrays.stream(seed).forEach(bb::putLong);
@@ -254,7 +279,7 @@ class ConversionsTest {
 
         // byte[] -> int[] -> int
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.intSizeFromByteSize(bytes);
+        final int outLength = Conversions.intSizeFromByteSize(bytes);
         final byte[] filledSeed = Arrays.copyOf(seed, outLength * Integer.BYTES);
         final ByteBuffer bb = ByteBuffer.wrap(filledSeed)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -284,7 +309,7 @@ class ConversionsTest {
         ThreadLocalRandom.current().nextBytes(seed);
 
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.intSizeFromByteSize(bytes);
+        final int outLength = Conversions.intSizeFromByteSize(bytes);
         final byte[] filledSeed = Arrays.copyOf(seed, outLength * Integer.BYTES);
         final ByteBuffer bb = ByteBuffer.wrap(filledSeed)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -311,7 +336,7 @@ class ConversionsTest {
 
         // byte[] -> long[] -> long
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.longSizeFromByteSize(bytes);
+        final int outLength = Conversions.longSizeFromByteSize(bytes);
         final byte[] filledSeed = Arrays.copyOf(seed, outLength * Long.BYTES);
         final ByteBuffer bb = ByteBuffer.wrap(filledSeed)
                 .order(ByteOrder.LITTLE_ENDIAN);
@@ -341,7 +366,7 @@ class ConversionsTest {
         ThreadLocalRandom.current().nextBytes(seed);
 
         // Concatenate all bytes in little-endian order to bytes
-        final int outLength = SeedUtils.longSizeFromByteSize(bytes);
+        final int outLength = Conversions.longSizeFromByteSize(bytes);
         final byte[] filledSeed = Arrays.copyOf(seed, outLength * Long.BYTES);
         final ByteBuffer bb = ByteBuffer.wrap(filledSeed)
                 .order(ByteOrder.LITTLE_ENDIAN);

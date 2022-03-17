@@ -40,6 +40,67 @@ final class Conversions {
     private Conversions() {}
 
     /**
+     * Compute the size of an {@code int} array required to hold the specified number of bytes.
+     * Allows space for any remaining bytes that do not fit exactly in a 4 byte integer.
+     * <pre>
+     * n = ceil(size / 4)
+     * </pre>
+     *
+     * @param size the size in bytes (assumed to be positive)
+     * @return the size in ints
+     */
+    static int intSizeFromByteSize(int size) {
+        return (size + 3) >>> 2;
+    }
+
+    /**
+     * Compute the size of an {@code long} array required to hold the specified number of bytes.
+     * Allows space for any remaining bytes that do not fit exactly in an 8 byte long.
+     * <pre>
+     * n = ceil(size / 8)
+     * </pre>
+     *
+     * @param size the size in bytes (assumed to be positive)
+     * @return the size in longs
+     */
+    static int longSizeFromByteSize(int size) {
+        return (size + 7) >>> 3;
+    }
+
+    /**
+     * Compute the size of an {@code int} array required to hold the specified number of longs.
+     * Prevents overflow to a negative number when doubling the size.
+     * <pre>
+     * n = min(size * 2, 2^31 - 1)
+     * </pre>
+     *
+     * @param size the size in longs (assumed to be positive)
+     * @return the size in ints
+     */
+    static int intSizeFromLongSize(int size) {
+        // Avoid overflow when doubling the length.
+        // If n is negative the signed shift creates a mask with all bits set;
+        // otherwise it is zero and n is unchanged after the or operation.
+        // The final mask clears the sign bit in the event n did overflow.
+        final int n = size << 1;
+        return (n | (n >> 31)) & Integer.MAX_VALUE;
+    }
+
+    /**
+     * Compute the size of an {@code long} array required to hold the specified number of ints.
+     * Allows space for an odd int.
+     * <pre>
+     * n = ceil(size / 2)
+     * </pre>
+     *
+     * @param size the size in ints (assumed to be positive)
+     * @return the size in longs
+     */
+    static int longSizeFromIntSize(int size) {
+        return (size + 1) >>> 1;
+    }
+
+    /**
      * Perform variant 13 of David Stafford's 64-bit mix function.
      * This is the mix function used in the {@link SplitMix64} RNG.
      *

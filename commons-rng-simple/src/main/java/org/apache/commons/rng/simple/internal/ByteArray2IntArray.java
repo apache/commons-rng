@@ -26,7 +26,7 @@ public class ByteArray2IntArray implements Seed2ArrayConverter<byte[], int[]> {
     @Override
     public int[] convert(byte[] seed) {
         // Full length conversion
-        return Conversions.byteArray2IntArray(seed, SeedUtils.intSizeFromByteSize(seed.length));
+        return Conversions.byteArray2IntArray(seed, Conversions.intSizeFromByteSize(seed.length));
     }
 
     /**

@@ -26,7 +26,7 @@ public class ByteArray2LongArray implements Seed2ArrayConverter<byte[], long[]> 
     @Override
     public long[] convert(byte[] seed) {
         // Full length conversion
-        return Conversions.byteArray2LongArray(seed, SeedUtils.longSizeFromByteSize(seed.length));
+        return Conversions.byteArray2LongArray(seed, Conversions.longSizeFromByteSize(seed.length));
     }
 
     /**

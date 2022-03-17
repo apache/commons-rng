@@ -120,13 +120,13 @@ public enum NativeSeedType {
         protected int[] convert(long[] seed, int size) {
             // Avoid zero filling seeds that are too short
             return Conversions.longArray2IntArray(seed,
-                Math.min(size, SeedUtils.intSizeFromLongSize(seed.length)));
+                Math.min(size, Conversions.intSizeFromLongSize(seed.length)));
         }
         @Override
         protected int[] convert(byte[] seed, int size) {
             // Avoid zero filling seeds that are too short
             return Conversions.byteArray2IntArray(seed,
-                Math.min(size, SeedUtils.intSizeFromByteSize(seed.length)));
+                Math.min(size, Conversions.intSizeFromByteSize(seed.length)));
         }
     },
     /** The seed type is {@code long[]}. */
@@ -149,7 +149,7 @@ public enum NativeSeedType {
         protected long[] convert(int[] seed, int size) {
             // Avoid zero filling seeds that are too short
             return Conversions.intArray2LongArray(seed,
-                Math.min(size, SeedUtils.longSizeFromIntSize(seed.length)));
+                Math.min(size, Conversions.longSizeFromIntSize(seed.length)));
         }
         @Override
         protected long[] convert(long[] seed, int size) {
@@ -159,7 +159,7 @@ public enum NativeSeedType {
         protected long[] convert(byte[] seed, int size) {
             // Avoid zero filling seeds that are too short
             return Conversions.byteArray2LongArray(seed,
-                Math.min(size, SeedUtils.longSizeFromByteSize(seed.length)));
+                Math.min(size, Conversions.longSizeFromByteSize(seed.length)));
         }
     };
 
