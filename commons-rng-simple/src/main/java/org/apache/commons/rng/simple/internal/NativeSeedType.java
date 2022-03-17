@@ -66,7 +66,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Integer convert(byte[] seed, int size) {
-            return INT_ARRAY_TO_INT.convert(BYTE_ARRAY_TO_INT_ARRAY.convert(seed));
+            return Conversions.byteArray2Int(seed);
         }
     },
     /** The seed type is {@code Long}. */
@@ -85,7 +85,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Long convert(int[] seed, int size) {
-            return INT_TO_LONG.convert(INT_ARRAY_TO_INT.convert(seed));
+            return Conversions.intArray2Long(seed);
         }
         @Override
         protected Long convert(long[] seed, int size) {
@@ -93,7 +93,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Long convert(byte[] seed, int size) {
-            return LONG_ARRAY_TO_LONG.convert(BYTE_ARRAY_TO_LONG_ARRAY.convert(seed));
+            return Conversions.byteArray2Long(seed);
         }
     },
     /** The seed type is {@code int[]}. */

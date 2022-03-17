@@ -17,7 +17,12 @@
 package org.apache.commons.rng.simple.internal;
 
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +35,78 @@ import org.junit.jupiter.params.provider.MethodSource;
  * <p>Note: All supported types are tested in the {@link NativeSeedTypeParametricTest}.
  */
 class NativeSeedTypeTest {
+    /** Convert {@code Integer} to {@code Long}. */
+    private static final Int2Long INT_TO_LONG = new Int2Long();
+    /** Convert {@code Long} to {@code int[]}. */
+    private static final Long2IntArray LONG_TO_INT_ARRAY = new Long2IntArray(0);
+    /** Convert {@code Long} to {@code long[]}. */
+    private static final Long2LongArray LONG_TO_LONG_ARRAY = new Long2LongArray(0);
+
+    /**
+     * Perform the reference int to long conversion.
+     * This may change between release versions.
+     * The reference implementation is in the Int2LongConverter.
+     *
+     * @param v Value
+     * @return the result
+     */
+    private static long int2long(int v) {
+        return INT_TO_LONG.convert(v);
+    }
+
+    /**
+     * Perform the reference long to int[] conversion.
+     * This may change between release versions.
+     * The reference implementation is in the Long2IntArray.
+     *
+     * @param v Value
+     * @param length Array length
+     * @return the result
+     */
+    private static int[] long2intArray(long v, int length) {
+        return LONG_TO_INT_ARRAY.convert(v, length);
+    }
+
+    /**
+     * Perform the reference long to long[] conversion.
+     * This may change between release versions.
+     * The reference implementation is in the Long2LongArray.
+     *
+     * @param v Value
+     * @param length Array length
+     * @return the result
+     */
+    private static long[] long2longArray(long v, int length) {
+        return LONG_TO_LONG_ARRAY.convert(v, length);
+    }
+
+    /**
+     * Gets the lengths for the byte[] seeds to convert.
+     *
+     * @return the lengths
+     */
+    static IntStream getByteLengths() {
+        return IntStream.rangeClosed(0, Long.BYTES * 2);
+    }
+
+    /**
+     * Gets the int seeds to convert.
+     *
+     * @return the int seeds
+     */
+    static IntStream getIntSeeds() {
+        return IntStream.of(0, -1, 1267831682, 236786348, -52364);
+    }
+
+    /**
+     * Gets the long seeds to convert.
+     *
+     * @return the long seeds
+     */
+    static LongStream getLongSeeds() {
+        return LongStream.of(0, -1, 237848224324L, 6678328688668L, -2783792379423L);
+    }
+
     /**
      * Test the conversion throws for an unsupported seed type.
      * The error message should contain the type, not the string representation of the seed.
@@ -189,5 +266,288 @@ class NativeSeedTypeTest {
         for (final int i : ints) {
             Assertions.assertEquals(0, i);
         }
+    }
+
+    // The following tests define the conversion contract for NativeSeedType.
+    //
+    // - Native seed types are passed through with no change
+    // - long to int conversion uses hi ^ lo
+    // - int to long conversion expands the bits.
+    //   The Int2Long converter is the reference implementation.
+    // - long to long[] conversion seeds a RNG then expands.
+    //   The Long2LongArray converter is the reference implementation.
+    // - long to int[] conversion seeds a RNG then expands.
+    //   The Long2IntArray converter is the reference implementation.
+    // - int[] to int conversion uses ^ of all the bits
+    // - long[] to long conversion uses ^ of all the bits
+    // - Array-to-array conversions are little-endian.
+    // - Arrays are converted with no zero fill to expand the length.
+    // - Array conversion may be full length (F),
+    //   or truncated (T) to the required bytes for the native type.
+    //
+    // Conversions are tested to perform an equivalent to the following operations.
+    //
+    // Int
+    // int    -> int
+    // long   -> int
+    // int[]  -> int
+    // long[] -> F int[] -> int
+    // byte[] -> F int[] -> int
+    //
+    // Long
+    // int    -> long
+    // long   -> long
+    // int[]  -> F long[] -> long
+    // long[] -> long
+    // byte[] -> F long[] -> int
+    //
+    // int[]
+    // int    -> long -> int[]
+    // long   -> int[]
+    // int[]  -> int[]
+    // long[] -> T int[]
+    // byte[] -> T int[]
+    //
+    // int[]
+    // int    -> long -> long[]
+    // long   -> long[]
+    // int[]  -> T long[]
+    // long[] -> long[]
+    // byte[] -> T long[]
+    //
+    // Notes:
+    // 1. The actual implementation may be optimised to avoid redundant steps.
+    // 2. Primitive type native seed use all bits from an array (F).
+    // 3. Array type native seed use only the initial n bytes from an array (T) required
+    //    to satisfy the native seed length n
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testIntNativeSeedWithInt(int seed) {
+        // Native type
+        final Integer s = Integer.valueOf(seed);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertSame(s, NativeSeedType.INT.convert(s, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testIntNativeSeedWithInt(long seed) {
+        // Primitive conversion: Note: >>> takes precendence over ^
+        final Integer l = (int) (seed ^ seed >>> 32);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(l, (Integer) NativeSeedType.INT.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getByteLengths"})
+    void testIntNativeSeedWithArrays(int bytes) {
+        final byte[] byteSeed = new byte[bytes];
+        ThreadLocalRandom.current().nextBytes(byteSeed);
+
+        // Get the bytes as each array type
+        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
+        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(
+                Arrays.copyOf(byteSeed, longSize * Long.BYTES))
+                .order(ByteOrder.LITTLE_ENDIAN);
+        final long[] longSeed = new long[longSize];
+        for (int i = 0; i < longSeed.length; i++) {
+            longSeed[i] = bb.getLong();
+        }
+        bb.clear();
+        final int[] intSeed = new int[intSize];
+        int expected = 0;
+        for (int i = 0; i < intSeed.length; i++) {
+            intSeed[i] = bb.getInt();
+            expected ^= intSeed[i];
+        }
+
+        // Length parameter is ignored and full bytes are always used
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(expected, NativeSeedType.INT.convert(byteSeed, i));
+            Assertions.assertEquals(expected, NativeSeedType.INT.convert(intSeed, i));
+            Assertions.assertEquals(expected, NativeSeedType.INT.convert(longSeed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testLongNativeSeedWithInt(int seed) {
+        // Primitive conversion.
+        final Long l = int2long(seed);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(l, (Long) NativeSeedType.LONG.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getLongSeeds"})
+    void testLongNativeSeedWithLong(long seed) {
+        // Native type
+        final Long s = Long.valueOf(seed);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertSame(s, NativeSeedType.LONG.convert(s, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getByteLengths"})
+    void testLongNativeSeedWithArrays(int bytes) {
+        final byte[] byteSeed = new byte[bytes];
+        ThreadLocalRandom.current().nextBytes(byteSeed);
+
+        // Get the bytes as each array type
+        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
+        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(
+                Arrays.copyOf(byteSeed, longSize * Long.BYTES))
+                .order(ByteOrder.LITTLE_ENDIAN);
+        final long[] longSeed = new long[longSize];
+        long expected = 0;
+        for (int i = 0; i < longSeed.length; i++) {
+            longSeed[i] = bb.getLong();
+            expected ^= longSeed[i];
+        }
+        bb.clear();
+        final int[] intSeed = new int[intSize];
+        for (int i = 0; i < intSeed.length; i++) {
+            intSeed[i] = bb.getInt();
+        }
+
+        // Length parameter is ignored and full bytes are always used
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertEquals(expected, NativeSeedType.LONG.convert(byteSeed, i));
+            Assertions.assertEquals(expected, NativeSeedType.LONG.convert(intSeed, i));
+            Assertions.assertEquals(expected, NativeSeedType.LONG.convert(longSeed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testIntArrayNativeSeedWithInt(int seed) {
+        // Full-length conversion
+        final long l = int2long(seed);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertArrayEquals(long2intArray(l, i),
+                (int[]) NativeSeedType.INT_ARRAY.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getLongSeeds"})
+    void testIntArrayNativeSeedWithLong(long seed) {
+        // Full-length conversion
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertArrayEquals(long2intArray(seed, i),
+                (int[]) NativeSeedType.INT_ARRAY.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getByteLengths"})
+    void testIntArrayNativeSeedWithArrays(int bytes) {
+        final byte[] byteSeed = new byte[bytes];
+        ThreadLocalRandom.current().nextBytes(byteSeed);
+
+        // Get the bytes as each array type
+        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
+        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(
+                Arrays.copyOf(byteSeed, longSize * Long.BYTES))
+                .order(ByteOrder.LITTLE_ENDIAN);
+        final long[] longSeed = new long[longSize];
+        for (int i = 0; i < longSeed.length; i++) {
+            longSeed[i] = bb.getLong();
+        }
+        bb.clear();
+        final int[] intSeed = new int[intSize];
+        for (int i = 0; i < intSeed.length; i++) {
+            intSeed[i] = bb.getInt();
+        }
+
+        // Native type
+        Assertions.assertSame(intSeed, NativeSeedType.INT_ARRAY.convert(intSeed, 0));
+        Assertions.assertSame(intSeed, NativeSeedType.INT_ARRAY.convert(intSeed, intSize));
+        Assertions.assertSame(intSeed, NativeSeedType.INT_ARRAY.convert(intSeed, intSize * 2));
+
+        // Full-length conversion
+        Assertions.assertArrayEquals(intSeed, (int[]) NativeSeedType.INT_ARRAY.convert(byteSeed, intSize));
+        Assertions.assertArrayEquals(intSeed, (int[]) NativeSeedType.INT_ARRAY.convert(longSeed, intSize));
+        // Truncation
+        Assertions.assertArrayEquals(new int[0], (int[]) NativeSeedType.INT_ARRAY.convert(byteSeed, 0));
+        Assertions.assertArrayEquals(new int[0], (int[]) NativeSeedType.INT_ARRAY.convert(longSeed, 0));
+        if (intSize != 0) {
+            Assertions.assertArrayEquals(Arrays.copyOf(intSeed, 1), (int[]) NativeSeedType.INT_ARRAY.convert(byteSeed, 1));
+            Assertions.assertArrayEquals(Arrays.copyOf(intSeed, 1), (int[]) NativeSeedType.INT_ARRAY.convert(longSeed, 1));
+        }
+        // No zero-fill (only use the bytes in the input seed)
+        Assertions.assertArrayEquals(intSeed, (int[]) NativeSeedType.INT_ARRAY.convert(byteSeed, intSize * 2));
+        Assertions.assertArrayEquals(Arrays.copyOf(intSeed, longSize * 2), (int[]) NativeSeedType.INT_ARRAY.convert(longSeed, intSize * 2));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getIntSeeds"})
+    void testLongArrayNativeSeedWithInt(int seed) {
+        // Full-length conversion
+        final long l = int2long(seed);
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertArrayEquals(long2longArray(l, i),
+                (long[]) NativeSeedType.LONG_ARRAY.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getLongSeeds"})
+    void testLongArrayNativeSeedWithLong(long seed) {
+        // Full-length conversion
+        for (int i = 0; i < 3; i++) {
+            Assertions.assertArrayEquals(long2longArray(seed, i),
+                (long[]) NativeSeedType.LONG_ARRAY.convert(seed, i));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = {"getByteLengths"})
+    void testLongArrayNativeSeedWithArrays(int bytes) {
+        final byte[] byteSeed = new byte[bytes];
+        ThreadLocalRandom.current().nextBytes(byteSeed);
+
+        // Get the bytes as each array type
+        final int longSize = SeedUtils.longSizeFromByteSize(bytes);
+        final int intSize = SeedUtils.intSizeFromByteSize(bytes);
+        final ByteBuffer bb = ByteBuffer.wrap(
+                Arrays.copyOf(byteSeed, longSize * Long.BYTES))
+                .order(ByteOrder.LITTLE_ENDIAN);
+        final long[] longSeed = new long[longSize];
+        for (int i = 0; i < longSeed.length; i++) {
+            longSeed[i] = bb.getLong();
+        }
+        bb.clear();
+        final int[] intSeed = new int[intSize];
+        for (int i = 0; i < intSeed.length; i++) {
+            intSeed[i] = bb.getInt();
+        }
+
+        // Native type
+        Assertions.assertSame(longSeed, NativeSeedType.LONG_ARRAY.convert(longSeed, 0));
+        Assertions.assertSame(longSeed, NativeSeedType.LONG_ARRAY.convert(longSeed, longSize));
+        Assertions.assertSame(longSeed, NativeSeedType.LONG_ARRAY.convert(longSeed, longSize * 2));
+
+        // Full-length conversion
+        Assertions.assertArrayEquals(longSeed, (long[]) NativeSeedType.LONG_ARRAY.convert(byteSeed, longSize));
+        Assertions.assertArrayEquals(longSeed, (long[]) NativeSeedType.LONG_ARRAY.convert(intSeed, longSize));
+        // Truncation
+        Assertions.assertArrayEquals(new long[0], (long[]) NativeSeedType.LONG_ARRAY.convert(byteSeed, 0));
+        Assertions.assertArrayEquals(new long[0], (long[]) NativeSeedType.LONG_ARRAY.convert(intSeed, 0));
+        if (longSize != 0) {
+            Assertions.assertArrayEquals(Arrays.copyOf(longSeed, 1), (long[]) NativeSeedType.LONG_ARRAY.convert(byteSeed, 1));
+            Assertions.assertArrayEquals(Arrays.copyOf(longSeed, 1), (long[]) NativeSeedType.LONG_ARRAY.convert(intSeed, 1));
+        }
+        // No zero-fill (only use the bytes in the input seed)
+        Assertions.assertArrayEquals(longSeed, (long[]) NativeSeedType.LONG_ARRAY.convert(byteSeed, longSize * 2));
+        Assertions.assertArrayEquals(longSeed, (long[]) NativeSeedType.LONG_ARRAY.convert(intSeed, longSize * 2));
     }
 }
