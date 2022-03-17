@@ -63,7 +63,7 @@ final class Conversions {
      * @param input Input
      * @return a {@code long}.
      */
-    static long int2long(int input) {
+    static long int2Long(int input) {
         return stafford13(input + GOLDEN_RATIO);
     }
 
@@ -77,8 +77,8 @@ final class Conversions {
      * @param length Array length
      * @return an {@code int[]}.
      */
-    static int[] int2intArray(int input, int length) {
-        return long2intArray(input, length);
+    static int[] int2IntArray(int input, int length) {
+        return long2IntArray(input, length);
     }
 
     /**
@@ -90,8 +90,8 @@ final class Conversions {
      * @param length Array length
      * @return a {@code long[]}.
      */
-    static long[] int2longArray(int input, int length) {
-        return long2longArray(input, length);
+    static long[] int2LongArray(int input, int length) {
+        return long2LongArray(input, length);
     }
 
     /**
@@ -101,7 +101,7 @@ final class Conversions {
      * @param input Input
      * @return an {@code int}.
      */
-    static int long2int(long input) {
+    static int long2Int(long input) {
         return (int) input ^ (int) (input >>> 32);
     }
 
@@ -115,7 +115,7 @@ final class Conversions {
      * @param length Array length
      * @return an {@code int[]}.
      */
-    static int[] long2intArray(long input, int length) {
+    static int[] long2IntArray(long input, int length) {
         long v = input;
         final int[] output = new int[length];
         // Process pairs
@@ -141,12 +141,130 @@ final class Conversions {
      * @param length Array length
      * @return a {@code long}.
      */
-    static long[] long2longArray(long input, int length) {
+    static long[] long2LongArray(long input, int length) {
         long v = input;
         final long[] output = new long[length];
         for (int i = 0; i < length; i++) {
             output[i] = stafford13(v += GOLDEN_RATIO);
         }
+        return output;
+    }
+
+    /**
+     * Creates an {@code int} value from a sequence of ints. The conversion
+     * is made by combining all the longs with a xor operation.
+     *
+     * @param input Input bytes
+     * @return an {@code int}.
+     */
+    static int intArray2Int(int[] input) {
+        int output = 0;
+        for (final int i : input) {
+            output ^= i;
+        }
+        return output;
+    }
+
+    /**
+     * Creates a {@code long} value from a sequence of ints. The conversion
+     * is made as if converting to a {@code long[]} array by filling the longs
+     * in little-endian order (least significant byte first), then combining
+     * all the longs with a xor operation.
+     *
+     * @param input Input bytes
+     * @return a {@code long}.
+     */
+    static long intArray2Long(int[] input) {
+        long output = 0;
+
+        final int n = input.length;
+        // xor in the bits to a long in little-endian order
+        for (int i = 0; i < n; i++) {
+            // i              = int index
+            // i >> 1         = long index
+            // i & 0x1        = int number in the long  [0, 1]
+            // (i & 0x1) << 5 = little-endian byte shift to the long {0, 32}
+            output ^= (input[i] & 0xffffffffL) << ((i & 0x1) << 5);
+        }
+
+        return output;
+    }
+
+    /**
+     * Creates a {@code long[]} value from a sequence of ints. The longs are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input ints
+     * @param length Output array length
+     * @return a {@code long[]}.
+     */
+    static long[] intArray2LongArray(int[] input, int length) {
+        final long[] output = new long[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * 2L);
+        // Little-endian fill
+        for (int i = 0; i < n; i++) {
+            // i              = int index
+            // i >> 1         = long index
+            // i & 0x1        = int number in the long  [0, 1]
+            // (i & 0x1) << 5 = little-endian byte shift to the long {0, 32}
+            output[i >> 1] |= (input[i] & 0xffffffffL) << ((i & 0x1) << 5);
+        }
+
+        return output;
+    }
+
+    /**
+     * Creates an {@code int} value from a sequence of longs. The conversion
+     * is made as if combining all the longs with a xor operation, then folding
+     * the long high and low parts using a xor operation.
+     *
+     * @param input Input longs
+     * @return an {@code int}.
+     */
+    static int longArray2Int(long[] input) {
+        return Conversions.long2Int(longArray2Long(input));
+    }
+
+    /**
+     * Creates a {@code long} value from a sequence of longs. The conversion
+     * is made by combining all the longs with a xor operation.
+     *
+     * @param input Input longs
+     * @return a {@code long}.
+     */
+    static long longArray2Long(long[] input) {
+        long output = 0;
+        for (final long i : input) {
+            output ^= i;
+        }
+        return output;
+    }
+
+    /**
+     * Creates a {@code int[]} value from a sequence of longs. The ints are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input longs
+     * @param length Output array length
+     * @return an {@code int[]}.
+     */
+    static int[] longArray2IntArray(long[] input, int length) {
+        final int[] output = new int[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length * 2L, length);
+        // Little-endian fill
+        // Alternate low/high 32-bits from each long
+        for (int i = 0; i < n; i++) {
+            // i              = int index
+            // i >> 1         = long index
+            // i & 0x1        = int number in the long  [0, 1]
+            // (i & 0x1) << 5 = little-endian long shift to the int {0, 32}
+            output[i] = (int)((input[i >> 1]) >>> ((i & 0x1) << 5));
+        }
+
         return output;
     }
 
@@ -170,6 +288,31 @@ final class Conversions {
             // i & 0x3        = byte number in the integer  [0, 3]
             // (i & 0x3) << 3 = little-endian byte shift to the integer {0, 8, 16, 24}
             output ^= (input[i] & 0xff) << ((i & 0x3) << 3);
+        }
+
+        return output;
+    }
+
+    /**
+     * Creates an {@code int[]} value from a sequence of bytes. The ints are
+     * filled in little-endian order (least significant byte first).
+     *
+     * @param input Input bytes
+     * @param length Output array length
+     * @return a {@code int[]}.
+     */
+    static int[] byteArray2IntArray(byte[] input, int length) {
+        final int[] output = new int[length];
+
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * (long) Integer.BYTES);
+        // Little-endian fill
+        for (int i = 0; i < n; i++) {
+            // i              = byte index
+            // i >> 2         = integer index
+            // i & 0x3        = byte number in the integer  [0, 3]
+            // (i & 0x3) << 3 = little-endian byte shift to the integer {0, 8, 16, 24}
+            output[i >> 2] |= (input[i] & 0xff) << ((i & 0x3) << 3);
         }
 
         return output;
@@ -201,25 +344,25 @@ final class Conversions {
     }
 
     /**
-     * Creates a {@code long} value from a sequence of ints. The conversion
-     * is made as if converting to a {@code long[]} array by filling the longs
-     * in little-endian order (least significant byte first), then combining
-     * all the longs with a xor operation.
+     * Creates a {@code long[]} value from a sequence of bytes. The longs are
+     * filled in little-endian order (least significant byte first).
      *
      * @param input Input bytes
-     * @return a {@code long}.
+     * @param length Output array length
+     * @return a {@code long[]}.
      */
-    static long intArray2Long(int[] input) {
-        long output = 0;
+    static long[] byteArray2LongArray(byte[] input, int length) {
+        final long[] output = new long[length];
 
-        final int n = input.length;
-        // xor in the bits to a long in little-endian order
+        // Overflow-safe minimum using long
+        final int n = (int) Math.min(input.length, length * (long) Long.BYTES);
+        // Little-endian fill
         for (int i = 0; i < n; i++) {
-            // i              = int index
-            // i >> 1         = long index
-            // i & 0x1        = int number in the long  [0, 1]
-            // (i & 0x1) << 5 = little-endian byte shift to the long {0, 32}
-            output ^= (input[i] & 0xffffffffL) << ((i & 0x1) << 5);
+            // i              = byte index
+            // i >> 3         = long index
+            // i & 0x7        = byte number in the long  [0, 7]
+            // (i & 0x7) << 3 = little-endian byte shift to the long {0, 8, 16, 24, 32, 36, 40, 48, 56}
+            output[i >> 3] |= (input[i] & 0xffL) << ((i & 0x7) << 3);
         }
 
         return output;

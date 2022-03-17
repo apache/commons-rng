@@ -25,11 +25,6 @@ public class LongArray2Long implements SeedConverter<long[], Long> {
     /** {@inheritDoc} */
     @Override
     public Long convert(long[] seed) {
-        long out = 0;
-        for (final long s : seed) {
-            out ^= s;
-        }
-
-        return out;
+        return Conversions.longArray2Long(seed);
     }
 }

@@ -25,6 +25,6 @@ public class Int2Long implements SeedConverter<Integer, Long> {
     /** {@inheritDoc} */
     @Override
     public Long convert(Integer seed) {
-        return Conversions.int2long(seed);
+        return Conversions.int2Long(seed);
     }
 }

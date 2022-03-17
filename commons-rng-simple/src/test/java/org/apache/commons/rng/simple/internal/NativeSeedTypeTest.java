@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -35,49 +36,69 @@ import org.junit.jupiter.params.provider.MethodSource;
  * <p>Note: All supported types are tested in the {@link NativeSeedTypeParametricTest}.
  */
 class NativeSeedTypeTest {
-    /** Convert {@code Integer} to {@code Long}. */
-    private static final Int2Long INT_TO_LONG = new Int2Long();
-    /** Convert {@code Long} to {@code int[]}. */
-    private static final Long2IntArray LONG_TO_INT_ARRAY = new Long2IntArray(0);
-    /** Convert {@code Long} to {@code long[]}. */
-    private static final Long2LongArray LONG_TO_LONG_ARRAY = new Long2LongArray(0);
-
     /**
      * Perform the reference int to long conversion.
      * This may change between release versions.
-     * The reference implementation is in the Int2Long converter.
+     * The reference implementation is to create a long using a SplitMix64 generator.
      *
      * @param v Value
      * @return the result
      */
     private static long int2long(int v) {
-        return INT_TO_LONG.convert(v);
+        return new SplitMix64(v).nextLong();
     }
 
     /**
      * Perform the reference long to int[] conversion.
      * This may change between release versions.
-     * The reference implementation is in the Long2IntArray converter.
+     * The reference implementation is to create a long[] using a SplitMix64 generator
+     * and split each into an int, least significant bytes first.
      *
      * @param v Value
      * @param length Array length
      * @return the result
      */
     private static int[] long2intArray(long v, int length) {
-        return LONG_TO_INT_ARRAY.convert(v, length);
+        class LoHiSplitMix64 extends SplitMix64 {
+            /** Cache part of the most recently generated long value.
+             * Store the upper 32-bits from nextLong() in the lower half
+             * and all zero bits in the upper half when cached.
+             * Set to -1 when empty and requires a refill. */
+            private long next = -1;
+
+            LoHiSplitMix64(long seed) {
+                super(seed);
+            }
+
+            @Override
+            public int nextInt() {
+                long l = next;
+                if (l < 0) {
+                    l = nextLong();
+                    // Reserve the upper 32-bits
+                    next = l >>> 32;
+                    // Return the lower 32-bits
+                    return (int) l;
+                }
+                // Clear cache and return the previous upper 32-bits
+                next = -1;
+                return (int) l;
+            }
+        }
+        return IntStream.generate(new LoHiSplitMix64(v)::nextInt).limit(length).toArray();
     }
 
     /**
      * Perform the reference long to long[] conversion.
      * This may change between release versions.
-     * The reference implementation is in the Long2LongArray converter.
+     * The reference implementation is to create a long[] using a SplitMix64 generator.
      *
      * @param v Value
      * @param length Array length
      * @return the result
      */
     private static long[] long2longArray(long v, int length) {
-        return LONG_TO_LONG_ARRAY.convert(v, length);
+        return LongStream.generate(new SplitMix64(v)::nextLong).limit(length).toArray();
     }
 
     /**
@@ -273,11 +294,11 @@ class NativeSeedTypeTest {
     // - Native seed types are passed through with no change
     // - long to int conversion uses hi ^ lo
     // - int to long conversion expands the bits.
-    //   The Int2Long converter is the reference implementation.
+    //   Creating a long using a SplitMix64 is the reference implementation.
     // - long to long[] conversion seeds a RNG then expands.
-    //   The Long2LongArray converter is the reference implementation.
+    //   Filling using a SplitMix64 is the reference implementation.
     // - long to int[] conversion seeds a RNG then expands.
-    //   The Long2IntArray converter is the reference implementation.
+    //   Filling using a SplitMix64 is the reference implementation.
     // - Primitive expansion should produce equivalent output bits
     //   for all larger output seed types,
     //   i.e. int -> long == int -> int[0]+int[1] == int -> long[0]

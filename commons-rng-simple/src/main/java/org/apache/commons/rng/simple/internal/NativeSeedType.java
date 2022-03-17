@@ -54,15 +54,15 @@ public enum NativeSeedType {
         }
         @Override
         protected Integer convert(Long seed, int size) {
-            return Conversions.long2int(seed);
+            return Conversions.long2Int(seed);
         }
         @Override
         protected Integer convert(int[] seed, int size) {
-            return INT_ARRAY_TO_INT.convert(seed);
+            return Conversions.intArray2Int(seed);
         }
         @Override
         protected Integer convert(long[] seed, int size) {
-            return LONG_TO_INT.convert(LONG_ARRAY_TO_LONG.convert(seed));
+            return Conversions.longArray2Int(seed);
         }
         @Override
         protected Integer convert(byte[] seed, int size) {
@@ -77,7 +77,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Long convert(Integer seed, int size) {
-            return Conversions.int2long(seed);
+            return Conversions.int2Long(seed);
         }
         @Override
         protected Long convert(Long seed, int size) {
@@ -89,7 +89,7 @@ public enum NativeSeedType {
         }
         @Override
         protected Long convert(long[] seed, int size) {
-            return LONG_ARRAY_TO_LONG.convert(seed);
+            return Conversions.longArray2Long(seed);
         }
         @Override
         protected Long convert(byte[] seed, int size) {
@@ -106,11 +106,11 @@ public enum NativeSeedType {
         }
         @Override
         protected int[] convert(Integer seed, int size) {
-            return Conversions.int2intArray(seed, size);
+            return Conversions.int2IntArray(seed, size);
         }
         @Override
         protected int[] convert(Long seed, int size) {
-            return Conversions.long2intArray(seed, size);
+            return Conversions.long2IntArray(seed, size);
         }
         @Override
         protected int[] convert(int[] seed, int size) {
@@ -119,13 +119,13 @@ public enum NativeSeedType {
         @Override
         protected int[] convert(long[] seed, int size) {
             // Avoid zero filling seeds that are too short
-            return LONG_ARRAY_TO_INT_ARRAY.convert(seed,
+            return Conversions.longArray2IntArray(seed,
                 Math.min(size, SeedUtils.intSizeFromLongSize(seed.length)));
         }
         @Override
         protected int[] convert(byte[] seed, int size) {
             // Avoid zero filling seeds that are too short
-            return BYTE_ARRAY_TO_INT_ARRAY.convert(seed,
+            return Conversions.byteArray2IntArray(seed,
                 Math.min(size, SeedUtils.intSizeFromByteSize(seed.length)));
         }
     },
@@ -139,16 +139,16 @@ public enum NativeSeedType {
         }
         @Override
         protected long[] convert(Integer seed, int size) {
-            return Conversions.int2longArray(seed, size);
+            return Conversions.int2LongArray(seed, size);
         }
         @Override
         protected long[] convert(Long seed, int size) {
-            return Conversions.long2longArray(seed, size);
+            return Conversions.long2LongArray(seed, size);
         }
         @Override
         protected long[] convert(int[] seed, int size) {
             // Avoid zero filling seeds that are too short
-            return INT_ARRAY_TO_LONG_ARRAY.convert(seed,
+            return Conversions.intArray2LongArray(seed,
                 Math.min(size, SeedUtils.longSizeFromIntSize(seed.length)));
         }
         @Override
@@ -158,7 +158,7 @@ public enum NativeSeedType {
         @Override
         protected long[] convert(byte[] seed, int size) {
             // Avoid zero filling seeds that are too short
-            return BYTE_ARRAY_TO_LONG_ARRAY.convert(seed,
+            return Conversions.byteArray2LongArray(seed,
                 Math.min(size, SeedUtils.longSizeFromByteSize(seed.length)));
         }
     };
@@ -167,20 +167,6 @@ public enum NativeSeedType {
     private static final String UNRECOGNISED_SEED = "Unrecognized seed type: ";
     /** Maximum length of the seed array (for creating array seeds). */
     private static final int RANDOM_SEED_ARRAY_SIZE = 128;
-    /** Convert {@code Long} to {@code Integer}. */
-    private static final Long2Int LONG_TO_INT = new Long2Int();
-    /** Convert {@code long[]} to {@code Long}. */
-    private static final LongArray2Long LONG_ARRAY_TO_LONG = new LongArray2Long();
-    /** Convert {@code int[]} to {@code Integer}. */
-    private static final IntArray2Int INT_ARRAY_TO_INT = new IntArray2Int();
-    /** Convert {@code long[]} to {@code int[]}. */
-    private static final LongArray2IntArray LONG_ARRAY_TO_INT_ARRAY = new LongArray2IntArray();
-    /** Convert {@code Long} to {@code long[]}. */
-    private static final IntArray2LongArray INT_ARRAY_TO_LONG_ARRAY = new IntArray2LongArray();
-    /** Convert {@code byte[]} to {@code int[]}. */
-    private static final ByteArray2IntArray BYTE_ARRAY_TO_INT_ARRAY = new ByteArray2IntArray();
-    /** Convert {@code byte[]} to {@code long[]}. */
-    private static final ByteArray2LongArray BYTE_ARRAY_TO_LONG_ARRAY = new ByteArray2LongArray();
 
     /** Define the class type of the native seed. */
     private final Class<?> type;

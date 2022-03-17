@@ -38,7 +38,7 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
     /** {@inheritDoc} */
     @Override
     public int[] convert(Long seed) {
-        return Conversions.long2intArray(seed, size);
+        return Conversions.long2IntArray(seed, size);
     }
 
     /**
@@ -48,6 +48,6 @@ public class Long2IntArray implements Seed2ArrayConverter<Long, int[]> {
      */
     @Override
     public int[] convert(Long seed, int outputSize) {
-        return Conversions.long2intArray(seed, outputSize);
+        return Conversions.long2IntArray(seed, outputSize);
     }
 }

@@ -30,7 +30,7 @@ public class IntArray2LongArray implements Seed2ArrayConverter<int[], long[]> {
     @Override
     public long[] convert(int[] seed) {
         // Full length conversion
-        return convertSeed(seed, SeedUtils.longSizeFromIntSize(seed.length));
+        return Conversions.intArray2LongArray(seed, SeedUtils.longSizeFromIntSize(seed.length));
     }
 
     /**
@@ -40,31 +40,6 @@ public class IntArray2LongArray implements Seed2ArrayConverter<int[], long[]> {
      */
     @Override
     public long[] convert(int[] seed, int outputSize) {
-        return convertSeed(seed, outputSize);
-    }
-
-    /**
-     * Creates an array of {@code long} values from a sequence of ints. The longs are
-     * filled in little-endian order (least significant byte first).
-     *
-     * @param input Input bytes
-     * @param length Output length
-     * @return an array of {@code long}.
-     */
-    private static long[] convertSeed(int[] input, int length) {
-        final long[] output = new long[length];
-
-        // Overflow-safe minimum using long
-        final int n = (int) Math.min(input.length, length * 2L);
-        // Little-endian fill
-        for (int i = 0; i < n; i++) {
-            // i              = int index
-            // i >> 1         = long index
-            // i & 0x1        = int number in the long  [0, 1]
-            // (i & 0x1) << 5 = little-endian byte shift to the long {0, 32}
-            output[i >> 1] |= (input[i] & 0xffffffffL) << ((i & 0x1) << 5);
-        }
-
-        return output;
+        return Conversions.intArray2LongArray(seed, outputSize);
     }
 }

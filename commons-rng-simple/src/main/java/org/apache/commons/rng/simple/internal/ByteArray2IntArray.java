@@ -26,7 +26,7 @@ public class ByteArray2IntArray implements Seed2ArrayConverter<byte[], int[]> {
     @Override
     public int[] convert(byte[] seed) {
         // Full length conversion
-        return convertSeed(seed, SeedUtils.intSizeFromByteSize(seed.length));
+        return Conversions.byteArray2IntArray(seed, SeedUtils.intSizeFromByteSize(seed.length));
     }
 
     /**
@@ -36,31 +36,6 @@ public class ByteArray2IntArray implements Seed2ArrayConverter<byte[], int[]> {
      */
     @Override
     public int[] convert(byte[] seed, int outputSize) {
-        return convertSeed(seed, outputSize);
-    }
-
-    /**
-     * Creates an array of {@code int} values from a sequence of bytes. The integers are
-     * filled in little-endian order (least significant byte first).
-     *
-     * @param input Input bytes
-     * @param length Output length
-     * @return an array of {@code int}.
-     */
-    private static int[] convertSeed(byte[] input, int length) {
-        final int[] output = new int[length];
-
-        // Overflow-safe minimum using long
-        final int n = (int) Math.min(input.length, length * (long) Integer.BYTES);
-        // Little-endian fill
-        for (int i = 0; i < n; i++) {
-            // i              = byte index
-            // i >> 2         = integer index
-            // i & 0x3        = byte number in the integer  [0, 3]
-            // (i & 0x3) << 3 = little-endian byte shift to the integer {0, 8, 16, 24}
-            output[i >> 2] |= (input[i] & 0xff) << ((i & 0x3) << 3);
-        }
-
-        return output;
+        return Conversions.byteArray2IntArray(seed, outputSize);
     }
 }

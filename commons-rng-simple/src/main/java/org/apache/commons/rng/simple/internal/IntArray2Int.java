@@ -25,11 +25,6 @@ public class IntArray2Int implements SeedConverter<int[], Integer> {
     /** {@inheritDoc} */
     @Override
     public Integer convert(int[] seed) {
-        int out = 0;
-        for (final int s : seed) {
-            out ^= s;
-        }
-
-        return out;
+        return Conversions.intArray2Int(seed);
     }
 }
