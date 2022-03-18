@@ -115,36 +115,63 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
 
     /**
      * Discrete uniform distribution sampler when the range is small
-     * enough to fit in a positive long.
+     * enough to fit in a positive long. The range must not be a power of 2.
      * This sampler assumes the lower bound of the range is 0.
      */
     private static class SmallRangeUniformLongSampler extends UniformLongSampler {
         /** Maximum range of the sample (exclusive). */
         private final long n;
+        /** Limit of the uniform range (exclusive). This is the largest positive
+         * multiple of {@code n}. */
+        private final long limit;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
+         *   Must not be a power of 2.
          */
         SmallRangeUniformLongSampler(UniformRandomProvider rng,
                                      long range) {
             super(rng);
             this.n = range;
+            // Set the upper limit for the positive long.
+            // The sample must be selected from the largest multiple
+            // of range that fits within a positive value:
+            // limit = floor(2^63 / range) * range
+            //       = 2^63 - (2^63 % range)
+            // This is a one-off computation cost.
+            // The divide will truncate towards zero (do not use Math.floorDiv).
+            // Note: This is invalid if range is a power of 2 as it fits exactly in 2^63
+            // and the limit is computed as 2^63 (not representable).
+            // This is not possible here as this sampler is used for non-powers of 2.
+            limit = (Long.MIN_VALUE / range) * -range;
+        }
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         * @param source Source to copy.
+         */
+        SmallRangeUniformLongSampler(UniformRandomProvider rng,
+                                     SmallRangeUniformLongSampler source) {
+            super(rng);
+            this.n = source.n;
+            this.limit = source.limit;
         }
 
         @Override
         public long sample() {
-            // Rejection algorithm copied from o.a.c.rng.core.BaseProvider
-            // to avoid the (n <= 0) conditional.
-            // See the JDK javadoc for java.util.Random.nextInt(int) for
-            // a description of the algorithm.
-            long bits;
-            long val;
-            do {
-                bits = rng.nextLong() >>> 1;
-                val  = bits % n;
-            } while (bits - val + (n - 1) < 0);
-            return val;
+            // Note:
+            // This will have the same output as the rejection algorithm
+            // from o.a.c.rng.core.BaseProvider. The limit for the uniform
+            // positive value can be pre-computed. This ensures exactly
+            // 1 modulus operation per call.
+            for (;;) {
+                // bits in [0, limit)
+                final long bits = rng.nextLong() >>> 1;
+                if (bits < limit) {
+                    return bits % n;
+                }
+            }
         }
 
         @Override

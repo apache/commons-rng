@@ -81,6 +81,9 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="172">
+        "UniformLongSampler": Precompute rejection threshold for a non-power of 2 range.
+      </action>
       <action dev="aherbert" type="update" issue="169">
         "RandomSource.create": Update array seed conversion to use optimum seed length.
         Avoid duplication of input bytes and conversion of bytes that will be discarded.

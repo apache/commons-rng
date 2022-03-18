@@ -23,7 +23,8 @@ import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import java.util.Locale;
 
 /**
@@ -84,32 +85,61 @@ class UniformLongSamplerTest {
      * based on o.a.c.rng.core.BaseProvider as the rejection algorithm is
      * the same.
      */
-    @Test
-    void testSamplesWithSmallNonPowerOf2Range() {
-        final long upper = 234293789329234L;
+    @ParameterizedTest
+    @ValueSource(longs = {234293789329234L, 145, 69987, 12673586268L, 234785389445435L, Long.MAX_VALUE})
+    void testSamplesWithSmallNonPowerOf2Range(long upper) {
         for (final long lower : new long[] {-13, 0, 13}) {
             final long n = upper - lower + 1;
-            // Use an RNG that forces the rejection path on the first sample
-            final UniformRandomProvider rng1 = createRngWithFullBitsOnFirstCall();
-            final UniformRandomProvider rng2 = createRngWithFullBitsOnFirstCall();
+            // Skip overflow ranges
+            if (n < 0) {
+                continue;
+            }
+
+            Assertions.assertNotEquals(0, n & (n - 1), "Power of 2 is invalid here");
+
+            // Largest multiple of the upper bound.
+            // floor(2^63 / range) * range
+            // Computed as 2^63 - 2 % 63 with unsigned integers.
+            final long m = Long.MIN_VALUE - Long.remainderUnsigned(Long.MIN_VALUE, n);
+
+            // Check the method used in the sampler
+            Assertions.assertEquals(m, (Long.MIN_VALUE / n) * -n);
+
+            // Use an RNG that forces the rejection path on the first few samples
+            // This occurs when the positive value is above the limit set by the
+            // largest multiple of upper that does not overflow.
+            final UniformRandomProvider rng1 = createRngWithFullBitsOnFirstCall(m);
+            final UniformRandomProvider rng2 = createRngWithFullBitsOnFirstCall(m);
             final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100; i++) {
                 Assertions.assertEquals(lower + rng1.nextLong(n), sampler.sample());
             }
         }
     }
 
     /**
-     * Creates a RNG which will return full bits for the first sample.
+     * Creates a RNG which will return full bits for the first sample, then bits
+     * too high for the configured limit for a few iterations.
      *
+     * @param m Upper limit for a sample
      * @return the uniform random provider
      */
-    private static UniformRandomProvider createRngWithFullBitsOnFirstCall() {
+    private static UniformRandomProvider createRngWithFullBitsOnFirstCall(long m) {
         return new SplitMix64(0L) {
             private int i;
             @Override
             public long next() {
-                return i++ == 0 ? -1L : super.next();
+                int j = i++;
+                if (j == 0) {
+                    // Full bits
+                    return -1L;
+                } else if (j < 6) {
+                    // A value just above or below the limit.
+                    // Assumes m is positive and the sampler uses >>> 1 to extract
+                    // a positive value.
+                    return (m + 3 - j) << 1;
+                }
+                return super.next();
             }
         };
     }
