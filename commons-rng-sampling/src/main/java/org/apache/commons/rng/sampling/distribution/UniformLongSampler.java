@@ -115,20 +115,23 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
 
     /**
      * Discrete uniform distribution sampler when the range is small
-     * enough to fit in a positive long. The range must not be a power of 2.
-     * This sampler assumes the lower bound of the range is 0.
+     * enough to fit in a positive long.
+     * This sampler assumes the lower bound of the range is 0 and the range is
+     * non-zero.
      */
     private static class SmallRangeUniformLongSampler extends UniformLongSampler {
         /** Maximum range of the sample (exclusive). */
         private final long n;
-        /** Limit of the uniform range (exclusive). This is the largest positive
-         * multiple of {@code n}. */
+        /** Limit of the uniform range (inclusive) to sample a positive long.
+         * This is the largest positive multiple of {@code n} minus 1:
+         * {@code floor(2^63 / n) * n - 1}.
+         * The -1 changes the limit to an inclusive bound and allows support
+         * for a power of 2 range. */
         private final long limit;
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
-         *   Must not be a power of 2.
          */
         SmallRangeUniformLongSampler(UniformRandomProvider rng,
                                      long range) {
@@ -136,15 +139,16 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
             this.n = range;
             // Set the upper limit for the positive long.
             // The sample must be selected from the largest multiple
-            // of range that fits within a positive value:
+            // of 'range' that fits within a positive value:
             // limit = floor(2^63 / range) * range
             //       = 2^63 - (2^63 % range)
+            // Sample:
+            //   X in [0, limit) or X in [0, limit - 1]
+            //   return X % range
             // This is a one-off computation cost.
             // The divide will truncate towards zero (do not use Math.floorDiv).
-            // Note: This is invalid if range is a power of 2 as it fits exactly in 2^63
-            // and the limit is computed as 2^63 (not representable).
-            // This is not possible here as this sampler is used for non-powers of 2.
-            limit = (Long.MIN_VALUE / range) * -range;
+            // Note: This is invalid if range is not strictly positive.
+            limit = (Long.MIN_VALUE / range) * -range - 1;
         }
 
         /**
@@ -166,9 +170,9 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
             // positive value can be pre-computed. This ensures exactly
             // 1 modulus operation per call.
             for (;;) {
-                // bits in [0, limit)
+                // bits in [0, limit]
                 final long bits = rng.nextLong() >>> 1;
-                if (bits < limit) {
+                if (bits <= limit) {
                     return bits % n;
                 }
             }
