@@ -80,6 +80,11 @@ probability.  The 'maven-surefire-plugin' is configured to
 re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
+
+The source output type (int/long) of a RNG must maintain
+behavioural compatibility between releases; derived types
+may break behavioural compatibility. Any functional changes
+will be recorded in the release notes.
 ">
       <action dev="aherbert" type="update" issue="171">
         Recuce the memory footprint of the cached boolean and int source for the IntProvider

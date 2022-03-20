@@ -1006,6 +1006,28 @@ java -jar target/examples-jmh.jar -h
   Details of each example module is contained in a <<<HOWTO.md>>> document in the module
   directory.
 
-7. Dependencies
+7. Release compatibility
+
+  Apache Commons RNG will maintain binary compatibility within a major release number.
+  However the <output> from a random generator <may differ> between releases. This is a functional
+  compatibility change. The result is that when upgrading the library any code based on a
+  random generator may produce different results. For example any unit test code written
+  with a fixed seed to generate pseudo-random test data may fail after update as the test data
+  has changed.
+
+  The library generators are algorithms that produce a stream of random bits using 32-bit or
+  64-bit integer output. The output from the primary type will maintain functional compatibility
+  for the lifetime of the library. This output is tested to match a reference implementation
+  of the algorithm and should be invariant. The only exception is to address bug fixes identified
+  in the upstream implementation.
+
+  The primary output of the generator is used to produced derived types, for example floating
+  point values, byte arrays and integers within a range. The output for derived types is not
+  subject to functional compatibility constraints. Put simply the output from a generator may
+  be different even when using the same starting seed due to updates to generation algorithms
+  that use the underlying stream of random bits. Any library changes that result in a
+  functional compatibility should be recorded in the release notes.
+
+8. Dependencies
 
   Apache Commons RNG requires JDK 1.8+ and has no runtime dependencies.
