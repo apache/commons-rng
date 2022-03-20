@@ -81,6 +81,14 @@ re-run tests that fail, and pass the build if they succeed
 within the allotted number of reruns (the test will be marked
 as 'flaky' in the report).
 ">
+      <action dev="aherbert" type="update" issue="171">
+        Recuce the memory footprint of the cached boolean and int source for the IntProvider
+        and LongProvider. This change has a performance improvement on some JDKs.
+        Note: This introduces a functional compatibility change to the output from the
+        nextInt method of any LongProvider; the output is now little-endian as
+        each long is returned as the low 32-bits then the high 32-bits.
+        The bit output from nextBoolean is unchanged (little-endian order).
+      </action>
       <action dev="aherbert" type="update" issue="172">
         "UniformLongSampler": Precompute rejection threshold for a non-power of 2 range.
       </action>

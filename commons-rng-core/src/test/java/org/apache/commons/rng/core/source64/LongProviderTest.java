@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.core.source64;
 
+import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -74,15 +75,15 @@ class LongProviderTest {
 
     /**
      * This test ensures that the call to {@link LongProvider#nextInt()} returns the
-     * upper and then lower 32-bits from {@link LongProvider#nextLong()}.
+     * lower and then upper 32-bits from {@link LongProvider#nextLong()}.
      */
     @Test
     void testNextInt() {
         final int max = 5;
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < max; j++) {
-                // Pack into upper then lower bits
-                final long value = (((long) i) << 32) | (j & 0xffffffffL);
+                // Pack into lower then upper bits
+                final long value = NumberFactory.makeLong(j, i);
                 final LongProvider provider = new FixedLongProvider(value);
                 Assertions.assertEquals(i, provider.nextInt(), "1st call not the upper 32-bits");
                 Assertions.assertEquals(j, provider.nextInt(), "2nd call not the lower 32-bits");

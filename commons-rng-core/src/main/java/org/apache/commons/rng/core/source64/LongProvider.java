@@ -28,33 +28,32 @@ public abstract class LongProvider
     extends BaseProvider
     implements RandomLongSource {
 
+    /** Empty boolean source. This is the location of the sign-bit after 63 right shifts on
+     * the boolean source. */
+    private static final long EMPTY_BOOL_SOURCE = 1;
+    /** Empty int source. This requires a negative value as the sign-bit is used to
+     * trigger a refill. */
+    private static final long EMPTY_INT_SOURCE = -1;
+
     /**
      * Provides a bit source for booleans.
      *
      * <p>A cached value from a call to {@link #nextLong()}.
-     */
-    private long booleanSource; // Initialised as 0
-
-    /**
-     * The bit mask of the boolean source to obtain the boolean bit.
      *
-     * <p>The bit mask contains a single bit set. This begins at the least
-     * significant bit and is gradually shifted upwards until overflow to zero.
-     *
-     * <p>When zero a new boolean source should be created and the mask set to the
-     * least significant bit (i.e. 1).
+     * <p>Only stores 63-bits when full as 1 bit has already been consumed.
+     * The sign bit is a flag that shifts down so the source eventually equals 1
+     * when all bits are consumed and will trigger a refill.
      */
-    private long booleanBitMask; // Initialised as 0
+    private long booleanSource = EMPTY_BOOL_SOURCE;
 
     /**
      * Provides a source for ints.
      *
-     * <p>A cached value from a call to {@link #nextLong()}.
+     * <p>A cached half-value value from a call to {@link #nextLong()}.
+     * The int is stored in the lower 32 bits with zeros in the upper bits.
+     * When empty this is set to negative to trigger a refill.
      */
-    private long intSource;
-
-    /** Flag to indicate an int source has been cached. */
-    private boolean cachedIntSource; // Initialised as false
+    private long intSource = EMPTY_INT_SOURCE;
 
     /**
      * Creates a new instance.
@@ -75,9 +74,7 @@ public abstract class LongProvider
      */
     protected LongProvider(LongProvider source) {
         booleanSource = source.booleanSource;
-        booleanBitMask = source.booleanBitMask;
         intSource = source.intSource;
-        cachedIntSource = source.cachedIntSource;
     }
 
     /**
@@ -91,20 +88,14 @@ public abstract class LongProvider
      * @since 1.3
      */
     protected void resetCachedState() {
-        booleanSource = 0L;
-        booleanBitMask = 0L;
-        intSource = 0L;
-        cachedIntSource = false;
+        booleanSource = EMPTY_BOOL_SOURCE;
+        intSource = EMPTY_INT_SOURCE;
     }
 
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        // Pack the boolean inefficiently as a long
-        final long[] state = {booleanSource,
-                              booleanBitMask,
-                              intSource,
-                              cachedIntSource ? 1 : 0 };
+        final long[] state = {booleanSource, intSource};
         return composeStateInternal(NumberFactory.makeByteArray(state),
                                     super.getStateInternal());
     }
@@ -112,13 +103,10 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        final byte[][] c = splitStateInternal(s, 32);
+        final byte[][] c = splitStateInternal(s, 2 * Long.BYTES);
         final long[] state = NumberFactory.makeLongArray(c[0]);
         booleanSource   = state[0];
-        booleanBitMask  = state[1];
-        intSource       = state[2];
-        // Non-zero is true
-        cachedIntSource = state[3] != 0;
+        intSource       = state[1];
         super.setStateInternal(c[1]);
     }
 
@@ -131,18 +119,17 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     public int nextInt() {
-        // Directly store and use the long value as a source for ints
-        if (cachedIntSource) {
-            // Consume the cache value
-            cachedIntSource = false;
-            // Return the lower 32 bits
-            return NumberFactory.extractLo(intSource);
+        long bits = intSource;
+        if (bits < 0) {
+            // Refill
+            bits = next();
+            // Store high 32 bits, return low 32 bits
+            intSource = bits >>> 32;
+            return (int) bits;
         }
-        // Fill the cache
-        cachedIntSource = true;
-        intSource = nextLong();
-        // Return the upper 32 bits
-        return NumberFactory.extractHi(intSource);
+        // Reset and return previous low bits
+        intSource = -1;
+        return (int) bits;
     }
 
     /** {@inheritDoc} */
@@ -154,17 +141,17 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     public boolean nextBoolean() {
-        // Shift up. This will eventually overflow and become zero.
-        booleanBitMask <<= 1;
-        // The mask will either contain a single bit or none.
-        if (booleanBitMask == 0) {
-            // Set the least significant bit
-            booleanBitMask = 1;
-            // Get the next value
-            booleanSource = nextLong();
+        long bits = booleanSource;
+        if (bits == 1) {
+            // Refill
+            bits = next();
+            // Store a refill flag in the sign bit and the unused 63 bits, return lowest bit
+            booleanSource = Long.MIN_VALUE | (bits >>> 1);
+            return (bits & 0x1) == 1;
         }
-        // Return if the bit is set
-        return (booleanSource & booleanBitMask) != 0;
+        // Shift down eventually triggering refill, return current lowest bit
+        booleanSource = bits >>> 1;
+        return (bits & 0x1) == 1;
     }
 
     /** {@inheritDoc} */

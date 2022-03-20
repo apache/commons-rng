@@ -35,14 +35,14 @@ import org.apache.commons.rng.core.source64.LongProvider;
  * Tests which all {@link JumpableUniformRandomProvider} generators must pass.
  */
 class JumpableProvidersParametricTest {
-    /** The size of the state for the IntProvider. */
-    private static final int INT_PROVIDER_STATE_SIZE;
-    /** The size of the state for the LongProvider. */
-    private static final int LONG_PROVIDER_STATE_SIZE;
+    /** The default state for the IntProvider. */
+    private static final byte[] INT_PROVIDER_STATE;
+    /** The default state for the LongProvider. */
+    private static final byte[] LONG_PROVIDER_STATE;
 
     static {
-        INT_PROVIDER_STATE_SIZE = new State32Generator().getStateSize();
-        LONG_PROVIDER_STATE_SIZE = new State64Generator().getStateSize();
+        INT_PROVIDER_STATE = new State32Generator().getState();
+        LONG_PROVIDER_STATE = new State64Generator().getState();
     }
 
     /**
@@ -194,15 +194,15 @@ class JumpableProvidersParametricTest {
      */
     private static void assertJumpResetsDefaultState(TestJumpFunction jumpFunction,
                                                      JumpableUniformRandomProvider generator) {
-        int stateSize;
+        byte[] expected;
         if (generator instanceof IntProvider) {
-            stateSize = INT_PROVIDER_STATE_SIZE;
+            expected = INT_PROVIDER_STATE;
         } else if (generator instanceof LongProvider) {
-            stateSize = LONG_PROVIDER_STATE_SIZE;
+            expected = LONG_PROVIDER_STATE;
         } else {
             throw new AssertionError("Unsupported RNG");
         }
-        final byte[] expected = new byte[stateSize];
+        final int stateSize = expected.length;
         for (int repeats = 0; repeats < 2; repeats++) {
             // Exercise the generator.
             // This calls nextInt() once so the default implementation of LongProvider
@@ -238,12 +238,13 @@ class JumpableProvidersParametricTest {
         }
 
         /**
-         * Gets the state size. This captures the state size of the IntProvider.
+         * Gets the default state. This captures the initial state of the IntProvider
+         * including the values of the cache variables.
          *
-         * @return the state size
+         * @return the state
          */
-        int getStateSize() {
-            return getStateInternal().length;
+        byte[] getState() {
+            return getStateInternal();
         }
     }
 
@@ -258,12 +259,13 @@ class JumpableProvidersParametricTest {
         }
 
         /**
-         * Gets the state size. This captures the state size of the LongProvider.
+         * Gets the default state. This captures the initial state of the LongProvider
+         * including the values of the cache variables.
          *
          * @return the state size
          */
-        int getStateSize() {
-            return getStateInternal().length;
+        byte[] getState() {
+            return getStateInternal();
         }
     }
 

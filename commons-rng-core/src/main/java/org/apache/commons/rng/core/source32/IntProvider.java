@@ -28,23 +28,20 @@ public abstract class IntProvider
     extends BaseProvider
     implements RandomIntSource {
 
+    /** Empty boolean source. This is the location of the sign-bit after 31 right shifts on
+     * the boolean source. */
+    private static final int EMPTY_BOOL_SOURCE = 1;
+
     /**
      * Provides a bit source for booleans.
      *
      * <p>A cached value from a call to {@link #nextInt()}.
-     */
-    private int booleanSource; // Initialised as 0
-
-    /**
-     * The bit mask of the boolean source to obtain the boolean bit.
      *
-     * <p>The bit mask contains a single bit set. This begins at the least
-     * significant bit and is gradually shifted upwards until overflow to zero.
-     *
-     * <p>When zero a new boolean source should be created and the mask set to the
-     * least significant bit (i.e. 1).
+     * <p>Only stores 31-bits when full as 1 bit has already been consumed.
+     * The sign bit is a flag that shifts down so the source eventually equals 1
+     * when all bits are consumed and will trigger a refill.
      */
-    private int booleanBitMask; // Initialised as 0
+    private int booleanSource = EMPTY_BOOL_SOURCE;
 
     /**
      * Creates a new instance.
@@ -65,7 +62,6 @@ public abstract class IntProvider
      */
     protected IntProvider(IntProvider source) {
         booleanSource = source.booleanSource;
-        booleanBitMask = source.booleanBitMask;
     }
 
     /**
@@ -78,26 +74,21 @@ public abstract class IntProvider
      * @since 1.3
      */
     protected void resetCachedState() {
-        booleanSource = 0;
-        booleanBitMask = 0;
+        booleanSource = EMPTY_BOOL_SOURCE;
     }
 
     /** {@inheritDoc} */
     @Override
     protected byte[] getStateInternal() {
-        final int[] state = {booleanSource,
-                             booleanBitMask};
-        return composeStateInternal(NumberFactory.makeByteArray(state),
+        return composeStateInternal(NumberFactory.makeByteArray(booleanSource),
                                     super.getStateInternal());
     }
 
     /** {@inheritDoc} */
     @Override
     protected void setStateInternal(byte[] s) {
-        final byte[][] c = splitStateInternal(s, 8);
-        final int[] state = NumberFactory.makeIntArray(c[0]);
-        booleanSource  = state[0];
-        booleanBitMask = state[1];
+        final byte[][] c = splitStateInternal(s, Integer.BYTES);
+        booleanSource = NumberFactory.makeInt(c[0]);
         super.setStateInternal(c[1]);
     }
 
@@ -110,17 +101,17 @@ public abstract class IntProvider
     /** {@inheritDoc} */
     @Override
     public boolean nextBoolean() {
-        // Shift up. This will eventually overflow and become zero.
-        booleanBitMask <<= 1;
-        // The mask will either contain a single bit or none.
-        if (booleanBitMask == 0) {
-            // Set the least significant bit
-            booleanBitMask = 1;
-            // Get the next value
-            booleanSource = nextInt();
+        int bits = booleanSource;
+        if (bits == 1) {
+            // Refill
+            bits = next();
+            // Store a refill flag in the sign bit and the unused 31 bits, return lowest bit
+            booleanSource = Integer.MIN_VALUE | (bits >>> 1);
+            return (bits & 0x1) == 1;
         }
-        // Return if the bit is set
-        return (booleanSource & booleanBitMask) != 0;
+        // Shift down eventually triggering refill, return current lowest bit
+        booleanSource = bits >>> 1;
+        return (bits & 0x1) == 1;
     }
 
     /** {@inheritDoc} */
