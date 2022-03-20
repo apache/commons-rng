@@ -40,7 +40,7 @@
  * values are defined in the
  * {@link org.apache.commons.rng.core.source64 source64} package.
  * </p>
- * 
+ *
  * <p>
  * Implementations are expected to match an algorithm reference output
  * for the source output type (32-bit or 64-bit integers). This should
@@ -48,7 +48,7 @@
  * obtained from the source output type, such as float or boolean, are
  * not required to maintain functional compatibility to allow algorithm
  * improvements.
- * </p> 
+ * </p>
  *
  * <p>
  * Each implementation must have an identifier in
