@@ -86,6 +86,10 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="173">
+        "BaseProvider": Add a static method to extend input int[] and long[] seeds to a
+        minimum length.
+      </action>
       <action dev="aherbert" type="update" issue="171">
         Recuce the memory footprint of the cached boolean and int source for the IntProvider
         and LongProvider. This change has a performance improvement on some JDKs.

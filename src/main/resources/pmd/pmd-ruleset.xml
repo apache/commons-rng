@@ -101,6 +101,13 @@
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='TSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters">
+    <properties>
+      <!-- Hash functions are optimised for minimum byte size to allow inlining -->
+      <property name="violationSuppressXPath"
+        value="./ancestor::MethodDeclaration[@Name='stafford13' or @Name='murmur3']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/codestyle.xml/ClassNamingConventions">
     <properties>

@@ -17,6 +17,7 @@
 
 package org.apache.commons.rng.core;
 
+import java.util.Arrays;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 
@@ -29,6 +30,16 @@ public abstract class BaseProvider
     private static final String NOT_POSITIVE = "Must be strictly positive: ";
     /** 2^32. */
     private static final long POW_32 = 1L << 32;
+    /**
+     * The fractional part of the the golden ratio, phi, scaled to 64-bits and rounded to odd.
+     * <pre>
+     * phi = (sqrt(5) - 1) / 2) * 2^64
+     * </pre>
+     * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
+     */
+    private static final long GOLDEN_RATIO_64 = 0x9e3779b97f4a7c15L;
+    /** The fractional part of the the golden ratio, phi, scaled to 32-bits and rounded to odd. */
+    private static final int GOLDEN_RATIO_32 = 0x9e3779b9;
 
     /** {@inheritDoc} */
     @Override
@@ -319,5 +330,141 @@ public abstract class BaseProvider
                                      int add) {
         // Code inspired from "AbstractWell" class.
         return scramble(n, 1812433253L, 30, add);
+    }
+
+    /**
+     * Extend the seed to the specified minimum length. If the seed is equal or greater than the
+     * minimum length, return the same seed unchanged. Otherwise:
+     * <ol>
+     *  <li>Create a new array of the specified length
+     *  <li>Copy all elements of the seed into the array
+     *  <li>Fill the remaining values. The additional values will have at most one occurrence
+     *   of zero. If the original seed is all zero, the first extended value will be non-zero.
+     *  </li>
+     * </ol>
+     *
+     * <p>This method can be used in constructors that must pass their seed to the super class
+     * to avoid a duplication of seed expansion to the minimum length required by the super class
+     * and the class:
+     * <pre>
+     * public RNG extends AnotherRNG {
+     *     public RNG(long[] seed) {
+     *         super(seed = extendSeed(seed, SEED_SIZE));
+     *         // Use seed for additional state ...
+     *     }
+     * }
+     * </pre>
+     *
+     * <p>Note using the state filling procedure provided in {@link #fillState(long[], long[])}
+     * is not possible as it is an instance method. Calling a seed extension routine must use a
+     * static method.
+     *
+     * <p>This method functions as if the seed has been extended using a
+     * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64}
+     * generator seeded with {@code seed[0]}, or zero if the input seed length is zero.
+     * <pre>
+     * if (seed.length &lt; length) {
+     *     final long[] s = Arrays.copyOf(seed, length);
+     *     final SplitMix64 rng = new SplitMix64(s[0]);
+     *     for (int i = seed.length; i &lt; length; i++) {
+     *         s[i] = rng.nextLong();
+     *     }
+     *     return s;
+     * }</pre>
+     *
+     * @param seed Input seed
+     * @param length The minimum length
+     * @return the seed
+     */
+    protected static long[] extendSeed(long[] seed, int length) {
+        if (seed.length < length) {
+            final long[] s = Arrays.copyOf(seed, length);
+            // Fill the rest as if using a SplitMix64 RNG
+            long x = s[0];
+            for (int i = seed.length; i < length; i++) {
+                s[i] = stafford13(x += GOLDEN_RATIO_64);
+            }
+            return s;
+        }
+        return seed;
+    }
+
+    /**
+     * Extend the seed to the specified minimum length. If the seed is equal or greater than the
+     * minimum length, return the same seed unchanged. Otherwise:
+     * <ol>
+     *  <li>Create a new array of the specified length
+     *  <li>Copy all elements of the seed into the array
+     *  <li>Fill the remaining values. The additional values will have at most one occurrence
+     *   of zero. If the original seed is all zero, the first extended value will be non-zero.
+     *  </li>
+     * </ol>
+     *
+     * <p>This method can be used in constructors that must pass their seed to the super class
+     * to avoid a duplication of seed expansion to the minimum length required by the super class
+     * and the class:
+     * <pre>
+     * public RNG extends AnotherRNG {
+     *     public RNG(int[] seed) {
+     *         super(seed = extendSeed(seed, SEED_SIZE));
+     *         // Use seed for additional state ...
+     *     }
+     * }
+     * </pre>
+     *
+     * <p>Note using the state filling procedure provided in {@link #fillState(int[], int[])}
+     * is not possible as it is an instance method. Calling a seed extension routine must use a
+     * static method.
+     *
+     * <p>This method functions as if the seed has been extended using a
+     * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64}-style 32-bit
+     * generator seeded with {@code seed[0]}, or zero if the input seed length is zero. The
+     * generator uses the 32-bit mixing function from MurmurHash3.
+     *
+     * @param seed Input seed
+     * @param length The minimum length
+     * @return the seed
+     */
+    protected static int[] extendSeed(int[] seed, int length) {
+        if (seed.length < length) {
+            final int[] s = Arrays.copyOf(seed, length);
+            // Fill the rest as if using a SplitMix64-style RNG for 32-bit output
+            int x = s[0];
+            for (int i = seed.length; i < length; i++) {
+                s[i] = murmur3(x += GOLDEN_RATIO_32);
+            }
+            return s;
+        }
+        return seed;
+    }
+
+    /**
+     * Perform variant 13 of David Stafford's 64-bit mix function.
+     * This is the mix function used in the {@link SplitMix64} RNG.
+     *
+     * <p>This is ranked first of the top 14 Stafford mixers.
+     *
+     * @param x the input value
+     * @return the output value
+     * @see <a href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
+     *      Bit Mixing - Improving on MurmurHash3&#39;s 64-bit Finalizer.</a>
+     */
+    private static long stafford13(long x) {
+        x = (x ^ (x >>> 30)) * 0xbf58476d1ce4e5b9L;
+        x = (x ^ (x >>> 27)) * 0x94d049bb133111ebL;
+        return x ^ (x >>> 31);
+    }
+
+    /**
+     * Perform the finalising 32-bit mix function of Austin Appleby's MurmurHash3.
+     *
+     * @param x the input value
+     * @return the output value
+     * @see <a href="https://github.com/aappleby/smhasher">SMHasher</a>
+     */
+    private static int murmur3(int x) {
+        x = (x ^ (x >>> 16)) * 0x85ebca6b;
+        x = (x ^ (x >>> 13)) * 0xc2b2ae35;
+        return x ^ (x >>> 16);
     }
 }

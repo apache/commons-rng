@@ -17,6 +17,13 @@
 package org.apache.commons.rng.core;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Arrays;
+import java.util.SplittableRandom;
+
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 
@@ -125,6 +132,103 @@ class BaseProviderTest {
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, 6));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, Integer.MIN_VALUE));
         Assertions.assertThrows(IndexOutOfBoundsException.class, () -> rng.checkIndex(-10, 5, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Test a seed can be extended to a required size by filling with a SplitMix64 generator.
+     */
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 4, 5, 6, 7, 8, 9})
+    void testExpnadSeedLong(int length) {
+        // The seed does not matter.
+        // Create random seeds that are smaller or larger than length.
+        final SplittableRandom rng = new SplittableRandom();
+        for (long[] seed : new long[][] {
+            {},
+            rng.longs(1).toArray(),
+            rng.longs(2).toArray(),
+            rng.longs(3).toArray(),
+            rng.longs(4).toArray(),
+            rng.longs(5).toArray(),
+            rng.longs(6).toArray(),
+            rng.longs(7).toArray(),
+            rng.longs(8).toArray(),
+            rng.longs(9).toArray(),
+        }) {
+            Assertions.assertArrayEquals(expandSeed(length, seed),
+                                         BaseProvider.extendSeed(seed, length));
+        }
+    }
+
+    /**
+     * Expand the seed to the minimum specified length using a {@link SplitMix64} generator
+     * seeded with {@code seed[0]}, or zero if the seed length is zero.
+     *
+     * @param length the length
+     * @param seed the seed
+     * @return the seed
+     */
+    private static long[] expandSeed(int length, long... seed) {
+        if (seed.length < length) {
+            final long[] s = Arrays.copyOf(seed, length);
+            final SplitMix64 rng = new SplitMix64(s[0]);
+            for (int i = seed.length; i < length; i++) {
+                s[i] = rng.nextLong();
+            }
+            return s;
+        }
+        return seed;
+    }
+
+    /**
+     * Test a seed can be extended to a required size by filling with a SplitMix64-style
+     * generator using MurmurHash3's 32-bit mix function.
+     *
+     * <p>There is no reference RNG for this output. The test uses fixed output computed
+     * from the reference c++ function in smhasher.
+     */
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 4, 5, 6, 7, 8, 9})
+    void testExpandSeedInt(int length) {
+        // Reference output from the c++ function fmix32(uint32_t) in smhasher.
+        // https://github.com/aappleby/smhasher/blob/master/src/MurmurHash3.cpp
+        final int seedA = 0x012de1ba;
+        final int[] valuesA = {
+            0x2f66c8b6, 0x256c0269, 0x054ef409, 0x402425ba, 0x78ebf590, 0x76bea1db,
+            0x8bf5dcbe, 0x104ecdd4, 0x43cfc87e, 0xa33c7643, 0x4d210f56, 0xfa12093d,
+        };
+        // Values from a seed of zero
+        final int[] values0 = {
+            0x92ca2f0e, 0x3cd6e3f3, 0x1b147dcc, 0x4c081dbf, 0x487981ab, 0xdb408c9d,
+            0x78bc1b8f, 0xd83072e5, 0x65cbdd54, 0x1f4b8cef, 0x91783bb0, 0x0231739b,
+        };
+
+        // Create a random seed that is larger than the maximum length;
+        // start with the initial value
+        final int[] data = new SplittableRandom().ints(10).toArray();
+        data[0] = seedA;
+
+        for (int i = 0; i <= 9; i++) {
+            final int seedLength = i;
+            // Truncate the random seed
+            final int[] seed = Arrays.copyOf(data, seedLength);
+            // Create the expected output length.
+            // If too short it should be extended with values from the reference output
+            final int[] expected = Arrays.copyOf(seed, Math.max(seedLength, length));
+            if (expected.length == 0) {
+                // Edge case for zero length
+                Assertions.assertArrayEquals(new int[0],
+                                             BaseProvider.extendSeed(seed, length));
+                continue;
+            }
+            // Extend the truncated seed using the reference output.
+            // This may be seeded with zero or the non-zero initial value.
+            final int[] source = expected[0] == 0 ? values0 : valuesA;
+            System.arraycopy(source, 0, expected, seedLength, expected.length - seedLength);
+            Assertions.assertArrayEquals(expected,
+                                         BaseProvider.extendSeed(seed, length),
+                                         () -> String.format("%d -> %d", seedLength, length));
+        }
     }
 
     /**
