@@ -27,6 +27,7 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.util.NumberFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -35,6 +36,15 @@ import org.junit.jupiter.params.provider.ValueSource;
  * Tests for {@link Conversions}.
  */
 class ConversionsTest {
+    /**
+     * The fractional part of the the golden ratio, phi, scaled to 64-bits and rounded to odd.
+     * <pre>
+     * phi = (sqrt(5) - 1) / 2) * 2^64
+     * </pre>
+     * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
+     */
+    private static final long GOLDEN_RATIO = 0x9e3779b97f4a7c15L;
+
     /**
      * Gets the lengths for the byte[] seeds to convert.
      *
@@ -123,7 +133,12 @@ class ConversionsTest {
 
     @RepeatedTest(value = 5)
     void testLong2IntArray() {
-        final long v = ThreadLocalRandom.current().nextLong();
+        // Avoid seed == 0 - 0x9e3779b97f4a7c15L. See testLong2IntArrayLength2NotAllZero.
+        long seed;
+        do {
+            seed = ThreadLocalRandom.current().nextLong();
+        } while (seed == -GOLDEN_RATIO);
+        final long v = seed;
         getIntLengths().forEach(len -> {
             final int longs = Conversions.longSizeFromIntSize(len);
             // Little-endian conversion
@@ -141,6 +156,36 @@ class ConversionsTest {
             // long -> int[] position[0] != long -> int
             // Reduction is done by folding upper and lower using xor
         });
+    }
+
+    /**
+     * Test the long2IntArray conversion avoids an input that will generate a zero from the
+     * SplitMix64-style RNG. This prevents creating an array of length 2 that is zero.
+     *
+     * <p>This special case avoids creating a small state Xor-based generator such as
+     * XoRoShiRo64StarStar with a seed of all zeros.
+     */
+    @Test
+    void testLong2IntArrayLength2NotAllZero() {
+        // The first output from the SplitMix64 is mix(seed + GOLDEN_RATIO).
+        // Create the seed to ensure a zero output from the mix function.
+        final long seed = -GOLDEN_RATIO;
+        Assertions.assertEquals(0, new SplitMix64(seed).nextLong());
+
+        // Note: This cannot occur for int2IntArray as the SplitMix64 is seeded with the int.
+        // This ignores the case of an output int[] of length 1 which could be zero.
+        // An int -> int[1] conversion is nonsensical and should not be performed by the library.
+        Assertions.assertNotEquals(0, new SplitMix64((int) seed).nextLong());
+
+        // The conversion should detect this case and a zero seed of length 2 should not happen.
+        final int[] actual = Conversions.long2IntArray(seed, 2);
+        Assertions.assertFalse(Arrays.equals(new int[2], actual));
+
+        // Longer arrays may be a partially zero as the generator state passes through
+        // the zero-point.
+        Assertions.assertArrayEquals(
+            Arrays.copyOf(Conversions.long2IntArray(seed - GOLDEN_RATIO, 2), 4),
+            Conversions.long2IntArray(seed - GOLDEN_RATIO, 4));
     }
 
     @RepeatedTest(value = 5)

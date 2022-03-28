@@ -173,12 +173,18 @@ final class Conversions {
      * generate the sequence and filling the ints
      * in little-endian order (least significant byte first).
      *
+     * <p>A special case is made to avoid an array filled with zeros for
+     * the initial 2 positions. It is still possible to create a zero in
+     * position 0. However any RNG with an int[] native type is expected to
+     * require at least 2 int values.
+     *
      * @param input Input
      * @param length Array length
      * @return an {@code int[]}.
      */
     static int[] long2IntArray(long input, int length) {
-        long v = input;
+        // Special case to avoid creating a zero-filled array of length 2.
+        long v = input == -GOLDEN_RATIO ? ~input : input;
         final int[] output = new int[length];
         // Process pairs
         final int n = length & ~0x1;
