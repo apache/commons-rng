@@ -54,6 +54,11 @@ import java.nio.ByteOrder;
  * {@link java.io.BufferedOutputStream#write(int) BufferedOutputStream#write(int)} that
  * occur for each {@code int} value that is written to
  * {@link java.io.DataOutputStream#writeInt(int) DataOutputStream#writeInt(int)}.</p>
+ *
+ * <p>This class has adaptors to write the long output from a RNG to two int values.
+ * To match the caching implementation in the the core LongProvider class this is tested
+ * to output int values in the same order as an instance of the LongProvider. Currently
+ * this outputs in order: low 32-bits, high 32-bits.
  */
 abstract class RngDataOutput implements Closeable {
     /** The data buffer. */
@@ -155,7 +160,8 @@ abstract class RngDataOutput implements Closeable {
     }
 
     /**
-     * Write {@code long} data as two little-endian {@code int} values.
+     * Write {@code long} data as two little-endian {@code int} values, high 32-bits then
+     * low 32-bits.
      * <pre>
      * 76543210  ->  4567  0123
      * </pre>
@@ -180,7 +186,39 @@ abstract class RngDataOutput implements Closeable {
         @Override
         public void fillBuffer(UniformRandomProvider rng) {
             for (int i = 0; i < buffer.length; i += 8) {
-                writeLongAsIntLE(i, rng.nextLong());
+                writeLongAsHighLowIntLE(i, rng.nextLong());
+            }
+        }
+    }
+
+    /**
+     * Write {@code long} data as two big-endian {@code int} values, low 32-bits then
+     * high 32-bits.
+     * <pre>
+     * 76543210  ->  3210  7654
+     * </pre>
+     *
+     * <p>This is a specialisation that allows the Java big-endian representation to be split
+     * into two big-endian values in the original order of lower then upper bits. In
+     * comparison the {@link BLongRngDataOutput} will output the same data as:
+     *
+     * <pre>
+     * 76543210  ->  7654  3210
+     * </pre>
+     */
+    private static class BLongAsLoHiIntRngDataOutput extends RngDataOutput {
+        /**
+         * @param out Output stream.
+         * @param size Buffer size.
+         */
+        BLongAsLoHiIntRngDataOutput(OutputStream out, int size) {
+            super(out, size);
+        }
+
+        @Override
+        public void fillBuffer(UniformRandomProvider rng) {
+            for (int i = 0; i < buffer.length; i += 8) {
+                writeLongAsLowHighIntBE(i, rng.nextLong());
             }
         }
     }
@@ -258,7 +296,7 @@ abstract class RngDataOutput implements Closeable {
     }
 
     /**
-     * Writes an {@code long} to the buffer as eight bytes, low byte first (big-endian).
+     * Writes an {@code long} to the buffer as eight bytes, low byte first (little-endian).
      *
      * @param index the index to start writing.
      * @param value an {@code long} to be written.
@@ -276,20 +314,48 @@ abstract class RngDataOutput implements Closeable {
 
     /**
      * Writes an {@code long} to the buffer as two integers of four bytes, each
-     * low byte first (big-endian).
+     * low byte first (little-endian). The long is written as the high 32-bits,
+     * then the low 32-bits.
+     *
+     * <p>Note: A LowHigh little-endian output is the same as {@link #writeLongLE(int, long)}.
      *
      * @param index the index to start writing.
      * @param value an {@code long} to be written.
      */
-    final void writeLongAsIntLE(int index, long value) {
+    final void writeLongAsHighLowIntLE(int index, long value) {
+        // high
         buffer[index    ] = (byte) (value >>> 32);
         buffer[index + 1] = (byte) (value >>> 40);
         buffer[index + 2] = (byte) (value >>> 48);
         buffer[index + 3] = (byte) (value >>> 56);
+        // low
         buffer[index + 4] = (byte) value;
         buffer[index + 5] = (byte) (value >>> 8);
         buffer[index + 6] = (byte) (value >>> 16);
         buffer[index + 7] = (byte) (value >>> 24);
+    }
+
+    /**
+     * Writes an {@code long} to the buffer as two integers of four bytes, each
+     * high byte first (big-endian). The long is written as the low 32-bits,
+     * then the high 32-bits.
+     *
+     * <p>Note: A HighLow big-endian output is the same as {@link #writeLongBE(int, long)}.
+     *
+     * @param index the index to start writing.
+     * @param value an {@code long} to be written.
+     */
+    final void writeLongAsLowHighIntBE(int index, long value) {
+        // low
+        buffer[index    ] = (byte) (value >>> 24);
+        buffer[index + 1] = (byte) (value >>> 16);
+        buffer[index + 2] = (byte) (value >>> 8);
+        buffer[index + 3] = (byte) value;
+        // high
+        buffer[index + 4] = (byte) (value >>> 56);
+        buffer[index + 5] = (byte) (value >>> 48);
+        buffer[index + 6] = (byte) (value >>> 40);
+        buffer[index + 7] = (byte) (value >>> 32);
     }
 
     @Override
@@ -338,7 +404,7 @@ abstract class RngDataOutput implements Closeable {
     /**
      * Create a new instance to write batches of data from
      * {@link UniformRandomProvider#nextLong()} to the specified output as two sequential
-     * {@code int} values.
+     * {@code int} values, high 32-bits then low 32-bits.
      *
      * <p>This will output the following bytes:</p>
      *
@@ -359,11 +425,43 @@ abstract class RngDataOutput implements Closeable {
      * @return the data output
      */
     @SuppressWarnings("resource")
-    static RngDataOutput ofLongAsInt(OutputStream out, int size, ByteOrder byteOrder) {
+    static RngDataOutput ofLongAsHLInt(OutputStream out, int size, ByteOrder byteOrder) {
         // Ensure the buffer is positive and a factor of 8
         final int bytes = Math.max(size * 8, 8);
         return byteOrder == ByteOrder.LITTLE_ENDIAN ?
             new LLongAsIntRngDataOutput(out, bytes) :
             new BLongRngDataOutput(out, bytes);
+    }
+
+    /**
+     * Create a new instance to write batches of data from
+     * {@link UniformRandomProvider#nextLong()} to the specified output as two sequential
+     * {@code int} values, low 32-bits then high 32-bits.
+     *
+     * <p>This will output the following bytes:</p>
+     *
+     * <pre>
+     * // Little-endian
+     * 76543210  ->  0123  4567
+     *
+     * // Big-endian
+     * 76543210  ->  3210  7654
+     * </pre>
+     *
+     * <p>This ensures the output from the generator is the original lower then upper order bits
+     * for each endianess.
+     *
+     * @param out Output stream.
+     * @param size Number of values to write.
+     * @param byteOrder Byte order.
+     * @return the data output
+     */
+    @SuppressWarnings("resource")
+    static RngDataOutput ofLongAsLHInt(OutputStream out, int size, ByteOrder byteOrder) {
+        // Ensure the buffer is positive and a factor of 8
+        final int bytes = Math.max(size * 8, 8);
+        return byteOrder == ByteOrder.LITTLE_ENDIAN ?
+            new LLongRngDataOutput(out, bytes) :
+            new BLongAsLoHiIntRngDataOutput(out, bytes);
     }
 }

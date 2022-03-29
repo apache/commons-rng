@@ -108,7 +108,7 @@ The `RNG_test` tool is used to accept raw bits via standard input for testing.
 Test platform Endianness
 ------------------------
 
-The stress test application will output raw binary data for generated integers or longs. 
+The stress test application will output raw binary data for generated integers or longs.
 An integer is 4 bytes and a long is 8 bytes and thus the byte order or [Endianness](https://en.wikipedia.org/wiki/Endianness) of the data
 must be correct for the test application. The stress test application can support either big-endian
 or little-endian format. The application will auto-detect the platform and will default to output
@@ -170,7 +170,7 @@ To run the stress test use the `stress` command and provide the following argume
 | executable | The test tool | dieharder, stdin2testu01, PractRand |
 | ... | Arguments for the test tool | dieharder: -a -g 200 -Y 1 -k 2 <br/> stdin2testu01: SmallCrush, Crush, BigCrush <br/> RNG_test stdin32 -tf 1 -te 0 -tlmin 1KB -tlmax 4TB |
 
-The `stress` command defaults for other options that can be changed, for example the output
+The `stress` command defaults for other options can be changed, for example the output
 results file prefix, the number of concurrent tasks, byte-order or the number of trials per
 generator.
 Use the `--help` option to show the available options.
@@ -250,24 +250,42 @@ The output results can be viewed using the `results` command:
         java -jar target/examples-stress.jar results \
               target/tu_* \
               target/dh_* \
-              target/pr_* \
+              target/pr_*
 
 Various formats are available. Use the `--help` option to show the available options.
 
 Test 64-bit generators
 ----------------------
 
-The available random generators output either 32-bits or 64-bits per cycle. 
+The available random generators output either 32-bits or 64-bits per cycle.
 
 Any application that supports 64-bit generators and should be tested using the `--raw64`
 output mode of the `stress` command. See the example for running tests using **PractRand**
 for details.
 
 Any application that supports 32-bit generators can be tested using different subsets of the
-64-bit output. For example the test applications **Dieharder** and **TestU01** require 32-bit input.
-The standard method for a 64-bit generator is to use the upper and then lower 32-bits of each
-64-bit output. The stress test application has options to use only the upper or the lower 32-bits
-for testing. These can then be bit-reversed or byte-reversed if desired.
+64-bit output using the `--source64` option. For example the test applications **Dieharder**
+and **TestU01** require 32-bit input.
+The standard method for a 64-bit generator is to use the full 64-bits of output in the order
+provided by the Commons RNG core caching implementation of the `nextInt` method. The stress
+test application has options to use the following parts of the 64-bit output:
+
+| source64  | Description |
+| --------- | ---------- |
+| LONG | Use the full 64-bit output. This is equivalent to using the `--raw64` mode. |
+| INT | Use the 32-bit output from the RNG implementation of nextInt. |
+| HI_LO | Use the upper 32-bits, then lower 32-bits of the 64-bit output. |
+| LO_HI | Use the lower 32-bits, then upper 32-bits of the 64-bit output. |
+| HI | Use the upper 32-bits of the 64-bit output. |
+| LO | Use the lower 32-bits of the 64-bit output. |
+
+Note: The default uses an explicit mode rather than INT so that it is recorded in the stress
+test output file. If the RNG uses the default implementation for `nextInt` then output
+from INT should match LO_HI.
+
+On some platforms the LONG setting is matched by a split of the upper and lower parts.
+The binary output from LONG should match LO_HI if using little-endian format;
+it should match HI_LO if using big-endian format.
 
 The `list` command can output available generators by provider type. For example to output the
 64-bit providers to a `rng64.list` file:
@@ -280,11 +298,14 @@ order using **BigCrush**:
 
         java -jar target/examples-stress.jar stress \
               --list rng64.list \
-              --low-bits \
+              --source64 LO \
               --reverse-bits \
               --prefix target/tu_lo_r_ \
               ./stdin2testu01 \
               BigCrush
 
-If a 32-bit provider is used with the `--low-bits` or `--upper-bits` options then an error
-message is shown.
+If a 32-bit provider is used with the `--source64=LONG` or `--raw64` options then
+an error message is shown as this is explicitly for 64-bit output. Other `source64`
+options split the 64-bit output for testing with a 32-bit stress test application. These
+options are ignored for any 32-bit provider; this allows testing 64-bit and 32-bit
+providers in the same batch execution.

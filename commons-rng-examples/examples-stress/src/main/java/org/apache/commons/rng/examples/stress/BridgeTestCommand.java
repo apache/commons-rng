@@ -131,8 +131,8 @@ class BridgeTestCommand implements Callable<Void> {
             // Open the stdin of the process and write to a custom data sink.
             // Note: The 'bridge' command only supports 32-bit data in order to
             // demonstrate passing suitable data for TestU01 BigCrush.
-            final boolean raw64 = false;
-            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, raw64,
+            final Source64Mode source64 = null;
+            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, source64,
                     testingProcess.getOutputStream(), buffer.capacity() * 4, byteOrder)) {
                 sink.write(rng);
             }

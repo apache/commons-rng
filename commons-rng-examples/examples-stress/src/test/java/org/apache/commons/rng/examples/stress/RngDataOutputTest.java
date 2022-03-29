@@ -84,33 +84,54 @@ class RngDataOutputTest {
     }
 
     @Test
-    void testLongAsIntBigEndian() throws IOException {
+    void testLongAsHLIntBigEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
-            // Convert SplitMix64 to an int provider so it is detected as requiring double the
+            // Convert to an int provider so it is detected as requiring double the
             // length output.
-            rng -> new IntProvider() {
-                @Override
-                public int next() {
-                    return rng.nextInt();
-                }
-            },
+            rng -> new HiLoCachingIntProvider(rng),
             RngDataOutputTest::writeInt,
-            RngDataOutput::ofLongAsInt, ByteOrder.BIG_ENDIAN);
+            RngDataOutput::ofLongAsHLInt, ByteOrder.BIG_ENDIAN);
     }
 
     @Test
-    void testLongAsIntLittleEndian() throws IOException {
+    void testLongAsHLIntLittleEndian() throws IOException {
         assertRngOutput(RandomSource.SPLIT_MIX_64,
             // Convert SplitMix64 to an int provider so it is detected as requiring double the
             // length output. Then reverse the bytes.
-            rng -> new IntProvider() {
+            rng -> new HiLoCachingIntProvider(rng) {
                 @Override
                 public int next() {
-                    return Integer.reverseBytes(rng.nextInt());
+                    return Integer.reverseBytes(super.next());
                 }
             },
             RngDataOutputTest::writeInt,
-            RngDataOutput::ofLongAsInt, ByteOrder.LITTLE_ENDIAN);
+            RngDataOutput::ofLongAsHLInt, ByteOrder.LITTLE_ENDIAN);
+    }
+
+
+    @Test
+    void testLongAsLHIntBigEndian() throws IOException {
+        assertRngOutput(RandomSource.SPLIT_MIX_64,
+            // Convert to an int provider so it is detected as requiring double the
+            // length output.
+            rng -> new LoHiCachingIntProvider(rng),
+            RngDataOutputTest::writeInt,
+            RngDataOutput::ofLongAsLHInt, ByteOrder.BIG_ENDIAN);
+    }
+
+    @Test
+    void testLongAsLHIntLittleEndian() throws IOException {
+        assertRngOutput(RandomSource.SPLIT_MIX_64,
+            // Convert to an int provider so it is detected as requiring double the
+            // length output. Then reverse the bytes.
+            rng -> new LoHiCachingIntProvider(rng) {
+                @Override
+                public int next() {
+                    return Integer.reverseBytes(super.next());
+                }
+            },
+            RngDataOutputTest::writeInt,
+            RngDataOutput::ofLongAsLHInt, ByteOrder.LITTLE_ENDIAN);
     }
 
     private static void writeInt(DataOutputStream sink, UniformRandomProvider rng) {
@@ -211,5 +232,57 @@ class RngDataOutputTest {
             }
         }
         return out.toByteArray();
+    }
+
+    private static class LoHiCachingIntProvider extends IntProvider {
+        private long source = -1;
+        private final UniformRandomProvider rng;
+
+        LoHiCachingIntProvider(UniformRandomProvider rng) {
+            this.rng = rng;
+        }
+
+        @Override
+        public int next() {
+            long next = source;
+            if (next < 0) {
+                // refill
+                next = rng.nextLong();
+                // store hi
+                source = next >>> 32;
+                // extract low
+                return (int) next;
+            }
+            final int v = (int) next;
+            // reset
+            source = -1;
+            return v;
+        }
+    }
+
+    private static class HiLoCachingIntProvider extends IntProvider {
+        private long source = -1;
+        private final UniformRandomProvider rng;
+
+        HiLoCachingIntProvider(UniformRandomProvider rng) {
+            this.rng = rng;
+        }
+
+        @Override
+        public int next() {
+            long next = source;
+            if (next < 0) {
+                // refill
+                next = rng.nextLong();
+                // store low
+                source = next & 0xffff_ffffL;
+                // extract hi
+                return (int) (next >>> 32);
+            }
+            final int v = (int) next;
+            // reset
+            source = -1;
+            return v;
+        }
     }
 }

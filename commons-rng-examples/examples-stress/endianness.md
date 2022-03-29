@@ -59,12 +59,12 @@ This will create a single jar file with all the dependencies in the `target` dir
 contains a simple command to output data from a random generator. To output data in both text
 and binary format use the following commands:
 
-        java -jar target/examples-stress.jar output SPLIT_MIX_64 -s 1 -n 100000 \
+        java -jar target/examples-stress.jar output KISS -s 1 -n 2048000 \
                 -f DIEHARDER -o test.dh
-        java -jar target/examples-stress.jar output SPLIT_MIX_64 -s 1 -n 100000 \
-                -f BINARY -o test.big -b big_endian
-        java -jar target/examples-stress.jar output SPLIT_MIX_64 -s 1 -n 100000 \
-                -f BINARY -o test.little -b little_endian
+        java -jar target/examples-stress.jar output KISS -s 1 -n 1000 \
+                -f BINARY -o test.big -b big_endian --buffer-size 8192
+        java -jar target/examples-stress.jar output KISS -s 1 -n 1000 \
+                -f BINARY -o test.little -b little_endian --buffer-size 8192
 
 This should produce the following output files:
 
@@ -73,6 +73,8 @@ This should produce the following output files:
 | test.dh | Text file in the Dieharder format (unsigned integer data) |
 | test.big | Binary file using the big-endian format |
 | test.little | Binary file using the little-endian format |
+
+Note that the `-n` parameter is the count of numbers in text output but the count of buffers in binary output. The example above has 2048 4-byte integers per 8192 buffer. The `-n` parameter has been adjusted so the output numbers are the same.
 
 The data can then be used to run a test within **Dieharder**:
 
@@ -89,10 +91,10 @@ written direct to dieharder. For the birthdays test (`-d 0` option) 20,000,000 s
 In the following example the stress test application directly writes to `stdout` which is then
 piped to the `dieharder` application which reads using `stdin` (`-g 200` option):
 
-        java -jar target/examples-stress.jar output SPLIT_MIX_64 -s 1 -n 20000000 \
+        java -jar target/examples-stress.jar output KISS -s 1 -n 20000000 \
                 -f DIEHARDER -o test.dh
         dieharder -g 202 -d 0 -f test.dh
-        java -jar target/examples-stress.jar output SPLIT_MIX_64 -s 1 -n 20000000 \
+        java -jar target/examples-stress.jar output KISS -s 1 -n 10000 \
                 -f BINARY -b little_endian | dieharder -g 200 -d 0
 
 If the results are not the same then the second command can be repeated with `-b big_endian`.
@@ -150,7 +152,7 @@ integer value and the signed integer value. The contents will be similar to:
         01011100 10001111 11110001 11000001  1552937409  1552937409
         10110000 01110101 10010011 00011100  2960495388 -1334471908
 
-The `stdin2testu01` has been written to output the same format when using the `raw32` mode.
+The `stdin2testu01` has been written to output in the same format when using the `raw32` mode.
 If the data has been correctly read the `bridge.data` and `bridge.out` should match.
 If the endianess is incorrect then the data sent by the Java application will not match the
 data read by the sub-process. For example to swap the endianness use the `-b` option:
@@ -215,7 +217,7 @@ The number data in the file should be identical if the endianness was correctly 
 The only difference should be the the header and footer added by the `stress` command
 to the results file. If the endianness is incorrect for the `output` command then the number
 data will not match. Note that the `output` command by default uses big endian for consistency
-across all platforms.
+across all platforms; the `stress` command uses the native byte order of the platform.
 
 An equivalent 64-bit output would use the `--raw64` option for each command:
 

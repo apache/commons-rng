@@ -126,24 +126,21 @@ class OutputCommand implements Callable<Void> {
             description = {"Reverse the bits in the data (default: ${DEFAULT-VALUE})."})
     private boolean reverseBits;
 
-    /** Flag to use the upper 32-bits from the 64-bit long output. */
-    @Option(names = {"--high-bits"},
-            description = {"Use the upper 32-bits from the 64-bit long output.",
-                           "Takes precedent over --low-bits."})
-    private boolean longHighBits;
-
-    /** Flag to use the lower 32-bits from the 64-bit long output. */
-    @Option(names = {"--low-bits"},
-            description = {"Use the lower 32-bits from the 64-bit long output."})
-    private boolean longLowBits;
-
     /** Flag to use 64-bit long output. */
     @Option(names = {"--raw64"},
             description = {"Use 64-bit output (default is 32-bit).",
                            "This is ignored if not a native 64-bit generator.",
-                           "In 32-bit mode the output uses the upper then lower bits of 64-bit " +
-                           "generators sequentially."})
+                           "Set to true sets the source64 mode to LONG."})
     private boolean raw64;
+
+    /** Output mode for 64-bit long output. */
+    @Option(names = {"--source64"},
+            description = {"Output mode for 64-bit generators (default: ${DEFAULT-VALUE}).",
+                           "This is ignored if not a native 64-bit generator.",
+                           "In 32-bit mode the output uses a combination of upper and " +
+                           "lower bits of the 64-bit value.",
+                           "Valid values: ${COMPLETION-CANDIDATES}."})
+    private Source64Mode source64 = RNGUtils.getSource64Default();
 
     /**
      * The output mode for existing files.
@@ -166,12 +163,20 @@ class OutputCommand implements Callable<Void> {
         final Object objectSeed = createSeed();
         UniformRandomProvider rng = createRNG(objectSeed);
 
+        // raw64 flag overrides the source64 mode
+        if (raw64) {
+            source64 = Source64Mode.LONG;
+        }
+        if (source64 == Source64Mode.LONG && !(rng instanceof RandomLongSource)) {
+            throw new ApplicationException("Not a 64-bit RNG: " + rng);
+        }
+
         // Upper or lower bits from 64-bit generators must be created first.
-        // This will throw if not a 64-bit generator.
-        if (longHighBits) {
-            rng = RNGUtils.createLongUpperBitsIntProvider(rng);
-        } else if (longLowBits) {
-            rng = RNGUtils.createLongLowerBitsIntProvider(rng);
+        // Note this does not test source64 != Source64Mode.LONG as the full long
+        // output split into hi-lo or lo-hi is supported by the RngDataOutput.
+        if (rng instanceof RandomLongSource &&
+            (source64 == Source64Mode.HI || source64 == Source64Mode.LO || source64 == Source64Mode.INT)) {
+            rng = RNGUtils.createIntProvider((UniformRandomProvider & RandomLongSource) rng, source64);
         }
         if (reverseBits) {
             rng = RNGUtils.createReverseBitsProvider(rng);
@@ -305,9 +310,9 @@ class OutputCommand implements Callable<Void> {
      */
     private UniformRandomProvider toOutputFormat(UniformRandomProvider rng) {
         UniformRandomProvider convertedRng = rng;
-        if (rng instanceof RandomLongSource && !raw64) {
+        if (rng instanceof RandomLongSource && source64 != Source64Mode.LONG) {
             // Convert to 32-bit generator
-            convertedRng = RNGUtils.createIntProvider(rng);
+            convertedRng = RNGUtils.createIntProvider((UniformRandomProvider & RandomLongSource) rng, source64);
         }
         if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
             convertedRng = RNGUtils.createReverseBytesProvider(convertedRng);
@@ -421,7 +426,7 @@ class OutputCommand implements Callable<Void> {
         // If count is not positive use max value.
         // This is effectively unlimited: program must be killed.
         final long limit = (count < 1) ? Long.MAX_VALUE : count;
-        try (RngDataOutput data = RNGUtils.createDataOutput(rng, raw64, out, bufferSize, byteOrder)) {
+        try (RngDataOutput data = RNGUtils.createDataOutput(rng, source64, out, bufferSize, byteOrder)) {
             for (long c = 0; c < limit; c++) {
                 data.write(rng);
             }

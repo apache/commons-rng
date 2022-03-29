@@ -153,24 +153,38 @@ class StressTestCommand implements Callable<Void> {
                            "when passing using the standard sequence."})
     private boolean reverseBits;
 
-    /** Flag to use the upper 32-bits from the 64-bit long output. */
-    @Option(names = {"--high-bits"},
-            description = {"Use the upper 32-bits from the 64-bit long output.",
-                           "Takes precedent over --low-bits."})
-    private boolean longHighBits;
-
-    /** Flag to use the lower 32-bits from the 64-bit long output. */
-    @Option(names = {"--low-bits"},
-            description = {"Use the lower 32-bits from the 64-bit long output."})
-    private boolean longLowBits;
-
     /** Flag to use 64-bit long output. */
     @Option(names = {"--raw64"},
             description = {"Use 64-bit output (default is 32-bit).",
-                           "This requires a 64-bit testing application and native 64-bit generators.",
-                           "In 32-bit mode the output uses the upper then lower bits of 64-bit " +
-                           "generators sequentially, each appropriately byte reversed for the platform."})
+                           "This is ignored if not a native 64-bit generator.",
+                           "Set to true sets the source64 mode to LONG."})
     private boolean raw64;
+
+    /** Output mode for 64-bit long output.
+     *
+     * <p>Note: The default is set as the default caching implementation.
+     * It passes the full output of the RNG to the stress test application.
+     * Any combination random sources are performed on the full 64-bit output.
+     *
+     * <p>If using INT this will use the RNG's nextInt method.
+     * Any combination random sources are performed on the 32-bit output. Without
+     * a combination random source the output should be the same as the default if
+     * the generator uses the default caching implementation.
+     *
+     * <p>LONG and LO_HI should match binary output when LITTLE_ENDIAN. LONG and HI_LO
+     * should match binary output when BIG_ENDIAN.
+     *
+     * <p>Changing from HI_LO to LO_HI should not effect the stress test as many values are consumed
+     * per test. Using HI or LO may have a different outcome as parts of the generator output
+     * may be weak, e.g. the lower bits of linear congruential generators.
+     */
+    @Option(names = {"--source64"},
+            description = {"Output mode for 64-bit generators (default: ${DEFAULT-VALUE}).",
+                           "This is ignored if not a native 64-bit generator.",
+                           "In 32-bit mode the output uses a combination of upper and " +
+                           "lower bits of the 64-bit value.",
+                           "Valid values: ${COMPLETION-CANDIDATES}."})
+    private Source64Mode source64 = RNGUtils.getSource64Default();
 
     /** The random seed as a byte[]. */
     @Option(names = {"-x", "--hex-seed"},
@@ -481,6 +495,11 @@ class StressTestCommand implements Callable<Void> {
                                        String basePath,
                                        Iterable<StressTestData> stressTestData,
                                        ProgressTracker progressTracker) {
+        // raw64 flag overrides the source64 mode
+        if (raw64) {
+            source64 = Source64Mode.LONG;
+        }
+
         final List<Runnable> tasks = new ArrayList<>();
         for (final StressTestData testData : stressTestData) {
             for (int trial = 1; trial <= testData.getTrials(); trial++) {
@@ -501,12 +520,17 @@ class StressTestCommand implements Callable<Void> {
                 final byte[] seed = createSeed(testData.getRandomSource());
                 UniformRandomProvider rng = testData.createRNG(seed);
 
-                // Upper or lower bits from 64-bit generators must be created first.
-                // This will throw if not a 64-bit generator.
-                if (longHighBits) {
-                    rng = RNGUtils.createLongUpperBitsIntProvider(rng);
-                } else if (longLowBits) {
-                    rng = RNGUtils.createLongLowerBitsIntProvider(rng);
+                if (source64 == Source64Mode.LONG && !(rng instanceof RandomLongSource)) {
+                    throw new ApplicationException("Not a 64-bit RNG: " + rng);
+                }
+
+                // Upper or lower bits from 64-bit generators must be created first before
+                // any further combination operators.
+                // Note this does not test source64 != Source64Mode.LONG as the full long
+                // output split into hi-lo or lo-hi is supported by the RngDataOutput.
+                if (rng instanceof RandomLongSource &&
+                    (source64 == Source64Mode.HI || source64 == Source64Mode.LO || source64 == Source64Mode.INT)) {
+                    rng = RNGUtils.createIntProvider((UniformRandomProvider & RandomLongSource) rng, source64);
                 }
 
                 // Combination generators. Mainly used for testing.
@@ -669,7 +693,7 @@ class StressTestCommand implements Callable<Void> {
             //    of a new one)
             // -- There are no pending tasks (i.e. the final submission or the end of a final task)
             if (completed >= total ||
-                (current >= nextReportTimestamp && (running == parallelTasks || pending == 0))) {
+                (current >= nextReportTimestamp && running == parallelTasks || pending == 0)) {
                 // Report
                 nextReportTimestamp = current + PROGRESS_INTERVAL;
                 final StringBuilder sb = createStringBuilderWithTimestamp(current, pending, running, completed);
@@ -991,7 +1015,7 @@ class StressTestCommand implements Callable<Void> {
             final Process testingProcess = builder.start();
 
             // Use a custom data output to write the RNG.
-            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, cmd.raw64,
+            try (RngDataOutput sink = RNGUtils.createDataOutput(rng, cmd.source64,
                 testingProcess.getOutputStream(), cmd.bufferSize, cmd.byteOrder)) {
                 for (;;) {
                     sink.write(rng);
@@ -1040,7 +1064,7 @@ class StressTestCommand implements Callable<Void> {
                 .append(C).append("Native byte-order: ").append(ByteOrder.nativeOrder()).append(N)
                 .append(C).append("Output byte-order: ").append(cmd.byteOrder).append(N);
             if (rng instanceof RandomLongSource) {
-                sb.append(C).append("64-bit output: ").append(cmd.raw64).append(N);
+                sb.append(C).append("64-bit output: ").append(cmd.source64).append(N);
             }
             sb.append(C).append(N)
                 .append(C).append("Analyzer: ");

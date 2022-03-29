@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 final class RNGUtils {
     /** Name prefix for bit-reversed RNGs. */
     private static final String BYTE_REVERSED = "Byte-reversed ";
-    /** Name prefix for byte-reversed RNGs. */
+    /** Name prefix for bit-reversed RNGs. */
     private static final String BIT_REVERSED = "Bit-reversed ";
     /** Name prefix for hashcode mixed RNGs. */
     private static final String HASH_CODE = "HashCode ^ ";
@@ -41,13 +41,24 @@ final class RNGUtils {
     private static final String TLR_MIXED = "ThreadLocalRandom ^ ";
     /** Name of xor operator for xor mixed RNGs. */
     private static final String XOR = " ^ ";
+    /** Message for an unrecognised source64 mode. */
+    private static final String UNRECOGNISED_SOURCE_64_MODE = "Unrecognised source64 mode: ";
     /** Message for an unrecognised native output type. */
     private static final String UNRECOGNISED_NATIVE_TYPE = "Unrecognised native output type: ";
-    /** Message when not a RandomLongSource. */
-    private static final String NOT_LONG_SOURCE = "Not a 64-bit long generator: ";
+    /** The source64 mode for the default LongProvider caching implementation. */
+    private static final Source64Mode SOURCE_64_DEFAULT = Source64Mode.LO_HI;
 
     /** No public construction. */
     private RNGUtils() {}
+
+    /**
+     * Gets the source64 mode for the default caching implementation in {@link LongProvider}.
+     *
+     * @return the source64 default mode
+     */
+    static Source64Mode getSource64Default() {
+        return SOURCE_64_DEFAULT;
+    }
 
     /**
      * Wrap the random generator with a new instance that will reverse the byte order of
@@ -132,6 +143,35 @@ final class RNGUtils {
     }
 
     /**
+     * Wrap the {@link RandomLongSource} with an {@link IntProvider} that will use the
+     * specified part of {@link RandomLongSource#next()} to create the int value.
+     *
+     * @param <R> The type of the generator.
+     * @param rng The random generator.
+     * @param mode the mode
+     * @return the int random generator.
+     * @throws ApplicationException If the input source native type is not 64-bit.
+     */
+    static <R extends RandomLongSource & UniformRandomProvider>
+            UniformRandomProvider createIntProvider(final R rng, Source64Mode mode) {
+        switch (mode) {
+        case INT:
+            return createIntProvider(rng);
+        case LO_HI:
+            return createLongLowerUpperBitsIntProvider(rng);
+        case HI_LO:
+            return createLongUpperLowerBitsIntProvider(rng);
+        case HI:
+            return createLongUpperBitsIntProvider(rng);
+        case LO:
+            return createLongLowerBitsIntProvider(rng);
+        case LONG:
+        default:
+            throw new IllegalArgumentException("Unsupported mode " + mode);
+        }
+    }
+
+    /**
      * Wrap the random generator with an {@link IntProvider} that will use
      * {@link UniformRandomProvider#nextInt()}.
      * An input {@link RandomIntSource} is returned unmodified.
@@ -139,7 +179,7 @@ final class RNGUtils {
      * @param rng The random generator.
      * @return the int random generator.
      */
-    static UniformRandomProvider createIntProvider(final UniformRandomProvider rng) {
+    private static UniformRandomProvider createIntProvider(final UniformRandomProvider rng) {
         if (!(rng instanceof RandomIntSource)) {
             return new IntProvider() {
                 @Override
@@ -157,6 +197,78 @@ final class RNGUtils {
     }
 
     /**
+     * Wrap the random generator with an {@link IntProvider} that will use the lower then upper
+     * 32-bits from {@link UniformRandomProvider#nextLong()}.
+     * An input {@link RandomIntSource} is returned unmodified.
+     *
+     * @param rng The random generator.
+     * @return the int random generator.
+     */
+    private static UniformRandomProvider createLongLowerUpperBitsIntProvider(final RandomLongSource rng) {
+        return new IntProvider() {
+            private long source = -1;
+
+            @Override
+            public int next() {
+                long next = source;
+                if (next < 0) {
+                    // refill
+                    next = rng.next();
+                    // store hi
+                    source = next >>> 32;
+                    // extract low
+                    return (int) next;
+                }
+                final int v = (int) next;
+                // reset
+                source = -1;
+                return v;
+            }
+
+            @Override
+            public String toString() {
+                return "Long lower-upper bits " + rng.toString();
+            }
+        };
+    }
+
+    /**
+     * Wrap the random generator with an {@link IntProvider} that will use the lower then upper
+     * 32-bits from {@link UniformRandomProvider#nextLong()}.
+     * An input {@link RandomIntSource} is returned unmodified.
+     *
+     * @param rng The random generator.
+     * @return the int random generator.
+     */
+    private static UniformRandomProvider createLongUpperLowerBitsIntProvider(final RandomLongSource rng) {
+        return new IntProvider() {
+            private long source = -1;
+
+            @Override
+            public int next() {
+                long next = source;
+                if (next < 0) {
+                    // refill
+                    next = rng.next();
+                    // store low
+                    source = next & 0xffff_ffffL;
+                    // extract hi
+                    return (int) (next >>> 32);
+                }
+                final int v = (int) next;
+                // reset
+                source = -1;
+                return v;
+            }
+
+            @Override
+            public String toString() {
+                return "Long upper-lower bits " + rng.toString();
+            }
+        };
+    }
+
+    /**
      * Wrap the random generator with an {@link IntProvider} that will use the upper
      * 32-bits of the {@code long} from {@link UniformRandomProvider#nextLong()}.
      * The input must be a {@link RandomLongSource}.
@@ -165,21 +277,18 @@ final class RNGUtils {
      * @return the upper bits random generator.
      * @throws ApplicationException If the input source native type is not 64-bit.
      */
-    static UniformRandomProvider createLongUpperBitsIntProvider(final UniformRandomProvider rng) {
-        if (rng instanceof RandomLongSource) {
-            return new IntProvider() {
-                @Override
-                public int next() {
-                    return (int) (rng.nextLong() >>> 32);
-                }
+    private static UniformRandomProvider createLongUpperBitsIntProvider(final RandomLongSource rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return (int) (rng.next() >>> 32);
+            }
 
-                @Override
-                public String toString() {
-                    return "Long upper-bits " + rng.toString();
-                }
-            };
-        }
-        throw new ApplicationException(NOT_LONG_SOURCE + rng);
+            @Override
+            public String toString() {
+                return "Long upper-bits " + rng.toString();
+            }
+        };
     }
 
     /**
@@ -191,21 +300,18 @@ final class RNGUtils {
      * @return the lower bits random generator.
      * @throws ApplicationException If the input source native type is not 64-bit.
      */
-    static UniformRandomProvider createLongLowerBitsIntProvider(final UniformRandomProvider rng) {
-        if (rng instanceof RandomLongSource) {
-            return new IntProvider() {
-                @Override
-                public int next() {
-                    return (int) rng.nextLong();
-                }
+    private static UniformRandomProvider createLongLowerBitsIntProvider(final RandomLongSource rng) {
+        return new IntProvider() {
+            @Override
+            public int next() {
+                return (int) rng.next();
+            }
 
-                @Override
-                public String toString() {
-                    return "Long lower-bits " + rng.toString();
-                }
-            };
-        }
-        throw new ApplicationException(NOT_LONG_SOURCE + rng);
+            @Override
+            public String toString() {
+                return "Long lower-bits " + rng.toString();
+            }
+        };
     }
 
     /**
@@ -360,32 +466,60 @@ final class RNGUtils {
      *
      * <p>If the RNG is a {@link RandomLongSource} then the byte output can be 32-bit or 64-bit.
      * If 32-bit then the 64-bit output will be written as if 2 {@code int} values were generated
-     * sequentially from the upper then lower 32-bits of the {@code long}. This setting is
-     * significant depending on the byte order. If using the Java standard big-endian
-     * representation the flag has no effect and the output will be the same. If using little
-     * endian the output bytes will be written as:</p>
+     * sequentially from the {@code long} (order depends on the source64 mode). This setting is
+     * significant depending on the byte order. For example for a high-low source64 mode and
+     * using the Java standard big-endian representation the output is the same as the raw 64-bit
+     * output. If using little endian the output bytes will be written as:</p>
      *
      * <pre>
      * 76543210  ->  4567  0123
      * </pre>
      *
+     * <h2>Note</h2>
+     *
+     * <p>The output from an implementation of RandomLongSource from the RNG core package
+     * may output the long bits as integers: in high-low order; in low-high order; using
+     * only the low bits; using only the high bits; or other combinations. This method
+     * allows testing the long output as if it were two int outputs, i.e. using the full
+     * bit output of a long provider with a stress test application that targets 32-bit
+     * random values (e.g. Test U01).
+     *
+     * <p>The results of stress testing can be used to determine if the provider
+     * implementation can use the upper, lower or both parts of the long output for int
+     * generation. In the case of the combined upper-lower output it is not expected that
+     * the order low-high or high-low is important given the stress test will consume
+     * thousands of numbers per test. The default 32-bit mode for a 64-bit source is high-low
+     * for backwards compatibility.
+     *
      * @param rng The random generator.
-     * @param raw64 Set to true for 64-bit byte output.
+     * @param source64 The output mode for a 64-bit source
      * @param out Output stream.
      * @param byteSize Number of bytes values to write.
      * @param byteOrder Byte order.
      * @return the data output
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognised; or if
+     * the mode for a RandomLongSource is not one of: raw; hi-lo; or lo-hi.
      */
-    static RngDataOutput createDataOutput(final UniformRandomProvider rng, boolean raw64,
+    static RngDataOutput createDataOutput(final UniformRandomProvider rng, Source64Mode source64,
         OutputStream out, int byteSize, ByteOrder byteOrder) {
         if (rng instanceof RandomIntSource) {
             return RngDataOutput.ofInt(out, byteSize / 4, byteOrder);
         }
         if (rng instanceof RandomLongSource) {
-            return raw64 ?
-                RngDataOutput.ofLong(out, byteSize / 8, byteOrder) :
-                RngDataOutput.ofLongAsInt(out, byteSize / 8, byteOrder);
+            switch (source64) {
+            case HI_LO:
+                return RngDataOutput.ofLongAsHLInt(out, byteSize / 8, byteOrder);
+            case LO_HI:
+                return RngDataOutput.ofLongAsLHInt(out, byteSize / 8, byteOrder);
+            case LONG:
+                return RngDataOutput.ofLong(out, byteSize / 8, byteOrder);
+            // Note other options should have already been converted to an IntProvider
+            case INT:
+            case LO:
+            case HI:
+            default:
+                throw new ApplicationException(UNRECOGNISED_SOURCE_64_MODE + source64);
+            }
         }
         throw new ApplicationException(UNRECOGNISED_NATIVE_TYPE + rng);
     }
