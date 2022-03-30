@@ -19,7 +19,6 @@ package org.apache.commons.rng.simple;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.io.IOException;
