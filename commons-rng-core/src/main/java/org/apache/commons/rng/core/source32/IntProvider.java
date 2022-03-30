@@ -35,7 +35,7 @@ public abstract class IntProvider
     /**
      * Provides a bit source for booleans.
      *
-     * <p>A cached value from a call to {@link #nextInt()}.
+     * <p>A cached value from a call to {@link #next()}.
      *
      * <p>Only stores 31-bits when full as 1 bit has already been consumed.
      * The sign bit is a flag that shifts down so the source eventually equals 1
@@ -117,19 +117,19 @@ public abstract class IntProvider
     /** {@inheritDoc} */
     @Override
     public double nextDouble() {
-        return NumberFactory.makeDouble(nextInt(), nextInt());
+        return NumberFactory.makeDouble(next(), next());
     }
 
     /** {@inheritDoc} */
     @Override
     public float nextFloat() {
-        return NumberFactory.makeFloat(nextInt());
+        return NumberFactory.makeFloat(next());
     }
 
     /** {@inheritDoc} */
     @Override
     public long nextLong() {
-        return NumberFactory.makeLong(nextInt(), nextInt());
+        return NumberFactory.makeLong(next(), next());
     }
 
     /** {@inheritDoc} */

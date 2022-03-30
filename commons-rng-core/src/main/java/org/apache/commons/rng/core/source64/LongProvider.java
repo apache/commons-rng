@@ -38,7 +38,7 @@ public abstract class LongProvider
     /**
      * Provides a bit source for booleans.
      *
-     * <p>A cached value from a call to {@link #nextLong()}.
+     * <p>A cached value from a call to {@link #next()}.
      *
      * <p>Only stores 63-bits when full as 1 bit has already been consumed.
      * The sign bit is a flag that shifts down so the source eventually equals 1
@@ -49,7 +49,7 @@ public abstract class LongProvider
     /**
      * Provides a source for ints.
      *
-     * <p>A cached half-value value from a call to {@link #nextLong()}.
+     * <p>A cached half-value value from a call to {@link #next()}.
      * The int is stored in the lower 32 bits with zeros in the upper bits.
      * When empty this is set to negative to trigger a refill.
      */
@@ -135,7 +135,7 @@ public abstract class LongProvider
     /** {@inheritDoc} */
     @Override
     public double nextDouble() {
-        return NumberFactory.makeDouble(nextLong());
+        return NumberFactory.makeDouble(next());
     }
 
     /** {@inheritDoc} */
