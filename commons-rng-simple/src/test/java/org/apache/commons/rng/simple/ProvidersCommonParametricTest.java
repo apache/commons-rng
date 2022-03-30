@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -382,17 +383,12 @@ class ProvidersCommonParametricTest {
      * @param sampleSize Number of random values generated.
      * @param generator Random generator.
      */
-    private void checkNextIntegerInRange(final UniformRandomProvider rng,
-                                         final int max,
-                                         int sampleSize) {
-        final Callable<Integer> nextMethod = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return rng.nextInt(max);
-            }
-        };
+    private static void checkNextIntegerInRange(final UniformRandomProvider rng,
+                                                final int max,
+                                                int sampleSize) {
+        final LongSupplier nextMethod = () -> rng.nextInt(max);
 
-        checkNextInRange(max, sampleSize, nextMethod, rng);
+        checkNextInRange(rng, max, sampleSize, nextMethod);
     }
 
     /**
@@ -403,22 +399,21 @@ class ProvidersCommonParametricTest {
      * Repeat tests are performed at the 1% level and the total number of failed
      * tests is tested at the 0.5% significance level.
      *
-     * @param max Upper bound.
+     * @param n Upper bound.
      * @param nextMethod method to call.
      * @param sampleSize Number of random values generated.
      * @param generator Random generator.
      */
-    private static <T extends Number> void checkNextInRange(T max,
-                                                            int sampleSize,
-                                                            Callable<T> nextMethod,
-                                                            UniformRandomProvider generator) {
+    private static void checkNextInRange(UniformRandomProvider generator,
+                                         long n,
+                                         int sampleSize,
+                                         LongSupplier nextMethod) {
         final int numTests = 500;
 
         // Do not change (statistical test assumes that dof = 9).
         final int numBins = 10; // dof = numBins - 1
 
         // Set up bins.
-        final long n = max.longValue();
         final long[] binUpperBounds = new long[numBins];
         final double step = n / (double) numBins;
         for (int k = 0; k < numBins; k++) {
@@ -450,7 +445,7 @@ class ProvidersCommonParametricTest {
             for (int i = 0; i < numTests; i++) {
                 Arrays.fill(observed, 0);
                 SAMPLE: for (int j = 0; j < sampleSize; j++) {
-                    final long value = nextMethod.call().longValue();
+                    final long value = nextMethod.getAsLong();
                     Assertions.assertTrue(value >= 0 && value < n, "Range");
 
                     for (int k = 0; k < lastDecileIndex; k++) {

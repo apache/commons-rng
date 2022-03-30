@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -381,15 +382,10 @@ class ProvidersCommonParametricTest {
      * @param max Upper bound.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextIntegerInRange(final UniformRandomProvider generator,
-                                         final int max,
-                                         int sampleSize) {
-        final Callable<Integer> nextMethod = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return generator.nextInt(max);
-            }
-        };
+    private static void checkNextIntegerInRange(final UniformRandomProvider generator,
+                                                final int max,
+                                                int sampleSize) {
+        final LongSupplier nextMethod = () -> generator.nextInt(max);
 
         checkNextInRange(generator, max, sampleSize, nextMethod);
     }
@@ -401,15 +397,10 @@ class ProvidersCommonParametricTest {
      * @param max Upper bound.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextLongInRange(final UniformRandomProvider generator,
-                                      long max,
-                                      int sampleSize) {
-        final Callable<Long> nextMethod = new Callable<Long>() {
-            @Override
-            public Long call() throws Exception {
-                return generator.nextLong(max);
-            }
-        };
+    private static void checkNextLongInRange(final UniformRandomProvider generator,
+                                             long max,
+                                             int sampleSize) {
+        final LongSupplier nextMethod = () -> generator.nextLong(max);
 
         checkNextInRange(generator, max, sampleSize, nextMethod);
     }
@@ -420,15 +411,10 @@ class ProvidersCommonParametricTest {
      * @param generator Generator.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextFloat(final UniformRandomProvider generator,
-                                int sampleSize) {
+    private static void checkNextFloat(final UniformRandomProvider generator,
+                                       int sampleSize) {
         final int max = 1234;
-        final Callable<Integer> nextMethod = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return (int) (max * generator.nextFloat());
-            }
-        };
+        final LongSupplier nextMethod = () -> (int) (max * generator.nextFloat());
 
         checkNextInRange(generator, max, sampleSize, nextMethod);
     }
@@ -439,15 +425,10 @@ class ProvidersCommonParametricTest {
      * @param generator Generator.
      * @param sampleSize Number of random values generated.
      */
-    private void checkNextDouble(final UniformRandomProvider generator,
-                                 int sampleSize) {
+    private static void checkNextDouble(final UniformRandomProvider generator,
+                                        int sampleSize) {
         final int max = 578;
-        final Callable<Integer> nextMethod = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                return (int) (max * generator.nextDouble());
-            }
-        };
+        final LongSupplier nextMethod = () -> (int) (max * generator.nextDouble());
 
         checkNextInRange(generator, max, sampleSize, nextMethod);
     }
@@ -461,21 +442,20 @@ class ProvidersCommonParametricTest {
      * tests is tested at the 0.5% significance level.
      *
      * @param generator Generator.
-     * @param max Upper bound.
+     * @param n Upper bound.
      * @param nextMethod method to call.
      * @param sampleSize Number of random values generated.
      */
-    private <T extends Number> void checkNextInRange(final UniformRandomProvider generator,
-                                                     T max,
-                                                     int sampleSize,
-                                                     Callable<T> nextMethod) {
+    private static void checkNextInRange(final UniformRandomProvider generator,
+                                         long n,
+                                         int sampleSize,
+                                         LongSupplier nextMethod) {
         final int numTests = 500;
 
         // Do not change (statistical test assumes that dof = 9).
         final int numBins = 10; // dof = numBins - 1
 
         // Set up bins.
-        final long n = max.longValue();
         final long[] binUpperBounds = new long[numBins];
         final double step = n / (double) numBins;
         for (int k = 0; k < numBins; k++) {
@@ -507,7 +487,7 @@ class ProvidersCommonParametricTest {
             for (int i = 0; i < numTests; i++) {
                 Arrays.fill(observed, 0);
                 SAMPLE: for (int j = 0; j < sampleSize; j++) {
-                    final long value = nextMethod.call().longValue();
+                    final long value = nextMethod.getAsLong();
                     Assertions.assertTrue(value >= 0 && value < n, "Range");
 
                     for (int k = 0; k < lastDecileIndex; k++) {
