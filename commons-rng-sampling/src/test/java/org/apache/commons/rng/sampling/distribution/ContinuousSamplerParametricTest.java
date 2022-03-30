@@ -18,6 +18,7 @@ package org.apache.commons.rng.sampling.distribution;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Assertions;
@@ -114,9 +115,10 @@ class ContinuousSamplerParametricTest {
         if (numFailures > 3) { // Test will fail with 0.16% probability
             Assertions.fail(String.format(
                     "%s: Too many failures for sample size = %d " +
-                    " (%d out of %d tests failed, chi2 > %.3f=%s)",
+                    "(%d out of %d tests failed, chi2 > %.3f=%s)",
                     sampler, sampleSize, numFailures, numTests, chi2CriticalValue,
-                    Arrays.toString(failedStat.toArray(new Double[0]))));
+                    failedStat.stream().map(d -> String.format("%.3f", d))
+                              .collect(Collectors.joining(", ", "[", "]"))));
         }
     }
 }

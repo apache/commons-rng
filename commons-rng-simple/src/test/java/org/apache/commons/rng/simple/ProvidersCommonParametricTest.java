@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
@@ -440,21 +441,25 @@ class ProvidersCommonParametricTest {
         final int[] observed = new int[numBins];
         // Chi-square critical value with 9 degrees of freedom
         // and 1% significance level.
-        final double chi2CriticalValue = 21.67;
+        final double chi2CriticalValue = 21.665994333461924;
 
+        // For storing chi2 larger than the critical value.
+        final List<Double> failedStat = new ArrayList<>();
         try {
+            final int lastDecileIndex = numBins - 1;
             for (int i = 0; i < numTests; i++) {
                 Arrays.fill(observed, 0);
-                for (int j = 0; j < sampleSize; j++) {
+                SAMPLE: for (int j = 0; j < sampleSize; j++) {
                     final long value = nextMethod.call().longValue();
                     Assertions.assertTrue(value >= 0 && value < n, "Range");
 
-                    for (int k = 0; k < numBins; k++) {
+                    for (int k = 0; k < lastDecileIndex; k++) {
                         if (value < binUpperBounds[k]) {
                             ++observed[k];
-                            break;
+                            continue SAMPLE;
                         }
                     }
+                    ++observed[lastDecileIndex];
                 }
 
                 // Compute chi-square.
@@ -466,6 +471,7 @@ class ProvidersCommonParametricTest {
 
                 // Statistics check.
                 if (chi2 > chi2CriticalValue) {
+                    failedStat.add(chi2);
                     ++numFailures;
                 }
             }
@@ -483,8 +489,12 @@ class ProvidersCommonParametricTest {
         // 12    0.00190
 
         if (numFailures > 11) { // Test will fail with 0.5% probability
-            Assertions.fail(generator + ": Too many failures for n = " + n +
-                            " (" + numFailures + " out of " + numTests + " tests failed)");
+            Assertions.fail(String.format(
+                    "%s: Too many failures for n = %d, sample size = %d " +
+                    "(%d out of %d tests failed, chi2 > %.3f=%s)",
+                    generator, n, sampleSize, numFailures, numTests, chi2CriticalValue,
+                    failedStat.stream().map(d -> String.format("%.3f", d))
+                              .collect(Collectors.joining(", ", "[", "]"))));
         }
     }
 
