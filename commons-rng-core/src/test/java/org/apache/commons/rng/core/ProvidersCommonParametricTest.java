@@ -261,7 +261,7 @@ class ProvidersCommonParametricTest {
      * @param generator RNG under test.
      * @return a list containing {@code 11 * n} random numbers.
      */
-    private List<Number> makeList(int n, UniformRandomProvider generator) {
+    private static List<Number> makeList(int n, UniformRandomProvider generator) {
         final List<Number> list = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
@@ -296,10 +296,10 @@ class ProvidersCommonParametricTest {
      * @param nextMethod Method that fills the given {@code buffer}.
      * @return {@code true} if the distribution is uniform.
      */
-    private boolean isUniformNextBytes(byte[] buffer,
-                                       int first,
-                                       int last,
-                                       Runnable nextMethod) {
+    private static boolean isUniformNextBytes(byte[] buffer,
+                                              int first,
+                                              int last,
+                                              Runnable nextMethod) {
         final int sampleSize = 10000;
 
         // Number of possible values (do not change).
@@ -350,9 +350,9 @@ class ProvidersCommonParametricTest {
      * values are to be placed in the first bin, {@code false} if it must
      * go to the second bin.
      */
-    private void checkRandomWalk(UniformRandomProvider generator,
-                                 int sampleSize,
-                                 Callable<Boolean> nextMethod) {
+    private static void checkRandomWalk(UniformRandomProvider generator,
+                                        int sampleSize,
+                                        Callable<Boolean> nextMethod) {
         int walk = 0;
 
         try {
