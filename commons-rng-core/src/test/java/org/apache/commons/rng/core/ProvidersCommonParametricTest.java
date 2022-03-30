@@ -122,9 +122,13 @@ class ProvidersCommonParametricTest {
         // Test should pass for the part of the buffer where values are put.
         Assertions.assertTrue(isUniformNextBytes(buffer, offset, offset + size, nextMethod), generator::toString);
 
-        // Test must fail for the parts of the buffer where no values are put.
-        Assertions.assertFalse(isUniformNextBytes(buffer, 0, offset, nextMethod));
-        Assertions.assertFalse(isUniformNextBytes(buffer, offset + size, buffer.length, nextMethod));
+        // The parts of the buffer where no values are put should be zero.
+        for (int i = 0; i < offset; i++) {
+            Assertions.assertEquals(0, buffer[i], generator::toString);
+        }
+        for (int i = offset + size; i < totalSize; i++) {
+            Assertions.assertEquals(0, buffer[i], generator::toString);
+        }
     }
 
     @ParameterizedTest
@@ -299,27 +303,23 @@ class ProvidersCommonParametricTest {
 
         // Number of possible values (do not change).
         final int byteRange = 256;
-        // Chi-square critical value with 256 degrees of freedom
+        // Chi-square critical value with 255 degrees of freedom
         // and 1% significance level.
-        final double chi2CriticalValue = 311.560343;
-        // To transform a byte value into its bin index.
-        final int byteRangeOffset = 128;
+        final double chi2CriticalValue = 310.45738821990585;
 
         // Bins.
         final long[] observed = new long[byteRange];
         final double[] expected = new double[byteRange];
 
-        for (int i = 0; i < byteRange; i++) {
-            expected[i] = sampleSize * (last - first) / (double) byteRange;
-        }
+        Arrays.fill(expected, sampleSize * (last - first) / (double) byteRange);
 
         try {
             for (int k = 0; k < sampleSize; k++) {
                 nextMethod.run();
 
                 for (int i = first; i < last; i++) {
-                    final byte b = buffer[i];
-                    ++observed[b + byteRangeOffset];
+                    // Convert byte to an index in [0, 255]
+                    ++observed[buffer[i] & 0xff];
                 }
             }
         } catch (Exception e) {
@@ -335,7 +335,7 @@ class ProvidersCommonParametricTest {
         }
 
         // Statistics check.
-        return chi2 < chi2CriticalValue;
+        return chi2 <= chi2CriticalValue;
     }
 
     /**
