@@ -34,7 +34,7 @@ final class Conversions {
      * </pre>
      * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
      */
-    private static final long GOLDEN_RATIO = 0x9e3779b97f4a7c15L;
+    private static final long GOLDEN_RATIO = MixFunctions.GOLDEN_RATIO_64;
 
     /** No instances. */
     private Conversions() {}
@@ -101,24 +101,6 @@ final class Conversions {
     }
 
     /**
-     * Perform variant 13 of David Stafford's 64-bit mix function.
-     * This is the mix function used in the {@link SplitMix64} RNG.
-     *
-     * <p>This is ranked first of the top 14 Stafford mixers.
-     *
-     * @param z the input value
-     * @return the output value
-     * @see <a href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
-     *      Bit Mixing - Improving on MurmurHash3&#39;s 64-bit Finalizer.</a>
-     */
-    private static long stafford13(long z) {
-        long x = z;
-        x = (x ^ (x >>> 30)) * 0xbf58476d1ce4e5b9L;
-        x = (x ^ (x >>> 27)) * 0x94d049bb133111ebL;
-        return x ^ (x >>> 31);
-    }
-
-    /**
      * Creates a {@code long} value from an {@code int}. The conversion
      * is made as if seeding a SplitMix64 RNG and calling nextLong().
      *
@@ -126,7 +108,7 @@ final class Conversions {
      * @return a {@code long}.
      */
     static long int2Long(int input) {
-        return stafford13(input + GOLDEN_RATIO);
+        return MixFunctions.stafford13(input + GOLDEN_RATIO);
     }
 
     /**
@@ -189,13 +171,13 @@ final class Conversions {
         // Process pairs
         final int n = length & ~0x1;
         for (int i = 0; i < n; i += 2) {
-            final long x = stafford13(v += GOLDEN_RATIO);
+            final long x = MixFunctions.stafford13(v += GOLDEN_RATIO);
             output[i] = (int) x;
             output[i + 1] = (int) (x >>> 32);
         }
         // Final value
         if (n < length) {
-            output[n] = (int) stafford13(v + GOLDEN_RATIO);
+            output[n] = (int) MixFunctions.stafford13(v + GOLDEN_RATIO);
         }
         return output;
     }
@@ -213,7 +195,7 @@ final class Conversions {
         long v = input;
         final long[] output = new long[length];
         for (int i = 0; i < length; i++) {
-            output[i] = stafford13(v += GOLDEN_RATIO);
+            output[i] = MixFunctions.stafford13(v += GOLDEN_RATIO);
         }
         return output;
     }

@@ -17,12 +17,18 @@
 package org.apache.commons.rng.simple.internal;
 
 import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
+import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.RandomLongSource;
+import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
@@ -114,6 +120,11 @@ class SeedFactoryTest {
     }
 
     @Test
+    void testCreateIntArrayWithZeroSize() {
+        Assertions.assertArrayEquals(new int[0], SeedFactory.createIntArray(0));
+    }
+
+    @Test
     void testCreateIntArrayWithCompleteBlockSize() {
         // Block size is 8 for int
         assertCreateIntArray(8);
@@ -142,6 +153,11 @@ class SeedFactoryTest {
         }
         final int numberOfBits = n * Integer.SIZE;
         assertMonobit(bitCount, numberOfBits);
+    }
+
+    @Test
+    void testCreateLongArrayWithZeroSize() {
+        Assertions.assertArrayEquals(new long[0], SeedFactory.createLongArray(0));
     }
 
     @Test
@@ -243,12 +259,12 @@ class SeedFactoryTest {
             }
         };
 
-        final byte[] seed = SeedFactory.createByteArray(rng, expected.length);
+        final byte[] seed = SeedFactory.createByteArray(rng, expected.length, 0, expected.length);
         Assertions.assertArrayEquals(expected, seed);
     }
 
     @Test
-    void testCreateByteArrayWithAllZeroBytesUpdatesPosition0() {
+    void testCreateByteArrayWithAllZeroBytesUpdatesFromTo() {
         final UniformRandomProvider rng = new IntProvider() {
             @Override
             public int next() {
@@ -256,75 +272,254 @@ class SeedFactoryTest {
                 return 0;
             }
         };
-        // Test the method only replaces position 0
-        final byte[] seed = SeedFactory.createByteArray(rng, 4);
-        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
-        for (int i = 1; i < seed.length; i++) {
-            Assertions.assertEquals(0, seed[i], "Position above 0 should be unmodified");
+        // Test the method only replaces the target sub-range.
+        // Test all sub-ranges.
+        final int size = 4;
+        for (int start = 0; start < size; start++) {
+            final int from = start;
+            for (int end = start; end < size; end++) {
+                final int to = end;
+                final byte[] seed = SeedFactory.createByteArray(rng, 4, from, to);
+
+                // Validate
+                for (int i = 0; i < from; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+                if (to > from) {
+                    byte allBits = 0;
+                    for (int i = from; i < to; i++) {
+                        allBits |= seed[i];
+                    }
+                    Assertions.assertNotEquals(0, allBits,
+                        () -> String.format("[%d, %d) should not be all zero", from, to));
+                }
+                for (int i = to; i < size; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+            }
         }
     }
 
     @Test
     void testEnsureNonZeroIntArrayIgnoresEmptySeed() {
         final int[] seed = new int[0];
-        SeedFactory.ensureNonZero(seed);
+        SeedFactory.ensureNonZero(seed, 0, 0);
         // Note: Nothing to assert.
         // This tests an ArrayIndexOutOfBoundsException does not occur.
     }
 
-    @Test
-    void testEnsureNonZeroIntArrayIgnoresNonZeroPosition0() {
-        final int position0 = 123;
-        final int[] seed = new int[] {position0, 0, 0, 0};
-        final int[] before = seed.clone();
-        SeedFactory.ensureNonZero(seed);
-        Assertions.assertEquals(position0, seed[0], "Non-zero at position 0 should be unmodified");
-        for (int i = 1; i < seed.length; i++) {
-            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
-        }
+    @ParameterizedTest
+    @CsvSource({
+        "0, 0, 1",
+        "1, -1, 1",
+        "1, 0, 2",
+        "1, 1, 2",
+    })
+    void testEnsureNonZeroIntArrayThrowsWithInvalidRange(int n, int from, int to) {
+        final int[] seed = new int[n];
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> SeedFactory.ensureNonZero(seed, from, to));
     }
 
+
     @Test
-    void testEnsureNonZeroIntArrayUpdatesZeroPosition0() {
-        // Test the method replaces position 0 even if the rest of the array is non-zero
-        final int[] seed = new int[] {0, 123, 456, 789};
-        final int[] before = seed.clone();
-        SeedFactory.ensureNonZero(seed);
-        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
-        for (int i = 1; i < seed.length; i++) {
-            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
+    void testEnsureNonZeroIntArrayWithAllZeroBytesUpdatesFromTo() {
+        // Test the method only replaces the target sub-range.
+        // Test all sub-ranges.
+        final int size = 4;
+        final int[] seed = new int[size];
+        for (int start = 0; start < size; start++) {
+            final int from = start;
+            for (int end = start; end < size; end++) {
+                final int to = end;
+                Arrays.fill(seed, 0);
+                SeedFactory.ensureNonZero(seed, from, to);
+
+                // Validate
+                for (int i = 0; i < from; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+                if (to > from) {
+                    int allBits = 0;
+                    for (int i = from; i < to; i++) {
+                        allBits |= seed[i];
+                    }
+                    Assertions.assertNotEquals(0, allBits,
+                        () -> String.format("[%d, %d) should not be all zero", from, to));
+                }
+                for (int i = to; i < size; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+            }
         }
     }
 
     @Test
     void testEnsureNonZeroLongArrayIgnoresEmptySeed() {
         final long[] seed = new long[0];
-        SeedFactory.ensureNonZero(seed);
+        SeedFactory.ensureNonZero(seed, 0, 0);
         // Note: Nothing to assert.
         // This tests an ArrayIndexOutOfBoundsException does not occur.
     }
 
+    @ParameterizedTest
+    @CsvSource({
+        "0, 0, 1",
+        "1, -1, 1",
+        "1, 0, 2",
+        "1, 1, 2",
+    })
+    void testEnsureNonZeroLongArrayThrowsWithInvalidRange(int n, int from, int to) {
+        final long[] seed = new long[n];
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> SeedFactory.ensureNonZero(seed, from, to));
+    }
+
+
     @Test
-    void testEnsureNonZeroLongArrayIgnoresNonZeroPosition0() {
-        final long position0 = 123;
-        final long[] seed = new long[] {position0, 0, 0, 0};
-        final long[] before = seed.clone();
-        SeedFactory.ensureNonZero(seed);
-        Assertions.assertEquals(position0, seed[0], "Non-zero at position 0 should be unmodified");
-        for (int i = 1; i < seed.length; i++) {
-            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
+    void testEnsureNonZeroLongArrayWithAllZeroBytesUpdatesFromTo() {
+        // Test the method only replaces the target sub-range.
+        // Test all sub-ranges.
+        final int size = 4;
+        final long[] seed = new long[size];
+        for (int start = 0; start < size; start++) {
+            final int from = start;
+            for (int end = start; end < size; end++) {
+                final int to = end;
+                Arrays.fill(seed, 0);
+                SeedFactory.ensureNonZero(seed, from, to);
+
+                // Validate
+                for (int i = 0; i < from; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+                if (to > from) {
+                    long allBits = 0;
+                    for (int i = from; i < to; i++) {
+                        allBits |= seed[i];
+                    }
+                    Assertions.assertNotEquals(0, allBits,
+                        () -> String.format("[%d, %d) should not be all zero", from, to));
+                }
+                for (int i = to; i < size; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+            }
         }
     }
 
     @Test
-    void testEnsureNonZeroLongArrayUpdatesZeroPosition0() {
-        // Test the method replaces position 0 even if the rest of the array is non-zero
-        final long[] seed = new long[] {0, 123, 456, 789};
-        final long[] before = seed.clone();
-        SeedFactory.ensureNonZero(seed);
-        Assertions.assertNotEquals(0, seed[0], "Zero at position 0 should be modified");
-        for (int i = 1; i < seed.length; i++) {
-            Assertions.assertEquals(before[i], seed[i], "Position above 0 should be unmodified");
+    void testEnsureNonZeroByteArrayIgnoresEmptySeed() {
+        final byte[] seed = new byte[0];
+        final UniformRandomProvider rng = new SplitMix64(123);
+        SeedFactory.ensureNonZero(seed, 0, 0, rng);
+        // Note: Nothing to assert.
+        // This tests an ArrayIndexOutOfBoundsException does not occur.
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "0, 0, 1",
+        "1, -1, 1",
+        "1, 0, 2",
+        "1, 1, 2",
+    })
+    void testEnsureNonZeroByteArrayThrowsWithInvalidRange(int n, int from, int to) {
+        final byte[] seed = new byte[n];
+        final UniformRandomProvider rng = new SplitMix64(123);
+        Assertions.assertThrows(IndexOutOfBoundsException.class,
+            () -> SeedFactory.ensureNonZero(seed, from, to, rng));
+    }
+
+    /**
+     * Test the fixed values returned for the zero byte array source of randomness
+     * have specific properties.
+     */
+    @Test
+    void testZeroByteArraySourceOfRandomness() {
+        Assertions.assertEquals(0, MixFunctions.stafford13(-MixFunctions.GOLDEN_RATIO_64 + MixFunctions.GOLDEN_RATIO_64));
+        Assertions.assertEquals(0, MixFunctions.stafford13((1463436497261722119L << 1) + MixFunctions.GOLDEN_RATIO_64) & (-1L >>> 56));
+        Assertions.assertEquals(0, MixFunctions.stafford13((4949471497809997598L << 1) + MixFunctions.GOLDEN_RATIO_64) & (-1L >>> 48));
+        // Note:
+        // Finding a value x where MixFunctions.stafford13((x << 1) + MixFunctions.GOLDEN_RATIO_64)
+        // is zero for the least significant 7 bytes used inversion of the mix function.
+        // See the MixFunctionsTest for a routine to perform the unmixing.
+        Assertions.assertEquals(0, MixFunctions.stafford13((953042962641938212L << 1) + MixFunctions.GOLDEN_RATIO_64) & (-1L >>> 8));
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {0, -MixFunctions.GOLDEN_RATIO_64, 1463436497261722119L, 4949471497809997598L, 953042962641938212L})
+    void testEnsureNonZeroByteArrayWithAllZeroBytesUpdatesFromTo(long next) {
+        // Use a fixed source of randomness to demonstrate the method is robust.
+        // This should only be used when the sub-range is non-zero length.
+        int[] calls = {0};
+        final UniformRandomProvider rng = new LongProvider() {
+            @Override
+            public long next() {
+                calls[0]++;
+                return next;
+            }
+        };
+
+        // Test the method only replaces the target sub-range.
+        // Test all sub-ranges up to size.
+        final int size = 2 * Long.BYTES;
+        final byte[] seed = new byte[size];
+        for (int start = 0; start < size; start++) {
+            final int from = start;
+            for (int end = start; end < size; end++) {
+                final int to = end;
+                Arrays.fill(seed, (byte) 0);
+                final int before = calls[0];
+                SeedFactory.ensureNonZero(seed, from, to, rng);
+
+                // Validate
+                for (int i = 0; i < from; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+                if (to > from) {
+                    byte allBits = 0;
+                    for (int i = from; i < to; i++) {
+                        allBits |= seed[i];
+                    }
+                    Assertions.assertNotEquals(0, allBits,
+                        () -> String.format("[%d, %d) should not be all zero", from, to));
+                    // Check the source was used to seed the sequence
+                    Assertions.assertNotEquals(before, calls[0],
+                        () -> String.format("[%d, %d) should use the random source", from, to));
+                } else {
+                    // Check the source was not used
+                    Assertions.assertEquals(before, calls[0],
+                        () -> String.format("[%d, %d) should not use the random source", from, to));
+                }
+                for (int i = to; i < size; i++) {
+                    final int index = i;
+                    Assertions.assertEquals(0, seed[i],
+                        () -> String.format("[%d, %d) zero at position %d should not be modified",
+                            from, to, index));
+                }
+            }
         }
     }
 

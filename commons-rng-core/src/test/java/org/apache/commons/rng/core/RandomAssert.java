@@ -353,7 +353,7 @@ public final class RandomAssert {
             final int[] seed = new int[size];
             int remaining = k;
             for (int i = 0; i < seed.length; i++) {
-                seed[i] = 0x80000000;
+                seed[i] = Integer.MIN_VALUE;
                 for (int j = 0; j < 32; j++) {
                     final UniformRandomProvider rng = constructor.newInstance(seed);
                     RandomAssert.assertNextLongNonZeroOutputFromSingleBitSeed(rng, 2 * size, 2 * size, i, 31 - j);
@@ -383,17 +383,41 @@ public final class RandomAssert {
      */
     public static <T extends UniformRandomProvider> void
         assertLongArrayConstructorWithSingleBitSeedIsFunctional(Class<T> type, int size) {
+        assertLongArrayConstructorWithSingleBitInPoolIsFunctional(type, 64 * size);
+    }
+
+    /**
+     * Assert that the random generator created using an {@code long[]} seed with a
+     * single bit set is functional. This is tested using the
+     * {@link #assertNextLongNonZeroOutput(UniformRandomProvider, int, int)} using
+     * two times the seed size as the warm-up and test cycles.
+     *
+     * <p>The seed size is determined from the size of the bit pool. Bits are set for every position
+     * in the pool from most significant first. If the pool size is not a multiple of 64 then the
+     * remaining lower significant bits of the last seed position are not tested.</p>
+     *
+     * @param type Class of the generator.
+     * @param k Number of bits in the pool (not necessarily a multiple of 64).
+     */
+    public static <T extends UniformRandomProvider> void
+        assertLongArrayConstructorWithSingleBitInPoolIsFunctional(Class<T> type, int k) {
         try {
             // Find the long[] constructor
             final Constructor<T> constructor = type.getConstructor(long[].class);
+            final int size = (k + 63) / 64;
             final long[] seed = new long[size];
-            for (int i = 0; i < size; i++) {
-                seed[i] = 0x8000000000000000L;
+            int remaining = k;
+            for (int i = 0; i < seed.length; i++) {
+                seed[i] = Long.MIN_VALUE;
                 for (int j = 0; j < 64; j++) {
                     final UniformRandomProvider rng = constructor.newInstance(seed);
                     RandomAssert.assertNextLongNonZeroOutputFromSingleBitSeed(rng, 2 * size, 2 * size, i, 63 - j);
                     // Eventually reset to zero
                     seed[i] >>>= 1;
+                    // Terminate when the entire bit pool has been tested
+                    if (--remaining == 0) {
+                        return;
+                    }
                 }
                 Assertions.assertEquals(0L, seed[i], "Seed element was not reset");
             }

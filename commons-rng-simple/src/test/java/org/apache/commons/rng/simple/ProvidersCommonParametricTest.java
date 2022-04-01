@@ -38,6 +38,7 @@ import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
+import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 
 /**
@@ -190,8 +191,6 @@ class ProvidersCommonParametricTest {
         final Object[] originalArgs = data.getArgs();
         final long[] empty = new long[0];
         Assumptions.assumeTrue(originalSource.isNativeSeed(empty));
-        // The Middle-Square Weyl Sequence generator cannot self-seed
-        Assumptions.assumeFalse(originalSource == RandomSource.MSWS);
 
         // Exercise the default seeding procedure.
         final UniformRandomProvider rng = originalSource.create(empty, originalArgs);
@@ -240,6 +239,31 @@ class ProvidersCommonParametricTest {
         final RandomSource originalSource = data.getSource();
         final Object[] originalArgs = data.getArgs();
         final byte[] seed = originalSource.createSeed(new SplitMix64(RandomSource.createLong()));
+        final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
+        checkNextIntegerInRange(rng, 10, 10000);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getProvidersTestData")
+    void testRandomSourceCreateSeedFromInvalidRNG(ProvidersList.Data data) {
+        // Create a RNG that will fill a byte[] seed with all zeros.
+        // The ensure non-zero range checks in the RandomSource should
+        // create a good seed and a functional RNG.
+        final LongProvider badRng = new LongProvider() {
+            @Override
+            public long next() {
+                return 0;
+            }
+        };
+
+        final RandomSource originalSource = data.getSource();
+        final byte[] seed = originalSource.createSeed(badRng);
+
+        // The seed generation should be repeatable
+        Assertions.assertArrayEquals(seed, originalSource.createSeed(badRng));
+
+        // The RNG seed will create a functional generator
+        final Object[] originalArgs = data.getArgs();
         final UniformRandomProvider rng = originalSource.create(seed, originalArgs);
         checkNextIntegerInRange(rng, 10, 10000);
     }

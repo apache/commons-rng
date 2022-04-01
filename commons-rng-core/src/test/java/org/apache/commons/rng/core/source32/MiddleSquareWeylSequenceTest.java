@@ -22,6 +22,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class MiddleSquareWeylSequenceTest {
+    /** The size of the array seed. */
+    private static final int SEED_SIZE = 3;
+
     @Test
     void testReferenceCode() {
         /*
@@ -96,5 +99,10 @@ class MiddleSquareWeylSequenceTest {
             Assertions.assertEquals(NumberFactory.makeLong(rng1.nextInt(), rng1.nextInt()),
                                 rng2.nextLong());
         }
+    }
+
+    @Test
+    void testConstructorWithZeroSeedIsNonFunctional() {
+        RandomAssert.assertNextIntZeroOutput(new MiddleSquareWeylSequence(new long[SEED_SIZE]), 2 * SEED_SIZE);
     }
 }

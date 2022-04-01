@@ -17,6 +17,7 @@
 package org.apache.commons.rng.simple.internal;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,30 @@ class NativeSeedTypeParametricTest {
         if (type.isArray()) {
             Assertions.assertEquals(size, Array.getLength(seed), "Seed was not created the correct length");
         }
+    }
+
+    /**
+     * Test the seed can be checked as non-zero in a sub-range. This uses a bad range to
+     * generate an expected exception. The non-zero requirement is not tested as random
+     * seeding is very unlikely to create even a single 32-bit integer that is zero and
+     * requires correction. This test at least verifies the (from, to) sub-range arguments
+     * are used.
+     *
+     * @param nativeSeedType Native seed type.
+     */
+    @ParameterizedTest
+    @EnumSource
+    void testCreateArraySeedWithNonZeroRangeThrows(NativeSeedType nativeSeedType) {
+        Assumptions.assumeTrue(nativeSeedType.getType().isArray(), "Not an array type");
+        // Arguments: (size, from, to)
+        // Since the seed is created randomly it is very likely non-zero.
+        // Use a sub-range that will throw on the first array access; otherwise
+        // if the array location is valid it will likely be non-zero and no further
+        // checks are made.
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> nativeSeedType.createSeed(0, 0, 1));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> nativeSeedType.createSeed(1, -1, 1));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> nativeSeedType.createSeed(1, 1, 2));
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> nativeSeedType.createSeed(1, 2, 3));
     }
 
     /**

@@ -132,27 +132,27 @@ public final class ProviderBuilder {
             NativeSeedType.LONG),
         /** Source of randomness is {@link Well512a}. */
         WELL_512_A(Well512a.class,
-                   16,
+                   16, 0, 16,
                    NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well1024a}. */
         WELL_1024_A(Well1024a.class,
-                    32,
+                    32, 0, 32,
                     NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well19937a}. */
         WELL_19937_A(Well19937a.class,
-                     624,
+                     624, 0, 623,
                      NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well19937c}. */
         WELL_19937_C(Well19937c.class,
-                     624,
+                     624, 0, 623,
                      NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well44497a}. */
         WELL_44497_A(Well44497a.class,
-                     1391,
+                     1391, 0, 1390,
                      NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link Well44497b}. */
         WELL_44497_B(Well44497b.class,
-                     1391,
+                     1391, 0, 1390,
                      NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link MersenneTwister}. */
         MT(MersenneTwister.class,
@@ -168,7 +168,7 @@ public final class ProviderBuilder {
                      NativeSeedType.LONG),
         /** Source of randomness is {@link XorShift1024Star}. */
         XOR_SHIFT_1024_S(XorShift1024Star.class,
-                         16,
+                         16, 0, 16,
                          NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link TwoCmres}. */
         TWO_CMRES(TwoCmres.class,
@@ -189,55 +189,56 @@ public final class ProviderBuilder {
               NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link MultiplyWithCarry256}. */
         MWC_256(MultiplyWithCarry256.class,
-                257,
+                257, 0, 257,
                 NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link KISSRandom}. */
         KISS(KISSRandom.class,
-             4,
+             // If zero in initial 3 positions the output is a simple LCG
+             4, 0, 3,
              NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XorShift1024StarPhi}. */
         XOR_SHIFT_1024_S_PHI(XorShift1024StarPhi.class,
-                             16,
+                             16, 0, 16,
                              NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo64Star}. */
         XO_RO_SHI_RO_64_S(XoRoShiRo64Star.class,
-                          2,
+                          2, 0, 2,
                           NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoRoShiRo64StarStar}. */
         XO_RO_SHI_RO_64_SS(XoRoShiRo64StarStar.class,
-                           2,
+                           2, 0, 2,
                            NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoShiRo128Plus}. */
         XO_SHI_RO_128_PLUS(XoShiRo128Plus.class,
-                           4,
+                           4, 0, 4,
                            NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoShiRo128StarStar}. */
         XO_SHI_RO_128_SS(XoShiRo128StarStar.class,
-                         4,
+                         4, 0, 4,
                          NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoRoShiRo128Plus}. */
         XO_RO_SHI_RO_128_PLUS(XoRoShiRo128Plus.class,
-                              2,
+                              2, 0, 2,
                               NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo128StarStar}. */
         XO_RO_SHI_RO_128_SS(XoRoShiRo128StarStar.class,
-                            2,
+                            2, 0, 2,
                             NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo256Plus}. */
         XO_SHI_RO_256_PLUS(XoShiRo256Plus.class,
-                           4,
+                           4, 0, 4,
                            NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo256StarStar}. */
         XO_SHI_RO_256_SS(XoShiRo256StarStar.class,
-                         4,
+                         4, 0, 4,
                          NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo512Plus}. */
         XO_SHI_RO_512_PLUS(XoShiRo512Plus.class,
-                           8,
+                           8, 0, 8,
                            NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo512StarStar}. */
         XO_SHI_RO_512_SS(XoShiRo512StarStar.class,
-                         8,
+                         8, 0, 8,
                          NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link PcgXshRr32}. */
         PCG_XSH_RR_32(PcgXshRr32.class,
@@ -261,7 +262,10 @@ public final class ProviderBuilder {
                 NativeSeedType.LONG),
         /** Source of randomness is {@link MiddleSquareWeylSequence}. */
         MSWS(MiddleSquareWeylSequence.class,
-             3,
+             // Many partially zero seeds can create low quality initial output.
+             // The Weyl increment cascades bits into the random state so ideally it
+             // has a high number of bit transitions. Minimally ensure it is non-zero.
+             3, 2, 3,
              NativeSeedType.LONG_ARRAY) {
             @Override
             protected Object createSeed() {
@@ -356,31 +360,31 @@ public final class ProviderBuilder {
                NativeSeedType.LONG),
         /** Source of randomness is {@link XoShiRo128PlusPlus}. */
         XO_SHI_RO_128_PP(XoShiRo128PlusPlus.class,
-                         4,
+                         4, 0, 4,
                          NativeSeedType.INT_ARRAY),
         /** Source of randomness is {@link XoRoShiRo128PlusPlus}. */
         XO_RO_SHI_RO_128_PP(XoRoShiRo128PlusPlus.class,
-                            2,
+                            2, 0, 2,
                             NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo256PlusPlus}. */
         XO_SHI_RO_256_PP(XoShiRo256PlusPlus.class,
-                         4,
+                         4, 0, 4,
                          NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoShiRo512PlusPlus}. */
         XO_SHI_RO_512_PP(XoShiRo512PlusPlus.class,
-                         8,
+                         8, 0, 8,
                          NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo1024PlusPlus}. */
         XO_RO_SHI_RO_1024_PP(XoRoShiRo1024PlusPlus.class,
-                             16,
+                             16, 0, 16,
                              NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo1024Star}. */
         XO_RO_SHI_RO_1024_S(XoRoShiRo1024Star.class,
-                            16,
+                            16, 0, 16,
                             NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link XoRoShiRo1024StarStar}. */
         XO_RO_SHI_RO_1024_SS(XoRoShiRo1024StarStar.class,
-                             16,
+                             16, 0, 16,
                              NativeSeedType.LONG_ARRAY),
         /** Source of randomness is {@link PcgXshRr32}. */
         PCG_XSH_RR_32_OS(PcgXshRr32.class,
@@ -399,6 +403,10 @@ public final class ProviderBuilder {
         private final Class<? extends UniformRandomProvider> rng;
         /** Native seed size. Used for array seeds. */
         private final int nativeSeedSize;
+        /** Start of the not all-zero sub-range for array seeds (inclusive). */
+        private final int notAllZeroFrom;
+        /** End of the not all-zero sub-range for array seeds (exclusive). */
+        private final int notAllZeroTo;
         /** Define the parameter types of the data needed to build the generator. */
         private final Class<?>[] args;
         /** Native seed type. Used to create a seed or convert input seeds. */
@@ -412,6 +420,8 @@ public final class ProviderBuilder {
         /**
          * Create a new instance.
          *
+         * <p>Used when the seed array has no requirement for a not all-zero sub-range.
+         *
          * @param rng Source type.
          * @param nativeSeedSize Native seed size (array types only).
          * @param nativeSeedType Native seed type.
@@ -421,8 +431,36 @@ public final class ProviderBuilder {
                              int nativeSeedSize,
                              NativeSeedType nativeSeedType,
                              Class<?>... args) {
+            this(rng, nativeSeedSize, 0, 0, nativeSeedType, args);
+        }
+
+        /**
+         * Create a new instance.
+         *
+         * <p>Note: The sub-range of an array seed that is not all-zero can be specified.
+         * If the native seed array is used to represent a number of bits
+         * that is not an exact multiple of the number of bytes in the seed, then a
+         * safe approach is to specify the sub-range using a smaller size than the
+         * full length seed. For example a {@link Well19937a} generator uses 19937
+         * bits and has a seed bit length of 19968. A safe range is [0, 19937 / 32).
+         *
+         * @param rng Source type.
+         * @param nativeSeedSize Native seed size (array types only).
+         * @param notAllZeroFrom The start of the not all-zero sub-range (inclusive).
+         * @param notAllZeroTo The end of the not all-zero sub-range (exclusive).
+         * @param nativeSeedType Native seed type.
+         * @param args Additional data needed to create a generator instance.
+         */
+        RandomSourceInternal(Class<? extends UniformRandomProvider> rng,
+                             int nativeSeedSize,
+                             int notAllZeroFrom,
+                             int notAllZeroTo,
+                             NativeSeedType nativeSeedType,
+                             Class<?>... args) {
             this.rng = rng;
             this.nativeSeedSize = nativeSeedSize;
+            this.notAllZeroFrom = notAllZeroFrom;
+            this.notAllZeroTo = notAllZeroTo;
             this.nativeSeedType = nativeSeedType;
             // Build the complete list of class types for the constructor
             this.args = (Class<?>[]) Array.newInstance(args.getClass().getComponentType(), 1 + args.length);
@@ -469,16 +507,6 @@ public final class ProviderBuilder {
          */
         public <SEED> boolean isNativeSeed(SEED seed) {
             return seed != null && getSeed().equals(seed.getClass());
-        }
-
-        /**
-         * Gets the number of seed bytes required to seed the implementing class represented by
-         * this random source.
-         *
-         * @return the number of seed bytes
-         */
-        private int getSeedByteSize() {
-            return nativeSeedSize * nativeSeedType.getBytes();
         }
 
         /**
@@ -550,7 +578,8 @@ public final class ProviderBuilder {
          * @since 1.3
          */
         protected Object createSeed() {
-            return nativeSeedType.createSeed(nativeSeedSize);
+            // Ensure the seed is not all-zero in the sub-range
+            return nativeSeedType.createSeed(nativeSeedSize, notAllZeroFrom, notAllZeroTo);
         }
 
         /**
@@ -566,7 +595,13 @@ public final class ProviderBuilder {
          * @since 1.3
          */
         protected byte[] createByteArraySeed(UniformRandomProvider source) {
-            return SeedFactory.createByteArray(source, getSeedByteSize());
+            // Ensure the seed is not all-zero in the sub-range.
+            // Note: Convert the native seed array size/positions to byte size/positions.
+            final int bytes = nativeSeedType.getBytes();
+            return SeedFactory.createByteArray(source,
+                bytes * nativeSeedSize,
+                bytes * notAllZeroFrom,
+                bytes * notAllZeroTo);
         }
 
         /**

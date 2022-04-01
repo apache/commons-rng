@@ -17,6 +17,7 @@
 package org.apache.commons.rng.core.source32;
 
 import org.apache.commons.rng.core.RandomAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class KISSRandomTest {
@@ -161,5 +162,21 @@ class KISSRandomTest {
         };
 
         RandomAssert.assertEquals(expectedSequence, new KISSRandom(seed));
+    }
+
+    @Test
+    void testConstructorWithZeroSeedInSubRangeIsPartiallyFunctional() {
+        // If the first 3 positions are zero then the output is a simple LCG.
+        // The seeding routine in commons-rng-simple should ensure the first 3 seed
+        // positions are not all zero.
+        final int m = 69069;
+        final int c = 1234567;
+        int s = 42;
+        final int[] seed = new int[] {0, 0, 0, s};
+        final KISSRandom rng = new KISSRandom(seed);
+        for (int i = 0; i < 200; i++) {
+            s = m * s + c;
+            Assertions.assertEquals(s, rng.nextInt());
+        }
     }
 }

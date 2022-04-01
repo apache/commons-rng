@@ -45,7 +45,7 @@ public enum NativeSeedType {
     /** The seed type is {@code Integer}. */
     INT(Integer.class, 4) {
         @Override
-        public Integer createSeed(int size) {
+        public Integer createSeed(int size, int from, int to) {
             return SeedFactory.createInt();
         }
         @Override
@@ -72,7 +72,7 @@ public enum NativeSeedType {
     /** The seed type is {@code Long}. */
     LONG(Long.class, 8) {
         @Override
-        public Long createSeed(int size) {
+        public Long createSeed(int size, int from, int to) {
             return SeedFactory.createLong();
         }
         @Override
@@ -99,10 +99,11 @@ public enum NativeSeedType {
     /** The seed type is {@code int[]}. */
     INT_ARRAY(int[].class, 4) {
         @Override
-        public int[] createSeed(int size) {
+        public int[] createSeed(int size, int from, int to) {
             // Limit the number of calls to the synchronized method. The generator
             // will support self-seeding.
-            return SeedFactory.createIntArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
+            return SeedFactory.createIntArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE),
+                                              from, to);
         }
         @Override
         protected int[] convert(Integer seed, int size) {
@@ -132,10 +133,11 @@ public enum NativeSeedType {
     /** The seed type is {@code long[]}. */
     LONG_ARRAY(long[].class, 8) {
         @Override
-        public long[] createSeed(int size) {
+        public long[] createSeed(int size, int from, int to) {
             // Limit the number of calls to the synchronized method. The generator
             // will support self-seeding.
-            return SeedFactory.createLongArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE));
+            return SeedFactory.createLongArray(Math.min(size, RANDOM_SEED_ARRAY_SIZE),
+                                               from, to);
         }
         @Override
         protected long[] convert(Integer seed, int size) {
@@ -214,7 +216,24 @@ public enum NativeSeedType {
      * @param size The size of the seed (array types only).
      * @return the seed
      */
-    public abstract Object createSeed(int size);
+    public Object createSeed(int size) {
+        // Maintain behaviour since 1.3 to ensure position [0] of array seeds is non-zero.
+        return createSeed(size, 0, Math.min(size, 1));
+    }
+
+    /**
+     * Creates the seed. The output seed type is determined by the native seed type. If
+     * the output is an array the required size of the array can be specified and a
+     * sub-range that must not be all-zero.
+     *
+     * @param size The size of the seed (array types only).
+     * @param from The start of the not all-zero sub-range (inclusive; array types only).
+     * @param to The end of the not all-zero sub-range (exclusive; array types only).
+     * @return the seed
+     * @throws IndexOutOfBoundsException if the sub-range is out of bounds
+     * @since 1.5
+     */
+    public abstract Object createSeed(int size, int from, int to);
 
     /**
      * Converts the input seed from any of the supported seed types to the native seed type.
