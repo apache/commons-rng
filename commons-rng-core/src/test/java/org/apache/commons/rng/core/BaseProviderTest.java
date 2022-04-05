@@ -139,7 +139,7 @@ class BaseProviderTest {
      */
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 4, 5, 6, 7, 8, 9})
-    void testExpnadSeedLong(int length) {
+    void testExpandSeedLong(int length) {
         // The seed does not matter.
         // Create random seeds that are smaller or larger than length.
         final SplittableRandom rng = new SplittableRandom();
