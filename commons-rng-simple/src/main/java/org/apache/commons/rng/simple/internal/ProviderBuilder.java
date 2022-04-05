@@ -30,6 +30,7 @@ import org.apache.commons.rng.core.source32.Well19937c;
 import org.apache.commons.rng.core.source32.Well44497a;
 import org.apache.commons.rng.core.source32.Well44497b;
 import org.apache.commons.rng.core.source32.ISAACRandom;
+import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source32.MersenneTwister;
 import org.apache.commons.rng.core.source32.MiddleSquareWeylSequence;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
@@ -281,7 +282,33 @@ public final class ProviderBuilder {
 
             @Override
             protected byte[] createByteArraySeed(UniformRandomProvider source) {
-                return NativeSeedType.convertSeedToBytes(createMswsSeed(source));
+                // The seed requires approximately 4-6 calls to nextInt().
+                // Wrap the input and switch to a default if the input is faulty.
+                final UniformRandomProvider wrapped = new IntProvider() {
+                    /** The number of remaining calls to the source generator. */
+                    private int calls = 100;
+                    /** Default generator, initialised when required. */
+                    private UniformRandomProvider defaultGen;
+                    @Override
+                    public int next() {
+                        if (calls == 0) {
+                            // The input source is broken.
+                            // Seed a default
+                            if (defaultGen == null) {
+                                defaultGen = new SplitMix64(source.nextLong());
+                            }
+                            return defaultGen.nextInt();
+                        }
+                        calls--;
+                        return source.nextInt();
+                    }
+                    @Override
+                    public long nextLong() {
+                        // No specific requirements so always use the source
+                        return source.nextLong();
+                    }
+                };
+                return NativeSeedType.convertSeedToBytes(createMswsSeed(wrapped));
             }
 
             /**

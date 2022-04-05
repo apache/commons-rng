@@ -16,6 +16,8 @@
  */
 package org.apache.commons.rng.simple;
 
+import java.time.Duration;
+import org.apache.commons.rng.core.source64.LongProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -79,5 +81,22 @@ class RandomSourceTest {
         Assertions.assertFalse(RandomSource.JDK.isLongJumpable(), "JDK is not LongJumpable");
         Assertions.assertFalse(RandomSource.XOR_SHIFT_1024_S_PHI.isLongJumpable(), "XOR_SHIFT_1024_S_PHI is not LongJumpable");
         Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isLongJumpable(), "XO_SHI_RO_256_SS is LongJumpable");
+    }
+
+    /**
+     * MSWS should not infinite loop if the input RNG fails to provide randomness to create a seed.
+     * See RNG-175.
+     */
+    @Test
+    void testMSWSCreateSeed() {
+        final LongProvider broken = new LongProvider() {
+            @Override
+            public long next() {
+                return 0;
+            }
+        };
+        Assertions.assertTimeoutPreemptively(Duration.ofMillis(100), () -> {
+            RandomSource.MSWS.createSeed(broken);
+        });
     }
 }

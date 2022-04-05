@@ -86,6 +86,10 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="fix" issue="175">
+        "RandomSource.MSWS": createSeed(UniformRandomProvider) to handle a bad RNG.
+        This fixes an infinite loop when the RNG output is not suitably random to create a seed.
+      </action>
       <action dev="aherbert" type="add" issue="173">
         "BaseProvider": Add a static method to extend input int[] and long[] seeds to a
         minimum length.
