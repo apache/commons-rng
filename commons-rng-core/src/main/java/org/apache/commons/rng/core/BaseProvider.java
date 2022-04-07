@@ -440,7 +440,8 @@ public abstract class BaseProvider
 
     /**
      * Perform variant 13 of David Stafford's 64-bit mix function.
-     * This is the mix function used in the {@link org.apache.commons.rng.core.source64.SplitMix64} RNG.
+     * This is the mix function used in the
+     * {@link org.apache.commons.rng.core.source64.SplitMix64 SplitMix64} RNG.
      *
      * <p>This is ranked first of the top 14 Stafford mixers.
      *
