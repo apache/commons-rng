@@ -375,6 +375,7 @@ public abstract class BaseProvider
      * @param seed Input seed
      * @param length The minimum length
      * @return the seed
+     * @since 1.5
      */
     protected static long[] extendSeed(long[] seed, int length) {
         if (seed.length < length) {
@@ -424,6 +425,7 @@ public abstract class BaseProvider
      * @param seed Input seed
      * @param length The minimum length
      * @return the seed
+     * @since 1.5
      */
     protected static int[] extendSeed(int[] seed, int length) {
         if (seed.length < length) {
