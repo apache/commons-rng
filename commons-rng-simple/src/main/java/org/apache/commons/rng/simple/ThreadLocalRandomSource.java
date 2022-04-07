@@ -122,7 +122,7 @@ public final class ThreadLocalRandomSource {
             }
 
             synchronized (SOURCES) {
-                rng = SOURCES.computeIfAbsent(source, s -> new ThreadLocalRng(s));
+                rng = SOURCES.computeIfAbsent(source, ThreadLocalRng::new);
             }
         }
         return rng.get();
