@@ -117,4 +117,16 @@
     <BugPattern name="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/>
   </Match>
 
+  <Match>
+    <!-- This intentionally stores an externally mutable object. -->
+    <Class name="org.apache.commons.rng.simple.JDKRandomWrapper"/>
+    <BugPattern name="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <!-- This intentionally creates a single-use SecureRandom to generate a seed. -->
+    <Class name="org.apache.commons.rng.simple.internal.SeedFactory"/>
+    <BugPattern name="DMI_RANDOM_USED_ONLY_ONCE"/>
+  </Match>
+
 </FindBugsFilter>
