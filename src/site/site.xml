@@ -45,7 +45,10 @@
     </menu>
 
     <menu name="User Guide">
-      <item name="Contents" href="/userguide/index.html"/>
+      <item name="Contents" href="/userguide/rng.html#Table_of_contents"/>
+      <item name="Usage" href="/userguide/rng.html#a2._Usage_overview"/>
+      <item name="Performance" href="/userguide/rng.html#a4._Performance"/>
+      <item name="Quality" href="/userguide/rng.html#a5._Quality"/>
     </menu>
   </body>
 

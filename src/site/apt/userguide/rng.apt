@@ -15,9 +15,25 @@
 ~~ limitations under the License.
 ~~
 
-  -----------------------------
-  The Apache Commons RNG User Guide
-  -----------------------------
+The Apache Commons RNG User Guide
+
+* Table of contents
+
+  * {{{a1._Purpose}Purpose of the library}}
+
+  * {{{a2._Usage_overview}Usage overview (for users)}}
+
+  * {{{a3._Library_layout}Library layout (for developers)}}
+
+  * {{{a4._Performance}Performance}}
+
+  * {{{a5._Quality}Quality}}
+
+  * {{{a6._Examples}Examples}}
+
+  * {{{a7._Release_compatibility}Release compatibility}}
+
+  * {{{a8._Dependencies}Dependencies}}
 
 1. Purpose
 
