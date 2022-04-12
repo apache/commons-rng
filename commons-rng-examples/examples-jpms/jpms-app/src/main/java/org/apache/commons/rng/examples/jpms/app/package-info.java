@@ -16,12 +16,8 @@
  */
 
 /**
- * <h3>Java Platform Module System (JPMS) integration tests</h3>
- *
- * <p>
- *  This package contains code for testing that the library
- *  can be used as a Java 9 module.
- * </p>
+ * This package contains an application for testing that the library
+ * can be used as a Java 9 Java Platform Module System (JPMS) module.
  */
 
 package org.apache.commons.rng.examples.jpms.app;

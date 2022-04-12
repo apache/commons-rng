@@ -16,9 +16,8 @@
  */
 
 /**
- * <h3>Base classes for the {@link org.apache.commons.rng.UniformRandomProvider
+ * Base classes for the {@link org.apache.commons.rng.UniformRandomProvider
  * generation of uniformly distributed random numbers}.
- * </h3>
  *
  * <p>
  * <b>For internal use only:</b> Direct access to classes in this package

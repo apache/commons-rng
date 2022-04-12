@@ -16,9 +16,6 @@
  */
 
 /**
- * <h3>Randomness providers</h3>
- *
- * <p>
  * This package provides
  * {@link org.apache.commons.rng.simple.RandomSource factory methods}
  * by which low-level classes implemented in module "commons-rng-core"
@@ -29,7 +26,6 @@
  * <br>
  * The generators are <i>not</i> thread-safe: Parallel applications must
  * use different generator instances in different threads.
- * </p>
  *
  * <p>
  * In the case of pseudo-random generators, the source of randomness is

@@ -16,11 +16,7 @@
  */
 
 /**
- * <h3>Utilities</h3>
- *
- * <p>
  * This package contains utilities to combine/split primitive types.
- * </p>
  */
 
 package org.apache.commons.rng.core.util;

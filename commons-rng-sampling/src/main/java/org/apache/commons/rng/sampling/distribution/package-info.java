@@ -16,11 +16,7 @@
  */
 
 /**
- * <h3>Distribution samplers</h3>
- *
- * <p>
  * This package contains classes for sampling from statistical distributions.
- * </p>
  *
  * <p>As of version 1.0, the code for specific distributions was adapted from
  * the corresponding classes in the development version of "Commons Math" (in

@@ -16,12 +16,8 @@
  */
 
 /**
- * <h3>Monte-Carlo integration</h3>
- *
- * <p>
  * This package contains a simple application that uses many
- * uniformly-distributed random numbers.
- * </p>
+ * uniformly-distributed random numbers for Monte-Carlo integration.
  */
 
 package org.apache.commons.rng.examples.quadrature;

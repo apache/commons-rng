@@ -16,9 +16,7 @@
  */
 
 /**
- * <h3>
- * Concrete algorithms for {@code int}-based sources of randomness
- * </h3>
+ * Concrete algorithms for {@code int}-based sources of randomness.
  *
  * <p>
  * <b>For internal use only:</b> Direct access to classes in this package

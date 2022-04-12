@@ -16,12 +16,8 @@
  */
 
 /**
- * <h3>Performance benchmarks</h3>
- *
- * <p>
  * This package contains code to perform a
- * <a href="http://openjdk.java.net/projects/code-tools/jmh">JMH</a> run.
- * </p>
+ * <a href="http://openjdk.java.net/projects/code-tools/jmh">JMH</a> performance benchmark.
  *
  * <p>
  * Support for a new {@link org.apache.commons.rng.UniformRandomProvider UniformRandomProvider}

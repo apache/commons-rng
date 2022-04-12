@@ -16,11 +16,7 @@
  */
 
 /**
- * <h3>Samplers</h3>
- *
- * <p>
  * This package provides sampling utilities.
- * </p>
  * <p>
  * The {@link org.apache.commons.rng.sampling.distribution distribution}
  * sub-package provides sampling from statistical distributions.

@@ -16,13 +16,9 @@
  */
 
 /**
- * <h3>Randomness providers API</h3>
- *
- * <p>
  * This package contains the library's interface to be used by client
  * code that needs a generator of sequences of pseudo-random numbers
  * that are <i>uniformly distributed</i> in a specified range.
- * </p>
  */
 
 package org.apache.commons.rng;

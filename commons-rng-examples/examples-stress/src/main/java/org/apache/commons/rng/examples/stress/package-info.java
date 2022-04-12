@@ -16,13 +16,9 @@
  */
 
 /**
- * <h3>Stress test application</h3>
- *
- * <p>
  * This package contains an application for interfacing with external
  * software that perform stringent tests to check the uniformity of
  * the sequences being passed to them.
- * </p>
  */
 
 package org.apache.commons.rng.examples.stress;

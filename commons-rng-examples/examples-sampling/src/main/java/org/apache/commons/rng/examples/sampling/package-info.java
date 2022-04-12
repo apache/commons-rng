@@ -16,12 +16,8 @@
  */
 
 /**
- * <h3>Sampling</h3>
- *
- * <p>
  * This package contains usage examples of the samplers provided in the
  * <a href="https://commons.apache.org/rng">Commons RNG</a> library.
- * </p>
  */
 
 package org.apache.commons.rng.examples.sampling;
