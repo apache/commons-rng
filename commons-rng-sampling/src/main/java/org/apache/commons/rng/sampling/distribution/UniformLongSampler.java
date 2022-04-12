@@ -180,7 +180,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
 
         @Override
         public UniformLongSampler withUniformRandomProvider(UniformRandomProvider rng) {
-            return new SmallRangeUniformLongSampler(rng, n);
+            return new SmallRangeUniformLongSampler(rng, this);
         }
     }
 
