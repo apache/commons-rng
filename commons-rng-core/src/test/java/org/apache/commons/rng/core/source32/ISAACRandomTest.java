@@ -20,7 +20,7 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
 
-public final class ISAACRandomTest {
+class ISAACRandomTest {
     private static final int[] SEED_1 = {
         0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
         0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
