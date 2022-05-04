@@ -24,6 +24,8 @@ import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test for the {@link GuideTableDiscreteSampler}.
@@ -126,31 +128,13 @@ class GuideTableDiscreteSamplerTest {
 
     /**
      * Test sampling from a non-uniform distribution of probabilities (these sum to 1).
+     * The alpha used in the default (1.0) or a smaller or larger value than the default.
      */
-    @Test
-    void testNonUniformSamplesWithProbabilities() {
+    @ParameterizedTest
+    @ValueSource(doubles = {1.0, 0.1, 10.0})
+    void testNonUniformSamplesWithProbabilities(double alpha) {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
-        checkSamples(expected, 1.0);
-    }
-
-    /**
-     * Test sampling from a non-uniform distribution of probabilities with an alpha smaller than
-     * the default.
-     */
-    @Test
-    void testNonUniformSamplesWithProbabilitiesWithSmallAlpha() {
-        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
-        checkSamples(expected, 0.1);
-    }
-
-    /**
-     * Test sampling from a non-uniform distribution of probabilities with an alpha larger than
-     * the default.
-     */
-    @Test
-    void testNonUniformSamplesWithProbabilitiesWithLargeAlpha() {
-        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
-        checkSamples(expected, 10.0);
+        checkSamples(expected, alpha);
     }
 
     /**
