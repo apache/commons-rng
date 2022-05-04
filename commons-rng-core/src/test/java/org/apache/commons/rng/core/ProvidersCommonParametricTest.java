@@ -249,7 +249,8 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getList")
     void testRestoreForeignState(RestorableUniformRandomProvider generator) {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> generator.restoreState(new RandomProviderState() {}));
+        final RandomProviderState state = new RandomProviderState() {};
+        Assertions.assertThrows(IllegalArgumentException.class, () -> generator.restoreState(state));
     }
 
     ///// Support methods below.

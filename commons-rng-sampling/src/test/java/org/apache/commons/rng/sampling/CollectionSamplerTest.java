@@ -18,6 +18,7 @@ package org.apache.commons.rng.sampling;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -51,10 +52,11 @@ class CollectionSamplerTest {
 
     @Test
     void testSamplePrecondition() {
+        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
         // Must fail for empty collection.
+        final List<String> empty = Collections.emptyList();
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> new CollectionSampler<>(RandomSource.SPLIT_MIX_64.create(0L),
-                                                new ArrayList<>()));
+            () -> new CollectionSampler<>(rng, empty));
     }
 
     /**

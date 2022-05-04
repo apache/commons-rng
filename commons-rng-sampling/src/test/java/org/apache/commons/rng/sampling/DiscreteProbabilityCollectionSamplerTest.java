@@ -19,7 +19,6 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -39,63 +38,76 @@ class DiscreteProbabilityCollectionSamplerTest {
     @Test
     void testPrecondition1() {
         // Size mismatch
+        final List<Double> collection = Arrays.asList(1d, 2d);
+        final double[] probabilities = {0};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(1d, 2d),
-                 new double[] {0d}));
+                 collection,
+                 probabilities));
     }
 
     @Test
     void testPrecondition2() {
         // Negative probability
+        final List<Double> collection = Arrays.asList(1d, 2d);
+        final double[] probabilities = {0, -1};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(1d, 2d),
-                 new double[] {0d, -1d}));
+                collection,
+                probabilities));
     }
 
     @Test
     void testPrecondition3() {
         // Probabilities do not sum above 0
+        final List<Double> collection = Arrays.asList(1d, 2d);
+        final double[] probabilities = {0, 0};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(1d, 2d),
-                 new double[] {0d, 0d}));
+                collection,
+                probabilities));
     }
 
     @Test
     void testPrecondition4() {
         // NaN probability
+        final List<Double> collection = Arrays.asList(1d, 2d);
+        final double[] probabilities = {0, Double.NaN};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(1d, 2d),
-                 new double[] {0d, Double.NaN}));
+                collection,
+                probabilities));
     }
 
     @Test
     void testPrecondition5() {
         // Infinite probability
+        final List<Double> collection = Arrays.asList(1d, 2d);
+        final double[] probabilities = {0, Double.POSITIVE_INFINITY};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Arrays.asList(1d, 2d),
-                 new double[] {0d, Double.POSITIVE_INFINITY}));
+                collection,
+                probabilities));
     }
 
     @Test
     void testPrecondition6() {
         // Empty Map<T, Double> not allowed
+        final Map<String, Double> collection = Collections.emptyMap();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 new HashMap<>()));
+                 collection));
     }
 
     @Test
     void testPrecondition7() {
         // Empty List<T> not allowed
+        final List<Double> collection = Collections.emptyList();
+        final double[] probabilities = {};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                 Collections.<Double>emptyList(),
-                 new double[0]));
+                collection,
+                probabilities));
     }
 
     @Test

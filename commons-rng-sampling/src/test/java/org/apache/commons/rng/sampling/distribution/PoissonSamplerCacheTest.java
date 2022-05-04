@@ -189,8 +189,9 @@ class PoissonSamplerCacheTest {
     void testWithRangeConstructorThrowsWhenMaxIsLessThanMin() {
         final double min = PoissonSampler.PIVOT;
         final double max = Math.nextDown(min);
+        final PoissonSamplerCache cache = createPoissonSamplerCache();
         Assertions.assertThrows(IllegalArgumentException.class,
-            () -> createPoissonSamplerCache().withRange(min, max));
+            () -> cache.withRange(min, max));
     }
 
     /**

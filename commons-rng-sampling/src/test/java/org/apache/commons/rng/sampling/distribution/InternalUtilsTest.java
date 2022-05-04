@@ -96,13 +96,15 @@ class InternalUtilsTest {
 
     @Test
     void testLogFactorialThrowsWhenNegative() {
+        final FactorialLog factorialLog = FactorialLog.create();
         Assertions.assertThrows(IndexOutOfBoundsException.class,
-            () -> FactorialLog.create().value(-1));
+            () -> factorialLog.value(-1));
     }
 
     @Test
     void testLogFactorialWithCacheThrowsWhenNegative() {
+        final FactorialLog factorialLog = FactorialLog.create();
         Assertions.assertThrows(NegativeArraySizeException.class,
-            () -> FactorialLog.create().withCache(-1));
+            () -> factorialLog.withCache(-1));
     }
 }

@@ -54,9 +54,11 @@ class ProvidersCommonParametricTest {
     @ParameterizedTest
     @MethodSource("getProvidersTestData")
     void testUnsupportedSeedType(ProvidersList.Data data) {
+        final RandomSource originalSource = data.getSource();
         final byte seed = 123;
+        final Object[] originalArgs = data.getArgs();
         Assertions.assertThrows(UnsupportedOperationException.class,
-            () -> data.getSource().create(seed, data.getArgs()));
+            () -> originalSource.create(seed, originalArgs));
     }
 
     /**
