@@ -16,6 +16,8 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.stream.DoubleStream;
+
 /**
  * Sampler that generates values of type {@code double}.
  *
@@ -23,9 +25,37 @@ package org.apache.commons.rng.sampling.distribution;
  */
 public interface ContinuousSampler {
     /**
-     * Creates a sample.
+     * Creates a {@code double} sample.
      *
      * @return a sample.
      */
     double sample();
+
+    /**
+     * Returns an effectively unlimited stream of {@code double} sample values.
+     *
+     * <p>The default implementation produces a sequential stream that repeatedly
+     * calls {@link #sample sample}().
+     *
+     * @return a stream of {@code double} values.
+     * @since 1.5
+     */
+    default DoubleStream samples() {
+        return DoubleStream.generate(this::sample).sequential();
+    }
+
+    /**
+     * Returns a stream producing the given {@code streamSize} number of {@code double}
+     * sample values.
+     *
+     * <p>The default implementation produces a sequential stream that repeatedly
+     * calls {@link #sample sample}(); the stream is limited to the given {@code streamSize}.
+     *
+     * @param streamSize Number of values to generate.
+     * @return a stream of {@code double} values.
+     * @since 1.5
+     */
+    default DoubleStream samples(long streamSize) {
+        return samples().limit(streamSize);
+    }
 }

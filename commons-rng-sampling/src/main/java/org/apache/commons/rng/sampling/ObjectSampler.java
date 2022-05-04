@@ -17,6 +17,8 @@
 
 package org.apache.commons.rng.sampling;
 
+import java.util.stream.Stream;
+
 /**
  * Sampler that generates values of a specified type.
  *
@@ -25,9 +27,37 @@ package org.apache.commons.rng.sampling;
  */
 public interface ObjectSampler<T> {
     /**
-     * Create a sample.
+     * Create an object sample.
      *
-     * @return a sample
+     * @return a sample.
      */
     T sample();
+
+    /**
+     * Returns an effectively unlimited stream of object sample values.
+     *
+     * <p>The default implementation produces a sequential stream that repeatedly
+     * calls {@link #sample sample}().
+     *
+     * @return a stream of object values.
+     * @since 1.5
+     */
+    default Stream<T> samples() {
+        return Stream.generate(this::sample).sequential();
+    }
+
+    /**
+     * Returns a stream producing the given {@code streamSize} number of object
+     * sample values.
+     *
+     * <p>The default implementation produces a sequential stream that repeatedly
+     * calls {@link #sample sample}(); the stream is limited to the given {@code streamSize}.
+     *
+     * @param streamSize Number of values to generate.
+     * @return a stream of object values.
+     * @since 1.5
+     */
+    default Stream<T> samples(long streamSize) {
+        return samples().limit(streamSize);
+    }
 }
