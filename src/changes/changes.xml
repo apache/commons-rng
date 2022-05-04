@@ -86,6 +86,9 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="177">
+        "sampling": Add samples() method to the API to generate Java 8 streams of sample values.
+      </action>
       <action dev="aherbert" type="add" issue="168">
         New LXM family of random generators. Added implementations of the LXM generators
         included in JDK 17.
