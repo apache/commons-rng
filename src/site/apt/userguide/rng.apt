@@ -378,6 +378,34 @@ DiscreteSampler sampler = RejectionInversionZipfSampler.of(RandomSource.ISAAC.cr
 int random = sampler.sample();
 +--------------------------+
 
+  * Sampler interfaces are provided for generation of the primitive types <<<int>>>, <<<long>>>, and <<<double>>>
+    and objects of type <<<T>>>. The <<<samples>>> method creates a stream of sample values
+    using the Java 8 streaming API:
+
++--------------------------+
+import org.apache.commons.rng.sampling.distribution.PoissonSampler;
+import org.apache.commons.rng.simple.RandomSource;
+
+double mean = 15.5;
+int streamSize = 100;
+int[] counts = PoissonSampler.of(RandomSource.L64_X128_MIX.create(), mean)
+                             .samples(streamSize)
+                             .toArray();
++--------------------------+
+
++--------------------------+
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
+import org.apache.commons.rng.simple.RandomSource;
+
+// Lower-truncated Normal distribution samples
+double low = -1.23;
+double[] samples = ZigguratSampler.NormalizedGaussian.of(RandomSource.L64_X128_MIX.create())
+                                                     .samples()
+                                                     .filter(x -> x > low)
+                                                     .limit(100)
+                                                     .toArray();
++--------------------------+
+
   * The <<<SharedStateSampler>>> interface allows creation of a copy of the sampler using a new
     generator. The samplers share only their immutable state and can be used in parallel computations.
 
@@ -468,10 +496,11 @@ ListSampler.shuffle(rng, list)
 import org.apache.commons.rng.sampling.shape.BoxSampler;
 
 double[] lower = {1, 2, 3};
-double[] upper = {15, 16, 17}
+double[] upper = {15, 16, 17};
 BoxSampler sampler = BoxSampler.of(RandomSource.KISS.create(),
                                    lower, upper);
 double[] coordinate = sampler.sample();
+double[][] coordinates = sampler.samples(100).toArray(double[][]::new);
 +--------------------------+
 
   * The 
