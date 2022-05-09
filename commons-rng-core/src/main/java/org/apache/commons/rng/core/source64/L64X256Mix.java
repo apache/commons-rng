@@ -214,7 +214,7 @@ public class L64X256Mix extends AbstractL64 {
 
     /** {@inheritDoc} */
     @Override
-    protected AbstractL64 copy() {
+    AbstractL64 copy() {
         // This exists to ensure the jump function performed in the super class returns
         // the correct class type. It should not be public.
         return new L64X256Mix(this);

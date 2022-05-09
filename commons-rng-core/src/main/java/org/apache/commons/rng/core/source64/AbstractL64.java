@@ -146,5 +146,5 @@ abstract class AbstractL64 extends LongProvider implements LongJumpableUniformRa
      *
      * @return the copy
      */
-    protected abstract AbstractL64 copy();
+    abstract AbstractL64 copy();
 }

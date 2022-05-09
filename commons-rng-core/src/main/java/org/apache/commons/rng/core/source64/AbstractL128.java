@@ -181,5 +181,5 @@ abstract class AbstractL128 extends LongProvider implements LongJumpableUniformR
      *
      * @return the copy
      */
-    protected abstract AbstractL128 copy();
+    abstract AbstractL128 copy();
 }

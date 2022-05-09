@@ -197,7 +197,7 @@ public class L128X128Mix extends AbstractL128 {
 
     /** {@inheritDoc} */
     @Override
-    protected AbstractL128 copy() {
+    AbstractL128 copy() {
         // This exists to ensure the jump function performed in the super class returns
         // the correct class type. It should not be public.
         return new L128X128Mix(this);
