@@ -21,6 +21,8 @@ import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test for the {@link SmallMeanPoissonSampler}. The tests hit edge cases for the sampler.
@@ -56,27 +58,15 @@ class SmallMeanPoissonSamplerTest {
     /**
      * Test the sample is bounded to 1000 * mean.
      */
-    @Test
-    void testSampleUpperBounds() {
-        // If the nextDouble() is always 1 then the sample will hit the upper bounds
-        final UniformRandomProvider rng = new UniformRandomProvider() {
-            // CHECKSTYLE: stop all
-            public long nextLong(long n) { return 0; }
-            public long nextLong() { return 0; }
-            public int nextInt(int n) { return 0; }
-            public int nextInt() { return 0; }
-            public float nextFloat() { return 0; }
-            public double nextDouble() { return 1;}
-            public void nextBytes(byte[] bytes, int start, int len) {}
-            public void nextBytes(byte[] bytes) {}
-            public boolean nextBoolean() { return false; }
-            // CHECKSTYLE: resume all
-        };
-        for (double mean : new double[] {0.5, 1, 1.5, 2.2}) {
-            final SharedStateDiscreteSampler sampler = SmallMeanPoissonSampler.of(rng, mean);
-            final int expected = (int) Math.ceil(1000 * mean);
-            Assertions.assertEquals(expected, sampler.sample());
-        }
+    @ParameterizedTest
+    @ValueSource(doubles = {0.5, 1, 1.5, 2.2})
+    void testSampleUpperBounds(double mean) {
+        // If the nextDouble() is always ~1 then the sample will hit the upper bounds.
+        // nextLong() returns -1; nextDouble returns Math.nextDown(1.0).
+        final UniformRandomProvider rng = () -> -1;
+        final SharedStateDiscreteSampler sampler = SmallMeanPoissonSampler.of(rng, mean);
+        final int expected = (int) Math.ceil(1000 * mean);
+        Assertions.assertEquals(expected, sampler.sample());
     }
 
     /**

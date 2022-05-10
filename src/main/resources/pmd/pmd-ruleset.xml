@@ -171,16 +171,18 @@
   </rule>
   <rule ref="category/java/design.xml/ExcessiveMethodLength">
     <properties>
-      <!-- The length is due to comments -->
+      <!-- The length is due to comments, or for RandomSource the wrapping of a delegate UniformRandomProvider -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='AliasMethodDiscreteSampler'
-        or @SimpleName='ProbabilityDensityApproximationCommand']"/>
+        or @SimpleName='ProbabilityDensityApproximationCommand']
+        or ./ancestor::EnumDeclaration[@SimpleName='RandomSource']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveClassLength">
     <properties>
       <!-- The length is due to multiple implementations as inner classes -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler'
-        or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler' or @SimpleName='ZigguratSampler']"/>
+        or @SimpleName='CompositeSamplers' or @SimpleName='StableSampler' or @SimpleName='ZigguratSampler']
+        or ./ancestor::EnumDeclaration[@SimpleName='RandomSource']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveParameterList">

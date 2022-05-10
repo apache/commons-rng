@@ -133,28 +133,7 @@ public class ThreadLocalPerformance {
     @Threads(4)
     public long threadLocalRandomWrapped() {
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
-        final UniformRandomProvider rng = new UniformRandomProvider() {
-            // CHECKSTYLE: stop all
-            @Override
-            public void nextBytes(byte[] bytes) { /* Ignore this. */ }
-            @Override
-            public void nextBytes(byte[] bytes, int start, int len) { /* Ignore this. */ }
-            @Override
-            public int nextInt() { return rand.nextInt(); }
-            @Override
-            public int nextInt(int n) { return rand.nextInt(n); }
-            @Override
-            public long nextLong() { return rand.nextLong(); }
-            @Override
-            public long nextLong(long n) { return rand.nextLong(n); }
-            @Override
-            public boolean nextBoolean() { return rand.nextBoolean(); }
-            @Override
-            public float nextFloat() { return rand.nextFloat(); }
-            @Override
-            public double nextDouble() { return rand.nextDouble(); }
-            // CHECKSTYLE: resume all
-        };
+        final UniformRandomProvider rng = rand::nextLong;
         long result = 0;
         for (int i = 0; i < numValues; i++) {
             result = result ^ rng.nextLong();

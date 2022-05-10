@@ -168,18 +168,17 @@ class DiscreteProbabilityCollectionSamplerTest {
         // a probability (for the second item) that hits an edge case.
         final UniformRandomProvider dummyRng = new UniformRandomProvider() {
             private int count;
-            // CHECKSTYLE: stop all
-            public long nextLong(long n) { return 0; }
-            public long nextLong() { return 0; }
-            public int nextInt(int n) { return 0; }
-            public int nextInt() { return 0; }
-            public float nextFloat() { return 0; }
-            // Return 0 then the given probability
-            public double nextDouble() { return (count++ == 0) ? 0 : 1.0; }
-            public void nextBytes(byte[] bytes, int start, int len) {}
-            public void nextBytes(byte[] bytes) {}
-            public boolean nextBoolean() { return false; }
-            // CHECKSTYLE: resume all
+
+            @Override
+            public long nextLong() {
+                return 0;
+            }
+
+            @Override
+            public double nextDouble() {
+                // Return 0 then the 1.0 for the probability
+                return (count++ == 0) ? 0 : 1.0;
+            }
         };
 
         final List<Double> items = Arrays.asList(1d, 2d);

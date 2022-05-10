@@ -16,6 +16,9 @@
  */
 package org.apache.commons.rng.simple;
 
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.internal.ProviderBuilder;
@@ -1015,20 +1018,36 @@ public enum RandomSource {
 
     /**
      * Wraps the given {@code delegate} generator in a new instance that
-     * does not allow access to the "save/restore" functionality.
+     * only provides access to the {@link UniformRandomProvider} methods.
+     *
+     * <p>This method can be used to prevent access to any methods of the {@code delegate}
+     * that are not defined in the {@link UniformRandomProvider} interface.
+     * For example this will prevent access to the "save/restore" functionality of
+     * any {@link RestorableUniformRandomProvider} {@link #create() created}
+     * by the {@link RandomSource} factory methods, or will prevent access to the jump
+     * functionality of generators.
+     *
+     * <p>Since the method applies to more than the {@link RestorableUniformRandomProvider}
+     * interface it is left to the caller to determine if any methods require hiding,
+     * for example:
+     *
+     * <pre><code>
+     * UniformRandomProvider rng = ...;
+     * if (rng instanceof JumpableUniformRandomProvider) {
+     *    rng = RandomSource.unrestorable(rng);
+     * }
+     * </code></pre>
      *
      * @param delegate Generator to which calls will be delegated.
-     * @return a new instance whose state cannot be saved or restored.
+     * @return a new instance
      */
     public static UniformRandomProvider unrestorable(final UniformRandomProvider delegate) {
         return new UniformRandomProvider() {
-            /** {@inheritDoc} */
             @Override
             public void nextBytes(byte[] bytes) {
                 delegate.nextBytes(bytes);
             }
 
-            /** {@inheritDoc} */
             @Override
             public void nextBytes(byte[] bytes,
                                   int start,
@@ -1036,49 +1055,131 @@ public enum RandomSource {
                 delegate.nextBytes(bytes, start, len);
             }
 
-            /** {@inheritDoc} */
             @Override
             public int nextInt() {
                 return delegate.nextInt();
             }
 
-            /** {@inheritDoc} */
             @Override
             public int nextInt(int n) {
                 return delegate.nextInt(n);
             }
 
-            /** {@inheritDoc} */
+            @Override
+            public int nextInt(int origin, int bound) {
+                return delegate.nextInt(origin, bound);
+            }
+
             @Override
             public long nextLong() {
                 return delegate.nextLong();
             }
 
-            /** {@inheritDoc} */
             @Override
             public long nextLong(long n) {
                 return delegate.nextLong(n);
             }
 
-            /** {@inheritDoc} */
+            @Override
+            public long nextLong(long origin, long bound) {
+                return delegate.nextLong(origin, bound);
+            }
+
             @Override
             public boolean nextBoolean() {
                 return delegate.nextBoolean();
             }
 
-            /** {@inheritDoc} */
             @Override
             public float nextFloat() {
                 return delegate.nextFloat();
             }
 
-            /** {@inheritDoc} */
+            @Override
+            public float nextFloat(float bound) {
+                return delegate.nextFloat(bound);
+            }
+
+            @Override
+            public float nextFloat(float origin, float bound) {
+                return delegate.nextFloat(origin, bound);
+            }
+
             @Override
             public double nextDouble() {
                 return delegate.nextDouble();
             }
 
-            /** {@inheritDoc} */
+            @Override
+            public double nextDouble(double bound) {
+                return delegate.nextDouble(bound);
+            }
+
+            @Override
+            public double nextDouble(double origin, double bound) {
+                return delegate.nextDouble(origin, bound);
+            }
+
+            @Override
+            public IntStream ints() {
+                return delegate.ints();
+            }
+
+            @Override
+            public IntStream ints(int origin, int bound) {
+                return delegate.ints(origin, bound);
+            }
+
+            @Override
+            public IntStream ints(long streamSize) {
+                return delegate.ints(streamSize);
+            }
+
+            @Override
+            public IntStream ints(long streamSize, int origin, int bound) {
+                return delegate.ints(streamSize, origin, bound);
+            }
+
+            @Override
+            public LongStream longs() {
+                return delegate.longs();
+            }
+
+            @Override
+            public LongStream longs(long origin, long bound) {
+                return delegate.longs(origin, bound);
+            }
+
+            @Override
+            public LongStream longs(long streamSize) {
+                return delegate.longs(streamSize);
+            }
+
+            @Override
+            public LongStream longs(long streamSize, long origin, long bound) {
+                return delegate.longs(streamSize, origin, bound);
+            }
+
+            @Override
+            public DoubleStream doubles() {
+                return delegate.doubles();
+            }
+
+            @Override
+            public DoubleStream doubles(double origin, double bound) {
+                return delegate.doubles(origin, bound);
+            }
+
+            @Override
+            public DoubleStream doubles(long streamSize) {
+                return delegate.doubles(streamSize);
+            }
+
+            @Override
+            public DoubleStream doubles(long streamSize, double origin, double bound) {
+                return delegate.doubles(streamSize, origin, bound);
+            }
+
             @Override
             public String toString() {
                 return delegate.toString();

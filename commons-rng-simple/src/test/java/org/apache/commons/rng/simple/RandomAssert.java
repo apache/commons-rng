@@ -46,25 +46,33 @@ public final class RandomAssert {
             Assertions.assertEquals(rng1.nextInt(), rng2.nextInt());
         }
         for (int i = 0; i < 4; i++) {
+            final int min = 31 * i + 3;
             for (int j = 0; j < 5; j++) {
                 final int max = 107 * i + 374 * j + 11;
                 Assertions.assertEquals(rng1.nextInt(max), rng2.nextInt(max));
+                Assertions.assertEquals(rng1.nextInt(min, max), rng2.nextInt(min, max));
             }
         }
         for (int i = 0; i < 23; i++) {
             Assertions.assertEquals(rng1.nextLong(), rng2.nextLong());
         }
         for (int i = 0; i < 4; i++) {
+            final int min = 31 * i + 3;
             for (int j = 0; j < 5; j++) {
-                final long max = (Long.MAX_VALUE << 2) + 107 * i + 374 * j + 11;
+                final long max = (Long.MAX_VALUE >> 2) + 107 * i + 374 * j + 11;
                 Assertions.assertEquals(rng1.nextLong(max), rng2.nextLong(max));
+                Assertions.assertEquals(rng1.nextLong(min, max), rng2.nextLong(min, max));
             }
         }
-        for (int i = 0; i < 103; i++) {
+        for (int i = 0; i < 35; i++) {
             Assertions.assertEquals(rng1.nextFloat(), rng2.nextFloat());
+            Assertions.assertEquals(rng1.nextFloat(12.34f), rng2.nextFloat(12.34f));
+            Assertions.assertEquals(rng1.nextFloat(1.23f, 12.34f), rng2.nextFloat(1.23f, 12.34f));
         }
-        for (int i = 0; i < 79; i++) {
+        for (int i = 0; i < 27; i++) {
             Assertions.assertEquals(rng1.nextDouble(), rng2.nextDouble());
+            Assertions.assertEquals(rng1.nextDouble(12.34), rng2.nextDouble(12.34));
+            Assertions.assertEquals(rng1.nextDouble(1.23, 12.34), rng2.nextDouble(1.23, 12.34));
         }
 
         final int size = 345;
@@ -84,5 +92,21 @@ public final class RandomAssert {
             rng2.nextBytes(a2, offset, n);
             Assertions.assertArrayEquals(a1, a2);
         }
+
+        // Streams
+        Assertions.assertArrayEquals(rng1.ints().limit(4).toArray(), rng2.ints().limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.ints(5).toArray(), rng2.ints(5).toArray());
+        Assertions.assertArrayEquals(rng1.ints(-3, 12).limit(4).toArray(), rng2.ints(-3, 12).limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.ints(5, -13, 2).toArray(), rng2.ints(5, -13, 2).toArray());
+
+        Assertions.assertArrayEquals(rng1.longs().limit(4).toArray(), rng2.longs().limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.longs(5).toArray(), rng2.longs(5).toArray());
+        Assertions.assertArrayEquals(rng1.longs(-3, 12).limit(4).toArray(), rng2.longs(-3, 12).limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.longs(5, -13, 2).toArray(), rng2.longs(5, -13, 2).toArray());
+
+        Assertions.assertArrayEquals(rng1.doubles().limit(4).toArray(), rng2.doubles().limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.doubles(5).toArray(), rng2.doubles(5).toArray());
+        Assertions.assertArrayEquals(rng1.doubles(-3, 12).limit(4).toArray(), rng2.doubles(-3, 12).limit(4).toArray());
+        Assertions.assertArrayEquals(rng1.doubles(5, -13, 2).toArray(), rng2.doubles(5, -13, 2).toArray());
     }
 }
