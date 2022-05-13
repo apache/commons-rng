@@ -26,10 +26,6 @@ import org.apache.commons.rng.RandomProviderState;
  */
 public abstract class BaseProvider
     implements RestorableUniformRandomProvider {
-    /** Error message when an integer is not positive. */
-    private static final String NOT_POSITIVE = "Must be strictly positive: ";
-    /** 2^32. */
-    private static final long POW_32 = 1L << 32;
     /**
      * The fractional part of the the golden ratio, phi, scaled to 64-bits and rounded to odd.
      * <pre>
@@ -40,45 +36,6 @@ public abstract class BaseProvider
     private static final long GOLDEN_RATIO_64 = 0x9e3779b97f4a7c15L;
     /** The fractional part of the the golden ratio, phi, scaled to 32-bits and rounded to odd. */
     private static final int GOLDEN_RATIO_32 = 0x9e3779b9;
-
-    /** {@inheritDoc} */
-    @Override
-    public int nextInt(int n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException(NOT_POSITIVE + n);
-        }
-
-        // Lemire (2019): Fast Random Integer Generation in an Interval
-        // https://arxiv.org/abs/1805.10941
-        long m = (nextInt() & 0xffffffffL) * n;
-        long l = m & 0xffffffffL;
-        if (l < n) {
-            // 2^32 % n
-            final long t = POW_32 % n;
-            while (l < t) {
-                m = (nextInt() & 0xffffffffL) * n;
-                l = m & 0xffffffffL;
-            }
-        }
-        return (int) (m >>> 32);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public long nextLong(long n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException(NOT_POSITIVE + n);
-        }
-
-        long bits;
-        long val;
-        do {
-            bits = nextLong() >>> 1;
-            val  = bits % n;
-        } while (bits - val + (n - 1) < 0);
-
-        return val;
-    }
 
     /** {@inheritDoc} */
     @Override

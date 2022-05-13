@@ -15,3 +15,8 @@
 # -----------------------------------------------------------------------------
 #
 # Empty file used to automatically trigger profile from commons parent pom
+#
+# TODO: Enable JApiCmp
+# This has been disabled for the 1.4 to 1.5 comparison.
+# JApiCmp does not recognise methods moved from a class to a default
+# implementation in an interface.

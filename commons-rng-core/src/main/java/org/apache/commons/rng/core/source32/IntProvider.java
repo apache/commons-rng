@@ -122,12 +122,6 @@ public abstract class IntProvider
 
     /** {@inheritDoc} */
     @Override
-    public float nextFloat() {
-        return NumberFactory.makeFloat(next());
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public long nextLong() {
         return NumberFactory.makeLong(next(), next());
     }
