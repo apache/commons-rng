@@ -55,6 +55,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <rng.pmd.version>3.14.0</rng.pmd.version>
     <rng.pmd.dep.version>6.37.0</rng.pmd.dep.version>
+    <rng.revapi.version>0.14.6</rng.revapi.version>
+    <rng.revapi.java.version>0.26.1</rng.revapi.java.version>
     <rng.checkstyle.version>3.1.2</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.45</rng.checkstyle.dep.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
@@ -298,6 +300,43 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <version>${rng.revapi.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.revapi</groupId>
+            <artifactId>revapi-java</artifactId>
+            <version>${rng.revapi.java.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <analysisConfiguration>
+            <revapi.differences id="intentional-api-changes">
+              <ignore>true</ignore>
+            </revapi.differences>
+          </analysisConfiguration>
+          <analysisConfigurationFiles>
+            <configurationFile>
+              <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
+              <roots>
+                <!-- Path to configuration in the JSON config file -->
+                <root>1.5</root>
+              </roots>
+            </configurationFile>
+          </analysisConfigurationFiles>
+        </configuration>
+        <executions>
+          <execution>
+            <configuration>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <!-- Note: commons-parent binds the check goal to the validate phase -->
@@ -323,6 +362,7 @@
             <exclude>dist-archive/**</exclude>
             <exclude>**/*.patch</exclude>
             <exclude>**/pdf.*.txt</exclude>
+            <exclude>src/main/resources/revapi/api-changes.json</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -429,6 +469,34 @@
             <reports>
               <report>pmd</report>
               <report>cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <version>${rng.revapi.version}</version>
+        <configuration>
+          <!-- For reporting do not ignore the "intentional-api-changes" so they are included -->
+          <analysisConfigurationFiles>
+            <configurationFile>
+              <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
+              <roots>
+                <!-- Path(s) to configuration in the JSON config file -->
+                <root>1.5</root>
+              </roots>
+            </configurationFile>
+          </analysisConfigurationFiles>
+          <!-- Note: Property 'reportSeverity' is deprecated but newer 'reportCriticality'
+               does work as documented. -->
+          <reportSeverity>equivalent</reportSeverity>
+          <reportCriticality>allowed</reportCriticality>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
             </reports>
           </reportSet>
         </reportSets>

@@ -96,6 +96,14 @@
           <failOnViolation>false</failOnViolation>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.revapi</groupId>
+        <artifactId>revapi-maven-plugin</artifactId>
+        <version>${rng.revapi.version}</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

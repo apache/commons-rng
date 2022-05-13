@@ -1,0 +1,17 @@
+{
+  "1.5": [
+    {
+      "extension": "revapi.differences",
+      "id": "intentional-api-changes",
+      "configuration": {
+        "differences": [
+          {
+            "code": "java.method.abstractMethodAdded",
+            "new": "method java.lang.Object org.apache.commons.rng.simple.internal.NativeSeedType::createSeed(int, int, int)",
+            "justification": "Abstract method added to enum; all implementations are within this class. This is an internal package with no compatibility enforcement."
+          }
+        ]
+      }
+    }
+  ]
+}
