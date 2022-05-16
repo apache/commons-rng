@@ -140,29 +140,35 @@ UniformRandomProvider rng = RandomSource.MT.create();
 +--------------------------+
 
 
-  * A generator will return a randomly selected element from a range
+  * A generator can return a randomly selected element from a range
     of possible values of some Java (primitive) type.
 
 +--------------------------+
 boolean isOn = rng.nextBoolean(); // "true" or "false".
 +--------------------------+
 +--------------------------+
-int n = rng.nextInt(); // Integer.MIN_VALUE <= n <= Integer.MAX_VALUE.
-int m = rng.nextInt(max); // 0 <= m < max.
+int n = rng.nextInt();         // Integer.MIN_VALUE <= n <= Integer.MAX_VALUE.
+int m = rng.nextInt(max);      // 0 <= m < max.
+int l = rng.nextInt(min, max); // min <= l < max.
 +--------------------------+
 +--------------------------+
-long n = rng.nextLong(); // Long.MIN_VALUE <= n <= Long.MAX_VALUE.
-long m = rng.nextLong(max); // 0 <= m < max.
+long n = rng.nextLong();         // Long.MIN_VALUE <= n <= Long.MAX_VALUE.
+long m = rng.nextLong(max);      // 0 <= m < max.
+long l = rng.nextLong(min, max); // min <= l < max.
 +--------------------------+
 +--------------------------+
-float x = rng.nextFloat(); // 0 <= x < 1.
+float x = rng.nextFloat();         // 0 <= x < 1.
+float y = rng.nextFloat(max);      // 0 <= y < max.
+float z = rng.nextFloat(min, max); // min <= z < max.
 +--------------------------+
 +--------------------------+
-double x = rng.nextDouble(); // 0 <= x < 1.
+double x = rng.nextDouble();         // 0 <= x < 1.
+double y = rng.nextDouble(max);      // 0 <= y < max.
+double z = rng.nextDouble(min, max); // min <= z < max.
 +--------------------------+
 
 
-  * A generator will fill a given <<<byte>>> array with random values.
+  * A generator can fill a given <<<byte>>> array with random values.
 
 +--------------------------+
 byte[] a = new byte[47];
@@ -175,6 +181,50 @@ byte[] a = new byte[47];
 rng.nextBytes(a, 15, 3);
 +--------------------------+
 
+
+  * A generator can return a stream of primitive values.
+
++--------------------------+
+IntStream s1 = rng.ints();         // [Integer.MIN_VALUE, Integer.MAX_VALUE]
+IntStream s2 = rng.ints(max);      // [0, max)
+IntStream s3 = rng.ints(min, max); // [min, max)
++--------------------------+
++--------------------------+
+LongStream s1 = rng.longs();         // [Long.MIN_VALUE, Long.MAX_VALUE]
+LongStream s2 = rng.longs(max);      // [0, max)
+LongStream s3 = rng.longs(min, max); // [min, max)
++--------------------------+
++--------------------------+
+DoubleStream s1 = rng.doubles();         // [0, 1)
+DoubleStream s2 = rng.doubles(max);      // [0, max)
+DoubleStream s3 = rng.doubles(min, max); // [min, max)
++--------------------------+
+
+  Streams can be limited by a stream size argument.
+
++--------------------------+
+// Roll a die 1000 times
+int[] rolls = rng.ints(1000, 1, 7).toArray();
++--------------------------+
+
+  It should be noted that streams returned by the interface default implementation perform repeat
+calls to the relevant <<<next>>> generation method and may have a performance overhead. Efficient
+streams can be created using an instance of a sampler which can precompute coefficients on
+construction (see the
+{{{../commons-rng-sampling/apidocs/org/apache/commons/rng/sampling/package-summary.html}sampling}} module).
+
+
+  * The <<<UniformRandomProvider>>> interface provides default implementations for all generation
+methods except <<<nextLong>>>. Implementation of a new generator must only provide a 64-bit
+source of randomness.
+
++--------------------------+
+UniformRandomProvider rng = new SecureRandom()::nextLong;
++--------------------------+
+
+  Abstract classes for a 32-bit or 64-bit source of randomness, with additional functionality
+not present in the interface, are provided in the
+{{{../commons-rng-core/apidocs/org/apache/commons/rng/core/package-summary.html}core}} module.
 
   * In order to generate reproducible sequences, generators must be instantiated with a user-defined seed.
 
