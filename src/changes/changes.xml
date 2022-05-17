@@ -86,6 +86,10 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="178">
+        "JumpableUniformRandomProvider": Add support to generate Java 8 streams of new
+        random generator instances using the jump method.
+      </action>
       <action dev="aherbert" type="add" issue="176">
         "UniformRandomProvider": Enhance the interface with default methods. Add range sample
         methods with a lower and upper bound. Add support to generate Java 8 streams of sample

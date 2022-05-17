@@ -16,6 +16,8 @@
  */
 package org.apache.commons.rng;
 
+import java.util.stream.Stream;
+
 /**
  * Applies to generators that can be advanced a very large number of
  * steps of the output sequence in a single operation.
@@ -42,4 +44,31 @@ public interface LongJumpableUniformRandomProvider extends JumpableUniformRandom
      * @return A copy of the current state.
      */
     JumpableUniformRandomProvider longJump();
+
+    /**
+     * Returns an effectively unlimited stream of new random generators, each of which
+     * implements the {@link JumpableUniformRandomProvider} interface.
+     *
+     * @return a stream of random generators.
+     * @since 1.5
+     */
+    default Stream<JumpableUniformRandomProvider> longJumps() {
+        return Stream.generate(this::longJump).sequential();
+    }
+
+    /**
+     * Returns a stream producing the given {@code streamSize} number of new random
+     * generators, each of which implements the {@link JumpableUniformRandomProvider}
+     * interface.
+     *
+     * @param streamSize Number of objects to generate.
+     * @return a stream of random generators; the stream is limited to the given
+     * {@code streamSize}.
+     * @throws IllegalArgumentException if {@code streamSize} is negative.
+     * @since 1.5
+     */
+    default Stream<JumpableUniformRandomProvider> longJumps(long streamSize) {
+        UniformRandomProviderSupport.validateStreamSize(streamSize);
+        return longJumps().limit(streamSize);
+    }
 }
