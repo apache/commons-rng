@@ -262,7 +262,7 @@ public interface UniformRandomProvider {
      * values.
      *
      * @param streamSize Number of values to generate.
-     * @return a stream of random {@code int} values. the stream is limited to the given
+     * @return a stream of random {@code int} values; the stream is limited to the given
      * {@code streamSize}.
      * @throws IllegalArgumentException if {@code streamSize} is negative.
      * @since 1.5
@@ -325,7 +325,7 @@ public interface UniformRandomProvider {
      * values.
      *
      * @param streamSize Number of values to generate.
-     * @return a stream of random {@code long} values. the stream is limited to the given
+     * @return a stream of random {@code long} values; the stream is limited to the given
      * {@code streamSize}.
      * @throws IllegalArgumentException if {@code streamSize} is negative.
      * @since 1.5
@@ -389,7 +389,8 @@ public interface UniformRandomProvider {
      * values between 0 (inclusive) and 1 (exclusive).
      *
      * @param streamSize Number of values to generate.
-     * @return a stream of random values between 0 (inclusive) and 1 (exclusive).
+     * @return a stream of random values between 0 (inclusive) and 1 (exclusive);
+     * the stream is limited to the given {@code streamSize}.
      * @throws IllegalArgumentException if {@code streamSize} is negative.
      * @since 1.5
      */
