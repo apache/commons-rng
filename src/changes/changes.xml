@@ -131,10 +131,10 @@ will be recorded in the release notes.
         "RandomSource.create": Update array seed conversion to use optimum seed length.
         Avoid duplication of input bytes and conversion of bytes that will be discarded.
         This introduces a behavioural change for int[], long[], and int seed conversions.
-        Any fixed seeds from previous versions in byte[], long or the native seed type
+        Any fixed seeds used in previous versions in byte[], long or the native seed type
         will create the same RNG state. All array-to-array seed conversions now use little
         endian format, matching the byte[] conversion behaviour since 1.0. All seed
-        conversions that expand the seed size using the same generation method to provide
+        conversions that expand the seed size use the same generation method to provide
         additional bytes. Conversion of int[] to long avoids loss of bits
         changing the possible output seeds from 2^32 to 2^64.
       </action>
