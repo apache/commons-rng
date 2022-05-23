@@ -181,12 +181,17 @@ public final class DiscreteSamplersList {
             // Any discrete distribution
             final int[] discretePoints = {0, 1, 2, 3, 4};
             final double[] discreteProbabilities = {0.1, 0.2, 0.3, 0.4, 0.5};
+            final long[] discreteFrequencies = {1, 2, 3, 4, 5};
             add(LIST, discretePoints, discreteProbabilities,
                 MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomSource.XO_SHI_RO_512_PLUS.create(), discreteProbabilities));
             add(LIST, discretePoints, discreteProbabilities,
                 GuideTableDiscreteSampler.of(RandomSource.XO_SHI_RO_512_SS.create(), discreteProbabilities));
             add(LIST, discretePoints, discreteProbabilities,
                 AliasMethodDiscreteSampler.of(RandomSource.KISS.create(), discreteProbabilities));
+            add(LIST, discretePoints, discreteProbabilities,
+                FastLoadedDiceRollerDiscreteSampler.of(RandomSource.L64_X128_MIX.create(), discreteFrequencies));
+            add(LIST, discretePoints, discreteProbabilities,
+                FastLoadedDiceRollerDiscreteSampler.of(RandomSource.L64_X128_SS.create(), discreteProbabilities));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);

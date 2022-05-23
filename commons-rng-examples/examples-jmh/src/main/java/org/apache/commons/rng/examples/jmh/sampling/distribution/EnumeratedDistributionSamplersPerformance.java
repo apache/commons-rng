@@ -22,7 +22,9 @@ import org.apache.commons.math3.distribution.IntegerDistribution;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.AliasMethodDiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.DirichletSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.FastLoadedDiceRollerDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSampler;
 import org.apache.commons.rng.simple.RandomSource;
@@ -41,7 +43,6 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -115,6 +116,9 @@ public class EnumeratedDistributionSamplersPerformance {
                 "AliasMethodDiscreteSampler",
                 "GuideTableDiscreteSampler",
                 "MarsagliaTsangWangDiscreteSampler",
+                "FastLoadedDiceRollerDiscreteSampler",
+                "FastLoadedDiceRollerDiscreteSamplerLong",
+                "FastLoadedDiceRollerDiscreteSampler53",
 
                 // Uncomment to test non-default parameters
                 //"AliasMethodDiscreteSamplerNoPad", // Not optimal for sampling
@@ -187,6 +191,19 @@ public class EnumeratedDistributionSamplersPerformance {
                 factory = () -> GuideTableDiscreteSampler.of(rng, probabilities, 8);
             } else if ("MarsagliaTsangWangDiscreteSampler".equals(samplerType)) {
                 factory = () -> MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
+            } else if ("FastLoadedDiceRollerDiscreteSampler".equals(samplerType)) {
+                factory = () -> FastLoadedDiceRollerDiscreteSampler.of(rng, probabilities);
+            } else if ("FastLoadedDiceRollerDiscreteSamplerLong".equals(samplerType)) {
+                // Avoid exact floating-point arithmetic in construction.
+                // Frequencies must sum to less than 2^63; here the sum is ~2^62.
+                // This conversion may omit very small probabilities.
+                final double sum = Arrays.stream(probabilities).sum();
+                final long[] frequencies = Arrays.stream(probabilities)
+                                                 .mapToLong(x -> Math.round(0x1.0p62 * x / sum))
+                                                 .toArray();
+                factory = () -> FastLoadedDiceRollerDiscreteSampler.of(rng, frequencies);
+            } else if ("FastLoadedDiceRollerDiscreteSampler53".equals(samplerType)) {
+                factory = () -> FastLoadedDiceRollerDiscreteSampler.of(rng, probabilities, 53);
             } else {
                 throw new IllegalStateException();
             }
@@ -335,12 +352,115 @@ public class EnumeratedDistributionSamplersPerformance {
         /** {@inheritDoc} */
         @Override
         protected double[] createProbabilities() {
-            final double[] probabilities = new double[randomNonUniformSize];
-            final ThreadLocalRandom rng = ThreadLocalRandom.current();
-            for (int i = 0; i < probabilities.length; i++) {
-                probabilities[i] = rng.nextDouble();
-            }
-            return probabilities;
+            return RandomSource.XO_RO_SHI_RO_128_PP.create()
+                .doubles(randomNonUniformSize).toArray();
+        }
+    }
+
+    /**
+     * Sample random probability arrays from a Dirichlet distribution.
+     *
+     * <p>The distribution ensures the probabilities sum to 1.
+     * The <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">entropy</a>
+     * of the probabilities increases with parameters k and alpha.
+     * The following shows the mean and sd of the entropy from 100 samples
+     * for a range of parameters.
+     * <pre>
+     * k   alpha   mean    sd
+     * 4   0.500   1.299   0.374
+     * 4   1.000   1.531   0.294
+     * 4   2.000   1.754   0.172
+     * 8   0.500   2.087   0.348
+     * 8   1.000   2.490   0.266
+     * 8   2.000   2.707   0.142
+     * 16  0.500   3.023   0.287
+     * 16  1.000   3.454   0.166
+     * 16  2.000   3.693   0.095
+     * 32  0.500   4.008   0.182
+     * 32  1.000   4.406   0.125
+     * 32  2.000   4.692   0.075
+     * 64  0.500   4.986   0.151
+     * 64  1.000   5.392   0.115
+     * 64  2.000   5.680   0.048
+     * </pre>
+     */
+    @State(Scope.Benchmark)
+    public static class DirichletDistributionSources extends SamplerSources {
+        /** Number of categories. */
+        @Param({"4", "8", "16"})
+        private int k;
+
+        /** Concentration parameter. */
+        @Param({"0.5", "1", "2"})
+        private double alpha;
+
+        /** {@inheritDoc} */
+        @Override
+        protected double[] createProbabilities() {
+            return DirichletSampler.symmetric(RandomSource.XO_RO_SHI_RO_128_PP.create(),
+                                              k, alpha).sample();
+        }
+    }
+
+    /**
+     * The {@link FastLoadedDiceRollerDiscreteSampler} samplers to use for testing.
+     * Creates the sampler for each random source and the probabilities using
+     * a Dirichlet distribution.
+     *
+     * <p>This class is a specialized source to allow examination of the effect of the
+     * {@link FastLoadedDiceRollerDiscreteSampler} {@code alpha} parameter.
+     */
+    @State(Scope.Benchmark)
+    public static class FastLoadedDiceRollerDiscreteSamplerSources extends LocalRandomSources {
+        /** Number of categories. */
+        @Param({"4", "8", "16"})
+        private int k;
+
+        /** Concentration parameter. */
+        @Param({"0.5", "1", "2"})
+        private double concentration;
+
+        /** The constructor {@code alpha} parameter. */
+        @Param({"0", "30", "53"})
+        private int alpha;
+
+        /** The factory. */
+        private Supplier<DiscreteSampler> factory;
+
+        /** The sampler. */
+        private DiscreteSampler sampler;
+
+        /**
+         * Gets the sampler.
+         *
+         * @return the sampler.
+         */
+        public DiscreteSampler getSampler() {
+            return sampler;
+        }
+
+        /** Create the distribution probabilities (per iteration as it may vary), the sampler
+         * factory and instantiates sampler. */
+        @Override
+        @Setup(Level.Iteration)
+        public void setup() {
+            super.setup();
+
+            final double[] probabilities =
+                DirichletSampler.symmetric(RandomSource.XO_RO_SHI_RO_128_PP.create(),
+                                           k, concentration).sample();
+            final UniformRandomProvider rng = getGenerator();
+            factory = () -> FastLoadedDiceRollerDiscreteSampler.of(rng, probabilities, alpha);
+            sampler = factory.get();
+        }
+
+        /**
+         * Creates a new instance of the sampler.
+         *
+         * @return The sampler.
+         */
+        public DiscreteSampler createSampler() {
+            return factory.get();
         }
     }
 
@@ -480,7 +600,7 @@ public class EnumeratedDistributionSamplersPerformance {
     }
 
     /**
-     * Run the sampler.
+     * Create and run the sampler.
      *
      * @param sources Source of randomness.
      * @return the sample value
@@ -502,13 +622,57 @@ public class EnumeratedDistributionSamplersPerformance {
     }
 
     /**
-     * Run the sampler.
+     * Create and run the sampler.
      *
      * @param sources Source of randomness.
      * @return the sample value
      */
     @Benchmark
     public int singleSampleRandom(RandomDistributionSources sources) {
+        return sources.createSampler().sample();
+    }
+
+    /**
+     * Run the sampler.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    @Benchmark
+    public int sampleDirichlet(DirichletDistributionSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Create and run the sampler.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    @Benchmark
+    public int singleSampleDirichlet(DirichletDistributionSources sources) {
+        return sources.createSampler().sample();
+    }
+
+    /**
+     * Run the sampler.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    @Benchmark
+    public int sampleFast(FastLoadedDiceRollerDiscreteSamplerSources sources) {
+        return sources.getSampler().sample();
+    }
+
+    /**
+     * Create and run the sampler.
+     *
+     * @param sources Source of randomness.
+     * @return the sample value
+     */
+    @Benchmark
+    public int singleSampleFast(FastLoadedDiceRollerDiscreteSamplerSources sources) {
         return sources.createSampler().sample();
     }
 }

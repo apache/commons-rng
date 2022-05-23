@@ -77,7 +77,7 @@
       <property name="violationSuppressXPath"
         value="//ClassOrInterfaceDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
           or @SimpleName='GuideTableDiscreteSampler' or @SimpleName='SharedStateDiscreteProbabilitySampler'
-          or @SimpleName='DirichletSampler']"/>
+          or @SimpleName='DirichletSampler' or @SimpleName='FastLoadedDiceRollerDiscreteSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
@@ -142,6 +142,14 @@
     <properties>
       <!-- Allow Builder set methods to return the Builder (not void) -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Builder$')]"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/codestyle.xml/PrematureDeclaration">
+    <properties>
+      <!-- False positive where minExponent is stored before a possible exit point. -->
+      <property name="violationSuppressXPath"
+        value="./ancestor::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'] and
+        ./ancestor::MethodName[@Image='of']"/>
     </properties>
   </rule>
 
@@ -227,6 +235,12 @@
       <!-- Methods document the size of the jump functions -->
       <property name="violationSuppressXPath"
         value="../MethodDeclaration[@Name='jump' or @Name='longJump']"/>
+    </properties>
+  </rule>
+  <rule ref="category/java/design.xml/GodClass">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler']"/>
     </properties>
   </rule>
 
