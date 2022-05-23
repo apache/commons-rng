@@ -213,8 +213,8 @@ class AliasMethodDiscreteSamplerTest {
      *
      * @param expected the expected probabilities
      */
-    private static void checkSamples(double[] probabilies) {
-        checkSamples(createSampler(probabilies), probabilies);
+    private static void checkSamples(double[] probabilities) {
+        checkSamples(createSampler(probabilities), probabilities);
     }
 
     /**
@@ -222,27 +222,27 @@ class AliasMethodDiscreteSamplerTest {
      *
      * @param expected the expected probabilities
      */
-    private static void checkSamples(SharedStateDiscreteSampler sampler, double[] probabilies) {
+    private static void checkSamples(SharedStateDiscreteSampler sampler, double[] probabilities) {
         final int numberOfSamples = 10000;
-        final long[] samples = new long[probabilies.length];
+        final long[] samples = new long[probabilities.length];
         for (int i = 0; i < numberOfSamples; i++) {
             samples[sampler.sample()]++;
         }
 
         // Handle a test with some zero-probability observations by mapping them out
         int mapSize = 0;
-        for (int i = 0; i < probabilies.length; i++) {
-            if (probabilies[i] != 0) {
+        for (int i = 0; i < probabilities.length; i++) {
+            if (probabilities[i] != 0) {
                 mapSize++;
             }
         }
 
         double[] expected = new double[mapSize];
         long[] observed = new long[mapSize];
-        for (int i = 0; i < probabilies.length; i++) {
-            if (probabilies[i] != 0) {
+        for (int i = 0; i < probabilities.length; i++) {
+            if (probabilities[i] != 0) {
                 --mapSize;
-                expected[mapSize] = probabilies[i];
+                expected[mapSize] = probabilities[i];
                 observed[mapSize] = samples[i];
             } else {
                 Assertions.assertEquals(0, samples[i], "No samples expected from zero probability");
