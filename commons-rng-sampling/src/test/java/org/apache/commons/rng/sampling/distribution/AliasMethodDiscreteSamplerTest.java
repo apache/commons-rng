@@ -123,7 +123,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithProbabilities() {
-        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
+        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         checkSamples(expected);
     }
 
@@ -133,7 +133,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
-        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
+        final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         checkSamples(AliasMethodDiscreteSampler.of(RandomSource.SPLIT_MIX_64.create(), expected), expected);
     }
 
@@ -143,7 +143,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithObservations() {
-        final double[] expected = {1, 2, 3, 1, 3 };
+        final double[] expected = {1, 2, 3, 1, 3};
         checkSamples(expected);
     }
 
@@ -153,7 +153,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithProbabilitiesPaddedToPowerOf2() {
-        final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0, 0 };
+        final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0, 0};
         checkSamples(expected);
     }
 
@@ -163,7 +163,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithObservationsPaddedToPowerOf2() {
-        final double[] expected = {1, 2, 3, 0, 1, 3, 0, 0 };
+        final double[] expected = {1, 2, 3, 0, 1, 3, 0, 0};
         checkSamples(expected);
     }
 
@@ -173,7 +173,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithZeroProbabilities() {
-        final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0 };
+        final double[] expected = {0.1, 0, 0.2, 0.3, 0.1, 0.3, 0};
         checkSamples(expected);
     }
 
@@ -183,7 +183,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testNonUniformSamplesWithZeroObservations() {
-        final double[] expected = {1, 2, 3, 0, 1, 3, 0 };
+        final double[] expected = {1, 2, 3, 0, 1, 3, 0};
         checkSamples(expected);
     }
 
@@ -193,7 +193,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testUniformSamplesWithNoObservationLessThanTheMean() {
-        final double[] expected = {2, 2, 2, 2, 2, 2 };
+        final double[] expected = {2, 2, 2, 2, 2, 2};
         checkSamples(expected);
     }
 
@@ -202,7 +202,7 @@ class AliasMethodDiscreteSamplerTest {
      */
     @Test
     void testLargeTableSize() {
-        double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3 };
+        double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
         // Pad to a large table size not supported for fast sampling (anything > 2^11)
         expected = Arrays.copyOf(expected, 1 << 12);
         checkSamples(expected);
