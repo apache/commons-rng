@@ -32,41 +32,41 @@ import java.util.Arrays;
  */
 class AliasMethodDiscreteSamplerTest {
     @Test
-    void testConstructorThrowsWithNullProbabilites() {
+    void testConstructorThrowsWithNullProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(null));
     }
 
     @Test
-    void testConstructorThrowsWithZeroLengthProbabilites() {
+    void testConstructorThrowsWithZeroLengthProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[0]));
     }
 
     @Test
-    void testConstructorThrowsWithNegativeProbabilites() {
+    void testConstructorThrowsWithNegativeProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {-1, 0.1, 0.2}));
     }
 
     @Test
-    void testConstructorThrowsWithNaNProbabilites() {
+    void testConstructorThrowsWithNaNProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {0.1, Double.NaN, 0.2}));
     }
 
     @Test
-    void testConstructorThrowsWithInfiniteProbabilites() {
+    void testConstructorThrowsWithInfiniteProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {0.1, Double.POSITIVE_INFINITY, 0.2}));
     }
 
     @Test
-    void testConstructorThrowsWithInfiniteSumProbabilites() {
+    void testConstructorThrowsWithInfiniteSumProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> createSampler(new double[] {Double.MAX_VALUE, Double.MAX_VALUE}));
     }
 
     @Test
-    void testConstructorThrowsWithZeroSumProbabilites() {
+    void testConstructorThrowsWithZeroSumProbabilities() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createSampler(new double[4]));
     }
 
