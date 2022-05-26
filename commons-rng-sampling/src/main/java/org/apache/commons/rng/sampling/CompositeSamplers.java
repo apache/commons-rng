@@ -117,7 +117,7 @@ public final class CompositeSamplers {
             public SharedStateDiscreteSampler create(UniformRandomProvider rng, double[] probabilities) {
                 return MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng, probabilities);
             }
-        };
+        }
     }
 
     /**
@@ -262,7 +262,7 @@ public final class CompositeSamplers {
             /** Instance of {@link SharedStateSampler}. */
             SHARED_STATE_SAMPLER,
             /** No specialisation. */
-            NONE;
+            NONE
         }
 
         /**

@@ -196,17 +196,11 @@ public class ContinuousUniformSampler
             // (MAX_VALUE has all bits set except the most significant sign bit.)
             bitsx &= Long.MAX_VALUE;
             bitsy &= Long.MAX_VALUE;
-            if (lessThanUnsigned(bitsx + bitsy, MIN_ULP_OPPOSITE_SIGN)) {
-                return false;
-            }
-        } else {
-            // Same signs, subtraction will count the ULP difference.
-            // This should be above 1.
-            if (Math.abs(bitsx - bitsy) < MIN_ULP_SAME_SIGN) {
-                return false;
-            }
+            return !lessThanUnsigned(bitsx + bitsy, MIN_ULP_OPPOSITE_SIGN);
         }
-        return true;
+        // Same signs, subtraction will count the ULP difference.
+        // This should be above 1.
+        return Math.abs(bitsx - bitsy) >= MIN_ULP_SAME_SIGN;
     }
 
     /**
