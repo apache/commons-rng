@@ -44,3 +44,8 @@ jobs:
     - name: Build with Maven
       # Use the default goal
       run: mvn -V --no-transfer-progress
+    - name: Build examples with Maven
+      # Examples require Java 11+
+      if: contains(matrix.java, '11')
+      working-directory: ./commons-numbers-examples
+      run: mvn -pl examples-jmh,examples-quadrature,examples-sampling,examples-stress,examples-jpms/jpms-lib,examples-jpms/jpms-app verify apache-rat:check checkstyle:check
