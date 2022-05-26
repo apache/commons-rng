@@ -76,6 +76,15 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <configuration>
+          <ignores>
+            <ignore>java.nio.IntBuffer</ignore>
+          </ignores>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
