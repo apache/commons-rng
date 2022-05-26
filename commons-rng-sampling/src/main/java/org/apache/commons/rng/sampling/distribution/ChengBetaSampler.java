@@ -266,6 +266,7 @@ public class ChengBetaSampler
                 // Compute Y and Z
                 final double y = u1 * u2;
                 final double z = u1 * y;
+                final double v1 = Math.log(u1) - Math.log1p(-u1);
                 if (u1 < ONE_HALF) {
                     // Step 2:
                     if (ONE_QUARTER * u2 + z - y >= k1) {
@@ -274,7 +275,7 @@ public class ChengBetaSampler
                 } else {
                     // Step 3:
                     if (z <= ONE_QUARTER) {
-                        final double v = beta * (Math.log(u1) - Math.log1p(-u1));
+                        final double v = beta * v1;
                         w = a * Math.exp(v);
                         break;
                     }
@@ -286,7 +287,7 @@ public class ChengBetaSampler
                 }
 
                 // Step 5:
-                final double v = beta * (Math.log(u1) - Math.log1p(-u1));
+                final double v = beta * v1;
                 w = a * Math.exp(v);
                 if (alpha * (logAlpha - Math.log(b + w) + v) - LN_4 >= Math.log(z)) {
                     break;
