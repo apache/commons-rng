@@ -76,6 +76,7 @@
     <project.mainClass>org.openjdk.jmh.Main</project.mainClass>
     <!-- Disable analysis for benchmarking code. -->
     <pmd.skip>true</pmd.skip>
+    <spotbugs.skip>true</spotbugs.skip>
 
     <!-- Skip tests. This avoids the lengthy test of the ziggurat samplers. Override using:
        mvn test -DskipTests=false
