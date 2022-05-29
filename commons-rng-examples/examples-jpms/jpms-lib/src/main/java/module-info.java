@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This module contains code for testing that the library
+ * can be used as a Java 9 Java Platform Module System (JPMS) module.
+ */
 module org.apache.commons.rng.examples.jpms.lib {
     requires org.apache.commons.rng.api;
     requires org.apache.commons.rng.sampling;

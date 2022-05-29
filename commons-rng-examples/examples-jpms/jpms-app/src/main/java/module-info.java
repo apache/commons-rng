@@ -14,6 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * This module contains an application for testing that the library
+ * can be used as a Java 9 Java Platform Module System (JPMS) module.
+ */
 module org.apache.commons.rng.examples.jpms.app {
     requires org.apache.commons.rng.examples.jpms.lib;
     requires org.apache.commons.rng.simple;
