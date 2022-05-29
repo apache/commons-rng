@@ -94,6 +94,50 @@
 
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <!-- NOTE: javadoc config must also be set under <reporting> -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <sourceFileExcludes>
+            <sourceFileExclude>**/jmh_generated/*.java</sourceFileExclude>
+          </sourceFileExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <excludes>**/jmh_generated/*.java</excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <!-- NOTE: javadoc config must also be set under <build> -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <sourceFileExcludes>
+            <sourceFileExclude>**/jmh_generated/*.java</sourceFileExclude>
+          </sourceFileExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <excludes>**/jmh_generated/*.java</excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <profiles>
     <profile>
       <!-- Run a named benchmark from maven. The class to run can be specified as a property
