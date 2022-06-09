@@ -43,8 +43,8 @@
 Apache Commons RNG Simple
 ===================
 
-[![Build Status](https://app.travis-ci.com/apache/commons-rng.svg)](https://app.travis-ci.com/github/apache/commons-rng)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-rng/badge.svg)](https://coveralls.io/r/apache/commons-rng)
+[![Build Status](https://github.com/apache/commons-rng/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-rng/actions/workflows/maven.yml)
+[![Coverage Status](https://codecov.io/gh/apache/commons-rng/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-simple/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-simple/1.4)
 
