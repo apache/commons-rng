@@ -86,6 +86,11 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="179">
+        "FastLoadedDiceRollerDiscreteSampler": Distribution sampler that uses the
+        Fast Loaded Dice Roller (FLDR) algorithm for exact sampling from a discrete
+        probability distribution.
+      </action>
       <action dev="aherbert" type="add" issue="178">
         "JumpableUniformRandomProvider": Add support to generate Java 8 streams of new
         random generator instances using the jump method.
