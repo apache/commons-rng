@@ -325,8 +325,6 @@
         </configuration>
         <executions>
           <execution>
-            <configuration>
-            </configuration>
             <goals>
               <goal>check</goal>
             </goals>
