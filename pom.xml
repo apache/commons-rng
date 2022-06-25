@@ -71,6 +71,8 @@
        depend on other packages. -->
     <commons.jxr.version>2.5</commons.jxr.version>
 
+    <!-- Increase from commons-parent -->
+    <commons.jacoco.methodRatio>1.00</commons.jacoco.methodRatio>
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
 
     <commons.site.path>rng</commons.site.path>
