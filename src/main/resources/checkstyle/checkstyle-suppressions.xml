@@ -36,4 +36,7 @@
   <suppress checks="MethodLength" files="ProbabilityDensityApproximationCommand" />
   <suppress checks="FileLength" files="[\\/]StableSamplerTest" />
   <suppress checks="FileLength" files="[\\/]ZigguratSamplerPerformance" />
+  <!-- Suppress checks for the method-local inner classes -->
+  <suppress checks="MissingJavadocType" files="[\\/]LXMBenchmark" />
+  <suppress checks="MissingJavadocMethod" files="[\\/]LXMBenchmark" />
 </suppressions>
