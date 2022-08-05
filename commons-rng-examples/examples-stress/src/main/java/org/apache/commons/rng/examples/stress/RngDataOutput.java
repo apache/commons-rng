@@ -56,7 +56,7 @@ import java.nio.ByteOrder;
  * {@link java.io.DataOutputStream#writeInt(int) DataOutputStream#writeInt(int)}.</p>
  *
  * <p>This class has adaptors to write the long output from a RNG to two int values.
- * To match the caching implementation in the the core LongProvider class this is tested
+ * To match the caching implementation in the core LongProvider class this is tested
  * to output int values in the same order as an instance of the LongProvider. Currently
  * this outputs in order: low 32-bits, high 32-bits.
  */

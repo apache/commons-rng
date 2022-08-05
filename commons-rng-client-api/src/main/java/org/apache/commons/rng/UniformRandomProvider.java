@@ -30,8 +30,7 @@ public interface UniformRandomProvider {
     /**
      * Generates {@code byte} values and places them into a user-supplied array.
      *
-     * <p>The number of random bytes produced is equal to the length of the
-     * the byte array.
+     * <p>The number of random bytes produced is equal to the length of the byte array.
      *
      * @param bytes Byte array in which to put the random bytes.
      * Cannot be {@code null}.

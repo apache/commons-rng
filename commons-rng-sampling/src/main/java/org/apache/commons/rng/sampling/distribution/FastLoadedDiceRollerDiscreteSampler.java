@@ -705,7 +705,7 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
     }
 
     /**
-     * Creates the sampler. Frequencies are are represented as a 53-bit value with a
+     * Creates the sampler. Frequencies are represented as a 53-bit value with a
      * left-shift offset.
      * <pre>
      * BigInteger.valueOf(value).shiftLeft(offset)

@@ -459,7 +459,7 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
-     * Write an {@code long} value to the the output. The native Java value will be
+     * Write an {@code long} value to the output. The native Java value will be
      * written to the writer on a single line using: a binary string representation
      * of the bytes; the unsigned integer; and the signed integer.
      *
@@ -497,7 +497,7 @@ class OutputCommand implements Callable<Void> {
     }
 
     /**
-     * Write an {@code int} value to the the output. The native Java value will be
+     * Write an {@code int} value to the output. The native Java value will be
      * written to the writer on a single line using: a binary string representation
      * of the bytes; the unsigned integer; and the signed integer.
      *
