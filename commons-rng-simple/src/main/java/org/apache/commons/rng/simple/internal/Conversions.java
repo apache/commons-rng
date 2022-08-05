@@ -28,7 +28,7 @@ package org.apache.commons.rng.simple.internal;
  */
 final class Conversions {
     /**
-     * The fractional part of the the golden ratio, phi, scaled to 64-bits and rounded to odd.
+     * The fractional part of the golden ratio, phi, scaled to 64-bits and rounded to odd.
      * <pre>
      * phi = (sqrt(5) - 1) / 2) * 2^64
      * </pre>

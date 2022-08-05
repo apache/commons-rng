@@ -759,6 +759,9 @@ This is avoided by creating an empty directory when svn is not available.
      <contributor>
       <name>Abhishek Singh Dhadwal</name>
     </contributor>
+    <contributor>
+      <name>Arturo Bernal</name>
+    </contributor>
   </contributors>
 
 </project>

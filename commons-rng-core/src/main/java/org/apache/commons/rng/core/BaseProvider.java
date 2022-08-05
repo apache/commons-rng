@@ -27,14 +27,14 @@ import org.apache.commons.rng.RandomProviderState;
 public abstract class BaseProvider
     implements RestorableUniformRandomProvider {
     /**
-     * The fractional part of the the golden ratio, phi, scaled to 64-bits and rounded to odd.
+     * The fractional part of the golden ratio, phi, scaled to 64-bits and rounded to odd.
      * <pre>
      * phi = (sqrt(5) - 1) / 2) * 2^64
      * </pre>
      * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
      */
     private static final long GOLDEN_RATIO_64 = 0x9e3779b97f4a7c15L;
-    /** The fractional part of the the golden ratio, phi, scaled to 32-bits and rounded to odd. */
+    /** The fractional part of the golden ratio, phi, scaled to 32-bits and rounded to odd. */
     private static final int GOLDEN_RATIO_32 = 0x9e3779b9;
 
     /** {@inheritDoc} */
