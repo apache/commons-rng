@@ -105,6 +105,7 @@
           <sourceFileExcludes>
             <sourceFileExclude>**/jmh_generated/*.java</sourceFileExclude>
           </sourceFileExcludes>
+          <failOnWarnings>false</failOnWarnings>
         </configuration>
       </plugin>
       <plugin>
@@ -127,6 +128,7 @@
           <sourceFileExcludes>
             <sourceFileExclude>**/jmh_generated/*.java</sourceFileExclude>
           </sourceFileExcludes>
+          <failOnWarnings>false</failOnWarnings>
         </configuration>
       </plugin>
       <plugin>
