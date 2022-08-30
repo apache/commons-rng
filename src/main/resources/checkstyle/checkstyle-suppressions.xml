@@ -26,6 +26,9 @@
   <suppress checks="UnnecessaryParentheses" files=".*stress[/\\]StressTestCommand\.java$" lines="672" />
   <!-- Special to allow withUniformRandomProvider to act as a constructor. -->
   <suppress checks="HiddenField" files=".*Sampler\.java$" message="'rng' hides a field." />
+  <!-- Methods have the names from the Spliterator interface that is implemented by child classes.
+       Classes are package-private and should not require documentation. -->
+  <suppress checks="MissingJavadocMethod" files="[\\/]UniformRandomProviderSupport\.java$" lines="461-466"/>
   <!-- Be more lenient on tests. -->
   <suppress checks="Javadoc" files=".*[/\\]test[/\\].*" />
   <suppress checks="MultipleStringLiterals" files=".*[/\\]test[/\\].*" />

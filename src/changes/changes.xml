@@ -86,6 +86,12 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="180">
+        New "SplittableUniformRandomProvider" interface to allow splitting a RNG into two
+        objects, each of which implements the same interface (and can be recursively split
+        indefinitely). Add default methods to support parallel stream implementations
+        of the UniformRandomProvider stream methods.
+      </action>
       <action dev="aherbert" type="add" issue="179">
         "FastLoadedDiceRollerDiscreteSampler": Distribution sampler that uses the
         Fast Loaded Dice Roller (FLDR) algorithm for exact sampling from a discrete
