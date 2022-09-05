@@ -244,6 +244,16 @@
     </properties>
   </rule>
 
+  <rule ref="category/java/documentation.xml/CommentRequired">
+    <properties>
+      <!-- Public methods have the names from the Spliterator interface that is implemented by
+           child classes. These cannot inherit javadoc as the Spliterator interface must be
+           generic-typed by the child class and the parent does not implement Spliterator. -->
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='ProviderSpliterator']"/>
+    </properties>
+  </rule>
+
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
       <property name="ignoreMagicNumbers" value="-1,0,1" />

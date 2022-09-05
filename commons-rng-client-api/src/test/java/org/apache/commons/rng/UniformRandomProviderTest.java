@@ -25,9 +25,6 @@ import java.util.SplittableRandom;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,14 +37,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 /**
  * Tests for default method implementations in {@link UniformRandomProvider}.
  *
- * <p>This class verifies all exception conditions for the range methods and
- * the range arguments to the stream methods. Streams methods are asserted
- * to call the corresponding single value generation method in the interface.
+ * <p>This class verifies all exception conditions for the range methods.
  * Single value generation methods are asserted using a test of uniformity
  * from multiple samples.
+ *
+ * <p>Stream methods are tested {@link UniformRandomProviderStreamTest}.
  */
 class UniformRandomProviderTest {
-    private static final long STREAM_SIZE_ONE = 1;
     /** Sample size for statistical uniformity tests. */
     private static final int SAMPLE_SIZE = 1000;
     /** Sample size for statistical uniformity tests as a BigDecimal. */
@@ -126,10 +122,6 @@ class UniformRandomProviderTest {
             Arguments.of(0, Double.NaN),
             Arguments.of(Double.NaN, 1)
         );
-    }
-
-    static long[] streamSizes() {
-        return new long[] {0, 1, 13};
     }
 
     /**
@@ -383,286 +375,6 @@ class UniformRandomProviderTest {
         for (int i = 0; i < size; i++) {
             Assertions.assertEquals(values[i] < 0, rng.nextBoolean());
         }
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {-1, -2, Long.MIN_VALUE})
-    void testInvalidStreamSizeThrows(long size) {
-        final UniformRandomProvider rng = DummyGenerator.INSTANCE;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.ints(size), "ints");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.ints(size, 1, 42), "ints(lower, upper)");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.longs(size), "longs");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.longs(size, 3L, 33L), "longs(lower, upper)");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.doubles(size), "doubles");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.doubles(size, 1.5, 2.75), "doubles(lower, upper)");
-    }
-
-    @Test
-    void testUnlimitedStreamSize() {
-        final UniformRandomProvider rng = DummyGenerator.INSTANCE;
-        Assertions.assertEquals(Long.MAX_VALUE, rng.ints().spliterator().estimateSize(), "ints");
-        Assertions.assertEquals(Long.MAX_VALUE, rng.ints(1, 42).spliterator().estimateSize(), "ints(lower, upper)");
-        Assertions.assertEquals(Long.MAX_VALUE, rng.longs().spliterator().estimateSize(), "longs");
-        Assertions.assertEquals(Long.MAX_VALUE, rng.longs(3L, 33L).spliterator().estimateSize(), "longs(lower, upper)");
-        Assertions.assertEquals(Long.MAX_VALUE, rng.doubles().spliterator().estimateSize(), "doubles");
-        Assertions.assertEquals(Long.MAX_VALUE, rng.doubles(1.5, 2.75).spliterator().estimateSize(), "doubles(lower, upper)");
-    }
-
-    // Test stream methods throw immediately for invalid range arguments.
-
-    @ParameterizedTest
-    @MethodSource(value = {"invalidNextIntOriginBound"})
-    void testIntsOriginBoundThrows(int origin, int bound) {
-        final UniformRandomProvider rng = DummyGenerator.INSTANCE;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.ints(origin, bound));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.ints(STREAM_SIZE_ONE, origin, bound));
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"invalidNextLongOriginBound"})
-    void testLongsOriginBoundThrows(long origin, long bound) {
-        final UniformRandomProvider rng = DummyGenerator.INSTANCE;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.longs(origin, bound));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.longs(STREAM_SIZE_ONE, origin, bound));
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"invalidNextDoubleOriginBound"})
-    void testDoublesOriginBoundThrows(double origin, double bound) {
-        final UniformRandomProvider rng = DummyGenerator.INSTANCE;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.doubles(origin, bound));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.doubles(STREAM_SIZE_ONE, origin, bound));
-    }
-
-    // Test stream methods call the correct generation method in the UniformRandomProvider.
-    // If range arguments are supplied they are asserted to be passed through.
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testInts(long streamSize) {
-        final int[] values = ThreadLocalRandom.current().ints(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public int nextInt() {
-                return values[i++];
-            }
-        };
-
-        final IntStream stream = rng.ints();
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testIntsOriginBound(long streamSize) {
-        final int origin = 13;
-        final int bound = 42;
-        final int[] values = ThreadLocalRandom.current().ints(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public int nextInt(int o, int b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final IntStream stream = rng.ints(origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testIntsWithSize(long streamSize) {
-        final int[] values = ThreadLocalRandom.current().ints(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public int nextInt() {
-                return values[i++];
-            }
-        };
-
-        final IntStream stream = rng.ints(streamSize);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testIntsOriginBoundWithSize(long streamSize) {
-        final int origin = 13;
-        final int bound = 42;
-        final int[] values = ThreadLocalRandom.current().ints(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public int nextInt(int o, int b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final IntStream stream = rng.ints(streamSize, origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testLongs(long streamSize) {
-        final long[] values = ThreadLocalRandom.current().longs(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public long nextLong() {
-                return values[i++];
-            }
-        };
-
-        final LongStream stream = rng.longs();
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testLongsOriginBound(long streamSize) {
-        final long origin = 13;
-        final long bound = 42;
-        final long[] values = ThreadLocalRandom.current().longs(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public long nextLong(long o, long b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final LongStream stream = rng.longs(origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testLongsWithSize(long streamSize) {
-        final long[] values = ThreadLocalRandom.current().longs(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public long nextLong() {
-                return values[i++];
-            }
-        };
-
-        final LongStream stream = rng.longs(streamSize);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testLongsOriginBoundWithSize(long streamSize) {
-        final long origin = 13;
-        final long bound = 42;
-        final long[] values = ThreadLocalRandom.current().longs(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public long nextLong(long o, long b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final LongStream stream = rng.longs(streamSize, origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testDoubles(long streamSize) {
-        final double[] values = ThreadLocalRandom.current().doubles(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public double nextDouble() {
-                return values[i++];
-            }
-        };
-
-        final DoubleStream stream = rng.doubles();
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testDoublesOriginBound(long streamSize) {
-        final double origin = 13;
-        final double bound = 42;
-        final double[] values = ThreadLocalRandom.current().doubles(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public double nextDouble(double o, double b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final DoubleStream stream = rng.doubles(origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.limit(streamSize).toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testDoublesWithSize(long streamSize) {
-        final double[] values = ThreadLocalRandom.current().doubles(streamSize).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public double nextDouble() {
-                return values[i++];
-            }
-        };
-
-        final DoubleStream stream = rng.doubles(streamSize);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
-    }
-
-    @ParameterizedTest
-    @MethodSource(value = {"streamSizes"})
-    void testDoublesOriginBoundWithSize(long streamSize) {
-        final double origin = 13;
-        final double bound = 42;
-        final double[] values = ThreadLocalRandom.current().doubles(streamSize, origin, bound).toArray();
-        final UniformRandomProvider rng = new DummyGenerator() {
-            private int i;
-            @Override
-            public double nextDouble(double o, double b) {
-                Assertions.assertEquals(origin, o, "origin");
-                Assertions.assertEquals(bound, b, "bound");
-                return values[i++];
-            }
-        };
-
-        final DoubleStream stream = rng.doubles(streamSize, origin, bound);
-        Assertions.assertFalse(stream.isParallel());
-        Assertions.assertArrayEquals(values, stream.toArray());
     }
 
     // Statistical tests for uniform distribution

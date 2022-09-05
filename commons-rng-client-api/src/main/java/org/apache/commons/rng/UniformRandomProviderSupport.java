@@ -16,6 +16,16 @@
  */
 package org.apache.commons.rng;
 
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+
 /**
  * Support for {@link UniformRandomProvider} default methods.
  *
@@ -30,6 +40,8 @@ final class UniformRandomProviderSupport {
     private static final String INVALID_RANGE = "Invalid range: [%s, %s)";
     /** 2^32. */
     private static final long POW_32 = 1L << 32;
+    /** Message when the consumer action is null. */
+    private static final String NULL_ACTION = "action must not be null";
 
     /** No instances. */
     private UniformRandomProviderSupport() {}
@@ -419,5 +431,300 @@ final class UniformRandomProviderSupport {
             v = Math.nextDown(bound);
         }
         return v;
+    }
+
+    // Spliterator support
+
+    /**
+     * Base class for spliterators for streams of values. Contains the range current position and
+     * end position. Splitting is expected to divide the range in half and create instances
+     * that span the two ranges.
+     */
+    private static class ProviderSpliterator {
+        /** The current position in the range. */
+        protected long position;
+        /** The upper limit of the range. */
+        protected final long end;
+
+        /**
+         * @param start Start position of the stream (inclusive).
+         * @param end Upper limit of the stream (exclusive).
+         */
+        ProviderSpliterator(long start, long end) {
+            position = start;
+            this.end = end;
+        }
+
+        // Methods required by all Spliterators
+
+        // See Spliterator.estimateSize()
+        public long estimateSize() {
+            return end - position;
+        }
+
+        // See Spliterator.characteristics()
+        public int characteristics() {
+            return Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.NONNULL | Spliterator.IMMUTABLE;
+        }
+    }
+
+    /**
+     * Spliterator for streams of SplittableUniformRandomProvider.
+     */
+    static class ProviderSplitsSpliterator extends ProviderSpliterator
+            implements Spliterator<SplittableUniformRandomProvider> {
+        /** Source of randomness used to initialise the new instances. */
+        private final SplittableUniformRandomProvider source;
+        /** Generator to split to create new instances. */
+        private final SplittableUniformRandomProvider rng;
+
+        /**
+         * @param start Start position of the stream (inclusive).
+         * @param end Upper limit of the stream (exclusive).
+         * @param source Source of randomness used to initialise the new instances.
+         * @param rng Generator to split to create new instances.
+         */
+        ProviderSplitsSpliterator(long start, long end,
+                                  SplittableUniformRandomProvider source,
+                                  SplittableUniformRandomProvider rng) {
+            super(start, end);
+            this.source = source;
+            this.rng = rng;
+        }
+
+        @Override
+        public Spliterator<SplittableUniformRandomProvider> trySplit() {
+            final long start = position;
+            final long middle = (start + end) >>> 1;
+            if (middle <= start) {
+                return null;
+            }
+            position = middle;
+            return new ProviderSplitsSpliterator(start, middle, source.split(), rng);
+        }
+
+        @Override
+        public boolean tryAdvance(Consumer<? super SplittableUniformRandomProvider> action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            final long pos = position;
+            if (pos < end) {
+                // Advance before exceptions from the action are relayed to the caller
+                position = pos + 1;
+                action.accept(rng.split(source));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super SplittableUniformRandomProvider> action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            long pos = position;
+            final long last = end;
+            if (pos < last) {
+                // Ensure forEachRemaining is called only once
+                position = last;
+                final SplittableUniformRandomProvider s = source;
+                final SplittableUniformRandomProvider r = rng;
+                do {
+                    action.accept(r.split(s));
+                } while (++pos < last);
+            }
+        }
+    }
+
+    /**
+     * Spliterator for streams of int values that may be recursively split.
+     */
+    static class ProviderIntsSpliterator extends ProviderSpliterator
+            implements Spliterator.OfInt {
+        /** Source of randomness. */
+        private final SplittableUniformRandomProvider source;
+        /** Value generator function. */
+        private final ToIntFunction<SplittableUniformRandomProvider> gen;
+
+        /**
+         * @param start Start position of the stream (inclusive).
+         * @param end Upper limit of the stream (exclusive).
+         * @param source Source of randomness.
+         * @param gen Value generator function.
+         */
+        ProviderIntsSpliterator(long start, long end,
+                                SplittableUniformRandomProvider source,
+                                ToIntFunction<SplittableUniformRandomProvider> gen) {
+            super(start, end);
+            this.source = source;
+            this.gen = gen;
+        }
+
+        @Override
+        public Spliterator.OfInt trySplit() {
+            final long start = position;
+            final long middle = (start + end) >>> 1;
+            if (middle <= start) {
+                return null;
+            }
+            position = middle;
+            return new ProviderIntsSpliterator(start, middle, source.split(), gen);
+        }
+
+        @Override
+        public boolean tryAdvance(IntConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            final long pos = position;
+            if (pos < end) {
+                // Advance before exceptions from the action are relayed to the caller
+                position = pos + 1;
+                action.accept(gen.applyAsInt(source));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void forEachRemaining(IntConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            long pos = position;
+            final long last = end;
+            if (pos < last) {
+                // Ensure forEachRemaining is called only once
+                position = last;
+                final SplittableUniformRandomProvider s = source;
+                final ToIntFunction<SplittableUniformRandomProvider> g = gen;
+                do {
+                    action.accept(g.applyAsInt(s));
+                } while (++pos < last);
+            }
+        }
+    }
+
+    /**
+     * Spliterator for streams of long values that may be recursively split.
+     */
+    static class ProviderLongsSpliterator extends ProviderSpliterator
+            implements Spliterator.OfLong {
+        /** Source of randomness. */
+        private final SplittableUniformRandomProvider source;
+        /** Value generator function. */
+        private final ToLongFunction<SplittableUniformRandomProvider> gen;
+
+        /**
+         * @param start Start position of the stream (inclusive).
+         * @param end Upper limit of the stream (exclusive).
+         * @param source Source of randomness.
+         * @param gen Value generator function.
+         */
+        ProviderLongsSpliterator(long start, long end,
+                                SplittableUniformRandomProvider source,
+                                ToLongFunction<SplittableUniformRandomProvider> gen) {
+            super(start, end);
+            this.source = source;
+            this.gen = gen;
+        }
+
+        @Override
+        public Spliterator.OfLong trySplit() {
+            final long start = position;
+            final long middle = (start + end) >>> 1;
+            if (middle <= start) {
+                return null;
+            }
+            position = middle;
+            return new ProviderLongsSpliterator(start, middle, source.split(), gen);
+        }
+
+        @Override
+        public boolean tryAdvance(LongConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            final long pos = position;
+            if (pos < end) {
+                // Advance before exceptions from the action are relayed to the caller
+                position = pos + 1;
+                action.accept(gen.applyAsLong(source));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void forEachRemaining(LongConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            long pos = position;
+            final long last = end;
+            if (pos < last) {
+                // Ensure forEachRemaining is called only once
+                position = last;
+                final SplittableUniformRandomProvider s = source;
+                final ToLongFunction<SplittableUniformRandomProvider> g = gen;
+                do {
+                    action.accept(g.applyAsLong(s));
+                } while (++pos < last);
+            }
+        }
+    }
+
+    /**
+     * Spliterator for streams of double values that may be recursively split.
+     */
+    static class ProviderDoublesSpliterator extends ProviderSpliterator
+            implements Spliterator.OfDouble {
+        /** Source of randomness. */
+        private final SplittableUniformRandomProvider source;
+        /** Value generator function. */
+        private final ToDoubleFunction<SplittableUniformRandomProvider> gen;
+
+        /**
+         * @param start Start position of the stream (inclusive).
+         * @param end Upper limit of the stream (exclusive).
+         * @param source Source of randomness.
+         * @param gen Value generator function.
+         */
+        ProviderDoublesSpliterator(long start, long end,
+                                SplittableUniformRandomProvider source,
+                                ToDoubleFunction<SplittableUniformRandomProvider> gen) {
+            super(start, end);
+            this.source = source;
+            this.gen = gen;
+        }
+
+        @Override
+        public Spliterator.OfDouble trySplit() {
+            final long start = position;
+            final long middle = (start + end) >>> 1;
+            if (middle <= start) {
+                return null;
+            }
+            position = middle;
+            return new ProviderDoublesSpliterator(start, middle, source.split(), gen);
+        }
+
+        @Override
+        public boolean tryAdvance(DoubleConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            final long pos = position;
+            if (pos < end) {
+                // Advance before exceptions from the action are relayed to the caller
+                position = pos + 1;
+                action.accept(gen.applyAsDouble(source));
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void forEachRemaining(DoubleConsumer action) {
+            Objects.requireNonNull(action, NULL_ACTION);
+            long pos = position;
+            final long last = end;
+            if (pos < last) {
+                // Ensure forEachRemaining is called only once
+                position = last;
+                final SplittableUniformRandomProvider s = source;
+                final ToDoubleFunction<SplittableUniformRandomProvider> g = gen;
+                do {
+                    action.accept(g.applyAsDouble(s));
+                } while (++pos < last);
+            }
+        }
     }
 }
