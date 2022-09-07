@@ -9,6 +9,12 @@
             "code": "java.method.abstractMethodAdded",
             "new": "method java.lang.Object org.apache.commons.rng.simple.internal.NativeSeedType::createSeed(int, int, int)",
             "justification": "Abstract method added to enum; all implementations are within this class. This is an internal package with no compatibility enforcement."
+          },
+          {
+            "ignore": true,
+            "code": "java.class.externalClassExposedInAPI",
+            "new": "interface org.apache.commons.rng.SplittableUniformRandomProvider",
+            "justification": "Split support was added to the client API and can be used by other modules."
           }
         ]
       }

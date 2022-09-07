@@ -37,6 +37,7 @@ import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
@@ -360,6 +361,9 @@ class ProvidersCommonParametricTest {
         Assertions.assertEquals(rng instanceof LongJumpableUniformRandomProvider,
                                 originalSource.isLongJumpable(),
                                 "isLongJumpable");
+        Assertions.assertEquals(rng instanceof SplittableUniformRandomProvider,
+                                originalSource.isSplittable(),
+                                "isSplittable");
     }
 
     ///// Support methods below.

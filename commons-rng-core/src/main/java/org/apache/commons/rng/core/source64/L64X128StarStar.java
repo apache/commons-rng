@@ -17,6 +17,11 @@
 
 package org.apache.commons.rng.core.source64;
 
+import java.util.stream.Stream;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.util.RandomStreams;
+
 /**
  * A 64-bit all purpose generator.
  *
@@ -43,7 +48,7 @@ package org.apache.commons.rng.core.source64;
  *      JDK 17 java.util.random javadoc</a>
  * @since 1.5
  */
-public class L64X128StarStar extends AbstractL64X128 {
+public class L64X128StarStar extends AbstractL64X128 implements SplittableUniformRandomProvider {
     /**
      * Creates a new instance.
      *
@@ -122,5 +127,41 @@ public class L64X128StarStar extends AbstractL64X128 {
         // This exists to ensure the jump function performed in the super class returns
         // the correct class type. It should not be public.
         return new L64X128StarStar(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SplittableUniformRandomProvider split(UniformRandomProvider source) {
+        return create(source.nextLong(), source);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Stream<SplittableUniformRandomProvider> splits(long streamSize, SplittableUniformRandomProvider source) {
+        return RandomStreams.generateWithSeed(streamSize, source, L64X128StarStar::create);
+    }
+
+    /**
+     * Create a new instance using the given {@code seed} and {@code source} of randomness
+     * to initialise the instance.
+     *
+     * @param seed Seed used to initialise the instance.
+     * @param source Source of randomness used to initialise the instance.
+     * @return A new instance.
+     */
+    private static SplittableUniformRandomProvider create(long seed, UniformRandomProvider source) {
+        // LCG state. The addition uses the input seed.
+        // The LCG addition parameter is set to odd so left-shift the seed.
+        final long s0 = seed << 1;
+        final long s1 = source.nextLong();
+        // XBG state must not be all zero
+        long x0 = source.nextLong();
+        long x1 = source.nextLong();
+        if ((x0 | x1) == 0) {
+            // SplitMix style seed ensures at least one non-zero value
+            x0 = LXMSupport.lea64(s1);
+            x1 = LXMSupport.lea64(s1 + LXMSupport.GOLDEN_RATIO_64);
+        }
+        return new L64X128StarStar(s0, s1, x0, x1);
     }
 }

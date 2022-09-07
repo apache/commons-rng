@@ -92,6 +92,13 @@ class RandomSourceTest {
         Assertions.assertTrue(RandomSource.XO_SHI_RO_256_SS.isLongJumpable(), "XO_SHI_RO_256_SS is LongJumpable");
     }
 
+    @Test
+    void testIsSplittable() {
+        Assertions.assertFalse(RandomSource.JDK.isSplittable(), "JDK is not Splittable");
+        Assertions.assertTrue(RandomSource.L32_X64_MIX.isSplittable(), "L32_X64_MIX is Splittable");
+        Assertions.assertTrue(RandomSource.L64_X128_MIX.isSplittable(), "L64_X128_MIX is Splittable");
+    }
+
     /**
      * MSWS should not infinite loop if the input RNG fails to provide randomness to create a seed.
      * See RNG-175.

@@ -48,6 +48,14 @@ final class LXMSupport {
      * </pre>
      */
     static final int C32P = 0x046b0000;
+    /**
+     * The fractional part of the golden ratio, phi, scaled to 32-bits and rounded to odd.
+     * <pre>
+     * phi = (sqrt(5) - 1) / 2) * 2^32
+     * </pre>
+     * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
+     */
+    static final int GOLDEN_RATIO_32 = 0x9e3779b9;
 
     /** No instances. */
     private LXMSupport() {}

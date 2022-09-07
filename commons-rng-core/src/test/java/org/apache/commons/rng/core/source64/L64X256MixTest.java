@@ -18,7 +18,10 @@ package org.apache.commons.rng.core.source64;
 
 import java.util.stream.Stream;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.RandomAssert;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -137,5 +140,30 @@ class L64X256MixTest extends AbstractLXMTest {
         final L64X256Mix rng1 = new L64X256Mix(seed);
         final L64X256Mix rng2 = new L64X256Mix(seed[0], seed[1], seed[2], seed[3], seed[4], seed[5]);
         RandomAssert.assertNextLongEquals(seed.length * 2, rng1, rng2);
+    }
+
+    /**
+     * Test split with zero bits from the source. This should be robust to escape the state
+     * of all zero bits that will create an invalid state for the xor-based generator (XBG).
+     */
+    @Test
+    void testSplitWithZeroBits() {
+        final UniformRandomProvider zeroSource = () -> 0;
+        final long[] seed = new long[Factory.INSTANCE.seedSize()];
+        // Here we copy the split which sets the LCG increment to odd
+        seed[(Factory.INSTANCE.lcgSeedSize() / 2) - 1] = 1;
+        final SplittableUniformRandomProvider rng1 = new L64X256Mix(seed);
+        final SplittableUniformRandomProvider rng2 = rng1.split(zeroSource);
+        RandomAssert.assertNextLongNotEquals(seed.length * 2, rng1, rng2);
+
+        // Since we know how the zero seed is amended
+        long z = 0;
+        for (int i = Factory.INSTANCE.lcgSeedSize(); i < seed.length; i++) {
+            seed[i] = LXMSupport.lea64(z);
+            z += LXMSupport.GOLDEN_RATIO_64;
+        }
+        final SplittableUniformRandomProvider rng3 = new L64X256Mix(seed);
+        final SplittableUniformRandomProvider rng4 = rng1.split(zeroSource);
+        RandomAssert.assertNextLongEquals(seed.length * 2, rng3, rng4);
     }
 }

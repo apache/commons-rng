@@ -404,9 +404,12 @@ public abstract class BaseProvider
      *
      * <p>This is ranked first of the top 14 Stafford mixers.
      *
+     * <p>This function can be used to mix the bits of a {@code long} value to
+     * obtain a better distribution and avoid collisions between similar values.
+     *
      * @param x the input value
      * @return the output value
-     * @see <a href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
+     * @see <a href="https://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
      *      Bit Mixing - Improving on MurmurHash3&#39;s 64-bit Finalizer.</a>
      */
     private static long stafford13(long x) {
@@ -417,6 +420,9 @@ public abstract class BaseProvider
 
     /**
      * Perform the finalising 32-bit mix function of Austin Appleby's MurmurHash3.
+     *
+     * <p>This function can be used to mix the bits of a {@code int} value to
+     * obtain a better distribution and avoid collisions between similar values.
      *
      * @param x the input value
      * @return the output value

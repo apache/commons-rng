@@ -17,10 +17,13 @@
 
 package org.apache.commons.rng.core.source32;
 
+import java.util.stream.Stream;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
+import org.apache.commons.rng.core.util.RandomStreams;
 
 /**
  * A 32-bit all purpose generator.
@@ -41,13 +44,22 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * against accidental correlation in a multi-threaded setting. The additive parameters must be
  * different in the most significant 31-bits.
  *
+ * <p>This generator implements
+ * {@link org.apache.commons.rng.SplittableUniformRandomProvider SplittableUniformRandomProvider}.
+ * The stream of generators created using the {@code splits} methods support parallelisation
+ * and are robust against accidental correlation by using unique values for the additive parameter
+ * for each instance in the same stream. The primitive streaming methods support parallelisation
+ * but with no assurances of accidental correlation; each thread uses a new instance with a
+ * randomly initialised state.
+ *
  * @see <a href="https://doi.org/10.1145/3485525">Steele &amp; Vigna (2021) Proc. ACM Programming
  *      Languages 5, 1-31</a>
  * @see <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/package-summary.html">
  *      JDK 17 java.util.random javadoc</a>
  * @since 1.5
  */
-public final class L32X64Mix extends IntProvider implements LongJumpableUniformRandomProvider {
+public final class L32X64Mix extends IntProvider implements LongJumpableUniformRandomProvider,
+    SplittableUniformRandomProvider {
     // Implementation note:
     // This does not extend AbstractXoRoShiRo64 as the XBG function is re-implemented
     // inline to allow parallel pipelining. Inheritance would provide only the XBG state.
@@ -212,5 +224,42 @@ public final class L32X64Mix extends IntProvider implements LongJumpableUniformR
         ls = LXMSupport.M32P * ls + LXMSupport.C32P * la;
         resetCachedState();
         return copy;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SplittableUniformRandomProvider split(UniformRandomProvider source) {
+        // The upper half of the long seed is discarded so use nextInt
+        return create(source.nextInt(), source);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Stream<SplittableUniformRandomProvider> splits(long streamSize, SplittableUniformRandomProvider source) {
+        return RandomStreams.generateWithSeed(streamSize, source, L32X64Mix::create);
+    }
+
+    /**
+     * Create a new instance using the given {@code seed} and {@code source} of randomness
+     * to initialise the instance.
+     *
+     * @param seed Seed used to initialise the instance.
+     * @param source Source of randomness used to initialise the instance.
+     * @return A new instance.
+     */
+    private static SplittableUniformRandomProvider create(long seed, UniformRandomProvider source) {
+        // LCG state. The addition uses the input seed.
+        // The LCG addition parameter is set to odd so left-shift the seed.
+        final int s0 = (int) seed << 1;
+        final int s1 = source.nextInt();
+        // XBG state must not be all zero
+        int x0 = source.nextInt();
+        int x1 = source.nextInt();
+        if ((x0 | x1) == 0) {
+            // SplitMix style seed ensures at least one non-zero value
+            x0 = LXMSupport.lea32(s1);
+            x1 = LXMSupport.lea32(s1 + LXMSupport.GOLDEN_RATIO_32);
+        }
+        return new L32X64Mix(s0, s1, x0, x1);
     }
 }

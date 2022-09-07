@@ -74,6 +74,7 @@ import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
 
 /**
  * The purpose of this class is to provide the list of all generators
@@ -93,6 +94,8 @@ public final class ProvidersList {
     private static final List<RestorableUniformRandomProvider> LIST64 = new ArrayList<>();
     /** List of {@link JumpableUniformRandomProvider} RNGs. */
     private static final List<JumpableUniformRandomProvider> LIST_JUMP = new ArrayList<>();
+    /** List of {@link SplittableUniformRandomProvider} RNGs. */
+    private static final List<SplittableUniformRandomProvider> LIST_SPLIT = new ArrayList<>();
 
     static {
         // External generator for creating a random seed.
@@ -166,10 +169,13 @@ public final class ProvidersList {
             // Complete list.
             LIST.addAll(LIST32);
             LIST.addAll(LIST64);
-            // Dynamically identify the Jumpable RNGs
+            // Dynamically identify the sub-type RNGs
             LIST.stream()
                 .filter(rng -> rng instanceof JumpableUniformRandomProvider)
                 .forEach(rng -> LIST_JUMP.add((JumpableUniformRandomProvider) rng));
+            LIST.stream()
+                .filter(rng -> rng instanceof SplittableUniformRandomProvider)
+                .forEach(rng -> LIST_SPLIT.add((SplittableUniformRandomProvider) rng));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
@@ -222,5 +228,15 @@ public final class ProvidersList {
      */
     public static Iterable<JumpableUniformRandomProvider> listJumpable() {
         return Collections.unmodifiableList(LIST_JUMP);
+    }
+
+    /**
+     * Subclasses that are "parametric" tests can forward the call to
+     * the "@Parameters"-annotated method to this method.
+     *
+     * @return the list of {@link SplittableUniformRandomProvider} generators.
+     */
+    public static Iterable<SplittableUniformRandomProvider> listSplittable() {
+        return Collections.unmodifiableList(LIST_SPLIT);
     }
 }

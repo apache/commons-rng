@@ -68,6 +68,14 @@ final class LXMSupport {
      * </pre>
      */
     static final long C128PH = 0x61139b28883277c3L;
+    /**
+     * The fractional part of the golden ratio, phi, scaled to 64-bits and rounded to odd.
+     * <pre>
+     * phi = (sqrt(5) - 1) / 2) * 2^64
+     * </pre>
+     * @see <a href="https://en.wikipedia.org/wiki/Golden_ratio">Golden ratio</a>
+     */
+    static final long GOLDEN_RATIO_64 = 0x9e3779b97f4a7c15L;
 
     /** A mask to convert an {@code int} to an unsigned integer stored as a {@code long}. */
     private static final long INT_TO_UNSIGNED_BYTE_MASK = 0xffff_ffffL;

@@ -784,6 +784,29 @@ public enum RandomSource {
     }
 
     /**
+     * Checks whether the implementing class represented by this random source
+     * supports the {@link org.apache.commons.rng.SplittableUniformRandomProvider
+     * SplittableUniformRandomProvider} interface. If {@code true} the instance returned
+     * by {@link #create(RandomSource)} may be cast to the interface; otherwise a class
+     * cast exception will occur.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  if (source.isSplittable()) {
+     *      SplittableUniformRandomProvider rng =
+     *          (SplittableUniformRandomProvider) source.create();
+     *  }
+     * </code></pre>
+     *
+     * @return {@code true} if splittable
+     * @since 1.5
+     */
+    public boolean isSplittable() {
+        return isAssignableTo(org.apache.commons.rng.SplittableUniformRandomProvider.class);
+    }
+
+    /**
      * Determines if the implementing class represented by this random source is either the same
      * as, or is a subclass or subinterface of, the class or interface represented
      * by the specified {@code Class} parameter. It returns true if so; otherwise it returns

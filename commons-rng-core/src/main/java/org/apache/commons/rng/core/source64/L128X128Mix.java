@@ -17,9 +17,12 @@
 
 package org.apache.commons.rng.core.source64;
 
+import java.util.stream.Stream;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
+import org.apache.commons.rng.core.util.RandomStreams;
 
 /**
  * A 64-bit all purpose generator.
@@ -41,13 +44,21 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * against accidental correlation in a multi-threaded setting. The additive parameters must be
  * different in the most significant 127-bits.
  *
+ * <p>This generator implements
+ * {@link org.apache.commons.rng.SplittableUniformRandomProvider SplittableUniformRandomProvider}.
+ * The stream of generators created using the {@code splits} methods support parallelisation
+ * and are robust against accidental correlation by using unique values for the additive parameter
+ * for each instance in the same stream. The primitive streaming methods support parallelisation
+ * but with no assurances of accidental correlation; each thread uses a new instance with a
+ * randomly initialised state.
+ *
  * @see <a href="https://doi.org/10.1145/3485525">Steele &amp; Vigna (2021) Proc. ACM Programming
  *      Languages 5, 1-31</a>
  * @see <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/package-summary.html">
  *      JDK 17 java.util.random javadoc</a>
  * @since 1.5
  */
-public class L128X128Mix extends AbstractL128 {
+public class L128X128Mix extends AbstractL128 implements SplittableUniformRandomProvider {
     /** Size of the seed vector. */
     private static final int SEED_SIZE = 6;
     /** Size of the XBG state vector. */
@@ -201,5 +212,44 @@ public class L128X128Mix extends AbstractL128 {
         // This exists to ensure the jump function performed in the super class returns
         // the correct class type. It should not be public.
         return new L128X128Mix(this);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SplittableUniformRandomProvider split(UniformRandomProvider source) {
+        return create(source.nextLong(), source);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Stream<SplittableUniformRandomProvider> splits(long streamSize, SplittableUniformRandomProvider source) {
+        return RandomStreams.generateWithSeed(streamSize, source, L128X128Mix::create);
+    }
+
+    /**
+     * Create a new instance using the given {@code seed} and {@code source} of randomness
+     * to initialise the instance.
+     *
+     * @param seed Seed used to initialise the instance.
+     * @param source Source of randomness used to initialise the instance.
+     * @return A new instance.
+     */
+    private static SplittableUniformRandomProvider create(long seed, UniformRandomProvider source) {
+        // LCG state. The addition lower-half uses the input seed.
+        // The LCG addition parameter is set to odd so left-shift the seed.
+        final long s0 = source.nextLong();
+        final long s1 = seed << 1;
+        final long s2 = source.nextLong();
+        final long s3 = source.nextLong();
+        // XBG state must not be all zero
+        long x0 = source.nextLong();
+        long x1 = source.nextLong();
+        if ((x0 | x1) == 0) {
+            // SplitMix style seed ensures at least one non-zero value
+            final long z = s3;
+            x0 = LXMSupport.lea64(z);
+            x1 = LXMSupport.lea64(z + LXMSupport.GOLDEN_RATIO_64);
+        }
+        return new L128X128Mix(s0, s1, s2, s3, x0, x1);
     }
 }

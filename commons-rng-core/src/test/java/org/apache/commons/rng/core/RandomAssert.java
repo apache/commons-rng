@@ -244,6 +244,40 @@ public final class RandomAssert {
     }
 
     /**
+     * Assert that the two random generators produce a different output for
+     * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
+     *
+     * @param cycles Number of cycles.
+     * @param rng1 Random generator 1.
+     * @param rng2 Random generator 2.
+     */
+    public static void assertNextIntNotEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
+        for (int i = 0; i < cycles; i++) {
+            if (rng1.nextInt() != rng2.nextInt()) {
+                return;
+            }
+        }
+        Assertions.fail(() -> cycles + " cycles of nextb has same output");
+    }
+
+    /**
+     * Assert that the two random generators produce a different output for
+     * {@link UniformRandomProvider#nextLong()} over the given number of cycles.
+     *
+     * @param cycles Number of cycles.
+     * @param rng1 Random generator 1.
+     * @param rng2 Random generator 2.
+     */
+    public static void assertNextLongNotEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
+        for (int i = 0; i < cycles; i++) {
+            if (rng1.nextLong() != rng2.nextLong()) {
+                return;
+            }
+        }
+        Assertions.fail(() -> cycles + " cycles of nextLong has same output");
+    }
+
+    /**
      * Assert that the random generator produces zero output for
      * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
      * This is used to test a poorly seeded generator cannot generate random output.

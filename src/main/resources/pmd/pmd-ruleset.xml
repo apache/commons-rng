@@ -121,7 +121,7 @@
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
           or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath'
           or @SimpleName='Conversions' or @SimpleName='MixFunctions' or @SimpleName='LXMSupport'
-          or @SimpleName='UniformRandomProviderSupport']"/>
+          or @SimpleName='UniformRandomProviderSupport' or @SimpleName='RandomStreams']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>
@@ -276,6 +276,14 @@
     <properties>
       <!-- Allows synchronized method when it is an override of the parent class -->
       <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='JDKRandomBridge']"/>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/performance.xml/AvoidArrayLoops">
+    <properties>
+      <!-- False positive. The array loop is generating, not copying, values. -->
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$')]"/>
     </properties>
   </rule>
 
