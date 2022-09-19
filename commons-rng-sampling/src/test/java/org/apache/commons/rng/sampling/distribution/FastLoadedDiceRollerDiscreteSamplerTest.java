@@ -352,13 +352,25 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
     }
 
     /**
+     * Return a stream of expected frequencies for a discrete distribution where the frequencies
+     * can be converted to a {@code double} without loss of precision.
+     *
+     * @return the stream of expected frequencies
+     */
+    static Stream<long[]> testSamplesWeightsMatchesFrequencies() {
+        // Reuse the same frequencies.
+        // Those that cannot be converted to a double are ignored by the test.
+        return testSamplesFrequencies();
+    }
+
+    /**
      * Check the distribution of samples when the frequencies can be converted to weights without
      * loss of precision.
      *
      * @param frequencies Expected frequencies.
      */
     @ParameterizedTest
-    @MethodSource(value = {"testSamplesFrequencies"})
+    @MethodSource
     void testSamplesWeightsMatchesFrequencies(long[] frequencies) {
         final double[] weights = new double[frequencies.length];
         for (int i = 0; i < frequencies.length; i++) {
