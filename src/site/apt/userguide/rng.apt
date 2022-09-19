@@ -379,17 +379,23 @@ rngNew.restoreState(stateNew);
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
+import java.util.concurrent.ForkJoinPool;
 
 RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
 
 JumpableUniformRandomProvider jumpable = (JumpableUniformRandomProvider) source.create();
 
 // For use in parallel
-UniformRandomProvider[] rngs = new UniformRandomProvider[10];
-for (int i = 0; i < rngs.length; i++) {
-    rngs[i] = jumpable.jump();
-}
+int streamSize = 10;
+jumpable.jumps(streamSize).forEach(rng -> {
+    ForkJoinPool.commonPool().execute(() -> {
+        // Task using the rng
+    });
+});
 +--------------------------+
+
+    Note that here the stream of RNGs is sequential; each RNG is used within a potentially
+    long-running task that can run concurrently with other tasks using an executor service.
 
     In the above example, the source is known to implement the <<<JumpableUniformRandomProvider>>> interface.
     Not all generators support this functionality. You can determine if a <<<RandomSource>>> is
@@ -401,6 +407,51 @@ import org.apache.commons.rng.simple.RandomSource;
 public void initialise(RandomSource source) {
     if (!source.isJumpable()) {
         throw new IllegalArgumentException("Require a jumpable random source");
+    }
+    // ...
+}
++--------------------------+
+
+  * The <<<SplittableUniformRandomProvider>>> interface allows splitting a generator into two
+    objects (the original and a new instance) each of which implements the same interface (and
+    can be recursively split indefinitely). This can be used for parallel computations where the
+    number of forks is unknown. These generators provide support for parallel streams.
+    It should be noted that in general creation of a new generator instance may result in
+    correlation of the output sequence with an existing generator. The generators that support
+    this interface have algorithms designed to minimise correlation between instances. In particular
+    the stream of generators provided by recursive splitting of a parallel stream are robust
+    to collision of their sequence output.
+
++--------------------------+
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.SplittableUniformRandomProvider;
+import org.apache.commons.rng.simple.RandomSource;
+
+RandomSource source = RandomSource.L64_X128_MIX; // Known to be splittable.
+
+SplittableUniformRandomProvider splittable = (SplittableUniformRandomProvider) source.create();
+
+// For use in parallel
+int streamSize = 10;
+jumpable.splits(streamSize).parallel().forEach(rng -> {
+    // Task using the rng
+});
++--------------------------+
+
+    Note that here the stream of RNGs is parallel; each RNG is used within a potentially
+    long-running task that can run concurrently with other tasks if the enclosing stream
+    parallel support utilises multiple threads.
+
+    In the above example, the source is known to implement the <<<SplittableUniformRandomProvider>>> interface.
+    Not all generators support this functionality. You can determine if a <<<RandomSource>>> is
+    splittable without creating one using the instance method <<<isSplittable()>>>.
+
++--------------------------+
+import org.apache.commons.rng.simple.RandomSource;
+
+public void initialise(RandomSource source) {
+    if (!source.isSplittable()) {
+        throw new IllegalArgumentException("Require a splittable random source");
     }
     // ...
 }
@@ -600,7 +651,12 @@ double[] coordinate = sampler.sample();
     provide the "save/restore" API.
 
   * Interfaces <<<JumpableUniformRandomProvider>>> and <<<LongJumpableUniformRandomProvider>>>
-    provide the "copy and jump" API for parallel computations.
+    provide the "copy and jump" API for parallel computations. These are suitable for tasks
+    where the number of instances to use in parallel is known.
+
+  * Interface <<<SplittableUniformRandomProvider>>> provides the "split" API for parallel
+    computations. This is suitable for tasks where the number of instances to use in parallel
+    is unknown, for example execution of tasks within a stream using the JDK parallelism support. 
 
   []
 
@@ -653,6 +709,9 @@ double[] coordinate = sampler.sample();
        the output (<<<int>>> or <<<long>>>) of the underlying source of
        randomness into the requested output, i.e. one of the Java primitive
        types supported by <<<UniformRandomProvider>>>.
+
+    ** <<<RandomStreams>>>: contains utilities for generating a stream of objects
+       created using a random seed and source of randomness.
 
     []
 
@@ -1139,6 +1198,11 @@ java -jar target/examples-jmh.jar -h
   be different even when using the same starting seed due to updates to generation algorithms
   that use the underlying stream of random bits. Any library changes that result in a
   functional compatibility should be recorded in the release notes.
+
+  The library is provided as modules. It is recommended to explicitly include all required RNG
+  modules in a project using the same version number. This will avoid version mismatch
+  occurring between modules due to transitive dependencies; specifically this avoids using
+  an alternative version number explicitly specified in the dependency tree.
 
 8. Dependencies
 
