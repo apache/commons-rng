@@ -304,12 +304,13 @@ class RandomStreamsTest {
         final long size = 10;
         final SplittableUniformRandomProvider source = new SequenceGenerator(0);
         final ObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
-        final Spliterator<Long> s = RandomStreams.generateWithSeed(size, source, factory).spliterator();
+        final Spliterator<Long> s1 = RandomStreams.generateWithSeed(size, source, factory).spliterator();
         final Consumer<Long> badAction = null;
-        final NullPointerException ex1 = Assertions.assertThrows(NullPointerException.class, () -> s.tryAdvance(badAction), "tryAdvance");
-        final NullPointerException ex2 = Assertions.assertThrows(NullPointerException.class, () -> s.forEachRemaining(badAction), "forEachRemaining");
+        final NullPointerException ex1 = Assertions.assertThrows(NullPointerException.class, () -> s1.tryAdvance(badAction), "tryAdvance");
+        final NullPointerException ex2 = Assertions.assertThrows(NullPointerException.class, () -> s1.forEachRemaining(badAction), "forEachRemaining");
         // Check the exception method is consistent with UniformRandomProvider stream methods
-        final NullPointerException ex3 = Assertions.assertThrows(NullPointerException.class, () -> source.ints().spliterator().tryAdvance((IntConsumer) null), "tryAdvance");
+        final Spliterator.OfInt s2 = source.ints().spliterator();
+        final NullPointerException ex3 = Assertions.assertThrows(NullPointerException.class, () -> s2.tryAdvance((IntConsumer) null), "tryAdvance");
         Assertions.assertEquals(ex3.getMessage(), ex1.getMessage(), "Inconsistent tryAdvance exception message");
         Assertions.assertEquals(ex3.getMessage(), ex2.getMessage(), "Inconsistent forEachRemaining exception message");
     }
