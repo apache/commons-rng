@@ -131,7 +131,7 @@ public final class RandomStreams {
         long bits = rng.nextLong() | 1;
         // Mask to extract characters.
         // Can be used to sample from (n-1) n-bit characters.
-        final long n = (1 << SEED_CHAR_BITS) - 1;
+        final long n = (1L << SEED_CHAR_BITS) - 1;
 
         // Extract the unique character.
         final long unique = bits & n;
