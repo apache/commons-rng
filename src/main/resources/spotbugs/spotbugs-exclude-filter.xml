@@ -143,5 +143,10 @@
     </Or>
     <BugPattern name="FL_FLOATS_AS_LOOP_COUNTERS"/>
   </Match>
+  <Match>
+    <Class name="org.apache.commons.rng.examples.sampling.UniformSamplingVisualCheckCommand"/>
+    <Method name="call"/>
+    <BugPattern name="FL_FLOATS_AS_LOOP_COUNTERS"/>
+  </Match>
 
 </FindBugsFilter>
