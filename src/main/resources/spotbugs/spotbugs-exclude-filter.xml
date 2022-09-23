@@ -129,4 +129,19 @@
     <BugPattern name="DMI_RANDOM_USED_ONLY_ONCE"/>
   </Match>
 
+  <!-- Use of floating-point loop counters is intentional. -->
+  <Match>
+    <Class name="org.apache.commons.rng.sampling.distribution.AhrensDieterExponentialSampler"/>
+    <Method name="sample"/>
+    <BugPattern name="FL_FLOATS_AS_LOOP_COUNTERS"/>
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.rng.sampling.distribution.MarsagliaTsangWangDiscreteSampler$Poisson"/>
+    <Or>
+      <Method name="createPoissonDistributionFromX0"/>
+      <Method name="createPoissonDistributionFromXMode"/>
+    </Or>
+    <BugPattern name="FL_FLOATS_AS_LOOP_COUNTERS"/>
+  </Match>
+
 </FindBugsFilter>
