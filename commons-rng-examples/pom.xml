@@ -91,7 +91,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${rng.pmd.version}</version>
         <configuration>
           <failOnViolation>false</failOnViolation>
         </configuration>

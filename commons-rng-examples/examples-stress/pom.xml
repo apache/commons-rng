@@ -64,7 +64,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${rng.checkstyle.version}</version>
         <!-- The custom ApplicationException cannot be loaded by checkstyle unless the source is
           compiled. Checkstyle runs in the validate phase so here we switch to verify -->
         <executions>

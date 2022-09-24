@@ -53,12 +53,8 @@
     <commons.encoding>UTF-8</commons.encoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <rng.pmd.version>3.14.0</rng.pmd.version>
-    <rng.pmd.dep.version>6.37.0</rng.pmd.dep.version>
     <rng.revapi.version>0.14.6</rng.revapi.version>
     <rng.revapi.java.version>0.26.1</rng.revapi.java.version>
-    <rng.checkstyle.version>3.1.2</rng.checkstyle.version>
-    <rng.checkstyle.dep.version>8.45</rng.checkstyle.dep.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -214,14 +210,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${rng.checkstyle.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>${rng.checkstyle.dep.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
           <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
@@ -262,19 +250,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${rng.pmd.version}</version>
-        <dependencies>
-          <dependency>
-            <groupId>net.sourceforge.pmd</groupId>
-            <artifactId>pmd-core</artifactId>
-            <version>${rng.pmd.dep.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>net.sourceforge.pmd</groupId>
-            <artifactId>pmd-java</artifactId>
-            <version>${rng.pmd.dep.version}</version>
-          </dependency>
-        </dependencies>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>
@@ -430,7 +405,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>${rng.checkstyle.version}</version>
         <configuration>
           <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
           <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
@@ -458,7 +432,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${rng.pmd.version}</version>
         <configuration>
           <targetJdk>${maven.compiler.target}</targetJdk>
           <skipEmptyReport>false</skipEmptyReport>

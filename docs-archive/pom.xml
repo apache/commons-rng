@@ -175,7 +175,6 @@
 
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>${rng.pmd.version}</version>
         <configuration>
           <skip>true</skip>
         </configuration>
