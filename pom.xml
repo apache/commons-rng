@@ -60,7 +60,6 @@
     <rng.checkstyle.version>3.1.2</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.45</rng.checkstyle.dep.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
-    <rng.junit5.version>5.7.2</rng.junit5.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
     <!-- Multi-module support fixed in commons-parent 55 -->
@@ -137,7 +136,6 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>${rng.junit5.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
