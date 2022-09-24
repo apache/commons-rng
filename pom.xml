@@ -53,8 +53,8 @@
     <commons.encoding>UTF-8</commons.encoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <rng.revapi.version>0.14.6</rng.revapi.version>
-    <rng.revapi.java.version>0.26.1</rng.revapi.java.version>
+    <rng.revapi.version>0.14.7</rng.revapi.version>
+    <rng.revapi.java.version>0.27.0</rng.revapi.java.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
