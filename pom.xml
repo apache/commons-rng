@@ -60,7 +60,6 @@
     <rng.checkstyle.version>3.1.2</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.45</rng.checkstyle.dep.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
-    <rng.antrun.version>1.8</rng.antrun.version>
     <rng.surefire.version>3.0.0-M5</rng.surefire.version>
     <rng.junit5.version>5.7.2</rng.junit5.version>
     <!-- Workaround to avoid duplicating config files. -->
@@ -590,7 +589,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>${rng.antrun.version}</version>
             <executions>
               <!-- For multi-module builds, only the parent directory requires a site checkout.
                    This task will create an empty directory as the site checkout is missing. -->
@@ -649,7 +647,6 @@ This is avoided by creating an empty directory when svn is not available.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>${rng.antrun.version}</version>
             <executions>
               <execution>
                 <id>remove-checkout</id>
