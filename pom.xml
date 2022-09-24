@@ -60,7 +60,6 @@
     <rng.checkstyle.version>3.1.2</rng.checkstyle.version>
     <rng.checkstyle.dep.version>8.45</rng.checkstyle.dep.version>
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
-    <rng.surefire.version>3.0.0-M5</rng.surefire.version>
     <rng.junit5.version>5.7.2</rng.junit5.version>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
@@ -193,7 +192,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>${rng.surefire.version}</version>
         <configuration>
           <!-- Fix for OpenJDK 8 now validating class-path attributes in Jar manifests. -->
           <!-- See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=912333#63 -->
