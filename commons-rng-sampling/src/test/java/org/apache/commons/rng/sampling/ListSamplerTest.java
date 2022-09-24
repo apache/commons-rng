@@ -223,10 +223,10 @@ class ListSamplerTest {
                                        boolean same) {
         for (int i = start; i < end; i++) {
             if (!orig.get(i).equals(list.get(i))) {
-                return same ? false : true;
+                return !same;
             }
         }
-        return same ? true : false;
+        return same;
     }
 
     private static <T extends Set<String>> int findSample(List<T> u,
