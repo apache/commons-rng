@@ -23,7 +23,7 @@
   <suppress checks="ParameterNumber" files="[\\/]LargeMeanPoissonSampler\.java$" />
   <suppress checks="ParameterNumber" files="source64[\\/].*XoShiRo512.*\.java$" />
   <suppress checks="ParameterNumber" files="source64[\\/]L128X256Mix\.java$" />
-  <suppress checks="UnnecessaryParentheses" files=".*stress[/\\]StressTestCommand\.java$" lines="672" />
+  <suppress checks="UnnecessaryParentheses" files=".*stress[/\\]StressTestCommand\.java$" lines="696" />
   <!-- Special to allow withUniformRandomProvider to act as a constructor. -->
   <suppress checks="HiddenField" files=".*Sampler\.java$" message="'rng' hides a field." />
   <!-- Methods have the names from the Spliterator interface that is implemented by child classes.
