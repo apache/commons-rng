@@ -40,7 +40,7 @@ public final class RandomStreams {
      * @param <T> the object type
      * @since 1.5
      */
-    public interface ObjectFactory<T> {
+    public interface SeededObjectFactory<T> {
         /**
          * Creates the object.
          *
@@ -80,7 +80,7 @@ public final class RandomStreams {
      */
     public static <T> Stream<T> generateWithSeed(long streamSize,
                                                  SplittableUniformRandomProvider source,
-                                                 ObjectFactory<T> factory) {
+                                                 SeededObjectFactory<T> factory) {
         if (streamSize < 0) {
             throw new IllegalArgumentException("Invalid stream size: " + streamSize);
         }
@@ -191,7 +191,7 @@ public final class RandomStreams {
         /** Source of randomness used to initialise the new instances. */
         private final SplittableUniformRandomProvider source;
         /** Factory to create new instances. */
-        private final ObjectFactory<T> factory;
+        private final SeededObjectFactory<T> factory;
 
         /**
          * @param start Start position of the stream (inclusive).
@@ -203,7 +203,7 @@ public final class RandomStreams {
          */
         SeededObjectSpliterator(long start, long end,
                                 SplittableUniformRandomProvider source,
-                                ObjectFactory<T> factory,
+                                SeededObjectFactory<T> factory,
                                 long seed) {
             position = start;
             this.end = end;
@@ -266,7 +266,7 @@ public final class RandomStreams {
                 // Ensure forEachRemaining is called only once
                 position = last;
                 final SplittableUniformRandomProvider s = source;
-                final ObjectFactory<T> f = factory;
+                final SeededObjectFactory<T> f = factory;
                 do {
                     action.accept(f.create(seed | pos, s));
                     pos++;

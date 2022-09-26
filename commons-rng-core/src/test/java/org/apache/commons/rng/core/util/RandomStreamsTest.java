@@ -30,7 +30,7 @@ import java.util.stream.LongStream;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.SplittableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.core.util.RandomStreams.ObjectFactory;
+import org.apache.commons.rng.core.util.RandomStreams.SeededObjectFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -226,7 +226,7 @@ class RandomStreamsTest {
     @ValueSource(longs = {-1, -2, Long.MIN_VALUE})
     void testGenerateWithSeedInvalidStreamSizeThrows(long size) {
         final SplittableUniformRandomProvider source = new SequenceGenerator(0);
-        final ObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
+        final SeededObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
         final IllegalArgumentException ex1 = Assertions.assertThrows(IllegalArgumentException.class,
             () -> RandomStreams.generateWithSeed(size, source, factory));
         // Check the exception method is consistent with UniformRandomProvider stream methods
@@ -239,7 +239,7 @@ class RandomStreamsTest {
     void testGenerateWithSeedNullArgumentThrows() {
         final long size = 10;
         final SplittableUniformRandomProvider source = new SequenceGenerator(0);
-        final ObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
+        final SeededObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
         Assertions.assertThrows(NullPointerException.class,
             () -> RandomStreams.generateWithSeed(size, null, factory));
         Assertions.assertThrows(NullPointerException.class,
@@ -277,7 +277,7 @@ class RandomStreamsTest {
         Assertions.assertEquals(1, RandomStreams.createSeed(rng), "Unexpected seed value");
 
         // Create a factory that will return the seed passed to the factory
-        final ObjectFactory<Long> factory = (s, r) -> {
+        final SeededObjectFactory<Long> factory = (s, r) -> {
             Assertions.assertSame(rng, r, "The source RNG is not used");
             return Long.valueOf(s);
         };
@@ -303,7 +303,7 @@ class RandomStreamsTest {
     void testGenerateWithSeedSpliteratorThrows() {
         final long size = 10;
         final SplittableUniformRandomProvider source = new SequenceGenerator(0);
-        final ObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
+        final SeededObjectFactory<Long> factory = (s, r) -> Long.valueOf(s);
         final Spliterator<Long> s1 = RandomStreams.generateWithSeed(size, source, factory).spliterator();
         final Consumer<Long> badAction = null;
         final NullPointerException ex1 = Assertions.assertThrows(NullPointerException.class, () -> s1.tryAdvance(badAction), "tryAdvance");
@@ -334,7 +334,7 @@ class RandomStreamsTest {
         Assertions.assertEquals(initial, RandomStreams.createSeed(rng), "Unexpected seed value");
 
         // Create a factory that will return the seed passed to the factory
-        final ObjectFactory<Long> factory = (s, r) -> {
+        final SeededObjectFactory<Long> factory = (s, r) -> {
             Assertions.assertSame(rng, r, "The source RNG is not used");
             return Long.valueOf(s);
         };
@@ -418,7 +418,7 @@ class RandomStreamsTest {
         Assertions.assertEquals(initial, RandomStreams.createSeed(rng), "Unexpected seed value");
 
         // Create a factory that will return the seed passed to the factory
-        final ObjectFactory<Long> factory = (s, r) -> {
+        final SeededObjectFactory<Long> factory = (s, r) -> {
             Assertions.assertSame(rng, r, "The source RNG is not used");
             return Long.valueOf(s);
         };
