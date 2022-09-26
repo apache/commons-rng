@@ -69,13 +69,13 @@ public class NormalDeviates {
 import java.util.HashSet;
 import org.apache.commons.rng.sampling.CollectionSampler;
 
-HashSet&lt;String&gt; list = new HashSet&lt;String&gt;();
-list.add("Apache");
-list.add("Commons");
-list.add("RNG");
+HashSet&lt;String&gt; elements = new HashSet&lt;&gt;();
+elements.add("Apache");
+elements.add("Commons");
+elements.add("RNG");
 
-CollectionSampler&lt;String&gt; sampler = new CollectionSampler&lt;String&gt;(RandomSource.MWC_256.create(),
-                                                                  list);
+CollectionSampler&lt;String&gt; sampler = new CollectionSampler&lt;&gt;(RandomSource.MWC_256.create(),
+                                                            elements);
 String word = sampler.sample();
 </source>
       </p>
@@ -92,7 +92,7 @@ String word = sampler.sample();
 import org.apache.commons.rng.sampling.UnitSphereSampler;
 
 int dimension = 3;
-UnitSphereSampler sampler = new UnitSphereSampler(dimension, RandomSource.KISS.create());
+UnitSphereSampler sampler = UnitSphereSampler.of(dimension, RandomSource.KISS.create());
 
 double[] vector = sampler.sample();
 </source>
