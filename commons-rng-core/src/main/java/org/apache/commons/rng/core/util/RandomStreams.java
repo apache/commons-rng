@@ -88,7 +88,7 @@ public final class RandomStreams {
         Objects.requireNonNull(factory, "factory");
         final long seed = createSeed(source);
         return StreamSupport
-                .stream(new SeededObjectSpliterator<>(0, streamSize, source, factory, seed), false);
+            .stream(new SeededObjectSpliterator<>(0, streamSize, source, factory, seed), false);
     }
 
     /**
