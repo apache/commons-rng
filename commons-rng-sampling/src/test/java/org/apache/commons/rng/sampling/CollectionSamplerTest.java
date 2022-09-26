@@ -39,10 +39,9 @@ class CollectionSamplerTest {
         list.add("RNG");
 
         final CollectionSampler<String> sampler =
-            new CollectionSampler<>(RandomSource.MWC_256.create(),
-                                          list);
+            new CollectionSampler<>(RandomSource.MWC_256.create(), list);
         final String word = sampler.sample();
-        for (String w : list) {
+        for (final String w : list) {
             if (word.equals(w)) {
                 return;
             }

@@ -328,7 +328,7 @@ UniformRandomProvider rng = RandomSource.TWO_CMRES_SELECT.create(seed, first, se
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
 
-RestorableUniformRandomProvider rng = RandomSource.WELL_512_A.create();
+RestorableUniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 RandomProviderState state = rng.saveState();
 double x = rng.nextDouble();
 rng.restoreState(state);
@@ -349,7 +349,7 @@ import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 
-RandomSource source = RandomSource.MT_64; // Known source identifier.
+RandomSource source = RandomSource.KISS; // Known source identifier.
 
 RestorableUniformRandomProvider rngOrig = source.create(); // Original RNG instance.
 
@@ -463,9 +463,9 @@ public void initialise(RandomSource source) {
 +--------------------------+
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.GaussianSampler;
-import org.apache.commons.rng.sampling.distribution.MarsagliaNormalizedGaussianSampler;
+import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
-ContinuousSampler sampler = GaussianSampler.of(MarsagliaNormalizedGaussianSampler.of(RandomSource.MT_64.create()),
+ContinuousSampler sampler = GaussianSampler.of(ZigguratSampler.NormalizedGaussian.of(RandomSource.ISAAC.create()),
                                                45.6, 2.3);
 double random = sampler.sample();
 +--------------------------+
@@ -558,13 +558,13 @@ int[] combination = combinationSampler.sample();
 import java.util.HashSet;
 import org.apache.commons.rng.sampling.CollectionSampler;
 
-HashSet<String> list = new HashSet<String>();
-list.add("Apache");
-list.add("Commons");
-list.add("RNG");
+HashSet<String> elements = new HashSet<>();
+elements.add("Apache");
+elements.add("Commons");
+elements.add("RNG");
 
-CollectionSampler<String> sampler = new CollectionSampler<String>(RandomSource.MWC_256.create(),
-                                                                  list);
+CollectionSampler<String> sampler = new CollectionSampler<>(RandomSource.MWC_256.create(),
+                                                            elements);
 String word = sampler.sample();
 +--------------------------+
 
