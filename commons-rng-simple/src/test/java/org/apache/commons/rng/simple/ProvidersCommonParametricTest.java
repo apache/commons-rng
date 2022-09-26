@@ -111,8 +111,8 @@ class ProvidersCommonParametricTest {
         final Object[] originalArgs = data.getArgs();
         if (originalArgs == null) {
             // Try passing arguments to a provider that does not require them
-            int arg1 = 123;
-            double arg2 = 456.0;
+            final int arg1 = 123;
+            final double arg2 = 456.0;
             Assertions.assertThrows(IllegalArgumentException.class,
                 () -> originalSource.create(arg1, arg2),
                 () -> "Source does not require arguments: " + originalSource);
@@ -145,7 +145,7 @@ class ProvidersCommonParametricTest {
 
         int nonNativeSeedCount = 0;
         int seedCount = 0;
-        for (Object s : seeds) {
+        for (final Object s : seeds) {
             ++seedCount;
             if (originalSource.isNativeSeed(s)) {
                 Assertions.assertNotNull(s, "Identified native seed is null");
@@ -291,7 +291,7 @@ class ProvidersCommonParametricTest {
         final RestorableUniformRandomProvider restorable = (RestorableUniformRandomProvider) rng1;
         // Cast must fail.
         Assertions.assertThrows(ClassCastException.class, () -> {
-            RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
+            final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
         });
     }
 
@@ -311,8 +311,8 @@ class ProvidersCommonParametricTest {
         // Save.
         final RandomProviderState stateOrig = restorable.saveState();
         // Serialize.
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(((RandomProviderDefaultState) stateOrig).getState());
 
         // Store some values.
@@ -324,8 +324,8 @@ class ProvidersCommonParametricTest {
         Assertions.assertNotEquals(listOrig, listDiscard);
 
         // Retrieve from serialized stream.
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        ObjectInputStream ois = new ObjectInputStream(bis);
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        final ObjectInputStream ois = new ObjectInputStream(bis);
         final RandomProviderState stateNew = new RandomProviderDefaultState((byte[]) ois.readObject());
 
         Assertions.assertNotSame(stateOrig, stateNew);
@@ -499,7 +499,7 @@ class ProvidersCommonParametricTest {
                     ++numFailures;
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should never happen.
             throw new RuntimeException("Unexpected", e);
         }

@@ -213,7 +213,7 @@ class UniformRandomProviderTest {
     void testNextFloatExtremes() {
         final UniformRandomProvider rng = new DummyGenerator() {
             private int i;
-            private int[] values = {0, -1, 1 << 8};
+            private final int[] values = {0, -1, 1 << 8};
             @Override
             public int nextInt() {
                 return values[i++];
@@ -244,7 +244,7 @@ class UniformRandomProviderTest {
         // This method will be used
         final UniformRandomProvider rng = new DummyGenerator() {
             private int i;
-            private float[] values = {0, 0.25f, 0.5f, 0.75f, 1};
+            private final float[] values = {0, 0.25f, 0.5f, 0.75f, 1};
             @Override
             public float nextFloat() {
                 return values[i++];
@@ -289,7 +289,7 @@ class UniformRandomProviderTest {
     void testNextDoubleExtremes() {
         final UniformRandomProvider rng = new DummyGenerator() {
             private int i;
-            private long[] values = {0, -1, 1L << 11};
+            private final long[] values = {0, -1, 1L << 11};
             @Override
             public long nextLong() {
                 return values[i++];
@@ -320,7 +320,7 @@ class UniformRandomProviderTest {
         // This method will be used
         final UniformRandomProvider rng = new DummyGenerator() {
             private int i;
-            private double[] values = {0, 0.25, 0.5, 0.75, 1};
+            private final double[] values = {0, 0.25, 0.5, 0.75, 1};
             @Override
             public double nextDouble() {
                 return values[i++];
@@ -801,7 +801,7 @@ class UniformRandomProviderTest {
                     failedStat.add(chi2);
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should never happen.
             throw new RuntimeException("Unexpected", e);
         }

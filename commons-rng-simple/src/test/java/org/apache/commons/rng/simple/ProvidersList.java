@@ -105,7 +105,7 @@ public final class ProvidersList {
             // Complete list.
             LIST.addAll(LIST32);
             LIST.addAll(LIST64);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
             e.printStackTrace(System.err);

@@ -324,7 +324,7 @@ class ProvidersCommonParametricTest {
                     ++observed[buffer[i] & 0xff];
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should never happen.
             throw new RuntimeException("Unexpected");
         }
@@ -364,7 +364,7 @@ class ProvidersCommonParametricTest {
                     --walk;
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should never happen.
             throw new RuntimeException("Unexpected");
         }
@@ -513,7 +513,7 @@ class ProvidersCommonParametricTest {
                     ++numFailures;
                 }
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // Should never happen.
             throw new RuntimeException("Unexpected", e);
         }

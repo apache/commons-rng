@@ -138,8 +138,8 @@ class SplittableProvidersParametricTest {
     @MethodSource("getSplittableProviders")
     void testSplitWithSourceIsReproducible(SplittableUniformRandomProvider generator) {
         final long seed = ThreadLocalRandom.current().nextLong();
-        UniformRandomProvider rng1 = generator.split(new SplittableRandom(seed)::nextLong);
-        UniformRandomProvider rng2 = generator.split(new SplittableRandom(seed)::nextLong);
+        final UniformRandomProvider rng1 = generator.split(new SplittableRandom(seed)::nextLong);
+        final UniformRandomProvider rng2 = generator.split(new SplittableRandom(seed)::nextLong);
         RandomAssert.assertNextLongEquals(10, rng1, rng2);
     }
 

@@ -143,7 +143,7 @@ class BaseProviderTest {
         // The seed does not matter.
         // Create random seeds that are smaller or larger than length.
         final SplittableRandom rng = new SplittableRandom();
-        for (long[] seed : new long[][] {
+        for (final long[] seed : new long[][] {
             {},
             rng.longs(1).toArray(),
             rng.longs(2).toArray(),

@@ -149,7 +149,7 @@ class RandomSourceTest {
         // Cast must fail.
         Assertions.assertThrows(ClassCastException.class, () -> {
             @SuppressWarnings("unused")
-            RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
+            final RestorableUniformRandomProvider dummy = (RestorableUniformRandomProvider) rng2;
         });
     }
 

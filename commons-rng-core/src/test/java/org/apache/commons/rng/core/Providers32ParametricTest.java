@@ -34,8 +34,8 @@ class Providers32ParametricTest {
     void testNextBytesChunks(RestorableUniformRandomProvider generator) {
         final int[] chunkSizes = {4, 8, 12, 16};
         final int[] chunks = {1, 2, 3, 4, 5};
-        for (int chunkSize : chunkSizes) {
-            for (int numChunks : chunks) {
+        for (final int chunkSize : chunkSizes) {
+            for (final int numChunks : chunks) {
                 ProvidersCommonParametricTest.checkNextBytesChunks(generator,
                                                                    chunkSize,
                                                                    numChunks);

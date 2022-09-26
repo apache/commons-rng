@@ -54,13 +54,13 @@ class JDKRandomBridgeTest {
         final Random rng = new JDKRandomBridge(RandomSource.SPLIT_MIX_64, seed);
 
         // Serialize.
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(rng);
 
         // Retrieve from serialized stream.
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        ObjectInputStream ois = new ObjectInputStream(bis);
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        final ObjectInputStream ois = new ObjectInputStream(bis);
         final Random serialRng = (Random) (ois.readObject());
 
         // Check that the serialized data recreated the original state.

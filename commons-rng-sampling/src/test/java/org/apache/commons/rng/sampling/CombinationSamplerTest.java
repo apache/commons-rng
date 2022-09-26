@@ -38,7 +38,7 @@ class CombinationSamplerTest {
         for (int k = 1; k <= n; k++) {
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
             final int[] random = sampler.sample();
-            for (int s : random) {
+            for (final int s : random) {
                 assertIsInDomain(n, s);
             }
         }
@@ -154,7 +154,7 @@ class CombinationSamplerTest {
         // Codes are positive for all combinations of bits that use k-bits,
         // otherwise they are negative.
         final int totalBitCombinations = 1 << n;
-        int[] codeLookup = new int[totalBitCombinations];
+        final int[] codeLookup = new int[totalBitCombinations];
         Arrays.fill(codeLookup, -1); // initialize as negative
         int codes = 0;
         for (int i = 0; i < totalBitCombinations; i++) {
@@ -189,7 +189,7 @@ class CombinationSamplerTest {
         // Each sample index is used to set a bit in an integer.
         // The resulting bits should be a valid code.
         int bits = 0;
-        for (int s : sample) {
+        for (final int s : sample) {
             // This shift will be from 0 to n-1 since it is from the
             // domain of size n.
             bits |= 1 << s;

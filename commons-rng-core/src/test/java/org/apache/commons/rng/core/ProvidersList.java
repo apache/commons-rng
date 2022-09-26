@@ -176,7 +176,7 @@ public final class ProvidersList {
             LIST.stream()
                 .filter(rng -> rng instanceof SplittableUniformRandomProvider)
                 .forEach(rng -> LIST_SPLIT.add((SplittableUniformRandomProvider) rng));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
             e.printStackTrace(System.err);

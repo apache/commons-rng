@@ -40,7 +40,7 @@ class PermutationSamplerTest {
         final PermutationSampler sampler = new PermutationSampler(RandomSource.KISS.create(),
                                                                   n, k);
         final int[] random = sampler.sample();
-        SAMPLE: for (int s : random) {
+        SAMPLE: for (final int s : random) {
             for (int i = 0; i < n; i++) {
                 if (i == s) {
                     continue SAMPLE;

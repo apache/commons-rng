@@ -368,7 +368,7 @@ public final class RandomAssert {
         UniformRandomProvider rng, int warmupCycles, int testCycles, int seedElement, int bit) {
         try {
             assertNextLongNonZeroOutput(rng, warmupCycles, testCycles);
-        } catch (AssertionError ex) {
+        } catch (final AssertionError ex) {
             Assertions.fail("No non-zero output after " + (warmupCycles + testCycles) + " cycles. " +
                         "Seed element [" + seedElement + "], bit=" + bit);
         }
