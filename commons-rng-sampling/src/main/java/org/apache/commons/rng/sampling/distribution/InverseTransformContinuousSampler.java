@@ -42,7 +42,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * final RealDistribution dist = new ChiSquaredDistribution(9);
  * // Create the sampler.
  * final ContinuousSampler chiSquareSampler =
- *     InverseTransformContinuousSampler.of(RandomSource.MT.create(),
+ *     InverseTransformContinuousSampler.of(RandomSource.XO_RO_SHI_RO_128_PP.create(),
  *                                          new ContinuousInverseCumulativeProbabilityFunction() {
  *                                              public double inverseCumulativeProbability(double p) {
  *                                                  return dist.inverseCumulativeProbability(p);

@@ -29,17 +29,17 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  *
  * <p>Usage examples:</p>
  * <pre><code>
- *  UniformRandomProvider rng = RandomSource.MT.create();
+ *  UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
  * </code></pre>
  * or
  * <pre><code>
  *  final int[] seed = new int[] { 196, 9, 0, 226 };
- *  UniformRandomProvider rng = RandomSource.MT.create(seed);
+ *  UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create(seed);
  * </code></pre>
  * or
  * <pre><code>
  *  final int[] seed = RandomSource.createIntArray(256);
- *  UniformRandomProvider rng = RandomSource.MT.create(seed);
+ *  UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create(seed);
  * </code></pre>
  * where the enum value is the identifier of the generator's concrete
  * implementation, and the argument to method {@code create} is the
@@ -825,11 +825,11 @@ public enum RandomSource {
      *
      * <p>Usage example:</p>
      * <pre><code>
-     *  UniformRandomProvider rng = RandomSource.MT.create();
+     *  UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
      * </code></pre>
      * <p>or, if a {@link RestorableUniformRandomProvider "save/restore"} functionality is needed,</p>
      * <pre><code>
-     *  RestorableUniformRandomProvider rng = RandomSource.MT.create();
+     *  RestorableUniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
      * </code></pre>
      *
      * <p>This method will raise an exception if the generator requires arguments in addition

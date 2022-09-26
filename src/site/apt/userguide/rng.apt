@@ -136,7 +136,7 @@ The Apache Commons RNG User Guide
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 
-UniformRandomProvider rng = RandomSource.MT.create();
+UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 +--------------------------+
 
 

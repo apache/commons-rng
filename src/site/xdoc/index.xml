@@ -39,7 +39,7 @@
 import org.apache.commons.rng.simple.RandomSource;
 
 // Instantiate a "Mersenne-Twister" generator with a factory method.
-UniformRandomProvider rng = RandomSource.MT.create();
+UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
 
 // Use it to produce a floating-point value between 0 and 1.
 double random = rng.nextDouble();
