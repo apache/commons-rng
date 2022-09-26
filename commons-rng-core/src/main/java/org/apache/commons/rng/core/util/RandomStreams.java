@@ -58,7 +58,7 @@ public final class RandomStreams {
 
     /**
      * Returns a stream producing the given {@code streamSize} number of new objects
-     * generated using the supplied {@code source} of randomness using the {@code factory}.
+     * generated using the supplied {@code source} of randomness and object {@code factory}.
      *
      * <p>A {@code long} seed is provided for each object instance using the stream position
      * and random bits created from the supplied {@code source}.
@@ -76,7 +76,7 @@ public final class RandomStreams {
      * @param factory Factory to create new instances.
      * @return a stream of objects; the stream is limited to the given {@code streamSize}.
      * @throws IllegalArgumentException if {@code streamSize} is negative.
-     * @throws NullPointerException if {@code source} or {@code factory} is null
+     * @throws NullPointerException if {@code source} or {@code factory} is null.
      */
     public static <T> Stream<T> generateWithSeed(long streamSize,
                                                  SplittableUniformRandomProvider source,
