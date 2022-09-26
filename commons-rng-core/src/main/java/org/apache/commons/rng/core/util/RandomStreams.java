@@ -26,6 +26,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Utility for creating streams using a source of randomness.
+ *
+ * @since 1.5
  */
 public final class RandomStreams {
     /** The number of bits of each random character in the seed.
@@ -36,6 +38,7 @@ public final class RandomStreams {
      * A factory for creating objects using a seed and a using a source of randomness.
      *
      * @param <T> the object type
+     * @since 1.5
      */
     public interface ObjectFactory<T> {
         /**
