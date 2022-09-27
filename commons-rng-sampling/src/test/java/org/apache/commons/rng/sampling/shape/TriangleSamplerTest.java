@@ -82,7 +82,7 @@ class TriangleSamplerTest {
         // Test that a(1 - s - t) + sb + tc does not overflow is s+t = 1
         final double max = Double.MAX_VALUE;
         s -= delta;
-        final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         for (int n = 0; n < 100; n++) {
             Assertions.assertNotEquals(Double.POSITIVE_INFINITY, (1 - s - t) * max + s * max + t * max);
             s = rng.nextDouble();

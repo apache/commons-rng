@@ -46,7 +46,7 @@ class DiscreteUniformSamplerTest {
     void testSamplesWithRangeOf1() {
         final int upper = 99;
         final int lower = upper;
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng, lower, upper);
         for (int i = 0; i < 5; i++) {
             Assertions.assertEquals(lower, sampler.sample());

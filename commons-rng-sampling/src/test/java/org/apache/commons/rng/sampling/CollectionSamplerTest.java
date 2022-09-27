@@ -39,7 +39,7 @@ class CollectionSamplerTest {
         list.add("RNG");
 
         final CollectionSampler<String> sampler =
-            new CollectionSampler<>(RandomSource.MWC_256.create(), list);
+            new CollectionSampler<>(RandomAssert.createRNG(), list);
         final String word = sampler.sample();
         for (final String w : list) {
             if (word.equals(w)) {

@@ -538,7 +538,7 @@ class StableSamplerTest {
         // As pi is an approximation then the cos value is not exactly 0
         Assertions.assertTrue(cosPi2 > 0);
 
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_SS.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
 
         // The term is mirrored around 1 so use extremes between 1 and 0
         final double[] alphas = {1, Math.nextDown(1), 0.99, 0.5, 0.1, 0.05, 0.01, DU};
@@ -690,7 +690,7 @@ class StableSamplerTest {
     //@Test
     void expm1ULPReport() {
         // Create random doubles with a given exponent. Compute the mean and max ULP difference.
-        final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         // For a quicker report set to <= 2^20.
         final int size = 1 << 30;
         // Create random doubles using random bits in the 52-bit mantissa.

@@ -37,7 +37,7 @@ class PermutationSamplerTest {
     void testSampleTrivial() {
         final int n = 6;
         final int k = 3;
-        final PermutationSampler sampler = new PermutationSampler(RandomSource.KISS.create(),
+        final PermutationSampler sampler = new PermutationSampler(RandomAssert.createRNG(),
                                                                   n, k);
         final int[] random = sampler.sample();
         SAMPLE: for (final int s : random) {

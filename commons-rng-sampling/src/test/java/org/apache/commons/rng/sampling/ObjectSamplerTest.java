@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ObjectSamplerTest {
     @Test
     void testSamplesUnlimitedSize() {
-        final ObjectSampler<Double> s = RandomSource.SPLIT_MIX_64.create()::nextDouble;
+        final ObjectSampler<Double> s = RandomAssert.createRNG()::nextDouble;
         Assertions.assertEquals(Long.MAX_VALUE, s.samples().spliterator().estimateSize());
     }
 

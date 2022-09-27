@@ -193,7 +193,7 @@ class DirichletSamplerTest {
      */
     private static void assertSamples(double... alpha) {
         // No fixed seed. Failed tests will be repeated by the JUnit test runner.
-        final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final DirichletSampler sampler = DirichletSampler.of(rng, alpha);
         final int k = alpha.length;
         final double[][] samples = new double[100000][];

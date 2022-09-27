@@ -30,7 +30,7 @@ import org.apache.commons.rng.simple.RandomSource;
  * Tests for {@link CombinationSampler}.
  */
 class CombinationSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.XO_RO_SHI_RO_128_PP.create();
+    private final UniformRandomProvider rng = RandomAssert.createRNG();
 
     @Test
     void testSampleIsInDomain() {

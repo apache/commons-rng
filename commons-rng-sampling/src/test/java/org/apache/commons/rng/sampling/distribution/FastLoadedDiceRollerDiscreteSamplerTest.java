@@ -42,7 +42,7 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
      * @return the FLDR sampler
      */
     private static SharedStateDiscreteSampler createSampler(long... frequencies) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         return FastLoadedDiceRollerDiscreteSampler.of(rng, frequencies);
     }
 
@@ -53,7 +53,7 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
      * @return the FLDR sampler
      */
     private static SharedStateDiscreteSampler createSampler(double... weights) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         return FastLoadedDiceRollerDiscreteSampler.of(rng, weights);
     }
 
@@ -403,7 +403,7 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
     @ValueSource(ints = {1023, 67, 1, -59, -1020, -1021})
     void testScaledWeights(int scaleFactor) {
         // Weights in [0, 1)
-        final double[] w1 = RandomSource.KISS.create().doubles(10).toArray();
+        final double[] w1 = RandomAssert.createRNG().doubles(10).toArray();
         final double scale = Math.scalb(1.0, scaleFactor);
         final double[] w2 = Arrays.stream(w1).map(x -> x * scale).toArray();
         final long seed = RandomSource.createLong();

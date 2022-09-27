@@ -33,7 +33,7 @@ import org.apache.commons.rng.simple.RandomSource;
  */
 class DiscreteProbabilityCollectionSamplerTest {
     /** RNG. */
-    private final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create();
+    private final UniformRandomProvider rng = RandomAssert.createRNG();
 
     @Test
     void testPrecondition1() {

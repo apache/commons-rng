@@ -90,7 +90,7 @@ class GuideTableDiscreteSamplerTest {
 
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(rng, new double[] {0.5, 0.5}, 1.0);
         Assertions.assertTrue(sampler.toString().toLowerCase().contains("guide table"));
     }
@@ -187,7 +187,7 @@ class GuideTableDiscreteSamplerTest {
      * @param alpha the alpha
      */
     private static void checkSamples(double[] probabilies, double alpha) {
-        final UniformRandomProvider rng = RandomSource.JSF_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(rng, probabilies, alpha);
 
         final int numberOfSamples = 10000;

@@ -183,7 +183,7 @@ class MarsagliaTsangWangDiscreteSamplerTest {
     void testRealProbabilityDistributionSamples() {
         // These do not have to sum to 1
         final double[] probabilities = new double[11];
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         for (int i = 0; i < probabilities.length; i++) {
             probabilities[i] = rng.nextDouble();
         }

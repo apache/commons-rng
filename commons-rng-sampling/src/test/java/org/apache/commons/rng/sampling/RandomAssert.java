@@ -18,10 +18,13 @@
 package org.apache.commons.rng.sampling;
 
 import org.junit.jupiter.api.Assertions;
-
+import java.util.EnumSet;
+import java.util.concurrent.ThreadLocalRandom;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.LongSampler;
+import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Utility class for testing random samplers.
@@ -29,6 +32,37 @@ import org.apache.commons.rng.sampling.distribution.LongSampler;
 public final class RandomAssert {
     /** Number of samples to generate to test for equal sequences. */
     private static final int SAMPLES = 10;
+
+    /** The sources for a new random generator instance. */
+    private static final RandomSource[] SOURCES;
+
+    static {
+        final EnumSet<RandomSource> set = EnumSet.allOf(RandomSource.class);
+        // Remove all generators that do not pass Test U01 BigCrush or
+        // fail PractRand before 4 TiB of output.
+        // See: https://commons.apache.org/proper/commons-rng/userguide/rng.html#a5._Quality
+        set.remove(RandomSource.JDK);
+        set.remove(RandomSource.WELL_512_A);
+        set.remove(RandomSource.WELL_1024_A);
+        set.remove(RandomSource.WELL_19937_A);
+        set.remove(RandomSource.WELL_19937_C);
+        set.remove(RandomSource.WELL_44497_A);
+        set.remove(RandomSource.WELL_44497_B);
+        set.remove(RandomSource.MT);
+        set.remove(RandomSource.XOR_SHIFT_1024_S);
+        set.remove(RandomSource.TWO_CMRES);
+        set.remove(RandomSource.TWO_CMRES_SELECT);
+        set.remove(RandomSource.MT_64);
+        set.remove(RandomSource.XOR_SHIFT_1024_S_PHI);
+        set.remove(RandomSource.XO_RO_SHI_RO_64_S);
+        set.remove(RandomSource.XO_SHI_RO_128_PLUS);
+        set.remove(RandomSource.XO_RO_SHI_RO_128_PLUS);
+        set.remove(RandomSource.XO_SHI_RO_256_PLUS);
+        set.remove(RandomSource.XO_SHI_RO_512_PLUS);
+        set.remove(RandomSource.PCG_MCG_XSH_RS_32);
+        set.remove(RandomSource.XO_RO_SHI_RO_1024_S);
+        SOURCES = set.toArray(new RandomSource[0]);
+    }
 
     /**
      * Class contains only static methods.
@@ -114,5 +148,25 @@ public final class RandomAssert {
      */
     private static boolean isArray(Object object) {
         return object != null && object.getClass().isArray();
+    }
+
+    /**
+     * Create a new random generator instance. The implementation will be randomly chosen
+     * from a selection of high-quality generators.
+     *
+     * <p>This is a helper method to return a generator for use in testing where the
+     * underlying source should not impact the test. This ensures the test is robust upon
+     * repeat invocation across different JVM instances where the generator will most
+     * likely be different.
+     *
+     * <p>Note that use of this method is preferable to use of a fixed seed generator. Any
+     * test that is flaky when using this method may require an update to the test
+     * assumptions and assertions.
+     *
+     * @return the uniform random provider
+     * @see RandomSource#create()
+     */
+    public static UniformRandomProvider createRNG() {
+        return SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)].create();
     }
 }

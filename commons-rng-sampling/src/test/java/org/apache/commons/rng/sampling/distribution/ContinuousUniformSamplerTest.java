@@ -34,7 +34,7 @@ class ContinuousUniformSamplerTest {
     void testNoRestrictionOnOrderOfLowAndHighParameters() {
         final double low = 3.18;
         final double high = 5.23;
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         testSampleInRange(rng, low, high);
         testSampleInRange(rng, high, low);
     }

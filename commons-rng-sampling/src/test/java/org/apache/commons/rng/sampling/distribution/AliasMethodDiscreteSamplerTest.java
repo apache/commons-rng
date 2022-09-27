@@ -83,7 +83,7 @@ class AliasMethodDiscreteSamplerTest {
      * @return the alias method discrete sampler
      */
     private static SharedStateDiscreteSampler createSampler(double[] probabilities) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         return AliasMethodDiscreteSampler.of(rng, probabilities, -1);
     }
 
@@ -134,7 +134,7 @@ class AliasMethodDiscreteSamplerTest {
     @Test
     void testNonUniformSamplesWithProbabilitiesWithDefaultFactoryConstructor() {
         final double[] expected = {0.1, 0.2, 0.3, 0.1, 0.3};
-        checkSamples(AliasMethodDiscreteSampler.of(RandomSource.SPLIT_MIX_64.create(), expected), expected);
+        checkSamples(AliasMethodDiscreteSampler.of(RandomAssert.createRNG(), expected), expected);
     }
 
     /**

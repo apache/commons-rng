@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import java.util.concurrent.ThreadLocalRandom;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
@@ -30,7 +31,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class DiscreteSamplerTest {
     @Test
     void testSamplesUnlimitedSize() {
-        final DiscreteSampler s = RandomSource.SPLIT_MIX_64.create()::nextInt;
+        final DiscreteSampler s = RandomAssert.createRNG()::nextInt;
         Assertions.assertEquals(Long.MAX_VALUE, s.samples().spliterator().estimateSize());
     }
 
