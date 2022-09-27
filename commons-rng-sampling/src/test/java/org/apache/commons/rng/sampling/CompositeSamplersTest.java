@@ -19,9 +19,6 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.CompositeSamplers.Builder;
@@ -35,7 +32,8 @@ import org.apache.commons.rng.sampling.distribution.LongSampler;
 import org.apache.commons.rng.sampling.distribution.SharedStateContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.SharedStateLongSampler;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@link CompositeSamplers}.
@@ -46,17 +44,20 @@ class CompositeSamplersTest {
      */
     @Test
     void testDiscreteProbabilitySampler() {
-        final UniformRandomProvider rng = RandomSource.MWC_256.create(78979L);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final double[] probabilities = {0.1, 0.2, 0.3, 0.4};
-        final double mean = 0.2 + 2 * 0.3 + 3 * 0.4;
+
+        final ChiSquareTest chisq = new ChiSquareTest();
+
         final int n = 1000000;
         for (final DiscreteProbabilitySampler item : DiscreteProbabilitySampler.values()) {
             final DiscreteSampler sampler = item.create(rng, probabilities.clone());
-            long sum = 0;
+            final long[] observed = new long[probabilities.length];
             for (int i = 0; i < n; i++) {
-                sum += sampler.sample();
+                observed[sampler.sample()]++;
             }
-            Assertions.assertEquals(mean, (double) sum / n, 1e-3, item::name);
+            final double p = chisq.chiSquareTest(probabilities, observed);
+            Assertions.assertFalse(p < 0.001, () -> item + " p-value too small: " + p);
         }
     }
 
@@ -65,7 +66,7 @@ class CompositeSamplersTest {
      */
     @Test
     void testEmptyBuilderThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         Assertions.assertEquals(0, builder.size());
@@ -89,7 +90,7 @@ class CompositeSamplersTest {
      */
     @Test
     void testInvalidWeights() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         final RangeSampler sampler = new RangeSampler(45, 63, rng);
@@ -111,7 +112,7 @@ class CompositeSamplersTest {
      */
     @Test
     void testSingleSharedStateObjectSampler() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
         final RangeSampler sampler = new RangeSampler(45, 63, rng);
@@ -127,7 +128,7 @@ class CompositeSamplersTest {
     @Test
     void testObjectSamplerSamples() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.PCG_XSH_RR_32_OS.create(345);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 15;
         final int min = -134;
         final int max = 2097;
@@ -142,13 +143,13 @@ class CompositeSamplersTest {
     void testSharedStateObjectSamplerSamples() {
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.PCG_XSH_RS_32_OS.create(299);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 11;
         final int min = 42;
         final int max = 678;
         addObjectSamplers(builder, n, min, max, rng);
         // Exercise the shared state interface
-        final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_256_PLUS.create(0x9a8c6f5e);
+        final UniformRandomProvider rng1 = RandomAssert.createRNG();
         assertObjectSamplerSamples(builder.build(rng).withUniformRandomProvider(rng1), min, max);
     }
 
@@ -169,14 +170,14 @@ class CompositeSamplersTest {
                 return AliasMethodDiscreteSampler.of(rng, probabilities, 2);
             }
         });
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(0xa6b7c9);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 7;
         final int min = -610;
         final int max = 745;
         addObjectSamplers(builder, n, min, max, rng);
 
         // Exercise the shared state interface
-        final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_256_PLUS.create(0x1f2e3d);
+        final UniformRandomProvider rng1 = RandomAssert.createRNG();
         assertObjectSamplerSamples(builder.build(rng).withUniformRandomProvider(rng1), min, max);
 
         Assertions.assertEquals(1, factoryCount.get(), "Factory should not be used to create the shared state sampler");
@@ -207,7 +208,7 @@ class CompositeSamplersTest {
                 };
             }
         });
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(0x263478628L);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 14;
         final int min = 56;
         final int max = 2033;
@@ -215,7 +216,7 @@ class CompositeSamplersTest {
 
         // Exercise the shared state interface.
         // This tests the custom factory is used twice.
-        final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_256_PLUS.create(0x8c7b6a);
+        final UniformRandomProvider rng1 = RandomAssert.createRNG();
         assertObjectSamplerSamples(builder.build(rng).withUniformRandomProvider(rng1), min, max);
 
         Assertions.assertEquals(2, factoryCount.get(), "Factory should be used to create the shared state sampler");
@@ -230,7 +231,7 @@ class CompositeSamplersTest {
     @Test
     void testObjectSamplerSamplesWithUniformWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.JSF_64.create(678345);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int max = 60;
         final int interval = 10;
         for (int min = 0; min < max; min += interval) {
@@ -247,7 +248,7 @@ class CompositeSamplersTest {
     @Test
     void testObjectSamplerSamplesWithVeryLargeWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.SFC_64.create(267934293);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         // Ratio 4:4:2:1
         // The weights will sum to infinity as they are more than 2^1024.
         final double w4 = 0x1.0p1023;
@@ -270,7 +271,7 @@ class CompositeSamplersTest {
     @Test
     void testObjectSamplerSamplesWithSubNormalWeights() {
         final Builder<ObjectSampler<Integer>> builder = CompositeSamplers.newObjectSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.MSWS.create(6786);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         // Ratio 4:4:2:1
         // The weights are very small sub-normal numbers
         final double w4 = Double.MIN_VALUE * 4;
@@ -362,7 +363,7 @@ class CompositeSamplersTest {
     @Test
     void testDiscreteSamplerSamples() {
         final Builder<DiscreteSampler> builder = CompositeSamplers.newDiscreteSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.PCG_XSH_RR_32_OS.create(345);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 15;
         final int min = -134;
         final int max = 2097;
@@ -376,7 +377,7 @@ class CompositeSamplersTest {
     @Test
     void testSharedStateDiscreteSamplerSamples() {
         final Builder<SharedStateDiscreteSampler> builder = CompositeSamplers.newSharedStateDiscreteSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.PCG_XSH_RS_32_OS.create(299);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 11;
         final int min = 42;
         final int max = 678;
@@ -456,7 +457,7 @@ class CompositeSamplersTest {
     @Test
     void testContinuousSamplerSamples() {
         final Builder<ContinuousSampler> builder = CompositeSamplers.newContinuousSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_256_PP.create(9283756);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 15;
         final double min = 67.2;
         final double max = 2033.8;
@@ -471,7 +472,7 @@ class CompositeSamplersTest {
     void testSharedStateContinuousSamplerSamples() {
         final Builder<SharedStateContinuousSampler> builder = CompositeSamplers
                 .newSharedStateContinuousSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.PCG_RXS_M_XS_64_OS.create(0x567567345L);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 11;
         final double min = -15.7;
         final double max = 123.4;
@@ -553,7 +554,7 @@ class CompositeSamplersTest {
     @Test
     void testLongSamplerSamples() {
         final Builder<LongSampler> builder = CompositeSamplers.newLongSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.KISS.create(67842321783L);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 15;
         final long min = -134;
         final long max = 1L << 54;
@@ -567,7 +568,7 @@ class CompositeSamplersTest {
     @Test
     void testSharedStateLongSamplerSamples() {
         final Builder<SharedStateLongSampler> builder = CompositeSamplers.newSharedStateLongSamplerBuilder();
-        final UniformRandomProvider rng = RandomSource.KISS.create(12369279382030L);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = 11;
         final long min = 42;
         final long max = 1L << 53;
@@ -669,8 +670,8 @@ class CompositeSamplersTest {
      * support a shared stated sampler.
      */
     private static void testSharedStateObjectSampler(boolean customFactory) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         final Builder<SharedStateObjectSampler<Integer>> builder = CompositeSamplers
                 .newSharedStateObjectSamplerBuilder();
@@ -718,8 +719,8 @@ class CompositeSamplersTest {
      * support a shared stated sampler.
      */
     private static void testSharedStateDiscreteSampler(boolean customFactory) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         final Builder<SharedStateDiscreteSampler> builder = CompositeSamplers.newSharedStateDiscreteSamplerBuilder();
 
@@ -766,8 +767,8 @@ class CompositeSamplersTest {
      * support a shared stated sampler.
      */
     private static void testSharedStateContinuousSampler(boolean customFactory) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         final Builder<SharedStateContinuousSampler> builder = CompositeSamplers
                 .newSharedStateContinuousSamplerBuilder();
@@ -838,8 +839,8 @@ class CompositeSamplersTest {
      * support a shared stated sampler.
      */
     private static void testSharedStateLongSampler(boolean customFactory) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         final Builder<SharedStateLongSampler> builder = CompositeSamplers.newSharedStateLongSamplerBuilder();
 

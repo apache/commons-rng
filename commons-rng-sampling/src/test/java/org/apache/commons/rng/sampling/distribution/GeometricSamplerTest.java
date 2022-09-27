@@ -18,7 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +31,7 @@ class GeometricSamplerTest {
      */
     @Test
     void testProbabilityOfSuccessIsOneGeneratesZeroForSamples() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, 1);
         // All samples should be 0
         for (int i = 0; i < 10; i++) {
@@ -55,7 +54,7 @@ class GeometricSamplerTest {
         Assertions.assertTrue(exponentialMean > 0 && exponentialMean <= Double.MAX_VALUE);
         // The internal exponential sampler validates the mean so demonstrate creating a
         // geometric sampler does not throw.
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         GeometricSampler.of(rng, probabilityOfSuccess);
     }
 
@@ -65,7 +64,7 @@ class GeometricSamplerTest {
      */
     @Test
     void testProbabilityOfSuccessIsOneSamplerToString() {
-        final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider unusedRng = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(unusedRng, 1);
         Assertions.assertTrue(sampler.toString().contains("Geometric"),
             "Missing 'Geometric' from toString");
@@ -82,7 +81,7 @@ class GeometricSamplerTest {
      */
     @Test
     void testProbabilityOfSuccessIsAlmostZeroGeneratesMaxValueForSamples() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler = GeometricSampler.of(rng, Double.MIN_VALUE);
         // All samples should be max value
         for (int i = 0; i < 10; i++) {
@@ -96,7 +95,7 @@ class GeometricSamplerTest {
      */
     @Test
     void testProbabilityOfSuccessAboveOneThrows() {
-        final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider unusedRng = RandomAssert.seededRNG();
         final double probabilityOfSuccess = Math.nextUp(1.0);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> GeometricSampler.of(unusedRng, probabilityOfSuccess));
@@ -107,7 +106,7 @@ class GeometricSamplerTest {
      */
     @Test
     void testProbabilityOfSuccessIsZeroThrows() {
-        final UniformRandomProvider unusedRng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider unusedRng = RandomAssert.seededRNG();
         final double probabilityOfSuccess = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> GeometricSampler.of(unusedRng, probabilityOfSuccess));
@@ -136,8 +135,8 @@ class GeometricSamplerTest {
      * @param probabilityOfSuccess Probability of success.
      */
     private static void testSharedStateSampler(double probabilityOfSuccess) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler1 =
             GeometricSampler.of(rng1, probabilityOfSuccess);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

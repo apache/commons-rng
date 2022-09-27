@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.Locale;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
@@ -25,7 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import java.util.Locale;
 
 /**
  * Test for the {@link UniformLongSampler}. The tests hit edge cases for the sampler
@@ -47,7 +47,7 @@ class UniformLongSamplerTest {
     void testConstructorThrowsWithLowerAboveUpper() {
         final long upper = 55;
         final long lower = upper + 1;
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> UniformLongSampler.of(rng, lower, upper));
     }
@@ -71,8 +71,8 @@ class UniformLongSamplerTest {
     void testSamplesWithFullRange() {
         final long upper = Long.MAX_VALUE;
         final long lower = Long.MIN_VALUE;
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
             Assertions.assertEquals(rng1.nextLong(), sampler.sample());
@@ -193,8 +193,8 @@ class UniformLongSamplerTest {
             // Upper is inclusive so subtract 1
             final long upper = (1L << i) - 1;
             final int shift = 64 - i;
-            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+            final UniformRandomProvider rng2 = RandomAssert.seededRNG();
             sampler = UniformLongSampler.of(rng2, lower, upper);
             for (int j = 0; j < 10; j++) {
                 Assertions.assertEquals(rng1.nextLong() >>> shift, sampler.sample());
@@ -211,8 +211,8 @@ class UniformLongSamplerTest {
         // Create a range bigger than 2^63
         final long upper = Long.MAX_VALUE / 2 + 1;
         final long lower = Long.MIN_VALUE / 2 - 1;
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final UniformLongSampler sampler = UniformLongSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
             // Get the expected value by the rejection method
@@ -329,8 +329,8 @@ class UniformLongSamplerTest {
      * @param upper Upper.
      */
     private static void assertSharedStateSampler(long lower, long upper) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final UniformLongSampler sampler1 = UniformLongSampler.of(rng1, lower, upper);
         final UniformLongSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
@@ -365,7 +365,7 @@ class UniformLongSamplerTest {
      * @param upper Upper.
      */
     private static void assertToString(long lower, long upper) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final UniformLongSampler sampler = UniformLongSampler.of(rng, lower, upper);
         Assertions.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
     }

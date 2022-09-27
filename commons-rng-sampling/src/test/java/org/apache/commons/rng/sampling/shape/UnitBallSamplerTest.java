@@ -18,15 +18,12 @@ package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
 import java.util.function.DoubleUnaryOperator;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link UnitBallSampler}.
@@ -37,7 +34,7 @@ class UnitBallSamplerTest {
      */
     @Test
     void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> UnitBallSampler.of(rng, 0));
     }
@@ -126,8 +123,8 @@ class UnitBallSamplerTest {
         final int samples = samplesPerBin * expected.length;
         Arrays.fill(expected, (double) samples / layers);
 
-        // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xa1b2c3d4L);
+        // Increase the loops to verify robustness
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final UnitBallSampler sampler = UnitBallSampler.of(rng, dimension);
         for (int loop = 0; loop < 1; loop++) {
             // Assign each coordinate to a layer inside the ball and an orthant using the sign
@@ -226,8 +223,8 @@ class UnitBallSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final UnitBallSampler sampler1 = UnitBallSampler.of(rng1, dimension);
         final UnitBallSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);

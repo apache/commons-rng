@@ -16,12 +16,10 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link RejectionInversionZipfSampler}. The tests hit edge cases for the sampler.
@@ -32,8 +30,7 @@ class RejectionInversionZipfSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroNumberOfElements() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final int numberOfElements = 0;
         final double exponent = 1;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -45,8 +42,7 @@ class RejectionInversionZipfSamplerTest {
      */
     @Test
     void testConstructorThrowsWithNegativeExponent() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final int numberOfElements = 1;
         final double exponent = Math.nextDown(0);
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -76,8 +72,8 @@ class RejectionInversionZipfSamplerTest {
      * @param exponent Exponent
      */
     private static void testSharedStateSampler(int numberOfElements, double exponent) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         // Use instance constructor not factory constructor to exercise 1.X public API
         final RejectionInversionZipfSampler sampler1 =
             new RejectionInversionZipfSampler(rng1, numberOfElements, exponent);
@@ -91,7 +87,7 @@ class RejectionInversionZipfSamplerTest {
      */
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertTrue(new RejectionInversionZipfSampler(rng, 10, 2.0).toString()
                 .toLowerCase().contains("zipf"));
     }

@@ -17,6 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.RestorableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -249,8 +251,7 @@ class PoissonSamplerCacheTest {
      */
     @Test
     void testCreateSharedStateSamplerThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> cache.createSharedStateSampler(rng, 0));
@@ -261,8 +262,7 @@ class PoissonSamplerCacheTest {
      */
     @Test
     void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final PoissonSamplerCache cache = createPoissonSamplerCache();
         final double mean = Integer.MAX_VALUE + 1.0;
         Assertions.assertThrows(IllegalArgumentException.class,

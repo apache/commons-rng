@@ -16,8 +16,6 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.stat.correlation.Covariance;
@@ -26,6 +24,8 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link DirichletSampler}.
@@ -33,56 +33,56 @@ import org.apache.commons.rng.simple.RandomSource;
 class DirichletSamplerTest {
     @Test
     void testDistributionThrowsWithInvalidNumberOfCategories() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0));
     }
 
     @Test
     void testDistributionThrowsWithZeroConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, 0.0));
     }
 
     @Test
     void testDistributionThrowsWithNaNConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, Double.NaN));
     }
 
     @Test
     void testDistributionThrowsWithInfiniteConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.of(rng, 1.0, Double.POSITIVE_INFINITY));
     }
 
     @Test
     void testSymmetricDistributionThrowsWithInvalidNumberOfCategories() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> DirichletSampler.symmetric(rng, 1, 1.0));
     }
 
     @Test
     void testSymmetricDistributionThrowsWithZeroConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, 0.0));
     }
 
     @Test
     void testSymmetricDistributionThrowsWithNaNConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, Double.NaN));
     }
 
     @Test
     void testSymmetricDistributionThrowsWithInfiniteConcentration() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DirichletSampler.symmetric(rng, 2, Double.POSITIVE_INFINITY));
     }
@@ -153,7 +153,7 @@ class DirichletSamplerTest {
      */
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final DirichletSampler sampler1 = DirichletSampler.symmetric(rng, 2, 1.0);
         final DirichletSampler sampler2 = DirichletSampler.of(rng, 0.5, 1, 1.5);
         Assertions.assertTrue(sampler1.toString().toLowerCase().contains("dirichlet"));

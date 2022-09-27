@@ -16,12 +16,10 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import java.util.List;
 import org.apache.commons.math3.util.MathArrays;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 

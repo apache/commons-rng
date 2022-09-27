@@ -19,7 +19,6 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -151,8 +150,8 @@ class KempSmallMeanPoissonSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double mean = 1.23;
         final SharedStateDiscreteSampler sampler1 =
             KempSmallMeanPoissonSampler.of(rng1, mean);

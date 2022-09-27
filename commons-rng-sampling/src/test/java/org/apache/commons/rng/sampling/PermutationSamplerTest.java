@@ -17,27 +17,20 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
-
+import org.apache.commons.math3.stat.inference.ChiSquareTest;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Tests for {@link PermutationSampler}.
  */
 class PermutationSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.ISAAC.create(1232343456L);
-    private final ChiSquareTest chiSquareTest = new ChiSquareTest();
-
     @Test
     void testSampleTrivial() {
         final int n = 6;
         final int k = 3;
-        final PermutationSampler sampler = new PermutationSampler(RandomAssert.createRNG(),
+        final PermutationSampler sampler = new PermutationSampler(RandomAssert.seededRNG(),
                                                                   n, k);
         final int[] random = sampler.sample();
         SAMPLE: for (final int s : random) {
@@ -75,6 +68,7 @@ class PermutationSamplerTest {
 
     @Test
     void testSampleBoundaryCase() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Check size = 1 boundary case.
         final PermutationSampler sampler = new PermutationSampler(rng, 1, 1);
         final int[] perm = sampler.sample();
@@ -84,6 +78,7 @@ class PermutationSamplerTest {
 
     @Test
     void testSamplePrecondition1() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k > n.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 2, 3));
@@ -91,6 +86,7 @@ class PermutationSamplerTest {
 
     @Test
     void testSamplePrecondition2() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for n = 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 0, 0));
@@ -98,6 +94,7 @@ class PermutationSamplerTest {
 
     @Test
     void testSamplePrecondition3() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k < n < 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, -1, 0));
@@ -105,6 +102,7 @@ class PermutationSamplerTest {
 
     @Test
     void testSamplePrecondition4() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k < n < 0.
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new PermutationSampler(rng, 1, -1));
@@ -131,6 +129,7 @@ class PermutationSamplerTest {
     void testShuffleNoDuplicates() {
         final int n = 100;
         final int[] orig = PermutationSampler.natural(n);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         PermutationSampler.shuffle(rng, orig);
 
         // Test that all (unique) entries exist in the shuffled array.
@@ -149,6 +148,7 @@ class PermutationSamplerTest {
         final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         PermutationSampler.shuffle(rng, list, start, false);
 
         // Ensure that all entries below index "start" did not move.
@@ -172,6 +172,7 @@ class PermutationSamplerTest {
         final int[] orig = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         final int[] list = orig.clone();
         final int start = 4;
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         PermutationSampler.shuffle(rng, list, start, true);
 
         // Ensure that all entries above index "start" did not move.
@@ -195,8 +196,8 @@ class PermutationSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final int n = 17;
         final int k = 13;
         final PermutationSampler sampler1 =
@@ -217,12 +218,14 @@ class PermutationSamplerTest {
         final double[] expected = new double[len];
         Arrays.fill(expected, numExpected);
 
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final PermutationSampler sampler = new PermutationSampler(rng, n, k);
         for (int i = 0; i < numSamples; i++) {
             observed[findPerm(p, sampler.sample())]++;
         }
 
         // Pass if we cannot reject null hypothesis that distributions are the same.
+        final ChiSquareTest chiSquareTest = new ChiSquareTest();
         Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 

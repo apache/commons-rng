@@ -21,7 +21,6 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -614,8 +613,8 @@ class MarsagliaTsangWangDiscreteSamplerTest {
      * @param prob Probability values.
      */
     private static void testSharedStateSampler(int offset, int[] prob) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         double[] probabilities = createProbabilities(offset, prob);
         final SharedStateDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.Enumerated.of(rng1, probabilities);
@@ -648,8 +647,8 @@ class MarsagliaTsangWangDiscreteSamplerTest {
      * @param probabilityOfSuccess Probability of success.
      */
     private static void testSharedStateSampler(int trials, double probabilityOfSuccess) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler1 =
                 MarsagliaTsangWangDiscreteSampler.Binomial.of(rng1, trials, probabilityOfSuccess);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

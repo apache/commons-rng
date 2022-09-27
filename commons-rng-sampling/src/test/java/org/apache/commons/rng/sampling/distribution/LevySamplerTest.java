@@ -19,8 +19,6 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +31,7 @@ class LevySamplerTest {
      */
     @Test
     void testConstructorThrowsWithNegativeScale() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double location = 1;
         final double scale = -1e-6;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -45,7 +43,7 @@ class LevySamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroScale() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double location = 1;
         final double scale = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -57,8 +55,8 @@ class LevySamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double location = 4.56;
         final double scale = 1.23;
         final LevySampler sampler1 = LevySampler.of(rng1, location, scale);

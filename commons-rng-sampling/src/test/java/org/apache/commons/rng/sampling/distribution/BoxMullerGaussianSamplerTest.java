@@ -16,10 +16,10 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
-import org.junit.jupiter.api.Test;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link BoxMullerGaussianSampler}. The tests hit edge cases for the sampler.
@@ -31,8 +31,7 @@ class BoxMullerGaussianSamplerTest {
     @SuppressWarnings({"deprecation"})
     @Test
     void testConstructorThrowsWithZeroStandardDeviation() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double mean = 1;
         final double standardDeviation = 0;
         Assertions.assertThrows(IllegalArgumentException.class,

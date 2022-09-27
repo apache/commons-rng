@@ -16,10 +16,8 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +30,7 @@ class AhrensDieterMarsagliaTsangGammaSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroAlpha() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double alpha = 0;
         final double theta = 1;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -45,8 +42,7 @@ class AhrensDieterMarsagliaTsangGammaSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroTheta() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double alpha = 1;
         final double theta = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -76,8 +72,8 @@ class AhrensDieterMarsagliaTsangGammaSamplerTest {
      * @param theta Theta.
      */
     private static void testSharedStateSampler(double alpha, double theta) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         // Use instance constructor not factory constructor to exercise 1.X public API
         final AhrensDieterMarsagliaTsangGammaSampler sampler1 =
             new AhrensDieterMarsagliaTsangGammaSampler(rng1, alpha, theta);
@@ -91,7 +87,7 @@ class AhrensDieterMarsagliaTsangGammaSamplerTest {
      */
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertTrue(new AhrensDieterMarsagliaTsangGammaSampler(rng, 1.0, 2.0).toString()
                 .toLowerCase().contains("gamma"));
     }

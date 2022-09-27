@@ -16,15 +16,13 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-
+import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
 
 /**
  * Tests for random deviates generators.

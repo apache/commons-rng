@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +29,8 @@ import org.junit.jupiter.api.Test;
 class SamplerBaseTest {
     @Test
     void testNextMethods() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SamplerBase sampler = new SamplerBase(rng2);
         final int n = 256;
         for (int i = 0; i < 3; i++) {
@@ -43,7 +43,7 @@ class SamplerBaseTest {
 
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final SamplerBase sampler = new SamplerBase(rng);
         Assertions.assertTrue(sampler.toString().contains("rng"));
     }

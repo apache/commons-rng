@@ -18,7 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -30,8 +29,8 @@ class BoxMullerNormalisedGaussianSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateContinuousSampler sampler1 =
             BoxMullerNormalizedGaussianSampler.<BoxMullerNormalizedGaussianSampler>of(rng1);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

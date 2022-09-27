@@ -20,6 +20,8 @@ package org.apache.commons.rng.sampling;
 import org.junit.jupiter.api.Assertions;
 import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
@@ -32,6 +34,15 @@ import org.apache.commons.rng.simple.RandomSource;
 public final class RandomAssert {
     /** Number of samples to generate to test for equal sequences. */
     private static final int SAMPLES = 10;
+    /** Default seed for the default generator. */
+    private static final Long DEFAULT_SEED;
+
+    static {
+        DEFAULT_SEED = Long.valueOf(RandomSource.createLong());
+        // Record this to allow debugging of tests that failed with the seeded generator
+        Logger.getLogger(RandomAssert.class.getName()).log(Level.INFO,
+            () -> "Default seed: " + DEFAULT_SEED);
+    }
 
     /** The sources for a new random generator instance. */
     private static final RandomSource[] SOURCES;
@@ -163,10 +174,45 @@ public final class RandomAssert {
      * test that is flaky when using this method may require an update to the test
      * assumptions and assertions.
      *
+     * <p>It should be noted that repeat invocations of a failing test by the surefire plugin
+     * will receive different instance.
+     *
      * @return the uniform random provider
      * @see RandomSource#create()
      */
     public static UniformRandomProvider createRNG() {
         return SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)].create();
+    }
+
+    /**
+     * Create a new random generator instance with a fixed seed. The implementation is a
+     * high-quality generator with a low construction cost. The seed is expected to be
+     * different between invocations of the Java Virtual Machine.
+     *
+     * <p>This is a helper method to return a generator for use in testing where the
+     * underlying source should not impact the test. This ensures the test is robust upon
+     * repeat invocation across different JVM instances where the generator will most
+     * likely be different.
+     *
+     * <p>Note that use of this method is preferable to use of a fixed seed generator as it provides
+     * a single entry point to update tests that use a deterministic output from a RNG.
+     *
+     * <p>This method should be used in preference to {@link RandomAssert#createRNG()} when:
+     * <ul>
+     *  <li>the test requires multiple instances of a generator with the same output
+     *  <li>the test requires a functioning generator but the output is not of consequence
+     * </ul>
+     *
+     * <p>It should be noted that repeat invocations of a failing test by the surefire plugin
+     * will receive an instance with the same seed. If a test may fail due to stochastic conditions
+     * then consider using {@link RandomAssert#createRNG()} which will obtain a different RNG
+     * for repeat test executions.
+     *
+     * @return the uniform random provider
+     * @see RandomSource#create()
+     * @see #createRNG()
+     */
+    public static UniformRandomProvider seededRNG() {
+        return RandomSource.SPLIT_MIX_64.create(DEFAULT_SEED);
     }
 }

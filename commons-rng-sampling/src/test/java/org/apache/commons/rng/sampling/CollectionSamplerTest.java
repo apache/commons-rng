@@ -20,11 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Tests for {@link CollectionSampler}.
@@ -51,7 +49,7 @@ class CollectionSamplerTest {
 
     @Test
     void testSamplePrecondition() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for empty collection.
         final List<String> empty = Collections.emptyList();
         Assertions.assertThrows(IllegalArgumentException.class,
@@ -63,8 +61,8 @@ class CollectionSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final List<String> list = Arrays.asList("Apache", "Commons", "RNG");
         final CollectionSampler<String> sampler1 =
             new CollectionSampler<>(rng1, list);

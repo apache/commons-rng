@@ -16,12 +16,9 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RandomProviderState;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.LargeMeanPoissonSamplerState;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,8 +35,7 @@ class LargeMeanPoissonSamplerTest {
      */
     @Test
     void testConstructorThrowsWithMeanLargerThanUpperBound() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double mean = Integer.MAX_VALUE / 2 + 1;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> LargeMeanPoissonSampler.of(rng, mean));
@@ -50,8 +46,7 @@ class LargeMeanPoissonSamplerTest {
      */
     @Test
     void testConstructorThrowsWithMeanBelow1() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double mean = Math.nextDown(1);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> LargeMeanPoissonSampler.of(rng, mean));
@@ -62,8 +57,7 @@ class LargeMeanPoissonSamplerTest {
      */
     @Test
     void testConstructorThrowsWithStateAndNegativeFractionalMean() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new LargeMeanPoissonSampler(rng, state, -0.1));
@@ -74,8 +68,7 @@ class LargeMeanPoissonSamplerTest {
      */
     @Test
     void testConstructorThrowsWithStateAndNonFractionalMean() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new LargeMeanPoissonSampler(rng, state, 1.1));
@@ -86,8 +79,7 @@ class LargeMeanPoissonSamplerTest {
      */
     @Test
     void testConstructorThrowsWithStateAndFractionalMeanOne() {
-        final RestorableUniformRandomProvider rng =
-                RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final LargeMeanPoissonSamplerState state = new LargeMeanPoissonSampler(rng, 1).getState();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new LargeMeanPoissonSampler(rng, state, 1));
@@ -102,12 +94,8 @@ class LargeMeanPoissonSamplerTest {
     @Test
     void testCanComputeSameSamplesWhenConstructedWithState() {
         // Two identical RNGs
-        final RestorableUniformRandomProvider rng1 =
-                RandomSource.MWC_256.create();
-        final RandomProviderState state = rng1.saveState();
-        final RestorableUniformRandomProvider rng2 =
-                RandomSource.MWC_256.create();
-        rng2.restoreState(state);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         // The sampler is suitable for mean > 40
         for (int i = 40; i < 44; i++) {
@@ -128,8 +116,8 @@ class LargeMeanPoissonSamplerTest {
      * @param mean  the mean
      */
     private static void testPoissonSamples(
-            final RestorableUniformRandomProvider rng1,
-            final RestorableUniformRandomProvider rng2,
+            final UniformRandomProvider rng1,
+            final UniformRandomProvider rng2,
             double mean) {
         final LargeMeanPoissonSampler s1 = new LargeMeanPoissonSampler(rng1, mean);
         final int n = (int) Math.floor(mean);
@@ -165,8 +153,8 @@ class LargeMeanPoissonSamplerTest {
      * @param mean Mean.
      */
     private static void testSharedStateSampler(double mean) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler1 =
             LargeMeanPoissonSampler.of(rng1, mean);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

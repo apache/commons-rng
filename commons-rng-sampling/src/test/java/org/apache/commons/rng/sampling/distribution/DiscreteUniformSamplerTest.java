@@ -16,14 +16,13 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.Locale;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Locale;
 
 /**
  * Test for the {@link DiscreteUniformSampler}. The tests hit edge cases for the sampler
@@ -37,7 +36,7 @@ class DiscreteUniformSamplerTest {
     void testConstructorThrowsWithLowerAboveUpper() {
         final int upper = 55;
         final int lower = upper + 1;
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> DiscreteUniformSampler.of(rng, lower, upper));
     }
@@ -61,8 +60,8 @@ class DiscreteUniformSamplerTest {
     void testSamplesWithFullRange() {
         final int upper = Integer.MAX_VALUE;
         final int lower = Integer.MIN_VALUE;
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
             Assertions.assertEquals(rng1.nextInt(), sampler.sample());
@@ -80,8 +79,8 @@ class DiscreteUniformSamplerTest {
         final int upper = 257;
         for (final int lower : new int[] {-13, 0, 13}) {
             final int n = upper - lower + 1;
-            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+            final UniformRandomProvider rng2 = RandomAssert.seededRNG();
             final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
             for (int i = 0; i < 10; i++) {
                 Assertions.assertEquals(lower + rng1.nextInt(n), sampler.sample());
@@ -138,8 +137,8 @@ class DiscreteUniformSamplerTest {
             // Upper is inclusive so subtract 1
             final int upper = (1 << i) - 1;
             final int shift = 32 - i;
-            final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-            final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+            final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+            final UniformRandomProvider rng2 = RandomAssert.seededRNG();
             sampler = DiscreteUniformSampler.of(rng2, lower, upper);
             for (int j = 0; j < 10; j++) {
                 Assertions.assertEquals(rng1.nextInt() >>> shift, sampler.sample());
@@ -156,8 +155,8 @@ class DiscreteUniformSamplerTest {
         // Create a range bigger than 2^63
         final int upper = Integer.MAX_VALUE / 2 + 1;
         final int lower = Integer.MIN_VALUE / 2 - 1;
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler = DiscreteUniformSampler.of(rng2, lower, upper);
         for (int i = 0; i < 10; i++) {
             // Get the expected value by the rejection method
@@ -360,8 +359,8 @@ class DiscreteUniformSamplerTest {
      * @param upper Upper.
      */
     private static void testSharedStateSampler(int lower, int upper) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         // Use instance constructor not factory constructor to exercise 1.X public API
         final SharedStateDiscreteSampler sampler1 =
             new DiscreteUniformSampler(rng1, lower, upper);
@@ -398,7 +397,7 @@ class DiscreteUniformSamplerTest {
      * @param upper Upper.
      */
     private static void assertToString(int lower, int upper) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
         Assertions.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
     }

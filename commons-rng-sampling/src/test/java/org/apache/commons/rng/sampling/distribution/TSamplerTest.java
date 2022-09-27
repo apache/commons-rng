@@ -18,7 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +33,7 @@ class TSamplerTest {
     @ParameterizedTest
     @ValueSource(doubles = {0, -1, Double.NaN})
     void testConstructorThrowsWithBadDegreesOfFreedom(double degreesOfFreedom) {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> TSampler.of(rng, degreesOfFreedom));
     }
@@ -45,8 +44,8 @@ class TSamplerTest {
     @ParameterizedTest
     @ValueSource(doubles = {4.56, 1e16})
     void testSharedStateSampler(double degreesOfFreedom) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final TSampler sampler1 = TSampler.of(rng1, degreesOfFreedom);
         final TSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
@@ -57,8 +56,8 @@ class TSamplerTest {
      */
     @Test
     void testExtremelyLargeDegreesOfFreedom() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double degreesOfFreedom = 1e16;
         final ContinuousSampler sampler1 = TSampler.of(rng1, degreesOfFreedom);
         final ContinuousSampler sampler2 = ZigguratSampler.NormalizedGaussian.of(rng2);

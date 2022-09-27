@@ -17,23 +17,19 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link CombinationSampler}.
  */
 class CombinationSamplerTest {
-    private final UniformRandomProvider rng = RandomAssert.createRNG();
-
     @Test
     void testSampleIsInDomain() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final int n = 6;
         for (int k = 1; k <= n; k++) {
             final CombinationSampler sampler = new CombinationSampler(rng, n, k);
@@ -60,6 +56,7 @@ class CombinationSamplerTest {
 
     @Test
     void testSampleWhenNequalsKIsNotShuffled() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Check n == k boundary case.
         // This is allowed but the sample is not shuffled.
         for (int n = 1; n < 3; n++) {
@@ -75,6 +72,7 @@ class CombinationSamplerTest {
 
     @Test
     void testKgreaterThanNThrows() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k > n.
         final int n = 2;
         final int k = 3;
@@ -84,6 +82,7 @@ class CombinationSamplerTest {
 
     @Test
     void testNequalsZeroThrows() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for n = 0.
         final int n = 0;
         final int k = 3;
@@ -93,6 +92,7 @@ class CombinationSamplerTest {
 
     @Test
     void testKequalsZeroThrows() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k = 0.
         final int n = 2;
         final int k = 0;
@@ -102,6 +102,7 @@ class CombinationSamplerTest {
 
     @Test
     void testNisNegativeThrows() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for n <= 0.
         final int n = -1;
         final int k = 3;
@@ -111,6 +112,7 @@ class CombinationSamplerTest {
 
     @Test
     void testKisNegativeThrows() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // Must fail for k <= 0.
         final int n = 0;
         final int k = -1;
@@ -123,8 +125,8 @@ class CombinationSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final int n = 17;
         final int k = 3;
         final CombinationSampler sampler1 =
@@ -171,6 +173,7 @@ class CombinationSamplerTest {
         final long[] observed = new long[codes];
         final int numSamples = 6000;
 
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final CombinationSampler sampler = new CombinationSampler(rng, n, k);
         for (int i = 0; i < numSamples; i++) {
             observed[findCode(codeLookup, sampler.sample())]++;

@@ -17,15 +17,11 @@
 package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link TriangleSampler}.
@@ -95,7 +91,7 @@ class TriangleSamplerTest {
      */
     @Test
     void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> TriangleSampler.of(rng, new double[1], new double[1], new double[1]));
     }
@@ -105,7 +101,7 @@ class TriangleSamplerTest {
      */
     @Test
     void testDimensionMismatchThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
         for (double[][] c : new double[][][] {
@@ -128,7 +124,7 @@ class TriangleSamplerTest {
      */
     @Test
     void testNonFiniteVertexCoordinates() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // A valid triangle
         final double[][] c = new double[][] {
             {0, 0, 1}, {2, 1, 0}, {-1, 2, 3}
@@ -185,8 +181,6 @@ class TriangleSamplerTest {
      * @param dimension the dimension
      */
     private static void testExtremeValueCoordinates(int dimension) {
-        // Object seed so use Long not long
-        final Long seed = 999666333L;
         final double[][] c1 = new double[3][dimension];
         final double[][] c2 = new double[3][dimension];
         // Create a valid triangle that can be scaled
@@ -215,9 +209,9 @@ class TriangleSamplerTest {
             "Expect vector c - b to be infinite in the y dimension");
 
         final TriangleSampler sampler1 = TriangleSampler.of(
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1], c1[2]);
+            RandomAssert.seededRNG(), c1[0], c1[1], c1[2]);
         final TriangleSampler sampler2 = TriangleSampler.of(
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c2[0], c2[1], c2[2]);
+            RandomAssert.seededRNG(), c2[0], c2[1], c2[2]);
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -311,8 +305,8 @@ class TriangleSamplerTest {
             throw new AssertionError("Unsupported dimension: " + dimension);
         }
 
-        // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xfabcab);
+        // Increase the loops to verify robustness
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final TriangleSampler sampler1 = TriangleSampler.of(rng, forward.apply(a), forward.apply(d), forward.apply(b));
         final TriangleSampler sampler2 = TriangleSampler.of(rng, forward.apply(b), forward.apply(c), forward.apply(e));
         final TriangleSampler sampler3 = TriangleSampler.of(rng, forward.apply(c), forward.apply(d), forward.apply(e));
@@ -390,8 +384,8 @@ class TriangleSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
@@ -431,8 +425,8 @@ class TriangleSamplerTest {
      * @param dimension the dimension
      */
     private static void testChangedInputCoordinates(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final double[] c3 = createCoordinate(-3, dimension);
@@ -511,7 +505,7 @@ class TriangleSamplerTest {
             throw new AssertionError("Unsupported dimension: " + dimension);
         }
 
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(789L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         double sum = 0;
         for (int n = 0; n < 10; n++) {
             final double[] a = new double[] {rng.nextDouble(), rng.nextDouble()};

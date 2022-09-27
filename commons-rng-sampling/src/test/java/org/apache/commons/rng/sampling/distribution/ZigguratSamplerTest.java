@@ -16,11 +16,6 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -34,6 +29,11 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Test for {@link ZigguratSampler}.
@@ -53,7 +53,7 @@ class ZigguratSamplerTest {
      */
     @Test
     void testExponentialConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> ZigguratSampler.Exponential.of(rng, mean));
@@ -64,8 +64,8 @@ class ZigguratSamplerTest {
      */
     @Test
     void testExponentialSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final ZigguratSampler.Exponential sampler1 = ZigguratSampler.Exponential.of(rng1);
         final ZigguratSampler.Exponential sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
@@ -76,8 +76,8 @@ class ZigguratSamplerTest {
      */
     @Test
     void testExponentialSharedStateSamplerWithMean() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double mean = 1.23;
         final ZigguratSampler.Exponential sampler1 = ZigguratSampler.Exponential.of(rng1, mean);
         final ZigguratSampler.Exponential sampler2 = sampler1.withUniformRandomProvider(rng2);
@@ -89,8 +89,8 @@ class ZigguratSamplerTest {
      */
     @Test
     void testGaussianSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final ZigguratSampler.NormalizedGaussian sampler1 = ZigguratSampler.NormalizedGaussian.of(rng1);
         final ZigguratSampler.NormalizedGaussian sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);

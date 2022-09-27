@@ -18,7 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +33,7 @@ class SmallMeanPoissonSamplerTest {
     @Test
     void testConstructorThrowsWithMeanThatSetsProbabilityP0ToZero() {
         final UniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+            RandomAssert.seededRNG();
         final double p0 = Double.MIN_VALUE;
         // Note: p0 = Math.exp(-mean) => mean = -Math.log(p0).
         // Add to the limit on the mean to cause p0 to be zero.
@@ -49,7 +48,7 @@ class SmallMeanPoissonSamplerTest {
     @Test
     void testConstructorThrowsWithZeroMean() {
         final UniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+            RandomAssert.seededRNG();
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> SmallMeanPoissonSampler.of(rng, mean));
@@ -74,8 +73,8 @@ class SmallMeanPoissonSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double mean = 1.23;
         final SharedStateDiscreteSampler sampler1 =
             SmallMeanPoissonSampler.of(rng1, mean);

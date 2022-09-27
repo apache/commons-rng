@@ -18,7 +18,6 @@ package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -50,8 +49,8 @@ class PoissonSamplerTest {
      * @param mean Mean.
      */
     private static void testSharedStateSampler(double mean) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         // Use instance constructor not factory constructor to exercise 1.X public API
         final SharedStateDiscreteSampler sampler1 =
             new PoissonSampler(rng1, mean);
@@ -65,7 +64,7 @@ class PoissonSamplerTest {
      */
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertTrue(new PoissonSampler(rng, 1.23).toString().toLowerCase().contains("poisson"));
     }
 }

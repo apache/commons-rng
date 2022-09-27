@@ -16,16 +16,14 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.Arrays;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.PoissonDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 /**
  * Test for the {@link AliasMethodDiscreteSampler}.
@@ -276,8 +274,8 @@ class AliasMethodDiscreteSamplerTest {
      * @param probabilities The probabilities
      */
     private static void testSharedStateSampler(double[] probabilities) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         // Use negative alpha to disable padding
         final SharedStateDiscreteSampler sampler1 =
             AliasMethodDiscreteSampler.of(rng1, probabilities, -1);

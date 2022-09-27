@@ -454,8 +454,8 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
     @ParameterizedTest
     @MethodSource
     void testSharedStateSampler(long[] frequencies) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final SharedStateDiscreteSampler sampler1 =
             FastLoadedDiceRollerDiscreteSampler.of(rng1, frequencies);
         final SharedStateDiscreteSampler sampler2 = sampler1.withUniformRandomProvider(rng2);

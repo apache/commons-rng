@@ -16,13 +16,11 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.SharedStateSampler;
-import org.apache.commons.rng.simple.RandomSource;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link LogNormalSampler}. The tests hit edge cases for the sampler.
@@ -33,8 +31,7 @@ class LogNormalSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroShape() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
         final double mu = 1;
         final double sigma = 0;
@@ -47,8 +44,8 @@ class LogNormalSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng1);
         // Test a negative mean is allowed (see RNG-166)
         final double mu = -1.23;
@@ -65,7 +62,7 @@ class LogNormalSamplerTest {
      */
     @Test
     void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
             @Override
             public double sample() {
@@ -86,7 +83,7 @@ class LogNormalSamplerTest {
      */
     @Test
     void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double mu = 1.23;
         final double sigma = 4.56;

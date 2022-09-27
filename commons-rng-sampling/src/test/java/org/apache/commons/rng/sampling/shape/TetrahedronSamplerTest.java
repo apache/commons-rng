@@ -17,15 +17,11 @@
 package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link TetrahedronSampler}.
@@ -36,7 +32,7 @@ class TetrahedronSamplerTest {
      */
     @Test
     void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double[] ok = new double[3];
         final double[] bad = new double[2];
         final double[][] c = {ok, ok, ok, ok};
@@ -55,7 +51,7 @@ class TetrahedronSamplerTest {
      */
     @Test
     void testNonFiniteVertexCoordinates() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // A valid tetrahedron
         final double[][] c = new double[][] {
             {1, 1, 1}, {1, -1, 1}, {-1, 1, 1}, {1, 1, -1}
@@ -84,8 +80,6 @@ class TetrahedronSamplerTest {
      */
     @Test
     void testExtremeValueCoordinates() {
-        // Object seed so use Long not long
-        final Long seed = 876543L;
         // Create a valid tetrahedron that can be scaled
         final double[][] c1 = new double[][] {
             {1, 1, 1}, {1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}
@@ -108,9 +102,9 @@ class TetrahedronSamplerTest {
             "Expect vector c - b to be infinite in the z dimension");
 
         final TetrahedronSampler sampler1 = TetrahedronSampler.of(
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1], c1[2], c1[3]);
+            RandomAssert.seededRNG(), c1[0], c1[1], c1[2], c1[3]);
         final TetrahedronSampler sampler2 = TetrahedronSampler.of(
-                RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c2[0], c2[1], c2[2], c2[3]);
+            RandomAssert.seededRNG(), c2[0], c2[1], c2[2], c2[3]);
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -163,8 +157,8 @@ class TetrahedronSamplerTest {
         final double[] expected = new double[binsXy * bins];
         Arrays.fill(expected, 1);
 
-        // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_512_PP.create(0xaabbccddeeffL);
+        // Increase the loops to verify robustness
+        final UniformRandomProvider rng = RandomAssert.createRNG();
 
         // Cut the box into 6 equal volume tetrahedra by cutting the box in half three times,
         // cutting diagonally through each of the three pairs of opposing faces. In this way,
@@ -248,8 +242,8 @@ class TetrahedronSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(-1);
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);
@@ -264,8 +258,8 @@ class TetrahedronSamplerTest {
      */
     @Test
     void testChangedInputCoordinates() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(1);
         final double[] c2 = createCoordinate(2);
         final double[] c3 = createCoordinate(-3);

@@ -16,13 +16,11 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.SharedStateSampler;
-import org.apache.commons.rng.simple.RandomSource;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link GaussianSampler}. The tests hit edge cases for the sampler.
@@ -33,8 +31,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroStandardDeviation() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng);
         final double mean = 1;
         final double standardDeviation = 0;
@@ -47,8 +44,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testConstructorThrowsWithInfiniteStandardDeviation() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = Double.POSITIVE_INFINITY;
@@ -61,8 +57,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testConstructorThrowsWithNaNStandardDeviation() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = 1;
         final double standardDeviation = Double.NaN;
@@ -75,8 +70,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testConstructorThrowsWithInfiniteMean() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = Double.POSITIVE_INFINITY;
         final double standardDeviation = 1;
@@ -89,8 +83,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testConstructorThrowsWithNaNMean() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new ZigguratNormalizedGaussianSampler(rng);
         final double mean = Double.NaN;
         final double standardDeviation = 1;
@@ -103,8 +96,8 @@ class GaussianSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = ZigguratSampler.NormalizedGaussian.of(rng1);
         final double mean = 1.23;
         final double standardDeviation = 4.56;
@@ -120,7 +113,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testSharedStateSamplerThrowsIfUnderlyingSamplerDoesNotShareState() {
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new NormalizedGaussianSampler() {
             @Override
             public double sample() {
@@ -141,7 +134,7 @@ class GaussianSamplerTest {
      */
     @Test
     void testSharedStateSamplerThrowsIfUnderlyingSamplerReturnsWrongSharedState() {
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final NormalizedGaussianSampler gauss = new BadSharedStateNormalizedGaussianSampler();
         final double mean = 1.23;
         final double standardDeviation = 4.56;

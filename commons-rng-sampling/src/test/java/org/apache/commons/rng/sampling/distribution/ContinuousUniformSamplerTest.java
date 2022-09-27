@@ -19,7 +19,6 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +93,7 @@ class ContinuousUniformSamplerTest {
      */
     @Test
     void testInvalidOpenIntervalThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         for (final double[] interval : new double[][] {
             // Opposite signs. Require two doubles inside the range.
             {-0.0, 0.0},
@@ -131,7 +130,7 @@ class ContinuousUniformSamplerTest {
      */
     @Test
     void testTinyOpenIntervalSample() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
 
         // Test sub-normal ranges
         final double x = Double.MIN_VALUE;
@@ -207,8 +206,8 @@ class ContinuousUniformSamplerTest {
     void testSamplerWithBoundsExcluded() {
         // SplitMix64 only returns zero once in the output. Seeded with zero it outputs zero
         // at the end of the period.
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double low = 1.23;
         final double high = 4.56;
         final SharedStateContinuousSampler sampler1 =

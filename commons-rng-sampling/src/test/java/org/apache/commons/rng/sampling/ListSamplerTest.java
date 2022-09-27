@@ -16,30 +16,23 @@
  */
 package org.apache.commons.rng.sampling;
 
-import java.util.Set;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.ArrayList;
-import java.util.Collection;
-
+import java.util.Set;
+import java.util.function.Supplier;
+import org.apache.commons.math3.stat.inference.ChiSquareTest;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
-import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.simple.RandomSource;
 
 /**
  * Tests for {@link ListSampler}.
  */
 class ListSamplerTest {
-    private final UniformRandomProvider rng = RandomSource.ISAAC.create(6543432321L);
-    private final ChiSquareTest chiSquareTest = new ChiSquareTest();
-
     @Test
     void testSample() {
         final String[][] c = {{"0", "1"}, {"0", "2"}, {"0", "3"}, {"0", "4"},
@@ -62,11 +55,13 @@ class ListSamplerTest {
             sets.add(hs);
         }
 
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         for (int i = 0; i < 1000; i++) {
             observed[findSample(sets, ListSampler.sample(rng, new ArrayList<>(cPop), 2))]++;
         }
 
         // Pass if we cannot reject null hypothesis that distributions are the same.
+        final ChiSquareTest chiSquareTest = new ChiSquareTest();
         Assertions.assertFalse(chiSquareTest.chiSquareTest(expected, observed, 0.001));
     }
 
@@ -76,6 +71,7 @@ class ListSamplerTest {
         final List<String> list = new ArrayList<>();
         list.add("one");
 
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final List<String> one = ListSampler.sample(rng, list, 1);
         Assertions.assertEquals(1, one.size());
         Assertions.assertTrue(one.contains("one"));
@@ -86,6 +82,7 @@ class ListSamplerTest {
         // Must fail for sample size > collection size.
         final List<String> list = new ArrayList<>();
         list.add("one");
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> ListSampler.sample(rng, list, 2));
     }
@@ -94,12 +91,14 @@ class ListSamplerTest {
     void testSamplePrecondition2() {
         // Must fail for empty collection.
         final List<String> list = new ArrayList<>();
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> ListSampler.sample(rng, list, 1));
     }
 
     @Test
     void testShuffle() {
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -120,6 +119,7 @@ class ListSamplerTest {
 
     @Test
     void testShuffleTail() {
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -138,6 +138,7 @@ class ListSamplerTest {
 
     @Test
     void testShuffleHead() {
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -161,6 +162,7 @@ class ListSamplerTest {
      */
     @Test
     void testShuffleMatchesPermutationSamplerShuffle() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -177,6 +179,7 @@ class ListSamplerTest {
      */
     @Test
     void testShuffleMatchesPermutationSamplerShuffleDirectional() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             orig.add((i + 1) * rng.nextInt());
@@ -194,6 +197,7 @@ class ListSamplerTest {
      */
     @Test
     void testShuffleWithSmallLinkedList() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final int size = 3;
         final List<Integer> orig = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -260,9 +264,8 @@ class ListSamplerTest {
         }
 
         // Identical RNGs
-        final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         ListSampler.shuffle(rng1, list);
         PermutationSampler.shuffle(rng2, array);
@@ -283,8 +286,8 @@ class ListSamplerTest {
      * (if {@code true}) of the array.
      */
     private static void assertShuffleMatchesPermutationSamplerShuffle(List<Integer> list,
-                                                                    int start,
-                                                                    boolean towardHead) {
+                                                                      int start,
+                                                                      boolean towardHead) {
         final int[] array = new int[list.size()];
         ListIterator<Integer> it = list.listIterator();
         for (int i = 0; i < array.length; i++) {
@@ -292,9 +295,8 @@ class ListSamplerTest {
         }
 
         // Identical RNGs
-        final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
 
         ListSampler.shuffle(rng1, list, start, towardHead);
         PermutationSampler.shuffle(rng2, array, start, towardHead);

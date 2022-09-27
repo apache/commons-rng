@@ -17,16 +17,12 @@
 package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.UnitSphereSampler;
-import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link BoxSampler}.
@@ -37,7 +33,7 @@ class BoxSamplerTest {
      */
     @Test
     void testInvalidDimensionThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> BoxSampler.of(rng, new double[1], new double[1]));
     }
@@ -47,7 +43,7 @@ class BoxSamplerTest {
      */
     @Test
     void testDimensionMismatchThrows() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double[] c2 = new double[2];
         final double[] c3 = new double[3];
         for (double[][] c : new double[][][] {
@@ -66,7 +62,7 @@ class BoxSamplerTest {
      */
     @Test
     void testNonFiniteVertexCoordinates() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         // A valid box
         final double[][] c = new double[][] {
             {0, 1, 2}, {-1, 2, 3}
@@ -123,8 +119,6 @@ class BoxSamplerTest {
      * @param dimension the dimension
      */
     private static void testExtremeValueCoordinates(int dimension) {
-        // Object seed so use Long not long
-        final Long seed = 456456L;
         final double[][] c1 = new double[2][dimension];
         final double[][] c2 = new double[2][dimension];
         // Create a valid box that can be scaled
@@ -143,9 +137,9 @@ class BoxSamplerTest {
             "Expect vector b - a to be infinite in the x dimension");
 
         final BoxSampler sampler1 = BoxSampler.of(
-            RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c1[0], c1[1]);
+            RandomAssert.seededRNG(), c1[0], c1[1]);
         final BoxSampler sampler2 = BoxSampler.of(
-            RandomSource.XO_RO_SHI_RO_128_PP.create(seed), c2[0], c2[1]);
+            RandomAssert.seededRNG(), c2[0], c2[1]);
 
         for (int n = 0; n < 10; n++) {
             final double[] a = sampler1.sample();
@@ -188,7 +182,7 @@ class BoxSamplerTest {
      * @param dimension the dimension
      */
     private static void testDistributionND(int dimension) {
-        final UniformRandomProvider rng = RandomSource.JSF_64.create(0xdabfab);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
 
         final UnitSphereSampler sphere = UnitSphereSampler.of(rng, dimension);
         final double[] a = sphere.sample();
@@ -270,8 +264,8 @@ class BoxSamplerTest {
      * Test the SharedStateSampler implementation for the given dimension.
      */
     private static void testSharedStateSampler(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final BoxSampler sampler1 = BoxSampler.of(rng1, c1, c2);
@@ -310,8 +304,8 @@ class BoxSamplerTest {
      * @param dimension the dimension
      */
     private static void testChangedInputCoordinates(int dimension) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double[] c1 = createCoordinate(1, dimension);
         final double[] c2 = createCoordinate(2, dimension);
         final BoxSampler sampler1 = BoxSampler.of(rng1, c1, c2);

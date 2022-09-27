@@ -17,11 +17,9 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import java.time.Duration;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,8 +32,7 @@ class AhrensDieterExponentialSamplerTest {
      */
     @Test
     void testConstructorThrowsWithZeroMean() {
-        final RestorableUniformRandomProvider rng =
-            RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         final double mean = 0;
         Assertions.assertThrows(IllegalArgumentException.class, () -> AhrensDieterExponentialSampler.of(rng, mean));
     }
@@ -45,8 +42,8 @@ class AhrensDieterExponentialSamplerTest {
      */
     @Test
     void testSharedStateSampler() {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double mean = 1.23;
         final SharedStateContinuousSampler sampler1 =
             AhrensDieterExponentialSampler.of(rng1, mean);

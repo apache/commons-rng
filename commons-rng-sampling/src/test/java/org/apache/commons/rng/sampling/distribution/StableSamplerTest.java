@@ -16,18 +16,18 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import java.util.function.Supplier;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.sampling.distribution.StableSampler.SpecialMath;
 import org.apache.commons.rng.sampling.distribution.StableSampler.Beta0CMSStableSampler;
 import org.apache.commons.rng.sampling.distribution.StableSampler.Beta0WeronStableSampler;
 import org.apache.commons.rng.sampling.distribution.StableSampler.CMSStableSampler;
+import org.apache.commons.rng.sampling.distribution.StableSampler.SpecialMath;
 import org.apache.commons.rng.sampling.distribution.StableSampler.WeronStableSampler;
 import org.apache.commons.rng.simple.RandomSource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the class {@link StableSampler}.
@@ -1870,7 +1870,7 @@ class StableSamplerTest {
         // This is required for nextDouble() since invoking super.nextDouble() when
         // the sequence has expired will call nextLong() and may use the intended
         // sequence of longs.
-        final UniformRandomProvider rng = RandomSource.JSF_64.create(0x6237846L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
 
         // A RNG with the provided output
         return new SplitMix64(0L) {
@@ -2033,8 +2033,8 @@ class StableSamplerTest {
      * @param beta Beta.
      */
     private static void testSharedStateSampler(double alpha, double beta) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         StableSampler sampler1 = StableSampler.of(rng1, alpha, beta);
         StableSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
@@ -2093,8 +2093,8 @@ class StableSamplerTest {
      * @param ulp Allowed ULP difference.
      */
     private static void testTransformedSampler(double alpha, double beta, int ulp) {
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(0L);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
         final double gamma = 3.4;
         final double delta = -17.3;
         final StableSampler sampler1 = StableSampler.of(rng1, alpha, beta, gamma, delta);
@@ -2240,7 +2240,7 @@ class StableSamplerTest {
      */
     @Test
     void testToString() {
-        final UniformRandomProvider rng = RandomSource.SPLIT_MIX_64.create(0L);
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
         for (final double[] p : new double[][] {
             {1.3, 0.1},
             {2.0, 0.0},
