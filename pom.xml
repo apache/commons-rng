@@ -41,6 +41,8 @@
     <commons.osgi.export>org.apache.commons.rng.parent</commons.osgi.export>
     <!-- Java 9+ -->
     <commons.automatic.module.name>org.apache.commons.rng.parent</commons.automatic.module.name>
+    <!-- This flag should only be true in the dist-archive module. -->
+    <commons.release.isDistModule>false</commons.release.isDistModule>
     <!-- do not use snapshot suffix here -->
     <commons.release.version>1.4</commons.release.version>
     <commons.bc.version>1.4</commons.bc.version>
