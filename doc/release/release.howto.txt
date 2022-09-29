@@ -117,7 +117,7 @@ that the build process can create all the necessary artifacts.
   (1a)
   The command
 
-    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Dcommons.release.dryRun=true -Ptest-deploy -Prelease clean verify site deploy
+    $ JAVA_HOME="__Path_to_a_JDK__" mvn -Duser.name="__Your_Apache_id__" -Ptest-deploy -Prelease clean verify site deploy
 
   should create the artifacts in the "target/deploy" directory. The site goal
   is required for the commons release plugin even though the site is
