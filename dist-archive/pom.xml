@@ -44,8 +44,6 @@ under the License.
     <commons.releaseManagerKey>BC87A3FD0A54480F0BADBEBD21939FF0CA2A6567</commons.releaseManagerKey>
   </properties>
 
-
-
   <build>
     <plugins>
       <plugin>
