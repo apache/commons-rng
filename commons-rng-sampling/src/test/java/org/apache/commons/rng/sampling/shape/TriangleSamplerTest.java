@@ -517,8 +517,12 @@ class TriangleSamplerTest {
             final double[] c = reverse.apply(b);
             Assertions.assertArrayEquals(a, c, 1e-10);
         }
-        // Check that higher dimension coordinates are generated
-        Assertions.assertTrue(sum > 0.5);
+        // Check that higher dimension coordinates are generated.
+        // Note: Initially higher dimensions are zero.
+        final double actual = sum;
+        final double nonZeroThreshold = 0.01;
+        Assertions.assertTrue(actual > nonZeroThreshold,
+            () -> "No non-zero higher dimension coordinates: " + actual + " <= " + nonZeroThreshold);
     }
 
     /**
