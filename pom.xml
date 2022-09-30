@@ -122,6 +122,11 @@
     <url>https://issues.apache.org/jira/browse/RNG</url>
   </issueManagement>
 
+  <ciManagement>
+    <system>GitHub</system>
+    <url>https://github.com/apache/commons-rng/actions</url>
+  </ciManagement>
+
   <distributionManagement>
     <site>
       <id>apache.website</id>
