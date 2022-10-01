@@ -214,6 +214,6 @@ final class LXMSupport {
         // +  1001111   |
         // +        1 <-+
         // = 10000000       carry bit generated
-        return ((left >>> 1) + (right >>> 1) + (left & 1)) >>> -1;
+        return ((left >>> 1) + (right >>> 1) + (left & 1)) >>> 63;
     }
 }
