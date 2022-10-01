@@ -22,6 +22,7 @@ import java.util.EnumSet;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.ContinuousSampler;
 import org.apache.commons.rng.sampling.distribution.DiscreteSampler;
@@ -175,13 +176,43 @@ public final class RandomAssert {
      * assumptions and assertions.
      *
      * <p>It should be noted that repeat invocations of a failing test by the surefire plugin
-     * will receive different instance.
+     * will receive a different instance.
      *
      * @return the uniform random provider
      * @see RandomSource#create()
      */
     public static UniformRandomProvider createRNG() {
         return SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)].create();
+    }
+
+    /**
+     * Create a count of new identical random generator instances. The implementation will be
+     * randomly chosen from a selection of high-quality generators. Each instance
+     * will be a copy created from the same seed and thus outputs the same sequence.
+     *
+     * <p>This is a helper method to return generators for use in parallel testing
+     * where the underlying source should not impact the test. This ensures the test
+     * is robust upon repeat invocation across different JVM instances where the
+     * generator will most likely be different.
+     *
+     * <p>Note that use of this method is preferable to use of a fixed seed
+     * generator. Any test that is flaky when using this method may require an
+     * update to the test assumptions and assertions.
+     *
+     * <p>It should be noted that repeat invocations of a failing test by the
+     * surefire plugin will receive different instances.
+     *
+     * @param count Number of copies to create.
+     * @return the uniform random provider
+     * @see RandomSource#create()
+     * @see RandomSource#createSeed()
+     */
+    public static UniformRandomProvider[] createRNG(int count) {
+        final RandomSource source = SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)];
+        final byte[] seed = source.createSeed();
+        return Stream.generate(() -> source.create(seed))
+                     .limit(count)
+                     .toArray(UniformRandomProvider[]::new);
     }
 
     /**

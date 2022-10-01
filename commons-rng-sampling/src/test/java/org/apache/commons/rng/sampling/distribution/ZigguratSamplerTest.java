@@ -24,7 +24,6 @@ import org.apache.commons.math3.distribution.AbstractRealDistribution;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
-import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
@@ -399,7 +398,7 @@ class ZigguratSamplerTest {
 
         final int samples = 10000000;
         final long[] observed = new long[bins];
-        final RestorableUniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(SEED);
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(SEED);
         final ContinuousSampler sampler = factory.apply(rng);
         for (int i = 0; i < samples; i++) {
             final double x = sampler.sample();

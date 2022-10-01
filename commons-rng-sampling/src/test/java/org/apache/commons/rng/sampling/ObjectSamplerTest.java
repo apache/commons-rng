@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.concurrent.ThreadLocalRandom;
-import org.apache.commons.rng.simple.RandomSource;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -36,9 +36,9 @@ class ObjectSamplerTest {
 
     @RepeatedTest(value = 3)
     void testSamples() {
-        final long seed = RandomSource.createLong();
-        final ObjectSampler<Double> s1 = RandomSource.SPLIT_MIX_64.create(seed)::nextDouble;
-        final ObjectSampler<Double> s2 = RandomSource.SPLIT_MIX_64.create(seed)::nextDouble;
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final ObjectSampler<Double> s1 = rngs[0]::nextDouble;
+        final ObjectSampler<Double> s2 = rngs[1]::nextDouble;
         final int count = ThreadLocalRandom.current().nextInt(3, 13);
         Assertions.assertArrayEquals(createSamples(s1, count),
                                      s2.samples().limit(count).toArray());
@@ -47,9 +47,9 @@ class ObjectSamplerTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 5, 13})
     void testSamples(int streamSize) {
-        final long seed = RandomSource.createLong();
-        final ObjectSampler<Double> s1 = RandomSource.SPLIT_MIX_64.create(seed)::nextDouble;
-        final ObjectSampler<Double> s2 = RandomSource.SPLIT_MIX_64.create(seed)::nextDouble;
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final ObjectSampler<Double> s1 = rngs[0]::nextDouble;
+        final ObjectSampler<Double> s2 = rngs[1]::nextDouble;
         Assertions.assertArrayEquals(createSamples(s1, streamSize),
                                      s2.samples(streamSize).toArray());
     }

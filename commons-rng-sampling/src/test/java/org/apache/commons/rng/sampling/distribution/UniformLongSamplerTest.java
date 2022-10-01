@@ -21,7 +21,6 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -240,10 +239,10 @@ class UniformLongSamplerTest {
     }
 
     private static void assertOffsetSamples(long range) {
-        final Long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng3 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(3);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
+        final UniformRandomProvider rng3 = rngs[2];
 
         // Since the upper limit is inclusive
         range = range - 1;

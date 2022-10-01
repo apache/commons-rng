@@ -2093,8 +2093,9 @@ class StableSamplerTest {
      * @param ulp Allowed ULP difference.
      */
     private static void testTransformedSampler(double alpha, double beta, int ulp) {
-        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
-        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
         final double gamma = 3.4;
         final double delta = -17.3;
         final StableSampler sampler1 = StableSampler.of(rng1, alpha, beta, gamma, delta);

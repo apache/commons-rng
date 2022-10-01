@@ -23,7 +23,6 @@ import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
-import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
@@ -379,9 +378,9 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
             // Ensure the exponent is set in the event of simple frequencies
             weights[i] = Math.scalb(w, -35);
         }
-        final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
         final SharedStateDiscreteSampler sampler1 =
             FastLoadedDiceRollerDiscreteSampler.of(rng1, frequencies);
         final SharedStateDiscreteSampler sampler2 =
@@ -406,9 +405,9 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
         final double[] w1 = RandomAssert.createRNG().doubles(10).toArray();
         final double scale = Math.scalb(1.0, scaleFactor);
         final double[] w2 = Arrays.stream(w1).map(x -> x * scale).toArray();
-        final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
         final SharedStateDiscreteSampler sampler1 =
             FastLoadedDiceRollerDiscreteSampler.of(rng1, w1);
         final SharedStateDiscreteSampler sampler2 =
@@ -430,10 +429,10 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
         final double small = Math.scalb(1.0, -(alpha + 1));
         final double[] w1 = {1, 0.5, 0.5, 0};
         final double[] w2 = {1, 0.5, 0.5, small};
-        final long seed = RandomSource.createLong();
-        final UniformRandomProvider rng1 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng2 = RandomSource.SPLIT_MIX_64.create(seed);
-        final UniformRandomProvider rng3 = RandomSource.SPLIT_MIX_64.create(seed);
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(3);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
+        final UniformRandomProvider rng3 = rngs[2];
 
         final int n = 10;
         final int[] s1 = FastLoadedDiceRollerDiscreteSampler.of(rng1, w1).samples(n).toArray();
