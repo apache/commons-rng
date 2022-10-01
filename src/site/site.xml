@@ -29,7 +29,8 @@
   <body>
     <head>
       <![CDATA[<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-      </script>]]>
+      </script>
+      <link rel="stylesheet" href="$relativePath/style/module.css" type="text/css" />]]>
     </head>
 
     <menu name="RNG">

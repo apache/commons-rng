@@ -236,6 +236,10 @@ In particular:
     <!-- ... -->
   </properties>
 
+   Other known locations of the project version:
+
+   commons-rng-bom/src/site/xdoc/index.xml
+
 
 (6)
 The "download" page template is located at "src/site/xdoc/download_rng.xml".

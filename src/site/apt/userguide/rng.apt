@@ -1237,6 +1237,8 @@ java -jar target/examples-jmh.jar -h
   modules in a project using the same version number. This will avoid version mismatch
   occurring between modules due to transitive dependencies; specifically this avoids using
   an alternative version number explicitly specified in the dependency tree.
+  A {{{../commons-rng-bom/index.html}Bill of Materials}} (BOM) is provided to ease
+  {{{https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms}dependency management}}.
 
 8. Dependencies
 
