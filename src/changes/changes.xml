@@ -86,6 +86,11 @@ behavioural compatibility between releases; derived types
 may break behavioural compatibility. Any functional changes
 will be recorded in the release notes.
 ">
+      <action dev="aherbert" type="add" issue="182">
+        Add a Bill of Materials (BOM) to aid in dependency management when referencing multiple
+        Apache Commons RNG artifacts. The BOM should be used to ensure all imported artifacts are
+        compatible.
+      </action>
       <action dev="aherbert" type="add" issue="181">
         LXM family to support SplittableUniformRandomProvider. This allows creating a parallel
         stream of generators which will avoid sequence correlations between instances.
