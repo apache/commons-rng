@@ -56,7 +56,7 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.5" date="TBD" description="
 This is a minor release of Apache Commons RNG, containing a
 few new features and performance improvements.
-Apache Commons RNG 1.4 contains the following library modules:
+Apache Commons RNG 1.5 contains the following library modules:
   commons-rng-client-api (requires Java 8)
   commons-rng-core (requires Java 8)
   commons-rng-simple (requires Java 8)
