@@ -113,7 +113,10 @@ will be recorded in the release notes.
       <action dev="aherbert" type="add" issue="RNG-176">
         "UniformRandomProvider": Enhance the interface with default methods. Add range sample
         methods with a lower and upper bound. Add support to generate Java 8 streams of sample
-        values.
+        values. Note: This moves some method implementations from the core module to the client-api
+        module. Binary compatibility is supported if the versions of these modules are matched.
+        Users of the simple module should ensure the client-api and core modules are resolved as
+        matched versions and not mismatched by transitive dependency resolution.
       </action>
       <action dev="aherbert" type="add" issue="RNG-177">
         "sampling": Add samples() method to the API to generate Java 8 streams of sample values.
