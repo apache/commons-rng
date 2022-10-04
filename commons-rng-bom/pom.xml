@@ -119,7 +119,7 @@
         </executions>
       </plugin>
       <plugin>
-        <!-- 
+        <!--
           Configure the destination repository based on the SNAPSHOT prefix.
           This first sets tmp properties conditionally to snapshot, and then
           updates them in the next phase to release if they are not snapshot.
@@ -186,7 +186,7 @@
       </plugin>
       <!-- The install and deploy plugin goals are skipped.
            Here we install the generated BOM file as the project artifact.
-           The deploy is performed by different plugins configured in profiles 
+           The deploy is performed by different plugins configured in profiles
            depending if GPG signing is required. -->
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
@@ -249,7 +249,7 @@
     </profile>
 
     <!-- Activate the appropriate deploy goal.
-         If both profiles are actived (using the profile ids) then this will deploy the same
+         If both profiles are activated (using the profile ids) then this will deploy the same
          artifact twice with different build timestamps; only one is present in the metadata.
          The GPG signature is valid for either as it has no build timestamp. -->
     <profile>
@@ -316,7 +316,7 @@
                   <repositoryId>${bom.repositoryId}</repositoryId>
                   <file>${rng.bom.file}</file>
                   <!-- Collect group, artifact, version and packaging from the BOM -->
-                  <pomFile>${rng.bom.file}</pomFile> 
+                  <pomFile>${rng.bom.file}</pomFile>
                   <generatePom>false</generatePom>
                 </configuration>
               </execution>
