@@ -185,7 +185,9 @@
         </executions>
       </plugin>
       <!-- The install and deploy plugin goals are skipped.
-           Here we install and deploy the generated BOM file as the project artifact. -->
+           Here we install the generated BOM file as the project artifact.
+           The deploy is performed by different plugins configured in profiles 
+           depending if GPG signing is required. -->
       <plugin>
         <artifactId>maven-install-plugin</artifactId>
         <executions>
@@ -196,27 +198,6 @@
             </goals>
             <phase>install</phase>
             <configuration>
-              <file>${rng.bom.file}</file>
-              <!-- Collect group, artifact, version and packaging from the BOM -->
-              <pomFile>${rng.bom.file}</pomFile>
-              <generatePom>false</generatePom>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>deploy-bom</id>
-            <goals>
-              <goal>deploy-file</goal>
-            </goals>
-            <phase>deploy</phase>
-            <configuration>
-              <!-- Dynamically configured destination based on SNAPSHOT or test-deploy profile -->
-              <url>${bom.url}</url>
-              <repositoryId>${bom.repositoryId}</repositoryId>
               <file>${rng.bom.file}</file>
               <!-- Collect group, artifact, version and packaging from the BOM -->
               <pomFile>${rng.bom.file}</pomFile>
@@ -239,6 +220,112 @@
         <rng.bom.releases.url>file:target/deploy</rng.bom.releases.url>
       </properties>
     </profile>
+
+    <profile>
+      <!-- Changes to the commons-parent release profile -->
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <!-- Skip the signing of the project artifact performed by commons-parent
+                (i.e. the pom) to avoid generating additional .asc files in the target
+                directory. These are mistakenly deployed in addition to the desired asc
+                file from signing the genreated BOM. -->
+              <execution>
+                <id>sign-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <skip>true</skip>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Activate the appropriate deploy goal.
+         If both profiles are actived (using the profile ids) then this will deploy the same
+         artifact twice with different build timestamps; only one is present in the metadata.
+         The GPG signature is valid for either as it has no build timestamp. -->
+    <profile>
+      <!-- deploy -->
+      <id>release-deploy</id>
+      <activation>
+        <property>
+          <name>gpg.skip</name>
+          <!-- This ignores the value for simplicity to allow -Dgpg.skip to activate.
+               The side-effect being that -Dgpg.skip=false will still activate the profile.
+               This is only relevant for the deploy phase and impacts the release process. -->
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-bom</id>
+                <goals>
+                  <goal>deploy-file</goal>
+                </goals>
+                <phase>deploy</phase>
+                <configuration>
+                  <!-- Dynamically configured destination based on SNAPSHOT or test-deploy profile -->
+                  <url>${bom.url}</url>
+                  <repositoryId>${bom.repositoryId}</repositoryId>
+                  <file>${rng.bom.file}</file>
+                  <!-- Collect group, artifact, version and packaging from the BOM -->
+                  <pomFile>${rng.bom.file}</pomFile>
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- sign and deploy -->
+      <id>release-sign-and-deploy</id>
+      <activation>
+        <property>
+          <!-- Opposite of the deploy profile -->
+          <name>!gpg.skip</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-bom</id>
+                <goals>
+                  <goal>sign-and-deploy-file</goal>
+                </goals>
+                <phase>deploy</phase>
+                <configuration>
+                  <!-- Dynamically configured destination based on SNAPSHOT or test-deploy profile -->
+                  <url>${bom.url}</url>
+                  <repositoryId>${bom.repositoryId}</repositoryId>
+                  <file>${rng.bom.file}</file>
+                  <!-- Collect group, artifact, version and packaging from the BOM -->
+                  <pomFile>${rng.bom.file}</pomFile> 
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
 </project>
