@@ -46,7 +46,7 @@ the Bill of Materials (BOM) for dependency management:
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-rng-bom</artifactId>
-      <version>1.5-SNAPSHOT</version>
+      <version>1.5</version>
       <type>pom</type>
       <scope>import</scope>
     </dependency>

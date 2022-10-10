@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>commons-rng-parent</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG</name>
   <description>The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.</description>
