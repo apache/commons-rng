@@ -245,6 +245,15 @@
             expected.
           </li>
         </ul>
+        <p>
+          It must be noted that, due to the nature of random number generation, some unit tests
+          are bound to fail with some probability. This is applicable for tests that compare
+          random output to an expected distribution. These tests <i>should</i> <b>not</b>
+          use a fixed seed to ensure consistent output. The 'maven-surefire-plugin' is configured to
+          re-run tests that fail, and pass the build if they succeed within the allotted number of
+          reruns (the test will be marked as 'flaky' in the report). Any test that is consistently
+          'flaky' may require an update to the test assumptions and assertions.
+        </p>
       </subsection>
       <subsection name='Licensing and copyright'>
         <ul>
