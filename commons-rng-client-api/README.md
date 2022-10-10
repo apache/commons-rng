@@ -46,7 +46,7 @@ Apache Commons RNG Client API
 [![Build Status](https://github.com/apache/commons-rng/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-rng/actions/workflows/maven.yml)
 [![Coverage Status](https://codecov.io/gh/apache/commons-rng/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-rng)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-client-api/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-client-api/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-client-api/1.4.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-client-api/1.4)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-client-api/1.5.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-client-api/1.5)
 
 API for client code that uses random numbers generators.
 
@@ -67,7 +67,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-client-api</artifactId>
-  <version>1.4</version>
+  <version>1.5</version>
 </dependency>
 ```
 
