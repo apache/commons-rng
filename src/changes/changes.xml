@@ -54,43 +54,12 @@ If the output is not quite correct, check for invisible trailing spaces!
   <body>
 
     <release version="1.6" date="TBD" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements (requires Java 8).
+New features, updates and bug fixes (requires Java 8).
 ">
 </release>
 
     <release version="1.5" date="2022-09-10" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements.
-Apache Commons RNG 1.5 contains the following library modules:
-  commons-rng-client-api (requires Java 8)
-  commons-rng-core (requires Java 8)
-  commons-rng-simple (requires Java 8)
-  commons-rng-sampling (requires Java 8)
-The code in module 'commons-rng-core' should not be accessed
-directly by applications as a future release might make use of
-the JPMS modularization feature available in Java 11+.
-
-Additional code is provided in the following modules:
-  commons-rng-examples-quadrature (requires Java 8)
-  commons-rng-examples-jmh (requires Java 8)
-  commons-rng-examples-sampling (requires Java 8)
-  commons-rng-examples-stress (requires Java 8)
-  commons-rng-examples-jpms (requires Java 11)
-It is however not part of the official API and no compatibility
-should be expected in subsequent releases.
-
-It must be noted that, due to the nature of random number
-generation, some unit tests are bound to fail with some
-probability.  The 'maven-surefire-plugin' is configured to
-re-run tests that fail, and pass the build if they succeed
-within the allotted number of reruns (the test will be marked
-as 'flaky' in the report).
-
-The source output type (int/long) of a RNG must maintain
-behavioural compatibility between releases; derived types
-may break behavioural compatibility. Any functional changes
-will be recorded in the release notes.
+New features, updates and bug fixes. Adds a commons-rng-bom module. Requires Java 8.
 ">
       <action dev="aherbert" type="add" issue="RNG-182">
         Add a Bill of Materials (BOM) to aid in dependency management when referencing multiple
@@ -189,32 +158,7 @@ will be recorded in the release notes.
 </release>
 
     <release version="1.4" date="2021-09-13" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements.
-Apache Commons RNG 1.4 contains the following library modules:
-  commons-rng-client-api (requires Java 8)
-  commons-rng-core (requires Java 8)
-  commons-rng-simple (requires Java 8)
-  commons-rng-sampling (requires Java 8)
-The code in module 'commons-rng-core' should not be accessed
-directly by applications as a future release might make use of
-the JPMS modularization feature available in Java 11+.
-
-Additional code is provided in the following modules:
-  commons-rng-examples-quadrature (requires Java 8)
-  commons-rng-examples-jmh (requires Java 8)
-  commons-rng-examples-sampling (requires Java 8)
-  commons-rng-examples-stress (requires Java 8)
-  commons-rng-examples-jpms (requires Java 11)
-It is however not part of the official API and no compatibility
-should be expected in subsequent releases.
-
-It must be noted that, due to the nature of random number
-generation, some unit tests are bound to fail with some
-probability.  The 'maven-surefire-plugin' is configured to
-re-run tests that fail, and pass the build if they succeed
-within the allotted number of reruns (the test will be marked
-as 'flaky' in the report).
+New features, updates and bug fixes. Updates the minimum Java version to 8.
 ">
       <action dev="aherbert" type="update" issue="RNG-163">
         Update test suite to JUnit 5.
@@ -336,28 +280,7 @@ as 'flaky' in the report).
     </release>
 
     <release version="1.3" date="2019-11-08" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements.
-Apache Commons RNG 1.3 contains the following library modules:
-  commons-rng-client-api (requires Java 6)
-  commons-rng-core (requires Java 6)
-  commons-rng-simple (requires Java 6)
-  commons-rng-sampling (requires Java 6)
-The code in module 'commons-rng-core' should not be accessed
-directly by applications as a future release might make use of
-the JPMS modularization feature available in Java 9+.
-
-Additional code is provided in the following module:
-  commons-rng-examples (requires Java 9)
-It is however not part of the official API and no compatibility
-should be expected in subsequent releases.
-
-It must be noted that, due to the nature of random number
-generation, some of unit tests are bound to fail with some
-probability.  The 'maven-surefire-plugin' is configured to
-re-run tests that fail, and pass the build if they succeed
-within the allotted number of reruns (the test will be marked
-as 'flaky' in the report).
+New features, updates and bug fixes (requires Java 6).
 ">
       <action dev="aherbert" type="update" issue="RNG-122">
         "SeedFactory": Use XoRoShiRo1024PlusPlus as the default source of randomness.
@@ -548,28 +471,7 @@ as 'flaky' in the report).
     </release>
 
     <release version="1.2" date="2018-12-12" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements.
-Apache Commons RNG 1.2 contains the following library modules:
-  commons-rng-client-api (requires Java 6)
-  commons-rng-core (requires Java 6)
-  commons-rng-simple (requires Java 6)
-  commons-rng-sampling (requires Java 6)
-The code in module 'commons-rng-core' should not be accessed
-directly by applications as a future release might make use of
-the JPMS modularization feature available in Java 9+.
-
-Additional code is provided in the following module:
-  commons-rng-examples (requires Java 9)
-It is however not part of the official API and no compatibility
-should be expected in subsequent releases.
-
-It must be noted that, due to the nature of random number
-generation, some of unit tests are bound to fail with some
-probability.  The 'maven-surefire-plugin' is configured to
-re-run tests that fail, and pass the build if they succeed
-within the allotted number of reruns (the test will be marked
-as 'flaky' in the report).
+New features, updates and bug fixes (requires Java 6).
 ">
       <action dev="erans" type="update" issue="RNG-63">
         "NumberFactory": Some methods have become obsolete following RNG-57.
@@ -612,29 +514,7 @@ as 'flaky' in the report).
     </release>
 
     <release version="1.1" date="2018-08-14" description="
-This is a minor release of Apache Commons RNG, containing a
-few new features and performance improvements.
-
-Apache Commons RNG 1.1 contains the following library modules:
-  commons-rng-client-api (requires Java 6)
-  commons-rng-core (requires Java 6)
-  commons-rng-simple (requires Java 6)
-  commons-rng-sampling (requires Java 6)
-
-The code in module 'commons-rng-core' should not be accessed
-directly by applications as a future release might make use of
-the JPMS modularization feature available in Java 9+.
-
-Additional code is provided in the following module:
-  commons-rng-examples (requires Java 9)
-It is however not part of the official API and no compatibility
-should be expected in subsequent releases.
-
-We would like to also note that unit tests in module 'commons-rng-sampling'
-are bound to fail with some probability; this is expected due to the nature
-of random number generation.  The 'maven-surefire-plugin' can be configured
-to re-run tests that fail and pass the build if they succeed (the test will
-be marked as 'flaky' in the report).
+New features, updates and bug fixes (requires Java 6).
 ">
       <action dev="erans" type="fix" issue="RNG-53">
         Class "SamplerBase" has been deprecated.  It was meant for internal use
@@ -685,13 +565,13 @@ be marked as 'flaky' in the report).
     <release version="1.0" date="2016-12-13" description="
 This is the first release of Apache Commons RNG.
 
-Apache Commons RNG 1.0 contains the following modules:
-  commons-rng-client-api (requires Java 6)
-  commons-rng-core (requires Java 6)
-  commons-rng-simple (requires Java 6)
-  commons-rng-sampling (requires Java 6)
-  commons-rng-jmh (requires Java 6)
-  commons-rng-examples (requires Java 7)
+Contains the following modules:
+  commons-rng-client-api;
+  commons-rng-core;
+  commons-rng-simple;
+  commons-rng-sampling.
+
+Requires Java 6.
 ">
     </release>
 
