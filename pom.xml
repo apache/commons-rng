@@ -227,7 +227,6 @@
           <logViolationsToConsole>false</logViolationsToConsole>
           <failOnViolation>true</failOnViolation>
           <resourceExcludes>NOTICE,LICENSE,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
-          <excludes>**/jmh_generated/**.java</excludes>
         </configuration>
         <executions>
           <execution>
@@ -419,7 +418,6 @@
           <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
-          <excludes>**/jmh_generated/**.java</excludes>
         </configuration>
         <reportSets>
           <reportSet>
