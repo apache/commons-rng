@@ -38,6 +38,7 @@
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
     <maven.deploy.skip>true</maven.deploy.skip>
     <!-- Simple site -->
+    <pmd.skip>true</pmd.skip>
     <spotbugs.skip>true</spotbugs.skip>
     <checkstyle.skip>true</checkstyle.skip>
     <changes.jira.skip>true</changes.jira.skip>
@@ -171,21 +172,6 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jdepend-maven-plugin</artifactId>
-        <version>${commons.jdepend.version}</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
       </plugin>
 
       <!-- Create an aggregate report from the *parent* directory using:
