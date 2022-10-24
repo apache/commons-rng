@@ -39,6 +39,7 @@
     <maven.deploy.skip>true</maven.deploy.skip>
     <!-- Simple site -->
     <pmd.skip>true</pmd.skip>
+    <cpd.skip>true</cpd.skip>
     <spotbugs.skip>true</spotbugs.skip>
     <checkstyle.skip>true</checkstyle.skip>
     <changes.jira.skip>true</changes.jira.skip>
