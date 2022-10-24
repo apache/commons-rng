@@ -304,13 +304,6 @@
             </configurationFile>
           </analysisConfigurationFiles>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
@@ -451,34 +444,6 @@
             <reports>
               <report>pmd</report>
               <report>cpd</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.revapi</groupId>
-        <artifactId>revapi-maven-plugin</artifactId>
-        <version>${rng.revapi.version}</version>
-        <configuration>
-          <!-- For reporting do not ignore the "intentional-api-changes" so they are included -->
-          <analysisConfigurationFiles>
-            <configurationFile>
-              <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
-              <roots>
-                <!-- Path(s) to configuration in the JSON config file -->
-                <root>1.5</root>
-              </roots>
-            </configurationFile>
-          </analysisConfigurationFiles>
-          <!-- Note: Property 'reportSeverity' is deprecated but newer 'reportCriticality'
-               does work as documented. -->
-          <reportSeverity>equivalent</reportSeverity>
-          <reportCriticality>allowed</reportCriticality>
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>report</report>
             </reports>
           </reportSet>
         </reportSets>
@@ -677,6 +642,63 @@ This is avoided by creating an empty directory when svn is not available.
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <!-- RevAPI only activated in modules requiring binary compatibility -->
+      <id>revapi</id>
+      <activation>
+        <file>
+          <exists>src/site/resources/profile.revapi</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.revapi</groupId>
+            <artifactId>revapi-maven-plugin</artifactId>
+            <version>${rng.revapi.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.revapi</groupId>
+            <artifactId>revapi-maven-plugin</artifactId>
+            <version>${rng.revapi.version}</version>
+            <configuration>
+              <!-- For reporting do not ignore the "intentional-api-changes" so they are included -->
+              <analysisConfigurationFiles>
+                <configurationFile>
+                  <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
+                  <roots>
+                    <!-- Path(s) to configuration in the JSON config file -->
+                    <root>1.5</root>
+                  </roots>
+                </configurationFile>
+              </analysisConfigurationFiles>
+              <!-- Note: Property 'reportSeverity' is deprecated but newer 'reportCriticality'
+                   does work as documented. -->
+              <reportSeverity>equivalent</reportSeverity>
+              <reportCriticality>allowed</reportCriticality>
+            </configuration>
+            <reportSets>
+              <reportSet>
+                <reports>
+                  <report>report</report>
+                </reports>
+              </reportSet>
+            </reportSets>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
 
     <!--
