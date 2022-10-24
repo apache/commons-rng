@@ -949,7 +949,7 @@ next version will be 1.6).
     $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease -Pcommons-rng-examples -Pdocs
 
   You will only be prompted for the desired version number once.
-  This may miss the dist-archive/pom.xml and docs-archive/pom.xml for all
+  This may miss the dist-archive/pom.xml and commons-rng-docs/pom.xml for all
   the dependencies. These should be updated manually.
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.

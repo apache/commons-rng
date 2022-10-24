@@ -725,7 +725,7 @@ This is avoided by creating an empty directory when svn is not available.
       <!-- Include an aggregate module to build aggregate javadoc and test coverage reports -->
       <id>docs</id>
       <modules>
-        <module>docs-archive</module>
+        <module>commons-rng-docs</module>
       </modules>
     </profile>
 
