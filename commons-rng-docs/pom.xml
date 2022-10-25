@@ -36,6 +36,12 @@
     <animal.sniffer.skip>true</animal.sniffer.skip>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <!-- Skip the standard build plugins to avoid processing this 'jar' as an artifact. -->
+    <maven.resources.skip>true</maven.resources.skip>
+    <maven.source.skip>true</maven.source.skip>
+    <maven.main.skip>true</maven.main.skip>
+    <maven.test.skip>true</maven.test.skip>
+    <maven.install.skip>true</maven.install.skip>
     <maven.deploy.skip>true</maven.deploy.skip>
     <!-- Simple site -->
     <pmd.skip>true</pmd.skip>
@@ -74,7 +80,22 @@
     <sourceDirectory>src</sourceDirectory>
 
     <plugins>
-      <!-- Create aggregate javadoc jar using 'mvn package' -->
+      <plugin>
+        <!-- This plugin has no skip property - use an invalid phase -->
+        <groupId>org.spdx</groupId>
+        <artifactId>spdx-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-spdx</id>
+            <goals>
+              <goal>createSPDX</goal>
+            </goals>
+            <phase>None</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Create aggregate javadoc jar using 'mvn javadoc:aggregate-jar' -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -103,31 +124,6 @@
               <packages>org.apache.commons.rng.sampling*</packages>
             </group>
           </groups>
-        </configuration>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>aggregate-jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- There is nothing to do -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <configuration>
-          <skipSource>true</skipSource>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
         </configuration>
       </plugin>
 
