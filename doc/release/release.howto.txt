@@ -946,7 +946,7 @@ next version will be 1.6).
 
   This can be done using maven:
 
-    $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease -Pcommons-rng-examples -Pdocs
+    $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease -Pcommons-rng-examples
 
   You will only be prompted for the desired version number once.
   This may miss the dist-archive/pom.xml for all

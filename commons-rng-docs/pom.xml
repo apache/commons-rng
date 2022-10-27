@@ -173,7 +173,7 @@
 
       <!-- Create an aggregate report from the *parent* directory using:
 
-           mvn jacoco:report-aggregate -P docs
+           mvn jacoco:report-aggregate
 
            Requires that tests have already been run with the jacoco user agent.
            If executed within this directory then jacoco does not collect the
