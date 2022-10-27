@@ -106,6 +106,8 @@
     <module>commons-rng-simple</module>
     <module>commons-rng-sampling</module>
     <module>commons-rng-bom</module>
+    <!-- Include an aggregate module to build aggregate javadoc and test coverage reports -->
+    <module>commons-rng-docs</module>
     <!--
         The examples are built only upon explicit request (requires Java 11).
         See profiles: "commons-rng-examples"; "release"
@@ -718,14 +720,6 @@ This is avoided by creating an empty directory when svn is not available.
         <!-- Examples are not part of the binary release so do not include in the build.
              Use the commons-rng-examples profile to create the site. -->
         <module>dist-archive</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <!-- Include an aggregate module to build aggregate javadoc and test coverage reports -->
-      <id>docs</id>
-      <modules>
-        <module>commons-rng-docs</module>
       </modules>
     </profile>
 
