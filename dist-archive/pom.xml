@@ -138,6 +138,7 @@ under the License.
         </dependency>
 
       </dependencies>
+
       <build>
         <plugins>
           <plugin>
@@ -154,7 +155,6 @@ under the License.
           </plugin>
           <plugin>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>2.4</version>
             <configuration>
               <skipAssembly>false</skipAssembly>
             </configuration>
@@ -178,6 +178,7 @@ under the License.
           </plugin>
         </plugins>
       </build>
+
     </profile>
 
   </profiles>
