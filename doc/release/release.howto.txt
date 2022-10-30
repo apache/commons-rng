@@ -333,7 +333,7 @@ as it is the most stable reference for traceability.
 
 Push everything (including the tag!) on the Apache repository:
 
-  $ git push && git push --tags
+  $ git push && git push origin commons-rng-1.5-RC1
 
 
 (9)
@@ -909,7 +909,7 @@ tags).
   $ git tag -u "__Your_key_id__" -s -m "RC1 becomes v1.5 official release." rel/commons-rng-1.5 [commit hash]
   $ git tag -v rel/commons-rng-1.5
   $ git log -1
-  $ git push --tags
+  $ git push origin rel/commons-rng-1.5
 
 
 (23)
