@@ -22,7 +22,12 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <a href="https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform">
  * Box-Muller algorithm</a> for sampling from a Gaussian distribution.
  *
- * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ * <p>Sampling uses:</p>
+ *
+ * <ul>
+ *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextLong()}
+ * </ul>
  *
  * @since 1.0
  *
