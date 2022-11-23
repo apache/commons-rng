@@ -34,7 +34,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <p>Sampling uses {@link UniformRandomProvider#nextLong()}.</p>
  *
- * @see <a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution">Student's T distribution (wikipedia)</a>
+ * @see <a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution">Student&#39;s T distribution (wikipedia)</a>
  * @see <a href="https://doi.org/10.2307/2153537">Mathematics of Computation, 62, 779-781</a>
  * @since 1.5
  */
