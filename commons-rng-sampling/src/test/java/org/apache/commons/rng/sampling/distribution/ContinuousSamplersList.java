@@ -197,6 +197,10 @@ public final class ContinuousSamplersList {
             // Pareto.
             add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto),
                 InverseTransformParetoSampler.of(RandomAssert.createRNG(), scalePareto, shapePareto));
+            // Large shape
+            final double shapePareto2 = 12.34;
+            add(LIST, new org.apache.commons.math3.distribution.ParetoDistribution(unusedRng, scalePareto, shapePareto2),
+                InverseTransformParetoSampler.of(RandomAssert.createRNG(), scalePareto, shapePareto2));
 
             // Stable distributions.
             // Gaussian case: alpha=2

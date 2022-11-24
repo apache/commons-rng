@@ -17,6 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import org.apache.commons.math3.special.Gamma;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -106,5 +108,27 @@ class InternalUtilsTest {
         final FactorialLog factorialLog = FactorialLog.create();
         Assertions.assertThrows(NegativeArraySizeException.class,
             () -> factorialLog.withCache(-1));
+    }
+
+    @Test
+    void testMakeDouble() {
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
+        for (int i = 0; i < 10; i++) {
+            // Assume the RNG is outputting in [0, 1) using the same method
+            Assertions.assertEquals(rng1.nextDouble(), InternalUtils.makeDouble(rng2.nextLong()));
+        }
+    }
+
+    @Test
+    void testMakeNonZeroDouble() {
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
+        final double u = 0x1.0p-53;
+        for (int i = 0; i < 10; i++) {
+            // Assume the RNG is outputting in [0, 1)
+            // The non-zero method should shift this to (0, 1]
+            Assertions.assertEquals(rng1.nextDouble() + u, InternalUtils.makeNonZeroDouble(rng2.nextLong()));
+        }
     }
 }

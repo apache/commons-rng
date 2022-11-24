@@ -125,6 +125,18 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
     }
 
     /**
+     * Creates a {@code double} in the interval {@code [0, 1)} from a {@code long} value.
+     *
+     * @param v Number.
+     * @return a {@code double} value in the interval {@code [0, 1)}.
+     */
+    static double makeDouble(long v) {
+        // This matches the method in o.a.c.rng.core.util.NumberFactory.makeDouble(long)
+        // without adding an explicit dependency on that module.
+        return (v >>> 11) * DOUBLE_MULTIPLIER;
+    }
+
+    /**
      * Creates a {@code double} in the interval {@code (0, 1]} from a {@code long} value.
      *
      * @param v Number.

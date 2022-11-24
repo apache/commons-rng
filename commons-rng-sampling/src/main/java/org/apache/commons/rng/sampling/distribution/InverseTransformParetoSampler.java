@@ -16,12 +16,13 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.function.LongToDoubleFunction;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
  * Sampling from a <a href="https://en.wikipedia.org/wiki/Pareto_distribution">Pareto distribution</a>.
  *
- * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
+ * <p>Sampling uses {@link UniformRandomProvider#nextLong()}.</p>
  *
  * @since 1.0
  */
@@ -34,6 +35,8 @@ public class InverseTransformParetoSampler
     private final double oneOverShape;
     /** Underlying source of randomness. */
     private final UniformRandomProvider rng;
+    /** Method to generate the (1 - p) value. */
+    private final LongToDoubleFunction nextDouble;
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
@@ -54,6 +57,13 @@ public class InverseTransformParetoSampler
         this.rng = rng;
         this.scale = scale;
         this.oneOverShape = 1 / shape;
+        // Generate (1 - p) so that samples are concentrated to the lower/upper bound:
+        // large shape samples from p in [0, 1)  (lower bound)
+        // small shape samples from p in (0, 1]  (upper bound)
+        // Note that the method used is logically reversed as it generates (1 - p).
+        nextDouble = shape >= 1 ?
+            InternalUtils::makeNonZeroDouble :
+            InternalUtils::makeDouble;
     }
 
     /**
@@ -66,12 +76,13 @@ public class InverseTransformParetoSampler
         this.rng = rng;
         scale = source.scale;
         oneOverShape = source.oneOverShape;
+        nextDouble = source.nextDouble;
     }
 
     /** {@inheritDoc} */
     @Override
     public double sample() {
-        return scale / Math.pow(rng.nextDouble(), oneOverShape);
+        return scale / Math.pow(nextDouble.applyAsDouble(rng.nextLong()), oneOverShape);
     }
 
     /** {@inheritDoc} */
