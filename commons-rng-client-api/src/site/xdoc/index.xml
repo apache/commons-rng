@@ -44,7 +44,8 @@
 
 public class Dice {
     public int roll(UniformRandomProvider rng) {
-        return 1 + rng.nextInt(6);
+        // Sample in [1, 6]
+        return rng.nextInt(1, 7);
     }
 }
 </source>
