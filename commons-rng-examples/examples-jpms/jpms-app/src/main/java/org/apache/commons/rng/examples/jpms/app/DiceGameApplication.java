@@ -48,7 +48,7 @@ public final class DiceGameApplication {
                                 double sigma) {
         game = new DiceGame(numPlayers, numRounds,
                             identifier.create(),
-                            4.3, 2.1);
+                            mu, sigma);
     }
 
     // Allow System.out and multiple " ---" strings
@@ -64,6 +64,8 @@ public final class DiceGameApplication {
      *  <li>Number of players</li>
      *  <li>Number of rounds per game</li>
      *  <li>RNG {@link RandomSource identifier}</li>
+     *  <li>Mean rolls per round</li>
+     *  <li>Standard deviation of rolls per round</li>
      * </ol>
      */
     public static void main(String[] args) {
