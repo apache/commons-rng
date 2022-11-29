@@ -51,5 +51,5 @@ done
 echo -n "Copying long-term links ... "
 svnmucc -U https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng \
         $CPLIST \
-        -m "Commons RNG: Copying $RNG_RELEASE_VERSION apidocs to versioned directories for the long-term links."
+        -m "Commons RNG: Copying $VERSION apidocs to versioned directories for the long-term links."
 echo "Done."
