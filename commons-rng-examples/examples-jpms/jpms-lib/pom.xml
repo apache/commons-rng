@@ -49,7 +49,7 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.jpms.lib</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.jpms.lib</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.examples.jpms.lib</commons.automatic.module.name>
+    <commons.module.name>org.apache.commons.rng.examples.jpms.lib</commons.module.name>
   </properties>
 
 </project>

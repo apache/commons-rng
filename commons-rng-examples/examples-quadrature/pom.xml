@@ -36,7 +36,7 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.quadrature</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.quadrature</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.examples.quadrature</commons.automatic.module.name>
+    <commons.module.name>org.apache.commons.rng.examples.quadrature</commons.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 

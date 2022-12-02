@@ -39,7 +39,7 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.core</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.core;x-friends:="org.apache.commons.rng.simple"</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.core</commons.automatic.module.name>
+    <commons.module.name>org.apache.commons.rng.core</commons.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
     <rng.jira.component>core</rng.jira.component>

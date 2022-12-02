@@ -50,7 +50,7 @@
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.jpms.app</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.jpms.app</commons.osgi.export>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.examples.jpms.app</commons.automatic.module.name>
+    <commons.module.name>org.apache.commons.rng.examples.jpms.app</commons.module.name>
   </properties>
 
 </project>

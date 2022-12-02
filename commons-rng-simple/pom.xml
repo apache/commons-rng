@@ -36,7 +36,7 @@
     <commons.osgi.export>org.apache.commons.rng.simple</commons.osgi.export>
     <commons.osgi.private>org.apache.commons.rng.simple.internal</commons.osgi.private>
     <!-- Java 9+ -->
-    <commons.automatic.module.name>org.apache.commons.rng.simple</commons.automatic.module.name>
+    <commons.module.name>org.apache.commons.rng.simple</commons.module.name>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/..</rng.parent.dir>
     <rng.jira.component>simple</rng.jira.component>
