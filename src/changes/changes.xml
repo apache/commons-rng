@@ -56,6 +56,10 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.6" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="add" issue="RNG-184">
+        New "ArraySampler" to support shuffling primitive and generic arrays with
+        sub-range support.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-183">
         "InverseTransformParetoSampler": Modified to concentrate samples at the distribution
         lower/upper bounds for extreme shape parameters. Eliminates generation of outlier

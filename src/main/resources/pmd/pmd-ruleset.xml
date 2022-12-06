@@ -240,7 +240,8 @@
   <rule ref="category/java/design.xml/GodClass">
     <properties>
       <property name="violationSuppressXPath"
-        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler']"/>
+        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'
+          or @SimpleName='ArraySampler']"/>
     </properties>
   </rule>
 
