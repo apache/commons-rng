@@ -455,7 +455,7 @@ public final class ProviderBuilder {
          * The constructor.
          * This is discovered using the constructor parameter types and stored for re-use.
          */
-        private Constructor<?> rngConstructor;
+        private transient Constructor<?> rngConstructor;
 
         /**
          * Create a new instance.
