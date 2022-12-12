@@ -62,8 +62,6 @@
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
-    <!-- Multi-module support fixed in commons-parent 55 -->
-    <cyclonedx.skip>true</cyclonedx.skip>
 
     <!-- Fix to avoid JXR 3.0.0 forking the lifecycle phase 'compile' during site report
        jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
@@ -347,8 +345,6 @@
             <exclude>**/*.patch</exclude>
             <exclude>**/pdf.*.txt</exclude>
             <exclude>src/main/resources/revapi/api-changes.json</exclude>
-            <!-- Moved to commons-parent 55 -->
-            <exclude>.gitattributes</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -411,8 +407,6 @@
             <exclude>dist-archive/**</exclude>
             <exclude>**/*.patch</exclude>
             <exclude>**/pdf.*.txt</exclude>
-            <!-- Moved to commons-parent 55 -->
-            <exclude>.gitattributes</exclude>
           </excludes>
         </configuration>
       </plugin>
