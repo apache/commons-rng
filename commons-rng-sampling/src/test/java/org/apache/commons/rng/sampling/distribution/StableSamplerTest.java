@@ -1809,7 +1809,7 @@ class StableSamplerTest {
      * This uses a long values from the RNG.
      * </ol>
      *
-     * <p>Careful control of the the sequence can generate any value for {@code w} and {@code phi/2}.
+     * <p>Careful control of the sequence can generate any value for {@code w} and {@code phi/2}.
      * The sampler creates a uniform deviate first, then an exponential deviate second.
      * Examples of different output where {@code d} is the gap between values of {@code phi/2}
      * and is equal to {@code pi * 2^-55 = pi/4 * 2^-53}:
