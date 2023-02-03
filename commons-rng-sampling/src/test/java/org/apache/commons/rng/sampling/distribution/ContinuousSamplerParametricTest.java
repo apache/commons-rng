@@ -59,8 +59,7 @@ class ContinuousSamplerParametricTest {
         // Run the tests.
         int numFailures = 0;
 
-        final double[] expected = new double[numBins];
-        Arrays.fill(expected, sampleSize / (double) numBins);
+        final double expected = sampleSize / (double) numBins;
 
         final long[] observed = new long[numBins];
         // Chi-square critical value with 9 degrees of freedom
@@ -88,8 +87,8 @@ class ContinuousSamplerParametricTest {
                 // Compute chi-square.
                 double chi2 = 0;
                 for (int k = 0; k < numBins; k++) {
-                    final double diff = observed[k] - expected[k];
-                    chi2 += diff * diff / expected[k];
+                    final double diff = observed[k] - expected;
+                    chi2 += diff * diff / expected;
                 }
 
                 // Statistics check.

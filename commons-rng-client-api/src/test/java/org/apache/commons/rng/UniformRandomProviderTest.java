@@ -546,9 +546,7 @@ class UniformRandomProviderTest {
 
         // Bins.
         final long[] observed = new long[byteRange];
-        final double[] expected = new double[byteRange];
-
-        Arrays.fill(expected, sampleSize * (last - first) / (double) byteRange);
+        final double expected = (double) sampleSize * (last - first) / byteRange;
 
         for (int k = 0; k < sampleSize; k++) {
             nextMethod.run();
@@ -562,8 +560,8 @@ class UniformRandomProviderTest {
         // Compute chi-square.
         double chi2 = 0;
         for (int k = 0; k < byteRange; k++) {
-            final double diff = observed[k] - expected[k];
-            chi2 += diff * diff / expected[k];
+            final double diff = observed[k] - expected;
+            chi2 += diff * diff / expected;
         }
 
         // Statistics check.
