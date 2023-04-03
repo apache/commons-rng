@@ -306,7 +306,7 @@ public class PoissonSamplersPerformance {
         private final double mean;
         /**
          * Pre-compute the cumulative probability for all samples up to and including x.
-         * This is F(x) = sum of p(X<=x).
+         * This is F(x) = sum of {@code p(X<=x)}.
          *
          * <p>The value is computed at approximately 50% allowing the algorithm to choose to start
          * at value (x+1) approximately half of the time.
@@ -407,7 +407,7 @@ public class PoissonSamplersPerformance {
          * <p>This avoids a check on the next probability value assuming that the cumulative probability
          * is at a level where the long tail of the Poisson distribution will not be reached.
          *
-         * @param u the remaining cumulative probability (p(X>x))
+         * @param u the remaining cumulative probability ({@code p(X>x)})
          * @param x the current sample value X
          * @param p the current probability of the sample (p(X=x))
          * @return the sample X
@@ -487,7 +487,7 @@ public class PoissonSamplersPerformance {
         private final double mean;
         /**
          * Store the cumulative probability for all samples up to and including x.
-         * This is F(x) = sum of p(X<=x).
+         * This is F(x) = sum of {@code p(X<=x)}.
          *
          * <p>This table is initialized to store cumulative probabilities for x up to 2 * mean
          * or 99.99% (whichever is larger).
@@ -674,7 +674,7 @@ public class PoissonSamplersPerformance {
         private final double mean;
         /**
          * Store the cumulative probability for all samples up to and including x. This is
-         * F(x) = sum of p(X<=x).
+         * F(x) = sum of {@code p(X<=x)}.
          *
          * <p>This table is initialized to store cumulative probabilities for x up to 2 * mean
          * or 99.99% (whichever is larger).

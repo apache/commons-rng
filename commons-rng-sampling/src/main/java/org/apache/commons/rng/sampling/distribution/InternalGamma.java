@@ -61,7 +61,7 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
     private InternalGamma() {}
 
     /**
-     * Computes the function \( \ln \Gamma(x) \) for \( x > 0 \).
+     * Computes the function \( \ln \Gamma(x) \) for \( x \gt 0 \).
      *
      * <p>
      * For \( x \leq 8 \), the implementation is based on the double precision

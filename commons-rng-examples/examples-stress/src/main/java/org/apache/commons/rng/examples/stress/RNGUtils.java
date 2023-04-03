@@ -471,9 +471,9 @@ final class RNGUtils {
      * using the Java standard big-endian representation the output is the same as the raw 64-bit
      * output. If using little endian the output bytes will be written as:</p>
      *
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  4567  0123
-     * </pre>
+     * }</pre>
      *
      * <h2>Note</h2>
      *

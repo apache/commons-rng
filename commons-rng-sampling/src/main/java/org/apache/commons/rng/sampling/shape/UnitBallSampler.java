@@ -47,7 +47,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * The multiplier to convert the least significant 53-bits of a {@code long} to a {@code double}.
      * Taken from o.a.c.rng.core.utils.NumberFactory.
      *
-     * <p>This is equivalent to 1.0 / (1L << 53).
+     * <p>This is equivalent to {@code 1.0 / (1L << 53)}.
      */
     private static final double DOUBLE_MULTIPLIER = 0x1.0p-53d;
 

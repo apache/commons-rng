@@ -38,7 +38,7 @@ import java.nio.ByteOrder;
  * UniformRandomProvider rng = ...
  * int size = 2048;
  * DataOutputStream sink = new DataOutputStream(new BufferedOutputStream(out, size * 4));
- * for (int i = 0; i < size; i++) {
+ * for (int i = 0; i &lt; size; i++) {
  *    sink.writeInt(rng.nextInt());
  * }
  *
@@ -69,9 +69,9 @@ abstract class RngDataOutput implements Closeable {
 
     /**
      * Write big-endian {@code int} data.
-     * <pre>
+     * <pre>{@code
      * 3210  ->  3210
-     * </pre>
+     * }</pre>
      */
     private static class BIntRngDataOutput extends RngDataOutput {
         /**
@@ -92,9 +92,9 @@ abstract class RngDataOutput implements Closeable {
 
     /**
      * Write little-endian {@code int} data.
-     * <pre>
+     * <pre>{@code
      * 3210  ->  0123
-     * </pre>
+     * }</pre>
      */
     private static class LIntRngDataOutput extends RngDataOutput {
         /**
@@ -115,9 +115,9 @@ abstract class RngDataOutput implements Closeable {
 
     /**
      * Write big-endian {@code long} data.
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  76543210
-     * </pre>
+     * }</pre>
      */
     private static class BLongRngDataOutput extends RngDataOutput {
         /**
@@ -138,9 +138,9 @@ abstract class RngDataOutput implements Closeable {
 
     /**
      * Write little-endian {@code long} data.
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  01234567
-     * </pre>
+     * }</pre>
      */
     private static class LLongRngDataOutput extends RngDataOutput {
         /**
@@ -162,17 +162,17 @@ abstract class RngDataOutput implements Closeable {
     /**
      * Write {@code long} data as two little-endian {@code int} values, high 32-bits then
      * low 32-bits.
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  4567  0123
-     * </pre>
+     * }</pre>
      *
      * <p>This is a specialisation that allows the Java big-endian representation to be split
      * into two little-endian values in the original order of upper then lower bits. In
      * comparison the {@link LLongRngDataOutput} will output the same data as:
      *
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  0123  4567
-     * </pre>
+     * }</pre>
      */
     private static class LLongAsIntRngDataOutput extends RngDataOutput {
         /**
@@ -194,17 +194,17 @@ abstract class RngDataOutput implements Closeable {
     /**
      * Write {@code long} data as two big-endian {@code int} values, low 32-bits then
      * high 32-bits.
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  3210  7654
-     * </pre>
+     * }</pre>
      *
      * <p>This is a specialisation that allows the Java big-endian representation to be split
      * into two big-endian values in the original order of lower then upper bits. In
      * comparison the {@link BLongRngDataOutput} will output the same data as:
      *
-     * <pre>
+     * <pre>{@code
      * 76543210  ->  7654  3210
-     * </pre>
+     * }</pre>
      */
     private static class BLongAsLoHiIntRngDataOutput extends RngDataOutput {
         /**
@@ -408,13 +408,13 @@ abstract class RngDataOutput implements Closeable {
      *
      * <p>This will output the following bytes:</p>
      *
-     * <pre>
+     * <pre>{@code
      * // Little-endian
      * 76543210  ->  4567  0123
      *
      * // Big-endian
      * 76543210  ->  7654  3210
-     * </pre>
+     * }</pre>
      *
      * <p>This ensures the output from the generator is the original upper then lower order bits
      * for each endianess.
@@ -440,13 +440,13 @@ abstract class RngDataOutput implements Closeable {
      *
      * <p>This will output the following bytes:</p>
      *
-     * <pre>
+     * <pre>{@code
      * // Little-endian
      * 76543210  ->  0123  4567
      *
      * // Big-endian
      * 76543210  ->  3210  7654
-     * </pre>
+     * }</pre>
      *
      * <p>This ensures the output from the generator is the original lower then upper order bits
      * for each endianess.

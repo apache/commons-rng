@@ -89,8 +89,7 @@ public class BaselineGenerationPerformance {
     static final long NEXT_LONG_LIMIT = 9_223_372_036_854_775_783L;
 
     /**
-     * The provider for testing {@link UniformRandomProvider#nextByte()} and
-     * {@link UniformRandomProvider#nextByte(int)}.
+     * The provider for testing {@link UniformRandomProvider#nextBytes(byte[])}.
      */
     private UniformRandomProvider nextBytesProvider = BaselineUtils.getNextBytes();
 

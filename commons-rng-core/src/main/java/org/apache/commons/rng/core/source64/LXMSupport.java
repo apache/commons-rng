@@ -105,9 +105,9 @@ final class LXMSupport {
      * of the 128-bit unsigned result.
      *
      * <p>This method computes the equivalent of:
-     * <pre>
+     * <pre>{@code
      * Math.multiplyHigh(a, b) + ((a >> 63) & b) + ((b >> 63) & a)
-     * </pre>
+     * }</pre>
      *
      * <p>Note: The method {@code Math.multiplyHigh} was added in JDK 9
      * and should be used as above when the source code targets Java 11

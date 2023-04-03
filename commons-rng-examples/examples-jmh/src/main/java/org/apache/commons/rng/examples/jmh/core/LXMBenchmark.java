@@ -237,9 +237,9 @@ public class LXMBenchmark {
          * of the 128-bit unsigned result.
          *
          * <p>This method computes the equivalent of:
-         * <pre>
+         * <pre>{@code
          * Math.multiplyHigh(a, b) + ((a >> 63) & b) + ((b >> 63) & a)
-         * </pre>
+         * }</pre>
          *
          * <p>Note: The method {@code Math.multiplyHigh} was added in JDK 9
          * and should be used as above when the source code targets Java 11
@@ -783,7 +783,7 @@ public class LXMBenchmark {
         }
 
         /**
-         * Implements the 128-bit LCG using the reference code in Steele & Vigna (2021).
+         * Implements the 128-bit LCG using the reference code in Steele &amp; Vigna (2021).
          *
          * <p>Note: the additive parameter is not final. This is due to the requirement
          * for the LXM generator to implement
@@ -824,7 +824,7 @@ public class LXMBenchmark {
         }
 
         /**
-         * Implements the 128-bit LCG using the reference code in Steele & Vigna (2021).
+         * Implements the 128-bit LCG using the reference code in Steele &amp; Vigna (2021).
          * This uses a final additive parameter allowing the JVM to optimise.
          */
         static class ReferenceLcg128Final extends BaseLcg128 {
@@ -860,7 +860,7 @@ public class LXMBenchmark {
         }
 
         /**
-         * Implements the 128-bit LCG using the reference code in Steele & Vigna (2021)
+         * Implements the 128-bit LCG using the reference code in Steele &amp; Vigna (2021)
          * but directly implements the {@link Long#compareUnsigned(long, long)}.
          *
          * <p>Note: the additive parameter is not final. This is due to the requirement
@@ -1243,7 +1243,7 @@ public class LXMBenchmark {
         }
 
         /**
-         * Implements the L128X128Mix using the reference code for the LCG in Steele & Vigna (2021).
+         * Implements the L128X128Mix using the reference code for the LCG in Steele &amp; Vigna (2021).
          */
         static class ReferenceLxm128 extends BaseLxm128 {
             /**

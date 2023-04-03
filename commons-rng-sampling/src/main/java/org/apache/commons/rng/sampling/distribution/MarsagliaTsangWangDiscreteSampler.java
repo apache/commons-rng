@@ -576,7 +576,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * Create a new instance for probabilities {@code p(i)} where the sample value {@code x} is
      * {@code i + offset}.
      *
-     * <p>The sum of the probabilities must be >= 2<sup>30</sup>. Only the
+     * <p>The sum of the probabilities must be {@code >=} 2<sup>30</sup>. Only the
      * values for cumulative probability up to 2<sup>30</sup> will be sampled.</p>
      *
      * @param rng Generator of uniformly distributed random numbers.
@@ -695,7 +695,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * Upper bound on the mean for the Poisson distribution.
          *
          * <p>The original source code provided in Marsaglia, et al (2004) has no explicit
-         * limit but the code fails at mean >= 1941 as the transform to compute p(x=mode)
+         * limit but the code fails at mean {@code >= 1941} as the transform to compute p(x=mode)
          * produces infinity. Use a conservative limit of 1024.</p>
          */
 

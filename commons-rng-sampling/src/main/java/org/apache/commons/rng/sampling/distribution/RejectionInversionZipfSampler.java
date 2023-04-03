@@ -62,8 +62,8 @@ public class RejectionInversionZipfSampler
 
         /**
          * @param rng Generator of uniformly distributed random numbers.
-         * @param numberOfElements Number of elements (must be > 0).
-         * @param exponent Exponent (must be > 0).
+         * @param numberOfElements Number of elements (must be {@code > 0}).
+         * @param exponent Exponent (must be {@code > 0}).
          */
         RejectionInversionZipfSamplerImpl(UniformRandomProvider rng,
                                           int numberOfElements,
