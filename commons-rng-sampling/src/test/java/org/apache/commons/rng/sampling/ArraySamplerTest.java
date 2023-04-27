@@ -241,7 +241,7 @@ class ArraySamplerTest {
     @ValueSource(ints = {13, 16})
     void testShuffleIsRandom(int length) {
         final int[] array = PermutationSampler.natural(length);
-        final UniformRandomProvider rng = RandomAssert.seededRNG();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final long[][] counts = new long[length][length];
         for (int j = 1; j <= 1000; j++) {
             ArraySampler.shuffle(rng, array);
@@ -263,7 +263,7 @@ class ArraySamplerTest {
     void testShuffleSubRangeIsRandom(int from, int to, int length) {
         // Natural sequence in the sub-range
         final int[] array = natural(from, to, length);
-        final UniformRandomProvider rng = RandomAssert.seededRNG();
+        final UniformRandomProvider rng = RandomAssert.createRNG();
         final int n = to - from;
         final long[][] counts = new long[n][n];
         for (int j = 1; j <= 1000; j++) {
