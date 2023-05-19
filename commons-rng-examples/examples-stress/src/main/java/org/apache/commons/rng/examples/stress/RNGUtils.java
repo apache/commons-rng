@@ -35,7 +35,7 @@ final class RNGUtils {
     private static final String BYTE_REVERSED = "Byte-reversed ";
     /** Name prefix for bit-reversed RNGs. */
     private static final String BIT_REVERSED = "Bit-reversed ";
-    /** Name prefix for hashcode mixed RNGs. */
+    /** Name prefix for hash code mixed RNGs. */
     private static final String HASH_CODE = "HashCode ^ ";
     /** Name prefix for ThreadLocalRandom xor mixed RNGs. */
     private static final String TLR_MIXED = "ThreadLocalRandom ^ ";

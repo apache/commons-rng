@@ -194,14 +194,14 @@ class StressTestCommand implements Callable<Void> {
     private String byteSeed;
 
     /**
-     * Flag to indicate the output should be combined with a hashcode from a new object.
+     * Flag to indicate the output should be combined with a hash code from a new object.
      * This is a method previously used in the
      * {@link org.apache.commons.rng.simple.internal.SeedFactory SeedFactory}.
      *
      * @see System#identityHashCode(Object)
      */
     @Option(names = {"--hashcode"},
-            description = {"Combine the bits with a hashcode (default: ${DEFAULT-VALUE}).",
+            description = {"Combine the bits with a hash code (default: ${DEFAULT-VALUE}).",
                            "System.identityHashCode(new Object()) ^ rng.nextInt()."})
     private boolean xorHashCode;
 
