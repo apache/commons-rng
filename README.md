@@ -67,7 +67,7 @@ Where can I get the latest release?
 -----------------------------------
 You can download source and binaries from our [download page](https://commons.apache.org/proper/commons-rng/download_rng.cgi).
 
-Alternatively you can pull it from the central Maven repositories, e.g.:
+Alternatively, you can pull it from the central Maven repositories, e.g.:
 
 ```xml
 <dependency>
