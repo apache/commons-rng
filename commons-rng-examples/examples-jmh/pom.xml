@@ -90,6 +90,7 @@
     <!--
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+    <commons.compiler.release>11</commons.compiler.release>
     <animal.sniffer.skip>true</animal.sniffer.skip>
     -->
 
