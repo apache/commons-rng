@@ -476,7 +476,7 @@ public final class CompositeSamplers {
             // otherwise the sampler must be checked.
             if (specialisation == Specialisation.SHARED_STATE_SAMPLER &&
                 !(factory instanceof DiscreteProbabilitySampler)) {
-                // If the factory was user defined then clone the weights as they may be required
+                // If the factory was user-defined then clone the weights as they may be required
                 // to create a SharedStateDiscreteProbabilitySampler.
                 final DiscreteSampler sampler = factory.create(rng, weights.clone());
                 return sampler instanceof SharedStateDiscreteSampler ?
