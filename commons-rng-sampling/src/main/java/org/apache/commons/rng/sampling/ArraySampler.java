@@ -36,11 +36,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, boolean[] array) {
+    public static boolean[] shuffle(UniformRandomProvider rng, boolean[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -48,11 +50,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, byte[] array) {
+    public static byte[] shuffle(UniformRandomProvider rng, byte[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -60,11 +64,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, char[] array) {
+    public static char[] shuffle(UniformRandomProvider rng, char[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -72,11 +78,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, double[] array) {
+    public static double[] shuffle(UniformRandomProvider rng, double[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -84,11 +92,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, float[] array) {
+    public static float[] shuffle(UniformRandomProvider rng, float[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -96,11 +106,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, int[] array) {
+    public static int[] shuffle(UniformRandomProvider rng, int[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -108,11 +120,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, long[] array) {
+    public static long[] shuffle(UniformRandomProvider rng, long[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -120,11 +134,13 @@ public final class ArraySampler {
      *
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static void shuffle(UniformRandomProvider rng, short[] array) {
+    public static short[] shuffle(UniformRandomProvider rng, short[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -133,11 +149,13 @@ public final class ArraySampler {
      * @param <T> Type of the items.
      * @param rng Source of randomness.
      * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
      */
-    public static <T> void shuffle(UniformRandomProvider rng, T[] array) {
+    public static <T> T[] shuffle(UniformRandomProvider rng, T[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -147,13 +165,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, boolean[] array, int from, int to) {
+    public static boolean[] shuffle(UniformRandomProvider rng, boolean[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -163,13 +183,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, byte[] array, int from, int to) {
+    public static byte[] shuffle(UniformRandomProvider rng, byte[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -179,13 +201,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, char[] array, int from, int to) {
+    public static char[] shuffle(UniformRandomProvider rng, char[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -195,13 +219,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, double[] array, int from, int to) {
+    public static double[] shuffle(UniformRandomProvider rng, double[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -211,13 +237,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, float[] array, int from, int to) {
+    public static float[] shuffle(UniformRandomProvider rng, float[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -227,13 +255,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, int[] array, int from, int to) {
+    public static int[] shuffle(UniformRandomProvider rng, int[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -243,13 +273,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, long[] array, int from, int to) {
+    public static long[] shuffle(UniformRandomProvider rng, long[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -259,13 +291,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static void shuffle(UniformRandomProvider rng, short[] array, int from, int to) {
+    public static short[] shuffle(UniformRandomProvider rng, short[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**
@@ -276,13 +310,15 @@ public final class ArraySampler {
      * @param array Array whose entries will be shuffled (in-place).
      * @param from Lower-bound (inclusive) of the sub-range.
      * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
      * @throws IndexOutOfBoundsException if the sub-range is out of bounds
      */
-    public static <T> void shuffle(UniformRandomProvider rng, T[] array, int from, int to) {
+    public static <T> T[] shuffle(UniformRandomProvider rng, T[] array, int from, int to) {
         final int length = to - checkFromToIndex(from, to, array.length);
         for (int i = length; i > 1; i--) {
             swap(array, from + i - 1, from + rng.nextInt(i));
         }
+        return array;
     }
 
     /**

@@ -100,6 +100,60 @@ class ArraySamplerTest {
         Assertions.assertThrows(NullPointerException.class, () -> ArraySampler.shuffle(rng, (Object[]) null, 0, 2));
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 3})
+    void testReturnedReference(int length) {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
+        final boolean[] a = new boolean[length];
+        final byte[] b = new byte[length];
+        final char[] c = new char[length];
+        final double[] d = new double[length];
+        final float[] e = new float[length];
+        final int[] f = new int[length];
+        final long[] g = new long[length];
+        final short[] h = new short[length];
+        final Object[] i = new Object[length];
+        Assertions.assertSame(a, ArraySampler.shuffle(rng, a));
+        Assertions.assertSame(b, ArraySampler.shuffle(rng, b));
+        Assertions.assertSame(c, ArraySampler.shuffle(rng, c));
+        Assertions.assertSame(d, ArraySampler.shuffle(rng, d));
+        Assertions.assertSame(e, ArraySampler.shuffle(rng, e));
+        Assertions.assertSame(f, ArraySampler.shuffle(rng, f));
+        Assertions.assertSame(g, ArraySampler.shuffle(rng, g));
+        Assertions.assertSame(h, ArraySampler.shuffle(rng, h));
+        Assertions.assertSame(i, ArraySampler.shuffle(rng, i));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "0, 0, 0",
+        "0, 2, 2",
+        "0, 2, 4",
+        "1, 3, 4",
+        "2, 4, 4",
+    })
+    void testReturnedReferenceRange(int from, int to, int length) {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
+        final boolean[] a = new boolean[length];
+        final byte[] b = new byte[length];
+        final char[] c = new char[length];
+        final double[] d = new double[length];
+        final float[] e = new float[length];
+        final int[] f = new int[length];
+        final long[] g = new long[length];
+        final short[] h = new short[length];
+        final Object[] i = new Object[length];
+        Assertions.assertSame(a, ArraySampler.shuffle(rng, a, from, to));
+        Assertions.assertSame(b, ArraySampler.shuffle(rng, b, from, to));
+        Assertions.assertSame(c, ArraySampler.shuffle(rng, c, from, to));
+        Assertions.assertSame(d, ArraySampler.shuffle(rng, d, from, to));
+        Assertions.assertSame(e, ArraySampler.shuffle(rng, e, from, to));
+        Assertions.assertSame(f, ArraySampler.shuffle(rng, f, from, to));
+        Assertions.assertSame(g, ArraySampler.shuffle(rng, g, from, to));
+        Assertions.assertSame(h, ArraySampler.shuffle(rng, h, from, to));
+        Assertions.assertSame(i, ArraySampler.shuffle(rng, i, from, to));
+    }
+
     // Shuffle tests for randomness performed on int[].
     // All other implementations must match int[] shuffle.
 
