@@ -150,7 +150,7 @@ class JumpableProvidersParametricTest {
             generator.nextBoolean();
 
             final RandomProviderState preJumpState = ((RestorableUniformRandomProvider) generator).saveState();
-            Assumptions.assumeTrue(preJumpState instanceof RandomProviderDefaultState, "Not a recognised state");
+            Assumptions.assumeTrue(preJumpState instanceof RandomProviderDefaultState, "Not a recognized state");
 
             final UniformRandomProvider copy = jumpFunction.jump();
 

@@ -165,7 +165,7 @@ public enum NativeSeedType {
         }
     };
 
-    /** Error message for unrecognised seed types. */
+    /** Error message for unrecognized seed types. */
     private static final String UNRECOGNISED_SEED = "Unrecognized seed type: ";
     /** Maximum length of the seed array (for creating array seeds). */
     private static final int RANDOM_SEED_ARRAY_SIZE = 128;
@@ -261,7 +261,7 @@ public enum NativeSeedType {
             return convert((byte[]) seed, size);
         }
 
-        throw new UnsupportedOperationException(unrecognisedSeedMessage(seed));
+        throw new UnsupportedOperationException(unrecognizedSeedMessage(seed));
     }
 
     /**
@@ -329,16 +329,16 @@ public enum NativeSeedType {
             return (byte[]) seed;
         }
 
-        throw new UnsupportedOperationException(unrecognisedSeedMessage(seed));
+        throw new UnsupportedOperationException(unrecognizedSeedMessage(seed));
     }
 
     /**
-     * Create an unrecognised seed message. This will add the class type of the seed.
+     * Create an unrecognized seed message. This will add the class type of the seed.
      *
      * @param seed the seed
      * @return the message
      */
-    private static String unrecognisedSeedMessage(Object seed) {
+    private static String unrecognizedSeedMessage(Object seed) {
         return UNRECOGNISED_SEED + ((seed == null) ? "null" : seed.getClass().getName());
     }
 }

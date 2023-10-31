@@ -31,20 +31,28 @@ import java.util.concurrent.ThreadLocalRandom;
  * Utility methods for a {@link UniformRandomProvider}.
  */
 final class RNGUtils {
+
     /** Name prefix for bit-reversed RNGs. */
     private static final String BYTE_REVERSED = "Byte-reversed ";
+
     /** Name prefix for bit-reversed RNGs. */
     private static final String BIT_REVERSED = "Bit-reversed ";
+
     /** Name prefix for hash code mixed RNGs. */
     private static final String HASH_CODE = "HashCode ^ ";
+
     /** Name prefix for ThreadLocalRandom xor mixed RNGs. */
     private static final String TLR_MIXED = "ThreadLocalRandom ^ ";
+
     /** Name of xor operator for xor mixed RNGs. */
     private static final String XOR = " ^ ";
-    /** Message for an unrecognised source64 mode. */
-    private static final String UNRECOGNISED_SOURCE_64_MODE = "Unrecognised source64 mode: ";
-    /** Message for an unrecognised native output type. */
-    private static final String UNRECOGNISED_NATIVE_TYPE = "Unrecognised native output type: ";
+
+    /** Message for an unrecognized source64 mode. */
+    private static final String UNRECOGNISED_SOURCE_64_MODE = "Unrecognized source64 mode: ";
+
+    /** Message for an unrecognized native output type. */
+    private static final String UNRECOGNISED_NATIVE_TYPE = "Unrecognized native output type: ";
+
     /** The source64 mode for the default LongProvider caching implementation. */
     private static final Source64Mode SOURCE_64_DEFAULT = Source64Mode.LO_HI;
 
@@ -67,7 +75,7 @@ final class RNGUtils {
      *
      * @param rng The random generator.
      * @return the byte reversed random generator.
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognized.
      * @see Integer#reverseBytes(int)
      * @see Long#reverseBytes(long)
      */
@@ -108,7 +116,7 @@ final class RNGUtils {
      *
      * @param rng The random generator.
      * @return the bit reversed random generator.
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognized.
      * @see Integer#reverse(int)
      * @see Long#reverse(long)
      */
@@ -329,7 +337,7 @@ final class RNGUtils {
      *
      * @param rng The random generator.
      * @return the combined random generator.
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognized.
      * @see System#identityHashCode(Object)
      */
     static UniformRandomProvider createHashCodeProvider(final UniformRandomProvider rng) {
@@ -377,7 +385,7 @@ final class RNGUtils {
      *
      * @param rng The random generator.
      * @return the combined random generator.
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognized.
      */
     static UniformRandomProvider createThreadLocalRandomProvider(final UniformRandomProvider rng) {
         if (rng instanceof RandomIntSource) {
@@ -423,7 +431,7 @@ final class RNGUtils {
      * @param rng1 The first random generator.
      * @param rng2 The second random generator.
      * @return the combined random generator.
-     * @throws ApplicationException If the input source native type is not recognised.
+     * @throws ApplicationException If the input source native type is not recognized.
      */
     static UniformRandomProvider createXorProvider(final UniformRandomProvider rng1,
         final UniformRandomProvider rng2) {
@@ -497,7 +505,7 @@ final class RNGUtils {
      * @param byteSize Number of bytes values to write.
      * @param byteOrder Byte order.
      * @return the data output
-     * @throws ApplicationException If the input source native type is not recognised; or if
+     * @throws ApplicationException If the input source native type is not recognized; or if
      * the mode for a RandomLongSource is not one of: raw; hi-lo; or lo-hi.
      */
     static RngDataOutput createDataOutput(final UniformRandomProvider rng, Source64Mode source64,
@@ -533,7 +541,7 @@ final class RNGUtils {
      *
      * @param argument the argument
      * @return the object
-     * @throws ApplicationException If the argument is not recognised
+     * @throws ApplicationException If the argument is not recognized
      */
     static Object parseArgument(String argument) {
         try {

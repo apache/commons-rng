@@ -591,7 +591,7 @@ class ResultsCommand implements Callable<Void> {
 
     /**
      * Gets the test format from the output. This scans the stdout produced by a test application.
-     * If it is not recognised this may be a valid partial result or an unknown result. Throw
+     * If it is not recognized this may be a valid partial result or an unknown result. Throw
      * an exception if not allowing partial results, otherwise log an error.
      *
      * @param resultFile Result file (for the exception message).
