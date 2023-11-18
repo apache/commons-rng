@@ -38,7 +38,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
     /**
      * Discrete uniform distribution sampler when the sample value is fixed.
      */
-    private static class FixedUniformLongSampler extends UniformLongSampler {
+    private static final class FixedUniformLongSampler extends UniformLongSampler {
         /** The value. */
         private final long value;
 
@@ -76,7 +76,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
      * <p>Note: This cannot be used when the range is 1 (2^0) as the shift would be 64-bits
      * which is ignored by the shift operator.</p>
      */
-    private static class PowerOf2RangeUniformLongSampler extends UniformLongSampler {
+    private static final class PowerOf2RangeUniformLongSampler extends UniformLongSampler {
         /** Bit shift to apply to the long sample. */
         private final int shift;
 
@@ -119,7 +119,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
      * This sampler assumes the lower bound of the range is 0 and the range is
      * non-zero.
      */
-    private static class SmallRangeUniformLongSampler extends UniformLongSampler {
+    private static final class SmallRangeUniformLongSampler extends UniformLongSampler {
         /** Maximum range of the sample (exclusive). */
         private final long n;
         /** Limit of the uniform range (inclusive) to sample a positive long.
@@ -188,7 +188,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
      * Discrete uniform distribution sampler when the range between lower and upper is too large
      * to fit in a positive long.
      */
-    private static class LargeRangeUniformLongSampler extends UniformLongSampler {
+    private static final class LargeRangeUniformLongSampler extends UniformLongSampler {
         /** Lower bound. */
         private final long lower;
         /** Upper bound. */
@@ -231,7 +231,7 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
     /**
      * Adds an offset to an underlying discrete sampler.
      */
-    private static class OffsetUniformLongSampler extends UniformLongSampler {
+    private static final class OffsetUniformLongSampler extends UniformLongSampler {
         /** The offset. */
         private final long offset;
         /** The long sampler. */

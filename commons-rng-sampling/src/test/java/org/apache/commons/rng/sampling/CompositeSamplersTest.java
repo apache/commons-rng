@@ -864,7 +864,7 @@ class CompositeSamplersTest {
     /**
      * Sample an object {@code Integer} from a range.
      */
-    private static class RangeSampler implements SharedStateObjectSampler<Integer> {
+    private static final class RangeSampler implements SharedStateObjectSampler<Integer> {
         private final int min;
         private final int range;
         private final UniformRandomProvider rng;
@@ -894,7 +894,7 @@ class CompositeSamplersTest {
     /**
      * Sample a primitive {@code integer} from a range.
      */
-    private static class IntRangeSampler implements SharedStateDiscreteSampler {
+    private static final class IntRangeSampler implements SharedStateDiscreteSampler {
         private final int min;
         private final int range;
         private final UniformRandomProvider rng;
@@ -924,7 +924,7 @@ class CompositeSamplersTest {
     /**
      * Sample a primitive {@code double} from a range between a and b.
      */
-    private static class DoubleRangeSampler implements SharedStateContinuousSampler {
+    private static final class DoubleRangeSampler implements SharedStateContinuousSampler {
         private final double a;
         private final double b;
         private final UniformRandomProvider rng;
@@ -965,7 +965,7 @@ class CompositeSamplersTest {
     /**
      * Sample a primitive {@code long} from a range.
      */
-    private static class LongRangeSampler implements SharedStateLongSampler {
+    private static final class LongRangeSampler implements SharedStateLongSampler {
         private final long min;
         private final long range;
         private final UniformRandomProvider rng;

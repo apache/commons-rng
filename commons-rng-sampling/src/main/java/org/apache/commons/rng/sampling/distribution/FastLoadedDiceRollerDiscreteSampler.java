@@ -87,7 +87,7 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
     /**
      * Class to handle the edge case of observations in only one category.
      */
-    private static class FixedValueDiscreteSampler extends FastLoadedDiceRollerDiscreteSampler {
+    private static final class FixedValueDiscreteSampler extends FastLoadedDiceRollerDiscreteSampler {
         /** The sample value. */
         private final int sampleValue;
 
@@ -117,7 +117,7 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
     /**
      * Class to implement the FLDR sample algorithm.
      */
-    private static class FLDRSampler extends FastLoadedDiceRollerDiscreteSampler {
+    private static final class FLDRSampler extends FastLoadedDiceRollerDiscreteSampler {
         /** Empty boolean source. This is the location of the sign-bit after 31 right shifts on
          * the boolean source. */
         private static final int EMPTY_BOOL_SOURCE = 1;

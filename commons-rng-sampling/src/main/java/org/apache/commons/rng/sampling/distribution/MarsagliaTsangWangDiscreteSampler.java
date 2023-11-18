@@ -127,7 +127,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * An implementation for the sample algorithm based on the decomposition of the
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 8-bit backing storage.
      */
-    private static class MarsagliaTsangWangBase64Int8DiscreteSampler
+    private static final class MarsagliaTsangWangBase64Int8DiscreteSampler
         extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** The mask to convert a {@code byte} to an unsigned 8-bit integer. */
         private static final int MASK = 0xff;
@@ -269,7 +269,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * An implementation for the sample algorithm based on the decomposition of the
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 16-bit backing storage.
      */
-    private static class MarsagliaTsangWangBase64Int16DiscreteSampler
+    private static final class MarsagliaTsangWangBase64Int16DiscreteSampler
         extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** The mask to convert a {@code byte} to an unsigned 16-bit integer. */
         private static final int MASK = 0xffff;
@@ -411,7 +411,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
      * An implementation for the sample algorithm based on the decomposition of the
      * index in the range {@code [0,2^30)} into 5 base-64 digits with 32-bit backing storage.
      */
-    private static class MarsagliaTsangWangBase64Int32DiscreteSampler
+    private static final class MarsagliaTsangWangBase64Int32DiscreteSampler
         extends AbstractMarsagliaTsangWangDiscreteSampler {
         /** Limit for look-up table 1. */
         private final int t1;
@@ -893,7 +893,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * Return a fixed result for the Binomial distribution. This is a special class to handle
          * an edge case of probability of success equal to 0 or 1.
          */
-        private static class MarsagliaTsangWangFixedResultBinomialSampler
+        private static final class MarsagliaTsangWangFixedResultBinomialSampler
             extends AbstractMarsagliaTsangWangDiscreteSampler {
             /** The result. */
             private final int result;
@@ -931,7 +931,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * Binomial(n, p) = 1 - Binomial(n, 1 - p)
          * </pre>
          */
-        private static class MarsagliaTsangWangInversionBinomialSampler
+        private static final class MarsagliaTsangWangInversionBinomialSampler
             extends AbstractMarsagliaTsangWangDiscreteSampler {
             /** The number of trials. */
             private final int trials;

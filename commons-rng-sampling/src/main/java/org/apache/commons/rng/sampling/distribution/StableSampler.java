@@ -298,7 +298,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
     /**
      * Class for implementations of a stable distribution transformed by scale and location.
      */
-    private static class TransformedStableSampler extends StableSampler {
+    private static final class TransformedStableSampler extends StableSampler {
         /** Underlying normalized stable sampler. */
         private final StableSampler sampler;
         /** The scale parameter. */
@@ -340,7 +340,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
     /**
      * Implement the {@code alpha = 2} stable distribution case (Gaussian distribution).
      */
-    private static class GaussianStableSampler extends StableSampler {
+    private static final class GaussianStableSampler extends StableSampler {
         /** sqrt(2). */
         private static final double ROOT_2 = Math.sqrt(2);
 
@@ -392,7 +392,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
      * Implement the {@code alpha = 1} and {@code beta = 0} stable distribution case
      * (Cauchy distribution).
      */
-    private static class CauchyStableSampler extends BaseStableSampler {
+    private static final class CauchyStableSampler extends BaseStableSampler {
         /** The scale parameter. */
         private final double gamma;
         /** The location parameter. */
@@ -447,7 +447,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
      * Note: This sampler can be used to output the symmetric case when
      * {@code beta = -1} by negating {@code gamma}.
      */
-    private static class LevyStableSampler extends StableSampler {
+    private static final class LevyStableSampler extends StableSampler {
         /** Underlying normalized Gaussian sampler. */
         private final NormalizedGaussianSampler sampler;
         /** The scale parameter. */

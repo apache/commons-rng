@@ -136,7 +136,7 @@ public class ChengBetaSampler
      * Computes one sample using Cheng's BB algorithm, when beta distribution {@code alpha} and
      * {@code beta} shape parameters are both larger than 1.
      */
-    private static class ChengBBBetaSampler extends BaseChengBetaSampler {
+    private static final class ChengBBBetaSampler extends BaseChengBetaSampler {
         /** 1 + natural logarithm of 5. */
         private static final double LN_5_P1 = 1 + Math.log(5.0);
 
@@ -210,7 +210,7 @@ public class ChengBetaSampler
      * Computes one sample using Cheng's BC algorithm, when at least one of beta distribution
      * {@code alpha} or {@code beta} shape parameters is smaller than 1.
      */
-    private static class ChengBCBetaSampler extends BaseChengBetaSampler {
+    private static final class ChengBCBetaSampler extends BaseChengBetaSampler {
         /** 1/2. */
         private static final double ONE_HALF = 1d / 2;
         /** 1/4. */

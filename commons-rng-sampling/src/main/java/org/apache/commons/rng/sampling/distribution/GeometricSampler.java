@@ -48,7 +48,7 @@ public final class GeometricSampler {
     /**
      * Sample from the geometric distribution when the probability of success is 1.
      */
-    private static class GeometricP1Sampler
+    private static final class GeometricP1Sampler
         implements SharedStateDiscreteSampler {
         /** The single instance. */
         static final GeometricP1Sampler INSTANCE = new GeometricP1Sampler();
@@ -74,7 +74,7 @@ public final class GeometricSampler {
     /**
      * Sample from the geometric distribution by using a related exponential distribution.
      */
-    private static class GeometricExponentialSampler
+    private static final class GeometricExponentialSampler
         implements SharedStateDiscreteSampler {
         /** Underlying source of randomness. Used only for the {@link #toString()} method. */
         private final UniformRandomProvider rng;

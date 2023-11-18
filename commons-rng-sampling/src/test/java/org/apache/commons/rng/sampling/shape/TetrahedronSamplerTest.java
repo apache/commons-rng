@@ -355,7 +355,7 @@ class TetrahedronSamplerTest {
      *
      * @see <a href="https://mathworld.wolfram.com/Point-PlaneDistance.html">Point-Plane distance</a>
      */
-    private static class Tetrahedron {
+    private static final class Tetrahedron {
         /** The face normals. */
         private final double[][] n;
         /** The distance of each face from the origin. */

@@ -57,7 +57,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     /**
      * Sample uniformly from the ends of a 1D unit line.
      */
-    private static class UnitSphereSampler1D extends UnitSphereSampler {
+    private static final class UnitSphereSampler1D extends UnitSphereSampler {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -87,7 +87,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
      * Sample uniformly from a 2D unit circle.
      * This is a 2D specialisation of the UnitSphereSamplerND.
      */
-    private static class UnitSphereSampler2D extends UnitSphereSampler {
+    private static final class UnitSphereSampler2D extends UnitSphereSampler {
         /** Sampler used for generating the individual components of the vectors. */
         private final NormalizedGaussianSampler sampler;
 
@@ -123,7 +123,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
      * Sample uniformly from a 3D unit sphere.
      * This is a 3D specialisation of the UnitSphereSamplerND.
      */
-    private static class UnitSphereSampler3D extends UnitSphereSampler {
+    private static final class UnitSphereSampler3D extends UnitSphereSampler {
         /** Sampler used for generating the individual components of the vectors. */
         private final NormalizedGaussianSampler sampler;
 
@@ -159,7 +159,7 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     /**
      * Sample uniformly from a ND unit sphere.
      */
-    private static class UnitSphereSamplerND extends UnitSphereSampler {
+    private static final class UnitSphereSamplerND extends UnitSphereSampler {
         /** Space dimension. */
         private final int dimension;
         /** Sampler used for generating the individual components of the vectors. */

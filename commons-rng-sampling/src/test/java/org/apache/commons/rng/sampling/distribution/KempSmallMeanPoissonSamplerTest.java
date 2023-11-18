@@ -179,7 +179,7 @@ class KempSmallMeanPoissonSamplerTest {
     /**
      * A RNG returning a fixed value.
      */
-    private static class FixedRNG implements UniformRandomProvider {
+    private static final class FixedRNG implements UniformRandomProvider {
         /** The value. */
         private double value;
 

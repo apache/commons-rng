@@ -82,7 +82,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
      * Sample uniformly from a triangle in 2D. This is an non-array based specialisation of
      * {@link TriangleSamplerND} for performance.
      */
-    private static class TriangleSampler2D extends TriangleSampler {
+    private static final class TriangleSampler2D extends TriangleSampler {
         /** The x component of vertex a. */
         private final double ax;
         /** The y component of vertex a. */
@@ -142,7 +142,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
      * Sample uniformly from a triangle in 3D. This is an non-array based specialisation of
      * {@link TriangleSamplerND} for performance.
      */
-    private static class TriangleSampler3D extends TriangleSampler {
+    private static final class TriangleSampler3D extends TriangleSampler {
         /** The x component of vertex a. */
         private final double ax;
         /** The y component of vertex a. */
@@ -214,7 +214,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
     /**
      * Sample uniformly from a triangle in ND.
      */
-    private static class TriangleSamplerND extends TriangleSampler {
+    private static final class TriangleSamplerND extends TriangleSampler {
         /** The first vertex. */
         private final double[] a;
         /** The second vertex. */

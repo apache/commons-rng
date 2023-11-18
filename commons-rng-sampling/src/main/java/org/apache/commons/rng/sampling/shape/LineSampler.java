@@ -55,7 +55,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
      * Sample uniformly from a line in 1D. This is an non-array based specialisation of
      * {@link LineSamplerND} for performance.
      */
-    private static class LineSampler1D extends LineSampler {
+    private static final class LineSampler1D extends LineSampler {
         /** The x component of vertex a. */
         private final double ax;
         /** The x component of vertex b. */
@@ -97,7 +97,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
      * Sample uniformly from a line in 2D. This is an non-array based specialisation of
      * {@link LineSamplerND} for performance.
      */
-    private static class LineSampler2D extends LineSampler {
+    private static final class LineSampler2D extends LineSampler {
         /** The x component of vertex a. */
         private final double ax;
         /** The y component of vertex a. */
@@ -148,7 +148,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
      * Sample uniformly from a line in 3D. This is an non-array based specialisation of
      * {@link LineSamplerND} for performance.
      */
-    private static class LineSampler3D extends LineSampler {
+    private static final class LineSampler3D extends LineSampler {
         /** The x component of vertex a. */
         private final double ax;
         /** The y component of vertex a. */
@@ -207,7 +207,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
     /**
      * Sample uniformly from a line in ND.
      */
-    private static class LineSamplerND extends LineSampler {
+    private static final class LineSamplerND extends LineSampler {
         /** The first vertex. */
         private final double[] a;
         /** The second vertex. */

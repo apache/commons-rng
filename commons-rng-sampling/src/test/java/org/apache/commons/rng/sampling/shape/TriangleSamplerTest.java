@@ -631,7 +631,7 @@ class TriangleSamplerTest {
     /**
      * Transform coordinates from 2D to a higher dimension using the rotation matrix.
      */
-    private static class ForwardTransform implements Transform {
+    private static final class ForwardTransform implements Transform {
         private final double[][] r;
 
         /**
@@ -652,7 +652,7 @@ class TriangleSamplerTest {
      * The result should be in the 2D plane (i.e. higher dimensions of the transformed vector
      * are asserted to be zero).
      */
-    private static class ReverseTransform implements Transform {
+    private static final class ReverseTransform implements Transform {
         private final double[][] r;
         private final int n;
 
@@ -679,7 +679,7 @@ class TriangleSamplerTest {
     /**
      * No-operation transform on 2D input. Asserts the input coordinates are length 2.
      */
-    private static class Transform2Dto2D implements Transform {
+    private static final class Transform2Dto2D implements Transform {
         @Override
         public double[] apply(double[] coord) {
             Assertions.assertEquals(2, coord.length);
@@ -707,7 +707,7 @@ class TriangleSamplerTest {
      * Point in a triangle</a>
      * @see <a href="https://stackoverflow.com/a/34093754">Point inside triangle by Cédric Dufour</a>
      */
-    private static class Triangle {
+    private static final class Triangle {
         private final double p2x;
         private final double p2y;
         private final double dX21;

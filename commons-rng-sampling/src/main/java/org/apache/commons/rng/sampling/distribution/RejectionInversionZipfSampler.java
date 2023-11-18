@@ -36,7 +36,7 @@ public class RejectionInversionZipfSampler
     /**
      * Implements the rejection-inversion method for the Zipf distribution.
      */
-    private static class RejectionInversionZipfSamplerImpl implements SharedStateDiscreteSampler {
+    private static final class RejectionInversionZipfSamplerImpl implements SharedStateDiscreteSampler {
         /** Threshold below which Taylor series will be used. */
         private static final double TAYLOR_THRESHOLD = 1e-8;
         /** 1/2. */

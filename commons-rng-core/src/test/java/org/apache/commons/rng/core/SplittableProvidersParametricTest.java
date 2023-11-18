@@ -45,7 +45,7 @@ class SplittableProvidersParametricTest {
      * All generation and split methods throw an exception. This can be used to test
      * exception conditions for arguments to default stream functions.
      */
-    private static class DummyGenerator implements SplittableUniformRandomProvider {
+    private static final class DummyGenerator implements SplittableUniformRandomProvider {
         /** An instance. */
         static final DummyGenerator INSTANCE = new DummyGenerator();
 
@@ -65,7 +65,7 @@ class SplittableProvidersParametricTest {
      * Generation methods default to ThreadLocalRandom. Split methods return the same instance.
      * This is a functioning generator that can be used as a source to seed splitting.
      */
-    private static class ThreadLocalGenerator implements SplittableUniformRandomProvider {
+    private static final class ThreadLocalGenerator implements SplittableUniformRandomProvider {
         /** An instance. */
         static final ThreadLocalGenerator INSTANCE = new ThreadLocalGenerator();
 

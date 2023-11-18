@@ -43,7 +43,7 @@ public class ContinuousUniformSampler
     /**
      * Specialization to sample from an open interval {@code (lo, hi)}.
      */
-    private static class OpenIntervalContinuousUniformSampler extends ContinuousUniformSampler {
+    private static final class OpenIntervalContinuousUniformSampler extends ContinuousUniformSampler {
         /**
          * @param rng Generator of uniformly distributed random numbers.
          * @param lo Lower bound.

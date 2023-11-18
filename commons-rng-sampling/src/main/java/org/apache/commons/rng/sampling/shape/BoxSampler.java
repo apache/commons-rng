@@ -50,7 +50,7 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
      * Sample uniformly from a box in 2D. This is an non-array based specialisation of
      * {@link BoxSamplerND} for performance.
      */
-    private static class BoxSampler2D extends BoxSampler {
+    private static final class BoxSampler2D extends BoxSampler {
         /** The x component of bound a. */
         private final double ax;
         /** The y component of bound a. */
@@ -101,7 +101,7 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
      * Sample uniformly from a box in 3D. This is an non-array based specialisation of
      * {@link BoxSamplerND} for performance.
      */
-    private static class BoxSampler3D extends BoxSampler {
+    private static final class BoxSampler3D extends BoxSampler {
         /** The x component of bound a. */
         private final double ax;
         /** The y component of bound a. */
@@ -160,7 +160,7 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
     /**
      * Sample uniformly from a box in ND.
      */
-    private static class BoxSamplerND extends BoxSampler {
+    private static final class BoxSamplerND extends BoxSampler {
         /** Bound a. */
         private final double[] a;
         /** Bound b. */

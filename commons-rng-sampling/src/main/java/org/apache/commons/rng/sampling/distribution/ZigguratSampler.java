@@ -533,7 +533,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * Specialisation which multiplies the standard exponential result by a specified mean.
          */
-        private static class ExponentialMean extends Exponential {
+        private static final class ExponentialMean extends Exponential {
             /** Mean. */
             private final double mean;
 

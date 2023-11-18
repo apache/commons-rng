@@ -99,7 +99,7 @@ class LogNormalSamplerTest {
      * <p>Note that due to type erasure the type returned by the SharedStateSampler is not
      * available at run-time and the LogNormalSampler has to assume it is the correct type.</p>
      */
-    private static class BadSharedStateNormalizedGaussianSampler
+    private static final class BadSharedStateNormalizedGaussianSampler
             implements NormalizedGaussianSampler, SharedStateSampler<Integer> {
         @Override
         public double sample() {

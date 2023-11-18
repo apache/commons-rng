@@ -658,7 +658,7 @@ class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * Return a fixed sequence of {@code int} output.
      */
-    private static class FixedSequenceIntProvider extends IntProvider {
+    private static final class FixedSequenceIntProvider extends IntProvider {
         /** The count of values output. */
         private int count;
         /** The values. */
@@ -683,7 +683,7 @@ class MarsagliaTsangWangDiscreteSamplerTest {
     /**
      * A RNG returning a fixed {@code int} value with all the bits set.
      */
-    private static class FixedRNG extends IntProvider {
+    private static final class FixedRNG extends IntProvider {
         @Override
         public int next() {
             return 0xffffffff;

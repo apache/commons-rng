@@ -81,7 +81,7 @@ public class DiscreteUniformSampler
     /**
      * Discrete uniform distribution sampler when the sample value is fixed.
      */
-    private static class FixedDiscreteUniformSampler
+    private static final class FixedDiscreteUniformSampler
             extends AbstractDiscreteUniformSampler {
         /** The value. */
         private final int value;
@@ -120,7 +120,7 @@ public class DiscreteUniformSampler
      * <p>Note: This cannot be used when the range is 1 (2^0) as the shift would be 32-bits
      * which is ignored by the shift operator.</p>
      */
-    private static class PowerOf2RangeDiscreteUniformSampler
+    private static final class PowerOf2RangeDiscreteUniformSampler
             extends AbstractDiscreteUniformSampler {
         /** Bit shift to apply to the integer sample. */
         private final int shift;
@@ -169,7 +169,7 @@ public class DiscreteUniformSampler
      *
      * @see <a href="https://arxiv.org/abs/1805.10941">Fast Random Integer Generation in an Interval</a>
      */
-    private static class SmallRangeDiscreteUniformSampler
+    private static final class SmallRangeDiscreteUniformSampler
             extends AbstractDiscreteUniformSampler {
         /** Maximum range of the sample (exclusive). */
         private final long n;
@@ -243,7 +243,7 @@ public class DiscreteUniformSampler
      * Discrete uniform distribution sampler when the range between lower and upper is too large
      * to fit in a positive integer.
      */
-    private static class LargeRangeDiscreteUniformSampler
+    private static final class LargeRangeDiscreteUniformSampler
             extends AbstractDiscreteUniformSampler {
         /** Lower bound. */
         private final int lower;
@@ -287,7 +287,7 @@ public class DiscreteUniformSampler
     /**
      * Adds an offset to an underlying discrete sampler.
      */
-    private static class OffsetDiscreteUniformSampler
+    private static final class OffsetDiscreteUniformSampler
             extends AbstractDiscreteUniformSampler {
         /** The offset. */
         private final int offset;

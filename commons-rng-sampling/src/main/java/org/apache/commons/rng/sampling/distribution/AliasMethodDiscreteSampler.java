@@ -171,7 +171,7 @@ public class AliasMethodDiscreteSampler
      *
      * <p>Sampling uses 1 or 2 calls to {@link UniformRandomProvider#nextInt()}.</p>
      */
-    private static class SmallTableAliasMethodDiscreteSampler extends AliasMethodDiscreteSampler {
+    private static final class SmallTableAliasMethodDiscreteSampler extends AliasMethodDiscreteSampler {
         /** The mask to isolate the lower bits. */
         private final int mask;
 

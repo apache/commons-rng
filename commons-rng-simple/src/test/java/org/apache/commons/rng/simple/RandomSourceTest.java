@@ -171,7 +171,7 @@ class RandomSourceTest {
      * Class to provide a complete implementation of the {@link UniformRandomProvider} interface.
      * This must return a different result than the default implementations in the interface.
      */
-    private static class RestorableRNG implements RestorableUniformRandomProvider {
+    private static final class RestorableRNG implements RestorableUniformRandomProvider {
         /** The source of randomness. */
         private final SplittableRandom rng = new SplittableRandom(123);
 

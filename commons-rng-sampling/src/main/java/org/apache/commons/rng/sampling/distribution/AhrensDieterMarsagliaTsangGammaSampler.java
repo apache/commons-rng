@@ -116,7 +116,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      *  Computing, 12, 223-246, 1974.
      * </blockquote>
      */
-    private static class AhrensDieterGammaSampler
+    private static final class AhrensDieterGammaSampler
         extends BaseGammaSampler {
 
         /** Inverse of "alpha". */
@@ -196,7 +196,7 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      *  Volume 26 Issue 3, September, 2000.
      * </blockquote>
      */
-    private static class MarsagliaTsangGammaSampler
+    private static final class MarsagliaTsangGammaSampler
         extends BaseGammaSampler {
 
         /** 1/3. */

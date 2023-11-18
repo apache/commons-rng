@@ -125,7 +125,7 @@ public final class CompositeSamplers {
      * sampler given a factory and the probability distribution. Each new instance will recreate
      * the distribution sampler using the factory.
      */
-    private static class SharedStateDiscreteProbabilitySampler implements SharedStateDiscreteSampler {
+    private static final class SharedStateDiscreteProbabilitySampler implements SharedStateDiscreteSampler {
         /** The sampler. */
         private final DiscreteSampler sampler;
         /** The factory to create a new discrete sampler. */
@@ -243,7 +243,7 @@ public final class CompositeSamplers {
      *
      * @param <S> Type of sampler
      */
-    private static class SamplerBuilder<S> implements Builder<S> {
+    private static final class SamplerBuilder<S> implements Builder<S> {
         /** The specialisation of the sampler. */
         private final Specialisation specialisation;
         /** The weighted samplers. */
@@ -295,7 +295,7 @@ public final class CompositeSamplers {
          *
          * @param <S> Sampler type
          */
-        private static class WeightedSampler<S> {
+        private static final class WeightedSampler<S> {
             /** The weight. */
             private final double weight;
             /** The sampler. */
@@ -593,7 +593,7 @@ public final class CompositeSamplers {
      *
      * @param <T> Type of sample
      */
-    private static class ObjectSamplerFactory<T> implements
+    private static final class ObjectSamplerFactory<T> implements
             SamplerBuilder.SamplerFactory<ObjectSampler<T>> {
         /** The instance. */
         @SuppressWarnings("rawtypes")
@@ -621,7 +621,7 @@ public final class CompositeSamplers {
          *
          * @param <T> Type of sample
          */
-        private static class CompositeObjectSampler<T>
+        private static final class CompositeObjectSampler<T>
                 extends CompositeSampler<ObjectSampler<T>>
                 implements ObjectSampler<T> {
             /**
@@ -645,7 +645,7 @@ public final class CompositeSamplers {
      *
      * @param <T> Type of sample
      */
-    private static class SharedStateObjectSamplerFactory<T> implements
+    private static final class SharedStateObjectSamplerFactory<T> implements
             SamplerBuilder.SamplerFactory<SharedStateObjectSampler<T>> {
         /** The instance. */
         @SuppressWarnings("rawtypes")
@@ -678,7 +678,7 @@ public final class CompositeSamplers {
          *
          * @param <T> Type of sample
          */
-        private static class CompositeSharedStateObjectSampler<T>
+        private static final class CompositeSharedStateObjectSampler<T>
                 extends CompositeSampler<SharedStateObjectSampler<T>>
                 implements SharedStateObjectSampler<T> {
             /**
@@ -708,7 +708,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite DiscreteSampler.
      */
-    private static class DiscreteSamplerFactory implements
+    private static final class DiscreteSamplerFactory implements
             SamplerBuilder.SamplerFactory<DiscreteSampler> {
         /** The instance. */
         static final DiscreteSamplerFactory INSTANCE = new DiscreteSamplerFactory();
@@ -722,7 +722,7 @@ public final class CompositeSamplers {
         /**
          * A composite discrete sampler.
          */
-        private static class CompositeDiscreteSampler
+        private static final class CompositeDiscreteSampler
                 extends CompositeSampler<DiscreteSampler>
                 implements DiscreteSampler {
             /**
@@ -744,7 +744,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite SharedStateDiscreteSampler.
      */
-    private static class SharedStateDiscreteSamplerFactory implements
+    private static final class SharedStateDiscreteSamplerFactory implements
             SamplerBuilder.SamplerFactory<SharedStateDiscreteSampler> {
         /** The instance. */
         static final SharedStateDiscreteSamplerFactory INSTANCE = new SharedStateDiscreteSamplerFactory();
@@ -760,7 +760,7 @@ public final class CompositeSamplers {
         /**
          * A composite discrete sampler with shared state support.
          */
-        private static class CompositeSharedStateDiscreteSampler
+        private static final class CompositeSharedStateDiscreteSampler
                 extends CompositeSampler<SharedStateDiscreteSampler>
                 implements SharedStateDiscreteSampler {
             /**
@@ -790,7 +790,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite ContinuousSampler.
      */
-    private static class ContinuousSamplerFactory implements
+    private static final class ContinuousSamplerFactory implements
             SamplerBuilder.SamplerFactory<ContinuousSampler> {
         /** The instance. */
         static final ContinuousSamplerFactory INSTANCE = new ContinuousSamplerFactory();
@@ -804,7 +804,7 @@ public final class CompositeSamplers {
         /**
          * A composite continuous sampler.
          */
-        private static class CompositeContinuousSampler
+        private static final class CompositeContinuousSampler
                 extends CompositeSampler<ContinuousSampler>
                 implements ContinuousSampler {
             /**
@@ -826,7 +826,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite SharedStateContinuousSampler.
      */
-    private static class SharedStateContinuousSamplerFactory implements
+    private static final class SharedStateContinuousSamplerFactory implements
             SamplerBuilder.SamplerFactory<SharedStateContinuousSampler> {
         /** The instance. */
         static final SharedStateContinuousSamplerFactory INSTANCE = new SharedStateContinuousSamplerFactory();
@@ -842,7 +842,7 @@ public final class CompositeSamplers {
         /**
          * A composite continuous sampler with shared state support.
          */
-        private static class CompositeSharedStateContinuousSampler
+        private static final class CompositeSharedStateContinuousSampler
                 extends CompositeSampler<SharedStateContinuousSampler>
                 implements SharedStateContinuousSampler {
             /**
@@ -872,7 +872,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite LongSampler.
      */
-    private static class LongSamplerFactory implements
+    private static final class LongSamplerFactory implements
             SamplerBuilder.SamplerFactory<LongSampler> {
         /** The instance. */
         static final LongSamplerFactory INSTANCE = new LongSamplerFactory();
@@ -886,7 +886,7 @@ public final class CompositeSamplers {
         /**
          * A composite long sampler.
          */
-        private static class CompositeLongSampler
+        private static final class CompositeLongSampler
                 extends CompositeSampler<LongSampler>
                 implements LongSampler {
             /**
@@ -908,7 +908,7 @@ public final class CompositeSamplers {
     /**
      * A factory for creating a composite SharedStateLongSampler.
      */
-    private static class SharedStateLongSamplerFactory implements
+    private static final class SharedStateLongSamplerFactory implements
             SamplerBuilder.SamplerFactory<SharedStateLongSampler> {
         /** The instance. */
         static final SharedStateLongSamplerFactory INSTANCE = new SharedStateLongSamplerFactory();
@@ -924,7 +924,7 @@ public final class CompositeSamplers {
         /**
          * A composite long sampler with shared state support.
          */
-        private static class CompositeSharedStateLongSampler
+        private static final class CompositeSharedStateLongSampler
                 extends CompositeSampler<SharedStateLongSampler>
                 implements SharedStateLongSampler {
             /**

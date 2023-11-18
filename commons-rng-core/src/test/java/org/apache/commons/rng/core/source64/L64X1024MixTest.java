@@ -34,7 +34,7 @@ class L64X1024MixTest extends AbstractLXMTest {
      * Factory to create a composite LXM generator that is equivalent
      * to the RNG under test.
      */
-    private static class Factory implements LXMGeneratorFactory {
+    private static final class Factory implements LXMGeneratorFactory {
         static final Factory INSTANCE = new Factory();
 
         @Override

@@ -54,7 +54,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     /**
      * Sample uniformly from a 1D unit line.
      */
-    private static class UnitBallSampler1D extends UnitBallSampler {
+    private static final class UnitBallSampler1D extends UnitBallSampler {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -79,7 +79,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     /**
      * Sample uniformly from a 2D unit disk.
      */
-    private static class UnitBallSampler2D extends UnitBallSampler {
+    private static final class UnitBallSampler2D extends UnitBallSampler {
         /** The source of randomness. */
         private final UniformRandomProvider rng;
 
@@ -113,7 +113,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * Sample uniformly from a 3D unit ball. This is an non-array based specialisation of
      * {@link UnitBallSamplerND} for performance.
      */
-    private static class UnitBallSampler3D extends UnitBallSampler {
+    private static final class UnitBallSampler3D extends UnitBallSampler {
         /** The standard normal distribution. */
         private final NormalizedGaussianSampler normal;
         /** The exponential distribution (mean=1). */
@@ -154,7 +154,7 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
      * Sample using ball point picking.
      * @see <a href="https://mathworld.wolfram.com/BallPointPicking.html">Ball point picking</a>
      */
-    private static class UnitBallSamplerND extends UnitBallSampler {
+    private static final class UnitBallSamplerND extends UnitBallSampler {
         /** The dimension. */
         private final int dimension;
         /** The standard normal distribution. */
