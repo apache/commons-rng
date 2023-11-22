@@ -32,24 +32,25 @@ class InternalUtilsTest {
 
     @Test
     void testFactorial() {
-        Assertions.assertEquals(1L, InternalUtils.factorial(0));
+        Assertions.assertEquals(0L, InternalUtils.logFactorial(0));
         long result = 1;
         for (int n = 1; n <= MAX_REPRESENTABLE; n++) {
             result *= n;
-            Assertions.assertEquals(result, InternalUtils.factorial(n));
+            final double expected = Math.log(result);
+            Assertions.assertEquals(expected, InternalUtils.logFactorial(n), Math.ulp(expected));
         }
     }
 
     @Test
     void testFactorialThrowsWhenNegative() {
         Assertions.assertThrows(IndexOutOfBoundsException.class,
-            () -> InternalUtils.factorial(-1));
+            () -> InternalUtils.logFactorial(-1));
     }
 
     @Test
     void testFactorialThrowsWhenNotRepresentableAsLong() {
         Assertions.assertThrows(IndexOutOfBoundsException.class,
-            () -> InternalUtils.factorial(MAX_REPRESENTABLE + 1));
+            () -> InternalUtils.logFactorial(MAX_REPRESENTABLE + 1));
     }
 
     @Test
@@ -60,7 +61,7 @@ class InternalUtilsTest {
         Assertions.assertEquals(0, factorialLog.value(0), 1e-10);
         for (int n = 1; n <= MAX_REPRESENTABLE + 5; n++) {
             // Use Commons math to compute logGamma(1 + n);
-            double expected = Gamma.logGamma(1 + n);
+            final double expected = Gamma.logGamma(1 + n);
             Assertions.assertEquals(expected, factorialLog.value(n), 1e-10);
         }
     }
@@ -71,7 +72,7 @@ class InternalUtilsTest {
         FactorialLog factorialLog = FactorialLog.create().withCache(limit);
         for (int n = MAX_REPRESENTABLE; n <= limit; n++) {
             // Use Commons math to compute logGamma(1 + n);
-            double expected = Gamma.logGamma(1 + n);
+            final double expected = Gamma.logGamma(1 + n);
             Assertions.assertEquals(expected, factorialLog.value(n), 1e-10);
         }
     }

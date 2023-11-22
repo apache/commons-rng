@@ -62,8 +62,12 @@ public class AhrensDieterExponentialSampler
         final double ln2 = Math.log(2);
         double qi = 0;
 
+        // Start with 0!
+        // This will not overflow a long as the length < 21
+        long factorial = 1;
         for (int i = 0; i < EXPONENTIAL_SA_QI.length; i++) {
-            qi += Math.pow(ln2, i + 1.0) / InternalUtils.factorial(i + 1);
+            factorial *= i + 1;
+            qi += Math.pow(ln2, i + 1.0) / factorial;
             EXPONENTIAL_SA_QI[i] = qi;
         }
     }

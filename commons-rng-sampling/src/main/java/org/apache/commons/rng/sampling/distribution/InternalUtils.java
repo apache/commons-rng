@@ -25,16 +25,36 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  * This class is not part of the public API, as it would be
  * better to group these utilities in a dedicated component.
  */
-final class InternalUtils { // Class is package-private on purpose; do not make it public.
-    /** All long-representable factorials. */
-    private static final long[] FACTORIALS = {
-        1L,                1L,                  2L,
-        6L,                24L,                 120L,
-        720L,              5040L,               40320L,
-        362880L,           3628800L,            39916800L,
-        479001600L,        6227020800L,         87178291200L,
-        1307674368000L,    20922789888000L,     355687428096000L,
-        6402373705728000L, 121645100408832000L, 2432902008176640000L };
+final class InternalUtils {
+    /** All long-representable factorials, precomputed as the natural
+     * logarithm using Matlab R2023a VPA: log(vpa(x)).
+     *
+     * <p>Note: This table could be any length. Previously this stored
+     * the long value of n!, not log(n!). Using the previous length
+     * maintains behaviour. */
+    private static final double[] LOG_FACTORIALS = {
+        0,
+        0,
+        0.69314718055994530941723212145818,
+        1.7917594692280550008124773583807,
+        3.1780538303479456196469416012971,
+        4.7874917427820459942477009345232,
+        6.5792512120101009950601782929039,
+        8.5251613610654143001655310363471,
+        10.604602902745250228417227400722,
+        12.801827480081469611207717874567,
+        15.104412573075515295225709329251,
+        17.502307845873885839287652907216,
+        19.987214495661886149517362387055,
+        22.55216385312342288557084982862,
+        25.191221182738681500093434693522,
+        27.89927138384089156608943926367,
+        30.671860106080672803758367749503,
+        33.505073450136888884007902367376,
+        36.39544520803305357621562496268,
+        39.339884187199494036224652394567,
+        42.33561646075348502965987597071
+    };
 
     /** The first array index with a non-zero log factorial. */
     private static final int BEGIN_LOG_FACTORIALS = 2;
@@ -54,8 +74,8 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
      * @throws IndexOutOfBoundsException if the result is too large to be represented
      * by a {@code long} (i.e. if {@code n > 20}), or {@code n} is negative.
      */
-    static long factorial(int n)  {
-        return FACTORIALS[n];
+    static double logFactorial(int n)  {
+        return LOG_FACTORIALS[n];
     }
 
     /**
@@ -283,8 +303,8 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
 
             // Compute remaining values.
             for (int i = endCopy; i < numValues; i++) {
-                if (i < FACTORIALS.length) {
-                    logFactorials[i] = Math.log(FACTORIALS[i]);
+                if (i < LOG_FACTORIALS.length) {
+                    logFactorials[i] = LOG_FACTORIALS[i];
                 } else {
                     logFactorials[i] = logFactorials[i - 1] + Math.log(i);
                 }
@@ -325,9 +345,9 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
                 return logFactorials[n];
             }
 
-            // Use cache of precomputed factorial values.
-            if (n < FACTORIALS.length) {
-                return Math.log(FACTORIALS[n]);
+            // Use cache of precomputed log factorial values.
+            if (n < LOG_FACTORIALS.length) {
+                return LOG_FACTORIALS[n];
             }
 
             // Delegate.
