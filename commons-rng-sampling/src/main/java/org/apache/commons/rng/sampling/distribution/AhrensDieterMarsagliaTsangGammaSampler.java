@@ -78,12 +78,20 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         BaseGammaSampler(UniformRandomProvider rng,
                          double alpha,
                          double theta) {
-            if (alpha <= 0) {
-                throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
-            }
-            if (theta <= 0) {
-                throw new IllegalArgumentException("theta is not strictly positive: " + theta);
-            }
+            // Validation before java.lang.Object constructor exits prevents partially initialized object
+            this(InternalUtils.requireStrictlyPositive(alpha, "alpha"),
+                 InternalUtils.requireStrictlyPositive(theta, "theta"),
+                 rng);
+        }
+
+        /**
+         * @param alpha Alpha parameter of the distribution.
+         * @param theta Theta parameter of the distribution.
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        private BaseGammaSampler(double alpha,
+                                 double theta,
+                                 UniformRandomProvider rng) {
             this.rng = rng;
             this.alpha = alpha;
             this.theta = theta;

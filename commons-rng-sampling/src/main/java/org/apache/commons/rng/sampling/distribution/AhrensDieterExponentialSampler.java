@@ -75,23 +75,19 @@ public class AhrensDieterExponentialSampler
      */
     public AhrensDieterExponentialSampler(UniformRandomProvider rng,
                                           double mean) {
-        super(null);
-        if (mean <= 0) {
-            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
-        }
-        this.rng = rng;
-        this.mean = mean;
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(InternalUtils.requireStrictlyPositive(mean, "mean"), rng);
     }
 
     /**
+     * @param mean Mean.
      * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
      */
-    private AhrensDieterExponentialSampler(UniformRandomProvider rng,
-                                           AhrensDieterExponentialSampler source) {
+    private AhrensDieterExponentialSampler(double mean,
+                                           UniformRandomProvider rng) {
         super(null);
         this.rng = rng;
-        this.mean = source.mean;
+        this.mean = mean;
     }
 
     /** {@inheritDoc} */
@@ -149,7 +145,8 @@ public class AhrensDieterExponentialSampler
      */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new AhrensDieterExponentialSampler(rng, this);
+        // Use private constructor without validation
+        return new AhrensDieterExponentialSampler(mean, rng);
     }
 
     /**

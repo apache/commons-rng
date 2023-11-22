@@ -85,9 +85,17 @@ public class PoissonSamplerCache {
      */
     public PoissonSamplerCache(double minMean,
                                double maxMean) {
+        this(checkMeanRange(minMean, maxMean), maxMean, false);
+    }
 
-        checkMeanRange(minMean, maxMean);
-
+    /**
+     * @param minMean The minimum mean covered by the cache.
+     * @param maxMean The maximum mean covered by the cache.
+     * @param ignored Ignored value.
+     */
+    private PoissonSamplerCache(double minMean,
+                                double maxMean,
+                                boolean ignored) {
         // The cache can only be used for the LargeMeanPoissonSampler.
         if (maxMean < PoissonSampler.PIVOT) {
             // The upper limit is too small so no cache will be used.
@@ -121,11 +129,16 @@ public class PoissonSamplerCache {
     /**
      * Check the mean range.
      *
+     * <p>This method exists to raise an exception before invocation of the
+     * private constructor; this mitigates Finalizer attacks
+     * (see SpotBugs CT_CONSTRUCTOR_THROW).
+     *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
+     * @return the minimum mean
      * @throws IllegalArgumentException if {@code maxMean < minMean}
      */
-    private static void checkMeanRange(double minMean, double maxMean) {
+    private static double checkMeanRange(double minMean, double maxMean) {
         // Note:
         // Although a mean of 0 is invalid for a Poisson sampler this case
         // is handled to make the cache user friendly. Any low means will
@@ -138,6 +151,7 @@ public class PoissonSamplerCache {
             throw new IllegalArgumentException(
                     "Max mean: " + maxMean + " < " + minMean);
         }
+        return minMean;
     }
 
     /**

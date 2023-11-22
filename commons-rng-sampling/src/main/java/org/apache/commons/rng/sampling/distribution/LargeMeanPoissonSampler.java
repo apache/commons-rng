@@ -117,6 +117,7 @@ public class LargeMeanPoissonSampler
     /** The internal Poisson sampler for the lambda fraction. */
     private final SharedStateDiscreteSampler smallMeanPoissonSampler;
 
+
     /**
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
@@ -125,13 +126,33 @@ public class LargeMeanPoissonSampler
      */
     public LargeMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
-        if (mean < 1) {
-            throw new IllegalArgumentException("mean is not >= 1: " + mean);
-        }
-        // The algorithm is not valid if Math.floor(mean) is not an integer.
-        if (mean > MAX_MEAN) {
-            throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
-        }
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(InternalUtils.requireRangeClosed(1, MAX_MEAN, mean, "mean"), rng);
+    }
+
+    /**
+     * Instantiates a sampler using a precomputed state.
+     *
+     * @param rng              Generator of uniformly distributed random numbers.
+     * @param state            The state for {@code lambda = (int)Math.floor(mean)}.
+     * @param lambdaFractional The lambda fractional value
+     *                         ({@code mean - (int)Math.floor(mean))}.
+     * @throws IllegalArgumentException
+     *                         if {@code lambdaFractional < 0 || lambdaFractional >= 1}.
+     */
+    LargeMeanPoissonSampler(UniformRandomProvider rng,
+                            LargeMeanPoissonSamplerState state,
+                            double lambdaFractional) {
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(state, InternalUtils.requireRange(0, 1, lambdaFractional, "lambdaFractional"), rng);
+    }
+
+    /**
+     * @param mean Mean.
+     * @param rng Generator of uniformly distributed random numbers.
+     */
+    private LargeMeanPoissonSampler(double mean,
+                                    UniformRandomProvider rng) {
         this.rng = rng;
 
         gaussian = ZigguratSampler.NormalizedGaussian.of(rng);
@@ -164,20 +185,14 @@ public class LargeMeanPoissonSampler
     /**
      * Instantiates a sampler using a precomputed state.
      *
-     * @param rng              Generator of uniformly distributed random numbers.
      * @param state            The state for {@code lambda = (int)Math.floor(mean)}.
      * @param lambdaFractional The lambda fractional value
      *                         ({@code mean - (int)Math.floor(mean))}.
-     * @throws IllegalArgumentException
-     *                         if {@code lambdaFractional < 0 || lambdaFractional >= 1}.
+     * @param rng              Generator of uniformly distributed random numbers.
      */
-    LargeMeanPoissonSampler(UniformRandomProvider rng,
-                            LargeMeanPoissonSamplerState state,
-                            double lambdaFractional) {
-        if (lambdaFractional < 0 || lambdaFractional >= 1) {
-            throw new IllegalArgumentException(
-                    "lambdaFractional must be in the range 0 (inclusive) to 1 (exclusive): " + lambdaFractional);
-        }
+    private LargeMeanPoissonSampler(LargeMeanPoissonSamplerState state,
+                                    double lambdaFractional,
+                                    UniformRandomProvider rng) {
         this.rng = rng;
 
         gaussian = ZigguratSampler.NormalizedGaussian.of(rng);

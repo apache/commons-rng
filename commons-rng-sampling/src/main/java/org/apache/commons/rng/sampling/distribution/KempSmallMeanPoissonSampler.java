@@ -123,9 +123,7 @@ public final class KempSmallMeanPoissonSampler
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double mean) {
-        if (mean <= 0) {
-            throw new IllegalArgumentException("Mean is not strictly positive: " + mean);
-        }
+        InternalUtils.requireStrictlyPositive(mean, "mean");
 
         final double p0 = Math.exp(-mean);
 

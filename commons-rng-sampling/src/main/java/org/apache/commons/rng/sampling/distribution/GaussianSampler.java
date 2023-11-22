@@ -50,27 +50,23 @@ public class GaussianSampler implements SharedStateContinuousSampler {
     public GaussianSampler(NormalizedGaussianSampler normalized,
                            double mean,
                            double standardDeviation) {
-        if (!(standardDeviation > 0 && standardDeviation < Double.POSITIVE_INFINITY)) {
-            throw new IllegalArgumentException(
-                "standard deviation is not strictly positive and finite: " + standardDeviation);
-        }
-        if (!Double.isFinite(mean)) {
-            throw new IllegalArgumentException("mean is not finite: " + mean);
-        }
-        this.normalized = normalized;
-        this.mean = mean;
-        this.standardDeviation = standardDeviation;
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(InternalUtils.requireFinite(mean, "mean"),
+             InternalUtils.requireStrictlyPositiveFinite(standardDeviation, "standardDeviation"),
+             normalized);
     }
 
     /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
+     * @param mean Mean of the Gaussian distribution.
+     * @param standardDeviation Standard deviation of the Gaussian distribution.
+     * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
      */
-    private GaussianSampler(UniformRandomProvider rng,
-                            GaussianSampler source) {
-        this.mean = source.mean;
-        this.standardDeviation = source.standardDeviation;
-        this.normalized = InternalUtils.newNormalizedGaussianSampler(source.normalized, rng);
+    private GaussianSampler(double mean,
+                            double standardDeviation,
+                            NormalizedGaussianSampler normalized) {
+        this.normalized = normalized;
+        this.mean = mean;
+        this.standardDeviation = standardDeviation;
     }
 
     /** {@inheritDoc} */
@@ -100,7 +96,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      */
     @Override
     public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
-        return new GaussianSampler(rng, this);
+        return new GaussianSampler(mean, standardDeviation,
+            InternalUtils.newNormalizedGaussianSampler(normalized, rng));
     }
 
     /**

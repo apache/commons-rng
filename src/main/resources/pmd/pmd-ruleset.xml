@@ -185,7 +185,7 @@
     <properties>
       <!-- Logic inversion allows detection of NaN for parameters that are expected in a range -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='GaussianSampler' or @SimpleName='StableSampler']"/>
+        value="//ClassOrInterfaceDeclaration[@SimpleName='InternalUtils' or @SimpleName='StableSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ImmutableField">

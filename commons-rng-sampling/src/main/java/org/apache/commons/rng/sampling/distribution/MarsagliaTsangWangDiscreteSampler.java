@@ -759,9 +759,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
          * @throws IllegalArgumentException if {@code mean <= 0} or {@code mean > 1024}.
          */
         private static void validatePoissonDistributionParameters(double mean) {
-            if (mean <= 0) {
-                throw new IllegalArgumentException("mean is not strictly positive: " + mean);
-            }
+            InternalUtils.requireStrictlyPositive(mean, "mean");
             if (mean > MAX_MEAN) {
                 throw new IllegalArgumentException("mean " + mean + " > " + MAX_MEAN);
             }
@@ -1032,9 +1030,7 @@ public final class MarsagliaTsangWangDiscreteSampler {
             if (trials < 0) {
                 throw new IllegalArgumentException("Trials is not positive: " + trials);
             }
-            if (probabilityOfSuccess < 0 || probabilityOfSuccess > 1) {
-                throw new IllegalArgumentException("Probability is not in range [0,1]: " + probabilityOfSuccess);
-            }
+            InternalUtils.requireRangeClosed(0, 1, probabilityOfSuccess, "probability of success");
         }
 
         /**

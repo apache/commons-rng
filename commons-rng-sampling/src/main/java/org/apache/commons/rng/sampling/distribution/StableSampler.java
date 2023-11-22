@@ -1479,12 +1479,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
                                            double gamma, double delta) {
         validateParameters(alpha, beta);
 
-        // Logic inversion will identify NaN
-        if (!(0 < gamma && gamma <= Double.MAX_VALUE)) {
-            throw new IllegalArgumentException("gamma is not strictly positive and finite: " + gamma);
-        }
-        if (!Double.isFinite(delta)) {
-            throw new IllegalArgumentException("delta is not finite: " + delta);
-        }
+        InternalUtils.requireStrictlyPositiveFinite(gamma, "gamma");
+        InternalUtils.requireFinite(delta, "delta");
     }
 }

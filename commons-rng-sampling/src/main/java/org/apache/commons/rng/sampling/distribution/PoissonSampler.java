@@ -73,10 +73,16 @@ public class PoissonSampler
      */
     public PoissonSampler(UniformRandomProvider rng,
                           double mean) {
-        super(null);
-
         // Delegate all work to specialised samplers.
-        poissonSamplerDelegate = of(rng, mean);
+        this(of(rng, mean));
+    }
+
+    /**
+     * @param delegate Poisson sampler.
+     */
+    private PoissonSampler(SharedStateDiscreteSampler delegate) {
+        super(null);
+        poissonSamplerDelegate = delegate;
     }
 
     /** {@inheritDoc} */

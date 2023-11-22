@@ -237,10 +237,7 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
      */
     private static SharedStateContinuousSampler createSampler(UniformRandomProvider rng,
                                                               double alpha) {
-        // Negation of logic will detect NaN
-        if (!isNonZeroPositiveFinite(alpha)) {
-            throw new IllegalArgumentException("Invalid concentration: " + alpha);
-        }
+        InternalUtils.requireStrictlyPositiveFinite(alpha, "alpha concentration");
         // Create a Gamma(shape=alpha, scale=1) sampler.
         if (alpha == 1) {
             // Special case

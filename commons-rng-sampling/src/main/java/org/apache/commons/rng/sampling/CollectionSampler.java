@@ -48,22 +48,17 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      */
     public CollectionSampler(UniformRandomProvider rng,
                              Collection<T> collection) {
-        if (collection.isEmpty()) {
-            throw new IllegalArgumentException("Empty collection");
-        }
-
-        this.rng = rng;
-        items = new ArrayList<>(collection);
+        this(rng, toList(collection));
     }
 
     /**
      * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
+     * @param collection Collection to be sampled.
      */
     private CollectionSampler(UniformRandomProvider rng,
-                              CollectionSampler<T> source) {
+                              List<T> collection) {
         this.rng = rng;
-        items = source.items;
+        items = collection;
     }
 
     /**
@@ -85,6 +80,25 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      */
     @Override
     public CollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
-        return new CollectionSampler<>(rng, this);
+        return new CollectionSampler<>(rng, this.items);
+    }
+
+    /**
+     * Convert the collection to a list (shallow) copy.
+     *
+     * <p>This method exists to raise an exception before invocation of the
+     * private constructor; this mitigates Finalizer attacks
+     * (see SpotBugs CT_CONSTRUCTOR_THROW).
+     *
+     * @param <T> Type of items in the collection.
+     * @param collection Collection.
+     * @return the list copy
+     * @throws IllegalArgumentException if {@code collection} is empty.
+     */
+    private static <T> List<T> toList(Collection<T> collection) {
+        if (collection.isEmpty()) {
+            throw new IllegalArgumentException("Empty collection");
+        }
+        return new ArrayList<>(collection);
     }
 }

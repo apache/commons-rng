@@ -314,8 +314,15 @@ public class ChengBetaSampler
     public ChengBetaSampler(UniformRandomProvider rng,
                             double alpha,
                             double beta) {
+        this(of(rng, alpha, beta));
+    }
+
+    /**
+     * @param delegate Beta sampler.
+     */
+    private ChengBetaSampler(SharedStateContinuousSampler delegate) {
         super(null);
-        delegate = of(rng, alpha, beta);
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */
@@ -353,12 +360,8 @@ public class ChengBetaSampler
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double alpha,
                                                   double beta) {
-        if (alpha <= 0) {
-            throw new IllegalArgumentException("alpha is not strictly positive: " + alpha);
-        }
-        if (beta <= 0) {
-            throw new IllegalArgumentException("beta is not strictly positive: " + beta);
-        }
+        InternalUtils.requireStrictlyPositive(alpha, "alpha");
+        InternalUtils.requireStrictlyPositive(beta, "beta");
 
         // Choose the algorithm.
         final double a = Math.min(alpha, beta);

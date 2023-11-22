@@ -54,14 +54,10 @@ public class TwoCmres extends LongProvider {
      * @param seed Initial seed.
      * @param x First subcycle generator.
      * @param y Second subcycle generator.
-     * @throws IllegalArgumentException if {@code x == y}.
      */
     private TwoCmres(int seed,
                      Cmres x,
                      Cmres y) {
-        if (x.equals(y)) {
-            throw new IllegalArgumentException("Subcycle generators must be different");
-        }
         this.x = x;
         this.y = y;
         setSeedInternal(seed);
@@ -91,7 +87,7 @@ public class TwoCmres extends LongProvider {
     public TwoCmres(Integer seed,
                     int i,
                     int j) {
-        this(seed, FACTORY.get(i), FACTORY.get(j));
+        this(seed, FACTORY.getIfDifferent(i, j), FACTORY.get(j));
     }
 
     /** {@inheritDoc} */
@@ -272,6 +268,24 @@ public class TwoCmres extends LongProvider {
                 }
 
                 return TABLE.get(index);
+            }
+
+            /**
+             * Get the generator at {@code index} if the {@code other} index is different.
+             *
+             * <p>This method exists to raise an exception before invocation of the
+             * private constructor; this mitigates Finalizer attacks
+             * (see SpotBugs CT_CONSTRUCTOR_THROW).
+             *
+             * @param index Index into the list of available generators.
+             * @param other Other index.
+             * @return the subcycle generator entry at index {@code index}.
+             */
+            Cmres getIfDifferent(int index, int other) {
+                if (index == other) {
+                    throw new IllegalArgumentException("Subcycle generators must be different");
+                }
+                return get(index);
             }
 
             /**

@@ -154,16 +154,12 @@ public final class GuideTableDiscreteSampler
         double sumProb = 0;
         int count = 0;
         for (final double prob : probabilities) {
-            InternalUtils.validateProbability(prob);
-
             // Compute and store cumulative probability.
-            sumProb += prob;
+            sumProb += InternalUtils.requirePositiveFinite(prob, "probability");
             cumulativeProbabilities[count++] = sumProb;
         }
 
-        if (Double.isInfinite(sumProb) || sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
-        }
+        InternalUtils.requireStrictlyPositiveFinite(sumProb, "sum of probabilities");
 
         // Note: The guide table is at least length 1. Compute the size avoiding overflow
         // in case (alpha * size) is too large.
@@ -209,9 +205,7 @@ public final class GuideTableDiscreteSampler
         if (probabilities == null || probabilities.length == 0) {
             throw new IllegalArgumentException("Probabilities must not be empty.");
         }
-        if (alpha <= 0) {
-            throw new IllegalArgumentException("Alpha must be strictly positive.");
-        }
+        InternalUtils.requireStrictlyPositive(alpha, "alpha");
     }
 
     /**

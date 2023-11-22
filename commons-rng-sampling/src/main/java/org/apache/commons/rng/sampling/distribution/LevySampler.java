@@ -91,9 +91,7 @@ public final class LevySampler implements SharedStateContinuousSampler {
     public static LevySampler of(UniformRandomProvider rng,
                                  double location,
                                  double scale) {
-        if (scale <= 0) {
-            throw new IllegalArgumentException("scale is not strictly positive: " + scale);
-        }
+        InternalUtils.requireStrictlyPositive(scale, "scale");
         return new LevySampler(rng, location, scale);
     }
 }

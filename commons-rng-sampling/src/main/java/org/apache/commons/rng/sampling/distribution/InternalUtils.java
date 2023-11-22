@@ -74,29 +74,127 @@ final class InternalUtils { // Class is package-private on purpose; do not make 
 
         double sumProb = 0;
         for (final double prob : probabilities) {
-            validateProbability(prob);
-            sumProb += prob;
+            sumProb += requirePositiveFinite(prob, "probability");
         }
 
-        if (Double.isInfinite(sumProb) || sumProb <= 0) {
-            throw new IllegalArgumentException("Invalid sum of probabilities: " + sumProb);
-        }
-        return sumProb;
+        return requireStrictlyPositiveFinite(sumProb, "sum of probabilities");
     }
 
     /**
-     * Validate the probability is a finite positive number.
+     * Checks the value {@code x} is finite.
      *
-     * @param probability Probability.
-     * @throws IllegalArgumentException if {@code probability} is negative, infinite or {@code NaN}.
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x} is non-finite
      */
-    static void validateProbability(double probability) {
-        if (probability < 0 ||
-            Double.isInfinite(probability) ||
-            Double.isNaN(probability)) {
-            throw new IllegalArgumentException("Invalid probability: " +
-                                               probability);
+    static double requireFinite(double x, String name) {
+        if (!Double.isFinite(x)) {
+            throw new IllegalArgumentException(name + " is not finite: " + x);
         }
+        return x;
+    }
+
+    /**
+     * Checks the value {@code x >= 0} and is finite.
+     * Note: This method allows {@code x == -0.0}.
+     *
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x < 0} or is non-finite
+     */
+    static double requirePositiveFinite(double x, String name) {
+        if (!(x >= 0 && x < Double.POSITIVE_INFINITY)) {
+            throw new IllegalArgumentException(
+                name + " is not positive and finite: " + x);
+        }
+        return x;
+    }
+
+    /**
+     * Checks the value {@code x > 0} and is finite.
+     *
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x <= 0} or is non-finite
+     */
+    static double requireStrictlyPositiveFinite(double x, String name) {
+        if (!(x > 0 && x < Double.POSITIVE_INFINITY)) {
+            throw new IllegalArgumentException(
+                name + " is not strictly positive and finite: " + x);
+        }
+        return x;
+    }
+
+    /**
+     * Checks the value {@code x >= 0}.
+     * Note: This method allows {@code x == -0.0}.
+     *
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x < 0}
+     */
+    static double requirePositive(double x, String name) {
+        // Logic inversion detects NaN
+        if (!(x >= 0)) {
+            throw new IllegalArgumentException(name + " is not positive: " + x);
+        }
+        return x;
+    }
+
+    /**
+     * Checks the value {@code x > 0}.
+     *
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x <= 0}
+     */
+    static double requireStrictlyPositive(double x, String name) {
+        // Logic inversion detects NaN
+        if (!(x > 0)) {
+            throw new IllegalArgumentException(name + " is not strictly positive: " + x);
+        }
+        return x;
+    }
+
+    /**
+     * Checks the value is within the range: {@code min <= x < max}.
+     *
+     * @param min Minimum (inclusive).
+     * @param max Maximum (exclusive).
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x < min || x >= max}.
+     */
+    static double requireRange(double min, double max, double x, String name) {
+        if (!(min <= x && x < max)) {
+            throw new IllegalArgumentException(
+                String.format("%s not within range: %s <= %s < %s", name, min, x, max));
+        }
+        return x;
+    }
+
+    /**
+     * Checks the value is within the closed range: {@code min <= x <= max}.
+     *
+     * @param min Minimum (inclusive).
+     * @param max Maximum (inclusive).
+     * @param x Value.
+     * @param name Name of the value.
+     * @return x
+     * @throws IllegalArgumentException if {@code x < min || x > max}.
+     */
+    static double requireRangeClosed(double min, double max, double x, String name) {
+        if (!(min <= x && x <= max)) {
+            throw new IllegalArgumentException(
+                String.format("%s not within closed range: %s <= %s <= %s", name, min, x, max));
+        }
+        return x;
     }
 
     /**

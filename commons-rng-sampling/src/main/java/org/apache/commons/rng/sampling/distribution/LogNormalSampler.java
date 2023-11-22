@@ -40,9 +40,18 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
     public LogNormalSampler(NormalizedGaussianSampler gaussian,
                             double mu,
                             double sigma) {
-        if (sigma <= 0) {
-            throw new IllegalArgumentException("sigma is not strictly positive: " + sigma);
-        }
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(mu, InternalUtils.requireStrictlyPositive(sigma, "sigma"), gaussian);
+    }
+
+    /**
+     * @param mu Mean of the natural logarithm of the distribution values.
+     * @param sigma Standard deviation of the natural logarithm of the distribution values.
+     * @param gaussian N(0,1) generator.
+     */
+    private LogNormalSampler(double mu,
+                             double sigma,
+                             NormalizedGaussianSampler gaussian) {
         this.mu = mu;
         this.sigma = sigma;
         this.gaussian = gaussian;

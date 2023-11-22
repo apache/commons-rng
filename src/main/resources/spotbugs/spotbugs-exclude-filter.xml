@@ -149,4 +149,17 @@
     <BugPattern name="FL_FLOATS_AS_LOOP_COUNTERS"/>
   </Match>
 
+  <!-- Code prevents Finalizer attacks using a private constructor that accepts
+    validated arguments. This solution is provided by:
+    https://wiki.sei.cmu.edu/confluence/display/java/OBJ11-J.+Be+wary+of+letting+constructors+throw+exceptions
+    It is not (always) detected by SpotBugs, e.g. where a validation method in the
+    same class returns a primitive value. -->
+  <Match>
+    <Or>
+      <Class name="org.apache.commons.rng.sampling.distribution.SmallMeanPoissonSampler"/>
+      <Class name="org.apache.commons.rng.sampling.distribution.PoissonSamplerCache"/>
+    </Or>
+    <BugPattern name="CT_CONSTRUCTOR_THROW"/>
+  </Match>
+
 </FindBugsFilter>

@@ -727,10 +727,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
          * @throws IllegalArgumentException if the mean is not strictly positive ({@code mean <= 0})
          */
         public static Exponential of(UniformRandomProvider rng, double mean) {
-            if (mean > 0) {
-                return new ExponentialMean(rng, mean);
-            }
-            throw new IllegalArgumentException("Mean is not strictly positive: " + mean);
+            return new ExponentialMean(rng, InternalUtils.requireStrictlyPositive(mean, "mean"));
         }
     }
 

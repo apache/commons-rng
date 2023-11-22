@@ -47,13 +47,21 @@ public class InverseTransformParetoSampler
     public InverseTransformParetoSampler(UniformRandomProvider rng,
                                          double scale,
                                          double shape) {
+        // Validation before java.lang.Object constructor exits prevents partially initialized object
+        this(InternalUtils.requireStrictlyPositive(scale, "scale"),
+             InternalUtils.requireStrictlyPositive(shape, "shape"),
+             rng);
+    }
+
+    /**
+     * @param scale Scale of the distribution.
+     * @param shape Shape of the distribution.
+     * @param rng Generator of uniformly distributed random numbers.
+     */
+    private InverseTransformParetoSampler(double scale,
+                                          double shape,
+                                          UniformRandomProvider rng) {
         super(null);
-        if (scale <= 0) {
-            throw new IllegalArgumentException("scale is not strictly positive: " + scale);
-        }
-        if (shape <= 0) {
-            throw new IllegalArgumentException("shape is not strictly positive: " + shape);
-        }
         this.rng = rng;
         this.scale = scale;
         this.oneOverShape = 1 / shape;

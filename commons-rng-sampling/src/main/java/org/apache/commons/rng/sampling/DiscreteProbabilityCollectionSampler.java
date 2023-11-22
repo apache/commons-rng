@@ -20,7 +20,6 @@ package org.apache.commons.rng.sampling;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
 import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
@@ -62,23 +61,8 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
      */
     public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
                                                 Map<T, Double> collection) {
-        if (collection.isEmpty()) {
-            throw new IllegalArgumentException(EMPTY_COLLECTION);
-        }
-
-        // Extract the items and probabilities
-        final int size = collection.size();
-        items = new ArrayList<>(size);
-        final double[] probabilities = new double[size];
-
-        int count = 0;
-        for (final Map.Entry<T, Double> e : collection.entrySet()) {
-            items.add(e.getKey());
-            probabilities[count++] = e.getValue();
-        }
-
-        // Delegate sampling
-        sampler = createSampler(rng, probabilities);
+        this(toList(collection),
+             createSampler(rng, toProbabilities(collection)));
     }
 
     /**
@@ -100,29 +84,18 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
     public DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
                                                 List<T> collection,
                                                 double[] probabilities) {
-        if (collection.isEmpty()) {
-            throw new IllegalArgumentException(EMPTY_COLLECTION);
-        }
-        final int len = probabilities.length;
-        if (len != collection.size()) {
-            throw new IllegalArgumentException("Size mismatch: " +
-                                               len + " != " +
-                                               collection.size());
-        }
-        // Shallow copy the list
-        items = new ArrayList<>(collection);
-        // Delegate sampling
-        sampler = createSampler(rng, probabilities);
+        this(copyList(collection),
+             createSampler(rng, collection, probabilities));
     }
 
     /**
-     * @param rng Generator of uniformly distributed random numbers.
-     * @param source Source to copy.
+     * @param items Collection to be sampled.
+     * @param sampler Sampler for the probabilities.
      */
-    private DiscreteProbabilityCollectionSampler(UniformRandomProvider rng,
-                                                 DiscreteProbabilityCollectionSampler<T> source) {
-        this.items = source.items;
-        this.sampler = source.sampler.withUniformRandomProvider(rng);
+    private DiscreteProbabilityCollectionSampler(List<T> items,
+                                                 SharedStateDiscreteSampler sampler) {
+        this.items = items;
+        this.sampler = sampler;
     }
 
     /**
@@ -142,7 +115,7 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
      */
     @Override
     public DiscreteProbabilityCollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
-        return new DiscreteProbabilityCollectionSampler<>(rng, this);
+        return new DiscreteProbabilityCollectionSampler<>(items, sampler.withUniformRandomProvider(rng));
     }
 
     /**
@@ -155,5 +128,86 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
     private static SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
                                                             double[] probabilities) {
         return GuideTableDiscreteSampler.of(rng, probabilities);
+    }
+
+    /**
+     * Creates the sampler of the enumerated probability distribution.
+     *
+     * @param <T> Type of items in the collection.
+     * @param rng Generator of uniformly distributed random numbers.
+     * @param collection Collection to be sampled.
+     * @param probabilities Probability associated to each item.
+     * @return the sampler
+     * @throws IllegalArgumentException if the number
+     * of items in the {@code collection} is not equal to the number of
+     * provided {@code probabilities}.
+     */
+    private static <T> SharedStateDiscreteSampler createSampler(UniformRandomProvider rng,
+                                                                List<T> collection,
+                                                                double[] probabilities) {
+        if (probabilities.length != collection.size()) {
+            throw new IllegalArgumentException("Size mismatch: " +
+                                               probabilities.length + " != " +
+                                               collection.size());
+        }
+        return GuideTableDiscreteSampler.of(rng, probabilities);
+    }
+
+    // Validation methods exist to raise an exception before invocation of the
+    // private constructor; this mitigates Finalizer attacks
+    // (see SpotBugs CT_CONSTRUCTOR_THROW).
+
+    /**
+     * Extract the items.
+     *
+     * @param <T> Type of items in the collection.
+     * @param collection Collection.
+     * @return the items
+     * @throws IllegalArgumentException if {@code collection} is empty.
+     */
+    private static <T> List<T> toList(Map<T, Double> collection) {
+        if (collection.isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_COLLECTION);
+        }
+        return new ArrayList<>(collection.keySet());
+    }
+
+    /**
+     * Extract the probabilities.
+     *
+     * @param <T> Type of items in the collection.
+     * @param collection Collection.
+     * @return the probabilities
+     */
+    private static <T> double[] toProbabilities(Map<T, Double> collection) {
+        final int size = collection.size();
+        final double[] probabilities = new double[size];
+        int count = 0;
+        for (final Double e : collection.values()) {
+            final double probability = e;
+            if (probability < 0 ||
+                Double.isInfinite(probability) ||
+                Double.isNaN(probability)) {
+                throw new IllegalArgumentException("Invalid probability: " +
+                                                   probability);
+            }
+            probabilities[count++] = probability;
+        }
+        return probabilities;
+    }
+
+    /**
+     * Create a (shallow) copy of the collection.
+     *
+     * @param <T> Type of items in the collection.
+     * @param collection Collection.
+     * @return the copy
+     * @throws IllegalArgumentException if {@code collection} is empty.
+     */
+    private static <T> List<T> copyList(List<T> collection) {
+        if (collection.isEmpty()) {
+            throw new IllegalArgumentException(EMPTY_COLLECTION);
+        }
+        return new ArrayList<>(collection);
     }
 }

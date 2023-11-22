@@ -60,18 +60,23 @@ public class SmallMeanPoissonSampler
      */
     public SmallMeanPoissonSampler(UniformRandomProvider rng,
                                    double mean) {
+        this(rng, mean, computeP0(mean));
+    }
+
+    /**
+     * Instantiates a new small mean poisson sampler.
+     *
+     * @param rng  Generator of uniformly distributed random numbers.
+     * @param mean Mean.
+     * @param p0 {@code Math.exp(-mean)}.
+     */
+    private SmallMeanPoissonSampler(UniformRandomProvider rng,
+                                    double mean,
+                                    double p0) {
         this.rng = rng;
-        if (mean <= 0) {
-            throw new IllegalArgumentException("mean is not strictly positive: " + mean);
-        }
-        p0 = Math.exp(-mean);
-        if (p0 > 0) {
-            // The returned sample is bounded by 1000 * mean
-            limit = (int) Math.ceil(1000 * mean);
-        } else {
-            // This excludes NaN values for the mean
-            throw new IllegalArgumentException("No p(x=0) probability for mean: " + mean);
-        }
+        this.p0 = p0;
+        // The returned sample is bounded by 1000 * mean
+        limit = (int) Math.ceil(1000 * mean);
     }
 
     /**
@@ -130,5 +135,26 @@ public class SmallMeanPoissonSampler
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double mean) {
         return new SmallMeanPoissonSampler(rng, mean);
+    }
+
+    /**
+     * Compute {@code Math.exp(-mean)}.
+     *
+     * <p>This method exists to raise an exception before invocation of the
+     * private constructor; this mitigates Finalizer attacks
+     * (see SpotBugs CT_CONSTRUCTOR_THROW).
+     *
+     * @param mean Mean.
+     * @return the mean
+     * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}
+     */
+    private static double computeP0(double mean) {
+        InternalUtils.requireStrictlyPositive(mean, "mean");
+        final double p0 = Math.exp(-mean);
+        if (p0 > 0) {
+            return p0;
+        }
+        // This excludes NaN values for the mean
+        throw new IllegalArgumentException("No p(x=0) probability for mean: " + mean);
     }
 }

@@ -334,9 +334,7 @@ public class RejectionInversionZipfSampler
         if (numberOfElements <= 0) {
             throw new IllegalArgumentException("number of elements is not strictly positive: " + numberOfElements);
         }
-        if (exponent < 0) {
-            throw new IllegalArgumentException("exponent is not positive: " + exponent);
-        }
+        InternalUtils.requirePositive(exponent, "exponent");
 
         // When the exponent is at the limit of 0 the distribution PMF reduces to 1 / n
         // and sampling can use a discrete uniform sampler.
