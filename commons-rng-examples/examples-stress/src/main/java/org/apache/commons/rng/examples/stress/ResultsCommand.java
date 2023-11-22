@@ -291,7 +291,7 @@ class ResultsCommand implements Callable<Void> {
          * @return the failure summary
          */
         String getFailureSummaryString() {
-            return (isComplete()) ? Integer.toString(failedTests.size()) : "-" + failedTests.size();
+            return isComplete() ? Integer.toString(failedTests.size()) : "-" + failedTests.size();
         }
 
         /**
