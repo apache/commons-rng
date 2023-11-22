@@ -52,8 +52,8 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
         .36899182659531622704e-5,
     };
 
-    /** Avoid repeated computation of log of 2 PI in logGamma. */
-    private static final double HALF_LOG_2_PI = 0.5 * Math.log(2.0 * Math.PI);
+    /** Avoid repeated computation of log(2*PI) / 2 in logGamma. */
+    private static final double HALF_LOG_2_PI = 0.91893853320467274178032973640562;
 
     /**
      * Class contains only static methods.
@@ -90,7 +90,7 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
 
         final double sum = lanczos(x);
         final double tmp = x + LANCZOS_G + 0.5;
-        return (x + 0.5) * Math.log(tmp) - tmp +  HALF_LOG_2_PI + Math.log(sum / x);
+        return (x + 0.5) * Math.log(tmp) - tmp + HALF_LOG_2_PI + Math.log(sum / x);
     }
 
     /**
