@@ -61,7 +61,7 @@ More information can be found on the [Apache Commons RNG homepage](https://commo
 - [Commons RNG Simple](https://commons.apache.org/proper/commons-rng/commons-rng-simple/apidocs/)
 - [Commons RNG Sampling](https://commons.apache.org/proper/commons-rng/commons-rng-sampling/apidocs/)
 
-Questions related to the usage of Apache Commons RNG should be posted to the [user mailing list][ml].
+Questions related to the usage of Apache Commons RNG should be posted to the [user mailing list](https://commons.apache.org/mail-lists.html).
 
 Where can I get the latest release?
 -----------------------------------
