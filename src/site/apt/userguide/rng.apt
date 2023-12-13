@@ -741,9 +741,7 @@ double[] coordinate = sampler.sample();
 
 4. Performance
 
-  This section reports
-  {{{../commons-rng-examples/examples-jmh/apidocs/org/apache/commons/rng/jmh/package-summary.html}performance benchmarks}} of the RNG implementations.
-
+  This section reports performance benchmarks of the RNG implementations.
   All runs were performed on a platform with the following characteristics:
 
   * CPU: Intel(R) Xeon(R) CPU E5-1680 v3 @ 3.20GHz
@@ -755,7 +753,8 @@ double[] coordinate = sampler.sample();
   []
 
   Performance was measured using the
-  {{{http://openjdk.java.net/projects/code-tools/jmh/}Java Micro-benchmark Harness (JMH)}}.
+  {{{http://openjdk.java.net/projects/code-tools/jmh/}Java Micro-benchmark Harness (JMH)}}
+  and the code is provided in the {{{a6._Examples}Examples}}.
 
   Timings are representative of performance; the relative ranking of results may change depending on the JVM, operating system and hardware.
 
