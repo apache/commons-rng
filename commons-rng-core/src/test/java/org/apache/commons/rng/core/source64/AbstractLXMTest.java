@@ -664,8 +664,6 @@ abstract class AbstractLXMTest {
      * small jumps that can be verified by an equal number of single state updates.
      */
     static class LCGTest {
-        /** 2^63. */
-        private static final BigInteger TWO_POW_63 = BigInteger.ONE.shiftLeft(63);
         /** 65-bit multiplier for the 128-bit LCG. */
         private static final BigInteger M = BigInteger.ONE.shiftLeft(64).add(toUnsignedBigInteger(LXMSupport.M128L));
         /** 2^128. Used as the modulus for the 128-bit LCG. */
@@ -823,9 +821,8 @@ abstract class AbstractLXMTest {
          * @return the big integer
          */
         private static BigInteger toUnsignedBigInteger(long v) {
-            return v < 0 ?
-                TWO_POW_63.add(BigInteger.valueOf(v & Long.MAX_VALUE)) :
-                BigInteger.valueOf(v);
+            // Delegate
+            return LXMSupportTest.toUnsignedBigInteger(v);
         }
     }
 

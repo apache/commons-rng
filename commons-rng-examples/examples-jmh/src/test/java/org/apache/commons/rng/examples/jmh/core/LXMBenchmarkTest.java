@@ -213,7 +213,7 @@ class LXMBenchmarkTest {
      */
     private static BigInteger toUnsignedBigInteger(long v) {
         return v < 0 ?
-            TWO_POW_63.add(BigInteger.valueOf(v & Long.MAX_VALUE)) :
+            TWO_POW_63.or(BigInteger.valueOf(v & Long.MAX_VALUE)) :
             BigInteger.valueOf(v);
     }
 
@@ -225,7 +225,7 @@ class LXMBenchmarkTest {
      * @return the big integer
      */
     private static BigInteger toUnsignedBigInteger(long hi, long lo) {
-        return toUnsignedBigInteger(hi).shiftLeft(64).add(toUnsignedBigInteger(lo));
+        return toUnsignedBigInteger(hi).shiftLeft(64).or(toUnsignedBigInteger(lo));
     }
 
     /**
