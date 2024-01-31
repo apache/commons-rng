@@ -675,7 +675,7 @@ RAT Report:
     https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/rat-report.html
 
 KEYS:
-  https://www.apache.org/dist/commons/KEYS
+  https://downloads.apache.org/commons/KEYS
 
 Please review the release candidate and vote.
 This vote will close no sooner than 72 hours from now.
@@ -1027,7 +1027,7 @@ Distribution packages can be downloaded from
 
 When downloading, please verify signatures using the KEYS file
 available at
-  https://www.apache.org/dist/commons/KEYS
+  https://downloads.apache.org/commons/KEYS
 
 Maven artifacts are also available in the central Maven repository:
   https://repo.maven.apache.org/maven2/org/apache/commons/
