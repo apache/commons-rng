@@ -41,7 +41,13 @@
     <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.core</commons.osgi.symbolicName>
-    <commons.osgi.export>org.apache.commons.rng.core</commons.osgi.export>
+    <!-- Export the pacakges required by the simple module -->
+    <commons.osgi.export>
+        org.apache.commons.rng.core,
+        org.apache.commons.rng.core.source32,
+        org.apache.commons.rng.core.source64,
+        org.apache.commons.rng.core.util
+    </commons.osgi.export>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.core</commons.module.name>
     <rng.jira.component>core</rng.jira.component>
