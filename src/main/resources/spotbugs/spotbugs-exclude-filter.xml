@@ -158,6 +158,7 @@
     <Or>
       <Class name="org.apache.commons.rng.sampling.distribution.SmallMeanPoissonSampler"/>
       <Class name="org.apache.commons.rng.sampling.distribution.PoissonSamplerCache"/>
+      <Class name="org.apache.commons.rng.sampling.DiscreteProbabilityCollectionSampler"/>
     </Or>
     <BugPattern name="CT_CONSTRUCTOR_THROW"/>
   </Match>

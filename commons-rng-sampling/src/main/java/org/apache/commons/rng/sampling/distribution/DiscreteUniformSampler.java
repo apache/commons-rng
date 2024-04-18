@@ -333,8 +333,18 @@ public class DiscreteUniformSampler
     public DiscreteUniformSampler(UniformRandomProvider rng,
                                   int lower,
                                   int upper) {
+        this(of(rng, lower, upper));
+    }
+
+    /**
+     * Private constructor used by to prevent partially initialized object if the construction
+     * of the delegate throws. In future versions the public constructor should be removed.
+     *
+     * @param delegate Delegate.
+     */
+    public DiscreteUniformSampler(SharedStateDiscreteSampler delegate) {
         super(null);
-        delegate = of(rng, lower, upper);
+        this.delegate = delegate;
     }
 
     /** {@inheritDoc} */

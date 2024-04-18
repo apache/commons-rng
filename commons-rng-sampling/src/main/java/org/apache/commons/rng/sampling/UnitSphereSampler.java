@@ -223,7 +223,18 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     @Deprecated
     public UnitSphereSampler(int dimension,
                              UniformRandomProvider rng) {
-        delegate = of(rng, dimension);
+        this(of(rng, dimension));
+    }
+
+    /**
+     * Private constructor used by deprecated constructor used to prevent partially
+     * initialized object if the construction of the delegate throws.
+     * In future versions the public constructor should be removed and the class made abstract.
+     *
+     * @param delegate Delegate.
+     */
+    private UnitSphereSampler(UnitSphereSampler delegate) {
+        this.delegate = delegate;
     }
 
     /**

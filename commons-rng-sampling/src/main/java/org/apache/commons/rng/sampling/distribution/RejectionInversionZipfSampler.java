@@ -276,10 +276,18 @@ public class RejectionInversionZipfSampler
     public RejectionInversionZipfSampler(UniformRandomProvider rng,
                                          int numberOfElements,
                                          double exponent) {
-        super(null);
+        this(of(rng, numberOfElements, exponent));
+    }
 
-        // Delegate all work to specialised samplers.
-        this.delegate = of(rng, numberOfElements, exponent);
+    /**
+     * Private constructor used by to prevent partially initialized object if the construction
+     * of the delegate throws. In future versions the public constructor should be removed.
+     *
+     * @param delegate Delegate.
+     */
+    public RejectionInversionZipfSampler(SharedStateDiscreteSampler delegate) {
+        super(null);
+        this.delegate = delegate;
     }
 
     /**
