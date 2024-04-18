@@ -35,13 +35,15 @@
   and to help ensure correctness of the implementations.</description>
 
   <properties>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.examples</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples</commons.osgi.export>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.examples</commons.module.name>
-    <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/..</rng.parent.dir>
 
     <rng.picocli.version>4.6.1</rng.picocli.version>
     <rng.exec.version>3.0.0</rng.exec.version>

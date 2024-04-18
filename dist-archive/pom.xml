@@ -33,6 +33,9 @@ under the License.
   <description>This module creates the Apache Commons RNG distribution.</description>
 
   <properties>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
+
     <checkstyle.skip>true</checkstyle.skip>
     <animal.sniffer.skip>true</animal.sniffer.skip>
     <!-- Commons Release Plugin -->

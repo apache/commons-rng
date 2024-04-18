@@ -33,13 +33,15 @@
   Code in this module is not part of the public API.</description>
 
   <properties>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.sampling</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.sampling</commons.osgi.export>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.examples.sampling</commons.module.name>
-    <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 
     <uberjar.name>examples-sampling</uberjar.name>
     <project.mainClass>org.apache.commons.rng.examples.sampling.ExamplesSamplingApplication</project.mainClass>

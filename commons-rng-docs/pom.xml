@@ -32,11 +32,14 @@
   <description>Aggregator module to genenerate Apache Commons RNG documentation.</description>
 
   <properties>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
+
     <moditect.skip>true</moditect.skip>
     <checkstyle.skip>true</checkstyle.skip>
     <animal.sniffer.skip>true</animal.sniffer.skip>
-    <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/..</rng.parent.dir>
     <!-- Skip the standard build plugins to avoid processing this 'jar' as an artifact. -->
     <maven.resources.skip>true</maven.resources.skip>
     <maven.source.skip>true</maven.source.skip>

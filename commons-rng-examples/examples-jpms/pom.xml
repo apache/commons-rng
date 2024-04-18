@@ -34,6 +34,8 @@
   <properties>
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}/../..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
 
     <!-- Java language level. -->
     <maven.compiler.source>11</maven.compiler.source>

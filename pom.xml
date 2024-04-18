@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>65</version>
+    <version>69</version>
   </parent>
 
   <artifactId>commons-rng-parent</artifactId>
@@ -43,6 +43,9 @@
     <commons.module.name>org.apache.commons.rng.parent</commons.module.name>
     <!-- This flag should only be true in the dist-archive module. -->
     <commons.release.isDistModule>false</commons.release.isDistModule>
+    <!-- Reproducible builds: maven-artifact-plugin:check-buildplan -->
+    <rng.build.outputTimestamp>2024-04-18T00:00:00Z</rng.build.outputTimestamp>
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- do not use snapshot suffix here -->
     <commons.release.version>1.6</commons.release.version>
     <commons.bc.version>1.5</commons.bc.version>
@@ -173,24 +176,12 @@
             <manifestEntries>
               <!-- Java 9 -->
               <Automatic-Module-Name>${commons.module.name}</Automatic-Module-Name>
-              <!-- Add entries from CP that are not inherited (for reasons unknown).
-                   Replace ${implementation.build} property with the unique git build number. -->
+              <!-- Add entries from CP that are not inherited (for reasons unknown). -->
               <Implementation-Vendor-Id>org.apache</Implementation-Vendor-Id>
-              <Implementation-Build>${buildNumber}; ${maven.build.timestamp}</Implementation-Build>
               <X-Compile-Source-JDK>${maven.compiler.source}</X-Compile-Source-JDK>
               <X-Compile-Target-JDK>${maven.compiler.target}</X-Compile-Target-JDK>
             </manifestEntries>
           </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <configuration>
-          <!-- buildnumber-maven-plugin:
-            "for git getLastChangedRevision() returns null instead of the last revision"
-            Override CP to use the last revision of the repository (OK for release jars). -->
-          <useLastCommittedRevision>false</useLastCommittedRevision>
         </configuration>
       </plugin>
 

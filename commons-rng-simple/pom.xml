@@ -31,14 +31,16 @@
   <description>Simple API for instantiating random numbers generators.</description>
 
   <properties>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.simple</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.simple</commons.osgi.export>
     <commons.osgi.private>org.apache.commons.rng.simple.internal</commons.osgi.private>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.simple</commons.module.name>
-    <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/..</rng.parent.dir>
     <rng.jira.component>simple</rng.jira.component>
   </properties>
 

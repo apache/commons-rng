@@ -62,13 +62,15 @@
   </dependencies>
 
   <properties>
+    <!-- Workaround to avoid duplicating config files. -->
+    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.examples.jmh</commons.osgi.symbolicName>
     <commons.osgi.export>org.apache.commons.rng.examples.jmh</commons.osgi.export>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.examples.jmh</commons.module.name>
-    <!-- Workaround to avoid duplicating config files. -->
-    <rng.parent.dir>${basedir}/../..</rng.parent.dir>
 
     <!-- JMH Benchmark related properties: version, name of the benchmarking uber jar. -->
     <jmh.version>1.35</jmh.version>
