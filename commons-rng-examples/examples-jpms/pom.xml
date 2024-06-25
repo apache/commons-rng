@@ -52,6 +52,9 @@
         <configuration>
           <!-- Reset API links since these refer to java 1.6 and 1.7 -->
           <links combine.self="override" />
+          <!-- JDK 17 issues warning about using modules but packages in the client API are in
+            the unnamed module. -->
+          <failOnWarnings>false</failOnWarnings>
         </configuration>
       </plugin>
     </plugins>
@@ -64,6 +67,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <links combine.self="override" />
+          <failOnWarnings>false</failOnWarnings>
         </configuration>
       </plugin>
     </plugins>
