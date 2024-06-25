@@ -709,6 +709,13 @@ This is avoided by creating an empty directory when svn is not available.
     </profile>
 
     <profile>
+      <id>commons-rng-integration</id>
+      <modules>
+        <module>commons-rng-integration</module>
+      </modules>
+    </profile>
+
+    <profile>
       <id>release</id>
       <modules>
         <!-- Examples are not part of the binary release so do not include in the build.

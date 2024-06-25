@@ -38,7 +38,12 @@
     <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- OSGi -->
     <commons.osgi.symbolicName>org.apache.commons.rng.sampling</commons.osgi.symbolicName>
-    <commons.osgi.export>org.apache.commons.rng.sampling</commons.osgi.export>
+    <!-- Export public API pacakges -->
+    <commons.osgi.export>
+        org.apache.commons.rng.sampling,
+        org.apache.commons.rng.sampling.distribution,
+        org.apache.commons.rng.sampling.shape
+    </commons.osgi.export>
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.sampling</commons.module.name>
     <rng.jira.component>sampling</rng.jira.component>
