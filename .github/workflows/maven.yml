@@ -49,5 +49,5 @@ jobs:
       # Here we run the build and javadoc generation separately (which requires install of sources)
       if: matrix.java > 8
       run: |
-        mvn --show-version --batch-mode --no-transfer-progress -P commons-numbers-examples clean install -Dmaven.javadoc.skip
-        mvn --show-version --batch-mode --no-transfer-progress -P commons-numbers-examples javadoc:javadoc
+        mvn --show-version --batch-mode --no-transfer-progress -P commons-rng-examples clean install -Dmaven.javadoc.skip
+        mvn --show-version --batch-mode --no-transfer-progress -P commons-rng-examples javadoc:javadoc
