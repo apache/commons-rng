@@ -86,7 +86,7 @@
         <artifactId>spdx-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>build-spdx</id>
+            <id>build-sbom-spdx</id>
             <goals>
               <goal>createSPDX</goal>
             </goals>
