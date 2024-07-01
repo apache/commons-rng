@@ -228,8 +228,8 @@ class DirichletSamplerTest {
         final double[][] covars = getCovariance(samples);
         final double denom = alpha0 * alpha0 * (alpha0 + 1);
         for (int i = 0; i < k; i++) {
-            final double var = alpha[i] * (alpha0 - alpha[i]) / denom;
-            Assertions.assertEquals(var, covars[i][i], var * relativeTolerance, "Variance");
+            final double variance = alpha[i] * (alpha0 - alpha[i]) / denom;
+            Assertions.assertEquals(variance, covars[i][i], variance * relativeTolerance, "Variance");
             for (int j = i + 1; j < k; j++) {
                 final double covar = -alpha[i] * alpha[j] / denom;
                 Assertions.assertEquals(covar, covars[i][j], Math.abs(covar) * relativeTolerance, "Covariance");
