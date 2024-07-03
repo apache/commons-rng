@@ -174,7 +174,8 @@
   </rule>
   <rule ref="category/java/design.xml/CouplingBetweenObjects">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='ProviderBuilder' or
+        @SimpleName='CompositeSamplers']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveParameterList">
@@ -235,6 +236,12 @@
           ./ancestor-or-self::EnumDeclaration[@SimpleName='RandomSource']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/DataClass">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='LargeMeanPoissonSamplerState']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/documentation.xml/CommentRequired">
     <properties>
@@ -270,6 +277,12 @@
           @SimpleName='PcgRxsMXs64' or @SimpleName='XorShift1024Star']"/>
     </properties>
   </rule>
+  <rule ref="category/java/errorprone.xml/MissingStaticMethodInNonInstantiatableClass">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
@@ -290,7 +303,7 @@
       <!-- False positive. The array loop is generating, not copying, values. -->
       <property name="violationSuppressXPath"
         value="./ancestor-or-self::ClassDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$') or
-          @SimpleName='MersenneTwister64']"/>
+          @SimpleName='MersenneTwister64' or @SimpleName='FactorialLog']"/>
     </properties>
   </rule>
 
