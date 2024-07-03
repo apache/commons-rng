@@ -106,6 +106,8 @@ public class TwoCmres extends LongProvider {
     }
 
     /**
+     * Get the number of subcycle generators.
+     *
      * @return the number of subcycle generators.
      */
     public static int numberOfSubcycleGenerators() {

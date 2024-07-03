@@ -48,6 +48,8 @@ public class RandomProviderDefaultState implements RandomProviderState {
     }
 
     /**
+     * Get the state.
+     *
      * @return the internal state.
      */
     public byte[] getState() {
