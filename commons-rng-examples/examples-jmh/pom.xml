@@ -73,7 +73,7 @@
     <commons.module.name>org.apache.commons.rng.examples.jmh</commons.module.name>
 
     <!-- JMH Benchmark related properties: version, name of the benchmarking uber jar. -->
-    <jmh.version>1.35</jmh.version>
+    <jmh.version>1.37</jmh.version>
     <uberjar.name>examples-jmh</uberjar.name>
     <project.mainClass>org.openjdk.jmh.Main</project.mainClass>
     <!-- Disable analysis for benchmarking code. -->
