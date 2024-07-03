@@ -51,6 +51,10 @@
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.core</commons.module.name>
     <rng.jira.component>core</rng.jira.component>
+
+    <!-- Change from commons-parent of 1.0 as some illegal state cases cannot be reached -->
+    <commons.jacoco.instructionRatio>0.99</commons.jacoco.instructionRatio>
+    <commons.jacoco.lineRatio>0.99</commons.jacoco.lineRatio>
   </properties>
 
   <dependencies>
