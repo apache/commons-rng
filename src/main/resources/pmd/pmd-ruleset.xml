@@ -146,6 +146,12 @@
         ./ancestor::MethodName[@Image='of']"/>
     </properties>
   </rule>
+  <rule ref="category/java/codestyle.xml/UnnecessaryBoxing">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="./ancestor::ClassDeclaration[@SimpleName='SplitMix64']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/design.xml/NPathComplexity">
     <properties>

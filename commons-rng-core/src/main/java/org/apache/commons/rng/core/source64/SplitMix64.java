@@ -50,15 +50,6 @@ public class SplitMix64 extends LongProvider {
     public SplitMix64(Long seed) {
         // Support for Long to allow instantiation through the
         // rng.simple.RandomSource factory methods.
-        setSeedInternal(seed);
-    }
-
-    /**
-     * Seeds the RNG.
-     *
-     * @param seed Seed.
-     */
-    private void setSeedInternal(Long seed) {
         state = seed.longValue();
     }
 
