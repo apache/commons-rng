@@ -276,7 +276,7 @@ final class Conversions {
      * @return an {@code int}.
      */
     static int longArray2Int(long[] input) {
-        return Conversions.long2Int(longArray2Long(input));
+        return long2Int(longArray2Long(input));
     }
 
     /**
