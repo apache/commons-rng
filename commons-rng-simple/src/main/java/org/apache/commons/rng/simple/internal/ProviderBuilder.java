@@ -598,7 +598,7 @@ public final class ProviderBuilder {
 
             // Build a single array with all the arguments to be passed
             // (in the right order) to the constructor.
-            Object[] all = new Object[constructorArgs.length + 1];
+            final Object[] all = new Object[constructorArgs.length + 1];
             all[0] = nativeSeed;
             System.arraycopy(constructorArgs, 0, all, 1, constructorArgs.length);
 
