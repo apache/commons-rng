@@ -290,7 +290,8 @@ public final class SeedFactory {
         // to be non-zero. This is ensured if the start is even since the increment is odd.
         int x = createInt() << 1;
         for (int i = from; i < to; i++) {
-            seed[i] = MixFunctions.murmur3(x += MixFunctions.GOLDEN_RATIO_32);
+            x += MixFunctions.GOLDEN_RATIO_32;
+            seed[i] = MixFunctions.murmur3(x);
         }
     }
 
@@ -326,7 +327,8 @@ public final class SeedFactory {
         // to be non-zero. This is ensured if the start is even since the increment is odd.
         long x = createLong() << 1;
         for (int i = from; i < to; i++) {
-            seed[i] = MixFunctions.stafford13(x += MixFunctions.GOLDEN_RATIO_64);
+            x += MixFunctions.GOLDEN_RATIO_64;
+            seed[i] = MixFunctions.stafford13(x);
         }
     }
 

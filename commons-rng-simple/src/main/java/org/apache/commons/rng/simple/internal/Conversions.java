@@ -171,7 +171,8 @@ final class Conversions {
         // Process pairs
         final int n = length & ~0x1;
         for (int i = 0; i < n; i += 2) {
-            final long x = MixFunctions.stafford13(v += GOLDEN_RATIO);
+            v += GOLDEN_RATIO;
+            final long x = MixFunctions.stafford13(v);
             output[i] = (int) x;
             output[i + 1] = (int) (x >>> 32);
         }
@@ -195,7 +196,8 @@ final class Conversions {
         long v = input;
         final long[] output = new long[length];
         for (int i = 0; i < length; i++) {
-            output[i] = MixFunctions.stafford13(v += GOLDEN_RATIO);
+            v += GOLDEN_RATIO;
+            output[i] = MixFunctions.stafford13(v);
         }
         return output;
     }
