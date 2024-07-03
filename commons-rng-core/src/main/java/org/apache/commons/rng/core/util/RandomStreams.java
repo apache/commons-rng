@@ -219,7 +219,7 @@ public final class RandomStreams {
 
         @Override
         public int characteristics() {
-            return Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.IMMUTABLE;
+            return SIZED | SUBSIZED | IMMUTABLE;
         }
 
         @Override
