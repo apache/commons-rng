@@ -130,6 +130,7 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
         return "Dirichlet deviate [" + rng.toString() + "]";
     }
 
+    /** {@inheritDoc} */
     @Override
     public double[] sample() {
         // Create Gamma(alpha_i, 1) deviates for all alpha
