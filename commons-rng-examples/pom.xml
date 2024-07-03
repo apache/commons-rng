@@ -47,7 +47,7 @@
 
     <rng.picocli.version>4.7.6</rng.picocli.version>
     <rng.exec.version>3.0.0</rng.exec.version>
-    <rng.shade.version>3.2.4</rng.shade.version>
+    <rng.shade.version>3.6.0</rng.shade.version>
 
     <!-- Disable JApiCmp failures (but keep the report). The examples API is allowed to change. -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
