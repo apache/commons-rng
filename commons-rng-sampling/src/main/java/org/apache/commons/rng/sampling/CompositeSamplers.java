@@ -597,7 +597,7 @@ public final class CompositeSamplers {
             SamplerBuilder.SamplerFactory<ObjectSampler<T>> {
         /** The instance. */
         @SuppressWarnings("rawtypes")
-        private static final ObjectSamplerFactory INSTANCE = new ObjectSamplerFactory();
+        private static final ObjectSamplerFactory INSTANCE = new ObjectSamplerFactory<>();
 
         /**
          * Get an instance.
@@ -649,7 +649,7 @@ public final class CompositeSamplers {
             SamplerBuilder.SamplerFactory<SharedStateObjectSampler<T>> {
         /** The instance. */
         @SuppressWarnings("rawtypes")
-        private static final SharedStateObjectSamplerFactory INSTANCE = new SharedStateObjectSamplerFactory();
+        private static final SharedStateObjectSamplerFactory INSTANCE = new SharedStateObjectSamplerFactory<>();
 
         /**
          * Get an instance.
