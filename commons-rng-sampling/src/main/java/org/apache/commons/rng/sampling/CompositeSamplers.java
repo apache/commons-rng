@@ -411,7 +411,7 @@ public final class CompositeSamplers {
 
             // Extract the weights and samplers.
             final double[] weights = new double[n];
-            final ArrayList<S> samplers = new ArrayList<>(n);
+            final List<S> samplers = new ArrayList<>(n);
             for (int i = 0; i < n; i++) {
                 final WeightedSampler<S> weightedItem = list.get(i);
                 weights[i] = weightedItem.getWeight();
@@ -1066,7 +1066,7 @@ public final class CompositeSamplers {
      */
     private static <T extends SharedStateSampler<T>> List<T> copy(List<T> samplers,
                                                                   UniformRandomProvider rng) {
-        final ArrayList<T> newSamplers = new ArrayList<>(samplers.size());
+        final List<T> newSamplers = new ArrayList<>(samplers.size());
         for (final T s : samplers) {
             newSamplers.add(s.withUniformRandomProvider(rng));
         }
