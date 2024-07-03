@@ -228,6 +228,13 @@
           or @SimpleName='ArraySampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/ExcessivePublicCount">
+    <properties>
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='ProviderBuilder'] |
+          ./ancestor-or-self::EnumDeclaration[@SimpleName='RandomSource']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/documentation.xml/CommentRequired">
     <properties>
@@ -266,7 +273,8 @@
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='DiscreteProbabilityCollectionSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='DiscreteProbabilityCollectionSampler' or
+        @SimpleName='ThreadLocalRandomSource']"/>
     </properties>
   </rule>
 
