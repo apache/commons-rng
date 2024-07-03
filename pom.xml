@@ -222,9 +222,9 @@
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
-          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-          <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+          <configLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/conf/checkstyle/license-header.txt</headerLocation>
+          <suppressionsLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <!-- Output the detected violations to the console (for checkstyle:check). -->
           <logViolationsToConsole>true</logViolationsToConsole>
@@ -247,7 +247,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
-          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+          <excludeFilterFile>${rng.parent.dir}/src/conf/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
         <executions>
           <execution>
@@ -265,7 +265,7 @@
           <skipEmptyReport>false</skipEmptyReport>
           <analysisCache>true</analysisCache>
           <rulesets>
-            <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
+            <ruleset>${rng.parent.dir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
           <excludeRoots>
             <excludeRoot>target/generated-sources</excludeRoot>
@@ -299,7 +299,7 @@
           </analysisConfiguration>
           <analysisConfigurationFiles>
             <configurationFile>
-              <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
+              <path>${rng.parent.dir}/src/conf/revapi/api-changes.json</path>
               <roots>
                 <!-- Path to configuration in the JSON config file -->
                 <root>1.5</root>
@@ -334,7 +334,7 @@
             <exclude>dist-archive/**</exclude>
             <exclude>**/*.patch</exclude>
             <exclude>**/pdf.*.txt</exclude>
-            <exclude>src/main/resources/revapi/api-changes.json</exclude>
+            <exclude>src/conf/revapi/api-changes.json</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -416,9 +416,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <configLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle.xml</configLocation>
-          <headerLocation>${rng.parent.dir}/src/main/resources/checkstyle/license-header.txt</headerLocation>
-          <suppressionsLocation>${rng.parent.dir}/src/main/resources/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
+          <configLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle.xml</configLocation>
+          <headerLocation>${rng.parent.dir}/src/conf/checkstyle/license-header.txt</headerLocation>
+          <suppressionsLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
         </configuration>
@@ -436,7 +436,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
-          <excludeFilterFile>${rng.parent.dir}/src/main/resources/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
+          <excludeFilterFile>${rng.parent.dir}/src/conf/spotbugs/spotbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
       <plugin>
@@ -446,7 +446,7 @@
           <skipEmptyReport>false</skipEmptyReport>
           <analysisCache>true</analysisCache>
           <rulesets>
-            <ruleset>${rng.parent.dir}/src/main/resources/pmd/pmd-ruleset.xml</ruleset>
+            <ruleset>${rng.parent.dir}/src/conf/pmd/pmd-ruleset.xml</ruleset>
           </rulesets>
         </configuration>
         <reportSets>
@@ -671,7 +671,7 @@ This is avoided by creating an empty directory when svn is not available.
               <!-- For reporting do not ignore the "intentional-api-changes" so they are included -->
               <analysisConfigurationFiles>
                 <configurationFile>
-                  <path>${rng.parent.dir}/src/main/resources/revapi/api-changes.json</path>
+                  <path>${rng.parent.dir}/src/conf/revapi/api-changes.json</path>
                   <roots>
                     <!-- Path(s) to configuration in the JSON config file -->
                     <root>1.5</root>
