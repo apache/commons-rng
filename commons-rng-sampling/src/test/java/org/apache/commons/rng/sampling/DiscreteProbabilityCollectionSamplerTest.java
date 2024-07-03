@@ -19,12 +19,15 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test class for {@link DiscreteProbabilityCollectionSampler}.
@@ -66,26 +69,26 @@ class DiscreteProbabilityCollectionSamplerTest {
                 probabilities));
     }
 
-    @Test
-    void testPrecondition4() {
-        // NaN probability
+    @ParameterizedTest
+    @ValueSource(doubles = {-1, Double.POSITIVE_INFINITY, Double.NaN})
+    void testPrecondition4(double p) {
         final List<Double> collection = Arrays.asList(1d, 2d);
-        final double[] probabilities = {0, Double.NaN};
+        final double[] probabilities = {0, p};
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
                 collection,
                 probabilities));
     }
 
-    @Test
-    void testPrecondition5() {
-        // Infinite probability
-        final List<Double> collection = Arrays.asList(1d, 2d);
-        final double[] probabilities = {0, Double.POSITIVE_INFINITY};
+    @ParameterizedTest
+    @ValueSource(doubles = {-1, Double.POSITIVE_INFINITY, Double.NaN})
+    void testPrecondition5(double p) {
+        final Map<String, Double> collection = new HashMap<>();
+        collection.put("one", 0.0);
+        collection.put("two", p);
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new DiscreteProbabilityCollectionSampler<>(rng,
-                collection,
-                probabilities));
+                collection));
     }
 
     @Test
