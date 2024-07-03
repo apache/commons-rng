@@ -340,7 +340,8 @@ public abstract class BaseProvider
             // Fill the rest as if using a SplitMix64 RNG
             long x = s[0];
             for (int i = seed.length; i < length; i++) {
-                s[i] = stafford13(x += GOLDEN_RATIO_64);
+                x += GOLDEN_RATIO_64;
+                s[i] = stafford13(x);
             }
             return s;
         }
@@ -390,7 +391,8 @@ public abstract class BaseProvider
             // Fill the rest as if using a SplitMix64-style RNG for 32-bit output
             int x = s[0];
             for (int i = seed.length; i < length; i++) {
-                s[i] = murmur3(x += GOLDEN_RATIO_32);
+                x += GOLDEN_RATIO_32;
+                s[i] = murmur3(x);
             }
             return s;
         }
