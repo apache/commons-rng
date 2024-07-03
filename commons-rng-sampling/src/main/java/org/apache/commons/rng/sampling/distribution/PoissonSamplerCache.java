@@ -365,8 +365,8 @@ public class PoissonSamplerCache {
                 new LargeMeanPoissonSamplerState[withMaxN - withMinN + 1];
 
         // Preserve values from the current array to the next
-        int currentIndex;
-        int nextIndex;
+        final int currentIndex;
+        final int nextIndex;
         if (this.minN <= withMinN) {
             // The current array starts before the new array
             currentIndex = withMinN - this.minN;

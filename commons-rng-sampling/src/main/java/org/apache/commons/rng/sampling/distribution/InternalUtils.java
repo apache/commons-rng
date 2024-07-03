@@ -290,7 +290,7 @@ final class InternalUtils {
                              double[] cache) {
             logFactorials = new double[numValues];
 
-            int endCopy;
+            final int endCopy;
             if (cache != null && cache.length > BEGIN_LOG_FACTORIALS) {
                 // Copy available values.
                 endCopy = Math.min(cache.length, numValues);

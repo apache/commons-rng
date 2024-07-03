@@ -757,7 +757,7 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
             final double eps = 1 - alpha;
             final double meps1 = 1 - eps;
             // Compute RSTAB prefactor
-            double tau;
+            final double tau;
 
             // tau is symmetric around alpha=1
             // tau -> beta / pi/2 as alpha -> 1
