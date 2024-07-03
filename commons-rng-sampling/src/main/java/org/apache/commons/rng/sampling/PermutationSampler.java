@@ -72,7 +72,7 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
         // 2. If the argument RNG is an exact match for the RNG in the source
         //    then the output sequence will differ unless the domain is currently
         //    in natural order.
-        domain = PermutationSampler.natural(source.domain.length);
+        domain = natural(source.domain.length);
         size = source.size;
         this.rng = rng;
     }
