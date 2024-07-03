@@ -33,9 +33,7 @@
     <exclude name="ShortVariable" />
     <exclude name="LongVariable" />
     <exclude name="CommentDefaultAccessModifier" />
-    <exclude name="DefaultPackage" />
     <exclude name="CallSuperInConstructor" />
-    <exclude name="AbstractNaming" />
     <exclude name="UselessParentheses" />
     <exclude name="AtLeastOneConstructor" />
     <exclude name="GenericsNaming" />
@@ -51,9 +49,7 @@
     <exclude name="CommentSize" />
   </rule>
   <rule ref="category/java/errorprone.xml">
-    <!-- This rule is known to be poor with Java 5 and later:
-      https://github.com/pmd/pmd/issues/873 -->
-    <exclude name="DataflowAnomalyAnalysis" />
+    <!-- <exclude name="..." /> -->
   </rule>
   <rule ref="category/java/multithreading.xml">
     <!-- <exclude name="..." /> -->
@@ -66,14 +62,14 @@
 
   <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly">
     <properties>
       <!-- Array is generated internally in this case. -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
+        value="//ClassDeclaration[@SimpleName='PoissonSamplerCache' or @SimpleName='AliasMethodDiscreteSampler'
           or @SimpleName='GuideTableDiscreteSampler' or @SimpleName='SharedStateDiscreteProbabilitySampler'
           or @SimpleName='DirichletSampler' or @SimpleName='FastLoadedDiceRollerDiscreteSampler']"/>
     </properties>
@@ -81,14 +77,14 @@
   <rule ref="category/java/bestpractices.xml/SystemPrintln">
     <properties>
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='DiceGameApplication' or @SimpleName='ComputePi'
+        value="//ClassDeclaration[@SimpleName='DiceGameApplication' or @SimpleName='ComputePi'
           or @SimpleName='UniformSamplingVisualCheckCommand' or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/UnusedPrivateField">
     <properties>
       <!-- Fields are used by picocli -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[
+      <property name="violationSuppressXPath" value="//ClassDeclaration[
         @SimpleName='ProbabilityDensityApproximationCommand' or @SimpleName='ExamplesStressCommand'
         or @SimpleName='ExamplesSamplingCommand' or @SimpleName='UniformSamplingVisualCheckCommand']"/>
     </properties>
@@ -96,7 +92,7 @@
   <rule ref="category/java/bestpractices.xml/AccessorClassGeneration">
     <properties>
       <!-- False positive -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='TSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='TSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters">
@@ -115,7 +111,7 @@
     <properties>
       <!-- Do not require Utils/Helper suffix -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
+        value="//ClassDeclaration[@SimpleName='ListSampler' or @SimpleName='ProviderBuilder'
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
           or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath'
           or @SimpleName='Conversions' or @SimpleName='MixFunctions' or @SimpleName='LXMSupport'
@@ -127,26 +123,26 @@
   <rule ref="category/java/codestyle.xml/ShortMethodName">
     <properties>
       <!-- Allow samplers to have factory constructor method 'of' -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Sampler$')]"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[matches(@SimpleName, '^.*Sampler$')]"/>
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/FieldNamingConventions">
     <properties>
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='ProbabilityDensityApproximationCommand']"/>
+        value="//ClassDeclaration[@SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/LinguisticNaming">
     <properties>
       <!-- Allow Builder set methods to return the Builder (not void) -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*Builder$')]"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[matches(@SimpleName, '^.*Builder$')]"/>
     </properties>
   </rule>
   <rule ref="category/java/codestyle.xml/PrematureDeclaration">
     <properties>
       <!-- False positive where minExponent is stored before a possible exit point. -->
       <property name="violationSuppressXPath"
-        value="./ancestor::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'] and
+        value="./ancestor::ClassDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'] and
         ./ancestor::MethodName[@Image='of']"/>
     </properties>
   </rule>
@@ -155,7 +151,7 @@
     <properties>
       <!-- Increase from default of 200 -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler' or @SimpleName='MersenneTwister'
+        value="//ClassDeclaration[@SimpleName='LargeMeanPoissonSampler' or @SimpleName='MersenneTwister'
           or @SimpleName='ProbabilityDensityApproximationCommand']"/>
     </properties>
   </rule>
@@ -167,31 +163,31 @@
   </rule>
   <rule ref="category/java/design.xml/ExcessiveImports">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/CouplingBetweenObjects">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='ProviderBuilder']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='ProviderBuilder']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ExcessiveParameterList">
     <properties>
       <!-- The length is due to the size of the internal state saved in the state object -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='LargeMeanPoissonSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='LargeMeanPoissonSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/LogicInversion">
     <properties>
       <!-- Logic inversion allows detection of NaN for parameters that are expected in a range -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='InternalUtils' or @SimpleName='StableSampler']"/>
+        value="//ClassDeclaration[@SimpleName='InternalUtils' or @SimpleName='StableSampler']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/ImmutableField">
     <properties>
       <!-- Fields are used by picocli -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='BridgeTestCommand'
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='BridgeTestCommand'
         or @SimpleName='ProbabilityDensityApproximationCommand' or @SimpleName='ExamplesStressCommand'
         or @SimpleName='ListCommand' or @SimpleName='OutputCommand'
         or @SimpleName='ResultsCommand' or @SimpleName='StressTestCommand'
@@ -201,14 +197,14 @@
   <rule ref="category/java/design.xml/AvoidThrowingNullPointerException">
     <properties>
       <!-- Local implementation of Objects.requireNonNull -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='CompositeSamplers']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='CompositeSamplers']"/>
     </properties>
   </rule>
   <rule ref="category/java/design.xml/CognitiveComplexity">
     <properties>
       <!-- Increase from default of 200 -->
       <property name="violationSuppressXPath"
-        value="//ClassOrInterfaceDeclaration[@SimpleName='ChengBetaSampler' or @SimpleName='LargeMeanPoissonSampler'
+        value="//ClassDeclaration[@SimpleName='ChengBetaSampler' or @SimpleName='LargeMeanPoissonSampler'
           or @SimpleName='ZigguratSampler']"/>
     </properties>
   </rule>
@@ -222,7 +218,7 @@
   <rule ref="category/java/design.xml/GodClass">
     <properties>
       <property name="violationSuppressXPath"
-        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'
           or @SimpleName='ArraySampler']"/>
     </properties>
   </rule>
@@ -233,7 +229,7 @@
            child classes. These cannot inherit javadoc as the Spliterator interface must be
            generic-typed by the child class and the parent does not implement Spliterator. -->
       <property name="violationSuppressXPath"
-        value="./ancestor-or-self::ClassOrInterfaceDeclaration[@SimpleName='ProviderSpliterator']"/>
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='ProviderSpliterator']"/>
     </properties>
   </rule>
 
@@ -245,20 +241,20 @@
   <rule ref="category/java/errorprone.xml/AvoidFieldNameMatchingMethodName">
     <properties>
       <!-- Field INSTANCE matches instance() which returne a generic typed version of the instance.  -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*ObjectSamplerFactory$')]"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[matches(@SimpleName, '^.*ObjectSamplerFactory$')]"/>
     </properties>
   </rule>
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='DiscreteProbabilityCollectionSampler']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='DiscreteProbabilityCollectionSampler']"/>
     </properties>
   </rule>
 
   <rule ref="category/java/multithreading.xml/AvoidSynchronizedAtMethodLevel">
     <properties>
       <!-- Allows synchronized method when it is an override of the parent class -->
-      <property name="violationSuppressXPath" value="//ClassOrInterfaceDeclaration[@SimpleName='JDKRandomBridge']"/>
+      <property name="violationSuppressXPath" value="//ClassDeclaration[@SimpleName='JDKRandomBridge']"/>
     </properties>
   </rule>
 
@@ -266,7 +262,7 @@
     <properties>
       <!-- False positive. The array loop is generating, not copying, values. -->
       <property name="violationSuppressXPath"
-        value="./ancestor-or-self::ClassOrInterfaceDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$')]"/>
+        value="./ancestor-or-self::ClassDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$')]"/>
     </properties>
   </rule>
 
