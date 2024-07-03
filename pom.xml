@@ -58,7 +58,7 @@
     <commons.encoding>UTF-8</commons.encoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <rng.revapi.version>0.14.7</rng.revapi.version>
+    <rng.revapi.version>0.15.0</rng.revapi.version>
     <rng.revapi.java.version>0.28.1</rng.revapi.java.version>
     <!-- MathJax configuration. See the maven-javadoc-plugin plugin. -->
     <rng.mathjax.url>https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js</rng.mathjax.url>
