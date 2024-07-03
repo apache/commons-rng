@@ -101,7 +101,7 @@
       <!-- Hash functions are optimised for minimum byte size to allow inlining -->
       <property name="violationSuppressXPath"
          value="./ancestor::ConstructorDeclaration[
-           (matches(@Image, 'L(64|128)X[0-9]+(StarStar|Mix)') and @Arity=1 and @Public=true())
+           (matches(@Image, 'L(64|128)X[0-9]+(StarStar|Mix)') and @Arity=1 and pmd-java:modifiers() = 'public')
            or @Image='AbstractL64X128'] |
            ./ancestor::MethodDeclaration[@Name='stafford13' or @Name='lea64' or @Name='lea32'or @Name='murmur3']"/>
     </properties>
@@ -250,6 +250,19 @@
       <property name="violationSuppressXPath" value="//ClassDeclaration[matches(@SimpleName, '^.*ObjectSamplerFactory$')]"/>
     </properties>
   </rule>
+  <rule ref="category/java/errorprone.xml/ConstructorCallsOverridableMethod">
+    <properties>
+      <!-- TODO: BaseProvider fillState method should be static.  -->
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='AbstractPcg6432' or
+          @SimpleName='AbstractXoRoShiRo64' or @SimpleName='AbstractXoShiRo128' or
+          @SimpleName='DotyHumphreySmallFastCounting32' or @SimpleName='KISSRandom' or
+          @SimpleName='MultiplyWithCarry256' or @SimpleName='AbstractXoRoShiRo1024' or
+          @SimpleName='AbstractXoRoShiRo128' or @SimpleName='AbstractXoShiRo256' or
+          @SimpleName='AbstractXoShiRo512' or @SimpleName='DotyHumphreySmallFastCounting64' or
+          @SimpleName='PcgRxsMXs64' or @SimpleName='XorShift1024Star']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
@@ -268,7 +281,8 @@
     <properties>
       <!-- False positive. The array loop is generating, not copying, values. -->
       <property name="violationSuppressXPath"
-        value="./ancestor-or-self::ClassDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$')]"/>
+        value="./ancestor-or-self::ClassDeclaration[matches(@SimpleName, '^.*L.*X1024Mix$') or
+          @SimpleName='MersenneTwister64']"/>
     </properties>
   </rule>
 
