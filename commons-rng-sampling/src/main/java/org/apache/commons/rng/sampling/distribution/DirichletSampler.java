@@ -120,7 +120,7 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
     /**
      * @param rng Generator of uniformly distributed random numbers.
      */
-    private DirichletSampler(UniformRandomProvider rng) {
+    DirichletSampler(UniformRandomProvider rng) {
         this.rng = rng;
     }
 

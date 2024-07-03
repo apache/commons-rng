@@ -560,7 +560,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * @param rng Generator of uniformly distributed random numbers.
          */
-        private Exponential(UniformRandomProvider rng) {
+        Exponential(UniformRandomProvider rng) {
             super(rng);
         }
 

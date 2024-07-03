@@ -95,8 +95,8 @@ public class ChengBetaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
-        private BaseChengBetaSampler(UniformRandomProvider rng,
-                                     BaseChengBetaSampler source) {
+        BaseChengBetaSampler(UniformRandomProvider rng,
+                             BaseChengBetaSampler source) {
             this.rng = rng;
             aIsAlphaShape = source.aIsAlphaShape;
             a = source.a;

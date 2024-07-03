@@ -226,9 +226,9 @@ public class AliasMethodDiscreteSampler
      * @param probability Probability table.
      * @param alias Alias table.
      */
-    private AliasMethodDiscreteSampler(final UniformRandomProvider rng,
-                                       final long[] probability,
-                                       final int[] alias) {
+    AliasMethodDiscreteSampler(final UniformRandomProvider rng,
+                               final long[] probability,
+                               final int[] alias) {
         this.rng = rng;
         // Deliberate direct storage of input arrays
         this.probability = probability;
