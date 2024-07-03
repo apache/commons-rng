@@ -17,7 +17,7 @@
 package org.apache.commons.rng.simple;
 
 import java.util.EnumMap;
-
+import java.util.Map;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
@@ -69,7 +69,7 @@ public final class ThreadLocalRandomSource {
      *
      * <p>This should only be modified to create new instances in a synchronized block.
      */
-    private static final EnumMap<RandomSource, ThreadLocal<UniformRandomProvider>> SOURCES =
+    private static final Map<RandomSource, ThreadLocal<UniformRandomProvider>> SOURCES =
         new EnumMap<>(RandomSource.class);
 
     /** No public construction. */
