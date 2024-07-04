@@ -80,4 +80,33 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <id>java-9-up</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.moditect</groupId>
+            <artifactId>moditect-maven-plugin</artifactId>
+            <version>${commons.moditect-maven-plugin.version}</version>
+            <configuration>
+              <module>
+                <moduleInfo>
+                  <!-- Do not export the internal package -->
+                  <exports>
+                    !${commons.module.name}*.internal*;
+                    *;
+                  </exports>
+                </moduleInfo>
+              </module>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>
