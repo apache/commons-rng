@@ -21,11 +21,11 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-examples</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
   </parent>
 
   <artifactId>commons-rng-examples-jpms</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG JPMS Integration Test</name>
 

@@ -21,11 +21,11 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
   </parent>
 
   <artifactId>commons-rng-examples</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG Examples</name>
 
@@ -60,17 +60,17 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-simple</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-sampling</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-rng-client-api</artifactId>
-        <version>1.6-SNAPSHOT</version>
+        <version>1.6</version>
       </dependency>
       <dependency>
         <groupId>info.picocli</groupId>

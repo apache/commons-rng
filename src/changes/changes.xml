@@ -53,7 +53,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.6" date="TBD" description="
+    <release version="1.6" date="2024-07-09" description="
 New features, updates and bug fixes (requires Java 8).
 ">
       <action dev="aherbert" type="add" issue="RNG-186">

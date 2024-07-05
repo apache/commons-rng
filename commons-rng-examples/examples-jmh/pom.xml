@@ -21,11 +21,11 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-rng-examples</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
   </parent>
 
   <artifactId>commons-rng-examples-jmh</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <name>Apache Commons RNG JMH Benchmark</name>
 
   <description>Code for running JMH benchmarks that assess the performance of the generators.
