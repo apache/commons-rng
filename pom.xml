@@ -421,6 +421,7 @@
           <suppressionsLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
+          <resourceExcludes>NOTICE,LICENSE,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
         </configuration>
         <reportSets>
           <reportSet>
