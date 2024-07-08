@@ -17,7 +17,7 @@
 package org.apache.commons.rng.sampling.shape;
 
 import java.util.Arrays;
-import org.apache.commons.math3.stat.inference.ChiSquareTest;
+import java.util.stream.DoubleStream;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.sampling.UnitSphereSampler;
@@ -225,34 +225,33 @@ class LineSamplerTest {
             scale[i] = 1.0 / (b[i] - a[i]);
         }
 
-        // Assign bins
-        final int bins = 100;
-        final int samplesPerBin = 20;
-
-        // Expect a uniform distribution
-        final double[] expected = new double[bins];
-        Arrays.fill(expected, 1.0 / bins);
-
-        // Increase the loops and use a null seed (i.e. randomly generated) to verify robustness
-        final LineSampler sampler = LineSampler.of(rng, a, b);
-        final int samples = expected.length * samplesPerBin;
-        for (int n = 0; n < 1; n++) {
-            // Assign each coordinate to a region inside the line
-            final long[] observed = new long[expected.length];
-            for (int i = 0; i < samples; i++) {
-                final double[] x = sampler.sample();
-                Assertions.assertEquals(dimension, x.length);
-                final double c = (x[0] - a[0]) * scale[0];
-                Assertions.assertTrue(c >= 0.0 && c <= 1.0, "Not uniformly distributed");
-                for (int j = 1; j < dimension; j++) {
-                    Assertions.assertEquals(c, (x[j] - a[j]) * scale[j], 1e-14, "Not on the line");
-                }
-                // Assign the uniform deviate to a bin. Assumes c != 1.0.
-                observed[(int) (c * bins)]++;
+        // Use two RNGs with the same output. The line sampler only uses a single double
+        // per sample so we can assert that the point is approximately located along the
+        // line vector is each dimension by the constant C. Floating-point tolerance
+        // is required to validate the equality.
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
+        final LineSampler sampler = LineSampler.of(rng1, a, b);
+        final double relEps = 1e-10;
+        final int n = 1000;
+        final DoubleStream.Builder errors = DoubleStream.builder();
+        for (int i = 0; i < n; i++) {
+            final double[] x = sampler.sample();
+            Assertions.assertEquals(dimension, x.length);
+            final double c = rng2.nextDouble();
+            for (int j = 0; j < dimension; j++) {
+                final double u = (x[j] - a[j]) * scale[j];
+                Assertions.assertTrue(u >= 0.0 && u <= 1.0, "Not within the line");
+                final double e = Math.abs(c - u) / u;
+                errors.add(e);
+                Assertions.assertEquals(c, u, c * relEps,
+                    () -> "Not on the expected line: rel.error = " + e);
             }
-            final double p = new ChiSquareTest().chiSquareTest(expected, observed);
-            Assertions.assertFalse(p < 0.001, () -> "p-value too small: " + p);
         }
+        final double averageRelError = errors.build().sum() / n;
+        Assertions.assertTrue(averageRelError < 1e-12,
+            () -> "Average relative error is too large = " + averageRelError);
     }
 
     /**
