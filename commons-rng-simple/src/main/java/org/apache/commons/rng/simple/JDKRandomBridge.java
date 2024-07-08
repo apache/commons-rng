@@ -95,6 +95,8 @@ public final class JDKRandomBridge extends Random {
     }
 
     /**
+     * Serialization method.
+     *
      * @param output Output stream.
      * @throws IOException if an error occurs.
      */
@@ -115,6 +117,8 @@ public final class JDKRandomBridge extends Random {
     }
 
     /**
+     * Deserialization method.
+     *
      * @param input Input stream.
      * @throws IOException if an error occurs.
      * @throws ClassNotFoundException if an error occurs.

@@ -32,6 +32,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
     private final NormalizedGaussianSampler gaussian;
 
     /**
+     * Create an instance.
+     *
      * @param gaussian N(0,1) generator.
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.

@@ -32,6 +32,8 @@ public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, 
     private final SeedConverter<TRANS, OUT> second;
 
     /**
+     * Create an instance.
+     *
      * @param first First conversion.
      * @param second second conversion.
      */

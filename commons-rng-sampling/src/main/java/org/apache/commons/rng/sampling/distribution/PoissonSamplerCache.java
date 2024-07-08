@@ -79,6 +79,8 @@ public class PoissonSamplerCache {
     private final LargeMeanPoissonSamplerState[] values;
 
     /**
+     * Create an instance.
+     *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
      * @throws IllegalArgumentException if {@code maxMean < minMean}

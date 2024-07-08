@@ -42,6 +42,8 @@ public class BoxMullerLogNormalSampler
     private final ContinuousSampler sampler;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.

@@ -73,6 +73,8 @@ public class AhrensDieterExponentialSampler
     }
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of this distribution.
      * @throws IllegalArgumentException if {@code mean <= 0}

@@ -37,6 +37,9 @@ public abstract class BaseProvider
     /** The fractional part of the golden ratio, phi, scaled to 32-bits and rounded to odd. */
     private static final int GOLDEN_RATIO_32 = 0x9e3779b9;
 
+    /** Create an instance. */
+    public BaseProvider() {}
+
     /** {@inheritDoc} */
     @Override
     public RandomProviderState saveState() {
