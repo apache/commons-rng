@@ -678,10 +678,6 @@ This is avoided by creating an empty directory when svn is not available.
                   </roots>
                 </configurationFile>
               </analysisConfigurationFiles>
-              <!-- Note: Property 'reportSeverity' is deprecated but newer 'reportCriticality'
-                   does work as documented. -->
-              <reportSeverity>equivalent</reportSeverity>
-              <reportCriticality>allowed</reportCriticality>
             </configuration>
             <reportSets>
               <reportSet>
