@@ -342,7 +342,7 @@ public class DiscreteUniformSampler
      *
      * @param delegate Delegate.
      */
-    public DiscreteUniformSampler(SharedStateDiscreteSampler delegate) {
+    private DiscreteUniformSampler(SharedStateDiscreteSampler delegate) {
         super(null);
         this.delegate = delegate;
     }

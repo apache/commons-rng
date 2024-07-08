@@ -285,7 +285,7 @@ public class RejectionInversionZipfSampler
      *
      * @param delegate Delegate.
      */
-    public RejectionInversionZipfSampler(SharedStateDiscreteSampler delegate) {
+    private RejectionInversionZipfSampler(SharedStateDiscreteSampler delegate) {
         super(null);
         this.delegate = delegate;
     }
