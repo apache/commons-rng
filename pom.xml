@@ -24,7 +24,7 @@
   </parent>
 
   <artifactId>commons-rng-parent</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <packaging>pom</packaging>
   <name>Apache Commons RNG</name>
   <description>The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.</description>
@@ -44,7 +44,7 @@
     <!-- This flag should only be true in the dist-archive module. -->
     <commons.release.isDistModule>false</commons.release.isDistModule>
     <!-- Reproducible builds: maven-artifact-plugin:check-buildplan -->
-    <rng.build.outputTimestamp>2024-04-18T00:00:00Z</rng.build.outputTimestamp>
+    <rng.build.outputTimestamp>2024-07-05T00:00:00Z</rng.build.outputTimestamp>
     <project.build.outputTimestamp>${rng.build.outputTimestamp}</project.build.outputTimestamp>
     <!-- do not use snapshot suffix here -->
     <commons.release.version>1.6</commons.release.version>
@@ -106,7 +106,7 @@
     <module>commons-rng-docs</module>
     <!--
         The examples are built only upon explicit request (requires Java 11).
-        See profiles: "commons-rng-examples"; "release"
+        See profiles: "examples"; "release"
     -->
   </modules>
 
@@ -700,14 +700,14 @@ This is avoided by creating an empty directory when svn is not available.
         These are combined with the existing <modules>.
     -->
     <profile>
-      <id>commons-rng-examples</id>
+      <id>examples</id>
       <modules>
         <module>commons-rng-examples</module>
       </modules>
     </profile>
 
     <profile>
-      <id>commons-rng-integration</id>
+      <id>integration</id>
       <modules>
         <module>commons-rng-integration</module>
       </modules>
@@ -717,7 +717,7 @@ This is avoided by creating an empty directory when svn is not available.
       <id>release</id>
       <modules>
         <!-- Examples are not part of the binary release so do not include in the build.
-             Use the commons-rng-examples profile to create the site. -->
+             Use the examples profile to create the site. -->
         <module>dist-archive</module>
       </modules>
     </profile>

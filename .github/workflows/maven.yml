@@ -50,6 +50,6 @@ jobs:
       # Run the OSGi integration test for the installed modules.
       if: matrix.java > 8
       run: |
-        mvn --show-version --batch-mode --no-transfer-progress -P commons-rng-examples clean install -Dmaven.javadoc.skip
-        mvn --show-version --batch-mode --no-transfer-progress -P commons-rng-examples javadoc:javadoc
-        mvn --show-version --batch-mode --no-transfer-progress -P commons-rng-integration -pl commons-rng-integration clean package integration-test
+        mvn --show-version --batch-mode --no-transfer-progress -P examples clean install -Dmaven.javadoc.skip
+        mvn --show-version --batch-mode --no-transfer-progress -P examples javadoc:javadoc
+        mvn --show-version --batch-mode --no-transfer-progress -P integration -pl commons-rng-integration clean package integration-test
