@@ -17,6 +17,7 @@
 package org.apache.commons.rng.sampling.distribution;
 
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
@@ -28,6 +29,9 @@ import org.apache.commons.rng.sampling.distribution.StableSampler.WeronStableSam
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests for the class {@link StableSampler}.
@@ -2044,44 +2048,30 @@ class StableSamplerTest {
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }
 
-    /**
-     * Test the implementation of the transformed sampler (scaled and translated).
-     */
-    @Test
-    void testTransformedSampler() {
-        // Gaussian case
-        // The Gaussian case has its own scaling where the StdDev is gamma * sqrt(2).
-        // (N(x) * sqrt(2)) * gamma != N(x) * (sqrt(2) * gamma)
-        // Test with a delta
-        testTransformedSampler(2.0, 0.0, 1);
-        // Cauchy case
-        testTransformedSampler(1.0, 0.0);
-        // Levy case
-        testTransformedSampler(0.5, 1.0);
-        // Symmetric case
-        testTransformedSampler(1.3, 0.0);
-        // Alpha 1 case
-        testTransformedSampler(1.0, 0.23);
-        // Alpha close to 1
-        testTransformedSampler(Math.nextUp(1.0), 0.23);
-        // General case
-        testTransformedSampler(1.3, 0.1);
-        // Small alpha case
-        testTransformedSampler(1e-5, 0.1);
-        // Large alpha case.
-        // This hits the case for computing tau from (1-alpha) -> -1.
-        testTransformedSampler(1.99, 0.1);
-    }
-
-    /**
-     * Test the implementation of the transformed sampler (scaled and translated).
-     * The transformed output must match exactly.
-     *
-     * @param alpha Alpha.
-     * @param beta Beta.
-     */
-    private static void testTransformedSampler(double alpha, double beta) {
-        testTransformedSampler(alpha, beta, 0);
+    static Stream<Arguments> testTransformedSampler() {
+        return Stream.of(
+            // Gaussian case
+            // The Gaussian case has its own scaling where the StdDev is gamma * sqrt(2).
+            // (N(x) * sqrt(2)) * gamma != N(x) * (sqrt(2) * gamma)
+            // Test with a delta
+            Arguments.of(2.0, 0.0, 2),
+            // Cauchy case
+            Arguments.of(1.0, 0.0, 0),
+            // Levy case
+            Arguments.of(0.5, 1.0, 0),
+            // Symmetric case
+            Arguments.of(1.3, 0.0, 0),
+            // Alpha 1 case
+            Arguments.of(1.0, 0.23, 0),
+            // Alpha close to 1
+            Arguments.of(Math.nextUp(1.0), 0.23, 0),
+            // General case
+            Arguments.of(1.3, 0.1, 0),
+            // Small alpha case
+            Arguments.of(1e-5, 0.1, 0),
+            // Large alpha case.
+            // This hits the case for computing tau from (1-alpha) -> -1.
+            Arguments.of(1.99, 0.1, 0));
     }
 
     /**
@@ -2092,7 +2082,9 @@ class StableSamplerTest {
      * @param beta Beta.
      * @param ulp Allowed ULP difference.
      */
-    private static void testTransformedSampler(double alpha, double beta, int ulp) {
+    @ParameterizedTest
+    @MethodSource
+    void testTransformedSampler(double alpha, double beta, int ulp) {
         final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
         final UniformRandomProvider rng1 = rngs[0];
         final UniformRandomProvider rng2 = rngs[1];
@@ -2106,7 +2098,8 @@ class StableSamplerTest {
             for (int i = 0; i < 10; i++) {
                 final double x1 = sampler1.sample();
                 final double x2 = sampler2.sample();
-                Assertions.assertEquals(x1, x2, ulp * Math.ulp(x1));
+                Assertions.assertEquals(x1, x2, ulp * Math.ulp(x1),
+                    () -> String.format("alpha=%s, beta=%s, ulp=%d", alpha, beta, ulp));
             }
         }
     }
