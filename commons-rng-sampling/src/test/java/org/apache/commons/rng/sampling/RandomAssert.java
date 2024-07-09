@@ -180,6 +180,7 @@ public final class RandomAssert {
      *
      * @return the uniform random provider
      * @see RandomSource#create()
+     * @see #createRNG(int)
      */
     public static UniformRandomProvider createRNG() {
         return SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)].create();
@@ -206,6 +207,7 @@ public final class RandomAssert {
      * @return the uniform random provider
      * @see RandomSource#create()
      * @see RandomSource#createSeed()
+     * @see #createRNG()
      */
     public static UniformRandomProvider[] createRNG(int count) {
         final RandomSource source = SOURCES[ThreadLocalRandom.current().nextInt(SOURCES.length)];
@@ -236,8 +238,8 @@ public final class RandomAssert {
      *
      * <p>It should be noted that repeat invocations of a failing test by the surefire plugin
      * will receive an instance with the same seed. If a test may fail due to stochastic conditions
-     * then consider using {@link RandomAssert#createRNG()} which will obtain a different RNG
-     * for repeat test executions.
+     * then consider using {@link RandomAssert#createRNG()} or {@link #createRNG(int)} which will
+     * obtain a different RNG for repeat test executions. 
      *
      * @return the uniform random provider
      * @see RandomSource#create()
