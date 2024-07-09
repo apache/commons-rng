@@ -26,6 +26,9 @@ package org.apache.commons.rng.simple.internal;
  * @since 1.0
  */
 public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
+    /** Create an instance. */
+    public NoOpConverter() {}
+
     /** {@inheritDoc} */
     @Override
     public SEED convert(SEED seed) {

@@ -29,6 +29,8 @@ public class Long2LongArray implements Seed2ArrayConverter<Long, long[]> {
     private final int size;
 
     /**
+     * Create an instance.
+     *
      * @param size Size of the output array.
      */
     public Long2LongArray(int size) {

@@ -202,6 +202,11 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     }
 
     /**
+     * Create an instance.
+     */
+    public UnitBallSampler() {}
+
+    /**
      * @return a random Cartesian coordinate within the unit n-ball.
      */
     @Override

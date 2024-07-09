@@ -54,6 +54,8 @@ public class SmallMeanPoissonSampler
     private final UniformRandomProvider rng;
 
     /**
+     * Create an instance.
+     *
      * @param rng  Generator of uniformly distributed random numbers.
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean <= 0} or {@code Math.exp(-mean) == 0}

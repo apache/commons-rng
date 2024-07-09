@@ -129,7 +129,11 @@ public class L64X128Mix extends AbstractL64X128 implements SplittableUniformRand
         return z;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
     @Override
     protected L64X128Mix copy() {
         // This exists to ensure the jump function performed in the super class returns

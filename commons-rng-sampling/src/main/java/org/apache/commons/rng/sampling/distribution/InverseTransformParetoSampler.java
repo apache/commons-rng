@@ -39,6 +39,8 @@ public class InverseTransformParetoSampler
     private final LongToDoubleFunction nextDouble;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.

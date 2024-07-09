@@ -37,6 +37,8 @@ public class MarsagliaNormalizedGaussianSampler
     private final UniformRandomProvider rng;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     public MarsagliaNormalizedGaussianSampler(UniformRandomProvider rng) {

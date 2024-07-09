@@ -64,6 +64,8 @@ public class InverseTransformContinuousSampler
     private final UniformRandomProvider rng;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param function Inverse cumulative probability function.
      */

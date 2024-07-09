@@ -106,7 +106,7 @@
     <module>commons-rng-docs</module>
     <!--
         The examples are built only upon explicit request (requires Java 11).
-        See profiles: "commons-rng-examples"; "release"
+        See profiles: "examples"; "release"
     -->
   </modules>
 
@@ -421,6 +421,7 @@
           <suppressionsLocation>${rng.parent.dir}/src/conf/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <includeResources>false</includeResources>
+          <resourceExcludes>NOTICE,LICENSE,**/pom.properties,**/resolver-status.properties,**/sha512.properties</resourceExcludes>
         </configuration>
         <reportSets>
           <reportSet>
@@ -482,19 +483,6 @@
           ]]>
           </bottom>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>${commons.jacoco.version}</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <!-- select non-aggregate reports -->
-              <report>report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
     </plugins>
   </reporting>
@@ -678,10 +666,6 @@ This is avoided by creating an empty directory when svn is not available.
                   </roots>
                 </configurationFile>
               </analysisConfigurationFiles>
-              <!-- Note: Property 'reportSeverity' is deprecated but newer 'reportCriticality'
-                   does work as documented. -->
-              <reportSeverity>equivalent</reportSeverity>
-              <reportCriticality>allowed</reportCriticality>
             </configuration>
             <reportSets>
               <reportSet>
@@ -700,14 +684,14 @@ This is avoided by creating an empty directory when svn is not available.
         These are combined with the existing <modules>.
     -->
     <profile>
-      <id>commons-rng-examples</id>
+      <id>examples</id>
       <modules>
         <module>commons-rng-examples</module>
       </modules>
     </profile>
 
     <profile>
-      <id>commons-rng-integration</id>
+      <id>integration</id>
       <modules>
         <module>commons-rng-integration</module>
       </modules>
@@ -717,7 +701,7 @@ This is avoided by creating an empty directory when svn is not available.
       <id>release</id>
       <modules>
         <!-- Examples are not part of the binary release so do not include in the build.
-             Use the commons-rng-examples profile to create the site. -->
+             Use the examples profile to create the site. -->
         <module>dist-archive</module>
       </modules>
     </profile>

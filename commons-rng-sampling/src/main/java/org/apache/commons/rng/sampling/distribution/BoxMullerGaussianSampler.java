@@ -48,6 +48,8 @@ public class BoxMullerGaussianSampler
     private final UniformRandomProvider rng;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.

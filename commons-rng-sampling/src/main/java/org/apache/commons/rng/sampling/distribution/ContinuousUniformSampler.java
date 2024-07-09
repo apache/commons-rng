@@ -72,6 +72,8 @@ public class ContinuousUniformSampler
     }
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param lo Lower bound.
      * @param hi Higher bound.

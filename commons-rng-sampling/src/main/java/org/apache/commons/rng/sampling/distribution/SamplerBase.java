@@ -31,6 +31,8 @@ public class SamplerBase {
     private final UniformRandomProvider rng;
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     protected SamplerBase(UniformRandomProvider rng) {
@@ -38,6 +40,8 @@ public class SamplerBase {
     }
 
     /**
+     * Return the next {@code double} value.
+     *
      * @return a random value from a uniform distribution in the
      * interval {@code [0, 1)}.
      */
@@ -46,6 +50,8 @@ public class SamplerBase {
     }
 
     /**
+     * Return the next {@code int} value.
+     *
      * @return a random {@code int} value.
      */
     protected int nextInt() {
@@ -53,6 +59,8 @@ public class SamplerBase {
     }
 
     /**
+     * Return the next {@code int} value.
+     *
      * @param max Upper bound (excluded).
      * @return a random {@code int} value in the interval {@code [0, max)}.
      */
@@ -61,6 +69,8 @@ public class SamplerBase {
     }
 
     /**
+     * Return the next {@code long} value.
+     *
      * @return a random {@code long} value.
      */
     protected long nextLong() {

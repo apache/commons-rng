@@ -95,6 +95,8 @@ public class ZigguratNormalizedGaussianSampler
     }
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     public ZigguratNormalizedGaussianSampler(UniformRandomProvider rng) {

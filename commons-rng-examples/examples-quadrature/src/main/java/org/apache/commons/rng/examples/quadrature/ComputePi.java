@@ -40,6 +40,8 @@ public class ComputePi extends MonteCarloIntegration {
     private static final int DIMENSION = 2;
 
     /**
+     * Create an instance.
+     *
      * @param rng RNG.
      */
     public ComputePi(UniformRandomProvider rng) {
@@ -78,6 +80,8 @@ public class ComputePi extends MonteCarloIntegration {
     }
 
     /**
+     * Compute the value of pi.
+     *
      * @param numPoints Number of random points to generate.
      * @return the approximate value of pi.
      */

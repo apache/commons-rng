@@ -22,6 +22,9 @@ package org.apache.commons.rng.simple.internal;
  * @since 1.0
  */
 public class LongArray2Long implements SeedConverter<long[], Long> {
+    /** Create an instance. */
+    public LongArray2Long() {}
+
     /** {@inheritDoc} */
     @Override
     public Long convert(long[] seed) {

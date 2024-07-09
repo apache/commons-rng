@@ -119,6 +119,8 @@ public class LargeMeanPoissonSampler
 
 
     /**
+     * Create an instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean.
      * @throws IllegalArgumentException if {@code mean < 1} or

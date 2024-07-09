@@ -121,7 +121,11 @@ public class L64X128StarStar extends AbstractL64X128 implements SplittableUnifor
         return z;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Create a copy.
+     *
+     * @return the copy
+     */
     @Override
     protected L64X128StarStar copy() {
         // This exists to ensure the jump function performed in the super class returns
