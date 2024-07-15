@@ -19,7 +19,7 @@
 # "mvn package" from the top level project directory).
 
 TOPDIR=../..
-RNGVERSION=1.6-SNAPSHOT
+RNGVERSION=1.7-SNAPSHOT
 TARGETDIR=target
 
 # Module path.
