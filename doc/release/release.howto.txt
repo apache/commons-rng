@@ -75,11 +75,11 @@ NOTE
 When performing a release it is good practice to edit a copy of these notes during the process
 and merge the updated document into the repository following a release. To assist in this process
 a find-and-replace can be performed to update all the version numbers in order. For example
-based on a previous release of 1.5:
+based on a previous release of 1.6:
 
-- Next development version  : 1.6 -> 1.7
-- Next release version      : 1.5 -> 1.6
-- Previous release version  : 1.4 -> 1.5
+- Next development version  : 1.7 -> 1.8
+- Next release version      : 1.6 -> 1.7
+- Previous release version  : 1.5 -> 1.6
 - Release candidate version : RC1 -> RC2   (if applicable)
 
 This allows the included commands to be coped during the release process.
@@ -95,9 +95,9 @@ Preliminary checks:
      <properties>
        <!-- ... -->
        <!-- upcoming release version -->
-       <commons.release.version>1.5</commons.release.version>
+       <commons.release.version>1.6</commons.release.version>
        <!-- previous release version -->
-       <commons.bc.version>1.4</commons.bc.version>
+       <commons.bc.version>1.5</commons.bc.version>
        <!-- ... -->
      </properties>
    Check all the issues reported by the "japicmp" plugin.
@@ -126,10 +126,10 @@ that the build process can create all the necessary artifacts.
 
   The "dist-archive/target" directory will contain those files:
 
-    commons-rng-1.5-SNAPSHOT-bin.tar.gz
-    commons-rng-1.5-SNAPSHOT-bin.zip
-    commons-rng-1.5-SNAPSHOT-src.tar.gz
-    commons-rng-1.5-SNAPSHOT-src.zip
+    commons-rng-1.6-SNAPSHOT-bin.tar.gz
+    commons-rng-1.6-SNAPSHOT-bin.zip
+    commons-rng-1.6-SNAPSHOT-src.tar.gz
+    commons-rng-1.6-SNAPSHOT-src.zip
 
   At some point when processing the above command, the GPG passphrase will be
   requested; to avoid problems, the "gpg2" executable should be specified in
@@ -169,18 +169,18 @@ candidate, create it locally starting from the master branch or the version
 branch and push it to Apache repository (assuming it is called origin),
 remembering the binding between the local and remote origin branches:
 
-  $ git branch 1.5-release
-  $ git push -u origin 1.5-release
+  $ git branch 1.6-release
+  $ git push -u origin 1.6-release
 
-(Optional)
-Modify the dist-archive/pom.xml to update the release manager name and GPG signing key
-to be used for the release.
+Note that the the release manager name and GPG signing key to be used for the release
+should be defined in the .m2/settings.xml
+(see https://commons.apache.org/releases/prepare.html).
 
 
 (3)
 Switch to the release branch:
 
-  $ git checkout 1.5-release
+  $ git checkout 1.6-release
 
 
 (4)
@@ -188,8 +188,8 @@ If there have been changes committed in the master branch or the version
 branch since the creation of the release branch, there are two cases:
 
   (4a)
-  if all these changes must be included in version 1.5, merge "master"
-  or the version branch into "1.5-release":
+  if all these changes must be included in version 1.6, merge "master"
+  or the version branch into "1.6-release":
 
     $ git merge master
 
@@ -198,15 +198,15 @@ branch since the creation of the release branch, there are two cases:
     $ git merge RNG_1_X
 
   (4b)
-  if only part of these changes must be included in version 1.5,
-  cherry-pick the required commits into the "1.5-release" branch:
+  if only part of these changes must be included in version 1.6,
+  cherry-pick the required commits into the "1.6-release" branch:
 
     $ git cherry-pick commit-SHA
 
 
 (5)
 Update the release specific files, checking you are really working on the
-1.5-release branch and *not* on the master branch.
+1.6-release branch and *not* on the master branch.
 
 In particular:
  * Update and commit the "src/site/site.xml" file to contain the information
@@ -215,14 +215,14 @@ In particular:
  * Estimate a release date (taking into account the release vote delay) and
    insert it in the "src/changes/changes.xml" file.
  * Update the "pom.xml" to contain the final version number and not a SNAPSHOT:
-   Assuming that the release version will be "1.5", modify the "<version>" tag to
+   Assuming that the release version will be "1.6", modify the "<version>" tag to
    read:
 
-    <version>1.5</version>
+    <version>1.6</version>
 
    This can be done using maven:
 
-    $ mvn versions:set -DnewVersion=1.5 -DgenerateBackupPoms=false
+    $ mvn versions:set -DnewVersion=1.6 -DgenerateBackupPoms=false
 
    Modify the section of "<properties>" that also refers to version numbers.
    You should uncomment the "<commons.rc.version>" line and indicate the
@@ -232,7 +232,7 @@ In particular:
 
   <properties>
     <!-- ... -->
-    <commons.release.version>1.5</commons.release.version>
+    <commons.release.version>1.6</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <!-- ... -->
   </properties>
@@ -249,6 +249,11 @@ This file is updated automatically by running the command:
   $ mvn -N -Pexamples commons-build:download-page
 
   Note: This command presently requires Java 8.
+
+Note: The maven commands may update the project.build.outputTimestamp
+property for reproducible builds. A suitable value should be placed into
+the rng.build.outputTimestamp property which is used throughout the modules.
+
 
 (7)
 The "release notes" file will be created by gathering all the changes
@@ -269,11 +274,11 @@ issue field. Update changes.xml if appropriate.
 Append the previous release notes from src/site/resources/release-notes/ to the current one:
 
   $ (echo "=============================================================================" &&
-     cat src/site/resources/release-notes/RELEASE-NOTES-1.4.txt) >> RELEASE-NOTES.txt
+     cat src/site/resources/release-notes/RELEASE-NOTES-1.5.txt) >> RELEASE-NOTES.txt
 
 Copy the RELEASE-NOTES.txt to src/site/resources/release-notes:
 
-  $ cp RELEASE-NOTES.txt src/site/resources/release-notes/RELEASE-NOTES-1.5.txt
+  $ cp RELEASE-NOTES.txt src/site/resources/release-notes/RELEASE-NOTES-1.6.txt
 
 Update the src/site/xdoc/release-history.xml to include the latest version. This generates
 the release history page on the web site.
@@ -289,9 +294,10 @@ Commit the updated files to git:
             src/site/xdoc/release-history.xml \
             commons-rng-bom/src/site/xdoc/index.xml
 
-Check you did not forget any files:
+Check you did not forget any files (e.g. all the pom.xml files):
 
   $ git status
+  $ git add commons-rng-* dist-archive/pom.xml
 
 Commit the changes:
 
@@ -308,7 +314,7 @@ Then, assuming the first candidate, the suffix will be "RC1" (this should
 be the same as in the "<properties>" in the "pom.xml"), and the command
 will be:
 
-  $ git tag -u "__Your_key_id__" -s -m "RC1." commons-rng-1.5-RC1
+  $ git tag -u "__Your_key_id__" -s -m "RC1." commons-rng-1.6-RC1
 
 If you have several GPG keys, you may prefer to use "-u keyId" to select a specific
 key for signing the tag instead of "-s" which select automatically one key
@@ -316,13 +322,13 @@ from the configured e-mail address.
 
 Check the tag GPG signature:
 
-  $ git tag -v commons-rng-1.5-RC1
+  $ git tag -v commons-rng-1.6-RC1
 
 You will get something like:
 
   object cf4a9d70c9ac24dd7196995390171150e4e56451
   type commit
-  tag commons-rng-1.5-RC1
+  tag commons-rng-1.6-RC1
   tagger YourName <YourApacheEmail> 1418934614 +0100
 
   RC1.
@@ -334,7 +340,7 @@ as it is the most stable reference for traceability.
 
 Push everything (including the tag!) on the Apache repository:
 
-  $ git push && git push origin commons-rng-1.5-RC1
+  $ git push && git push origin commons-rng-1.6-RC1
 
 
 (9)
@@ -342,7 +348,7 @@ Switch to a new directory out of your regular workspace, and retrieve
 the official tag from the Apache repository:
 
   $ cd /tmp
-  $ git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.5-RC1
+  $ git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.6-RC1
 
 In the command above, the --branch option accepts both branch names and tags names,
 so we specify directly the tag here. Git will warn that the resulting workspace
@@ -385,7 +391,8 @@ the maven settings.xml file. Typically the username is the same for Nexus reposi
 settings.xml file can be used by setting the commons.distServer property for the commons release
 plugin (see https://commons.apache.org/proper/commons-release-plugin/index.html).
 
-You can then generate the release artifacts without the site generation:
+You can then generate the release artifacts without the site generation
+(using Java 11 - see below):
 
   $ mvn -Duser.name="__Your_Apache_id__" [-Dcommons.distServer=apache.releases.https] \
         [-Duser.password=<yourApacheIdsPassword] \
@@ -404,22 +411,21 @@ documentation. The release profile will not include the example modules as they
 are not part of the binary release artifacts. The 'package' goal is required
 to generate a jar file for the japicmp report.
 
-Using Java 8 ensures a package-list is created for the javadoc in each module. Later Java
-versions may generate an element-list. If the site is generated including the examples
-module using JDK 11+ without running 'mvn clean' then the package-list will coexist
-alongside the newly generated element-list. This allows the javadocs to be searchable
-from new and old JDKs.
+Using Java 11 will include a module-info.java in the jar via the moditect plugin.
+However it will not create a package-list for the javadoc (instead creating an
+element-list). To ensure the generated javadoc are searchable for new and old
+JDKs a package-list will be generated later during the full site build.
 
-This process transfers more files than really needed in the the "staging" (i.e.
+This process may transfer more files than really needed in the the "staging" (i.e.
 non official) maven repository. The files expected in the repository for jar
 artifacts are
-  commons-rng-<ModuleArtifactID>-1.5.pom
-  commons-rng-<ModuleArtifactID>-1.5.jar
-  commons-rng-<ModuleArtifactID>-1.5.javadoc.jar
-  commons-rng-<ModuleArtifactID>-1.5.sources.jar
-  commons-rng-<ModuleArtifactID>-1.5.test-sources.jar
-  commons-rng-<ModuleArtifactID>-1.5.tests.jar
-  commons-rng-<ModuleArtifactID>-1.5.spdx.rdf.xml
+  commons-rng-<ModuleArtifactID>-1.6.pom
+  commons-rng-<ModuleArtifactID>-1.6.jar
+  commons-rng-<ModuleArtifactID>-1.6.javadoc.jar
+  commons-rng-<ModuleArtifactID>-1.6.sources.jar
+  commons-rng-<ModuleArtifactID>-1.6.test-sources.jar
+  commons-rng-<ModuleArtifactID>-1.6.tests.jar
+  commons-rng-<ModuleArtifactID>-1.6.spdx.rdf.xml
 and their associated fingerprints
   <file-name>.md5
   <file-name>.sha1
@@ -436,8 +442,8 @@ present, they must be manually removed from Nexus staging area.
 
 ***
 Note: The commons-rng-bom artifact is deployed using the sign-and-deploy goal
-of the maven gpg plugin. This still adds md5 and sha1 files for the artifact asc
-files and these should be deleted.
+of the maven gpg plugin. This previously added md5 and sha1 files for the artifact
+asc files and these should be deleted if present.
 
 Select each .asc.md5 and .asc.sha1 file and delete the artifact. Then refresh
 the view and confirm the deletion.
@@ -445,10 +451,10 @@ the view and confirm the deletion.
 
 The process used to transfer the complete source and binaries distributions files,
 (for each module):
-  commons-rng-<ModuleArtifactId>-1.5-bin.tar.gz
-  commons-rng-<ModuleArtifactId>-1.5-bin.zip
-  commons-rng-<ModuleArtifactId>-1.5-src.tar.gz
-  commons-rng-<ModuleArtifactId>-1.5-src.zip
+  commons-rng-<ModuleArtifactId>-1.6-bin.tar.gz
+  commons-rng-<ModuleArtifactId>-1.6-bin.zip
+  commons-rng-<ModuleArtifactId>-1.6-src.tar.gz
+  commons-rng-<ModuleArtifactId>-1.6-src.zip
 as well as their associated .md5 and .sha1 fingerprints and .asc signatures.
 All these files are not maven artifacts but rather distribution archives: They
 belong elsewhere; hence they must also been removed from the Nexus staging
@@ -470,13 +476,13 @@ referred to in this section.]
 ***
 Verify that the release plugin has performed the steps below.
 You may be required to remove the staged site from the "dev" area
-and add missing files. The following was performed for release 1.5:
+and add missing files. The following was performed for release 1.6:
 
   $ cd /tmp
   $ svn checkout https://dist.apache.org/repos/dist/dev/commons/rng
-  $ cd rng/1.5-RC1
+  $ cd rng/1.6-RC1
   $ svn del site
-  $ svn commit -m "Distribution files for Commons RNG v1.5 (RC1)."
+  $ svn commit -m "Distribution files for Commons RNG v1.6 (RC1)."
 ***
 
 Create and upload the other distribution files to the Apache servers.
@@ -508,7 +514,7 @@ Create and upload the other distribution files to the Apache servers.
   Copy other files from the RC workspace:
 
     $ cp path-to-the-RC-workspace/RELEASE-NOTES.txt .
-    $ cp path-to-the-RC-workspace/dist-archive/target/commons-release-plugin/scm/1.5-RC1/README.html .
+    $ cp path-to-the-RC-workspace/dist-archive/target/commons-release-plugin/scm/1.6-RC1/README.html .
     $ cp path-to-the-RC-workspace/dist-archive/target/*-bin.* binaries
     $ cp path-to-the-RC-workspace/dist-archive/target/*-src.* source
 
@@ -534,7 +540,7 @@ Create and upload the other distribution files to the Apache servers.
       RELEASE-NOTES.txt \
       binaries/* \
       source/*
-    $ svn commit -m "Distribution files for Commons RNG v1.5 (RC1)."
+    $ svn commit -m "Distribution files for Commons RNG v1.6 (RC1)."
 
 
 (13)
@@ -562,17 +568,27 @@ Then run these commands:
 
   Do not run 'clean' as it will delete the release source/binary artifacts and the
   release plugin cannot be used to generate the template VOTE.txt file with the
-  correct hashes. It also removes the previous javadocs package-list generated using
-  Java 8.
-
+  correct hashes.
+  
   $ mvn -Pexamples package site site:stage
+  
+  To ensure the javadocs are searchable from Java 8 requires a package-list. This
+  can be created by copying the element-list. This is only required for the Java 8
+  modules:
+  
+  $ find target/staging/commons-rng-client-api \
+      target/staging/commons-rng-core \
+      target/staging/commons-rng-simple \
+      target/staging/commons-rng-sampling \
+      target/staging/commons-rng-docs \
+      -name element-list -execdir cp {} package-list \;
 
   $ cd target
-  $ mv staging commons-rng-1.5-RC1-site
+  $ mv staging commons-rng-1.6-RC1-site
   $ lftp sftp://__Your_apache_login__@home.apache.org
      lftp you@home.apache.org:~> mkdir public_html
      lftp you@home.apache.org:~> cd public_html
-     lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.5-RC1-site
+     lftp you@home.apache.org:~/public_html> mirror -R commons-rng-1.6-RC1-site
      lftp you@home.apache.org:~/public_html> bye
 
 If lftp fails with 'Fatal error: Host key verification failed.' then the host
@@ -588,27 +604,30 @@ a result that must be heavily edited.]
 Template the vote using this command (run from the dist-archive module):
 
   $ mvn org.apache.commons:commons-release-plugin:vote-txt \
-        -Dgit.tag.commit=commons-rng-1.5-RC1 \
+        -Dgit.tag.commit=commons-rng-1.6-RC1 \
         -Dcommons.nexus.repo.id=XXXX
+        -Prelease
 
 where XXXX is the nexus repository staging ID. The output is target/VOTE.txt.
 This must be heavily edited. It is useful to generate the release hashes.
+The release profile assumes this is the profile ID containing the Commons release
+manager name and key properties in the settings.xml.
 
 Call to vote by sending a message to the "dev" ML with subject
-"[VOTE][RC1] Release Commons RNG 1.5". You can use the following example as
+"[VOTE][RC1] Release Commons RNG 1.6". You can use the following example as
 a reference point, replacing the URLs with the appropriate ones:
 ----------
-We have fixed quite a few bugs and added some significant enhancements since Apache Commons RNG 1.4 was released, so I would like to release Apache Commons RNG 1.5.
+We have fixed quite a few bugs and added some significant enhancements since Apache Commons RNG 1.5 was released, so I would like to release Apache Commons RNG 1.6.
 
-Apache Commons RNG 1.5 RC1 is available for review here:
-    https://dist.apache.org/repos/dist/dev/commons/rng/1.5-RC1 (svn revision 49724)
+Apache Commons RNG 1.6 RC1 is available for review here:
+    https://dist.apache.org/repos/dist/dev/commons/rng/1.6-RC1 (svn revision 49724)
 
-The Git tag commit for this RC is commons-rng-1.5-RC1 which you can browse here:
-    https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=commons-rng-1.5-RC1
+The Git tag commit for this RC is commons-rng-1.6-RC1 which you can browse here:
+    https://gitbox.apache.org/repos/asf?p=commons-rng.git;a=commit;h=commons-rng-1.6-RC1
 
 You may checkout this tag using:
-    git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.5-RC1 commons-rng-1.5-RC1
-(signature can be checked from git using 'git tag -v commons-rng-1.5-RC1')
+    git clone https://gitbox.apache.org/repos/asf/commons-rng.git --branch commons-rng-1.6-RC1 commons-rng-1.6-RC1
+(signature can be checked from git using 'git tag -v commons-rng-1.6-RC1')
 
 Commit ID the tag points at:
     6f2e939bc1ae5d7c1317d4fb1af9ef3ac8d45e54
@@ -620,16 +639,16 @@ These are the artifacts and their hashes:
 
 #Release SHA-512s
 #[Date]
-commons-rng-1.5-src.zip=<hash>
-commons-rng-1.5-src.tar.gz=<hash>
-commons-rng-1.5-bin.tar.gz=<hash>
-commons-rng-1.5-bin.zip=<hash>
+commons-rng-1.6-src.zip=<hash>
+commons-rng-1.6-src.tar.gz=<hash>
+commons-rng-1.6-bin.tar.gz=<hash>
+commons-rng-1.6-bin.zip=<hash>
 
 Signatures may be validated on a system supporting a bash Unix shell by executing:
-    svn co https://dist.apache.org/repos/dist/dev/commons/rng/1.5-RC1/
-    cd 1.5-RC1
+    svn co https://dist.apache.org/repos/dist/dev/commons/rng/1.6-RC1/
+    cd 1.6-RC1
     chmod +x ./signature-validator.sh
-    for m in client-api core simple sampling bom; do ./signature-validator.sh https://repository.apache.org/content/repositories/orgapachecommons-1596/org/apache/commons/commons-rng-${m}/1.5/; done
+    for m in client-api core simple sampling bom; do ./signature-validator.sh https://repository.apache.org/content/repositories/orgapachecommons-1596/org/apache/commons/commons-rng-${m}/1.6/; done
 
 The source code contains examples that are not part of the public API. These examples contain Java 11 modules and are enabled using a profile (see below).
 
@@ -651,28 +670,32 @@ Java version: 11.0.11, vendor: Ubuntu, runtime: /usr/lib/jvm/java-11-openjdk-amd
 Default locale: en_GB, platform encoding: UTF-8
 OS name: "linux", version: "4.15.0-153-generic", arch: "amd64", family: "unix"
 
-Details of changes since 1.4 are in the release notes:
-    https://dist.apache.org/repos/dist/dev/commons/rng/1.5-RC1/RELEASE-NOTES.txt
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/changes-report.html
+Details of changes since 1.5 are in the release notes:
+    https://dist.apache.org/repos/dist/dev/commons/rng/1.6-RC1/RELEASE-NOTES.txt
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/changes-report.html
 
 Site:
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/index.html
-    (note some *relative* links are broken and the 1.5 directories are not yet created - these will be OK once the site is deployed.)
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/index.html
+    (note some *relative* links are broken and the 1.6 directories are not yet created - these will be OK once the site is deployed.)
 
-JApiCmp Report (compared to 1.4):
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-client-api/japicmp.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-core/japicmp.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-simple/japicmp.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-sampling/japicmp.html
+The site has been staged in a personal Apache space as it includes the examples
+modules documentation. These are not staged to the SVN dev staging area during
+the release as these are not part of the official release artifacts.
 
-RevApi Report (compared to 1.4):
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-client-api/revapi-report.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-core/revapi-report.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-simple/revapi-report.html
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/commons-rng-sampling/revapi-report.html
+JApiCmp Report (compared to 1.5):
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-client-api/japicmp.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-core/japicmp.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-simple/japicmp.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-sampling/japicmp.html
+
+RevApi Report (compared to 1.5):
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-client-api/revapi-report.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-core/revapi-report.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-simple/revapi-report.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/commons-rng-sampling/revapi-report.html
 
 RAT Report:
-    https://home.apache.org/~aherbert/commons-rng-1.5-RC1-site/rat-report.html
+    https://home.apache.org/~aherbert/commons-rng-1.6-RC1-site/rat-report.html
 
 KEYS:
   https://downloads.apache.org/commons/KEYS
@@ -724,8 +747,8 @@ area of the Apache dist server.
   Copy the files from the checkout of the repository that was voted on:
 
     $ svn co https://dist.apache.org/repos/dist/dev/commons/rng rng2
-    $ cd rng2
-    $ rsync -Cav ../rng/1.5-RC1/ .
+    $ cd rng
+    $ rsync -Cav ../rng2/1.6-RC1/ .
 
   [Note: This might overwrite symbolic links; in this case, do a "svn
   revert" in order to restore the files that should not be updated.]
@@ -741,13 +764,13 @@ area of the Apache dist server.
   Perform a "svn add" for the new release artifacts.
   Perform a "svn del" for the old release(s) artifacts.
 
-    $ svn add binaries/*-1.5-* source/*-1.5-*
-    $ svn del binaries/*-1.4-* source/*-1.4-*
+    $ svn add binaries/*-1.6-* source/*-1.6-*
+    $ svn del binaries/*-1.5-* source/*-1.5-*
 
   (17d)
   Commit:
 
-    $ svn commit -m "Release Commons RNG v1.5 (from RC1)."
+    $ svn commit -m "Release Commons RNG v1.6 (from RC1)."
 
   (17e)
   Register the release at
@@ -785,7 +808,7 @@ Remove all files there (except .svn folder) and move all the files from the site
 
  $ cd site-content
  $ rm -rf *
- $ cp -pR ../target/commons-rng-1.5-RC1-site/* .
+ $ cp -pR ../target/commons-rng-1.6-RC1-site/* .
 
 Check for new or deleted files:
  $ svn status
@@ -808,7 +831,7 @@ The following commands are useful.
 
 Note that the "awk '{if ... print $2}'" only works for files that have no
 spaces. Currently the only files known to have spaces are the SPDX files,
-e.g. 'Apache Commons RNG-1.5.spdx.rdf.xml'; these must be committed manually.
+e.g. 'Apache Commons RNG-1.6.spdx.rdf.xml'; these must be committed manually.
 
 Reverting (may not be required):
 
@@ -830,7 +853,7 @@ Check the local website:
   $ open index.html
 
 Commit the new contents of the web site:
-  $ svn commit -m "Commons RNG v1.5 was released (from RC1). Web site update"
+  $ svn commit -m "Commons RNG v1.6 was released (from RC1). Web site update"
 
 Note the SVN website revision for the next step (javadocs archiving).
 
@@ -842,7 +865,7 @@ your component:
 
   [edit file: conf/component_releases.properties]
 
-  $ (cd conf && svn commit -m "Commons RNG v1.5 was released (from RC1)")
+  $ (cd conf && svn commit -m "Commons RNG v1.6 was released (from RC1)")
 
 
 (20)
@@ -855,7 +878,7 @@ The Javadoc must therefore be copied manually using server side copy from the
 to work. This is done as follows:
 
   $ export RNG_WEB_SITE_SVN_REVISION=1002658
-  $ export RNG_RELEASE_VERSION=1.5
+  $ export RNG_RELEASE_VERSION=1.6
   $ svnmucc -U https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-rng \
       cp $RNG_WEB_SITE_SVN_REVISION commons-rng-client-api/apidocs \
                                     commons-rng-client-api/javadocs/api-$RNG_RELEASE_VERSION \
@@ -870,7 +893,7 @@ to work. This is done as follows:
 [Note: The script "doc/release/copyLongTermJavadoc.sh" performs the above
 command (options are the svn revision and the component's new version).]
 
-  $ doc/release/copyLongTermJavadoc.sh -r 1080991 -v 1.5
+  $ doc/release/copyLongTermJavadoc.sh -r 1080991 -v 1.6
 
 Wait a few minutes for the live site to fully sync and then check
   https://commons.apache.org/proper/commons-rng/
@@ -887,14 +910,37 @@ in the SVN repository.
 
   [edit file: doap/doap_rng.rdf]
 
-  $ (cd doap && svn commit -m "Commons RNG v1.5 was released (from RC1)")
+  $ (cd doap && svn commit -m "Commons RNG v1.6 was released (from RC1)")
+
+  Note: A buildbot should automatically rebuild the commons site using the
+  component_releases.properties.
+  After a few minutes verify the latest release is listed here:
+    https://commons.apache.org/
+
+  Otherwise the site can be rebuilt manually using:
+
+  > svn co https://svn.apache.org/repos/asf/commons/cms-site/trunk/
+  ==> edit doap/doap_<component>.rdf
+  > conf/parse-latest-release.py
+  > svn diff
+  => check you have not downgraded other components - fix their doap file and repeat
+  > svn commit conf doap -m 'Regenerated component releases'
+  
+  > commons-site-build.sh
+  > svn diff target/site
+  > svn commit target/site -m 'Update the staging site prior to deployment'
+  => inspect at https://svn.apache.org/repos/infra/websites/staging/commons/trunk/content/index.html
+  
+  > commons-site-publish.sh
+  => inspect target/commons-site-publish.svnmucc
+  => Run svnmucc command printed by the script
 
 
 (22)
 In the git repository, put the official final tag to point at the same commit
 as the **last release candidate** tag:
 
-  $ git tag -v commons-rng-1.5-RC1
+  $ git tag -v commons-rng-1.6-RC1
 
 Check the commit hash then add the release tag.
 Note: The 'rel/' prefix adds the tag to the release section of the tags.
@@ -902,48 +948,52 @@ This cannot be deleted once pushed to the main repository due to restrictions
 on this section of the tag namespace (preventing deletion of official release
 tags).
 
-  $ git checkout 1.5-release
-  $ git tag -u "__Your_key_id__" -s -m "RC1 becomes v1.5 official release." rel/commons-rng-1.5 [commit hash]
-  $ git tag -v rel/commons-rng-1.5
+  $ git checkout 1.6-release
+  $ git tag -u "__Your_key_id__" -s -m "RC1 becomes v1.6 official release." rel/commons-rng-1.6 [commit hash]
+  $ git tag -v rel/commons-rng-1.6
   $ git log -1
-  $ git push origin rel/commons-rng-1.5
+  $ git push origin rel/commons-rng-1.6
 
 
 (23)
 Switch back to the "master" branch.
 We now prepare for the next round of development (here we assume that the
-next version will be 1.6).
+next version will be 1.7).
 
   (23a)
-  Retrieve files from the "1.5-release branch" (so that the web site will
+  Retrieve files from the "1.6-release branch" (so that the web site will
   contain up-to-date information):
 
-    $ git checkout 1.5-release commons-rng-client-api/src/site/site.xml \
+    $ git checkout 1.6-release commons-rng-client-api/src/site/site.xml \
                                commons-rng-core/src/site/site.xml \
                                commons-rng-simple/src/site/site.xml \
                                commons-rng-sampling/src/site/site.xml \
+                               commons-rng-bom/src/site/xdoc/index.xml \
                                src/changes/changes.xml \
                                src/site/xdoc/download_rng.xml \
                                RELEASE-NOTES.txt \
-                               src/site/resources/release-notes/RELEASE-NOTES-1.5.txt \
+                               src/site/resources/release-notes/RELEASE-NOTES-1.6.txt \
                                src/site/xdoc/release-history.xml
+
+  Check for any other changes to integrate and merge them (this is relevant
+  if other changes were made on the release branch). The following command
+  would show only version changes in the pom.xml if no other development on
+  master has been performed.
+
+    $ git diff 1.6-release
 
   Edit "src/changes/changes.xml" to add a new section for the next release,
   setting the release date and description to "TBD".
   Then commit them.
 
   (23b)
-  Optional: If the release manager was changed retrieve the updated release manager details:
-
-    $ git checkout 1.5-release dist-archive/pom.xml
-
   Edit every "pom.xml" file (i.e. for each module) to contain
 
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
 
   This can be done using maven:
 
-    $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease -Pexamples
+    $ mvn release:update-versions -DautoVersionSubmodules=true -Prelease -Pexamples -Pintegration
 
   You will only be prompted for the desired version number once.
   This may miss the dist-archive/pom.xml for all
@@ -951,24 +1001,24 @@ next version will be 1.6).
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.
 
-  $ git grep '1.5-SNAPSHOT'    [old version number]
-  $ git grep '1.6-SNAPSHOT'    [new version number]
+  $ git grep '1.6-SNAPSHOT'    [old version number]
+  $ git grep '1.7-SNAPSHOT'    [new version number]
   $ git grep '<version>'
 
   Then commit them.
 
   (23c)
   Update the README.md files to refer the latest release. These files are
-  auto-generated from the commons maven plugin using 'mvn common:readme-md'.
+  auto-generated from the commons maven plugin using 'mvn commons-build:readme-md'.
   The generated README.md files may have been edited for the multi-module
   set-up of RNG with extra text added to the main README.md.
 
   An updated will involve:
 
-  1. Replacing the <version>1.4</version> example XML for the maven dependency to
-     <version>1.5</version>.
+  1. Replacing the <version>1.5</version> example XML for the maven dependency to
+     <version>1.6</version>.
   2. Updating any badges for Javadocs. This can be done using search and replace
-     of '1.4.svg' for '1.5.svg' and '/1.4)' for '/1.5)'.
+     of '1.5.svg' for '1.6.svg' and '/1.5)' for '/1.6)'.
 
   Check the changes using 'git diff' and commit.
 
@@ -982,6 +1032,11 @@ next version will be 1.6).
   Update any other files that use a hard-coded version number:
 
   - commons-rng-examples/examples-jpms/runApp.sh
+
+  (23f)
+  Update the version numbers in the JPMS integration test module.
+  Edit commons-rng-integration/src/test/resources/org/apache/commons/rng/integration/tests.bndrun
+  with the current build version for the RNG run bundles.
 
 
 (24)
@@ -1002,10 +1057,10 @@ the Apache mailer daemon.
 You can use the following message as a template:
 
 Subject:
-[ANNOUNCE] Apache Commons RNG 1.5 released
+[ANNOUNCE] Apache Commons RNG 1.6 released
 ----------
 The Apache Commons Team is pleased to announce the availability of
-version 1.5 of "Apache Commons RNG".
+version 1.6 of "Apache Commons RNG".
 
 Apache Commons RNG provides Java implementations of pseudo-random
 numbers generators.
@@ -1035,15 +1090,15 @@ Maven artifacts are also available in the central Maven repository:
 ----
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-client-api</artifactId>
-  <version>1.5</version>
+  <version>1.6</version>
 ----
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-simple</artifactId>
-  <version>1.5</version>
+  <version>1.6</version>
 ----
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-rng-sampling</artifactId>
-  <version>1.5</version>
+  <version>1.6</version>
 ----
 
 The Apache Commons Team
@@ -1066,7 +1121,7 @@ Update JIRA to close all issues resolved in this release and prepare for the nex
       Step 1: Select the issues to close.
       Step 2: Select 'Transition issues'.
       Step 3: Select to close.
-      Step 4: Enter comment: 'Closed by release 1.5'.
+      Step 4: Enter comment: 'Closed by release 1.6'.
               Unselect 'Send mail for this update'.
       Confirm.
 
@@ -1093,7 +1148,7 @@ from apache personal area:
 
   $ lftp sftp://__Your_apache_login__@home.apache.org
      lftp you@home.apache.org:~> cd public_html
-     lftp you@home.apache.org:~/public_html> rm -rf commons-rng-1.5-RC1-site
+     lftp you@home.apache.org:~/public_html> rm -rf commons-rng-1.6-RC1-site
      lftp you@home.apache.org:~/public_html> bye
 
 (27)
