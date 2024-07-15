@@ -239,7 +239,7 @@ public final class RandomAssert {
      * <p>It should be noted that repeat invocations of a failing test by the surefire plugin
      * will receive an instance with the same seed. If a test may fail due to stochastic conditions
      * then consider using {@link RandomAssert#createRNG()} or {@link #createRNG(int)} which will
-     * obtain a different RNG for repeat test executions. 
+     * obtain a different RNG for repeat test executions.
      *
      * @return the uniform random provider
      * @see RandomSource#create()
