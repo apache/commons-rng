@@ -28,11 +28,11 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test*}
 # Generated using: mvn package bnd-resolver:resolve
 -runbundles: \
 	org.opentest4j;version='[1.3.0,1.3.1)',\
-	commons-rng-integration-tests;version='[1.6.0,1.6.1)',\
-	org.apache.commons.rng;version='[1.6.0,1.6.1)',\
-	org.apache.commons.rng.core;version='[1.6.0,1.6.1)',\
-	org.apache.commons.rng.sampling;version='[1.6.0,1.6.1)',\
-	org.apache.commons.rng.simple;version='[1.6.0,1.6.1)',\
+	commons-rng-integration-tests;version='[1.7.0,1.7.1)',\
+	org.apache.commons.rng;version='[1.7.0,1.7.1)',\
+	org.apache.commons.rng.core;version='[1.7.0,1.7.1)',\
+	org.apache.commons.rng.sampling;version='[1.7.0,1.7.1)',\
+	org.apache.commons.rng.simple;version='[1.7.0,1.7.1)',\
 	junit-jupiter-api;version='[5.11.0,5.11.1)',\
 	junit-jupiter-engine;version='[5.11.0,5.11.1)',\
 	junit-platform-commons;version='[1.11.0,1.11.1)',\
