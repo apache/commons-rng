@@ -1000,10 +1000,13 @@ next version will be 1.7).
   the dependencies. This should be updated manually.
   Double-check that the "pom.xml" files *really* have a "-SNAPSHOT" suffix
   in the "<version>" property.
+  Also check the <project.build.outputTimestamp> correctly references
+  rng.build.outputTimestamp (changes will have to be reverted):
 
   $ git grep '1.6-SNAPSHOT'    [old version number]
   $ git grep '1.7-SNAPSHOT'    [new version number]
   $ git grep '<version>'
+  $ git grep 'project.build.outputTimestamp' 
 
   Then commit them.
 
