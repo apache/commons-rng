@@ -16,9 +16,9 @@
  */
 package org.apache.commons.rng.examples.jmh.sampling;
 
+import java.util.function.BiConsumer;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
-import org.apache.commons.rng.sampling.ArraySampler;
 import org.apache.commons.rng.sampling.PermutationSampler;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
@@ -70,10 +70,46 @@ class ArrayShuffleBenchmarkTest {
     @CsvSource({
         "257",
         "8073",
-        // Above the bounded random threshold of 2^15
-        "31548",
     })
-    void testShuffle(int length) {
+    void testShuffle1(int length) {
+        assertShuffle(length, ArrayShuffleBenchmark::shuffle1);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "257",
+        "8073",
+        // Above the bounded random threshold of 2^15
+        "57548",
+    })
+    void testShuffle2(int length) {
+        assertShuffle(length, ArrayShuffleBenchmark::shuffle2);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "257",
+        "8073",
+        // Above the bounded random threshold of 2^15
+        "57548",
+    })
+    void testShuffle3(int length) {
+        assertShuffle(length, ArrayShuffleBenchmark::shuffle3);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "89",
+        "257",
+        "8073",
+        // Above the bounded random threshold of 2^15
+        "57548",
+    })
+    void testShuffle4(int length) {
+        assertShuffle(length, ArrayShuffleBenchmark::shuffle4);
+    }
+
+    private static void assertShuffle(int length, BiConsumer<UniformRandomProvider, int[]> fun) {
         final int[] array = PermutationSampler.natural(length);
         final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(SEED);
         final int samples = 1000000 / length;
@@ -81,7 +117,7 @@ class ArrayShuffleBenchmarkTest {
         final long[][] observed = new long[bins][bins];
         final int width = (int) Math.ceil((double) length / bins);
         for (int j = 0; j < samples; j++) {
-            ArraySampler.shuffle(rng, array);
+            fun.accept(rng, array);
             for (int i = 0; i < length; i++) {
                 observed[i / width][array[i] / width]++;
             }

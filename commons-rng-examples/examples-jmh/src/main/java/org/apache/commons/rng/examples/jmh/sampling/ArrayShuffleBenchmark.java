@@ -63,6 +63,10 @@ public class ArrayShuffleBenchmark {
     private static final long POW_32 = 1L << 32;
     /** 2^15. Length threshold to sample 2 integers from a random 32-bit value. */
     private static final int POW_15 = 1 << 15;
+    /** 2^9. Length threshold to sample 3 integers from a random 32-bit value. */
+    private static final int POW_9 = 1 << 9;
+    /** 2^6. Length threshold to sample 4 integers from a random 32-bit value. */
+    private static final int POW_6 = 1 << 6;
     /** Mask the lower 32-bit of a long. */
     private static final long MASK_32 = 0xffffffffL;
 
@@ -148,7 +152,7 @@ public class ArrayShuffleBenchmark {
         /**
          * Method name.
          */
-        @Param({"shuffle", "shuffle2"})
+        @Param({"shuffle", "shuffle2", "shuffle3", "shuffle4"})
         private String method;
 
         /** Shuffle function. */
@@ -172,6 +176,10 @@ public class ArrayShuffleBenchmark {
                 fun = ArrayShuffleBenchmark::shuffle1;
             } else if ("shuffle2".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle2;
+            } else if ("shuffle3".equals(method)) {
+                fun = ArrayShuffleBenchmark::shuffle3;
+            } else if ("shuffle4".equals(method)) {
+                fun = ArrayShuffleBenchmark::shuffle4;
             } else {
                 throw new IllegalStateException("Unknown shuffle method: " + method);
             }
@@ -270,6 +278,203 @@ public class ArrayShuffleBenchmark {
             final int index2 = indices[1];
             swap(array, i - 1, index1);
             swap(array, i - 2, index2);
+        }
+        return array;
+    }
+
+    /**
+     * Return two random values in {@code [0, range1)}, {@code [0, range2)}
+     * and {@code [0, range3)}. The
+     * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
+     *
+     * <p>The product bound can be any positive integer {@code >= range1*range2*range3}.
+     * It may be updated to become {@code range1*range2*range3}.
+     *
+     * @param range1 Range 1.
+     * @param range2 Range 2.
+     * @param range3 Range 3.
+     * @param productBound Product bound.
+     * @param rng Source of randomness.
+     * @return [i1, i2, i3]
+     */
+    static int[] randomBounded3(int range1, int range2, int range3, int[] productBound, UniformRandomProvider rng) {
+        long m = (rng.nextInt() & MASK_32) * range1;
+        // result1 and result2 are the top 32-bits of the long
+        long r1 = m;
+        // Leftover bits * range2
+        m = (m & MASK_32) * range2;
+        long r2 = m;
+        m = (m & MASK_32) * range3;
+        long r3 = m;
+        // Leftover bits must be unsigned
+        long l = m & MASK_32;
+        if (l < productBound[0]) {
+            final int bound = range1 * range2 * range3;
+            productBound[0] = bound;
+            if (l < bound) {
+                // 2^32 % bound
+                long t = POW_32 % bound;
+                while (l < t) {
+                    m = (rng.nextInt() & MASK_32) * range1;
+                    r1 = m;
+                    m = (m & MASK_32) * range2;
+                    r2 = m;
+                    m = (m & MASK_32) * range3;
+                    r3 = m;
+                    l = m & MASK_32;
+                }
+            }
+        }
+        // Convert to [0, range1), [0, range2), [0, range3)
+        return new int[] {(int) (r1 >> 32), (int) (r2 >> 32), (int) (r3 >> 32)};
+    }
+
+    /**
+     * Shuffles the entries of the given array.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
+     */
+    static int[] shuffle3(UniformRandomProvider rng, int[] array) {
+        int i = array.length;
+        // The threshold provided in the Brackett-Rozinsky and Lemire paper
+        // is the power of 2 below 20724. Note that the product 2^15*2^15
+        // is representable using signed integers.
+        for (; i > POW_15; i--) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        // Batches of 2 for sizes up to 2^15 elements
+        final int[] productBound = {i * (i - 1)};
+        for (; i > POW_9; i -= 2) {
+            final int[] indices = randomBounded2(i, i - 1, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+        }
+        // Batches of 3 for sizes up to 2^9 elements (power of 2 below 581)
+        productBound[0] = i * (i - 1) * (i - 2);
+        for (; i > 3; i -= 3) {
+            final int[] indices = randomBounded3(i, i - 1, i - 2, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            final int index3 = indices[2];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+            swap(array, i - 3, index3);
+        }
+        // Finish
+        for (; i > 1; i--) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        return array;
+    }
+
+    /**
+     * Return two random values in {@code [0, range1)}, {@code [0, range2)},
+     * {@code [0, range3)} and {@code [0, range4)}. The
+     * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
+     *
+     * <p>The product bound can be any positive integer {@code >= range1*range2*range3*range4}.
+     * It may be updated to become {@code range1*range2*range3*range4}.
+     *
+     * @param range1 Range 1.
+     * @param range2 Range 2.
+     * @param range3 Range 3.
+     * @param range4 Range 4.
+     * @param productBound Product bound.
+     * @param rng Source of randomness.
+     * @return [i1, i2, i3, i4]
+     */
+    static int[] randomBounded4(int range1, int range2, int range3, int range4, int[] productBound,
+            UniformRandomProvider rng) {
+        long m = (rng.nextInt() & MASK_32) * range1;
+        // result1 and result2 are the top 32-bits of the long
+        long r1 = m;
+        // Leftover bits * range2
+        m = (m & MASK_32) * range2;
+        long r2 = m;
+        m = (m & MASK_32) * range3;
+        long r3 = m;
+        m = (m & MASK_32) * range4;
+        long r4 = m;
+        // Leftover bits must be unsigned
+        long l = m & MASK_32;
+        if (l < productBound[0]) {
+            final int bound = range1 * range2 * range3 * range4;
+            productBound[0] = bound;
+            if (l < bound) {
+                // 2^32 % bound
+                long t = POW_32 % bound;
+                while (l < t) {
+                    m = (rng.nextInt() & MASK_32) * range1;
+                    r1 = m;
+                    m = (m & MASK_32) * range2;
+                    r2 = m;
+                    m = (m & MASK_32) * range3;
+                    r3 = m;
+                    m = (m & MASK_32) * range4;
+                    r4 = m;
+                    l = m & MASK_32;
+                }
+            }
+        }
+        // Convert to [0, range1), [0, range2), [0, range3), [0, range4)
+        return new int[] {(int) (r1 >> 32), (int) (r2 >> 32), (int) (r3 >> 32), (int) (r4 >> 32)};
+    }
+
+    /**
+     * Shuffles the entries of the given array.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
+     */
+    static int[] shuffle4(UniformRandomProvider rng, int[] array) {
+        int i = array.length;
+        // The threshold provided in the Brackett-Rozinsky and Lemire paper
+        // is the power of 2 below 20724. Note that the product 2^15*2^15
+        // is representable using signed integers.
+        for (; i > POW_15; i--) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        // Batches of 2 for sizes up to 2^15 elements
+        final int[] productBound = {i * (i - 1)};
+        for (; i > POW_9; i -= 2) {
+            final int[] indices = randomBounded2(i, i - 1, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+        }
+        // Batches of 3 for sizes up to 2^9 elements (power of 2 below 581)
+        productBound[0] = i * (i - 1) * (i - 2);
+        for (; i > POW_6; i -= 3) {
+            final int[] indices = randomBounded3(i, i - 1, i - 2, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            final int index3 = indices[2];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+            swap(array, i - 3, index3);
+        }
+        // Batches of 4 for sizes up to 2^6 elements (power of 2 below 109)
+        productBound[0] = i * (i - 1) * (i - 2) * (i - 3);
+        for (; i > 4; i -= 4) {
+            final int[] indices = randomBounded4(i, i - 1, i - 2, i - 3, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            final int index3 = indices[2];
+            final int index4 = indices[3];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+            swap(array, i - 3, index3);
+            swap(array, i - 4, index4);
+        }
+        // Finish
+        for (; i > 1; i--) {
+            swap(array, i - 1, rng.nextInt(i));
         }
         return array;
     }
