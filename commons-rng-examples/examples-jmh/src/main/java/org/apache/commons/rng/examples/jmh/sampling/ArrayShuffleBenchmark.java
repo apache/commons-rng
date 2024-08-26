@@ -152,7 +152,10 @@ public class ArrayShuffleBenchmark {
         /**
          * Method name.
          */
-        @Param({"shuffle", "shuffle2", "shuffle3", "shuffle4"})
+        @Param({"shuffle1",
+            // Effectively the same speed as shuffle1
+            //"shuffle1a",
+            "shuffle2", "shuffle3", "shuffle4"})
         private String method;
 
         /** Shuffle function. */
@@ -172,8 +175,10 @@ public class ArrayShuffleBenchmark {
          */
         @Setup
         public void setup() {
-            if ("shuffle".equals(method)) {
+            if ("shuffle1".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle1;
+            } else if ("shuffle1a".equals(method)) {
+                fun = ArrayShuffleBenchmark::shuffle1a;
             } else if ("shuffle2".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle2;
             } else if ("shuffle3".equals(method)) {
@@ -210,6 +215,50 @@ public class ArrayShuffleBenchmark {
     static int[] shuffle1(UniformRandomProvider rng, int[] array) {
         for (int i = array.length; i > 1; i--) {
             swap(array, i - 1, rng.nextInt(i));
+        }
+        return array;
+    }
+
+    /**
+     * Generates an {@code int} value between 0 (inclusive) and the specified value
+     * (exclusive).
+     *
+     * <p>Taken from {@code o.a.c.rng.UniformRandomProviderSupport}. This is used
+     * to benchmark elimination of the conditional check for a negative index in
+     * {@link UniformRandomProvider#nextInt(int)}.
+     *
+     * @param source Source of randomness.
+     * @param n Bound on the random number to be returned. Must be strictly positive.
+     * @return a random {@code int} value between 0 (inclusive) and {@code n} (exclusive).
+     */
+    static int nextInt(UniformRandomProvider source,
+                       int n) {
+        // Lemire (2019): Fast Random Integer Generation in an Interval
+        // https://arxiv.org/abs/1805.10941
+        long m = (source.nextInt() & 0xffffffffL) * n;
+        long l = m & 0xffffffffL;
+        if (l < n) {
+            // 2^32 % n
+            final long t = POW_32 % n;
+            while (l < t) {
+                m = (source.nextInt() & 0xffffffffL) * n;
+                l = m & 0xffffffffL;
+            }
+        }
+        return (int) (m >>> 32);
+    }
+
+    /**
+     * Shuffles the entries of the given array.
+     * Uses a Fisher-Yates shuffle.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
+     */
+    static int[] shuffle1a(UniformRandomProvider rng, int[] array) {
+        for (int i = array.length; i > 1; i--) {
+            swap(array, i - 1, nextInt(rng, i));
         }
         return array;
     }
@@ -283,7 +332,7 @@ public class ArrayShuffleBenchmark {
     }
 
     /**
-     * Return two random values in {@code [0, range1)}, {@code [0, range2)}
+     * Return three random values in {@code [0, range1)}, {@code [0, range2)}
      * and {@code [0, range3)}. The
      * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
      *
@@ -372,7 +421,7 @@ public class ArrayShuffleBenchmark {
     }
 
     /**
-     * Return two random values in {@code [0, range1)}, {@code [0, range2)},
+     * Return four random values in {@code [0, range1)}, {@code [0, range2)},
      * {@code [0, range3)} and {@code [0, range4)}. The
      * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
      *

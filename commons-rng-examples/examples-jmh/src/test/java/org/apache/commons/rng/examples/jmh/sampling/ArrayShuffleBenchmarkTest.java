@@ -125,4 +125,24 @@ class ArrayShuffleBenchmarkTest {
         final double p = new ChiSquareTest().chiSquareTest(observed);
         Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
     }
+
+    @ParameterizedTest
+    @CsvSource({
+        "257",
+        "8073",
+    })
+    void testShuffle1a(int length) {
+        final int[] a = PermutationSampler.natural(length);
+        final int[] b = a.clone();
+        final RandomSource source = RandomSource.XO_RO_SHI_RO_128_PP;
+        final byte[] seed = source.createSeed();
+        final UniformRandomProvider rng1 = source.create(seed);
+        final UniformRandomProvider rng2 = source.create(seed);
+        final int samples = 10;
+        for (int j = 0; j < samples; j++) {
+            ArrayShuffleBenchmark.shuffle1(rng1, a);
+            ArrayShuffleBenchmark.shuffle1(rng2, b);
+            Assertions.assertArrayEquals(a, b);
+        }
+    }
 }
