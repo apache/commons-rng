@@ -17,18 +17,34 @@
 package org.apache.commons.rng.sampling;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 import org.apache.commons.math3.stat.inference.ChiSquareTest;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link ArraySampler}.
  */
 class ArraySamplerTest {
+    /** Constant for a large array where batched index generation is not used. */
+    private static final int ABOVE_BATCH_LIMIT = 43210;
+
+    /**
+     * Return arguments for shuffle of a sub-range where batch index generation is
+     * not always used. Arguments are [from, to, length].
+     *
+     * @return the stream
+     */
+    static Stream<Arguments> aboveBatchLimit() {
+        return Stream.of(Arguments.of(123, ABOVE_BATCH_LIMIT + 123, ABOVE_BATCH_LIMIT + 789));
+    }
+
     @Test
     void testNullArguments() {
         final UniformRandomProvider rng = RandomAssert.seededRNG();
@@ -199,7 +215,7 @@ class ArraySamplerTest {
      * Test that all (unique) entries exist in the shuffled array.
      */
     @ParameterizedTest
-    @ValueSource(ints = {13, 42, 100})
+    @ValueSource(ints = {13, 42, 100, ABOVE_BATCH_LIMIT})
     void testShuffleNoDuplicates(int length) {
         final int[] array = PermutationSampler.natural(length);
         final UniformRandomProvider rng = RandomAssert.seededRNG();
@@ -226,6 +242,7 @@ class ArraySamplerTest {
         "0, 5, 10",
         "5, 10, 15",
     })
+    @MethodSource("aboveBatchLimit")
     void testShuffleSubRangeNoDuplicates(int from, int to, int length) {
         // Natural sequence in the sub-range
         final int[] array = natural(from, to, length);
@@ -253,7 +270,7 @@ class ArraySamplerTest {
      * Test that shuffle of the full range using the range arguments matches a full-range shuffle.
      */
     @ParameterizedTest
-    @ValueSource(ints = {9, 17})
+    @ValueSource(ints = {9, 17, ABOVE_BATCH_LIMIT})
     void testShuffleFullRangeMatchesShuffle(int length) {
         final int[] array1 = PermutationSampler.natural(length);
         final int[] array2 = array1.clone();
@@ -277,6 +294,7 @@ class ArraySamplerTest {
         "0, 5, 10",
         "5, 10, 15",
     })
+    @MethodSource("aboveBatchLimit")
     void testShuffleSubRangeMatchesShuffle(int from, int to, int length) {
         final int[] array1 = PermutationSampler.natural(to - from);
         // Natural sequence in the sub-range
@@ -324,6 +342,47 @@ class ArraySamplerTest {
             ArraySampler.shuffle(rng, array, from, to);
             for (int i = 0; i < n; i++) {
                 counts[i][array[from + i]]++;
+            }
+        }
+        final double p = new ChiSquareTest().chiSquareTest(counts);
+        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(ints = {ABOVE_BATCH_LIMIT})
+    void testShuffleIsRandomLarge(int length) {
+        final int[] array = PermutationSampler.natural(length);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
+        final int samples = 1000000 / length;
+        final int bins = 8;
+        final long[][] counts = new long[bins][bins];
+        final int width = (int) Math.ceil((double) length / bins);
+        for (int j = 1; j <= samples; j++) {
+            ArraySampler.shuffle(rng, array);
+            for (int i = 0; i < length; i++) {
+                counts[i / width][array[i] / width]++;
+            }
+        }
+        final double p = new ChiSquareTest().chiSquareTest(counts);
+        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+    }
+
+    @ParameterizedTest
+    @MethodSource("aboveBatchLimit")
+    void testShuffleSubRangeIsRandomLarge(int from, int to, int length) {
+        // Natural sequence in the sub-range
+        final int[] array = natural(from, to, length);
+        final UniformRandomProvider rng = RandomAssert.createRNG();
+        final int n = to - from;
+        final int samples = 1000000 / n;
+        final int bins = 8;
+        final long[][] counts = new long[bins][bins];
+        final int width = (int) Math.ceil((double) length / bins);
+        for (int j = 1; j <= samples; j++) {
+            ArraySampler.shuffle(rng, array, from, to);
+            for (int i = 0; i < n; i++) {
+                counts[i / width][array[from + i] / width]++;
             }
         }
         final double p = new ChiSquareTest().chiSquareTest(counts);
@@ -405,7 +464,7 @@ class ArraySamplerTest {
     // most robust to detecting the boolean shuffle swapping around the wrong pairs.
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1234})
+    @ValueSource(ints = {0, 1234, ABOVE_BATCH_LIMIT})
     void testShuffleBoolean(int length) {
         final byte[] a = randomBitsAsBytes(length);
         final boolean[] b = booleans(a);
@@ -422,12 +481,111 @@ class ArraySamplerTest {
         "0, 900, 1000",
         "100, 1100, 1200",
     })
+    @MethodSource("aboveBatchLimit")
     void testShuffleBooleanSubRange(int from, int to, int length) {
         final byte[] a = randomBitsAsBytes(length);
         final boolean[] b = booleans(a);
         ArraySampler.shuffle(RandomAssert.seededRNG(), a, from, to);
         ArraySampler.shuffle(RandomAssert.seededRNG(), b, from, to);
         Assertions.assertArrayEquals(a, bytes(b));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {ABOVE_BATCH_LIMIT})
+    void testShuffleLarge(int length) {
+        final int[] a = randomBitsAsInts(length);
+        final byte[] b = bytes(a);
+        final char[] c = chars(a);
+        final double[] d = doubles(a);
+        final float[] e = floats(a);
+        final long[] f = longs(a);
+        final short[] g = shorts(a);
+        final Integer[] h = boxed(a);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), a);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), b);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), c);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), d);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), e);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), f);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), g);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), h);
+        Assertions.assertArrayEquals(a, ints(b), "byte");
+        Assertions.assertArrayEquals(a, ints(c), "char");
+        Assertions.assertArrayEquals(a, ints(d), "double");
+        Assertions.assertArrayEquals(a, ints(e), "float");
+        Assertions.assertArrayEquals(a, ints(f), "long");
+        Assertions.assertArrayEquals(a, ints(g), "short");
+        Assertions.assertArrayEquals(a, ints(h), "Object");
+    }
+
+    @ParameterizedTest
+    @MethodSource("aboveBatchLimit")
+    void testShuffleSubRangeLarge(int from, int to, int length) {
+        final int[] a = randomBitsAsInts(length);
+        final byte[] b = bytes(a);
+        final char[] c = chars(a);
+        final double[] d = doubles(a);
+        final float[] e = floats(a);
+        final long[] f = longs(a);
+        final short[] g = shorts(a);
+        final Integer[] h = boxed(a);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), a, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), b, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), c, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), d, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), e, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), f, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), g, from, to);
+        ArraySampler.shuffle(RandomAssert.seededRNG(), h, from, to);
+        Assertions.assertArrayEquals(a, ints(b), "byte");
+        Assertions.assertArrayEquals(a, ints(c), "char");
+        Assertions.assertArrayEquals(a, ints(d), "double");
+        Assertions.assertArrayEquals(a, ints(e), "float");
+        Assertions.assertArrayEquals(a, ints(f), "long");
+        Assertions.assertArrayEquals(a, ints(g), "short");
+        Assertions.assertArrayEquals(a, ints(h), "Object");
+    }
+
+    /**
+     * Test that the indices generated after rejection of the first pair use an identical
+     * generation method. This is done by randomly forcing pairs to be rejected by outputting
+     * zero for the random bits. This effectively breaks up the usual output from the
+     * generation algorithm so that the indices may come from the first generation step,
+     * or the subsequent generation step inside the generating loop.
+     */
+    @Test
+    void testRandomBounded2() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+
+        // Create a RNG which randomly outputs nextInt() with zeros
+        final UniformRandomProvider delegate = RandomAssert.seededRNG();
+        final UniformRandomProvider randomChoice = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = new UniformRandomProvider() {
+            @Override
+            public int nextInt() {
+                if (randomChoice.nextBoolean()) {
+                    return 0;
+                }
+                return delegate.nextInt();
+            }
+
+            @Override
+            public long nextLong() {
+                throw new IllegalStateException("unused");
+            }
+        };
+
+        for (int i = 0; i < 100; i++) {
+            // Avoid an index bound of 0 or 1 by adding 2
+            final int n = 2 + rng.nextInt(ABOVE_BATCH_LIMIT);
+            final int[] bound1 = {n * (n - 1)};
+            final int[] i1 = ArraySampler.randomBounded2(n, n - 1, bound1, rng1);
+            final int[] bound2 = {n * (n - 1)};
+            final int[] i2 = ArraySampler.randomBounded2(n, n - 1, bound2, rng2);
+            Assertions.assertArrayEquals(i1, i2, "indices");
+            Assertions.assertArrayEquals(bound1, bound2, "bounds");
+        }
     }
 
     /**
@@ -467,6 +625,23 @@ class ArraySamplerTest {
         // Convert to boolean bits: 0 or 1
         for (int i = 0; i < length; i++) {
             a[i] = (byte) (a[i] & 1);
+        }
+        return a;
+    }
+
+    /**
+     * Create random bits of the specified length stored as ints using {0, 1}.
+     *
+     * @param length Length of the array.
+     * @return the bits, 1 per int
+     */
+    private static int[] randomBitsAsInts(int length) {
+        // Random ints
+        final int[] a = new int[length];
+        final UniformRandomProvider rng = RandomAssert.createRNG();
+        // Convert to boolean bits: 0 or 1
+        for (int i = 0; i < length; i++) {
+            a[i] = rng.nextBoolean() ? 1 : 0;
         }
         return a;
     }

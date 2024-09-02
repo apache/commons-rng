@@ -56,6 +56,9 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.7" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" issue="RNG-187">
+        "ArraySampler": Improve performance on small ranges using batched index generation.
+      </action>
 </release>
 
     <release version="1.6" date="2024-07-15" description="
