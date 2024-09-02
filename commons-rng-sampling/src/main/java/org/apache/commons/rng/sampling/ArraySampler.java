@@ -16,6 +16,7 @@
  */
 package org.apache.commons.rng.sampling;
 
+import java.util.List;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
@@ -266,6 +267,34 @@ public final class ArraySampler {
             swap(array, i - 2, index2);
         }
         return array;
+    }
+
+    /**
+     * Shuffles the entries of the given list.
+     *
+     * <p>Note: This method is intentionally package-private.
+     *
+     * <p>This method exists to allow the shuffle performed by the {@link ListSampler} to
+     * match the {@link PermutationSampler} and {@link ArraySampler}.
+     *
+     * @param <T> Type of the items.
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     */
+    static <T> void shuffle(UniformRandomProvider rng, List<T> array) {
+        int i = array.size();
+        for (; i > BATCH_2; --i) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        // Batches of 2
+        final int[] productBound = {i * (i - 1)};
+        for (; i > 1; i -= 2) {
+            final int[] indices = randomBounded2(i, i - 1, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
+        }
     }
 
     /**
@@ -629,6 +658,19 @@ public final class ArraySampler {
         array[j] = tmp;
     }
 
+    /**
+     * Swaps the two specified elements in the list.
+     *
+     * @param <T> Type of the list items.
+     * @param list List.
+     * @param i First index.
+     * @param j Second index.
+     */
+    private static <T> void swap(List<T> list, int i, int j) {
+        final T tmp = list.get(i);
+        list.set(i, list.get(j));
+        list.set(j, tmp);
+    }
 
     /**
      * Return two random values in {@code [0, range1)} and {@code [0, range2)}. The

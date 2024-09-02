@@ -93,7 +93,7 @@ final class SubsetSamplerUtils {
      * @param i     the first index
      * @param j     the second index
      */
-    static void swap(int[] array, int i, int j) {
+    private static void swap(int[] array, int i, int j) {
         final int tmp = array[i];
         array[i] = array[j];
         array[j] = tmp;

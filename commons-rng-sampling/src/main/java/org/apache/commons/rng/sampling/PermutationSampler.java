@@ -79,7 +79,6 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
 
     /**
      * @return a random permutation.
-     *
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */
     @Override
@@ -100,14 +99,13 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
     /**
      * Shuffles the entries of the given array.
      *
-     * @see #shuffle(UniformRandomProvider,int[],int,boolean)
-     *
      * @param rng Random number generator.
      * @param list Array whose entries will be shuffled (in-place).
+     * @see #shuffle(UniformRandomProvider,int[],int,boolean)
      */
     public static void shuffle(UniformRandomProvider rng,
                                int[] list) {
-        shuffle(rng, list, list.length - 1, true);
+        ArraySampler.shuffle(rng, list);
     }
 
     /**
@@ -117,7 +115,7 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
      * The {@code start} and {@code towardHead} parameters select which part
      * of the array is randomized and which is left untouched.
      *
-     * <p>Sampling uses {@link UniformRandomProvider#nextInt(int)}.</p>
+     * <p>Sampling uses {@link UniformRandomProvider#nextInt()}.</p>
      *
      * @param rng Random number generator.
      * @param list Array whose entries will be shuffled (in-place).
@@ -132,19 +130,10 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
                                boolean towardHead) {
         if (towardHead) {
             // Visit all positions from start to 0.
-            // Do not visit 0 to avoid a swap with itself.
-            for (int i = start; i > 0; i--) {
-                // Swap index with any position down to 0
-                SubsetSamplerUtils.swap(list, i, rng.nextInt(i + 1));
-            }
+            ArraySampler.shuffle(rng, list, 0, start + 1);
         } else {
             // Visit all positions from the end to start.
-            // Start is not visited to avoid a swap with itself.
-            for (int i = list.length - 1; i > start; i--) {
-                // Swap index with any position down to start.
-                // Note: i - start + 1 is the number of elements remaining.
-                SubsetSamplerUtils.swap(list, i, rng.nextInt(i - start + 1) + start);
-            }
+            ArraySampler.shuffle(rng, list, start, list.length);
         }
     }
 

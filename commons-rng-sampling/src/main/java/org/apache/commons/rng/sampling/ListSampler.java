@@ -98,15 +98,11 @@ public final class ListSampler {
                                    List<T> list) {
         if (list instanceof RandomAccess || list.size() < RANDOM_ACCESS_SIZE_THRESHOLD) {
             // Shuffle list in-place
-            for (int i = list.size(); i > 1; i--) {
-                swap(list, i - 1, rng.nextInt(i));
-            }
+            ArraySampler.shuffle(rng, list);
         } else {
             // Shuffle as an array
             final Object[] array = list.toArray();
-            for (int i = array.length; i > 1; i--) {
-                swap(array, i - 1, rng.nextInt(i));
-            }
+            ArraySampler.shuffle(rng, array);
 
             // Copy back. Use raw types.
             final ListIterator it = list.listIterator();
@@ -149,32 +145,5 @@ public final class ListSampler {
         } else {
             shuffle(rng, list.subList(start, list.size()));
         }
-    }
-
-    /**
-     * Swaps the two specified elements in the list.
-     *
-     * @param <T> Type of the list items.
-     * @param list List.
-     * @param i First index.
-     * @param j Second index.
-     */
-    private static <T> void swap(List<T> list, int i, int j) {
-        final T tmp = list.get(i);
-        list.set(i, list.get(j));
-        list.set(j, tmp);
-    }
-
-    /**
-     * Swaps the two specified elements in the array.
-     *
-     * @param array Array.
-     * @param i First index.
-     * @param j Second index.
-     */
-    private static void swap(Object[] array, int i, int j) {
-        final Object tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
     }
 }
