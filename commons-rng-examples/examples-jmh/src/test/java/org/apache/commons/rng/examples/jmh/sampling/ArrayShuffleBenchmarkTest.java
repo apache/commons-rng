@@ -68,6 +68,29 @@ class ArrayShuffleBenchmarkTest {
 
     @ParameterizedTest
     @CsvSource({
+        "13, 12257",
+        "4242, 9899",
+    })
+    void testBoundedRandom2a(int range1, int range2) {
+        Assertions.assertTrue((long) range1 * range2 < 1L << 31, "Product must be less than 2^31");
+
+        final int samples = 1000;
+        final UniformRandomProvider rng1 = RandomSource.XO_SHI_RO_128_PP.create(SEED);
+        final UniformRandomProvider rng2 = RandomSource.XO_SHI_RO_128_PP.create(SEED);
+        final int[] productBound = {range1 * range2};
+        int bound = productBound[0];
+        final int[] indices2 = new int[2];
+        for (int i = 0; i < samples; i++) {
+            final int[] indices1 = ArrayShuffleBenchmark.randomBounded2(range1, range2, productBound, rng1);
+            bound = ArrayShuffleBenchmark.randomBounded2a(range1, range2, bound, rng2, indices2);
+            Assertions.assertEquals(indices1[0], indices2[0], "index0");
+            Assertions.assertEquals(indices1[1], indices2[1], "index1");
+            Assertions.assertEquals(productBound[0], bound, "bound");
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
         "257",
         "8073",
     })
@@ -143,6 +166,30 @@ class ArrayShuffleBenchmarkTest {
             ArrayShuffleBenchmark.shuffle1(rng1, a);
             ArrayShuffleBenchmark.shuffle1(rng2, b);
             Assertions.assertArrayEquals(a, b);
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "257",
+        "8073",
+    })
+    void testShuffle2a(int length) {
+        final int[] a = PermutationSampler.natural(length);
+        final int[] b = a.clone();
+        final int[] c = a.clone();
+        final RandomSource source = RandomSource.XO_RO_SHI_RO_128_PP;
+        final byte[] seed = source.createSeed();
+        final UniformRandomProvider rng1 = source.create(seed);
+        final UniformRandomProvider rng2 = source.create(seed);
+        final UniformRandomProvider rng3 = source.create(seed);
+        final int samples = 10;
+        for (int j = 0; j < samples; j++) {
+            ArrayShuffleBenchmark.shuffle2(rng1, a);
+            ArrayShuffleBenchmark.shuffle2a(rng2, b);
+            ArrayShuffleBenchmark.shuffle2(rng3, c, 0, c.length);
+            Assertions.assertArrayEquals(a, b, "shuffle2a");
+            Assertions.assertArrayEquals(a, c, "shuffle2 range");
         }
     }
 }

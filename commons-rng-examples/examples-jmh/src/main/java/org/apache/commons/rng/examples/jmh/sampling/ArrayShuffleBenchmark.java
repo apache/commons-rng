@@ -155,7 +155,10 @@ public class ArrayShuffleBenchmark {
         @Param({"shuffle1",
             // Effectively the same speed as shuffle1
             //"shuffle1a",
-            "shuffle2", "shuffle3", "shuffle4"})
+            "shuffle2", "shuffle3", "shuffle4",
+            // Effectively the same speed as shuffle2; the range method is marginally slower
+            //"shuffle2a", "shuffle2range",
+            })
         private String method;
 
         /** Shuffle function. */
@@ -181,6 +184,10 @@ public class ArrayShuffleBenchmark {
                 fun = ArrayShuffleBenchmark::shuffle1a;
             } else if ("shuffle2".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle2;
+            } else if ("shuffle2a".equals(method)) {
+                fun = ArrayShuffleBenchmark::shuffle2a;
+            } else if ("shuffle2range".equals(method)) {
+                fun = (rng, a) -> ArrayShuffleBenchmark.shuffle2(rng, a, 0, a.length);
             } else if ("shuffle3".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle3;
             } else if ("shuffle4".equals(method)) {
@@ -239,7 +246,7 @@ public class ArrayShuffleBenchmark {
         long l = m & 0xffffffffL;
         if (l < n) {
             // 2^32 % n
-            final long t = POW_32 % n;
+            final final long t = POW_32 % n;
             while (l < t) {
                 m = (source.nextInt() & 0xffffffffL) * n;
                 l = m & 0xffffffffL;
@@ -290,7 +297,7 @@ public class ArrayShuffleBenchmark {
             productBound[0] = bound;
             if (l < bound) {
                 // 2^32 % bound
-                long t = POW_32 % bound;
+                final long t = POW_32 % bound;
                 while (l < t) {
                     m = (rng.nextInt() & MASK_32) * range1;
                     r1 = m;
@@ -332,6 +339,106 @@ public class ArrayShuffleBenchmark {
     }
 
     /**
+     * Shuffles the entries of the given array.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @param from Lower-bound (inclusive) of the sub-range.
+     * @param to Upper-bound (exclusive) of the sub-range.
+     * @return a reference to the given array
+     */
+    static int[] shuffle2(UniformRandomProvider rng, int[] array, int from, int to) {
+        int i = to - from;
+        // The threshold provided in the Brackett-Rozinsky and Lemire paper
+        // is the power of 2 below 20724. Note that the product 2^15*2^15
+        // is representable using signed integers.
+        for (; i > POW_15; i--) {
+            swap(array, from + i - 1, from + rng.nextInt(i));
+        }
+        // Batches of 2 for sizes up to 2^15 elements
+        final int[] productBound = {i * (i - 1)};
+        for (; i > 1; i -= 2) {
+            final int[] indices = randomBounded2(i, i - 1, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            swap(array, from + i - 1, from + index1);
+            swap(array, from + i - 2, from + index2);
+        }
+        return array;
+    }
+
+    /**
+     * Return two random values in {@code [0, range1)} and {@code [0, range2)}. The
+     * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
+     *
+     * <p>The product bound can be any positive integer {@code >= range1*range2}.
+     * It may be updated to become {@code range1*range2}.
+     *
+     * @param range1 Range 1.
+     * @param range2 Range 2.
+     * @param bound Product bound.
+     * @param rng Source of randomness.
+     * @param indices Output indices.
+     * @return updated bound
+     */
+    static int randomBounded2a(int range1, int range2, int bound, UniformRandomProvider rng,
+            int[] indices) {
+        long m = (rng.nextInt() & MASK_32) * range1;
+        // result1 and result2 are the top 32-bits of the long
+        long r1 = m;
+        // Leftover bits * range2
+        m = (m & MASK_32) * range2;
+        long r2 = m;
+        // Leftover bits must be unsigned
+        long l = m & MASK_32;
+        if (l < bound) {
+            bound = range1 * range2;
+            if (l < bound) {
+                // 2^32 % bound
+                final long t = POW_32 % bound;
+                while (l < t) {
+                    m = (rng.nextInt() & MASK_32) * range1;
+                    r1 = m;
+                    m = (m & MASK_32) * range2;
+                    r2 = m;
+                    l = m & MASK_32;
+                }
+            }
+        }
+        // Convert to [0, range1), [0, range2)
+        indices[0] = (int) (r1 >> 32);
+        indices[1] = (int) (r2 >> 32);
+        return bound;
+    }
+
+    /**
+     * Shuffles the entries of the given array. Uses a variant of the random bounded
+     * integer generation.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
+     */
+    static int[] shuffle2a(UniformRandomProvider rng, int[] array) {
+        int i = array.length;
+        // The threshold provided in the Brackett-Rozinsky and Lemire paper
+        // is the power of 2 below 20724. Note that the product 2^15*2^15
+        // is representable using signed integers.
+        for (; i > POW_15; i--) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        // Batches of 2 for sizes up to 2^15 elements
+        final int[] indices = new int[2];
+        int bound = i * (i - 1);
+        for (; i > 1; i -= 2) {
+            bound = randomBounded2a(i, i - 1, bound, rng, indices);
+            swap(array, i - 1, indices[0]);
+            swap(array, i - 2, indices[1]);
+        }
+        return array;
+    }
+
+    /**
      * Return three random values in {@code [0, range1)}, {@code [0, range2)}
      * and {@code [0, range3)}. The
      * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
@@ -362,7 +469,7 @@ public class ArrayShuffleBenchmark {
             productBound[0] = bound;
             if (l < bound) {
                 // 2^32 % bound
-                long t = POW_32 % bound;
+                final long t = POW_32 % bound;
                 while (l < t) {
                     m = (rng.nextInt() & MASK_32) * range1;
                     r1 = m;
@@ -455,7 +562,7 @@ public class ArrayShuffleBenchmark {
             productBound[0] = bound;
             if (l < bound) {
                 // 2^32 % bound
-                long t = POW_32 % bound;
+                final long t = POW_32 % bound;
                 while (l < t) {
                     m = (rng.nextInt() & MASK_32) * range1;
                     r1 = m;
