@@ -246,7 +246,7 @@ public class ArrayShuffleBenchmark {
         long l = m & 0xffffffffL;
         if (l < n) {
             // 2^32 % n
-            final final long t = POW_32 % n;
+            final long t = POW_32 % n;
             while (l < t) {
                 m = (source.nextInt() & 0xffffffffL) * n;
                 l = m & 0xffffffffL;
