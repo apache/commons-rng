@@ -61,6 +61,8 @@ public class ArrayShuffleBenchmark {
      * method used (-bound % bound) for (2^L % bound) which only works for unsigned integer
      * modulus. */
     private static final long POW_32 = 1L << 32;
+    /** 2^30. Length threshold to sample 2 integers from a random 64-bit value. */
+    private static final int POW_30 = 1 << 30;
     /** 2^15. Length threshold to sample 2 integers from a random 32-bit value. */
     private static final int POW_15 = 1 << 15;
     /** 2^9. Length threshold to sample 3 integers from a random 32-bit value. */
@@ -186,6 +188,8 @@ public class ArrayShuffleBenchmark {
                 fun = ArrayShuffleBenchmark::shuffle2;
             } else if ("shuffle2a".equals(method)) {
                 fun = ArrayShuffleBenchmark::shuffle2a;
+            } else if ("shuffle2L".equals(method)) {
+                fun = ArrayShuffleBenchmark::shuffle2L;
             } else if ("shuffle2range".equals(method)) {
                 fun = (rng, a) -> ArrayShuffleBenchmark.shuffle2(rng, a, 0, a.length);
             } else if ("shuffle3".equals(method)) {
@@ -434,6 +438,132 @@ public class ArrayShuffleBenchmark {
             bound = randomBounded2a(i, i - 1, bound, rng, indices);
             swap(array, i - 1, indices[0]);
             swap(array, i - 2, indices[1]);
+        }
+        return array;
+    }
+
+    /**
+     * Return two random values in {@code [0, range1)} and {@code [0, range2)}. The
+     * product bound is used for the reject algorithm. See Brackett-Rozinsky and Lemire.
+     *
+     * <p>The product bound can be any product {@code >= range1*range2} <em>but</em>
+     * it must be created using {@link #createBound(int, int)}.
+     * It may be updated to become {@code createBound(range1, range2)}.
+     *
+     * <p>This uses {@link UniformRandomProvider#nextLong()} as a 64-bit source of randomness.
+     *
+     * @param range1 Range 1.
+     * @param range2 Range 2.
+     * @param productBound Product bound.
+     * @param rng Source of randomness.
+     * @return [i1, i2]
+     */
+    static int[] randomBounded2L(int range1, int range2, long[] productBound, UniformRandomProvider rng) {
+        long bits = rng.nextLong();
+        // 96-bit product of bits * range1 into lo 32-bits and hi 64-bits
+        long lo = (bits & MASK_32) * range1;
+        long hi = (bits >>> 32) * range1 + (lo >>> 32);
+        // result1 and result2 are the top 32-bits of the long
+        long r1 = hi;
+        // Leftover lower 64-bits * range2
+        // bits = (hi << 32) | (lo & MASK_32)
+        lo = (lo & MASK_32) * range2;
+        hi = (hi & MASK_32) * range2 + (lo >>> 32);
+        long r2 = hi;
+        // Leftover bits must be compared as unsigned
+        bits = ((hi << 32) | (lo & MASK_32)) + Long.MIN_VALUE;
+        if (bits < productBound[0]) {
+            // Do not use createBound as the actual product is required for the modulus
+            final long bound = (long) range1 * range2;
+            productBound[0] = bound + Long.MIN_VALUE;
+            if (bits < bound + Long.MIN_VALUE) {
+                // 2^64 % bound = (2^64 - bound) % bound
+                final long t = remainderUnsigned(-bound, bound) + Long.MIN_VALUE;
+                while (bits < t) {
+                    bits = rng.nextLong();
+                    lo = (bits & MASK_32) * range1;
+                    hi = (bits >>> 32) * range1 + (lo >>> 32);
+                    r1 = hi;
+                    lo = (lo & MASK_32) * range2;
+                    hi = (hi & MASK_32) * range2 + (lo >>> 32);
+                    r2 = hi;
+                    bits = ((hi << 32) | (lo & MASK_32)) + Long.MIN_VALUE;
+                }
+            }
+        }
+        // Convert to [0, range1), [0, range2)
+        return new int[] {(int) (r1 >> 32), (int) (r2 >> 32)};
+    }
+
+    /**
+     * Creates the bound for sampling two values from {@code range1} and {@code range2}.
+     * This returns the product updated for use in an unsigned compare by adding
+     * {@link Long#MIN_VALUE}.
+     *
+     * @param range1 Range 1.
+     * @param range2 Range 2.
+     * @return the bound
+     */
+    static long createBound(int range1, int range2) {
+        return (long) range1 * range2 + Long.MIN_VALUE;
+    }
+
+    /**
+     * Returns the unsigned remainder from dividing the first argument
+     * by the second where each argument and the result is interpreted
+     * as an unsigned value.
+     *
+     * <p>Taken from {@code o.a.c.numbers.core.ArithmeticUtils}. The code has been
+     * adjusted as the divisor is known to be strictly positive.
+     *
+     * @param dividend the value to be divided
+     * @param divisor the value doing the dividing (must be positive)
+     * @return the unsigned remainder of the first argument divided by
+     * the second argument.
+     * @see Long#remainderUnsigned(long, long)
+     */
+    private static long remainderUnsigned(long dividend, long divisor) {
+        // Note: Removed check if (divisor < 0)
+
+        // From Hacker's Delight 2.0, section 9.3
+        final long q = ((dividend >>> 1) / divisor) << 1;
+        final long r = dividend - q * divisor;
+        // unsigned r: 0 <= r < 2 * divisor
+        // if (r < divisor): r
+        // else: r - divisor
+
+        // The compare of unsigned r can be done using:
+        // return (r + Long.MIN_VALUE) < (divisor | Long.MIN_VALUE) ? r : r - divisor
+
+        // Here we subtract divisor if (r - divisor) is positive, else the result is r.
+        // This can be done by flipping the sign bit and
+        // creating a mask as -1 or 0 by signed shift.
+        return r - (divisor & (~(r - divisor) >> 63));
+    }
+
+    /**
+     * Shuffles the entries of the given array.
+     *
+     * @param rng Source of randomness.
+     * @param array Array whose entries will be shuffled (in-place).
+     * @return a reference to the given array
+     */
+    static int[] shuffle2L(UniformRandomProvider rng, int[] array) {
+        int i = array.length;
+        // The threshold provided in the Brackett-Rozinsky and Lemire paper
+        // is the power of 2 below 1,358,187,913. Note that the product 2^30*2^30
+        // is representable using signed longs.
+        for (; i > POW_30; i--) {
+            swap(array, i - 1, rng.nextInt(i));
+        }
+        // Batches of 2 for sizes up to 2^30 elements
+        final long[] productBound = {createBound(i, i - 1)};
+        for (; i > 1; i -= 2) {
+            final int[] indices = randomBounded2L(i, i - 1, productBound, rng);
+            final int index1 = indices[0];
+            final int index2 = indices[1];
+            swap(array, i - 1, index1);
+            swap(array, i - 2, index2);
         }
         return array;
     }

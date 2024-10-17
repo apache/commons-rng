@@ -91,6 +91,34 @@ class ArrayShuffleBenchmarkTest {
 
     @ParameterizedTest
     @CsvSource({
+        "13, 12257",
+        "4242, 9899",
+        "56712332, 987914719",
+        "1267381263, 92567572",
+    })
+    void testBoundedRandom2L(int range1, int range2) {
+        Assertions.assertTrue(Long.compareUnsigned((long) range1 * range2, 1L << 63) < 0, "Product must be less than 2^63");
+
+        final int samples = 1000000;
+        final int bins = 8;
+        final long[][] observed = new long[bins][bins];
+        final UniformRandomProvider rng = RandomSource.XO_SHI_RO_128_PP.create(SEED);
+        final long[] productBound = {ArrayShuffleBenchmark.createBound(range1, range2)};
+        final int width1 = (int) Math.ceil((double) range1 / bins);
+        final int width2 = (int) Math.ceil((double) range2 / bins);
+        for (int i = 0; i < samples; i++) {
+            final int[] indices = ArrayShuffleBenchmark.randomBounded2L(range1, range2, productBound, rng);
+            final int index1 = indices[0] / width1;
+            final int index2 = indices[1] / width2;
+            observed[index1][index2]++;
+        }
+
+        final double p = new ChiSquareTest().chiSquareTest(observed);
+        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
         "257",
         "8073",
     })
@@ -107,6 +135,20 @@ class ArrayShuffleBenchmarkTest {
     })
     void testShuffle2(int length) {
         assertShuffle(length, ArrayShuffleBenchmark::shuffle2);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+        "257",
+        "8073",
+        "57548",
+        // Do not approach threshold of 2^30. Just go higher
+        // than the 32-bit based shuffle but small enough to assert
+        // on a few samples.
+        "208476",
+    })
+    void testShuffle2L(int length) {
+        assertShuffle(length, ArrayShuffleBenchmark::shuffle2L);
     }
 
     @ParameterizedTest
