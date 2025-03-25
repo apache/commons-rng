@@ -215,6 +215,6 @@ class RandomSourceInternalParametricTest {
 
         final Integer expected = EXPECTED_SEED_BYTES.get(randomSourceInternal);
         Assertions.assertNotNull(expected, () -> "Missing expected seed byte size: " + randomSourceInternal);
-        Assertions.assertEquals(expected.intValue(), size, () -> randomSourceInternal.toString());
+        Assertions.assertEquals(expected.intValue(), size, randomSourceInternal::toString);
     }
 }

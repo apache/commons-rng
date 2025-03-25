@@ -35,8 +35,7 @@ class ZigguratNormalizedGaussianSamplerTest {
 
         // Infinite loop (in v1.1).
         final ZigguratNormalizedGaussianSampler sampler = new ZigguratNormalizedGaussianSampler(bad);
-        Assertions.assertThrows(StackOverflowError.class,
-            () -> sampler.sample());
+        Assertions.assertThrows(StackOverflowError.class, sampler::sample);
     }
 
     /**

@@ -119,7 +119,7 @@ class ProvidersCommonParametricTest {
         } else {
             // Try no arguments for a provider that does require them
             Assertions.assertThrows(IllegalArgumentException.class,
-                () -> originalSource.create(),
+                originalSource::create,
                 () -> "Source requires arguments: " + originalSource);
         }
     }

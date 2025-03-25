@@ -119,6 +119,6 @@ class XoRoShiRo128PlusPlusTest {
     @Test
     void testNextOutputThrows() {
         final XoRoShiRo128PlusPlus rng = new XoRoShiRo128PlusPlus(SEED);
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> rng.nextOutput());
+        Assertions.assertThrows(UnsupportedOperationException.class, rng::nextOutput);
     }
 }

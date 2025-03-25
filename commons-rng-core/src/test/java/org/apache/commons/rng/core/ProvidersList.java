@@ -171,10 +171,10 @@ public final class ProvidersList {
             LIST.addAll(LIST64);
             // Dynamically identify the sub-type RNGs
             LIST.stream()
-                .filter(rng -> rng instanceof JumpableUniformRandomProvider)
+                .filter(JumpableUniformRandomProvider.class::isInstance)
                 .forEach(rng -> LIST_JUMP.add((JumpableUniformRandomProvider) rng));
             LIST.stream()
-                .filter(rng -> rng instanceof SplittableUniformRandomProvider)
+                .filter(SplittableUniformRandomProvider.class::isInstance)
                 .forEach(rng -> LIST_SPLIT.add((SplittableUniformRandomProvider) rng));
         } catch (final Exception e) {
             // CHECKSTYLE: stop Regexp
