@@ -40,7 +40,7 @@ class ThreadLocalRandomSourceTest {
     private static EnumSet<RandomSource> toIgnore;
 
     @BeforeAll
-    public static void createToIgnoreSet() {
+    static void createToIgnoreSet() {
         toIgnore = EnumSet.of(RandomSource.TWO_CMRES_SELECT);
     }
 
