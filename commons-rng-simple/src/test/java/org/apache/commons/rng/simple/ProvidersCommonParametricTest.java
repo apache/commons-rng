@@ -374,7 +374,6 @@ class ProvidersCommonParametricTest {
     //   * checkNextIntegerInRange
     //   * checkNextInRange
     // have been copied from "src/test" in module "commons-rng-core".
-    // TODO: check whether it is possible to have a single implementation.
 
     /**
      * Populates a list with random numbers.
