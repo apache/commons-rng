@@ -64,8 +64,7 @@ class ObjectSamplerTest {
     private static Double[] createSamples(ObjectSampler<Double> sampler, int count) {
         final Double[] data = new Double[count];
         for (int i = 0; i < count; i++) {
-            // Explicit boxing
-            data[i] = Double.valueOf(sampler.sample());
+            data[i] = sampler.sample();
         }
         return data;
     }
