@@ -86,7 +86,9 @@ public final class SeedFactory {
     /**
      * Class contains only static methods.
      */
-    private SeedFactory() {}
+    private SeedFactory() {
+        // Do nothing
+    }
 
     /**
      * Creates an {@code int} number for use as a seed.

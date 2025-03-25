@@ -88,7 +88,9 @@ final class SeedUtils {
     /**
      * Class contains only static methods.
      */
-    private SeedUtils() {}
+    private SeedUtils() {
+        // Do nothing
+    }
 
     /**
      * Creates an {@code int} containing a permutation of 8 hex digits chosen from 16.

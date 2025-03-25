@@ -23,7 +23,9 @@ package org.apache.commons.rng.simple.internal;
  */
 public class ByteArray2IntArray implements SeedConverter<byte[], int[]> {
     /** Create an instance. */
-    public ByteArray2IntArray() {}
+    public ByteArray2IntArray() {
+        // Do nothing
+    }
 
     /** {@inheritDoc} */
     @Override

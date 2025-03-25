@@ -23,7 +23,9 @@ package org.apache.commons.rng.simple.internal;
  */
 public class Int2Long implements SeedConverter<Integer, Long> {
     /** Create an instance. */
-    public Int2Long() {}
+    public Int2Long() {
+        // Do nothing
+    }
 
     /** {@inheritDoc} */
     @Override

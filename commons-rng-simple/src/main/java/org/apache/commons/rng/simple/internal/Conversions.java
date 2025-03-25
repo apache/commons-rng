@@ -37,7 +37,9 @@ final class Conversions {
     private static final long GOLDEN_RATIO = MixFunctions.GOLDEN_RATIO_64;
 
     /** No instances. */
-    private Conversions() {}
+    private Conversions() {
+        // Do nothing
+    }
 
     /**
      * Compute the size of an {@code int} array required to hold the specified number of bytes.

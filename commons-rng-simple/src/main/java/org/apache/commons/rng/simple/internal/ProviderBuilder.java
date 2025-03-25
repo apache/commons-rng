@@ -89,7 +89,9 @@ public final class ProviderBuilder {
     /**
      * Class only contains static method.
      */
-    private ProviderBuilder() {}
+    private ProviderBuilder() {
+        // Do nothing
+    }
 
     /**
      * Creates a RNG instance.

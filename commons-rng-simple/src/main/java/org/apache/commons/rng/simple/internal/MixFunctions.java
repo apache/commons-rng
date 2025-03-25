@@ -38,7 +38,9 @@ final class MixFunctions {
     static final int GOLDEN_RATIO_32 = 0x9e3779b9;
 
     /** No instances. */
-    private MixFunctions() {}
+    private MixFunctions() {
+        // Do nothing
+    }
 
     /**
      * Perform variant 13 of David Stafford's 64-bit mix function.

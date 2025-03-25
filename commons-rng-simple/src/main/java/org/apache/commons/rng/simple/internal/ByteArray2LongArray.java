@@ -23,7 +23,9 @@ package org.apache.commons.rng.simple.internal;
  */
 public class ByteArray2LongArray implements SeedConverter<byte[], long[]> {
     /** Create an instance. */
-    public ByteArray2LongArray() {}
+    public ByteArray2LongArray() {
+        // Do nothing
+    }
 
     /** {@inheritDoc} */
     @Override
