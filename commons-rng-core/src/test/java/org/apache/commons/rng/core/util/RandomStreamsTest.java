@@ -161,7 +161,7 @@ class RandomStreamsTest {
         // Histogram the distribution for each unique 4-bit character
         final int m = (1 << CHAR_BITS) - 1;
         // Number of remaining characters
-        final int n = (int) Math.ceil((Long.SIZE - CHAR_BITS) / CHAR_BITS);
+        final int n = (int) Math.ceil((double) (Long.SIZE - CHAR_BITS) / CHAR_BITS);
         final int[][] h = new int[m + 1][m + 1];
         final int samples = 1 << 16;
         for (int i = 0; i < samples; i++) {
