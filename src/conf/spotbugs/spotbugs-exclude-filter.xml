@@ -124,6 +124,12 @@
   </Match>
 
   <Match>
+    <!-- Avoid a false positive failure to identify synchronization in the next(int) method. -->
+    <Class name="org.apache.commons.rng.simple.JDKRandomBridge"/>
+    <BugPattern name="IS2_INCONSISTENT_SYNC"/>
+  </Match>
+
+  <Match>
     <!-- This intentionally creates a single-use SecureRandom to generate a seed. -->
     <Class name="org.apache.commons.rng.simple.internal.SeedFactory"/>
     <BugPattern name="DMI_RANDOM_USED_ONLY_ONCE"/>
