@@ -47,7 +47,7 @@ public final class JDKRandomBridge extends Random {
     /** Delegate. */
     private transient RestorableUniformRandomProvider delegate;
     /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225. */
-    private final transient boolean isInitialized;
+    private transient boolean isInitialized;
     /** An object to use for synchonized access to the delegate. */
     private transient ReentrantLock instanceLock = new ReentrantLock();
 
@@ -154,5 +154,7 @@ public final class JDKRandomBridge extends Random {
         final byte[] state = new byte[size];
         input.readFully(state);
         delegate.restoreState(new RandomProviderDefaultState(state));
+        // Ensure support for setSeed(long) after deserialization
+        isInitialized = true;
     }
 }

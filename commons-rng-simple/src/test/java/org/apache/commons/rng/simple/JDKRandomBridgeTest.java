@@ -65,6 +65,11 @@ class JDKRandomBridgeTest {
 
         // Check that the serialized data recreated the original state.
         checkSameSequence(rng, serialRng);
+
+        // Check that the restored object can be seeded
+        rng.setSeed(seed);
+        serialRng.setSeed(seed);
+        checkSameSequence(rng, serialRng);
     }
 
     /**
