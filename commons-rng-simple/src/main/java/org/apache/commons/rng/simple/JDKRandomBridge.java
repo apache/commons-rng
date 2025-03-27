@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 
@@ -47,6 +48,8 @@ public final class JDKRandomBridge extends Random {
     private transient RestorableUniformRandomProvider delegate;
     /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225. */
     private final transient boolean isInitialized;
+    /** An object to use for synchonized access to the delegate. */
+    private transient ReentrantLock instanceLock = new ReentrantLock();
 
     /**
      * Creates a new instance.
@@ -65,12 +68,17 @@ public final class JDKRandomBridge extends Random {
     @Override
     public synchronized void setSeed(long seed) {
         if (isInitialized) {
-            delegate = source.create(seed);
+            try {
+                instanceLock.lock();
+                delegate = source.create(seed);
 
-            // Force the clearing of the "haveNextNextGaussian" flag
-            // (cf. Javadoc of the base class); the value passed here
-            // is irrelevant (since it will not be used).
-            super.setSeed(0L);
+                // Force the clearing of the "haveNextNextGaussian" flag
+                // (cf. Javadoc of the base class); the value passed here
+                // is irrelevant (since it will not be used).
+                super.setSeed(0L);
+            } finally {
+                instanceLock.unlock();
+            }
         }
     }
 
@@ -89,8 +97,11 @@ public final class JDKRandomBridge extends Random {
      */
     @Override
     protected int next(int n) {
-        synchronized (this) {
+        try {
+            instanceLock.lock();
             return delegate.nextInt() >>> (32 - n);
+        } finally {
+            instanceLock.unlock();
         }
     }
 
@@ -102,7 +113,8 @@ public final class JDKRandomBridge extends Random {
      */
     private void writeObject(ObjectOutputStream output)
         throws IOException {
-        synchronized (this) {
+        try {
+            instanceLock.lock();
             // Write non-transient fields.
             output.defaultWriteObject();
 
@@ -113,6 +125,8 @@ public final class JDKRandomBridge extends Random {
             final int size = state.length;
             output.writeInt(size);
             output.write(state);
+        } finally {
+            instanceLock.unlock();
         }
     }
 
@@ -130,6 +144,7 @@ public final class JDKRandomBridge extends Random {
         input.defaultReadObject();
 
         // Recreate the "delegate" from serialized info.
+        instanceLock = new ReentrantLock();
         delegate = source.create();
         // And restore its state.
         // Avoid the use of input.readObject() to deserialize by manually reading the byte[].

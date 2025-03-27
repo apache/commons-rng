@@ -18,6 +18,7 @@ package org.apache.commons.rng.simple;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
@@ -71,6 +72,8 @@ public final class ThreadLocalRandomSource {
      */
     private static final Map<RandomSource, ThreadLocal<UniformRandomProvider>> SOURCES =
         new EnumMap<>(RandomSource.class);
+    /** An object to use for synchonization. */
+    private static final ReentrantLock LOCK = new ReentrantLock();
 
     /** No public construction. */
     private ThreadLocalRandomSource() {}
@@ -121,8 +124,11 @@ public final class ThreadLocalRandomSource {
                 throw new IllegalArgumentException("Random source is null");
             }
 
-            synchronized (SOURCES) {
+            try {
+                LOCK.lock();
                 rng = SOURCES.computeIfAbsent(source, ThreadLocalRng::new);
+            } finally {
+                LOCK.unlock();
             }
         }
         return rng.get();
