@@ -69,65 +69,65 @@ class L32X64MixTest extends AbstractLXMTest {
     @Override
     Stream<Arguments> getReferenceData() {
         /*
-         * Reference data from JDK 17:
+         * Reference data from JDK 21:
          * java.util.random.RandomGeneratorFactory.of("L32X64MixRandom").create(seed)
          *
          * Full byte[] seed created using SecureRandom.nextBytes. The seed was converted
-         * to int[] by filling the long bits sequentially starting at the most
-         * significant byte matching the method used by JDK 17. A sign extension bug in
-         * byte[] conversion required all byte indices (i % 4 != 0) to be non-negative.
-         * See: https://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8282144
+         * to int[] by filling the int bits sequentially starting at the most significant
+         * byte matching the method used by the JDK, e.g.
+         * int[] result = new int[seed.length / Integer.BYTES];
+         * ByteBuffer.wrap(seed).order(ByteOrder.BIG_ENDIAN).asIntBuffer().get(result);
          *
          * Note: Seed order: LCG addition; LCG state; XBG state.
          */
         return Stream.of(
             Arguments.of(
                 new int[] {
-                    0x5a16253f, 0xd449657e, 0x5b46012d, 0x1d504d64,
+                    0x1382067f, 0x11271e0a, 0x1c409978, 0x61f837c8,
                 },
                 new int[] {
-                    0xa6cc8f9b, 0xb9d3f0e3, 0xb8861d42, 0x9f8001a2,
-                    0xaf1eea5b, 0x4e3bc947, 0x1c6378b8, 0x54ccc942,
-                    0x4629da71, 0x0126a7e7, 0x6038f89c, 0xff72cb5c,
-                    0x3853ae58, 0xc86ccf16, 0x02d32147, 0x78afed22,
-                    0x432194a4, 0xf79809aa, 0x8c115507, 0x646b0445,
-                    0xed63cc9c, 0x4e1d7b55, 0x699cf21d, 0x7d2adf74,
-                    0xc2613634, 0x5ac9c96f, 0x1f2e59d2, 0x4c9878fb,
-                    0x49c7a137, 0xd277cdf8, 0x369dd190, 0x1edeb2dc,
-                    0x10bd09bd, 0x86e5140c, 0xe6bcb04c, 0x67f97775,
-                    0x8f979b43, 0x36dfa266, 0x3acf5157, 0xe69aac08,
+                    0x34d44b72, 0xc750d8e4, 0x2584b161, 0xe9271d96,
+                    0x3f538c0c, 0x4ecdf9e5, 0x8cdd4e81, 0xa6a5535b,
+                    0x44879020, 0xcc14afbc, 0x66072188, 0x1c60e8b4,
+                    0x9d659300, 0x8b34c635, 0x80487423, 0xa4207e37,
+                    0xa8f83eb4, 0xffba89ba, 0x2436ecfd, 0x09d00955,
+                    0x4f3e22b9, 0x75fc441a, 0xbae0e225, 0x063ba447,
+                    0x73c4496d, 0xf4f0c0d1, 0xa4c4d47e, 0xf5950ecf,
+                    0x37c08cae, 0x722310f2, 0xd57ddaed, 0x7810a797,
+                    0x3a999e58, 0x38d902dd, 0x267c802a, 0x566b7c3f,
+                    0xae527bee, 0x288233c4, 0x5e852aa1, 0xcaaa9452,
                 }),
             Arguments.of(
                 new int[] {
-                    0xa3512c5b, 0x970f3100, 0xfc22313b, 0xa71f183a,
+                    0x8dce7821, 0xd395b8fb, 0x882ad86d, 0x6c42301b,
                 },
                 new int[] {
-                    0x971dc6d7, 0xd8200b05, 0x0093d467, 0x74f11b96,
-                    0x8945aa8f, 0x88a3d635, 0xb1fcb212, 0x66ed8543,
-                    0xd5970056, 0x7b8b2d89, 0xd2d3957b, 0xc4ecc777,
-                    0xf8e295c3, 0x4ffb4a29, 0x509fc6b0, 0x9c5b1965,
-                    0x5008c757, 0x3a19410a, 0xc3992498, 0x0c4a8f22,
-                    0x3f6abfd8, 0xe943ac45, 0xb632fcd3, 0x3d1f3201,
-                    0xb17bc9f5, 0x902a9b9c, 0x39a76388, 0xd8c856a0,
-                    0x7422cf86, 0x3f776592, 0xef70a122, 0x053b628e,
-                    0x0dec8c4e, 0x5b0d80c9, 0xf58d19fc, 0x741f1361,
-                    0x01b747f7, 0x6b325a32, 0x714ed761, 0xf1facf8e,
+                    0xf1e9b7b5, 0x39fd7dc3, 0xc2d24932, 0x9bc0e33c,
+                    0x92a9f679, 0xf4b5aaa9, 0x9e2c545d, 0x0d7e55b7,
+                    0x4698f8a8, 0x2b73b6a5, 0x4add4011, 0xe9177c21,
+                    0x58444b3a, 0xbb61e0bf, 0x18092a31, 0xc89ba939,
+                    0xd8538403, 0x1731b7d4, 0x3f625aa5, 0x831d5bd0,
+                    0xa752451a, 0xd3e023db, 0x7c6e3e1e, 0xdc0445a3,
+                    0xcede9123, 0x2387454a, 0xed63408a, 0x45443d1d,
+                    0xa430e2f3, 0x5ae09548, 0xc2b07e8a, 0xbc6165c3,
+                    0xdd42ff11, 0x335bd3f2, 0x11914bfa, 0x99e552a0,
+                    0x061dab2b, 0x51dfcf44, 0x39686726, 0x851cf916,
                 }),
             Arguments.of(
                 new int[] {
-                    0x17767167, 0x1b6e286c, 0xe84a2f12, 0x637a5034,
+                    0x2d5f37ab, 0xc3dd28d9, 0x026acc94, 0x2bbc5847,
                 },
                 new int[] {
-                    0xd69fd4c1, 0x134945f8, 0x34c2fd4e, 0xd152b08f,
-                    0xb5a7e2bd, 0xd8afab0d, 0xed15f9d2, 0x6baba06e,
-                    0x9a1e8bcd, 0x8b392fbd, 0xb1e1cad9, 0x929f06d9,
-                    0xc9467860, 0x3d492690, 0x84fd7d06, 0xb576b0f9,
-                    0x860eac4c, 0xd3b7aa5b, 0x3ff4dd13, 0xfea00d01,
-                    0x025143a0, 0xf1c5885a, 0x3041a8be, 0xbfbfb908,
-                    0x186cd9cc, 0x1771875b, 0x9cc65fe2, 0xc9189702,
-                    0x6063b09d, 0x20f0286b, 0x6094b83d, 0x8c3fe8f5,
-                    0x2bf720eb, 0xe229e207, 0xe33f93db, 0x443b3849,
-                    0x79cc70a8, 0xcbf0de84, 0xe57c6367, 0xe555ee21,
+                    0x48e4f692, 0xff3c6a41, 0xaf27d478, 0xbb3ef921,
+                    0x9c84c6c0, 0x8d5e754d, 0x2c531e3a, 0x9da71b2f,
+                    0xfc96959f, 0x63dccae3, 0x06e52284, 0xe88e132b,
+                    0xabddb514, 0x4fb33005, 0x8459ab3e, 0xf4f953cc,
+                    0xfab97ed8, 0x266fd572, 0x40583e15, 0xe19b5e70,
+                    0x2220fa4c, 0xc39f35d0, 0xecb2a582, 0xa0f61e5a,
+                    0xbdeb66f3, 0x2009eda4, 0x64af4f0c, 0xa3002588,
+                    0x0d540eb8, 0x2e7680a5, 0xbcf8ac04, 0x5c487b38,
+                    0x601ef06d, 0xe45bd1ee, 0xb1f7d8d2, 0x91f48864,
+                    0x0d39f6df, 0x3584ed75, 0xec73b815, 0xf5a3e5e1,
                 }));
     }
 
