@@ -46,7 +46,7 @@ Apache Commons RNG
 [![Java CI](https://github.com/apache/commons-rng/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-rng/actions/workflows/maven.yml)
 [![Coverage Status](https://codecov.io/gh/apache/commons-rng/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-rng)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=commons-rng&metric=alert_status)](https://sonarcloud.io/dashboard?id=commons-rng)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-simple/)
+[![Maven Central](https://img.shields.io/maven-central/v/org.apache.commons/commons-rng-simple?label=Maven%20Central)](https://search.maven.org/artifact/org.apache.commons/commons-rng-simple/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-simple/1.6.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-simple/1.6)
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.

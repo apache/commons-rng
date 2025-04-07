@@ -45,7 +45,7 @@ Apache Commons RNG Core
 
 [![Java CI](https://github.com/apache/commons-rng/actions/workflows/maven.yml/badge.svg)](https://github.com/apache/commons-rng/actions/workflows/maven.yml)
 [![Coverage Status](https://codecov.io/gh/apache/commons-rng/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-rng)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-rng-core/)
+[![Maven Central](https://img.shields.io/maven-central/v/org.apache.commons/commons-rng-core?label=Maven%20Central)](https://search.maven.org/artifact/org.apache.commons/commons-rng-core/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-rng-core/1.6.svg)](https://javadoc.io/doc/org.apache.commons/commons-rng-core/1.6)
 
 Pure Java implementations of random numbers generator algorithms.
