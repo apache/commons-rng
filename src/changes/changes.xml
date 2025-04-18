@@ -62,6 +62,7 @@ New features, updates and bug fixes (requires Java 8).
       <action dev="aherbert" type="update" issue="RNG-187">
         "ArraySampler": Improve performance on small ranges using batched index generation.
       </action>
+      <action dev=ggregory" type="update">Bump org.revapi:revapi-maven-plugin from 0.15.0 to 0.15.1 #140.</action>
 </release>
 
     <release version="1.6" date="2024-07-15" description="
