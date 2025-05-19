@@ -15,12 +15,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project name="RNG">
-  <bannerRight>
-    <name>Apache Commons RNG</name>
-    <!-- Use a full URL allows a correct banner for the modules. -->
-    <src>https://commons.apache.org/proper/commons-rng/images/commons_rng.small.png</src>
-    <href>https://commons.apache.org/proper/commons-rng/index.html</href>
+<site name="RNG">
+  <!-- Use a full URL allows a correct banner for the modules. -->
+  <bannerRight name="Apache Commons RNG" href="https://commons.apache.org/proper/commons-rng/index.html">
+    <image src="https://commons.apache.org/proper/commons-rng/images/commons_rng.small.png"/>
   </bannerRight>
 
   <body>
@@ -45,4 +43,4 @@
     </menu>
 
   </body>
-</project>
+</site>
