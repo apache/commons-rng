@@ -23,6 +23,7 @@ import java.util.stream.DoubleStream;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface ContinuousSampler {
     /**
      * Creates a {@code double} sample.

@@ -22,6 +22,7 @@ package org.apache.commons.rng.core.source32;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface RandomIntSource {
     /**
      * Return the next random value.

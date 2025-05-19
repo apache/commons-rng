@@ -23,6 +23,7 @@ import java.util.stream.IntStream;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface DiscreteSampler {
     /**
      * Creates an {@code int} sample.

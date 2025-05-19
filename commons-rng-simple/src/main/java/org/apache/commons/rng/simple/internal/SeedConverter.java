@@ -24,6 +24,7 @@ package org.apache.commons.rng.simple.internal;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface SeedConverter<IN, OUT> {
     /**
      * Converts seed from input type to output type.

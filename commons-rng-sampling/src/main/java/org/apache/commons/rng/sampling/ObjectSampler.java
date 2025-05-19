@@ -25,6 +25,7 @@ import java.util.stream.Stream;
  * @param <T> Type of the sample.
  * @since 1.4
  */
+@FunctionalInterface
 public interface ObjectSampler<T> {
     /**
      * Create an object sample.

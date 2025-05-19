@@ -23,6 +23,7 @@ package org.apache.commons.rng.sampling.distribution;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface DiscreteInverseCumulativeProbabilityFunction {
     /**
      * Computes the quantile function of the distribution.

@@ -26,6 +26,7 @@ import java.util.stream.LongStream;
  *
  * @since 1.0
  */
+@FunctionalInterface
 public interface UniformRandomProvider {
     /**
      * Generates {@code byte} values and places them into a user-supplied array.

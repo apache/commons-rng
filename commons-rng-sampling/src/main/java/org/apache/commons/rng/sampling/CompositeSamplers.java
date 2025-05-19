@@ -73,6 +73,7 @@ public final class CompositeSamplers {
      * <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
      * discrete probability distribution</a>.
      */
+    @FunctionalInterface
     public interface DiscreteProbabilitySamplerFactory {
         /**
          * Creates the sampler.
@@ -273,6 +274,7 @@ public final class CompositeSamplers {
          *
          * @param <S> Type of sampler
          */
+        @FunctionalInterface
         interface SamplerFactory<S> {
             /**
              * Creates a new composite sampler.

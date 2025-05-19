@@ -40,6 +40,7 @@ public final class RandomStreams {
      * @param <T> the object type
      * @since 1.5
      */
+    @FunctionalInterface
     public interface SeededObjectFactory<T> {
         /**
          * Creates the object.

@@ -23,4 +23,5 @@ package org.apache.commons.rng.sampling.distribution;
  *
  * @since 1.1
  */
+@FunctionalInterface
 public interface NormalizedGaussianSampler extends ContinuousSampler {}

@@ -26,6 +26,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * @param <R> Type of the sampler.
  * @since 1.3
  */
+@FunctionalInterface
 public interface SharedStateSampler<R> {
     /**
      * Create a new instance of the sampler with the same underlying state using the given

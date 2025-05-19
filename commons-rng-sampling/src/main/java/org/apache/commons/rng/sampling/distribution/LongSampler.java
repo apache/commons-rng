@@ -23,6 +23,7 @@ import java.util.stream.LongStream;
  *
  * @since 1.4
  */
+@FunctionalInterface
 public interface LongSampler {
     /**
      * Creates a {@code long} sample.
