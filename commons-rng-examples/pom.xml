@@ -45,7 +45,7 @@
     <!-- Java 9+ -->
     <commons.module.name>org.apache.commons.rng.examples</commons.module.name>
 
-    <rng.picocli.version>4.7.6</rng.picocli.version>
+    <rng.picocli.version>4.7.7</rng.picocli.version>
     <rng.exec.version>3.5.0</rng.exec.version>
     <rng.shade.version>3.6.0</rng.shade.version>
 
