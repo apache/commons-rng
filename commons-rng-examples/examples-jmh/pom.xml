@@ -163,7 +163,6 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${rng.exec.version}</version>
             <executions>
               <execution>
                 <id>benchmark</id>
@@ -196,7 +195,7 @@
       <!-- Build an executable jar that runs JMH:
            mvn package -Pexamples-jmh
 
-           java -jar target/examples-jmh.jar -h
+           ava -jar target/examples-jmh.jar -hj
            java -jar target/examples-jmh.jar NextDoubleGenerationPerformance -rf json -rff out.json
            java -jar target/examples-jmh.jar NextIntGen.*nextInt$ -p randomSourceName=MSWS,PCG_MCG_XSH_RS_32
            java -jar target/examples-jmh.jar ContinuousSamplersPerformance.sample -p samplerType=BoxMullerNormalizedGaussianSampler
