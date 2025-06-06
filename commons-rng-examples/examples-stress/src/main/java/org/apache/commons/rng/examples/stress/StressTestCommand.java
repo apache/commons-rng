@@ -694,7 +694,7 @@ class StressTestCommand implements Callable<Void> {
             //    of a new one)
             // -- There are no pending tasks (i.e. the final submission or the end of a final task)
             if (completed >= total ||
-                (current >= nextReportTimestamp && running == parallelTasks || pending == 0)) {
+                current >= nextReportTimestamp && (running == parallelTasks || pending == 0)) {
                 // Report
                 nextReportTimestamp = current + PROGRESS_INTERVAL;
                 final StringBuilder sb = createStringBuilderWithTimestamp(current, pending, running, completed);
