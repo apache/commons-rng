@@ -48,6 +48,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -940,7 +941,7 @@ class StressTestCommand implements Callable<Void> {
         private final ProgressTracker progressTracker;
 
         /** The count of bytes used by the sub-process. */
-        private long bytesUsed;
+        private AtomicLong bytesUsed = new AtomicLong();
 
         /**
          * Creates the task.
@@ -1015,17 +1016,18 @@ class StressTestCommand implements Callable<Void> {
             final Process testingProcess = builder.start();
 
             // Use a custom data output to write the RNG.
+            long writeCount = 0;
             try (RngDataOutput sink = RNGUtils.createDataOutput(rng, cmd.source64,
                 testingProcess.getOutputStream(), cmd.bufferSize, cmd.byteOrder)) {
                 for (;;) {
                     sink.write(rng);
-                    bytesUsed++;
+                    writeCount++;
                 }
             } catch (final IOException ignored) {
                 // Hopefully getting here when the analyzing software terminates.
             }
 
-            bytesUsed *= cmd.bufferSize;
+            bytesUsed.set(writeCount * cmd.bufferSize);
 
             // Get the exit value.
             // Wait for up to 60 seconds.
@@ -1094,10 +1096,11 @@ class StressTestCommand implements Callable<Void> {
 
             appendDate(sb, "End").append(C).append(N);
 
+            final long bytes = bytesUsed.get();
             sb.append(C).append("Exit value: ").append(exitValue).append(N)
-                .append(C).append("Bytes used: ").append(bytesUsed)
-                          .append(" >= 2^").append(log2(bytesUsed))
-                          .append(" (").append(bytesToString(bytesUsed)).append(')').append(N)
+                .append(C).append("Bytes used: ").append(bytes)
+                          .append(" >= 2^").append(log2(bytes))
+                          .append(" (").append(bytesToString(bytes)).append(')').append(N)
                 .append(C).append(N);
 
             final double duration = millis * 1e-3 / 60;
