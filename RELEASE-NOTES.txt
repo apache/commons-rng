@@ -1,7 +1,7 @@
 
               Apache Commons RNG 1.6 RELEASE NOTES
 
-The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.6
+The Apache Commons RNG team is pleased to announce the release of Apache Commons RNG 1.6.
 
 The Apache Commons RNG project provides pure-Java implementation of pseudo-random generators.
 
