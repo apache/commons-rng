@@ -477,7 +477,7 @@ final class RNGUtils {
      * sequentially from the {@code long} (order depends on the source64 mode). This setting is
      * significant depending on the byte order. For example for a high-low source64 mode and
      * using the Java standard big-endian representation the output is the same as the raw 64-bit
-     * output. If using little endian the output bytes will be written as:</p>
+     * output. If using little-endian the output bytes will be written as:</p>
      *
      * <pre>{@code
      * 76543210  ->  4567  0123
