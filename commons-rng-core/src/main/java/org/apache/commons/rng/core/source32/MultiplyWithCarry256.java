@@ -113,6 +113,7 @@ public class MultiplyWithCarry256 extends IntProvider {
         index &= 0xff;
         final long t = A * (state[index] & 0xffffffffL) + carry;
         carry = (int) (t >> 32);
-        return state[index++] = (int) t;
+        state[index++] = (int) t;
+        return (int) t;
     }
 }

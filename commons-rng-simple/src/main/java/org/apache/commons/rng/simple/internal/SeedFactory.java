@@ -374,7 +374,8 @@ public final class SeedFactory {
         final int end = from + len;
         int i = from;
         while (i < end) {
-            long v = MixFunctions.stafford13(x += MixFunctions.GOLDEN_RATIO_64);
+            x += MixFunctions.GOLDEN_RATIO_64;
+            long v = MixFunctions.stafford13(x);
             for (int j = 0; j < 8; j++) {
                 seed[i++] = (byte) v;
                 v >>>= 8;

@@ -53,7 +53,9 @@ public class JenkinsSmallFast32 extends IntProvider {
      */
     private void setSeedInternal(int seed) {
         a = 0xf1ea5eed;
-        b = c = d = seed;
+        b = seed;
+        c = seed;
+        d = seed;
         for (int i = 0; i < 20; i++) {
             next();
         }

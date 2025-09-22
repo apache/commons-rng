@@ -189,7 +189,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
             t2 = t1 + (n2 << 18);
             t3 = t2 + (n3 << 12);
             t4 = t3 + (n4 << 6);
-            n1 = n2 = n3 = n4 = n5 = 0;
+            n1 = 0;
+            n2 = 0;
+            n3 = 0;
+            n4 = 0;
+            n5 = 0;
 
             // Fill tables
             for (int i = 0; i < prob.length; i++) {
@@ -331,7 +335,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
             t2 = t1 + (n2 << 18);
             t3 = t2 + (n3 << 12);
             t4 = t3 + (n4 << 6);
-            n1 = n2 = n3 = n4 = n5 = 0;
+            n1 = 0;
+            n2 = 0;
+            n3 = 0;
+            n4 = 0;
+            n5 = 0;
 
             // Fill tables
             for (int i = 0; i < prob.length; i++) {
@@ -470,7 +478,11 @@ public final class MarsagliaTsangWangDiscreteSampler {
             t2 = t1 + (n2 << 18);
             t3 = t2 + (n3 << 12);
             t4 = t3 + (n4 << 6);
-            n1 = n2 = n3 = n4 = n5 = 0;
+            n1 = 0;
+            n2 = 0;
+            n3 = 0;
+            n4 = 0;
+            n5 = 0;
 
             // Fill tables
             for (int i = 0; i < prob.length; i++) {

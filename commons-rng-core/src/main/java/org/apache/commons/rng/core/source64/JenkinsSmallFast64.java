@@ -52,7 +52,9 @@ public class JenkinsSmallFast64 extends LongProvider {
      */
     private void setSeedInternal(long seed) {
         a = 0xf1ea5eedL;
-        b = c = d = seed;
+        b = seed;
+        c = seed;
+        d = seed;
         for (int i = 0; i < 20; i++) {
             next();
         }
