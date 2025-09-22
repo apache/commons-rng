@@ -33,8 +33,8 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test*}
 	org.apache.commons.rng.core;version='[1.7.0,1.7.1)',\
 	org.apache.commons.rng.sampling;version='[1.7.0,1.7.1)',\
 	org.apache.commons.rng.simple;version='[1.7.0,1.7.1)',\
-	junit-jupiter-api;version='[5.12.2,5.12.3)',\
-	junit-jupiter-engine;version='[5.12.2,5.12.3)',\
-	junit-platform-commons;version='[1.12.2,1.12.3)',\
-	junit-platform-engine;version='[1.12.2,1.12.3)',\
-	junit-platform-launcher;version='[1.12.2,1.12.3)'
+	junit-jupiter-api;version='[5.13.4,5.13.5)',\
+	junit-jupiter-engine;version='[5.13.4,5.13.5)',\
+	junit-platform-commons;version='[1.13.4,1.13.5)',\
+	junit-platform-engine;version='[1.13.4,1.13.5)',\
+	junit-platform-launcher;version='[1.13.4,1.13.5)'
