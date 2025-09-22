@@ -287,6 +287,11 @@
         value="./ancestor-or-self::ClassDeclaration[@SimpleName='MarsagliaTsangWangDiscreteSampler']"/>
     </properties>
   </rule>
+  <rule ref="category/java/errorprone.xml/AssignmentInOperand">
+    <properties>
+      <property name="allowIncrementDecrement" value="true" />
+    </properties>
+  </rule>
 
   <rule ref="category/java/multithreading.xml/UseConcurrentHashMap">
     <properties>
