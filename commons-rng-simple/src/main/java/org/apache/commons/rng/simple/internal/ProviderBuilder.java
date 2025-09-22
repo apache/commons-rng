@@ -541,13 +541,13 @@ public final class ProviderBuilder {
          * Checks whether the type of given {@code seed} is the native type
          * of the implementation.
          *
-         * @param <SEED> Seed type.
+         * @param <T> Seed type.
          *
          * @param seed Seed value.
          * @return {@code true} if the seed can be passed to the builder
          * for this RNG type.
          */
-        public <SEED> boolean isNativeSeed(SEED seed) {
+        public <T> boolean isNativeSeed(T seed) {
             return seed != null && getSeed().equals(seed.getClass());
         }
 

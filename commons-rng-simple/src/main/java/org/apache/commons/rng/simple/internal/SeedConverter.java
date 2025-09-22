@@ -19,18 +19,18 @@ package org.apache.commons.rng.simple.internal;
 /**
  * Seed converter.
  *
- * @param <IN> Input seed type.
- * @param <OUT> Output seed type.
+ * @param <T> Input seed type.
+ * @param <R> Output seed type.
  *
  * @since 1.0
  */
 @FunctionalInterface
-public interface SeedConverter<IN, OUT> {
+public interface SeedConverter<T, R> {
     /**
      * Converts seed from input type to output type.
      *
      * @param seed Original seed value.
      * @return the converted seed value.
      */
-    OUT convert(IN seed);
+    R convert(T seed);
 }

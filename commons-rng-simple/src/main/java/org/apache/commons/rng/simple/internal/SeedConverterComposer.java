@@ -16,20 +16,21 @@
  */
 package org.apache.commons.rng.simple.internal;
 
+
 /**
  * Composes two {@link SeedConverter converters}.
  *
- * @param <IN> Input seed type.
- * @param <TRANS> Transitional seed type.
- * @param <OUT> Output seed type.
+ * @param <T> Input seed type.
+ * @param <S> Transitional seed type.
+ * @param <R> Output seed type.
  *
  * @since 1.0
  */
-public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, OUT> {
+public class SeedConverterComposer<T, S, R> implements SeedConverter<T, R> {
     /** First conversion. */
-    private final SeedConverter<IN, TRANS> first;
+    private final SeedConverter<T, S> first;
     /** Second conversion. */
-    private final SeedConverter<TRANS, OUT> second;
+    private final SeedConverter<S, R> second;
 
     /**
      * Create an instance.
@@ -37,16 +38,16 @@ public class SeedConverterComposer<IN, TRANS, OUT> implements SeedConverter<IN, 
      * @param first First conversion.
      * @param second second conversion.
      */
-    public SeedConverterComposer(SeedConverter<IN, TRANS> first,
-                                 SeedConverter<TRANS, OUT> second) {
+    public SeedConverterComposer(SeedConverter<T, S> first,
+                                 SeedConverter<S, R> second) {
         this.first = first;
         this.second = second;
     }
 
     /** {@inheritDoc} */
     @Override
-    public OUT convert(IN seed) {
-        final TRANS trans = first.convert(seed);
+    public R convert(T seed) {
+        final S trans = first.convert(seed);
         return second.convert(trans);
     }
 }

@@ -21,11 +21,11 @@ package org.apache.commons.rng.simple.internal;
  * Dummy converter that simply passes on its input.
  * It can be useful to avoid "unchecked" compiler warnings.
  *
- * @param <SEED> Seed type.
+ * @param <T> Seed type.
  *
  * @since 1.0
  */
-public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
+public class NoOpConverter<T> implements SeedConverter<T, T> {
     /** Create an instance. */
     public NoOpConverter() {
         // Do nothing
@@ -33,7 +33,7 @@ public class NoOpConverter<SEED> implements SeedConverter<SEED, SEED> {
 
     /** {@inheritDoc} */
     @Override
-    public SEED convert(SEED seed) {
+    public T convert(T seed) {
         return seed;
     }
 }

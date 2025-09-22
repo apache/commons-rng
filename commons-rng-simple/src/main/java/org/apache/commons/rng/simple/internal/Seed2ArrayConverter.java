@@ -19,11 +19,11 @@ package org.apache.commons.rng.simple.internal;
 /**
  * Seed converter to create an output array type.
  *
- * @param <IN> Input seed type.
- * @param <OUT> Output seed type.
+ * @param <T> Input seed type.
+ * @param <R> Output seed type.
  * @since 1.3
  */
-public interface Seed2ArrayConverter<IN, OUT> extends SeedConverter<IN, OUT> {
+public interface Seed2ArrayConverter<T, R> extends SeedConverter<T, R> {
     /**
      * Converts seed from input type to output type. The output type is expected to be an array.
      *
@@ -31,5 +31,5 @@ public interface Seed2ArrayConverter<IN, OUT> extends SeedConverter<IN, OUT> {
      * @param outputSize Output size.
      * @return the converted seed value.
      */
-    OUT convert(IN seed, int outputSize);
+    R convert(T seed, int outputSize);
 }
