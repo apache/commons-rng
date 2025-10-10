@@ -80,6 +80,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>${commons.animal-sniffer.version}</version>
         <configuration>
           <ignores>
             <ignore>java.nio.IntBuffer</ignore>
