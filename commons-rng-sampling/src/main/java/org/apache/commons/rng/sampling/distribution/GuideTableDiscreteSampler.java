@@ -35,7 +35,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *
  * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
  *
- * @see <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
+ * @see <a href="https://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
  * Discrete probability distribution (Wikipedia)</a>
  * @since 1.3
  */

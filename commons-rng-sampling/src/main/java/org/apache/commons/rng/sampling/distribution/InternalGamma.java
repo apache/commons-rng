@@ -70,11 +70,11 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
      * </p>
      *
      * <ul>
-     * <li><a href="http://mathworld.wolfram.com/GammaFunction.html">Gamma
+     * <li><a href="https://mathworld.wolfram.com/GammaFunction.html">Gamma
      *     Function</a>, equation (28).</li>
-     * <li><a href="http://mathworld.wolfram.com/LanczosApproximation.html">
+     * <li><a href="https://mathworld.wolfram.com/LanczosApproximation.html">
      *     Lanczos Approximation</a>, equations (1) through (5).</li>
-     * <li><a href="http://my.fit.edu/~gabdo/gamma.txt">Paul Godfrey, A note on
+     * <li><a href="https://my.fit.edu/~gabdo/gamma.txt">Paul Godfrey, A note on
      *     the computation of the convergent Lanczos complex Gamma
      *     approximation</a></li>
      * </ul>
@@ -109,9 +109,9 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
      * @param x Argument.
      * @return The Lanczos approximation.
      *
-     * @see <a href="http://mathworld.wolfram.com/LanczosApproximation.html">Lanczos Approximation</a>
+     * @see <a href="https://mathworld.wolfram.com/LanczosApproximation.html">Lanczos Approximation</a>
      * equations (1) through (5), and Paul Godfrey's
-     * <a href="http://my.fit.edu/~gabdo/gamma.txt">Note on the computation
+     * <a href="https://my.fit.edu/~gabdo/gamma.txt">Note on the computation
      * of the convergent Lanczos complex Gamma approximation</a>
      */
     private static double lanczos(final double x) {

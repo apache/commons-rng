@@ -19,7 +19,7 @@ package org.apache.commons.rng.core.source32;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * Port from Marsaglia's <a href="http://www.cse.yorku.ca/~oz/marsaglia-rng.html">
+ * Port from Marsaglia's <a href="https://www.cse.yorku.ca/~oz/marsaglia-rng.html">
  * "KISS" algorithm</a>.
  * This version contains the correction referred to
  * <a href="https://programmingpraxis.com/2010/10/05/george-marsaglias-random-number-generators/">here</a>

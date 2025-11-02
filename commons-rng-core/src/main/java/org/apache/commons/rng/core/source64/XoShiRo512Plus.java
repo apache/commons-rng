@@ -25,8 +25,8 @@ package org.apache.commons.rng.core.source64;
  * and the period is 2<sup>512</sup>-1. Speed is expected to be slower than
  * {@link XoShiRo256Plus}.</p>
  *
- * @see <a href="http://xoshiro.di.unimi.it/xoshiro512plus.c">Original source code</a>
- * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
+ * @see <a href="https://xoshiro.di.unimi.it/xoshiro512plus.c">Original source code</a>
+ * @see <a href="https://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
  * @since 1.3
  */
 public class XoShiRo512Plus extends AbstractXoShiRo512 {

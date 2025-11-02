@@ -27,7 +27,7 @@ package org.apache.commons.rng.core.source32;
  * effective: in effect, two seeds that only differ by the last 64 bits may produce
  * highly correlated sequences.
  *
- * @see <a href="http://www.pcg-random.org/">
+ * @see <a href="https://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
  */

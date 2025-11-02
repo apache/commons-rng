@@ -272,7 +272,7 @@ public class SeedGenerationPerformance {
      * @param z the input value
      * @return the output value
      * @see <a
-     * href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
+     * href="https://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
      * Bit Mixing</a>
      */
     private static long mixLong(long z) {
@@ -288,7 +288,7 @@ public class SeedGenerationPerformance {
      * @param z the input value
      * @return the output value
      * @see <a
-     * href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
+     * href="https://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
      * Bit Mixing</a>
      */
     private static int mixInt(long z) {

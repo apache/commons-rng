@@ -26,7 +26,7 @@ import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 
 /**
  * Sampling from a collection of items with user-defined
- * <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
+ * <a href="https://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
  * probabilities</a>.
  * Note that if all unique items are assigned the same probability,
  * it is much more efficient to use {@link CollectionSampler}.

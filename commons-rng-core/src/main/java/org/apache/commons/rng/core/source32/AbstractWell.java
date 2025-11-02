@@ -26,14 +26,14 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * <p>
  * This generator is described in a paper by Fran&ccedil;ois Panneton,
  * Pierre L'Ecuyer and Makoto Matsumoto
- * <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/wellrng.pdf">
+ * <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/wellrng.pdf">
  * Improved Long-Period Generators Based on Linear Recurrences Modulo 2</a>
  * ACM Transactions on Mathematical Software, 32, 1 (2006).
  * The errata for the paper are in
- * <a href="http://www.iro.umontreal.ca/~lecuyer/myftp/papers/wellrng-errata.txt">wellrng-errata.txt</a>.
+ * <a href="https://www.iro.umontreal.ca/~lecuyer/myftp/papers/wellrng-errata.txt">wellrng-errata.txt</a>.
  * </p>
  *
- * @see <a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
+ * @see <a href="https://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
  *
  * @since 1.0
  */

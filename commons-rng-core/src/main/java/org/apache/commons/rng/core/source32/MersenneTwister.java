@@ -28,14 +28,14 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * This generator features an extremely long period
  * (2<sup>19937</sup>-1) and 623-dimensional equidistribution up to
  * 32 bits accuracy.  The home page for this generator is located at
- * <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">
+ * <a href="https://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">
  * http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html</a>.
  * </p>
  *
  * <p>
  * This generator is described in a paper by Makoto Matsumoto and
  * Takuji Nishimura in 1998:
- * <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf">
+ * <a href="https://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf">
  * Mersenne Twister: A 623-Dimensionally Equidistributed Uniform Pseudo-Random
  * Number Generator</a>,
  * ACM Transactions on Modeling and Computer Simulation, Vol. 8, No. 1,
@@ -44,7 +44,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * <p>
  * This class is mainly a Java port of the
- * <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html">
+ * <a href="https://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/MT2002/emt19937ar.html">
  * 2002-01-26 version of the generator</a> written in C by Makoto Matsumoto
  * and Takuji Nishimura. Here is their original copyright:
  * </p>

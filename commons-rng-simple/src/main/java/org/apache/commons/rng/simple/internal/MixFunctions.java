@@ -51,7 +51,7 @@ final class MixFunctions {
      *
      * @param x the input value
      * @return the output value
-     * @see <a href="http://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
+     * @see <a href="https://zimbry.blogspot.com/2011/09/better-bit-mixing-improving-on.html">Better
      *      Bit Mixing - Improving on MurmurHash3&#39;s 64-bit Finalizer.</a>
      */
     static long stafford13(long x) {

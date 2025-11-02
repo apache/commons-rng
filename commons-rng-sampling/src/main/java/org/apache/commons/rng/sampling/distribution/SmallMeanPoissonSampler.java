@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
+ * Sampler for the <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
  *
  * <ul>
  *  <li>

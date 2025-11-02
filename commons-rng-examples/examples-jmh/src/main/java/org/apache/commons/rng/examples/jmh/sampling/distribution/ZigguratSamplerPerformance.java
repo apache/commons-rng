@@ -1179,7 +1179,7 @@ public class ZigguratSamplerPerformance {
      * distribution.
      *
      * <p>The algorithm is explained in this
-     * <a href="http://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
+     * <a href="https://www.jstatsoft.org/article/view/v005i08/ziggurat.pdf">paper</a>
      * and this implementation has been adapted from the C code provided therein.</p>
      */
     static class ZigguratExponentialSampler implements ContinuousSampler {

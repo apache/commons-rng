@@ -24,7 +24,7 @@ import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
 /**
- * Generate coordinates <a href="http://mathworld.wolfram.com/BallPointPicking.html">
+ * Generate coordinates <a href="https://mathworld.wolfram.com/BallPointPicking.html">
  * uniformly distributed within the unit n-ball</a>.
  *
  * <p>Sampling uses:</p>

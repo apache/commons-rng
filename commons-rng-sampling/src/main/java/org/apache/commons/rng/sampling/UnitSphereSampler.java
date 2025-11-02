@@ -22,7 +22,7 @@ import org.apache.commons.rng.sampling.distribution.NormalizedGaussianSampler;
 import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
 
 /**
- * Generate vectors <a href="http://mathworld.wolfram.com/SpherePointPicking.html">
+ * Generate vectors <a href="https://mathworld.wolfram.com/SpherePointPicking.html">
  * isotropically located on the surface of a sphere</a>.
  *
  * <p>Sampling in 2 or more dimensions uses:</p>

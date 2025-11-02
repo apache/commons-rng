@@ -23,7 +23,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * family that use an internal 64-bit Multiplicative Congruential Generator (MCG) and output
  * 32-bits per cycle.
  *
- * @see <a href="http://www.pcg-random.org/">
+ * @see <a href="https://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
  */

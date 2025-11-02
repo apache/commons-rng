@@ -21,7 +21,7 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
 
 /**
  * Create a sampler for the
- * <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson
+ * <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson
  * distribution</a> using a cache to minimise construction cost.
  *
  * <p>The cache will return a sampler equivalent to

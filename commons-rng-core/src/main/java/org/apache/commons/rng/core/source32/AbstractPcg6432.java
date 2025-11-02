@@ -51,7 +51,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *  </li>
  * </ul>
  *
- * @see <a href="http://www.pcg-random.org/">
+ * @see <a href="https://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @see <a href="https://ieeexplore.ieee.org/document/718715">Durst, M.J. (1989)
  *  Using Linear Congruential Generators For Parallel Random Number Generation</a>

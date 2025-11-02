@@ -24,8 +24,8 @@ package org.apache.commons.rng.core.source32;
  * <p>This is a member of the Xor-Shift-Rotate family of generators. Memory footprint is 128
  * bits.</p>
  *
- * @see <a href="http://xoshiro.di.unimi.it/xoshiro128plusplus.c">Original source code</a>
- * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
+ * @see <a href="https://xoshiro.di.unimi.it/xoshiro128plusplus.c">Original source code</a>
+ * @see <a href="https://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
  * @since 1.3
  */
 public class XoShiRo128PlusPlus extends AbstractXoShiRo128 {

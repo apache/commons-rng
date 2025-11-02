@@ -54,7 +54,7 @@ public class JDKRandom extends IntProvider {
      *
      * <p>Adapted from o.a.c.io.serialization.ValidatingObjectInputStream.</p>
      *
-     * @see <a href="http://www.ibm.com/developerworks/library/se-lookahead/">
+     * @see <a href="https://www.ibm.com/developerworks/library/se-lookahead/">
      *  IBM DeveloperWorks Article: Look-ahead Java deserialization</a>
      */
     private static final class ValidatingObjectInputStream extends ObjectInputStream {

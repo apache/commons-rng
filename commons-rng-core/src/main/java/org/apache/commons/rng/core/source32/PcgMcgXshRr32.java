@@ -23,7 +23,7 @@ package org.apache.commons.rng.core.source32;
  *
  * <p>State size is 64 bits and the period is 2<sup>62</sup>.</p>
  *
- * @see <a href="http://www.pcg-random.org/">
+ * @see <a href="https://www.pcg-random.org/">
  *  PCG, A Family of Better Random Number Generators</a>
  * @since 1.3
  */

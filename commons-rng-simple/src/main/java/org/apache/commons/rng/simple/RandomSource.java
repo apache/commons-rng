@@ -129,8 +129,8 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  *   The only way to ensure that the selected seed will make the generator
  *   produce a good sequence is to submit that sequence to a series of
  *   stringent tests, as provided by tools such as
- *   <a href="http://www.phy.duke.edu/~rgb/General/dieharder.php">dieharder</a>
- *   or <a href="http://simul.iro.umontreal.ca/testu01/tu01.html">TestU01</a>.
+ *   <a href="https://www.phy.duke.edu/~rgb/General/dieharder.php">dieharder</a>
+ *   or <a href="https://simul.iro.umontreal.ca/testu01/tu01.html">TestU01</a>.
  *  </li>
  * </ul>
  *

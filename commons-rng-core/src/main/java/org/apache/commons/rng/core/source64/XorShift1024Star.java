@@ -29,7 +29,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * <p>Note: This has been superseded by {@link XorShift1024StarPhi}. The sequences emitted
  * by both generators are correlated.</p>
  *
- * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
+ * @see <a href="https://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
  * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
  * @since 1.0
  */

@@ -26,7 +26,7 @@ import picocli.CommandLine.RunLast;
  * {@link org.apache.commons.rng.UniformRandomProvider#nextInt()
  * UniformRandomProvider.nextInt()} method to a program that reads {@code int} values from
  * its standard input and writes an analysis report to standard output. The <a
- * href="http://www.phy.duke.edu/~rgb/General/dieharder.php"> "Dieharder"</a> test suite
+ * href="https://www.phy.duke.edu/~rgb/General/dieharder.php"> "Dieharder"</a> test suite
  * is such a software.</p>
  *
  * <p>Example of command line, assuming that "examples-stress.jar" specifies this

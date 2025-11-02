@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampling from the <a href="http://mathworld.wolfram.com/GammaDistribution.html">gamma distribution</a>.
+ * Sampling from the <a href="https://mathworld.wolfram.com/GammaDistribution.html">gamma distribution</a>.
  * <ul>
  *  <li>
  *   For {@code 0 < alpha < 1}:
@@ -46,7 +46,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code alpha >= 1})
  * </ul>
  *
- * @see <a href="http://mathworld.wolfram.com/GammaDistribution.html">MathWorld Gamma distribution</a>
+ * @see <a href="https://mathworld.wolfram.com/GammaDistribution.html">MathWorld Gamma distribution</a>
  * @see <a href="https://en.wikipedia.org/wiki/Gamma_distribution">Wikipedia Gamma distribution</a>
  * @since 1.0
  */

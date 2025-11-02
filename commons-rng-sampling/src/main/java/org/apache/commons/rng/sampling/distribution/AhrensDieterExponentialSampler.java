@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampling from an <a href="http://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
+ * Sampling from an <a href="https://mathworld.wolfram.com/ExponentialDistribution.html">exponential distribution</a>.
  *
  * <p>Sampling uses:</p>
  *

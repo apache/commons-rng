@@ -23,7 +23,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * A fast RNG, with 64 bits of state, that can be used to initialize the
  * state of other generators.
  *
- * @see <a href="http://xorshift.di.unimi.it/splitmix64.c">
+ * @see <a href="https://xorshift.di.unimi.it/splitmix64.c">
  * Original source code</a>
  *
  * @since 1.0

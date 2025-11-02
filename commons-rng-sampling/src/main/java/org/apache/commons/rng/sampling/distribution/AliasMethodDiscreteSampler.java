@@ -63,7 +63,7 @@ import java.util.Arrays;
  * {@link UniformRandomProvider#nextInt(int)} that exploit the power of 2.</p>
  *
  * @see <a href="https://en.wikipedia.org/wiki/Alias_method">Alias Method</a>
- * @see <a href="http://www.keithschwarz.com/darts-dice-coins/">Darts, Dice, and Coins:
+ * @see <a href="https://www.keithschwarz.com/darts-dice-coins/">Darts, Dice, and Coins:
  * Sampling from a Discrete Distribution by Keith Schwartz</a>
  * @see <a href="https://ieeexplore.ieee.org/document/92917">Vose (1991) IEEE Transactions
  * on Software Engineering 17, 972-975.</a>

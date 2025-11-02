@@ -47,7 +47,7 @@ import java.util.Comparator;
  *
  * <p>Note: The comparator is thread-safe so can be used in a parallel sort.
  *
- * @see <a href="http://www.DaveKoelle.com">Alphanum Algorithm</a>
+ * @see <a href="https://www.DaveKoelle.com">Alphanum Algorithm</a>
  */
 class AlphaNumericComparator implements Comparator<CharSequence>, Serializable {
     /**

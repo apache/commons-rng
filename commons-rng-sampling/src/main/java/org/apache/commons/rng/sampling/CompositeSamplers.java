@@ -70,7 +70,7 @@ import org.apache.commons.rng.sampling.distribution.SharedStateLongSampler;
 public final class CompositeSamplers {
     /**
      * A factory for creating a sampler of a user-defined
-     * <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
+     * <a href="https://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
      * discrete probability distribution</a>.
      */
     @FunctionalInterface
@@ -88,7 +88,7 @@ public final class CompositeSamplers {
 
     /**
      * The DiscreteProbabilitySampler class defines implementations that sample from a user-defined
-     * <a href="http://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
+     * <a href="https://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
      * discrete probability distribution</a>.
      *
      * <p>All implementations support the {@link SharedStateDiscreteSampler} interface.

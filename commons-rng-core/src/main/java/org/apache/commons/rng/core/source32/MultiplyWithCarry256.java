@@ -25,7 +25,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * <p>
  * Implementation is based on the (non-portable!) C code reproduced on
- * <a href="http://school.anhb.uwa.edu.au/personalpages/kwessen/shared/Marsaglia03.html">
+ * <a href="https://school.anhb.uwa.edu.au/personalpages/kwessen/shared/Marsaglia03.html">
  * that page</a>.
  * </p>
  *

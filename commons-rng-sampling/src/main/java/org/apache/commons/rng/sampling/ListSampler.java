@@ -82,7 +82,7 @@ public final class ListSampler {
 
     /**
      * Shuffles the entries of the given array, using the
-     * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
+     * <a href="https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
      * Fisher-Yates</a> algorithm.
      *
      * <p>
@@ -115,7 +115,7 @@ public final class ListSampler {
 
     /**
      * Shuffles the entries of the given array, using the
-     * <a href="http://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
+     * <a href="https://en.wikipedia.org/wiki/Fisher-Yates_shuffle#The_modern_algorithm">
      * Fisher-Yates</a> algorithm.
      *
      * <p>

@@ -45,7 +45,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  <li>Binomial distribution up to {@code trials = 65535}
  * </ul>
  *
- * @see <a href="http://dx.doi.org/10.18637/jss.v011.i03">Margsglia, et al (2004) JSS Vol.
+ * @see <a href="https://dx.doi.org/10.18637/jss.v011.i03">Margsglia, et al (2004) JSS Vol.
  * 11, Issue 3</a>
  * @since 1.3
  */

@@ -26,7 +26,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * This abstract class is a base for algorithms from the Xor-Shift-Rotate family of 64-bit
  * generators with 128-bits of state.
  *
- * @see <a href="http://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
+ * @see <a href="https://xoshiro.di.unimi.it/">xorshiro / xoroshiro generators</a>
  * @since 1.3
  */
 abstract class AbstractXoRoShiRo128 extends LongProvider implements LongJumpableUniformRandomProvider {

@@ -27,7 +27,7 @@ package org.apache.commons.rng.core.source64;
  * of the golden ratio), which eliminates linear dependencies from one of the lowest
  * bits.</p>
  *
- * @see <a href="http://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
+ * @see <a href="https://xorshift.di.unimi.it/xorshift1024star.c">Original source code</a>
  * @see <a href="https://en.wikipedia.org/wiki/Xorshift">Xorshift (Wikipedia)</a>
  * @since 1.3
  */

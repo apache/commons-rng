@@ -25,7 +25,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  * <p>The state size is 256-bits; the period is a minimum of 2<sup>64</sup> and an
  * average of approximately 2<sup>255</sup>.</p>
  *
- * @see <a href="http://pracrand.sourceforge.net/">PractRand</a>
+ * @see <a href="https://pracrand.sourceforge.net/">PractRand</a>
  * @since 1.3
  */
 public class DotyHumphreySmallFastCounting64 extends LongProvider {

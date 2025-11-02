@@ -19,7 +19,7 @@ package org.apache.commons.rng.sampling.distribution;
 import org.apache.commons.rng.UniformRandomProvider;
 
 /**
- * Sampling from a <a href="http://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a>.
+ * Sampling from a <a href="https://en.wikipedia.org/wiki/Beta_distribution">beta distribution</a>.
  *
  * <p>Uses Cheng's algorithms for beta distribution sampling:</p>
  *

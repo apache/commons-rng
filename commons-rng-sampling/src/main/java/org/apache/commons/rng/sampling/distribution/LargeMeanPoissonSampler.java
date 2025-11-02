@@ -20,7 +20,7 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 
 /**
- * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
+ * Sampler for the <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
  *
  * <ul>
  *  <li>

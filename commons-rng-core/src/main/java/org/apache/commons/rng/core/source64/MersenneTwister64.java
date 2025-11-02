@@ -26,7 +26,7 @@ import org.apache.commons.rng.core.util.NumberFactory;
  *
  * <p>
  * This class is mainly a Java port of
- * <a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt64.html">
+ * <a href="https://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt64.html">
  *  the 2014/2/23 version of the generator
  * </a> written in C by Takuji Nishimura and Makoto Matsumoto.
  * </p>

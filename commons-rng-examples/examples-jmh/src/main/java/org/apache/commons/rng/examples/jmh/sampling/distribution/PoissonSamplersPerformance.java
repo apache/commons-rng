@@ -194,7 +194,7 @@ public class PoissonSamplersPerformance {
     }
 
     /**
-     * Kemp sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson
+     * Kemp sampler for the <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson
      * distribution</a>.
      *
      * <ul>
@@ -645,7 +645,7 @@ public class PoissonSamplersPerformance {
         }
     }
     /**
-     * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson
+     * Sampler for the <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson
      * distribution</a>.
      *
      * <p>Note: This is a modification of the original algorithm by Kemp. It stores the
@@ -892,7 +892,7 @@ public class PoissonSamplersPerformance {
     }
 
     /**
-     * Sampler for the <a href="http://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
+     * Sampler for the <a href="https://mathworld.wolfram.com/PoissonDistribution.html">Poisson distribution</a>.
      *
      * <ul>
      *  <li>
