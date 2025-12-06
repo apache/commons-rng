@@ -20,3 +20,7 @@ site-content*
 /maven-eclipse.xml
 stdin2testu01
 pdf.*.txt
+
+# NetBeans files
+nb-configuration.xml
+nbactions.xml
