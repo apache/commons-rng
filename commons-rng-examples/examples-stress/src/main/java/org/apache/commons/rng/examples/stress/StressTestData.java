@@ -23,10 +23,10 @@ import org.apache.commons.rng.simple.RandomSource;
  * Encapsulate the data needed to create and test a random generator. This includes:
  *
  * <ul>
- *   <li>An identifier for the random source
- *   <li>The random source
- *   <li>The constructor arguments
- *   <li>The number of trials for each random source
+ *   <li>An identifier for the random source</li>
+ *   <li>The random source</li>
+ *   <li>The constructor arguments</li>
+ *   <li>The number of trials for each random source</li>
  * </ul>
  */
 class StressTestData {

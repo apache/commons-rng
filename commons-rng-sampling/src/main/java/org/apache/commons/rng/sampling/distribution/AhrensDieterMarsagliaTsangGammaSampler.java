@@ -42,8 +42,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextDouble()} (both algorithms)
- *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code alpha >= 1})
+ *   <li>{@link UniformRandomProvider#nextDouble()} (both algorithms)</li>
+ *   <li>{@link UniformRandomProvider#nextLong()} (only for {@code alpha >= 1})</li>
  * </ul>
  *
  * @see <a href="https://mathworld.wolfram.com/GammaDistribution.html">MathWorld Gamma distribution</a>

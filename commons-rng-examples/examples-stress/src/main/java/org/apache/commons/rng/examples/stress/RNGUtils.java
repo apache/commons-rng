@@ -536,7 +536,7 @@ final class RNGUtils {
      * Parses the argument into an object suitable for the RandomSource constructor. Supports:
      *
      * <ul>
-     *   <li>Integer
+     *   <li>Integer</li>
      * </ul>
      *
      * @param argument the argument

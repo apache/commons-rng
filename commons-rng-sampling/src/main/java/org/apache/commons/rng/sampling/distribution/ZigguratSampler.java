@@ -36,10 +36,10 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <ol>
  * <li>Creating layers of the ziggurat entirely inside the probability density function (area B);
  * this allows the majority of samples to be obtained without checking if the value is in the
- * region of the ziggurat layer that requires a rejection test.
+ * region of the ziggurat layer that requires a rejection test.</li>
  * <li>For samples not within the main ziggurat (area A) alias sampling is used to choose a
  * layer and rejection of points above the PDF is accelerated using precomputation of
- * triangle regions entirely below or above the curve.
+ * triangle regions entirely below or above the curve.</li>
  * </ol>
  *
  * <pre>
@@ -380,9 +380,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text.
          * <ul>
-         * <li>X_i = length of ziggurat layer i.
-         * <li>X_j is the upper-left X coordinate of overhang j (starting from 1).
-         * <li>X_(j-1) is the lower-right X coordinate of overhang j.
+         * <li>X_i = length of ziggurat layer i.</li>
+         * <li>X_j is the upper-left X coordinate of overhang j (starting from 1).</li>
+         * <li>X_(j-1) is the lower-right X coordinate of overhang j.</li>
          * </ul>
          * <p>Values have been scaled by 2^-63.
          * Contains {@code I_MAX + 1} entries as the final value is 0.
@@ -456,9 +456,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * The precomputed ziggurat heights, denoted Y_i in the main text.
          * <ul>
-         * <li>Y_i = height of ziggurat layer i.
-         * <li>Y_j is the upper-left Y coordinate of overhang j (starting from 1).
-         * <li>Y_(j-1) is the lower-right Y coordinate of overhang j.
+         * <li>Y_i = height of ziggurat layer i.</li>
+         * <li>Y_j is the upper-left Y coordinate of overhang j (starting from 1).</li>
+         * <li>Y_(j-1) is the lower-right Y coordinate of overhang j.</li>
          * </ul>
          * <p>Values have been scaled by 2^-63.
          * Contains {@code I_MAX + 1} entries as the final value is pdf(x=0).
@@ -881,9 +881,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * The precomputed ziggurat lengths, denoted X_i in the main text.
          * <ul>
-         * <li>X_i = length of ziggurat layer i.
-         * <li>X_j is the upper-left X coordinate of overhang j (starting from 1).
-         * <li>X_(j-1) is the lower-right X coordinate of overhang j.
+         * <li>X_i = length of ziggurat layer i.</li>
+         * <li>X_j is the upper-left X coordinate of overhang j (starting from 1).</li>
+         * <li>X_(j-1) is the lower-right X coordinate of overhang j.</li>
          * </ul>
          * <p>Values have been scaled by 2^-63.
          * Contains {@code I_MAX + 1} entries as the final value is 0.
@@ -957,9 +957,9 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         /**
          * The precomputed ziggurat heights, denoted Y_i in the main text.
          * <ul>
-         * <li>Y_i = height of ziggurat layer i.
-         * <li>Y_j is the upper-left Y coordinate of overhang j (starting from 1).
-         * <li>Y_(j-1) is the lower-right Y coordinate of overhang j.
+         * <li>Y_i = height of ziggurat layer i.</li>
+         * <li>Y_j is the upper-left Y coordinate of overhang j (starting from 1).</li>
+         * <li>Y_(j-1) is the lower-right Y coordinate of overhang j.</li>
          * </ul>
          * <p>Values have been scaled by 2^-63.
          * Contains {@code I_MAX + 1} entries as the final value is pdf(x=0).

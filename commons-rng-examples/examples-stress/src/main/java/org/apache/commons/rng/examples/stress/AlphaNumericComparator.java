@@ -38,9 +38,9 @@ import java.util.Comparator;
  * <p>This implementation supports:</p>
  *
  * <ul>
- *  <li>{@link CharSequence} comparison
- *  <li>Direct use of input sequences for minimal memory consumption
- *  <li>Numbers with leading zeros
+ *  <li>{@link CharSequence} comparison</li>
+ *  <li>Direct use of input sequences for minimal memory consumption</li>
+ *  <li>Numbers with leading zeros</li>
  * </ul>
  *
  * <p>Any null sequences are ordered before non-null sequences.</p>

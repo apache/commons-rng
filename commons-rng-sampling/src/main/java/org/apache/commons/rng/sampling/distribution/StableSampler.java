@@ -44,9 +44,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>The implementation uses the Chambers-Mallows-Stuck (CMS) method as described in:
  * <ul>
  *  <li>Chambers, Mallows &amp; Stuck (1976) "A Method for Simulating Stable Random Variables".
- *      Journal of the American Statistical Association. 71 (354): 340–344.
+ *      Journal of the American Statistical Association. 71 (354): 340–344.</li>
  *  <li>Weron (1996) "On the Chambers-Mallows-Stuck method for simulating skewed stable
- *      random variables". Statistics &amp; Probability Letters. 28 (2): 165–171.
+ *      random variables". Statistics &amp; Probability Letters. 28 (2): 165–171.</li>
  * </ul>
  *
  * @see <a href="https://en.wikipedia.org/wiki/Stable_distribution">Stable distribution (Wikipedia)</a>
@@ -1164,10 +1164,10 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
          * a result in {@code [0, inf]}.
          *
          * <ul>
-         * <li>For {@code x=-inf} this returns {@code 0}.
-         * <li>For {@code x=0} this returns {@code 1}.
-         * <li>For {@code x=inf} this returns {@code inf}.
-         * <li>For {@code x=nan} this returns {@code nan}.
+         * <li>For {@code x=-inf} this returns {@code 0}.</li>
+         * <li>For {@code x=0} this returns {@code 1}.</li>
+         * <li>For {@code x=inf} this returns {@code inf}.</li>
+         * <li>For {@code x=nan} this returns {@code nan}.</li>
          * </ul>
          *
          * <p> This corrects {@code 0 / 0} and {@code inf / inf} division from
@@ -1205,9 +1205,9 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
          * <p>The following properties are desirable for the CMS algorithm:
          *
          * <ul>
-         * <li>For {@code x=0} this returns {@code 1}.
-         * <li>For {@code x=pi/4} this returns {@code 4/pi}.
-         * <li>For {@code x=pi/4} this multiplied by {@code x} returns {@code 1}.
+         * <li>For {@code x=0} this returns {@code 1}.</li>
+         * <li>For {@code x=pi/4} this returns {@code 4/pi}.</li>
+         * <li>For {@code x=pi/4} this multiplied by {@code x} returns {@code 1}.</li>
          * </ul>
          *
          * <p>This method is called by the CMS algorithm when {@code x < pi/4}.
@@ -1303,12 +1303,12 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
      *
      * <ul>
      * <li>{@code alpha=2} returns a Gaussian distribution sampler with
-     *     {@code mean=0} and {@code variance=2} (Note: {@code beta} has no effect on the distribution).
+     *     {@code mean=0} and {@code variance=2} (Note: {@code beta} has no effect on the distribution).</li>
      * <li>{@code alpha=1} and {@code beta=0} returns a Cauchy distribution sampler with
-     *     {@code location=0} and {@code scale=1}.
+     *     {@code location=0} and {@code scale=1}.</li>
      * <li>{@code alpha=0.5} and {@code beta=1} returns a Levy distribution sampler with
      *     {@code location=-1} and {@code scale=1}. This location shift is due to the
-     *     0-parameterization of the stable distribution.
+     *     0-parameterization of the stable distribution.</li>
      * </ul>
      *
      * <p>Note: To allow the computation of the stable distribution the parameter alpha

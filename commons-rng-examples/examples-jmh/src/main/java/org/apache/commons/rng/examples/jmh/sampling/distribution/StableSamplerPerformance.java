@@ -65,12 +65,12 @@ public class StableSamplerPerformance {
      * This is a translation of the FORTRAN routine RSTAB; it computes a rearrangement
      * of the original formula to use double-angle identities and output a 0-parameterization
      * stable deviate.
-     *
+     *</li>
      * <li>The implementation uses the Chambers-Mallows-Stuck (CMS) method using
      * the formula proven in Weron (1996) "On the Chambers-Mallows-Stuck method for
      * simulating skewed stable random variables". Statistics &amp; Probability
      * Letters. 28 (2): 165–171. This outputs a 1-parameterization stable deviate and
-     * has been modified to the 0-parameterization using a translation.
+     * has been modified to the 0-parameterization using a translation.</li>
      * </ol>
      *
      * <p>The code has been copied from o.a.c.rng.sampling.distributions.StableSampler.
@@ -1088,9 +1088,9 @@ public class StableSamplerPerformance {
          * a result in {@code [0, inf]}.
          *
          * <ul>
-         * <li>For {@code x=-inf} this returns {@code 0}.
-         * <li>For {@code x=0} this returns {@code 1}.
-         * <li>For {@code x=inf} this returns {@code inf}.
+         * <li>For {@code x=-inf} this returns {@code 0}.</li>
+         * <li>For {@code x=0} this returns {@code 1}.</li>
+         * <li>For {@code x=inf} this returns {@code inf}.</li>
          * </ul>
          *
          * <p> This corrects {@code 0 / 0} and {@code inf / inf} division from

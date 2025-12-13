@@ -296,8 +296,8 @@ public abstract class BaseProvider
      * Extend the seed to the specified minimum length. If the seed is equal or greater than the
      * minimum length, return the same seed unchanged. Otherwise:
      * <ol>
-     *  <li>Create a new array of the specified length
-     *  <li>Copy all elements of the seed into the array
+     *  <li>Create a new array of the specified length</li>
+     *  <li>Copy all elements of the seed into the array</li>
      *  <li>Fill the remaining values. The additional values will have at most one occurrence
      *   of zero. If the original seed is all zero, the first extended value will be non-zero.
      *  </li>
@@ -355,8 +355,8 @@ public abstract class BaseProvider
      * Extend the seed to the specified minimum length. If the seed is equal or greater than the
      * minimum length, return the same seed unchanged. Otherwise:
      * <ol>
-     *  <li>Create a new array of the specified length
-     *  <li>Copy all elements of the seed into the array
+     *  <li>Create a new array of the specified length</li>
+     *  <li>Copy all elements of the seed into the array</li>
      *  <li>Fill the remaining values. The additional values will have at most one occurrence
      *   of zero. If the original seed is all zero, the first extended value will be non-zero.
      *  </li>

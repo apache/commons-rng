@@ -41,8 +41,8 @@ import java.util.concurrent.TimeUnit;
  * baseline will:</p>
  *
  * <ul>
- *  <li>Run as fast as possible
- *  <li>Not be removed from the execution path
+ *  <li>Run as fast as possible</li>
+ *  <li>Not be removed from the execution path</li>
  * </ul>
  *
  * <p>The results of this benchmark should be plotted for each method using [numValues] vs [run time]
@@ -62,12 +62,12 @@ public class BaselineGenerationPerformance {
      *
      * <ul>
      *   <li>The number of bytes will be allocated when testing so the allocation overhead
-     *   should be small.
+     *   should be small.</li>
      *   <li>The number must be set so that filling the bytes from an {@code int} or {@code long}
      *   source has no advantage for the 32-bit source, e.g. the same number of underlying bits have
-     *   to be generated. Note: 127 / 4 ~ 32 ints or 127 / 8 ~ 16 longs.
+     *   to be generated. Note: 127 / 4 ~ 32 ints or 127 / 8 ~ 16 longs.</li>
      *   <li>The number should not be a factor of 4 to prevent filling completely using a 32-bit
-     *   source. This tests the edge case of partial fill.
+     *   source. This tests the edge case of partial fill.</li>
      * </ul>
      */
     static final int NEXT_BYTES_SIZE = 127;

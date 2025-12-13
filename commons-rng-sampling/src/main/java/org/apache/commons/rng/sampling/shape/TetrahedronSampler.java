@@ -38,7 +38,7 @@ import org.apache.commons.rng.sampling.SharedStateObjectSampler;
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}</li>
  * </ul>
  *
  * @see <a href="https://doi.org/10.1080/10867651.2000.10487528">

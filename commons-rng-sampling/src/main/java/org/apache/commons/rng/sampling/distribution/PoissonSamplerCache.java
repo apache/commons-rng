@@ -35,11 +35,11 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
  * <p>The cache is advantageous under the following conditions:</p>
  *
  * <ul>
- *   <li>The mean of the Poisson distribution falls within a known range.
+ *   <li>The mean of the Poisson distribution falls within a known range.</li>
  *   <li>The sample size to be made with the <strong>same</strong> sampler is
- *       small.
+ *       small.</li>
  *   <li>The Poisson samples have different means with the same integer
- *       value(s) after rounding down.
+ *       value(s) after rounding down.</li>
  * </ul>
  *
  * <p>If the sample size to be made with the <strong>same</strong> sampler is large
@@ -57,8 +57,8 @@ import org.apache.commons.rng.sampling.distribution.LargeMeanPoissonSampler.Larg
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextDouble()}
- *   <li>{@link UniformRandomProvider#nextLong()} (large means only)
+ *   <li>{@link UniformRandomProvider#nextDouble()}</li>
+ *   <li>{@link UniformRandomProvider#nextLong()} (large means only)</li>
  * </ul>
  *
  * @since 1.2
@@ -276,9 +276,9 @@ public class PoissonSamplerCache {
      *
      * <ul>
      *   <li>At small mean values a different algorithm is used for Poisson
-     *       sampling and the cache is unnecessary.
+     *       sampling and the cache is unnecessary.</li>
      *   <li>The minimum is always an integer so may be below the constructor
-     *       minimum mean.
+     *       minimum mean.</li>
      * </ul>
      *
      * <p>If {@link #isValidRange()} returns {@code true} the cache will store
@@ -303,9 +303,9 @@ public class PoissonSamplerCache {
      * due to the following reasons:
      * <ul>
      *   <li>At small mean values a different algorithm is used for Poisson
-     *       sampling and the cache is unnecessary.
+     *       sampling and the cache is unnecessary.</li>
      *   <li>The maximum is always the double value below an integer so
-     *       may be above the constructor maximum mean.
+     *       may be above the constructor maximum mean.</li>
      * </ul>
      *
      * <p>If {@link #isValidRange()} returns {@code true} the cache will store

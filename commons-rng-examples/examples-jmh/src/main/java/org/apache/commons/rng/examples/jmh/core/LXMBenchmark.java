@@ -647,17 +647,17 @@ public class LXMBenchmark {
          *
          * <p>Notes:
          * <ul>
-         * <li>Final LCG additive parameters make no significant difference.
-         * <li>Inlining the compareUnsigned operation is a marginal improvement.
+         * <li>Final LCG additive parameters make no significant difference.</li>
+         * <li>Inlining the compareUnsigned operation is a marginal improvement.</li>
          * <li>Using the conditional load of the addition is of benefit when the add parameter
          *     is close to 2^63. When close to 0 or 2^64 then branch prediction is good and
-         *     this path is fast.
+         *     this path is fast.</li>
          * <li>Using the full branchless version creates code with a constant time cost which
          *     is fast. The branch code is faster when the branch is ~100% predictable, but can
-         *     be much slower.
+         *     be much slower.</li>
          * <li>The branchless version assuming the add parameter is odd is constant time cost
          *     and fastest. The code is very small and putting it in a method will be inlined
-         *     and allows code reuse.
+         *     and allows code reuse.</li>
          * </ul>
          */
         @Param({
@@ -695,10 +695,10 @@ public class LXMBenchmark {
         /**
          * Range for a random addition to the additive parameter.
          * <ul>
-         * <li>{@code range == 0}: no addition
-         * <li>{@code range == Long.MIN_VALUE}: random addition
-         * <li>{@code range > 0}: random in [0, range)
-         * <li>{@code range < 0}: random in [0, -range) + 2^63
+         * <li>{@code range == 0}: no addition</li>
+         * <li>{@code range == Long.MIN_VALUE}: random addition</li>
+         * <li>{@code range > 0}: random in [0, range)</li>
+         * <li>{@code range < 0}: random in [0, -range) + 2^63</li>
          * </ul>
          */
         @Param({

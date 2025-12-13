@@ -96,10 +96,10 @@ public final class RandomStreams {
      * Creates a seed to prepend to a counter. The seed is created to satisfy the following
      * requirements:
      * <ul>
-     * <li>The least significant bit is set
-     * <li>The seed is composed of characters from an n-bit alphabet
-     * <li>The character used in the least significant bits is unique
-     * <li>The other characters are sampled uniformly from the remaining (n-1) characters
+     * <li>The least significant bit is set</li>
+     * <li>The seed is composed of characters from an n-bit alphabet</li>
+     * <li>The character used in the least significant bits is unique</li>
+     * <li>The other characters are sampled uniformly from the remaining (n-1) characters</li>
      * </ul>
      *
      * <p>The composed seed is created using {@code ((seed << shift) | count)}

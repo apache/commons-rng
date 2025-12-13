@@ -37,11 +37,11 @@ import picocli.CommandLine.RunLast;
  * <p>Other functionality includes:</p>
  *
  * <ul>
- *   <li>Listing all the available generators
- *   <li>Collating results from known stress test applications
- *   <li>Outputting data from a random generator
- *   <li>Showing the platform native byte order
- *   <li>Testing data transfer to an application sub-process via its standard input
+ *   <li>Listing all the available generators</li>
+ *   <li>Collating results from known stress test applications</li>
+ *   <li>Outputting data from a random generator</li>
+ *   <li>Showing the platform native byte order</li>
+ *   <li>Testing data transfer to an application sub-process via its standard input</li>
  * </ul>
  */
 public final class ExamplesStressApplication {

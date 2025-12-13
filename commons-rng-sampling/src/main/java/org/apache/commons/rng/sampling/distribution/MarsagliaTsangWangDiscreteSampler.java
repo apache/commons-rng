@@ -40,9 +40,9 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>The sampler supports the following distributions:</p>
  *
  * <ul>
- *  <li>Enumerated distribution (probabilities must be provided for each sample)
- *  <li>Poisson distribution up to {@code mean = 1024}
- *  <li>Binomial distribution up to {@code trials = 65535}
+ *  <li>Enumerated distribution (probabilities must be provided for each sample)</li>
+ *  <li>Poisson distribution up to {@code mean = 1024}</li>
+ *  <li>Binomial distribution up to {@code trials = 65535}</li>
  * </ul>
  *
  * @see <a href="https://dx.doi.org/10.18637/jss.v011.i03">Margsglia, et al (2004) JSS Vol.

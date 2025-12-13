@@ -47,7 +47,7 @@ import org.openjdk.jmh.annotations.Warmup;
  * <ul>
  * <li>Nevin Brackett-Rozinsky, Daniel Lemire,
  * Batched Ranged Random Integer Generation, Software: Practice and Experience (to appear)
- * <a href="https://arxiv.org/abs/2408.06213">arXiv:2408.06213M</a>
+ * <a href="https://arxiv.org/abs/2408.06213">arXiv:2408.06213M</a></li>
  * </ul>
  */
 @BenchmarkMode(Mode.AverageTime)

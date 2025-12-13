@@ -63,9 +63,9 @@ public class MiddleSquareWeylSequence extends IntProvider {
      * The seed elements are used to set:</p>
      *
      * <ol>
-     *   <li>The state of the generator
-     *   <li>The state of the Weyl sequence
-     *   <li>The increment of the Weyl sequence
+     *   <li>The state of the generator</li>
+     *   <li>The state of the Weyl sequence</li>
+     *   <li>The increment of the Weyl sequence</li>
      * </ol>
      *
      * <p>The third element is set to odd to ensure a period of at least 2<sup>64</sup>. If the

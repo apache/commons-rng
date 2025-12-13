@@ -26,10 +26,10 @@
  * </p>
  *
  * <ul>
- *   <li>The {@link org.apache.commons.rng.examples.jmh.RandomSourceValues RandomSourceValues} class
- *   <li>The {@link org.apache.commons.rng.examples.jmh.core.BaselineSources BaselineSources} class
+ *   <li>The {@link org.apache.commons.rng.examples.jmh.RandomSourceValues RandomSourceValues} class</li>
+ *   <li>The {@link org.apache.commons.rng.examples.jmh.core.BaselineSources BaselineSources} class</li>
  *   <li>The {@link org.apache.commons.rng.examples.jmh.simple.ConstructionPerformance
- *       ConstructionPerformance} class
+ *       ConstructionPerformance} class</li>
  * </ul>
  */
 package org.apache.commons.rng.examples.jmh;

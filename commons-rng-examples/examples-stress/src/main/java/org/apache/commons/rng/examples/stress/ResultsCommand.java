@@ -57,8 +57,8 @@ import java.util.stream.Collectors;
  * <p>This command creates a summary of the results from known test applications.</p>
  *
  * <ul>
- *   <li>Dieharder
- *   <li>Test U01 (BigCrush, Crush, SmallCrush)
+ *   <li>Dieharder</li>
+ *   <li>Test U01 (BigCrush, Crush, SmallCrush)</li>
  * </ul>
  */
 @Command(name = "results",

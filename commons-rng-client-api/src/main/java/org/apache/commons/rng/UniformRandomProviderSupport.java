@@ -167,19 +167,19 @@ final class UniformRandomProviderSupport {
      * <p>The sub-range is defined to be out of bounds if any of the following inequalities
      * is true:
      * <ul>
-     * <li>{@code fromIndex < 0}
-     * <li>{@code size < 0}
-     * <li>{@code fromIndex + size > length}, taking into account integer overflow
-     * <li>{@code length < 0}, which is implied from the former inequalities
+     * <li>{@code fromIndex < 0}</li>
+     * <li>{@code size < 0}</li>
+     * <li>{@code fromIndex + size > length}, taking into account integer overflow</li>
+     * <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
      *
      * <p>Note: This is not an exact implementation of the functionality of
      * {@code Objects.checkFromIndexSize}. The following changes have been made:
      * <ul>
      * <li>The method signature has been changed to avoid the return of {@code fromIndex};
-     * this value is not used within this package.
+     * this value is not used within this package.</li>
      * <li>No checks are made for {@code length < 0} as this is assumed to be derived from
-     * an array length.
+     * an array length.</li>
      * </ul>
      *
      * @param fromIndex the lower-bound (inclusive) of the sub-interval

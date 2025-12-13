@@ -32,10 +32,10 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>FLDR produces <em>exact</em> samples from the specified probability distribution.
  * <ul>
  *   <li>For integer weights, the probability of returning {@code i} is precisely equal to the
- *   rational number {@code L[i] / m}, where {@code m} is the sum of {@code L}.
+ *   rational number {@code L[i] / m}, where {@code m} is the sum of {@code L}.</li>
  *   <li>For floating-points weights, each weight {@code L[i]} is converted to the
  *   corresponding rational number {@code p[i] / q[i]} where {@code p[i]} is a positive integer and
- *   {@code q[i]} is a power of 2. The rational weights are then normalized (exactly) to sum to unity.
+ *   {@code q[i]} is a power of 2. The rational weights are then normalized (exactly) to sum to unity.</li>
  * </ul>
  *
  * <p>Note that if <em>exact</em> samples are not required then an alternative sampler that
@@ -357,8 +357,8 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
      * <p>This method creates a sampler with <em>exact</em> samples from the
      * specified probability distribution. It is recommended to use this method:
      * <ul>
-     *  <li>if the weights are computed, for example from a probability mass function; or
-     *  <li>if the weights sum to an infinite value.
+     *  <li>if the weights are computed, for example from a probability mass function; or</li>
+     *  <li>if the weights sum to an infinite value.</li>
      * </ul>
      *
      * <p>If the weights are computed from empirical observations then it is

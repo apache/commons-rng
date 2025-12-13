@@ -163,9 +163,9 @@ class ListCommand implements Callable<Void> {
      * <p>Performs adjustment of the number of trials for each item:
      *
      * <ul>
-     *   <li>Any item with trials {@code <= 0} will be written as zero.
+     *   <li>Any item with trials {@code <= 0} will be written as zero.</li>
      *   <li>Any item with trials {@code > 0} will be written as the maximum of the value and
-     *       the input parameter {@code numberOfTrials}.
+     *       the input parameter {@code numberOfTrials}.</li>
      * </ul>
      *
      * <p>This allows the output to contain a configurable number of trials for the

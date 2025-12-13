@@ -41,8 +41,8 @@ import org.apache.commons.rng.sampling.distribution.SharedStateLongSampler;
  * Samples are returned using a 2 step algorithm:
  *
  * <ol>
- *  <li>Select a sampler based on its weighting
- *  <li>Return a sample from the selected sampler
+ *  <li>Select a sampler based on its weighting</li>
+ *  <li>Return a sample from the selected sampler</li>
  * </ol>
  *
  * <p>The weights used for each sampler create a discrete probability distribution. This is
@@ -171,8 +171,8 @@ public final class CompositeSamplers {
      * Samples are returned using a 2 step algorithm:
      *
      * <ol>
-     *  <li>Select a sampler based on its weighting
-     *  <li>Return a sample from the selected sampler
+     *  <li>Select a sampler based on its weighting</li>
+     *  <li>Return a sample from the selected sampler</li>
      * </ol>
      *
      * <p>Step 1 requires a discrete sampler constructed from a discrete probability distribution.

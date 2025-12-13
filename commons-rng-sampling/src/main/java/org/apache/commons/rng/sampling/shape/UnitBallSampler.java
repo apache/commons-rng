@@ -30,8 +30,8 @@ import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextLong()}
- *   <li>{@link UniformRandomProvider#nextDouble()} (only for dimensions above 2)
+ *   <li>{@link UniformRandomProvider#nextLong()}</li>
+ *   <li>{@link UniformRandomProvider#nextDouble()} (only for dimensions above 2)</li>
  * </ul>
  *
  * @since 1.4

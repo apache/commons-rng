@@ -31,7 +31,7 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <ul>
  * <li>Nevin Brackett-Rozinsky, Daniel Lemire,
  * Batched Ranged Random Integer Generation, Software: Practice and Experience (to appear)
- * <a href="https://arxiv.org/abs/2408.06213">arXiv:2408.06213M</a>
+ * <a href="https://arxiv.org/abs/2408.06213">arXiv:2408.06213M</a></li>
  * </ul>
  *
  * @since 1.6
@@ -725,10 +725,10 @@ public final class ArraySampler {
      * <p>The sub-range is defined to be out of bounds if any of the following
      * inequalities is true:
      * <ul>
-     * <li>{@code fromIndex < 0}
-     * <li>{@code fromIndex > toIndex}
-     * <li>{@code toIndex > length}
-     * <li>{@code length < 0}, which is implied from the former inequalities
+     * <li>{@code fromIndex < 0}</li>
+     * <li>{@code fromIndex > toIndex}</li>
+     * <li>{@code toIndex > length}</li>
+     * <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
      *
      * @param fromIndex Lower-bound (inclusive) of the sub-range.

@@ -24,8 +24,8 @@ import picocli.CommandLine;
  * <p>Functionality includes:</p>
  *
  * <ul>
- *   <li>Creating a PDF approximation using sample data from a distribution
- *   <li>Sampling from a small range from a distribution to visually inspect sampling density
+ *   <li>Creating a PDF approximation using sample data from a distribution</li>
+ *   <li>Sampling from a small range from a distribution to visually inspect sampling density</li>
  * </ul>
  */
 public final class ExamplesSamplingApplication {

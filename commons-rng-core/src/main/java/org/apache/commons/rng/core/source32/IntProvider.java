@@ -202,10 +202,10 @@ public abstract class IntProvider
      * <p>The sub-range is defined to be out of bounds if any of the following inequalities
      * is true:
      * <ul>
-     * <li>{@code fromIndex < 0}
-     * <li>{@code size < 0}
-     * <li>{@code fromIndex + size > length}, taking into account integer overflow
-     * <li>{@code length < 0}, which is implied from the former inequalities
+     * <li>{@code fromIndex < 0}</li>
+     * <li>{@code size < 0}</li>
+     * <li>{@code fromIndex + size > length}, taking into account integer overflow</li>
+     * <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
      *
      * @param fromIndex the lower-bound (inclusive) of the sub-interval

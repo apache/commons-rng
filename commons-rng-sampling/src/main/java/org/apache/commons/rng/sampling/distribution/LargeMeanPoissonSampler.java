@@ -37,8 +37,8 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextLong()}
- *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextLong()}</li>
+ *   <li>{@link UniformRandomProvider#nextDouble()}</li>
  * </ul>
  *
  * @since 1.1

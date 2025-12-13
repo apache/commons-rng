@@ -28,8 +28,8 @@ import org.apache.commons.rng.sampling.distribution.ZigguratSampler;
  * <p>Sampling in 2 or more dimensions uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextLong()}
- *   <li>{@link UniformRandomProvider#nextDouble()}
+ *   <li>{@link UniformRandomProvider#nextLong()}</li>
+ *   <li>{@link UniformRandomProvider#nextDouble()}</li>
  * </ul>
  *
  * <p>Sampling in 1D uses the sign bit from {@link UniformRandomProvider#nextInt()} to set

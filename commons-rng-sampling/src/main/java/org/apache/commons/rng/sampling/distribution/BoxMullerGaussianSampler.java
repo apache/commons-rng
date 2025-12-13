@@ -25,8 +25,8 @@ import org.apache.commons.rng.UniformRandomProvider;
  * <p>Sampling uses:</p>
  *
  * <ul>
- *   <li>{@link UniformRandomProvider#nextDouble()}
- *   <li>{@link UniformRandomProvider#nextLong()}
+ *   <li>{@link UniformRandomProvider#nextDouble()}</li>
+ *   <li>{@link UniformRandomProvider#nextLong()}</li>
  * </ul>
  *
  * @since 1.0
