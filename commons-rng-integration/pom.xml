@@ -48,7 +48,7 @@
     <moditect.skip>true</moditect.skip>
 
     <!-- Version 7.0 requires Java 17 -->
-    <bnd.version>6.4.0</bnd.version>
+    <bnd.version>7.2.0</bnd.version>
     <felix.version>7.0.5</felix.version>
 
   </properties>
