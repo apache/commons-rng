@@ -120,6 +120,14 @@ public abstract class IntProvider
         return NumberFactory.makeDouble(next(), next());
     }
 
+    /**
+     * Generates a {@code double} value between 0 (exclusive) and 1 (exclusive).
+     * @return a uniform random {@code double} value in the open interval {@code (0, 1)}.
+     */
+    public double nextDoubleOpen() {
+        return NumberFactory.makeDoubleOpen(next(), next());
+    }
+
     /** {@inheritDoc} */
     @Override
     public long nextLong() {

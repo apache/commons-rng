@@ -23,6 +23,7 @@ import java.security.SecureRandom;
 
 import org.apache.commons.rng.core.source32.JDKRandom;
 import org.apache.commons.rng.core.source32.JenkinsSmallFast32;
+import org.apache.commons.rng.core.source32.Philox4x32;
 import org.apache.commons.rng.core.source32.Well512a;
 import org.apache.commons.rng.core.source32.XoRoShiRo64Star;
 import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
@@ -45,6 +46,7 @@ import org.apache.commons.rng.core.source32.PcgXshRs32;
 import org.apache.commons.rng.core.source32.DotyHumphreySmallFastCounting32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRr32;
 import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
+import org.apache.commons.rng.core.source64.Philox4x64;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
@@ -130,6 +132,7 @@ public final class ProvidersList {
             LIST32.add(new JenkinsSmallFast32(g.nextInt()));
             LIST32.add(new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             LIST32.add(new L32X64Mix(new int[] {g.nextInt(), g.nextInt()}));
+            LIST32.add(new Philox4x32(g.nextLong()));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -163,6 +166,7 @@ public final class ProvidersList {
             LIST64.add(new L128X128Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new L128X256Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new L128X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
+            LIST64.add(new Philox4x64(g.nextLong(), g.nextLong()));
             // ... add more here.
 
             // Do not modify the remaining statements.

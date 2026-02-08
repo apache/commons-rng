@@ -661,7 +661,26 @@ public enum RandomSource {
      * </ul>
      * @since 1.5
      */
-    L32_X64_MIX(ProviderBuilder.RandomSourceInternal.L32_X64_MIX);
+    L32_X64_MIX(ProviderBuilder.RandomSourceInternal.L32_X64_MIX),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Philox4x32}.
+     * <ul>
+     *  <li>Native seed type: {@code int[]}.</li>
+     *  <li>Native seed size: 6.</li>
+     * </ul>
+     * @since 1.7
+     */
+    PHILOX_4X32(ProviderBuilder.RandomSourceInternal.PHILOX_4X32),
+    /**
+     * Source of randomness is {@link org.apache.commons.rng.core.source32.Philox4x32}.
+     * <ul>
+     *  <li>Native seed type: {@code long[]}.</li>
+     *  <li>Native seed size: 6.</li>
+     * </ul>
+     * @since 1.7
+     */
+    PHILOX_4X64(ProviderBuilder.RandomSourceInternal.PHILOX_4X64);
+
 
     /** Internal identifier. */
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;

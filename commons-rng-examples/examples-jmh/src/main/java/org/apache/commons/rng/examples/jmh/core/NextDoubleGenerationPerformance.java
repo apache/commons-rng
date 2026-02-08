@@ -21,7 +21,6 @@ import org.apache.commons.rng.UniformRandomProvider;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
-
 /**
  * Executes benchmark to compare the speed of generation of random numbers from the
  * various source providers for {@link UniformRandomProvider#nextDouble()}.
