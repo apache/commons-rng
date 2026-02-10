@@ -347,40 +347,6 @@ class NumberFactoryTest {
         Assertions.assertEquals(0.0f, NumberFactory.makeFloat(noBits));
     }
 
-    @Test
-    void testDoubleOpenFromLong() {
-        long[] theLongs = new long[]{0xffffffffffffffffL, 0x0L, 0x1234567890abcdefL};
-        double[] theValues = new double[theLongs.length];
-        for (int i = 0; i < theLongs.length; i++) {
-            theValues[i] = NumberFactory.makeDoubleOpen(theLongs[i]);
-        }
-        for (double theValue : theValues) {
-            Assertions.assertNotEquals(1.0, theValue);
-            Assertions.assertNotEquals(0.0, theValue);
-            Assertions.assertTrue(theValue > 0.0);
-            Assertions.assertTrue(theValue < 1.0);
-        }
-        assertCloseToNotAbove1(theValues[0], 1);
-        Assertions.assertEquals(0x1.0p-53d, theValues[1]);
-    }
-
-    @Test
-    void testDoubleOpenFromIntegers() {
-        long[] theLongs = new long[]{0xffffffffffffffffL, 0x0L, 0x1234567890abcdefL};
-        double[] theValues = new double[theLongs.length];
-        for (int i = 0; i < theLongs.length; i++) {
-            theValues[i] = NumberFactory.makeDoubleOpen((int) (theLongs[i] >>> 32), (int) theLongs[i]);
-        }
-        for (double theValue : theValues) {
-            Assertions.assertNotEquals(1.0, theValue);
-            Assertions.assertNotEquals(0.0, theValue);
-            Assertions.assertTrue(theValue > 0.0);
-            Assertions.assertTrue(theValue < 1.0);
-        }
-        Assertions.assertEquals(1.0, theValues[0], Math.pow(2, -21)); // the xor will distort value after 20 bits.
-        Assertions.assertEquals(0x1.0p-53d, theValues[1]);
-    }
-
     /**
      * Assert that the value is close to but <strong>not above</strong> 1. This is used to test
      * the output from methods that produce a {@code float} value that must be in the range

@@ -132,7 +132,7 @@ public final class ProvidersList {
             LIST32.add(new JenkinsSmallFast32(g.nextInt()));
             LIST32.add(new XoShiRo128PlusPlus(new int[] {g.nextInt(), g.nextInt(), g.nextInt()}));
             LIST32.add(new L32X64Mix(new int[] {g.nextInt(), g.nextInt()}));
-            LIST32.add(new Philox4x32(g.nextLong()));
+            LIST32.add(new Philox4x32(new int[] {g.nextInt(), g.nextInt()}));
             // ... add more here.
 
             // "long"-based RNGs.
@@ -166,7 +166,7 @@ public final class ProvidersList {
             LIST64.add(new L128X128Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new L128X256Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
             LIST64.add(new L128X1024Mix(new long[] {g.nextLong(), g.nextLong(), g.nextLong(), g.nextLong()}));
-            LIST64.add(new Philox4x64(g.nextLong(), g.nextLong()));
+            LIST64.add(new Philox4x64(new long[] {g.nextLong(), g.nextLong()}));
             // ... add more here.
 
             // Do not modify the remaining statements.

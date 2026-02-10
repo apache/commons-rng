@@ -18,7 +18,6 @@ package org.apache.commons.rng.core.source64;
 
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.RandomAssert;
-import org.apache.commons.rng.core.source32.XoShiRo128PlusPlus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,23 +63,6 @@ public class Philox4x64Test {
     };
 
     private static final long[] EXPECTED_SEQUENCE_AFTER_JUMP = {
-        -1727205271972662868L, -929408180418766908L, -1945866921247798399L,
-        4169268208105524116L, 632888508629215617L, -1524268609550446551L,
-        1017151209430921623L, 6132992108188153451L, 20451580683440948L,
-        -5983342812596318147L, 7111485060182475632L, -3139710623798850919L,
-        -1285398253303499143L, 6122663610027136797L, 2115295045070288083L,
-        3475295225226077398L, -4567382713692939160L, 2219019105759378889L,
-        9185093757989334009L, -4483498154421417534L, 4899113076935204533L,
-        2822902514642117601L, 8699417340289208720L, -3702000480108440166L,
-        182332162670312430L, -4588636866812122027L, -6097870520215051203L,
-        -5437421417978893129L, -2642557189401455147L, -2357350941097728376L,
-        -3256721505120722383L, 7808773965898529545L, -8282907275396061324L,
-        -2119140891863246985L, 3101477059676926823L, 4342196138195251014L,
-        -6435107576506612831L, 4741991854358995576L, 2272452471517297382L,
-        -3745481320084764683L
-    };
-
-    private static final long[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
         -8246258822028745854L, -8108712508154901372L, 2654408923912105318L,
         -6418747939867464899L, 8695124057120477387L, -4062778777418832523L,
         -2866609061902870832L, -1985485291750970064L, -3716513824860297891L,
@@ -97,9 +79,26 @@ public class Philox4x64Test {
         -7214331765643557828L
     };
 
+    private static final long[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
+        234199833207670492L, 4847236961490835302L, 4652995647109309910L,
+        -3737386356448340712L, -5273383760715124519L, -3647957810120825499L,
+        5146817817305263920L, 5710973906845063179L, -1479449555641285865L,
+        4084674574582715314L, -5547600708256898652L, -4421640461296589483L,
+        -2968992335347510287L, -4790862279320238050L, -2473190691392812606L,
+        965983568262991078L, 601327440871821012L, 8223565539892887311L,
+        7546441310634873026L, 2825517271552261878L, 1821450327999942380L,
+        1829354945050293158L, -4141883204296663957L, 2272925410140103105L,
+        6950466720264053689L, 942049061182241074L, -423320710605977014L,
+        -7153892430601162036L, -3577327671114607603L, 2251213489013696162L,
+        -869366985991136417L, 6210870867759981069L, 8104504070499194349L,
+        -5828300645374305433L, -8988635423527025878L, 2037830179166981888L,
+        600555068878135939L, -1046966376945680441L, 9153700819137910983L,
+        6246833740445288808L
+    };
+
     @Test
     void testReferenceCode() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x64(new long[]{1234L, 0}, new long[]{0, 0}, new long[]{0, 0}));
+        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x64(new long[]{1234L, 0}));
     }
 
     @Test
@@ -110,7 +109,8 @@ public class Philox4x64Test {
 
     @Test
     void testJump() {
-        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP, new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 0, 0, 0, 0));
+        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP,
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L}));
     }
 
     @Test
@@ -119,138 +119,69 @@ public class Philox4x64Test {
     }
 
     @Test
-    void testOffset() {
-        Philox4x64 rng = new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 1, 0, 0, 0);
-        assertEquals(1, rng.getOffset()[0]);
-        assertEquals(EXPECTED_SEQUENCE_DEFAULT[4], rng.next());
-        rng = new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 0, 1, 0, 0);
-        assertEquals(1, rng.getOffset()[1]);
-    }
-
-    @Test
-    void testReset() {
-        Philox4x64 rng = new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 1, 0, 0, 0);
-        assertEquals(EXPECTED_SEQUENCE_DEFAULT[4], rng.next());
-        rng.resetState(new long[]{1234L, 0}, new long[]{0, 0});
-        assertEquals(EXPECTED_SEQUENCE_1234[0], rng.next());
-    }
-
-    @Test
     void testInternalCounter() {
         //test of incrementCounter
-        Philox4x64 rng = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 0}, new long[]{0xffffffffffffffffL, 0});
+        Philox4x64 rng = new Philox4x64(new long[]{67280421310721L, 1234L, 0xffffffffffffffffL, 0, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         long value = rng.next();
-        Philox4x64 rng2 = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 0}, new long[]{0, 1});
+        Philox4x64 rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 1, 0, 0});
         long value2 = rng2.next();
         assertEquals(value, value2);
 
-        rng = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL});
+        rng = new Philox4x64(new long[]{67280421310721L, 1234L, 0xffffffffffffffffL, 0xffffffffffffffffL, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         value = rng.next();
-        rng2 = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{1, 0}, new long[]{0, 0});
+        rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 0, 1, 0});
         value2 = rng2.next();
         assertEquals(value, value2);
 
-        rng = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0xffffffffffffffffL, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL});
+        rng = new Philox4x64(new long[]{67280421310721L, 1234L, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         value = rng.next();
-        rng2 = new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 1}, new long[]{0, 0});
+        rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 0, 0, 1});
         value2 = rng2.next();
         assertEquals(value, value2);
-
-    }
-
-    @Test
-    void testSetOffset() {
-        Philox4x64 rng = new Philox4x64(new long[]{1234L, 0}, new long[]{0, 0}, new long[]{1, 0});
-        assertEquals(1, rng.getOffset()[0]);
-        assertEquals(0, rng.getOffset()[1]);
-        assertEquals(EXPECTED_SEQUENCE_1234[4], rng.next());
-        rng = new Philox4x64(new long[]{1234L, 0}, new long[]{0, 0}, new long[]{0, 1});
-        assertEquals(0, rng.getOffset()[0]);
-        assertEquals(1, rng.getOffset()[1]);
-        rng.setOffset(0);
-        assertEquals(EXPECTED_SEQUENCE_1234[0], rng.next());
-        rng.setOffset(1, 0);
-        assertEquals(EXPECTED_SEQUENCE_1234[4], rng.next());
 
     }
 
     @Test
     void testLongJumpCounter() {
-        Philox4x64 rng = new Philox4x64(new long[]{1234L, 0}, new long[]{0xffffffffffffffffL, 0}, new long[]{0xffffffffffffffffL, 0});
-        UniformRandomProvider rngOrig = rng.longJump();
+        Philox4x64 rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0, 0xffffffffffffffffL, 0});
+        UniformRandomProvider rngOrig = rng.jump();
         long value = rng.nextInt();
-        Philox4x64 rng2 = new Philox4x64(new long[]{1234L, 0}, new long[]{0, 1}, new long[]{0xffffffffffffffffL, 0});
+        Philox4x64 rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0, 0, 1});
         long value2 = rng2.nextInt();
         assertEquals(value2, value);
-        rng = new Philox4x64(new long[]{1234L, 0}, new long[]{0xffffffffffffffffL, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL});
-        rngOrig = rng.longJump();
-        value = rng.nextInt();
-        rng2 = new Philox4x64(new long[]{1234L, 0}, new long[]{0, 1}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL});
-        value2 = rng2.nextInt();
-        assertEquals(value2, value);
-
-        rng = new Philox4x64(new long[]{1234L, 0}, new long[]{0, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL});
+        rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
         rngOrig = rng.jump();
         value = rng.nextInt();
-        rng2 = new Philox4x64(new long[]{1234L, 0}, new long[]{1, 0}, new long[]{0xffffffffffffffffL, 0});
+        rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0, 1});
         value2 = rng2.nextInt();
         assertEquals(value2, value);
-    }
 
-    @Test
-    void testJumpCounter() {
-        Philox4x64[] rngs = new Philox4x64[]{
-            new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 0}, new long[]{0xffffffffffffffffL, 0}),
-            new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL}),
-            new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0xffffffffffffffffL, 0}, new long[]{0xffffffffffffffffL, 0xffffffffffffffffL}),
-            new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0xffffffffffffffffL, 0}, new long[]{0, 0}),
-            new Philox4x64(new long[]{67280421310721L, 1234L}, new long[]{0xffffffffffffffffL, 0}, new long[]{0, 0xffffffffffffffffL}),
-        };
-        for (Philox4x64 rng : rngs) {
-            UniformRandomProvider rngOrig = rng.jump(10);
-            long value = rng.nextLong();
-            for (int i = 0; i < 10; i++) {
-                rngOrig.nextLong();
-            }
-            long value2 = rngOrig.nextLong();
-            assertEquals(value2, value);
-        }
-    }
-
-    @Test
-    void testArbitraryJumps() {
-        XoShiRo128PlusPlus rngForSkip = new XoShiRo128PlusPlus(10, 20, 30, 40);
-        Philox4x64 rng = new Philox4x64();
-        for (int i = 0; i < 512; i++) {
-            int n = rngForSkip.nextInt() >>> 23;
-            UniformRandomProvider rngOrig = rng.jump(n);
-            long jumpValue = rng.nextLong();
-            for (int k = 0; k < n; k++) {
-                rngOrig.nextLong();
-            }
-            long origValue = rngOrig.nextLong();
-            assertEquals(origValue, jumpValue);
-        }
+        rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
+        rngOrig = rng.longJump();
+        value = rng.nextInt();
+        rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 1});
+        value2 = rng2.nextInt();
+        assertEquals(value2, value);
     }
 
     @Test
     void testConstructors() {
         Philox4x64[] rngs = new Philox4x64[]{
             new Philox4x64(),
-            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L}, new long[]{0, 0}, new long[]{0, 0}),
-            new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L),
-            new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 0, 0),
-            new Philox4x64(67280421310721L, 0x9E3779B97F4A7C15L, 0, 0, 0, 0),
-            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0, 0, 0, 0})
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0, 0, 0, 0}),
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L}),
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0, 0, 0}),
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0, 0}),
+            new Philox4x64(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0})
         };
         long refValue = rngs[0].next();
         for (int i = 1; i < rngs.length; i++) {
@@ -259,22 +190,9 @@ public class Philox4x64Test {
         }
 
         rngs = new Philox4x64[]{
-            new Philox4x64(new long[]{1234L, 0}, new long[]{1, 0}, new long[]{1, 0}),
-            new Philox4x64(1234, 0, 1, 0, 1),
-            new Philox4x64(1234, 0, 1, 0, 1, 0),
-        };
-        refValue = rngs[0].next();
-        for (int i = 1; i < rngs.length; i++) {
-            long value = rngs[i].next();
-            assertEquals(refValue, value, "Philox4x32 initialization for i=" + i);
-        }
-        rngs = new Philox4x64[]{
-            new Philox4x64(1234L),
-            new Philox4x64(1234L, 0, 0),
-            new Philox4x64(1234, 0, 0, 0),
-            new Philox4x64(1234, 0, 0, 0, 0),
-            new Philox4x64(1234, 0, 0, 0, 0, 0),
-            new Philox4x64(1234, 0, 0, 0, 0, 0, 0),
+            new Philox4x64(new long[]{1234L, 0, 1, 0}),
+            new Philox4x64(new long[]{1234, 0, 1}),
+            new Philox4x64(new long[]{1234, 0, 1, 0, 0, 0}),
         };
         refValue = rngs[0].next();
         for (int i = 1; i < rngs.length; i++) {

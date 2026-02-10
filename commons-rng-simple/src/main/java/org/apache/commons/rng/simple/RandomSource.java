@@ -672,7 +672,7 @@ public enum RandomSource {
      */
     PHILOX_4X32(ProviderBuilder.RandomSourceInternal.PHILOX_4X32),
     /**
-     * Source of randomness is {@link org.apache.commons.rng.core.source32.Philox4x32}.
+     * Source of randomness is {@link org.apache.commons.rng.core.source64.Philox4x64}.
      * <ul>
      *  <li>Native seed type: {@code long[]}.</li>
      *  <li>Native seed size: 6.</li>

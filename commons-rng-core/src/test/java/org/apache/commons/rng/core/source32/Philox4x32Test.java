@@ -52,17 +52,6 @@ public class Philox4x32Test {
     };
 
     private static final int[] EXPECTED_SEQUENCE_AFTER_JUMP = {
-        -851136091, 1309410510, -1085986073, -2011015294, 1141542412,
-        1418494107, -1747451871, -1055627323, -146194734, 1282520890,
-        -1352853386, 1006181297, -1439198278, 1236883457, 492325190,
-        1314792982, 532544947, 1080385192, -2075089806, 1956500098,
-        -1226283606, 1100040044, -1227122850, -565515005, -851592399,
-        -2140061922, 138067050, 1387279196, 1163016478, -26858470,
-        -1462800132, 484042867, -1872158237, -300782320, -1425836673,
-        830088801, 1808637392, 1353273018, 660570244, -1956528645
-    };
-
-    private static final int[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
         -1941342745, 535234737, -1560986946, 1333403881, -467630828,
         -1212243215, 1924495835, 1889500660, 118588722, -444471278,
         -984974572, 2134204567, 620921081, -929199568, -44345645,
@@ -73,14 +62,25 @@ public class Philox4x32Test {
         -1380277812, 1855551741, -1023933348, -635058958, 1752530776
     };
 
+    private static final int[] EXPECTED_SEQUENCE_AFTER_LONG_JUMP = {
+        -643973534, -1464631510, -1204127809, 380399830, 1336312468,
+        862647039, -970571153, -1473390944, 811398823, -598244991,
+        -1474151641, -1228756553, -166611808, -231601273, -2055417682,
+        -1102476522, 1497124960, 438167652, -657449781, -404513325,
+        -621271837, -10198296, -267651022, -296539606, -1564719261,
+        -652626768, -973911394, 1388361366, 1675611708, -1270745165,
+        -620748722, -1569788343, 831908952, 1873081673, -1058521087,
+        -26171115, -1211556401, -65210719, -1194284085, 1579466740
+    };
+
     @Test
     void testReferenceCode() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x32(1234L, 0, 0));
+        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x32(1234L));
     }
 
     @Test
     void testReferenceCodeDefaultSeed() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_DEFAULT, new Philox4x32(67280421310721L, 0, 0));
+        RandomAssert.assertEquals(EXPECTED_SEQUENCE_DEFAULT, new Philox4x32(67280421310721L));
     }
 
     @Test
@@ -88,7 +88,6 @@ public class Philox4x32Test {
         Philox4x32[] rngs = new Philox4x32[]{
             new Philox4x32(),
             new Philox4x32(67280421310721L),
-            new Philox4x32(67280421310721L, 0, 0),
             new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 0, 0})
         };
         int refValue = rngs[0].next();
@@ -97,9 +96,8 @@ public class Philox4x32Test {
             assertEquals(refValue, value, "Philox4x32 initialization for i=" + i);
         }
         rngs = new Philox4x32[]{
-            new Philox4x32(1234L, 1, 1),
-            new Philox4x32(1234, 0, 1, 0, 1),
-            new Philox4x32(1234, 0, 1, 0, 1, 0),
+            new Philox4x32(new int[]{1234, 0, 1}),
+            new Philox4x32(new int[]{1234, 0, 1, 0, 0, 0}),
         };
         refValue = rngs[0].next();
         for (int i = 1; i < rngs.length; i++) {
@@ -108,15 +106,13 @@ public class Philox4x32Test {
         }
         rngs = new Philox4x32[]{
             new Philox4x32(1234L),
-            new Philox4x32(1234L, 0, 0),
-            new Philox4x32(1234),
             new Philox4x32(new int[]{1234}),
-            new Philox4x32(1234, 0),
-            new Philox4x32(1234, 0, 0),
-            new Philox4x32(1234, 0, 0, 0),
-            new Philox4x32(1234, 0, 0, 0, 0),
-            new Philox4x32(1234, 0, 0, 0, 0, 0),
-            new Philox4x32(1234, 0, 0, 0, 0, 0, 0),
+            new Philox4x32(new int[]{1234, 0}),
+            new Philox4x32(new int[]{1234, 0, 0}),
+            new Philox4x32(new int[]{1234, 0, 0, 0}),
+            new Philox4x32(new int[]{1234, 0, 0, 0, 0}),
+            new Philox4x32(new int[]{1234, 0, 0, 0, 0, 0}),
+            new Philox4x32(new int[]{1234, 0, 0, 0, 0, 0, 0}),
         };
         refValue = rngs[0].next();
         for (int i = 1; i < rngs.length; i++) {
@@ -127,116 +123,76 @@ public class Philox4x32Test {
 
     @Test
     void testJump() {
-        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP, new Philox4x32(67280421310721L, 0, 0));
+        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP, new Philox4x32(67280421310721L));
     }
 
     @Test
     void testLongJump() {
-        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new Philox4x32(67280421310721L, 0, 0));
-    }
-
-    @Test
-    void testOffset() {
-        Philox4x32 rng = new Philox4x32(67280421310721L, 0, 1);
-        assertEquals(1, rng.getOffset());
-        assertEquals(EXPECTED_SEQUENCE_DEFAULT[4], rng.nextInt());
-        rng = new Philox4x32(67280421310721L, 0, 1L << 32);
-        assertEquals(1L << 32, rng.getOffset());
-        rng.setOffset(0);
-        assertEquals(EXPECTED_SEQUENCE_DEFAULT[0], rng.nextInt());
+        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new Philox4x32(67280421310721L));
     }
 
     @Test
     void testDouble() {
         Philox4x32 rng = new Philox4x32();
-        double valueOpen = rng.nextDoubleOpen();
-        rng.setOffset(0);
+        final int v = rng.nextInt();
+        final int w = rng.nextInt();
+        final long high = Integer.toUnsignedLong(v) << 21;
+        final long low = Integer.toUnsignedLong(w);
+        double valueOpen = ((high ^ low) | 1) * 0x1.0p-53d;
+        rng = new Philox4x32();
         double value = rng.nextDouble();
         assertEquals(value, valueOpen, Math.pow(2, -20)); //will differ after 20bits
     }
 
     @Test
-    void testReset() {
-        Philox4x32 rng = new Philox4x32(67280421310721L, 0, 1);
-        assertEquals(EXPECTED_SEQUENCE_DEFAULT[4], rng.nextInt());
-        rng.resetState(1234L, 0);
-        assertEquals(EXPECTED_SEQUENCE_1234[0], rng.nextInt());
-    }
-
-    @Test
     void testInternalCounter() {
         //test of incrementCounter
-        Philox4x32 rng = new Philox4x32(67280421310721L, 0, (1L << 32) - 1);
+        Philox4x32 rng = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0xffffffff, 0, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         long value = rng.next();
-        Philox4x32 rng2 = new Philox4x32(67280421310721L, 0, 1L << 32);
+        Philox4x32 rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 1, 0, 0});
         long value2 = rng2.next();
         assertEquals(value, value2);
 
-        rng = new Philox4x32(67280421310721L, 0, 0xffffffffffffffffL);
+        rng = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0xffffffff, 0xffffffff, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         value = rng.next();
-        rng2 = new Philox4x32(67280421310721L, 1, 0);
+        rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 1, 0});
         value2 = rng2.next();
         assertEquals(value, value2);
 
-        rng = new Philox4x32(67280421310721L, (1L << 32) - 1, 0xffffffffffffffffL);
+        rng = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0xffffffff, 0xffffffff, 0xffffffff, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
         value = rng.next();
-        rng2 = new Philox4x32(67280421310721L, 1L << 32, 0);
+        rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 0, 1});
         value2 = rng2.next();
         assertEquals(value, value2);
-    }
-
-    @Test
-    void testJumpCounter() {
-        Philox4x32[] rngs = new Philox4x32[]{
-            new Philox4x32(67280421310721L, 0, (1L << 32) - 1),
-            new Philox4x32(67280421310721L, 0, 0xffffffffffffffffL),
-            new Philox4x32(67280421310721L, (1L << 32) - 1, 0xffffffffffffffffL)
-        };
-        for (Philox4x32 rng : rngs) {
-            UniformRandomProvider rngOrig = rng.jump(10);
-            long value = rng.nextInt();
-            for (int i = 0; i < 10; i++) {
-                rngOrig.nextInt();
-            }
-            long value2 = rngOrig.nextInt();
-            assertEquals(value2, value);
-        }
     }
 
     @Test
     void testLongJumpCounter() {
-        Philox4x32 rng = new Philox4x32(1234L, 0xffffffffL, 0xffffffffffffffffL);
+        Philox4x32 rng = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 0});
         UniformRandomProvider rngOrig = rng.longJump();
         long value = rng.nextInt();
-        Philox4x32 rng2 = new Philox4x32(1234L, 1L << 32, 0xffffffffffffffffL);
+        Philox4x32 rng2 = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 1});
         long value2 = rng2.nextInt();
         assertEquals(value2, value);
     }
 
     @Test
-    void testArbitraryJumps() {
-        XoShiRo128PlusPlus rngForSkip = new XoShiRo128PlusPlus(10, 20, 30, 40);
-        Philox4x32 rng = new Philox4x32();
-        for (int i = 0; i < 5120; i++) {
-            int n = rngForSkip.nextInt() >>> 23;
-            UniformRandomProvider rngOrig = rng.jump(n);
-            int jumpValue = rng.next();
-            for (int k = 0; k < n; k++) {
-                rngOrig.nextInt();
-            }
-            int origValue = rngOrig.nextInt();
-            assertEquals(origValue, jumpValue);
-        }
-
-
+    void testJumpCounter() {
+        Philox4x32 rng = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 0});
+        UniformRandomProvider rngOrig = rng.jump();
+        long value = rng.nextInt();
+        Philox4x32 rng2 = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0, 1});
+        long value2 = rng2.nextInt();
+        assertEquals(value2, value);
     }
+
 }

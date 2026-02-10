@@ -22,6 +22,8 @@ import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
+import java.util.Arrays;
+
 /**
  * This class implements the Philox4x32 128-bit counter-based generator with 10 rounds.
  * Jumping in the sequence is essentially instantaneous. This generator provides subsequences for easy parallelization.
@@ -108,107 +110,41 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     }
 
     /**
-     * Creates a new instance with default seed. Subsequence and offset are set to zero.
+     * Creates a new instance with default seed. Subsequence and offset (or equivalently, the internal counter)
+     * are set to zero.
      */
     public Philox4x32() {
-        this(67280421310721L, 0L, 0L);
+        this(67280421310721L);
     }
 
     /**
-     * Creates a new instance with given seed. Subsequence and offset are set to zero.
+     * Creates a new instance with a given seed. Subsequence and offset (or equivalently, the internal counter)
+     * are set to zero.
      *
-     * @param seed Initial seed.
+     * @param key the low 32 bits constitute the first int key of Philox,
+     *            and the high 32 bits constitute the second int key of Philox
      */
-    public Philox4x32(long seed) {
-        this(seed, 0L, 0L);
+    public Philox4x32(long key) {
+        this(new int[]{(int) key, (int) (key >>> 32)});
     }
 
     /**
-     * Creates a new instance. Offset and subsequence determine the internal counter of Philox.
+     * Creates a new instance based on an array of int containing, key (first two ints) and
+     * the counter (next 4 ints, starts at first int). The counter is not scrambled and may
+     * be used to create contiguous blocks with size a multiple of 4 ints.
      *
-     * @param seed        Initial seed.
-     * @param subsequence a subsequence index
-     * @param offset      an offset, zero for the first number.
+     * @param seed an array of size 6 defining key0,key1,counter0,counter1,counter2,counter3.
+     *             If the size is smaller, zero values are assumed.
      */
-    public Philox4x32(long seed, long subsequence, long offset) {
-        resetState(seed, subsequence);
-        incrementCounter(offset);
-    }
-
-    /**
-     * Creates a new instance based on an array of int containing, seed, subsequence and offset.
-     *
-     * @param seed key0,key1,counter0,counter1,counter2,counter3.
-     */
-    @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
-    public Philox4x32(int... seed) {
-        key0 = seed[0];
-        if (seed.length > 1) {
-            key1 = seed[1];
-        } else {
-            key1 = 0;
-        }
-        if (seed.length > 2) {
-            counter0 = seed[2];
-        } else {
-            counter0 = 0;
-        }
-        if (seed.length > 3) {
-            counter1 = seed[3];
-        } else {
-            counter1 = 0;
-        }
-        if (seed.length > 4) {
-            counter2 = seed[4];
-        } else {
-            counter2 = 0;
-        }
-        if (seed.length > 5) {
-            counter3 = seed[5];
-        } else {
-            counter3 = 0;
-        }
+    public Philox4x32(int[] seed) {
+        final int[] input = seed.length < 6 ? Arrays.copyOf(seed, 6) : seed;
+        key0 = input[0];
+        key1 = input[1];
+        counter0 = input[2];
+        counter1 = input[3];
+        counter2 = input[4];
+        counter3 = input[5];
         bufferPosition = PHILOX_BUFFER_SIZE;
-    }
-
-    /**
-     * Resets the key, counter and state index.
-     *
-     * @param seed        key for Philox
-     * @param subsequence counter third and fourth ints.
-     */
-    public void resetState(long seed, long subsequence) {
-        key0 = (int) seed;
-        key1 = (int) (seed >>> 32);
-
-        counter0 = 0;
-        counter1 = 0;
-        counter2 = (int) subsequence;
-        counter3 = (int) (subsequence >>> 32);
-
-        bufferPosition = PHILOX_BUFFER_SIZE;
-    }
-
-    /**
-     * Set the first two ints of the internal counter of Philox.
-     *
-     * @param offset an offet. An offet of 1 corresponds to the 4th number of the sequence.
-     */
-    public void setOffset(long offset) {
-        counter0 = (int) offset;
-        counter1 = (int) (offset >>> 32);
-        bufferPosition = PHILOX_BUFFER_SIZE;
-    }
-
-    /**
-     * Returns the offset, that is the first two ints of the internal counter as a long.
-     *
-     * @return the first two ints of the internal counter of Philox as long.
-     */
-    public long getOffset() {
-        final long lo = counter0 & 0xFFFFFFFFL;
-        final long hi = (counter1 & 0xFFFFFFFFL) << 32;
-        return lo | hi;
     }
 
     /**
@@ -218,35 +154,15 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
      */
     @Override
     public int next() {
-        if (bufferPosition < PHILOX_BUFFER_SIZE) {
-            return buffer[bufferPosition++];
+        final int p = bufferPosition;
+        if (p < PHILOX_BUFFER_SIZE) {
+            bufferPosition = p + 1;
+            return buffer[p];
         }
         incrementCounter();
         rand10();
         bufferPosition = 1;
         return buffer[0];
-    }
-
-    /**
-     * Counter increment.
-     *
-     * @param n how many steps to increment
-     */
-    private void incrementCounter(long n) {
-        final int nlo = (int) n;
-        int nhi = (int) (n >>> 32);
-
-        int old = counter0;
-        counter0 += nlo;
-        if (Integer.compareUnsigned(counter0, old) < 0) {
-            nhi++;
-        }
-
-        old = counter1;
-        counter1 += nhi;
-        if (Integer.compareUnsigned(counter1, old) < 0 && ++counter2 == 0) {
-            counter3++;
-        }
     }
 
     /**
@@ -294,7 +210,7 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
 
     /**
      * Perform 10 rounds, using counter0, counter1, counter2, counter3 as starting point.
-     *
+     * It updates the buffer member variable, but no others.
      */
     private void rand10() {
         buffer[0] = counter0;
@@ -341,15 +257,13 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
      * {@inheritDoc}
      *
      * <p>Increments the subsequence by 1.</p>
-     * <p>The jump size is the equivalent of 4*2<sup>64</sup> calls to
+     * <p>The jump size is the equivalent of 4*2<sup>96</sup> calls to
      * {@link UniformRandomProvider#nextInt() nextInt()}.
      */
     @Override
     public JumpableUniformRandomProvider longJump() {
         final Philox4x32 copy = copy();
-        if (++counter2 == 0) {
-            counter3++;
-        }
+        counter3++;
         rand10();
         return copy;
     }
@@ -357,37 +271,16 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     /**
      * {@inheritDoc}
      *
-     * <p>The jump size is the equivalent of 4*2<sup>32</sup>
+     * <p>The jump size is the equivalent of 4*2<sup>64</sup>
      * calls to {@link UniformRandomProvider#nextInt() nextInt()}.
      */
     @Override
     public UniformRandomProvider jump() {
         final Philox4x32 copy = copy();
-        incrementCounter(1L << 32);
-        rand10();
-        resetCachedState();
-        return copy;
-    }
-
-    /**
-     * jump by n numbers in the sequence. This is equivalent to
-     * calling nextInt() n times.
-     *
-     * @param n the length to jump.
-     * @return a copy of the original random number generator.
-     */
-    public UniformRandomProvider jump(long n) {
-        final Philox4x32 copy = copy();
-        final long ndiv4 = (n + bufferPosition) / 4;
-        if (ndiv4 > 0) {
-            incrementCounter(ndiv4);
-            rand10();
-            bufferPosition = (int) ((bufferPosition + n) & 3);
-        } else {
-            for (int i = 0; i < n; i++) {
-                nextInt();
-            }
+        if (++counter2 == 0) {
+            counter3++;
         }
+        rand10();
         resetCachedState();
         return copy;
     }
@@ -417,7 +310,7 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
         counter3 = state[5];
         bufferPosition = state[6];
         super.setStateInternal(c[1]);
-        rand10();
+        rand10(); //to regenerate the internal buffer
     }
 
     /**

@@ -288,7 +288,6 @@ public class ConstructionPerformance {
                 return INTEGER_SEEDS;
             case JDK:
             case SPLIT_MIX_64:
-            case PHILOX_4X32:
                 return LONG_SEEDS;
             case WELL_512_A:
             case WELL_1024_A:
@@ -304,6 +303,7 @@ public class ConstructionPerformance {
             case XO_RO_SHI_RO_64_SS:
             case XO_SHI_RO_128_PLUS:
             case XO_SHI_RO_128_SS:
+            case PHILOX_4X32:
                 return INT_ARRAY_SEEDS;
             case XOR_SHIFT_1024_S:
             case XOR_SHIFT_1024_S_PHI:
@@ -810,7 +810,7 @@ public class ConstructionPerformance {
     @Benchmark
     public void newPhilox4x32(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
-            bh.consume(new Philox4x32(LONG_SEEDS[i]));
+            bh.consume(new Philox4x32(INT_ARRAY_SEEDS[i]));
         }
     }
 
