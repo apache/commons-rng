@@ -16,12 +16,18 @@
  */
 package org.apache.commons.rng.core.source64;
 
-import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Philox4x64Test {
     /*
      * Data from python randomgen.philox.Philox(key=1234,number=4,width=32) random_raw()
@@ -96,16 +102,24 @@ public class Philox4x64Test {
         6246833740445288808L
     };
 
-    @Test
-    void testReferenceCode() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x64(new long[]{1234L, 0}));
+    /**
+     * Gets a stream of reference data. Each argument consists of the seed as a long array (first two longs),
+     * and the long array of the expected output from the generator.
+     *
+     * @return the reference data
+     */
+    Stream<Arguments> getReferenceData() {
+        return Stream.of(
+            Arguments.of(new long[]{1234L, 0}, EXPECTED_SEQUENCE_1234),
+            Arguments.of(new long[]{67280421310721L, 0x9E3779B97F4A7C15L}, EXPECTED_SEQUENCE_DEFAULT)
+        );
     }
 
-    @Test
-    void testReferenceCodeDefaultSeed() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_DEFAULT, new Philox4x64());
+    @ParameterizedTest
+    @MethodSource(value = "getReferenceData")
+    void testReferenceCode(long[] seed, long[] expected) {
+        RandomAssert.assertEquals(expected, new Philox4x64(seed));
     }
-
 
     @Test
     void testJump() {
@@ -125,52 +139,40 @@ public class Philox4x64Test {
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        long value = rng.next();
         Philox4x64 rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 1, 0, 0});
-        long value2 = rng2.next();
-        assertEquals(value, value2);
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
 
         rng = new Philox4x64(new long[]{67280421310721L, 1234L, 0xffffffffffffffffL, 0xffffffffffffffffL, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        value = rng.next();
         rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 0, 1, 0});
-        value2 = rng2.next();
-        assertEquals(value, value2);
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
 
         rng = new Philox4x64(new long[]{67280421310721L, 1234L, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        value = rng.next();
         rng2 = new Philox4x64(new long[]{67280421310721L, 1234L, 0, 0, 0, 1});
-        value2 = rng2.next();
-        assertEquals(value, value2);
-
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
     }
 
     @Test
     void testLongJumpCounter() {
         Philox4x64 rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0, 0xffffffffffffffffL, 0});
-        UniformRandomProvider rngOrig = rng.jump();
-        long value = rng.nextInt();
+        rng.jump();
         Philox4x64 rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0, 0, 1});
-        long value2 = rng2.nextInt();
-        assertEquals(value2, value);
-        rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
-        rngOrig = rng.jump();
-        value = rng.nextInt();
-        rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0, 1});
-        value2 = rng2.nextInt();
-        assertEquals(value2, value);
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
 
         rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
-        rngOrig = rng.longJump();
-        value = rng.nextInt();
+        rng.jump();
+        rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0, 1});
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
+
+        rng = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 0});
+        rng.longJump();
         rng2 = new Philox4x64(new long[]{1234L, 0, 0xffffffffffffffffL, 0xffffffffffffffffL, 0xffffffffffffffffL, 1});
-        value2 = rng2.nextInt();
-        assertEquals(value2, value);
+        RandomAssert.assertNextLongEquals(1, rng, rng2);
     }
 
     @Test

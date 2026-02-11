@@ -333,7 +333,6 @@ public class ConstructionPerformance {
             case SPLIT_MIX_64:
             case TWO_CMRES:
             case TWO_CMRES_SELECT:
-            case PHILOX_4X32:
                 return 1;
             case WELL_512_A:
                 return 16;
@@ -373,6 +372,7 @@ public class ConstructionPerformance {
             case XO_SHI_RO_512_PLUS:
             case XO_SHI_RO_512_SS:
                 return 8;
+            case PHILOX_4X32:
             case PHILOX_4X64:
                 return 6;
             default:

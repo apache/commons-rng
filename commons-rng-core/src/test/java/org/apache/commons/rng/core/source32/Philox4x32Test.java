@@ -16,12 +16,18 @@
  */
 package org.apache.commons.rng.core.source32;
 
-import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class Philox4x32Test {
 
     /*
@@ -73,21 +79,29 @@ public class Philox4x32Test {
         -26171115, -1211556401, -65210719, -1194284085, 1579466740
     };
 
-    @Test
-    void testReferenceCode() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_1234, new Philox4x32(1234L));
+    /**
+     * Gets a stream of reference data. Each argument consists of the seed as a long (first two ints),
+     * and the int array of the expected output from the generator.
+     *
+     * @return the reference data
+     */
+    Stream<Arguments> getReferenceData() {
+        return Stream.of(
+            Arguments.of(1234L, EXPECTED_SEQUENCE_1234),
+            Arguments.of(67280421310721L, EXPECTED_SEQUENCE_DEFAULT)
+        );
     }
 
-    @Test
-    void testReferenceCodeDefaultSeed() {
-        RandomAssert.assertEquals(EXPECTED_SEQUENCE_DEFAULT, new Philox4x32(67280421310721L));
+    @ParameterizedTest
+    @MethodSource(value = "getReferenceData")
+    void testReferenceCode(long seed, int[] expected) {
+        RandomAssert.assertEquals(expected, new Philox4x32(new int[]{(int) seed, (int) (seed >>> 32)}));
     }
 
     @Test
     void testConstructors() {
         Philox4x32[] rngs = new Philox4x32[]{
             new Philox4x32(),
-            new Philox4x32(67280421310721L),
             new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 0, 0})
         };
         int refValue = rngs[0].next();
@@ -105,7 +119,6 @@ public class Philox4x32Test {
             assertEquals(refValue, value, "Philox4x32 initialization for i=" + i);
         }
         rngs = new Philox4x32[]{
-            new Philox4x32(1234L),
             new Philox4x32(new int[]{1234}),
             new Philox4x32(new int[]{1234, 0}),
             new Philox4x32(new int[]{1234, 0, 0}),
@@ -123,25 +136,12 @@ public class Philox4x32Test {
 
     @Test
     void testJump() {
-        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP, new Philox4x32(67280421310721L));
+        RandomAssert.assertJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_JUMP, new Philox4x32());
     }
 
     @Test
     void testLongJump() {
-        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new Philox4x32(67280421310721L));
-    }
-
-    @Test
-    void testDouble() {
-        Philox4x32 rng = new Philox4x32();
-        final int v = rng.nextInt();
-        final int w = rng.nextInt();
-        final long high = Integer.toUnsignedLong(v) << 21;
-        final long low = Integer.toUnsignedLong(w);
-        double valueOpen = ((high ^ low) | 1) * 0x1.0p-53d;
-        rng = new Philox4x32();
-        double value = rng.nextDouble();
-        assertEquals(value, valueOpen, Math.pow(2, -20)); //will differ after 20bits
+        RandomAssert.assertLongJumpEquals(EXPECTED_SEQUENCE_DEFAULT, EXPECTED_SEQUENCE_AFTER_LONG_JUMP, new Philox4x32());
     }
 
     @Test
@@ -151,48 +151,38 @@ public class Philox4x32Test {
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        long value = rng.next();
         Philox4x32 rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 1, 0, 0});
-        long value2 = rng2.next();
-        assertEquals(value, value2);
+        RandomAssert.assertNextIntEquals(1, rng, rng2);
 
         rng = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0xffffffff, 0xffffffff, 0, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        value = rng.next();
         rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 1, 0});
-        value2 = rng2.next();
-        assertEquals(value, value2);
+        RandomAssert.assertNextIntEquals(1, rng, rng2);
 
         rng = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0xffffffff, 0xffffffff, 0xffffffff, 0});
         for (int i = 0; i < 4; i++) {
             rng.next();
         }
-        value = rng.next();
         rng2 = new Philox4x32(new int[]{(int) 67280421310721L, (int) (67280421310721L >>> 32), 0, 0, 0, 1});
-        value2 = rng2.next();
-        assertEquals(value, value2);
+        RandomAssert.assertNextIntEquals(1, rng, rng2);
     }
 
     @Test
     void testLongJumpCounter() {
         Philox4x32 rng = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 0});
-        UniformRandomProvider rngOrig = rng.longJump();
-        long value = rng.nextInt();
+        rng.longJump();
         Philox4x32 rng2 = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 1});
-        long value2 = rng2.nextInt();
-        assertEquals(value2, value);
+        RandomAssert.assertNextIntEquals(1, rng, rng2);
     }
 
     @Test
     void testJumpCounter() {
         Philox4x32 rng = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0xffffffff, 0});
-        UniformRandomProvider rngOrig = rng.jump();
-        long value = rng.nextInt();
+        rng.jump();
         Philox4x32 rng2 = new Philox4x32(new int[]{1234, 0, 0xffffffff, 0xffffffff, 0, 1});
-        long value2 = rng2.nextInt();
-        assertEquals(value2, value);
+        RandomAssert.assertNextIntEquals(1, rng, rng2);
     }
 
 }

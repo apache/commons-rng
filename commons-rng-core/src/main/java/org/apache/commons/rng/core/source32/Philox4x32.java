@@ -124,13 +124,13 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
      * @param key the low 32 bits constitute the first int key of Philox,
      *            and the high 32 bits constitute the second int key of Philox
      */
-    public Philox4x32(long key) {
+    private Philox4x32(long key) {
         this(new int[]{(int) key, (int) (key >>> 32)});
     }
 
     /**
      * Creates a new instance based on an array of int containing, key (first two ints) and
-     * the counter (next 4 ints, starts at first int). The counter is not scrambled and may
+     * the counter (next 4 ints, low bits = first int). The counter is not scrambled and may
      * be used to create contiguous blocks with size a multiple of 4 ints.
      *
      * @param seed an array of size 6 defining key0,key1,counter0,counter1,counter2,counter3.
@@ -265,6 +265,7 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
         final Philox4x32 copy = copy();
         counter3++;
         rand10();
+        resetCachedState();
         return copy;
     }
 
