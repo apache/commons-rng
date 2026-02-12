@@ -70,8 +70,6 @@ public class RandomSourceValues {
             "PCG_RXS_M_XS_64",
             "PCG_MCG_XSH_RR_32",
             "PCG_MCG_XSH_RS_32",
-            "PHILOX_4X32",
-            "PHILOX_4X64",
             "MSWS",
             "SFC_32",
             "SFC_64",
@@ -94,7 +92,9 @@ public class RandomSourceValues {
             "L128_X128_MIX",
             "L128_X256_MIX",
             "L128_X1024_MIX",
-            "L32_X64_MIX"})
+            "L32_X64_MIX",
+            "PHILOX_4X32",
+            "PHILOX_4X64"})
     private String randomSourceName;
 
     /** The RandomSource. */

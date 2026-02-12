@@ -165,9 +165,7 @@ public class JumpBenchmark {
             "L128_X1024_MIX",
             // Requires the LCG to be advanced 2^16 rather than 1 cycle which
             // can use precomputed coefficients.
-            "L32_X64_MIX",
-            "PHILOX_4X32",
-            "PHILOX_4X64"})
+            "L32_X64_MIX"})
         private String randomSourceName;
 
 

@@ -62,8 +62,6 @@ public abstract class BaselineSources {
      */
     @Param({BASELINE,
             "JDK",
-            "PHILOX_4X32",
-            "PHILOX_4X64",
             "WELL_512_A",
             "WELL_1024_A",
             "WELL_19937_A",
@@ -116,7 +114,9 @@ public abstract class BaselineSources {
             "L128_X128_MIX",
             "L128_X256_MIX",
             "L128_X1024_MIX",
-            "L32_X64_MIX"})
+            "L32_X64_MIX",
+            "PHILOX_4X32",
+            "PHILOX_4X64"})
     private String randomSourceName;
 
     /** RNG. */

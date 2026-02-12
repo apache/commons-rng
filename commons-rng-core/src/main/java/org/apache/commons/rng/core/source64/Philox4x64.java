@@ -26,70 +26,76 @@ import java.util.Arrays;
 
 /**
  * This class implements the Philox4x64 256-bit counter-based generator with 10 rounds.
- * Jumping in the sequence is essentially instantaneous. This generator provides subsequences for easy parallelization.
  *
- * @see <a href="https://www.thesalmons.org/john/random123/papers/random123sc11.pdf">Parallel Random Numbers: As Easy as 1,2,3</a>
+ * <p>This is a member of the Philox family of generators. Memory footprint is 384 bits
+ * and the period is 4*2<sup>256</sup>.</p>
+ *
+ * <p>Jumping in the sequence is essentially instantaneous.
+ * This generator provides subsequences for easy parallelization.
+ *
+ * <p>References:
+ * <ol>
+ * <li>
+ * Salmon, J.K. <i>et al</i> (2011)
+ * <a href="https://dl.acm.org/doi/epdf/10.1145/2063384.2063405">
+ * Parallel Random Numbers: As Easy as 1,2,3</a>.</li>
+ * </ol>
+ *
  * @since 1.7
  */
 public final class Philox4x64 extends LongProvider implements LongJumpableUniformRandomProvider {
-    /**
-     * Philox 32-bit mixing constant for counter 0.
-     */
+    /** Philox 32-bit mixing constant for counter 0. */
     private static final long PHILOX_M0 = 0xD2E7470EE14C6C93L;
-    /**
-     * Philox 32-bit mixing constant for counter 1.
-     */
+    /** Philox 32-bit mixing constant for counter 1. */
     private static final long PHILOX_M1 = 0xCA5A826395121157L;
-    /**
-     * Philox 32-bit constant for key 0.
-     */
+    /** Philox 32-bit constant for key 0. */
     private static final long PHILOX_W0 = 0x9E3779B97F4A7C15L;
-    /**
-     * Philox 32-bit constant for key 1.
-     */
+    /** Philox 32-bit constant for key 1. */
     private static final long PHILOX_W1 = 0xBB67AE8584CAA73BL;
-    /**
-     * Internal buffer size.
-     */
+    /** Internal buffer size. */
     private static final int PHILOX_BUFFER_SIZE = 4;
-    /**
-     * number of long variables.
-     */
+    /** Number of state variables. */
     private static final int STATE_SIZE = 7;
 
-    /**
-     * Counter 0.
-     */
+    /** Counter 0. */
     private long counter0;
-    /**
-     * Counter 1.
-     */
+    /** Counter 1. */
     private long counter1;
-    /**
-     * Counter 2.
-     */
+    /** Counter 2. */
     private long counter2;
-    /**
-     * Counter 3.
-     */
+    /** Counter 3. */
     private long counter3;
+    /** Output buffer. */
+    private final long[] buffer = new long[PHILOX_BUFFER_SIZE];
+    /** Key low bits. */
+    private long key0;
+    /** Key high bits. */
+    private long key1;
+    /** Output buffer index. When at the end of the buffer the counter is
+     * incremented and the buffer regenerated. */
+    private int bufferPosition;
 
     /**
-     * Output point.
+     * Creates a new instance with default seed. Subsequence and offset are set to zero.
      */
-    private long[] buffer = new long[PHILOX_BUFFER_SIZE]; // UINT4
+    public Philox4x64() {
+        this(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0L, 0L, 0L, 0L});
+    }
+
     /**
-     * Key low bits.
+     * Creates a new instance given 6 long numbers containing, key (first two longs) and
+     * the counter (next 4 longs, low bits = first long). The counter is not scrambled and may
+     * be used to create contiguous blocks with size a multiple of 4 longs. For example,
+     * setting seed[2] = 1 is equivalent to start with seed[2]=0 and calling {@link #next()} 4 times.
+     *
+     * @param seed Array of size 6 defining key0,key1,counter0,counter1,counter2,counter3.
+     *             If the size is smaller, zero values are assumed.
      */
-    private long key0;
-    /**
-     * Key high bits.
-     */
-    private long key1;
-    /**
-     * State index:  which output word is next (0..3).
-     */
-    private int bufferPosition;
+    public Philox4x64(long[] seed) {
+        final long[] input = seed.length < 6 ? Arrays.copyOf(seed, 6) : seed;
+        setState(input);
+        bufferPosition = PHILOX_BUFFER_SIZE;
+    }
 
     /**
      * Copy constructor.
@@ -105,43 +111,47 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
         key0 = source.key0;
         key1 = source.key1;
         bufferPosition = source.bufferPosition;
-        buffer = source.buffer.clone();
+        System.arraycopy(source.buffer, 0, buffer, 0, PHILOX_BUFFER_SIZE);
     }
 
     /**
-     * Creates a new instance with default seed. Subsequence and offset are set to zero.
-     */
-    public Philox4x64() {
-        this(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0L, 0L, 0L, 0L});
-    }
-
-
-    /**
-     * Creates a new instance given 6 long numbers containing, key (first two longs) and
-     * the counter (next 4, starts at first). The counter is not scrambled and may
-     * be used to create contiguous blocks with size a multiple of 4 longs. For example,
-     * setting seed[2] = 1 is equivalent to start with seed[2]=0 and calling {@link #next()} 4 times.
+     * Copies the state from the array into the generator state.
      *
-     * @param keyAndCounter the first two number are the key and the next 4 number are the counter.
-     *                      if size is smaller than 6, the array is padded with 0.
+     * @param state New state.
      */
-    public Philox4x64(long[] keyAndCounter) {
-        final long[] input = keyAndCounter.length < 6 ? Arrays.copyOf(keyAndCounter, 6) : keyAndCounter;
-        key0 = input[0];
-        key1 = input[1];
-        counter0 = input[2];
-        counter1 = input[3];
-        counter2 = input[4];
-        counter3 = input[5];
-        bufferPosition = PHILOX_BUFFER_SIZE;
+    private void setState(long[] state) {
+        key0 = state[0];
+        key1 = state[1];
+        counter0 = state[2];
+        counter1 = state[3];
+        counter2 = state[4];
+        counter3 = state[5];
     }
 
-    /**
-     * Fetch next long from the buffer, or regenerate the buffer using 10 rounds.
-     *
-     * @return random 64-bit integer
-     */
-    private long next64() {
+    /** {@inheritDoc} */
+    @Override
+    protected byte[] getStateInternal() {
+        return composeStateInternal(
+            NumberFactory
+                .makeByteArray(new long[] {key0, key1, counter0, counter1, counter2, counter3, bufferPosition}),
+            super.getStateInternal());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    protected void setStateInternal(byte[] s) {
+        final byte[][] c = splitStateInternal(s, STATE_SIZE * Long.BYTES);
+        final long[] state = NumberFactory.makeLongArray(c[0]);
+        setState(state);
+        bufferPosition = (int) state[6];
+        super.setStateInternal(c[1]);
+        // Regenerate the internal buffer
+        rand10();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public long next() {
         final int p = bufferPosition;
         if (bufferPosition < PHILOX_BUFFER_SIZE) {
             bufferPosition = p + 1;
@@ -154,49 +164,27 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     }
 
     /**
-     * Increment by one.
+     * Increment the counter by one.
      */
     private void incrementCounter() {
         counter0++;
         if (counter0 != 0) {
             return;
         }
-
         counter1++;
         if (counter1 != 0) {
             return;
         }
-
         counter2++;
         if (counter2 != 0) {
             return;
         }
-
         counter3++;
     }
 
     /**
-     * Performs a single round of philox.
-     *
-     * @param counter local counter, which will be updated after each call.
-     * @param key0    key low bits
-     * @param key1    key high bits
-     */
-    private static void singleRound(long[] counter, long key0, long key1) {
-        final long lo0 = PHILOX_M0 * counter[0];
-        final long hi0 = LXMSupport.unsignedMultiplyHigh(PHILOX_M0, counter[0]);
-        final long lo1 = PHILOX_M1 * counter[2];
-        final long hi1 = LXMSupport.unsignedMultiplyHigh(PHILOX_M1, counter[2]);
-
-        counter[0] = hi1 ^ counter[1] ^ key0;
-        counter[1] = lo1;
-        counter[2] = hi0 ^ counter[3] ^ key1;
-        counter[3] = lo0;
-    }
-
-    /**
      * Perform 10 rounds, using counter0, counter1, counter2, counter3 as starting point.
-     *
+     * It updates the buffer member variable, but no others.
      */
     private void rand10() {
         buffer[0] = counter0;
@@ -239,26 +227,30 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     }
 
     /**
-     * {@inheritDoc}
+     * Performs a single round of philox.
      *
-     * <p>Increments the subsequence by 1.</p>
-     * <p>The jump size is the equivalent of 4*2<sup>192</sup> calls to
-     * {@link UniformRandomProvider#nextLong() nextLong()}.
+     * @param counter Counter, which will be updated after each call.
+     * @param key0 Key low bits.
+     * @param key1 Key high bits.
      */
-    @Override
-    public JumpableUniformRandomProvider longJump() {
-        final Philox4x64 copy = copy();
-        counter3++;
-        rand10();
-        resetCachedState();
-        return copy;
+    private static void singleRound(long[] counter, long key0, long key1) {
+        final long lo0 = PHILOX_M0 * counter[0];
+        final long hi0 = LXMSupport.unsignedMultiplyHigh(PHILOX_M0, counter[0]);
+        final long lo1 = PHILOX_M1 * counter[2];
+        final long hi1 = LXMSupport.unsignedMultiplyHigh(PHILOX_M1, counter[2]);
+
+        counter[0] = hi1 ^ counter[1] ^ key0;
+        counter[1] = lo1;
+        counter[2] = hi0 ^ counter[3] ^ key1;
+        counter[3] = lo0;
     }
 
     /**
      * {@inheritDoc}
      *
      * <p>The jump size is the equivalent of 4*2<sup>128</sup>
-     * calls to {@link UniformRandomProvider#nextLong() nextLong()}.
+     * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
+     * up to 2<sup>128</sup> non-overlapping subsequences.</p>
      */
     @Override
     public UniformRandomProvider jump() {
@@ -273,39 +265,20 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
 
     /**
      * {@inheritDoc}
+     *
+     * <p>The jump size is the equivalent of 4*2<sup>192</sup> calls to
+     * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
+     * 2<sup>64</sup> non-overlapping subsequences of length 2<sup>192</sup>; each
+     * subsequence can provide up to 2<sup>64</sup> non-overlapping subsequences of
+     * length 2<sup>128</sup> using the {@link #jump()} method.</p>
      */
     @Override
-    public long next() {
-        return next64();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected byte[] getStateInternal() {
-        return composeStateInternal(NumberFactory.makeByteArray(
-                new long[]{key0, key1, counter0, counter1, counter2, counter3, bufferPosition}),
-            super.getStateInternal());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setStateInternal(byte[] s) {
-        final byte[][] c = splitStateInternal(s, STATE_SIZE * 8);
-
-        final long[] state = NumberFactory.makeLongArray(c[0]);
-        key0 = state[0];
-        key1 = state[1];
-        counter0 = state[2];
-        counter1 = state[3];
-        counter2 = state[4];
-        counter3 = state[5];
-        bufferPosition = (int) state[6];
-        super.setStateInternal(c[1]);
+    public JumpableUniformRandomProvider longJump() {
+        final Philox4x64 copy = copy();
+        counter3++;
         rand10();
+        resetCachedState();
+        return copy;
     }
 
     /**
