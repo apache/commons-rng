@@ -108,25 +108,6 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     }
 
     /**
-     * Creates a new instance with default seed. Subsequence and offset (or equivalently, the internal counter)
-     * are set to zero.
-     */
-    public Philox4x32() {
-        this(67280421310721L);
-    }
-
-    /**
-     * Creates a new instance with a given seed. Subsequence and offset (or equivalently, the internal counter)
-     * are set to zero.
-     *
-     * @param key the low 32 bits constitute the first int key of Philox,
-     *            and the high 32 bits constitute the second int key of Philox
-     */
-    private Philox4x32(long key) {
-        this(new int[]{(int) key, (int) (key >>> 32)});
-    }
-
-    /**
      * Copies the state from the array into the generator state.
      *
      * @param state New state.
@@ -144,7 +125,10 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     @Override
     protected byte[] getStateInternal() {
         return composeStateInternal(
-            NumberFactory.makeByteArray(new int[] {key0, key1, counter0, counter1, counter2, counter3, bufferPosition}),
+            NumberFactory.makeByteArray(new int[] {
+                key0, key1,
+                counter0, counter1, counter2, counter3,
+                bufferPosition}),
             super.getStateInternal());
     }
 

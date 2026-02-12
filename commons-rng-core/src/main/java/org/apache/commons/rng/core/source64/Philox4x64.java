@@ -76,13 +76,6 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     private int bufferPosition;
 
     /**
-     * Creates a new instance with default seed. Subsequence and offset are set to zero.
-     */
-    public Philox4x64() {
-        this(new long[]{67280421310721L, 0x9E3779B97F4A7C15L, 0L, 0L, 0L, 0L});
-    }
-
-    /**
      * Creates a new instance given 6 long numbers containing, key (first two longs) and
      * the counter (next 4 longs, low bits = first long). The counter is not scrambled and may
      * be used to create contiguous blocks with size a multiple of 4 longs. For example,
@@ -132,8 +125,10 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     @Override
     protected byte[] getStateInternal() {
         return composeStateInternal(
-            NumberFactory
-                .makeByteArray(new long[] {key0, key1, counter0, counter1, counter2, counter3, bufferPosition}),
+            NumberFactory.makeByteArray(new long[] {
+                key0, key1,
+                counter0, counter1, counter2, counter3,
+                bufferPosition}),
             super.getStateInternal());
     }
 
