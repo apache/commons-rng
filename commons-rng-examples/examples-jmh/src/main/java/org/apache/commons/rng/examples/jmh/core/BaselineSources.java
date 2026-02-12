@@ -62,6 +62,8 @@ public abstract class BaselineSources {
      */
     @Param({BASELINE,
             "JDK",
+            "PHILOX_4X32",
+            "PHILOX_4X64",
             "WELL_512_A",
             "WELL_1024_A",
             "WELL_19937_A",

@@ -47,6 +47,7 @@ import org.apache.commons.rng.core.source32.PcgMcgXshRs32;
 import org.apache.commons.rng.core.source32.DotyHumphreySmallFastCounting32;
 import org.apache.commons.rng.core.source32.JenkinsSmallFast32;
 import org.apache.commons.rng.core.source32.L32X64Mix;
+import org.apache.commons.rng.core.source32.Philox4x32;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.XorShift1024Star;
 import org.apache.commons.rng.core.source64.XorShift1024StarPhi;
@@ -74,6 +75,7 @@ import org.apache.commons.rng.core.source64.L64X256Mix;
 import org.apache.commons.rng.core.source64.L128X1024Mix;
 import org.apache.commons.rng.core.source64.L128X128Mix;
 import org.apache.commons.rng.core.source64.L128X256Mix;
+import org.apache.commons.rng.core.source64.Philox4x64;
 
 /**
  * RNG builder.
@@ -270,6 +272,7 @@ public final class ProviderBuilder {
         PCG_MCG_XSH_RS_32(PcgMcgXshRs32.class,
                 1,
                 NativeSeedType.LONG),
+
         /** Source of randomness is {@link MiddleSquareWeylSequence}. */
         MSWS(MiddleSquareWeylSequence.class,
              // Many partially zero seeds can create low quality initial output.
@@ -439,8 +442,13 @@ public final class ProviderBuilder {
         /** Source of randomness is {@link L32X64Mix}. */
         L32_X64_MIX(L32X64Mix.class,
                 4, 2, 4,
-                NativeSeedType.INT_ARRAY);
-
+                NativeSeedType.INT_ARRAY),
+        /** Source of randomness is {@link Philox4x32}. */
+        PHILOX_4X32(Philox4x32.class,
+            6, 0, 2, NativeSeedType.INT_ARRAY),
+        /** Source of randomness is {@link Philox4x64}. */
+        PHILOX_4X64(Philox4x64 .class,
+            6, 0, 2, NativeSeedType.LONG_ARRAY);
         /** Source type. */
         private final Class<? extends UniformRandomProvider> rng;
         /** Native seed size. Used for array seeds. */

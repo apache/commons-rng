@@ -42,6 +42,7 @@ import org.apache.commons.rng.core.source32.JDKRandom;
 import org.apache.commons.rng.core.source32.KISSRandom;
 import org.apache.commons.rng.core.source32.MersenneTwister;
 import org.apache.commons.rng.core.source32.MultiplyWithCarry256;
+import org.apache.commons.rng.core.source32.Philox4x32;
 import org.apache.commons.rng.core.source32.Well1024a;
 import org.apache.commons.rng.core.source32.Well19937a;
 import org.apache.commons.rng.core.source32.Well19937c;
@@ -53,6 +54,7 @@ import org.apache.commons.rng.core.source32.XoRoShiRo64StarStar;
 import org.apache.commons.rng.core.source32.XoShiRo128Plus;
 import org.apache.commons.rng.core.source32.XoShiRo128StarStar;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
+import org.apache.commons.rng.core.source64.Philox4x64;
 import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.core.source64.TwoCmres;
 import org.apache.commons.rng.core.source64.XoRoShiRo128Plus;
@@ -301,6 +303,7 @@ public class ConstructionPerformance {
             case XO_RO_SHI_RO_64_SS:
             case XO_SHI_RO_128_PLUS:
             case XO_SHI_RO_128_SS:
+            case PHILOX_4X32:
                 return INT_ARRAY_SEEDS;
             case XOR_SHIFT_1024_S:
             case XOR_SHIFT_1024_S_PHI:
@@ -311,6 +314,7 @@ public class ConstructionPerformance {
             case XO_SHI_RO_256_SS:
             case XO_SHI_RO_512_PLUS:
             case XO_SHI_RO_512_SS:
+            case PHILOX_4X64:
                 return LONG_ARRAY_SEEDS;
             default:
                 throw new AssertionError("Unknown native seed");
@@ -368,6 +372,9 @@ public class ConstructionPerformance {
             case XO_SHI_RO_512_PLUS:
             case XO_SHI_RO_512_SS:
                 return 8;
+            case PHILOX_4X32:
+            case PHILOX_4X64:
+                return 6;
             default:
                 throw new AssertionError("Unknown native seed size");
             }
@@ -398,6 +405,7 @@ public class ConstructionPerformance {
             case XO_RO_SHI_RO_64_SS:
             case XO_SHI_RO_128_PLUS:
             case XO_SHI_RO_128_SS:
+            case PHILOX_4X32:
                 return 4; // int
             case SPLIT_MIX_64:
             case XOR_SHIFT_1024_S:
@@ -409,6 +417,7 @@ public class ConstructionPerformance {
             case XO_SHI_RO_256_SS:
             case XO_SHI_RO_512_PLUS:
             case XO_SHI_RO_512_SS:
+            case PHILOX_4X64:
                 return 8; // long
             default:
                 throw new AssertionError("Unknown native seed element byte size");
@@ -450,6 +459,8 @@ public class ConstructionPerformance {
             case XO_SHI_RO_256_SS: return RandomSourceInternal.XO_SHI_RO_256_SS;
             case XO_SHI_RO_512_PLUS: return RandomSourceInternal.XO_SHI_RO_512_PLUS;
             case XO_SHI_RO_512_SS: return RandomSourceInternal.XO_SHI_RO_512_SS;
+            case PHILOX_4X32: return RandomSourceInternal.PHILOX_4X32;
+            case PHILOX_4X64: return RandomSourceInternal.PHILOX_4X64;
             default:
                 throw new AssertionError("Unknown random source internal");
             }
@@ -790,6 +801,26 @@ public class ConstructionPerformance {
     public void newXoShiRo512StarStar(Blackhole bh) {
         for (int i = 0; i < SEEDS; i++) {
             bh.consume(new XoShiRo512StarStar(LONG_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newPhilox4x32(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new Philox4x32(INT_ARRAY_SEEDS[i]));
+        }
+    }
+
+    /**
+     * @param bh Data sink.
+     */
+    @Benchmark
+    public void newPhilox4x64(Blackhole bh) {
+        for (int i = 0; i < SEEDS; i++) {
+            bh.consume(new Philox4x64(LONG_ARRAY_SEEDS[i]));
         }
     }
 
