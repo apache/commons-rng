@@ -56,16 +56,15 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.7" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" due-to="Jherek Healy" type="add" issue="RNG-188">
+        Add Philox4x32 and Philox4x64 random number generators.
+      </action>
       <action dev="aherbert" type="fix">
         "JDKRandomBridge": Support the use of setSeed(long) after object deserialization.
       </action>
       <action dev="aherbert" type="update" issue="RNG-187">
         "ArraySampler": Improve performance on small ranges using batched index generation.
       </action>
-      <action dev="ggregory" type="update">Pick up exec-maven-plugin version from parent POM.</action>
-      <action dev="ggregory" type="update">Bump org.revapi:revapi-maven-plugin from 0.15.0 to 0.15.1 #140.</action>
-      <action dev="ggregory" type="update">Bump org.revapi:revapi-java from 0.28.1 to 0.28.4 #141, #143.</action>
-      <action dev="ggregory" type="update">Bump org.apache.commons:commons-parent from 91 to 96 #184.</action>
 </release>
 
     <release version="1.6" date="2024-07-15" description="
