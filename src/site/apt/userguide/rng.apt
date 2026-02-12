@@ -1175,7 +1175,10 @@ double[] coordinate = sampler.sample();
 *-----------------+------------+---------------------+-------------+
 | <<L32_X64_MIX>> | {{{../txt/userguide/stress/dh_55_1}0}}, {{{../txt/userguide/stress/dh_55_2}0}}, {{{../txt/userguide/stress/dh_55_3}0}}, {{{../txt/userguide/stress/dh_55_4}0}}, {{{../txt/userguide/stress/dh_55_5}0}} | {{{../txt/userguide/stress/tu_55_1}0}}, {{{../txt/userguide/stress/tu_55_2}0}}, {{{../txt/userguide/stress/tu_55_3}0}}, {{{../txt/userguide/stress/tu_55_4}0}}, {{{../txt/userguide/stress/tu_55_5}0}} | {{{../txt/userguide/stress/pr_55_1}-}}, {{{../txt/userguide/stress/pr_55_2}-}}, {{{../txt/userguide/stress/pr_55_3}-}} |
 *-----------------+------------+---------------------+-------------+
-
+| <<PHILOX_4X32>> | {{{../txt/userguide/stress/dh_56_1}0}}, {{{../txt/userguide/stress/dh_56_2}0}}, {{{../txt/userguide/stress/dh_56_3}0}}, {{{../txt/userguide/stress/dh_56_4}0}}, {{{../txt/userguide/stress/dh_56_5}0}} | {{{../txt/userguide/stress/tu_56_1}0}}, {{{../txt/userguide/stress/tu_56_2}1}}, {{{../txt/userguide/stress/tu_56_3}0}}, {{{../txt/userguide/stress/tu_56_4}1}}, {{{../txt/userguide/stress/tu_56_5}0}} | {{{../txt/userguide/stress/pr_56_1}-}}, {{{../txt/userguide/stress/pr_56_2}-}}, {{{../txt/userguide/stress/pr_56_3}-}} |
+*-----------------+------------+---------------------+-------------+
+| <<PHILOX_4X64>> | {{{../txt/userguide/stress/dh_57_1}0}}, {{{../txt/userguide/stress/dh_57_2}0}}, {{{../txt/userguide/stress/dh_57_3}0}}, {{{../txt/userguide/stress/dh_57_4}0}}, {{{../txt/userguide/stress/dh_57_5}0}} | {{{../txt/userguide/stress/tu_57_1}0}}, {{{../txt/userguide/stress/tu_57_2}0}}, {{{../txt/userguide/stress/tu_57_3}0}}, {{{../txt/userguide/stress/tu_57_4}2}}, {{{../txt/userguide/stress/tu_57_5}0}} | {{{../txt/userguide/stress/pr_57_1}-}}, {{{../txt/userguide/stress/pr_57_2}-}}, {{{../txt/userguide/stress/pr_57_3}-}} |
+*-----------------+------------+---------------------+-------------+
 
 6. Examples
 
