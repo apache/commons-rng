@@ -29,7 +29,6 @@ import java.util.Arrays;
  * Jumping in the sequence is essentially instantaneous. This generator provides subsequences for easy parallelization.
  *
  * @see <a href="https://www.thesalmons.org/john/random123/papers/random123sc11.pdf">Parallel Random Numbers: As Easy as 1,2,3</a>
- * for details regarding the engine.
  * @since 1.7
  */
 public final class Philox4x32 extends IntProvider implements LongJumpableUniformRandomProvider {
@@ -131,7 +130,8 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     /**
      * Creates a new instance based on an array of int containing, key (first two ints) and
      * the counter (next 4 ints, low bits = first int). The counter is not scrambled and may
-     * be used to create contiguous blocks with size a multiple of 4 ints.
+     * be used to create contiguous blocks with size a multiple of 4 ints. For example,
+     * setting seed[2] = 1 is equivalent to start with seed[2]=0 and calling {@link #next()} 4 times.
      *
      * @param seed an array of size 6 defining key0,key1,counter0,counter1,counter2,counter3.
      *             If the size is smaller, zero values are assumed.

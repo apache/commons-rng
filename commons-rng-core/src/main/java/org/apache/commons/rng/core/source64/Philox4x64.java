@@ -25,11 +25,10 @@ import org.apache.commons.rng.core.util.NumberFactory;
 import java.util.Arrays;
 
 /**
- * This class implements the Philox4x64 128-bit counter-based generator with 10 rounds.
+ * This class implements the Philox4x64 256-bit counter-based generator with 10 rounds.
  * Jumping in the sequence is essentially instantaneous. This generator provides subsequences for easy parallelization.
  *
  * @see <a href="https://www.thesalmons.org/john/random123/papers/random123sc11.pdf">Parallel Random Numbers: As Easy as 1,2,3</a>
- * for details regarding the engine.
  * @since 1.7
  */
 public final class Philox4x64 extends LongProvider implements LongJumpableUniformRandomProvider {
@@ -120,7 +119,8 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     /**
      * Creates a new instance given 6 long numbers containing, key (first two longs) and
      * the counter (next 4, starts at first). The counter is not scrambled and may
-     * be used to create contiguous blocks with size a multiple of 4 longs.
+     * be used to create contiguous blocks with size a multiple of 4 longs. For example,
+     * setting seed[2] = 1 is equivalent to start with seed[2]=0 and calling {@link #next()} 4 times.
      *
      * @param keyAndCounter the first two number are the key and the next 4 number are the counter.
      *                      if size is smaller than 6, the array is padded with 0.
