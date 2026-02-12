@@ -56,7 +56,7 @@ public class ContinuousUniformSampler
         @Override
         public double sample() {
             final double x = super.sample();
-            // Due to rounding using a variate u in the open interval (0,1) with the original
+            // Due to rounding using a variate u in the open interval (lo, hi) with the original
             // algorithm may generate a value at the bound. Thus the bound is explicitly tested
             // and the sample repeated if necessary.
             if (x == getHi() || x == getLo()) {
