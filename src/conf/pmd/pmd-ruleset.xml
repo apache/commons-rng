@@ -142,14 +142,6 @@
       <property name="violationSuppressXPath" value="//ClassDeclaration[matches(@SimpleName, '^.*Builder$')]"/>
     </properties>
   </rule>
-  <rule ref="category/java/codestyle.xml/PrematureDeclaration">
-    <properties>
-      <!-- False positive where minExponent is stored before a possible exit point. -->
-      <property name="violationSuppressXPath"
-        value="./ancestor::ClassDeclaration[@SimpleName='FastLoadedDiceRollerDiscreteSampler'] and
-        ./ancestor::MethodName[@Image='of']"/>
-    </properties>
-  </rule>
   <rule ref="category/java/codestyle.xml/UnnecessaryBoxing">
     <properties>
       <property name="violationSuppressXPath"
