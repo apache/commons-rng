@@ -99,7 +99,12 @@ public class FloatingPointGenerationPerformance {
         // 0x300L = 256 + 512 = 768
         // 0x0ff  = 255
         // This makes a number in the range 1.0 to 2.0 so subtract 1.0
-        return Double.longBitsToDouble(0x3ffL << 52 | source.nextLong() >>> 12) - 1.0;
+        //
+        // Note: This variant using a long constant can be slower:
+        // Double.longBitsToDouble((source.nextLong() >>> 12) | 0x3ff0000000000001L) - 1.0
+        // It matches the performance of nextOpenDoubleUsingBitsToDouble so is not
+        // formally included as a variant.
+        return Double.longBitsToDouble((source.nextLong() >>> 12) | (0x3ffL << 52)) - 1.0;
     }
 
     /**
@@ -118,6 +123,67 @@ public class FloatingPointGenerationPerformance {
     @Benchmark
     public double nextDoubleUsingMultiply53bits(LongSource source) {
         return (source.nextLong() >>> 11) * 0x1.0p-53d; // 1.0 / (1L << 53)
+    }
+
+    // Methods for generation of a double in the open interval (0, 1).
+    // These are similar to the methods above with addition of a 1-bit
+    // at the end of the mantissa to avoid zero.
+
+    /**
+     * @param source the source
+     * @return the double
+     */
+    @Benchmark
+    public double nextOpenDoubleUsingBitsToDouble(LongSource source) {
+        return Double.longBitsToDouble((source.nextLong() >>> 12) | 0x3ff0000000000001L) - 1.0;
+    }
+
+    /**
+     * @param source the source
+     * @return the double
+     */
+    @Benchmark
+    public double nextOpenDoubleUsingMultiply52bits(LongSource source) {
+        return ((source.nextLong() >>> 12) + 0.5) * 0x1.0p-52d;
+    }
+
+    /**
+     * @param source the source
+     * @return the double
+     */
+    @Benchmark
+    public double nextOpenDoubleUsingMultiply53bits(LongSource source) {
+        return ((source.nextLong() >>> 11) | 1) * 0x1.0p-53d;
+    }
+
+    /**
+     * @param source the source
+     * @return the double
+     */
+    @Benchmark
+    public double nextOpenDoubleUsingRejection(LongSource source) {
+        // Methods adding a single trailing 1-bit will return 2^52 possible doubles.
+        // Using rejection of zero allows return of 2^53 - 1 possible doubles.
+        long a;
+        do {
+            a = source.nextLong() >>> 11;
+        } while (a == 0);
+        return a * 0x1.0p-53d;
+    }
+
+    /**
+     * @param source the source
+     * @return the double
+     */
+    @Benchmark
+    public double nextOpenDoubleUsingRecursion(LongSource source) {
+        // Rejection by recursion will cause a stack overflow error if the source
+        // is broken. This uses floating point comparison.
+        final double a = (source.nextLong() >>> 11) * 0x1.0p-53d;
+        if (a == 0.0) {
+            return nextOpenDoubleUsingRejection(source);
+        }
+        return a;
     }
 
     /**
