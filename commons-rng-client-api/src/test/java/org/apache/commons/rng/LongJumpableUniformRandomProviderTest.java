@@ -98,7 +98,7 @@ class LongJumpableUniformRandomProviderTest {
     @MethodSource(value = {"jumpArguments"})
     void testJumps(int size, long seed) {
         assertJumps(size, seed,
-            LongJumpableUniformRandomProvider::jump,
+            JumpableUniformRandomProvider::jump,
             (rng, n) -> rng.jumps().limit(n));
     }
 
