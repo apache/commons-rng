@@ -144,6 +144,18 @@ public class ContinuousSamplersPerformance {
                 sampler = ChengBetaSampler.of(rng, 0.45, 6.7);
             } else if ("ContinuousUniformSampler".equals(samplerType)) {
                 sampler = ContinuousUniformSampler.of(rng, 123.4, 5678.9);
+            } else if ("ContinuousUniformSamplerDouble".equals(samplerType)) {
+                sampler = ContinuousUniformSampler.of(rng, 0, 1);
+            } else if ("ContinuousUniformSamplerOpenDouble".equals(samplerType)) {
+                sampler = ContinuousUniformSampler.of(rng, 0, 1, true);
+            } else if ("UniformOpenDoubleBits".equals(samplerType)) {
+                sampler = new UniformOpenDouble(rng)::sampleUsingBitsToDouble;
+            } else if ("UniformOpenDoubleMultiply".equals(samplerType)) {
+                sampler = new UniformOpenDouble(rng)::sampleUsingMultiply53bits;
+            } else if ("UniformOpenDoubleRejection".equals(samplerType)) {
+                sampler = new UniformOpenDouble(rng)::sampleUsingRejection;
+            } else if ("UniformOpenDoubleRecursion".equals(samplerType)) {
+                sampler = new UniformOpenDouble(rng)::sampleUsingRecursion;
             } else if ("InverseTransformParetoSampler".equals(samplerType)) {
                 sampler = InverseTransformParetoSampler.of(rng, 23.45, 0.1234);
             } else if ("StableSampler".equals(samplerType)) {
@@ -151,6 +163,58 @@ public class ContinuousSamplersPerformance {
             } else if ("TSampler".equals(samplerType)) {
                 sampler = TSampler.of(rng, 1.23);
             }
+        }
+    }
+
+    /**
+     * Specialization to sample from an open interval {@code (0, 1)}.
+     * See RNG-190.
+     */
+    private static final class UniformOpenDouble {
+        /** RNG. */
+        private final UniformRandomProvider source;
+
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        UniformOpenDouble(UniformRandomProvider rng) {
+            this.source = rng;
+        }
+
+        /**
+         * @return the double in (0, 1)
+         */
+        public double sampleUsingBitsToDouble() {
+            return Double.longBitsToDouble((source.nextLong() >>> 12) | 0x3ff0000000000001L) - 1.0;
+        }
+
+        /**
+         * @return the double in (0, 1)
+         */
+        public double sampleUsingMultiply53bits() {
+            return ((source.nextLong() >>> 11) | 1L) * 0x1.0p-53d;
+        }
+
+        /**
+         * @return the double in (0, 1)
+         */
+        public double sampleUsingRejection() {
+            long a;
+            do {
+                a = source.nextLong() >>> 11;
+            } while (a == 0);
+            return a * 0x1.0p-53d;
+        }
+
+        /**
+         * @return the double in (0, 1)
+         */
+        public double sampleUsingRecursion() {
+            final double a = (source.nextLong() >>> 11) * 0x1.0p-53d;
+            if (a == 0.0) {
+                return sampleUsingRecursion();
+            }
+            return a;
         }
     }
 
