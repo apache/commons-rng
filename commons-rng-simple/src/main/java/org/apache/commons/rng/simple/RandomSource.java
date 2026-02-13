@@ -157,8 +157,8 @@ import org.apache.commons.rng.simple.internal.SeedFactory;
  * non-overlapping sequences by copying the generator and then advancing a large number
  * of steps in the generator sequence. Repeated jumps can create a series of
  * child generators that will output non-overlapping sequences over a specified number
- * of outputs. These implementations are identified using the {@link #isJumpable()}
- * and {@link #isLongJumpable()} methods.
+ * of outputs. These implementations are identified using the {@link #isJumpable()},
+ * {@link #isLongJumpable()} and {@link #isArbitrarilyJumpable()} methods.
  * </p>
  * <pre><code>
  *  RandomSource source = RandomSource.XO_RO_SHI_RO_128_SS; // Known to be jumpable.
@@ -800,6 +800,29 @@ public enum RandomSource {
      */
     public boolean isLongJumpable() {
         return isAssignableTo(org.apache.commons.rng.LongJumpableUniformRandomProvider.class);
+    }
+
+    /**
+     * Checks whether the implementing class represented by this random source
+     * supports the {@link org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider
+     * ArbitrarilyJumpableUniformRandomProvider} interface. If {@code true} the instance returned
+     * by {@link #create(RandomSource)} may be cast to the interface; otherwise a class
+     * cast exception will occur.
+     *
+     * <p>Usage example:</p>
+     * <pre><code>
+     *  RandomSource source = ...;
+     *  if (source.isJumpable()) {
+     *      ArbitrarilyJumpableUniformRandomProvider rng =
+     *          (ArbitrarilyJumpableUniformRandomProvider) source.create();
+     *  }
+     * </code></pre>
+     *
+     * @return {@code true} if arbitrarily jumpable
+     * @since 1.7
+     */
+    public boolean isArbitrarilyJumpable() {
+        return isAssignableTo(org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider.class);
     }
 
     /**

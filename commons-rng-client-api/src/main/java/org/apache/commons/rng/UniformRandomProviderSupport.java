@@ -34,6 +34,8 @@ import java.util.function.ToLongFunction;
 final class UniformRandomProviderSupport {
     /** Message for an invalid stream size. */
     private static final String INVALID_STREAM_SIZE = "Invalid stream size: ";
+    /** Message for an invalid jump distance. */
+    private static final String INVALID_JUMP_DISTANCE = "Invalid jump distance: ";
     /** Message for an invalid upper bound (must be positive, finite and above zero). */
     private static final String INVALID_UPPER_BOUND = "Upper bound must be above zero: ";
     /** Message format for an invalid range for lower inclusive and upper exclusive. */
@@ -55,6 +57,22 @@ final class UniformRandomProviderSupport {
     static void validateStreamSize(long size) {
         if (size < 0) {
             throw new IllegalArgumentException(INVALID_STREAM_SIZE + size);
+        }
+    }
+
+    /**
+     * Validate the jump distance.
+     *
+     * <p>Note it is not possible to validate if the jump distance is greater
+     * than the period of the generator as this is unknown.
+     *
+     * @param distance Jump distance.
+     * @throws IllegalArgumentException if {@code distance} is negative, or non-finite.
+     */
+    static void validateJumpDistance(double distance) {
+        // Negation of logic will detect NaN
+        if (!(distance >= 0 && distance <= Double.MAX_VALUE)) {
+            throw new IllegalArgumentException(INVALID_JUMP_DISTANCE + distance);
         }
     }
 

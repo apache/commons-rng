@@ -33,6 +33,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
@@ -361,6 +362,9 @@ class ProvidersCommonParametricTest {
         Assertions.assertEquals(rng instanceof LongJumpableUniformRandomProvider,
                                 originalSource.isLongJumpable(),
                                 "isLongJumpable");
+        Assertions.assertEquals(rng instanceof ArbitrarilyJumpableUniformRandomProvider,
+                                originalSource.isArbitrarilyJumpable(),
+                                "isArbitrarilyJumpable");
         Assertions.assertEquals(rng instanceof SplittableUniformRandomProvider,
                                 originalSource.isSplittable(),
                                 "isSplittable");

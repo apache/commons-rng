@@ -93,6 +93,13 @@ class RandomSourceTest {
     }
 
     @Test
+    void testIsArbitrarilyJumpable() {
+        Assertions.assertFalse(RandomSource.JDK.isArbitrarilyJumpable(), "JDK is not ArbitrarilyJumpable");
+        Assertions.assertFalse(RandomSource.XOR_SHIFT_1024_S_PHI.isArbitrarilyJumpable(), "XOR_SHIFT_1024_S_PHI is not ArbitrarilyJumpable");
+        // TODO: Add a true implementation
+    }
+
+    @Test
     void testIsSplittable() {
         Assertions.assertFalse(RandomSource.JDK.isSplittable(), "JDK is not Splittable");
         Assertions.assertTrue(RandomSource.L32_X64_MIX.isSplittable(), "L32_X64_MIX is Splittable");
