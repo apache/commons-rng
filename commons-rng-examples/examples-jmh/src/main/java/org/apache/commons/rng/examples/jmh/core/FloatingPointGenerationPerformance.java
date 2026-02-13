@@ -99,12 +99,7 @@ public class FloatingPointGenerationPerformance {
         // 0x300L = 256 + 512 = 768
         // 0x0ff  = 255
         // This makes a number in the range 1.0 to 2.0 so subtract 1.0
-        //
-        // Note: This variant using a long constant can be slower:
-        // Double.longBitsToDouble((source.nextLong() >>> 12) | 0x3ff0000000000001L) - 1.0
-        // It matches the performance of nextOpenDoubleUsingBitsToDouble so is not
-        // formally included as a variant.
-        return Double.longBitsToDouble((source.nextLong() >>> 12) | (0x3ffL << 52)) - 1.0;
+        return Double.longBitsToDouble((source.nextLong() >>> 12) | 0x3ff0000000000000L) - 1.0;
     }
 
     /**
