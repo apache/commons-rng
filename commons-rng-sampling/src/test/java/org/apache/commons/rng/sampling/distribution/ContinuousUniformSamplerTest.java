@@ -21,6 +21,8 @@ import org.apache.commons.rng.core.source64.SplitMix64;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * Test for the {@link ContinuousUniformSampler}.
@@ -53,8 +55,14 @@ class ContinuousUniformSamplerTest {
      * Test the sampler excludes the bounds when the underlying generator returns long values
      * that produce the limit of the uniform double output.
      */
-    @Test
-    void testExcludeBounds() {
+    @ParameterizedTest
+    @CsvSource({
+        "3.18, 5.23",
+        "0, 1",
+        "0, 2",
+        "1, 2",
+    })
+    void testExcludeBounds(double low, double high) {
         // A broken RNG that will return in an alternating sequence from 0 up or -1 down.
         // This is either zero bits or all the bits
         final UniformRandomProvider rng = new SplitMix64(0L) {
@@ -76,8 +84,6 @@ class ContinuousUniformSamplerTest {
                 return x << 11;
             }
         };
-        final double low = 3.18;
-        final double high = 5.23;
         final SharedStateContinuousSampler sampler =
             ContinuousUniformSampler.of(rng, low, high, true);
         // Test the sampler excludes the end points
@@ -155,20 +161,34 @@ class ContinuousUniformSamplerTest {
     }
 
     /**
-     * Test the SharedStateSampler implementation.
+     * Test open interval {@code (0, 1)} is within 1 dyadic rational of next double.
      */
     @Test
-    void testSharedStateSampler() {
-        testSharedStateSampler(false);
-        testSharedStateSampler(true);
+    void testOpenInterval01Sample() {
+        final UniformRandomProvider rng1 = RandomAssert.seededRNG();
+        final UniformRandomProvider rng2 = RandomAssert.seededRNG();
+
+        final SharedStateContinuousSampler sampler =
+            ContinuousUniformSampler.of(rng2, 0, 1, true);
+
+        for (int i = 0; i < 20; i++) {
+            Assertions.assertEquals(rng1.nextDouble(), sampler.sample(), 0x1.0p-53);
+        }
     }
 
     /**
      * Test the SharedStateSampler implementation.
-     *
-     * @param excludedBounds Set to true to exclude the bounds.
      */
-    private static void testSharedStateSampler(boolean excludedBounds) {
+    @ParameterizedTest
+    @CsvSource({
+        "3.18, 5.23, false",
+        "0, 1, false",
+        "0, 2, false",
+        "3.18, 5.23, true",
+        "0, 1, true",
+        "0, 2, true",
+    })
+    void testSharedStateSampler(double low, double high, boolean excludeBounds) {
         // Create RNGs that will generate a sample at the limits.
         // This tests the bounds excluded sampler correctly shares state.
         // Do this using a RNG that outputs 0 for the first nextDouble().
@@ -190,10 +210,8 @@ class ContinuousUniformSamplerTest {
                 return y;
             }
         };
-        final double low = 1.23;
-        final double high = 4.56;
         final SharedStateContinuousSampler sampler1 =
-            ContinuousUniformSampler.of(rng1, low, high, excludedBounds);
+            ContinuousUniformSampler.of(rng1, low, high, excludeBounds);
         final SharedStateContinuousSampler sampler2 = sampler1.withUniformRandomProvider(rng2);
         RandomAssert.assertProduceSameSequence(sampler1, sampler2);
     }

@@ -33,15 +33,17 @@ public class ContinuousUniformSampler
     /** The minimum ULP gap for the open interval when the doubles have the opposite sign. */
     private static final int MIN_ULP_OPPOSITE_SIGN = 3;
 
+    /** Underlying source of randomness. */
+    protected final UniformRandomProvider rng;
     /** Lower bound. */
     private final double lo;
     /** Higher bound. */
     private final double hi;
-    /** Underlying source of randomness. */
-    private final UniformRandomProvider rng;
 
     /**
-     * Specialization to sample from an open interval {@code (lo, hi)}.
+     * Specialization to sample from an open interval {@code (lo, hi)} (see RNG-145).
+     *
+     * @since 1.4
      */
     private static final class OpenIntervalContinuousUniformSampler extends ContinuousUniformSampler {
         /**
@@ -68,6 +70,32 @@ public class ContinuousUniformSampler
         @Override
         public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
             return new OpenIntervalContinuousUniformSampler(rng, getLo(), getHi());
+        }
+    }
+
+    /**
+     * Specialization to sample from an open interval {@code (0, 1)} (see RNG-190).
+     *
+     * @since 1.7
+     */
+    private static final class OpenIntervalContinuousUniformSampler01 extends ContinuousUniformSampler {
+        /**
+         * @param rng Generator of uniformly distributed random numbers.
+         */
+        OpenIntervalContinuousUniformSampler01(UniformRandomProvider rng) {
+            super(rng, 0, 1);
+        }
+
+        @Override
+        public double sample() {
+            // Adding a least significant bit before conversion to float.
+            // Output is 2^52 possible rationals.
+            return ((rng.nextLong() >>> 11) | 1L) * 0x1.0p-53d;
+        }
+
+        @Override
+        public SharedStateContinuousSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            return new OpenIntervalContinuousUniformSampler01(rng);
         }
     }
 
@@ -170,6 +198,10 @@ public class ContinuousUniformSampler
             if (!validateOpenInterval(lo, hi)) {
                 throw new IllegalArgumentException("Invalid open interval (" +
                                                     lo + "," + hi + ")");
+            }
+            // Special case for (0, 1)
+            if (lo == 0 && hi == 1) {
+                return new OpenIntervalContinuousUniformSampler01(rng);
             }
             return new OpenIntervalContinuousUniformSampler(rng, lo, hi);
         }

@@ -56,6 +56,10 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.7" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" issue="RNG-190">
+        "ContinuousUniformSampler": Add a special case for the open interval (0, 1)
+        with increased performance.
+      </action>
       <action dev="aherbert" due-to="Jherek Healy" type="add" issue="RNG-188">
         Add Philox4x32 and Philox4x64 random number generators.
       </action>
