@@ -119,7 +119,8 @@
           or @SimpleName='ThreadLocalRandomSource' or @SimpleName='SeedFactory'
           or @SimpleName='Coordinates' or @SimpleName='Hex' or @SimpleName='SpecialMath'
           or @SimpleName='Conversions' or @SimpleName='MixFunctions' or @SimpleName='LXMSupport'
-          or @SimpleName='UniformRandomProviderSupport' or @SimpleName='RandomStreams']"/>
+          or @SimpleName='UniformRandomProviderSupport' or @SimpleName='RandomStreams'
+          or @SimpleName='IntJumpDistances' or @SimpleName='LongJumpDistances']"/>
       <!-- Allow samplers to have only factory constructors -->
       <property name="utilityClassPattern" value="[A-Z][a-zA-Z0-9]+(Utils?|Helper|Sampler)" />
     </properties>

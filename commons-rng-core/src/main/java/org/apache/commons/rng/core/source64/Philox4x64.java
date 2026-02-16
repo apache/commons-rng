@@ -17,21 +17,22 @@
 
 package org.apache.commons.rng.core.source64;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.util.NumberFactory;
 
-import java.util.Arrays;
-
 /**
  * This class implements the Philox4x64 256-bit counter-based generator with 10 rounds.
  *
  * <p>This is a member of the Philox family of generators. Memory footprint is 384 bits
- * and the period is 4*2<sup>256</sup>.</p>
+ * and the period is 2<sup>258</sup>.</p>
  *
  * <p>Jumping in the sequence is essentially instantaneous.
- * This generator provides subsequences for easy parallelization.
+ * This generator provides both subsequences and arbitrary jumps for easy parallelization.
  *
  * <p>References:
  * <ol>
@@ -43,7 +44,8 @@ import java.util.Arrays;
  *
  * @since 1.7
  */
-public final class Philox4x64 extends LongProvider implements LongJumpableUniformRandomProvider {
+public final class Philox4x64 extends LongProvider implements LongJumpableUniformRandomProvider,
+        ArbitrarilyJumpableUniformRandomProvider {
     /** Philox 32-bit mixing constant for counter 0. */
     private static final long PHILOX_M0 = 0xD2E7470EE14C6C93L;
     /** Philox 32-bit mixing constant for counter 1. */
@@ -56,6 +58,13 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     private static final int PHILOX_BUFFER_SIZE = 4;
     /** Number of state variables. */
     private static final int STATE_SIZE = 7;
+    /** The base-2 logarithm of the period. */
+    private static final int LOG_PERIOD = 258;
+    /** The period of 2^258 as a double. */
+    private static final double PERIOD = 0x1.0p258;
+    /** 2^54. Threshold for a double that cannot have the 2 least
+     * significant bits set when converted to a long. */
+    private static final double TWO_POW_54 = 0x1.0p54;
 
     /** Counter 0. */
     private long counter0;
@@ -243,45 +252,169 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
     /**
      * {@inheritDoc}
      *
-     * <p>The jump size is the equivalent of 4*2<sup>128</sup>
+     * <p>The jump size is the equivalent of 2<sup>130</sup>
      * calls to {@link UniformRandomProvider#nextLong() nextLong()}. It can provide
      * up to 2<sup>128</sup> non-overlapping subsequences.</p>
      */
     @Override
     public UniformRandomProvider jump() {
-        final Philox4x64 copy = copy();
+        final Philox4x64 copy = new Philox4x64(this);
         if (++counter2 == 0) {
             counter3++;
         }
-        rand10();
-        resetCachedState();
+        finishJump();
         return copy;
     }
 
     /**
      * {@inheritDoc}
      *
-     * <p>The jump size is the equivalent of 4*2<sup>192</sup> calls to
+     * <p>The jump size is the equivalent of 2<sup>194</sup> calls to
      * {@link UniformRandomProvider#nextLong() nextLong()}. It can provide up to
-     * 2<sup>64</sup> non-overlapping subsequences of length 2<sup>192</sup>; each
+     * 2<sup>64</sup> non-overlapping subsequences of length 2<sup>194</sup>; each
      * subsequence can provide up to 2<sup>64</sup> non-overlapping subsequences of
-     * length 2<sup>128</sup> using the {@link #jump()} method.</p>
+     * length 2<sup>130</sup> using the {@link #jump()} method.</p>
      */
     @Override
     public JumpableUniformRandomProvider longJump() {
-        final Philox4x64 copy = copy();
+        final Philox4x64 copy = new Philox4x64(this);
         counter3++;
-        rand10();
-        resetCachedState();
+        finishJump();
+        return copy;
+    }
+
+    @Override
+    public ArbitrarilyJumpableUniformRandomProvider jump(double distance) {
+        LongJumpDistances.validateJump(distance, PERIOD);
+        // Decompose into an increment for the buffer position and counter
+        final int skip = getBufferPositionIncrement(distance);
+        final long[] increment = getCounterIncrement(distance);
+        return copyAndJump(skip, increment);
+    }
+
+    @Override
+    public ArbitrarilyJumpableUniformRandomProvider jumpPowerOfTwo(int logDistance) {
+        LongJumpDistances.validateJumpPowerOfTwo(logDistance, LOG_PERIOD);
+        // For simplicity this re-uses code to increment the buffer position and counter
+        // when only one or the other is required for a power of 2.
+        // In practice the jump should be much larger than 1 and the necessary regeneration
+        // of the buffer is the most time consuming step.
+        int skip = 0;
+        final long[] increment = new long[PHILOX_BUFFER_SIZE];
+        if (logDistance >= 0) {
+            if (logDistance <= 1) {
+                // The first 2 powers update the buffer position.
+                skip = 1 << logDistance;
+            } else {
+                // Remaining powers update the 256-bit counter
+                final int n = logDistance - 2;
+                // Create the increment.
+                // Start at n / 64 with a 1-bit shifted n % 64
+                increment[n >> 6] = 1L << (n & 0x3f);
+            }
+        }
+        return copyAndJump(skip, increment);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Stream<ArbitrarilyJumpableUniformRandomProvider> jumps(double distance) {
+        LongJumpDistances.validateJump(distance, PERIOD);
+        // Decompose into an increment for the buffer position and counter
+        final int skip = getBufferPositionIncrement(distance);
+        final long[] increment = getCounterIncrement(distance);
+        return Stream.generate(() -> copyAndJump(skip, increment)).sequential();
+    }
+
+    /**
+     * Gets the buffer position increment from the jump distance.
+     *
+     * @param distance Jump distance.
+     * @return the buffer position increment
+     */
+    private static int getBufferPositionIncrement(double distance) {
+        return distance < TWO_POW_54 ?
+            // 2 least significant digits from the integer representation
+            (int)((long) distance) & 0x3 :
+            0;
+    }
+
+    /**
+     * Gets the counter increment from the jump distance.
+     *
+     * @param distance Jump distance.
+     * @return the counter increment
+     */
+    private static long[] getCounterIncrement(double distance) {
+        final long[] increment = new long[PHILOX_BUFFER_SIZE];
+        // The counter is incremented if the distance is above the buffer size
+        // (increment = distance / 4).
+        if (distance >= PHILOX_BUFFER_SIZE) {
+            LongJumpDistances.writeUnsignedInteger(distance * 0.25, increment);
+        }
+        return increment;
+    }
+
+    /**
+     * Copy the generator and advance the internal state. The copy is returned.
+     *
+     * <p>This method: (1) assumes that the arguments have been validated;
+     * and (2) regenerates the output buffer if required.
+     *
+     * @param skip Amount to skip the buffer position in [0, 3].
+     * @param increment Unsigned 256-bit increment, least significant bits first.
+     * @return the copy
+     */
+    private ArbitrarilyJumpableUniformRandomProvider copyAndJump(int skip, long[] increment) {
+        final Philox4x64 copy = new Philox4x64(this);
+
+        // Skip the buffer position forward.
+        // Assumes position is in [0, 4] and skip is less than 4.
+        // Handle rollover but allow position=4 to regenerate buffer on next output call.
+        bufferPosition += skip;
+        if (bufferPosition > PHILOX_BUFFER_SIZE) {
+            bufferPosition -= PHILOX_BUFFER_SIZE;
+            incrementCounter();
+        }
+
+        // Increment the 256-bit counter.
+        // Addition using unsigned int as longs.
+        // Any overflow bit is carried to the next counter.
+        // Unrolled branchless loop for performance.
+        long r;
+        long s;
+        r = (counter0 & 0xffff_ffffL) + (increment[0] & 0xffff_ffffL);
+        s = (counter0 >>> 32) + (increment[0] >>> 32) + (r >>> 32);
+        counter0 = (r & 0xffff_ffffL) | (s << 32);
+
+        r = (counter1 & 0xffff_ffffL) + (increment[1] & 0xffff_ffffL) + (s >>> 32);
+        s = (counter1 >>> 32) + (increment[1] >>> 32) + (r >>> 32);
+        counter1 = (r & 0xffff_ffffL) | (s << 32);
+
+        r = (counter2 & 0xffff_ffffL) + (increment[2] & 0xffff_ffffL) + (s >>> 32);
+        s = (counter2 >>> 32) + (increment[2] >>> 32) + (r >>> 32);
+        counter2 = (r & 0xffff_ffffL) | (s << 32);
+
+        r = (counter3 & 0xffff_ffffL) + (increment[3] & 0xffff_ffffL) + (s >>> 32);
+        s = (counter3 >>> 32) + (increment[3] >>> 32) + (r >>> 32);
+        counter3 = (r & 0xffff_ffffL) | (s << 32);
+
+        finishJump();
         return copy;
     }
 
     /**
-     * Create a copy.
-     *
-     * @return the copy
+     * Finish the jump of this generator. Resets the cached state and regenerates
+     * the output buffer if required.
      */
-    private Philox4x64 copy() {
-        return new Philox4x64(this);
+    private void finishJump() {
+        resetCachedState();
+        // Regenerate the internal buffer only if the buffer position is
+        // within the output buffer. Otherwise regeneration is delayed until
+        // next output. This allows more efficient consecutive jumping when
+        // the buffer is due to be regenerated.
+        if (bufferPosition < PHILOX_BUFFER_SIZE) {
+            rand10();
+        }
     }
 }

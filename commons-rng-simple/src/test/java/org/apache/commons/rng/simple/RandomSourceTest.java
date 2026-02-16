@@ -96,7 +96,7 @@ class RandomSourceTest {
     void testIsArbitrarilyJumpable() {
         Assertions.assertFalse(RandomSource.JDK.isArbitrarilyJumpable(), "JDK is not ArbitrarilyJumpable");
         Assertions.assertFalse(RandomSource.XOR_SHIFT_1024_S_PHI.isArbitrarilyJumpable(), "XOR_SHIFT_1024_S_PHI is not ArbitrarilyJumpable");
-        // TODO: Add a true implementation
+        Assertions.assertTrue(RandomSource.PHILOX_4X32.isArbitrarilyJumpable(), "PHILOX_4X32 is ArbitrarilyJumpable");
     }
 
     @Test

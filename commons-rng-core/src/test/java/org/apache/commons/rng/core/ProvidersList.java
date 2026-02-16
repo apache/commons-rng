@@ -74,6 +74,7 @@ import org.apache.commons.rng.core.source64.L64X256Mix;
 import org.apache.commons.rng.core.source64.MersenneTwister64;
 import org.apache.commons.rng.core.source64.PcgRxsMXs64;
 import org.apache.commons.rng.core.source64.DotyHumphreySmallFastCounting64;
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.SplittableUniformRandomProvider;
@@ -98,6 +99,8 @@ public final class ProvidersList {
     private static final List<JumpableUniformRandomProvider> LIST_JUMP = new ArrayList<>();
     /** List of {@link SplittableUniformRandomProvider} RNGs. */
     private static final List<SplittableUniformRandomProvider> LIST_SPLIT = new ArrayList<>();
+    /** List of {@link ArbitrarilyJumpableUniformRandomProvider} RNGs. */
+    private static final List<ArbitrarilyJumpableUniformRandomProvider> LIST_ARBITRARY = new ArrayList<>();
 
     static {
         // External generator for creating a random seed.
@@ -180,6 +183,9 @@ public final class ProvidersList {
             LIST.stream()
                 .filter(SplittableUniformRandomProvider.class::isInstance)
                 .forEach(rng -> LIST_SPLIT.add((SplittableUniformRandomProvider) rng));
+            LIST.stream()
+                .filter(ArbitrarilyJumpableUniformRandomProvider.class::isInstance)
+                .forEach(rng -> LIST_ARBITRARY.add((ArbitrarilyJumpableUniformRandomProvider) rng));
         } catch (final Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of generators: " + e);
@@ -242,5 +248,15 @@ public final class ProvidersList {
      */
     public static Iterable<SplittableUniformRandomProvider> listSplittable() {
         return Collections.unmodifiableList(LIST_SPLIT);
+    }
+
+    /**
+     * Subclasses that are "parametric" tests can forward the call to
+     * the "@Parameters"-annotated method to this method.
+     *
+     * @return the list of {@link ArbitrarilyJumpableUniformRandomProvider} generators.
+     */
+    public static Iterable<ArbitrarilyJumpableUniformRandomProvider> listArbitrarilyJumpable() {
+        return Collections.unmodifiableList(LIST_ARBITRARY);
     }
 }

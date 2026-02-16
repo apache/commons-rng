@@ -16,14 +16,19 @@
  */
 package org.apache.commons.rng.core.source32;
 
-import java.util.stream.Stream.Builder;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.SplittableRandom;
 import java.util.stream.Stream;
+import java.util.stream.Stream.Builder;
 import org.apache.commons.rng.core.RandomAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class Philox4x32Test {
     // Data from python 3.12.12 using randomgen v2.3.0, e.g.
@@ -243,7 +248,6 @@ public class Philox4x32Test {
         return builder.build();
     }
 
-
     @ParameterizedTest
     @MethodSource
     void testInternalCounter(int[] seed1, int[] seed2) {
@@ -274,22 +278,254 @@ public class Philox4x32Test {
 
     @Test
     void testJumpCounter() {
-        Philox4x32 rng = new Philox4x32(new int[] {1234, 0, -1, 0, -1, 0});
-        rng.jump();
+        Philox4x32 rng1 = new Philox4x32(new int[] {1234, 0, -1, 0, -1, 0});
+        rng1.jump();
         Philox4x32 rng2 = new Philox4x32(new int[] {1234, 0, -1, 0, 0, 1});
-        RandomAssert.assertNextIntEquals(10, rng, rng2);
+        RandomAssert.assertNextIntEquals(10, rng1, rng2);
 
-        rng = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 0});
-        rng.jump();
+        rng1 = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 0});
+        rng1.jump();
         rng2 = new Philox4x32(new int[] {1234, 0, -1, -1, 0, 1});
-        RandomAssert.assertNextLongEquals(10, rng, rng2);
+        RandomAssert.assertNextIntEquals(10, rng1, rng2);
     }
 
     @Test
     void testLongJumpCounter() {
-        Philox4x32 rng = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 0});
-        rng.longJump();
-        Philox4x32 rng2 = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 1});
-        RandomAssert.assertNextIntEquals(10, rng, rng2);
+        final Philox4x32 rng1 = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 0});
+        rng1.longJump();
+        final Philox4x32 rng2 = new Philox4x32(new int[] {1234, 0, -1, -1, -1, 1});
+        RandomAssert.assertNextIntEquals(10, rng1, rng2);
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0x1.0p130, 0x1.0p456, Double.MAX_VALUE})
+    void testJumpThrowsWithInvalidDistance(double distance) {
+        final Philox4x32 rng = new Philox4x32(new int[] {1234});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.jump(distance));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {130, 456, Integer.MAX_VALUE})
+    void testJumpPowerOfTwoThrowsWithInvalidDistance(int logDistance) {
+        final Philox4x32 rng = new Philox4x32(new int[] {1234});
+        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.jumpPowerOfTwo(logDistance));
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "testJump")
+    void testArbitraryJumpMatchesJump(int[] seed, int[] ignored, int[] ignored2) {
+        for (int i = 0; i <= 4; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed), i);
+            rng1.jump();
+            rng2.jump(0x1.0p66);
+            RandomAssert.assertNextIntEquals(10, rng1, rng2);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "testJump")
+    void testArbitraryJumpPowerOfTwoMatchesJump(int[] seed, int[] ignored, int[] ignored2) {
+        for (int i = 0; i <= 4; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed), i);
+            rng1.jump();
+            rng2.jumpPowerOfTwo(66);
+            RandomAssert.assertNextIntEquals(10, rng1, rng2);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "testJump")
+    void testArbitraryJumpMatchesLongJump(int[] seed, int[] ignored, int[] ignored2) {
+        for (int i = 0; i <= 4; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed), i);
+            rng1.longJump();
+            rng2.jump(0x1.0p98);
+            RandomAssert.assertNextIntEquals(10, rng1, rng2);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource(value = "testJump")
+    void testArbitraryJumpPowerOfTwoMatchesLongJump(int[] seed, int[] ignored, int[] ignored2) {
+        for (int i = 0; i <= 4; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed), i);
+            rng1.longJump();
+            rng2.jumpPowerOfTwo(98);
+            RandomAssert.assertNextIntEquals(10, rng1, rng2);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testArbitraryJumpCounter(int[] seed1, double distance, int[] seed2) {
+        // Test the buffer in a used and partially used state
+        for (int i = 0; i < 2; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed1), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed2), i);
+            rng1.jump(distance);
+            RandomAssert.assertNextLongEquals(10, rng1, rng2,
+                () -> String.format("seed=%s, distance=%s", Arrays.toString(seed1), distance));
+        }
+    }
+
+    static Stream<Arguments> testArbitraryJumpCounter() {
+        // Test of counter increment. Note that the value of -1 is all bits set and incrementing
+        // will carry a 1-bit to the next counter up.
+        final int key0 = (int) 67280421310721L;
+        final int key1 = (int) (67280421310721L >>> 32);
+
+        final Stream.Builder<Arguments> builder = Stream.builder();
+
+        // Any power of two jump can be expressed as a double
+        testArbitraryJumpPowerOfTwoCounter().map(Arguments::get).forEach(objects -> {
+            final int logDistance = (int) objects[1];
+            final double distance = Math.scalb(1.0, logDistance);
+            builder.add(Arguments.of(objects[0], distance, objects[2]));
+        });
+
+        // Largest allowed jump
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, Math.nextDown(0x1.0p130),
+                                 new int[] {key0, key1, 0, 0, -1 << 11, -1}));
+
+        // Arbitrary jumps
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 0x1.0p99 + 0x1.0p73,
+                                 new int[] {key0, key1, 0, 0, 1 << 7, 2}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, -1, 0}, 0x1.0p99 + 0x1.0p73,
+                                 new int[] {key0, key1, 0, 0, -1 + (1 << 7), 3}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, -1, 0}, 0x1.0p73 + 0x1.0p23,
+                                 new int[] {key0, key1, 1 << 21, 0, -1 + (1 << 7), 1}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 1234 * 4 + 5678 * 0x1.0p34,
+                                 new int[] {key0, key1, 1234, 5678, 0, 0}));
+
+        final SplittableRandom rng = new SplittableRandom();
+        for (int i = 0; i < 10; i++) {
+            final int[] counter1 = rng.ints(4).toArray();
+            // Jump in range [0, 2^128): 128 - 63 = 65
+            final double counterDistance = Math.abs(Math.scalb((double) rng.nextLong(), rng.nextInt(65)));
+            final BigInteger jump = new BigDecimal(counterDistance).toBigInteger();
+            final int[] counter2 = add(counter1, jump);
+            builder.add(Arguments.of(new int[] {key0, key1, counter1[0], counter1[1], counter1[2], counter1[3]},
+                                     jump.doubleValue() * 4,
+                                     new int[] {key0, key1, counter2[0], counter2[1], counter2[2], counter2[3]}));
+        }
+        return builder.build();
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testArbitraryJumpPowerOfTwoCounter(int[] seed1, int logDistance, int[] seed2) {
+        // Test the buffer in a used and partially used state
+        for (int i = 0; i < 2; i++) {
+            final Philox4x32 rng1 = skip(new Philox4x32(seed1), i);
+            final Philox4x32 rng2 = skip(new Philox4x32(seed2), i);
+            rng1.jumpPowerOfTwo(logDistance);
+            RandomAssert.assertNextLongEquals(10, rng1, rng2,
+                () -> String.format("seed=%s, logDistance=%d", Arrays.toString(seed1), logDistance));
+        }
+    }
+
+    static Stream<Arguments> testArbitraryJumpPowerOfTwoCounter() {
+        // Test of counter increment. Note that the value of -1 is all bits set and incrementing
+        // will carry a 1-bit to the next counter up.
+        final int key0 = (int) 67280421310721L;
+        final int key1 = (int) (67280421310721L >>> 32);
+
+        final Stream.Builder<Arguments> builder = Stream.builder();
+        // Jumps for each part of the counter
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 2,
+                                 new int[] {key0, key1, 1, 0, 0, 0}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 32,
+                                 new int[] {key0, key1, 1 << 30, 0, 0, 0}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 53,
+                                 new int[] {key0, key1, 0, 1 << 19, 0, 0}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 75,
+                                 new int[] {key0, key1, 0, 0, 1 << 9, 0}));
+        builder.add(Arguments.of(new int[] {key0, key1, 0, 0, 0, 0}, 99,
+                                 new int[] {key0, key1, 0, 0, 0, 2}));
+        // Largest jump does not wrap the overflow bit. It should be lost
+        // to the unrepresented 129-th bit of the counter.
+        builder.add(Arguments.of(new int[] {key0, key1, -1, -1, -1, -1}, 129,
+                                 new int[] {key0, key1, -1, -1, -1, -1 + (1 << 31)}));
+        // Roll-over by incrementing the counter by 1.
+        // Note that the Philox counter is incremented by 1 upon first call to regenerate
+        // the output buffer. The test aims to use the jump to rollover the bits
+        // so the counter must be initialised 1 before the rollover threshold,
+        // i.e. -2 + 1 (increment) + 1 (jump) == 0 + rollover.
+        // The test uses a variable skip forward of the generator to cover cases of counter
+        // increment before or after jump increment.
+        builder.add(Arguments.of(new int[] {key0, key1, -2,  0,  0,  0}, 2,
+                                 new int[] {key0, key1, -1,  0,  0,  0}));
+        builder.add(Arguments.of(new int[] {key0, key1, -2, -1,  0,  0}, 2,
+                                 new int[] {key0, key1, -1, -1,  0,  0}));
+        builder.add(Arguments.of(new int[] {key0, key1, -2, -1, -1,  0}, 2,
+                                 new int[] {key0, key1, -1, -1, -1,  0}));
+        builder.add(Arguments.of(new int[] {key0, key1, -2, -1, -1, -1}, 2,
+                                 new int[] {key0, key1, -1, -1, -1, -1}));
+        // Arbitrary jumps
+        final SplittableRandom rng = new SplittableRandom();
+        for (int i = 0; i < 10; i++) {
+            final int[] counter1 = rng.ints(4).toArray();
+            // Jump in range [0, 2^128)
+            final int logDistance = rng.nextInt(128);
+            final BigInteger jump = BigInteger.ONE.shiftLeft(logDistance);
+            final int[] counter2 = add(counter1, jump);
+            builder.add(Arguments.of(new int[] {key0, key1, counter1[0], counter1[1], counter1[2], counter1[3]},
+                                     logDistance + 2,
+                                     new int[] {key0, key1, counter2[0], counter2[1], counter2[2], counter2[3]}));
+        }
+        return builder.build();
+    }
+
+    /**
+     * Test arbitrary jumps with the internal state of the generator anywhere in the
+     * output buffer. The jump targets both the counter increment (distance [4, 2^51))
+     * and the output buffer position (distance [0, 4)).
+     */
+    @ParameterizedTest
+    @MethodSource
+    void testArbitraryJumpCounterWithSkip(int[] seed1, long distance, int[] seed2) {
+        Assertions.assertNotEquals((double) distance, distance + 1.0,
+            "Small distance required to allow jumping within the buffer position");
+        // Skip within the generator output buffer
+        for (int i = 0; i <= 4; i++) {
+            // Jump within the generator output buffer
+            for (int j = 0; j <= 4; j++) {
+                final Philox4x32 rng1 = skip(new Philox4x32(seed1), i);
+                final Philox4x32 rng2 = skip(new Philox4x32(seed2), i + j);
+                rng1.jump(distance + j);
+                RandomAssert.assertNextIntEquals(10, rng1, rng2,
+                    () -> String.format("seed=%s, distance=%s", Arrays.toString(seed1), distance));
+            }
+        }
+    }
+
+    static Stream<Arguments> testArbitraryJumpCounterWithSkip() {
+        final int key0 = (int) 67280421310721L;
+        final int key1 = (int) (67280421310721L >>> 32);
+
+        final Stream.Builder<Arguments> builder = Stream.builder();
+        final SplittableRandom rng = new SplittableRandom();
+        for (int i = 0; i < 5; i++) {
+            final int[] counter1 = rng.ints(4).toArray();
+            // Jump in range [0, 2^51)
+            final long counterDistance = rng.nextLong(1L << 51);
+            final BigInteger jump = BigInteger.valueOf(counterDistance);
+            final int[] counter2 = add(counter1, jump);
+            builder.add(Arguments.of(new int[] {key0, key1, counter1[0], counter1[1], counter1[2], counter1[3]},
+                                     counterDistance * 4,
+                                     new int[] {key0, key1, counter2[0], counter2[1], counter2[2], counter2[3]}));
+        }
+        return builder.build();
+    }
+
+    private static int[] add(int[] counter, BigInteger jump) {
+        final BigInteger sum = IntJumpDistancesTest.toBigInteger(counter).add(jump);
+        final int[] value = IntJumpDistancesTest.toIntArray(sum);
+        // Return result with the same counter size
+        return Arrays.copyOf(value, counter.length);
     }
 }

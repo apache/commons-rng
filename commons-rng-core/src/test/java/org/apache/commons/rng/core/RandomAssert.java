@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
+import java.util.function.Supplier;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
@@ -231,6 +231,26 @@ public final class RandomAssert {
 
     /**
      * Assert that the two random generators produce the same output for
+     * {@link UniformRandomProvider#nextInt()} over the given number of cycles.
+     * The {@code message} is appended to the details of the generators and the
+     * cycle output position.
+     *
+     * @param cycles Number of cycles.
+     * @param rng1 Random generator 1.
+     * @param rng2 Random generator 2.
+     * @param message Message.
+     */
+    public static void assertNextIntEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2,
+                                           Supplier<String> message) {
+        for (int i = 0; i < cycles; i++) {
+            final int index = i;
+            Assertions.assertEquals(rng1.nextInt(), rng2.nextInt(),
+                () -> String.format("%s vs %s: Value at position %d. %s", rng1, rng2, index, message.get()));
+        }
+    }
+
+    /**
+     * Assert that the two random generators produce the same output for
      * {@link UniformRandomProvider#nextLong()} over the given number of cycles.
      *
      * @param cycles Number of cycles.
@@ -242,6 +262,26 @@ public final class RandomAssert {
             final int index = i;
             Assertions.assertEquals(rng1.nextLong(), rng2.nextLong(),
                 () -> String.format("%s vs %s: Value at position %d", rng1, rng2, index));
+        }
+    }
+
+    /**
+     * Assert that the two random generators produce the same output for
+     * {@link UniformRandomProvider#nextLong()} over the given number of cycles.
+     * The {@code message} is appended to the details of the generators and the
+     * cycle output position.
+     *
+     * @param cycles Number of cycles.
+     * @param rng1 Random generator 1.
+     * @param rng2 Random generator 2.
+     * @param message Message.
+     */
+    public static void assertNextLongEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2,
+                                            Supplier<String> message) {
+        for (int i = 0; i < cycles; i++) {
+            final int index = i;
+            Assertions.assertEquals(rng1.nextLong(), rng2.nextLong(),
+                () -> String.format("%s vs %s: Value at position %d. %s", rng1, rng2, index, message.get()));
         }
     }
 

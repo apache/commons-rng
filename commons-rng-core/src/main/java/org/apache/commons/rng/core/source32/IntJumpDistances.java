@@ -1,0 +1,161 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.rng.core.source32;
+
+/**
+ * Utility for working with positive integer jump distances represented
+ * as 32-bit integers.
+ *
+ * @since 1.7
+ */
+final class IntJumpDistances {
+    /** 2^63. */
+    private static final double TWO_POW_63 = 0x1.0p63;
+    /** The value of the exponent for NaN when the exponent is
+     * extracted and scaled to account for multiplying the
+     * floating-point 52-bit mantissa to an integer. 1024 - 52 = 972. */
+    private static final int NAN_EXP = 972;
+    /** Mask to extract the 52-bit mantissa from a long representation of a double. */
+    private static final long MANTISSA_MASK = 0x000f_ffff_ffff_ffffL;
+
+    /** Class contains only static methods. */
+    private IntJumpDistances() {}
+
+    /**
+     * Validate the jump {@code distance} is valid within the given {@code period}
+     * of the cycle.
+     *
+     * @param distance Jump distance.
+     * @param period Cycle period.
+     * @throws IllegalArgumentException if {@code distance} is negative,
+     * or is greater than the {@code period}.
+     */
+    static void validateJump(double distance, double period) {
+        // Logic negation will detect NaN
+        if (!(distance < period && distance >= 0)) {
+            throw new IllegalArgumentException(
+                String.format("Invalid jump distance: %s (Period: %s)", distance, period));
+        }
+    }
+
+    /**
+     * Validate the jump distance of 2<sup>{@code logDistance}</sup> is valid within the
+     * given cycle period of 2<sup>{@code logPeriod}</sup>.
+     *
+     * <p>Note: Negative {@code logDistance} is allowed as the distance is {@code >= 0}.
+     *
+     * @param logDistance Base-2 logarithm of the distance to jump forward with the state cycle.
+     * @param logPeriod Base-2 logarithm of the cycle period.
+     * @throws IllegalArgumentException if {@code logDistance >= logPeriod}.
+     */
+    static void validateJumpPowerOfTwo(int logDistance, int logPeriod) {
+        if (logDistance >= logPeriod) {
+            throw new IllegalArgumentException(
+                String.format("Invalid jump distance: 2^%d (Period: 2^%d)", logDistance, logPeriod));
+        }
+    }
+
+    /**
+     * Write the {@code value} to an unsigned integer representation. Any fractional part
+     * of the floating-point value is discarded. The integer part of the value must be
+     * positive or an exception is raised.
+     *
+     * <p>The 53-bit significand of the {@code value} is converted to an integer, shifted
+     * to align with a 32-bit boundary and written to the provided {@code result}, ordered
+     * with the least significant bits first.
+     *
+     * <p>No bounds checking is performed. The {@code result} array is assumed to have a
+     * length of at least 2 to store an unshifted 53-bit significand. The required array
+     * size for values larger than 2^53 can be computed using:
+     *
+     * <pre>
+     * 1 + Math.getExponent(value) / 32
+     * </pre>
+     *
+     * <p>Parts of the array not used by the significand are unchanged. It is recommended
+     * to use a newly created array for the result.
+     *
+     * <p>Note: For jump distances validated as less than the period of an output cycle
+     * the result array length can be preallocated based on the maximum possible length.
+     *
+     * @param value Value
+     * @param result the integer representation
+     * @throws IllegalArgumentException if the {@code value} is negative or non-finite.
+     */
+    static void writeUnsignedInteger(double value, int[] result) {
+        if (value < TWO_POW_63) {
+            // Case for representable integers
+            final long a = (long) value;
+            if (a < 0) {
+                throw new IllegalArgumentException(
+                    "Integer value is negative: " + value);
+            }
+            // Split
+            result[0] = (int) a;
+            result[1] = (int) (a >>> 32);
+            return;
+        }
+
+        // Large positive integer, infinity or NaN.
+        // Extract significand (with implicit leading 1 bit) and exponent.
+        // Note: sign is +1; exponent is non-zero.
+        // See IEEE 754 format conversion description in
+        // Double.longBitsToDouble.
+        final long bits = Double.doubleToRawLongBits(value);
+        final int exponent = (int) (bits >> 52) - 1075;
+
+        // Check if finite
+        if (exponent == NAN_EXP) {
+            throw new IllegalArgumentException(
+                "Double value is not finite: " + value);
+        }
+
+        final long significand = (bits & MANTISSA_MASK) | (1L << 52);
+
+        // value == significand * 2**exponent
+
+        // Return the offset to the first integer, and then the shifted significand.
+        // offset = exponent / 32
+        final int offset = exponent >> 5;
+
+        // Compute the remaining shift from the offset exponent (in [0, 31]).
+        final int shift = exponent - (offset << 5);
+        final int lo = (int) significand;
+        final int hi = (int) (significand >>> 32);
+
+        // Write the low and high parts of the 53-bit significand
+        // across 3 output int values.
+        // Note the opposite of a left shift is an unsigned right shift
+        // where only the lowest 5 bits of the shift are used:
+        // x << n : x >>> (32 - n) == x >>> -n
+        // Mask the bits to right shift. This handles shift == 0.
+        final int mask = ~(-1 >>> shift);
+        final int v1 = lo << shift;
+        final int v2 = ((lo & mask) >>> -shift) | (hi << shift);
+        final int v3 = (hi & mask) >>> -shift;
+
+        // Record the result assuming the result array is large enough
+        // to store the leading most significant bit.
+        // The 53-bit significand will write to 2 or 3 output positions
+        // so we must check if v3 contains the significant bit.
+        result[offset] = v1;
+        result[offset + 1] = v2;
+        if (v3 != 0) {
+            result[offset + 2] = v3;
+        }
+    }
+}

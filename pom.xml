@@ -303,6 +303,7 @@
               <roots>
                 <!-- Path to configuration in the JSON config file -->
                 <root>1.5</root>
+                <root>1.7</root>
               </roots>
             </configurationFile>
           </analysisConfigurationFiles>

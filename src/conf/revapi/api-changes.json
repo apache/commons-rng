@@ -19,5 +19,21 @@
         ]
       }
     }
+  ],
+  "1.7": [
+    {
+      "extension": "revapi.differences",
+      "id": "intentional-api-changes",
+      "configuration": {
+        "differences": [
+          {
+            "ignore": true,
+            "code": "java.class.externalClassExposedInAPI",
+            "new": "interface org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider",
+            "justification": "Arbitrary jump support was added to the client API and can be used by other modules."
+          }
+        ]
+      }
+    }
   ]
 }

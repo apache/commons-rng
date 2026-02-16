@@ -22,7 +22,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Arrays;
-
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.RandomProviderState;
@@ -32,7 +32,7 @@ import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.core.source64.LongProvider;
 
 /**
- * Tests which all {@link JumpableUniformRandomProvider} generators must pass.
+ * Tests which all jumpable generators must pass.
  */
 class JumpableProvidersParametricTest {
     /** The default state for the IntProvider. */
@@ -52,6 +52,15 @@ class JumpableProvidersParametricTest {
      */
     private static Iterable<JumpableUniformRandomProvider> getJumpableProviders() {
         return ProvidersList.listJumpable();
+    }
+
+    /**
+     * Gets the list of arbitrarily Jumpable generators.
+     *
+     * @return the list
+     */
+    private static Iterable<ArbitrarilyJumpableUniformRandomProvider> getArbitrarilyJumpableProviders() {
+        return ProvidersList.listArbitrarilyJumpable();
     }
 
     /**
@@ -86,13 +95,31 @@ class JumpableProvidersParametricTest {
     }
 
     /**
+     * Test that the random generator returned from the long jump is a new instance of the same class.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpReturnsACopy(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertJumpReturnsACopy(() -> generator.jump(42), generator);
+    }
+
+    /**
+     * Test that the random generator returned from the long jump is a new instance of the same class.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpPowerOfTwoReturnsACopy(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertJumpReturnsACopy(() -> generator.jumpPowerOfTwo(7), generator);
+    }
+
+    /**
      * Assert that the random generator returned from the jump function is a new instance of the same class.
      *
      * @param jumpFunction Jump function to test.
      * @param generator RNG under test.
      */
     private static void assertJumpReturnsACopy(TestJumpFunction jumpFunction,
-                                               JumpableUniformRandomProvider generator) {
+                                               UniformRandomProvider generator) {
         final UniformRandomProvider copy = jumpFunction.jump();
         Assertions.assertNotSame(generator, copy, () -> generator + ": The copy instance should be a different object");
         Assertions.assertEquals(generator.getClass(), copy.getClass(), () -> generator + ": The copy instance should be the same class");
@@ -119,6 +146,26 @@ class JumpableProvidersParametricTest {
     }
 
     /**
+     * Test that the random generator state of the copy instance returned from the arbitrary jump
+     * matches the input state.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpCopyMatchesPreJumpState(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertCopyMatchesPreJumpState(() -> generator.jump(42), generator);
+    }
+
+    /**
+     * Test that the random generator state of the copy instance returned from the arbitrary jump
+     * matches the input state.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpPowerOfTwoCopyMatchesPreJumpState(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertCopyMatchesPreJumpState(() -> generator.jumpPowerOfTwo(7), generator);
+    }
+
+    /**
      * Assert that the random generator state of the copy instance returned from the jump
      * function matches the input state.
      *
@@ -138,7 +185,7 @@ class JumpableProvidersParametricTest {
      * @param generator RNG under test.
      */
     private static void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction,
-                                                      JumpableUniformRandomProvider generator) {
+                                                      UniformRandomProvider generator) {
         Assumptions.assumeTrue(generator instanceof RestorableUniformRandomProvider, () -> generator + ": Not a restorable RNG");
 
         for (int repeats = 0; repeats < 2; repeats++) {
@@ -183,6 +230,26 @@ class JumpableProvidersParametricTest {
     }
 
     /**
+     * Test that an arbitrary jump resets the state of the default implementation of a generator in
+     * {@link IntProvider} and {@link LongProvider}.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpResetsDefaultState(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertJumpResetsDefaultState(() -> generator.jump(42), generator);
+    }
+
+    /**
+     * Test that an arbitrary jump resets the state of the default implementation of a generator in
+     * {@link IntProvider} and {@link LongProvider}.
+     */
+    @ParameterizedTest
+    @MethodSource("getArbitrarilyJumpableProviders")
+    void testArbitraryJumpPowerOfTwoResetsDefaultState(ArbitrarilyJumpableUniformRandomProvider generator) {
+        assertJumpResetsDefaultState(() -> generator.jumpPowerOfTwo(7), generator);
+    }
+
+    /**
      * Assert the jump resets the specified number of bytes of the state. The bytes are
      * checked from the end of the saved state.
      *
@@ -193,7 +260,7 @@ class JumpableProvidersParametricTest {
      * @param generator RNG under test.
      */
     private static void assertJumpResetsDefaultState(TestJumpFunction jumpFunction,
-                                                     JumpableUniformRandomProvider generator) {
+                                                     UniformRandomProvider generator) {
         byte[] expected;
         if (generator instanceof IntProvider) {
             expected = INT_PROVIDER_STATE;
