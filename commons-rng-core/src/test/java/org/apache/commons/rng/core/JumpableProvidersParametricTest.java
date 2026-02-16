@@ -64,7 +64,7 @@ class JumpableProvidersParametricTest {
     private static TestJumpFunction getLongJumpFunction(JumpableUniformRandomProvider generator) {
         Assumptions.assumeTrue(generator instanceof LongJumpableUniformRandomProvider, "No long jump function");
         final LongJumpableUniformRandomProvider rng2 = (LongJumpableUniformRandomProvider) generator;
-        return rng2::jump;
+        return rng2::longJump;
     }
 
     /**
