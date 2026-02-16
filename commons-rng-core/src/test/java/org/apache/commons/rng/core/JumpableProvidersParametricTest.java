@@ -94,8 +94,8 @@ class JumpableProvidersParametricTest {
     private static void assertJumpReturnsACopy(TestJumpFunction jumpFunction,
                                                JumpableUniformRandomProvider generator) {
         final UniformRandomProvider copy = jumpFunction.jump();
-        Assertions.assertNotSame(generator, copy, "The copy instance should be a different object");
-        Assertions.assertEquals(generator.getClass(), copy.getClass(), "The copy instance should be the same class");
+        Assertions.assertNotSame(generator, copy, () -> generator + ": The copy instance should be a different object");
+        Assertions.assertEquals(generator.getClass(), copy.getClass(), () -> generator + ": The copy instance should be the same class");
     }
 
     /**
@@ -139,7 +139,7 @@ class JumpableProvidersParametricTest {
      */
     private static void assertCopyMatchesPreJumpState(TestJumpFunction jumpFunction,
                                                       JumpableUniformRandomProvider generator) {
-        Assumptions.assumeTrue(generator instanceof RestorableUniformRandomProvider, "Not a restorable RNG");
+        Assumptions.assumeTrue(generator instanceof RestorableUniformRandomProvider, () -> generator + ": Not a restorable RNG");
 
         for (int repeats = 0; repeats < 2; repeats++) {
             // Exercise the generator.
@@ -150,7 +150,7 @@ class JumpableProvidersParametricTest {
             generator.nextBoolean();
 
             final RandomProviderState preJumpState = ((RestorableUniformRandomProvider) generator).saveState();
-            Assumptions.assumeTrue(preJumpState instanceof RandomProviderDefaultState, "Not a recognized state");
+            Assumptions.assumeTrue(preJumpState instanceof RandomProviderDefaultState, () -> generator + ": Not a recognized state");
 
             final UniformRandomProvider copy = jumpFunction.jump();
 
@@ -158,7 +158,7 @@ class JumpableProvidersParametricTest {
             final RandomProviderDefaultState expected = (RandomProviderDefaultState) preJumpState;
             final RandomProviderDefaultState actual = (RandomProviderDefaultState) copyState;
             Assertions.assertArrayEquals(expected.getState(), actual.getState(),
-                "The copy instance state should match the state of the original");
+                () -> generator + ": The copy instance state should match the state of the original");
         }
     }
 
@@ -200,7 +200,7 @@ class JumpableProvidersParametricTest {
         } else if (generator instanceof LongProvider) {
             expected = LONG_PROVIDER_STATE;
         } else {
-            throw new AssertionError("Unsupported RNG");
+            throw new AssertionError("Unsupported RNG: " + generator);
         }
         final int stateSize = expected.length;
         for (int repeats = 0; repeats < 2; repeats++) {
@@ -217,13 +217,13 @@ class JumpableProvidersParametricTest {
             final RandomProviderState postJumpState = ((RestorableUniformRandomProvider) generator).saveState();
             final byte[] actual = ((RandomProviderDefaultState) postJumpState).getState();
 
-            Assumptions.assumeTrue(actual.length >= stateSize, "Implementation has removed default state");
+            Assumptions.assumeTrue(actual.length >= stateSize, () -> generator + ": Implementation has removed default state");
 
             // The implementation requires that any sub-class state is prepended to the
             // state thus the default state is at the end.
             final byte[] defaultState = Arrays.copyOfRange(actual, actual.length - stateSize, actual.length);
             Assertions.assertArrayEquals(expected, defaultState,
-                "The jump should reset the default state to zero");
+                () -> generator + ": The jump should reset the default state to zero");
         }
     }
 

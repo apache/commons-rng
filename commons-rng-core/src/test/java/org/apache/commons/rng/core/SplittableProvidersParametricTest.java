@@ -95,7 +95,7 @@ class SplittableProvidersParametricTest {
     @ParameterizedTest
     @MethodSource("getSplittableProviders")
     void testSplitThrowsWithNullSource(SplittableUniformRandomProvider generator) {
-        Assertions.assertThrows(NullPointerException.class, () -> generator.split(null));
+        Assertions.assertThrows(NullPointerException.class, () -> generator.split(null), generator::toString);
     }
 
     /**
@@ -125,8 +125,8 @@ class SplittableProvidersParametricTest {
     private static void assertSplitReturnsANewInstance(UnaryOperator<SplittableUniformRandomProvider> splitFunction,
                                                        SplittableUniformRandomProvider generator) {
         final UniformRandomProvider child = splitFunction.apply(generator);
-        Assertions.assertNotSame(generator, child, "The child instance should be a different object");
-        Assertions.assertEquals(generator.getClass(), child.getClass(), "The child instance should be the same class");
+        Assertions.assertNotSame(generator, child, () -> generator + ": The child instance should be a different object");
+        Assertions.assertEquals(generator.getClass(), child.getClass(), () -> generator + ": The child instance should be the same class");
         RandomAssert.assertNextLongNotEquals(10, generator, child);
     }
 
@@ -156,17 +156,17 @@ class SplittableProvidersParametricTest {
     void testSplitsMethodsUseSameSpliterator(SplittableUniformRandomProvider generator) {
         final long size = 10;
         final Spliterator<SplittableUniformRandomProvider> s = generator.splits(size, generator).spliterator();
-        Assertions.assertEquals(s.getClass(), generator.splits().spliterator().getClass());
-        Assertions.assertEquals(s.getClass(), generator.splits(size).spliterator().getClass());
-        Assertions.assertEquals(s.getClass(), generator.splits(ThreadLocalGenerator.INSTANCE).spliterator().getClass());
+        Assertions.assertEquals(s.getClass(), generator.splits().spliterator().getClass(), generator::toString);
+        Assertions.assertEquals(s.getClass(), generator.splits(size).spliterator().getClass(), generator::toString);
+        Assertions.assertEquals(s.getClass(), generator.splits(ThreadLocalGenerator.INSTANCE).spliterator().getClass(), generator::toString);
     }
 
     @ParameterizedTest
     @MethodSource("getSplittableProviders")
     void testSplitsSize(SplittableUniformRandomProvider generator) {
         for (final long size : new long[] {0, 1, 7, 13}) {
-            Assertions.assertEquals(size, generator.splits(size).count(), "splits");
-            Assertions.assertEquals(size, generator.splits(size, ThreadLocalGenerator.INSTANCE).count(), "splits with source");
+            Assertions.assertEquals(size, generator.splits(size).count(), () -> generator + ": splits");
+            Assertions.assertEquals(size, generator.splits(size, ThreadLocalGenerator.INSTANCE).count(), () -> generator + ": splits with source");
         }
     }
 
@@ -208,10 +208,10 @@ class SplittableProvidersParametricTest {
             Assertions.assertEquals(seed | 1, RandomStreamsTestHelper.createSeed(source));
 
             Stream<SplittableUniformRandomProvider> stream = generator.splits(size, source);
-            Assertions.assertFalse(stream.isParallel(), "Initial stream should be sequential");
+            Assertions.assertFalse(stream.isParallel(), () -> generator + ": Initial stream should be sequential");
             if (parallel) {
                 stream = stream.parallel();
-                Assertions.assertTrue(stream.isParallel(), "Stream should be parallel");
+                Assertions.assertTrue(stream.isParallel(), () -> generator + ": Stream should be parallel");
             }
 
             // Check the instance is a new object of the same type.
@@ -219,11 +219,11 @@ class SplittableProvidersParametricTest {
             final Set<SplittableUniformRandomProvider> observed = ConcurrentHashMap.newKeySet();
             observed.add(generator);
             stream.forEach(r -> {
-                Assertions.assertTrue(observed.add(r), "Instance should be unique");
-                Assertions.assertEquals(generator.getClass(), r.getClass());
+                Assertions.assertTrue(observed.add(r), () -> generator + ": Instance should be unique");
+                Assertions.assertEquals(generator.getClass(), r.getClass(), generator::toString);
             });
             // Note: observed contains the original generator so subtract 1
-            Assertions.assertEquals(size, observed.size() - 1);
+            Assertions.assertEquals(size, observed.size() - 1, generator::toString);
 
             // Test instances generate different values.
             // The only randomness is from the stream position.
@@ -240,7 +240,7 @@ class SplittableProvidersParametricTest {
             // half the generators. This will spot errors where all generators are
             // the same.
             Assertions.assertTrue(values.length > size / 2,
-                () -> "splits did not seed randomness from the stream position. Initial seed = " + seed);
+                () -> generator + ": splits did not seed randomness from the stream position. Initial seed = " + seed);
         }
     }
 
@@ -253,24 +253,24 @@ class SplittableProvidersParametricTest {
      * @see Spliterator#tryAdvance(Consumer)
      * @see Spliterator#forEachRemaining(Consumer)
      */
-    private static void failSpliteratorShouldBeEmpty() {
-        Assertions.fail("Spliterator should not have any remaining elements");
+    private static void failSpliteratorShouldBeEmpty(SplittableUniformRandomProvider rng) {
+        Assertions.fail(rng + ": Spliterator should not have any remaining elements");
     }
 
     @ParameterizedTest
     @MethodSource("getSplittableProviders")
     void testSplitsInvalidStreamSizeThrows(SplittableUniformRandomProvider rng) {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.splits(-1), "splits(size)");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.splits(-1), () -> rng + ": splits(size)");
         final SplittableUniformRandomProvider source = DummyGenerator.INSTANCE;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.splits(-1, source), "splits(size, source)");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> rng.splits(-1, source), () -> rng + ": splits(size, source)");
     }
 
     @ParameterizedTest
     @MethodSource("getSplittableProviders")
     void testSplitsUnlimitedStreamSize(SplittableUniformRandomProvider rng) {
-        assertUnlimitedSpliterator(rng.splits().spliterator(), "splits()");
+        assertUnlimitedSpliterator(rng, rng.splits().spliterator(), "splits()");
         final SplittableUniformRandomProvider source = ThreadLocalGenerator.INSTANCE;
-        assertUnlimitedSpliterator(rng.splits(source).spliterator(), "splits(source)");
+        assertUnlimitedSpliterator(rng, rng.splits(source).spliterator(), "splits(source)");
     }
 
     /**
@@ -280,10 +280,11 @@ class SplittableProvidersParametricTest {
      * @param spliterator Spliterator.
      * @param msg Error message.
      */
-    private static void assertUnlimitedSpliterator(Spliterator<?> spliterator, String msg) {
-        Assertions.assertEquals(Long.MAX_VALUE, spliterator.estimateSize(), msg);
+    private static void assertUnlimitedSpliterator(SplittableUniformRandomProvider rng,
+                                                   Spliterator<?> spliterator, String msg) {
+        Assertions.assertEquals(Long.MAX_VALUE, spliterator.estimateSize(), rng + ": " + msg);
         Assertions.assertTrue(spliterator.hasCharacteristics(SPLITERATOR_CHARACTERISTICS),
-            () -> String.format("%s: characteristics = %s, expected %s", msg,
+            () -> String.format("%s: %s: characteristics = %s, expected %s", rng, msg,
                 Integer.toBinaryString(spliterator.characteristics()),
                 Integer.toBinaryString(SPLITERATOR_CHARACTERISTICS)
             ));
@@ -293,8 +294,8 @@ class SplittableProvidersParametricTest {
     @MethodSource("getSplittableProviders")
     void testSplitsNullSourceThrows(SplittableUniformRandomProvider rng) {
         final SplittableUniformRandomProvider source = null;
-        Assertions.assertThrows(NullPointerException.class, () -> rng.splits(source));
-        Assertions.assertThrows(NullPointerException.class, () -> rng.splits(1, source));
+        Assertions.assertThrows(NullPointerException.class, () -> rng.splits(source), rng::toString);
+        Assertions.assertThrows(NullPointerException.class, () -> rng.splits(1, source), rng::toString);
     }
 
     @ParameterizedTest
@@ -304,20 +305,20 @@ class SplittableProvidersParametricTest {
         // each is used to test different functionality
         final long size = 41;
         Spliterator<SplittableUniformRandomProvider> s1 = rng.splits(size).spliterator();
-        Assertions.assertEquals(size, s1.estimateSize());
+        Assertions.assertEquals(size, s1.estimateSize(), rng::toString);
         final Spliterator<SplittableUniformRandomProvider> s2 = s1.trySplit();
         final Spliterator<SplittableUniformRandomProvider> s3 = s1.trySplit();
         final Spliterator<SplittableUniformRandomProvider> s4 = s2.trySplit();
-        Assertions.assertEquals(size, s1.estimateSize() + s2.estimateSize() + s3.estimateSize() + s4.estimateSize());
+        Assertions.assertEquals(size, s1.estimateSize() + s2.estimateSize() + s3.estimateSize() + s4.estimateSize(), rng::toString);
 
         // s1. Test cannot split indefinitely
         while (s1.estimateSize() > 1) {
             final long currentSize = s1.estimateSize();
             final Spliterator<SplittableUniformRandomProvider> other = s1.trySplit();
-            Assertions.assertEquals(currentSize, s1.estimateSize() + other.estimateSize());
+            Assertions.assertEquals(currentSize, s1.estimateSize() + other.estimateSize(), rng::toString);
             s1 = other;
         }
-        Assertions.assertNull(s1.trySplit(), "Cannot split when size <= 1");
+        Assertions.assertNull(s1.trySplit(), () -> rng + ": Cannot split when size <= 1");
 
         // Check the instance is a new object of the same type.
         // These will be hashed using the system identity hash code.
@@ -326,21 +327,21 @@ class SplittableProvidersParametricTest {
 
         final Consumer<SplittableUniformRandomProvider> action = r -> {
             Assertions.assertTrue(observed.add(r), "Instance should be unique");
-            Assertions.assertEquals(rng.getClass(), r.getClass());
+            Assertions.assertEquals(rng.getClass(), r.getClass(), rng::toString);
         };
 
         // s2. Test advance
         for (long newSize = s2.estimateSize(); newSize-- > 0;) {
-            Assertions.assertTrue(s2.tryAdvance(action));
-            Assertions.assertEquals(newSize, s2.estimateSize(), "s2 size estimate");
+            Assertions.assertTrue(s2.tryAdvance(action), rng::toString);
+            Assertions.assertEquals(newSize, s2.estimateSize(), () -> rng + ": s2 size estimate");
         }
-        Assertions.assertFalse(s2.tryAdvance(r -> failSpliteratorShouldBeEmpty()));
-        s2.forEachRemaining(r -> failSpliteratorShouldBeEmpty());
+        Assertions.assertFalse(s2.tryAdvance(r -> failSpliteratorShouldBeEmpty(rng)), rng::toString);
+        s2.forEachRemaining(r -> failSpliteratorShouldBeEmpty(rng));
 
         // s3. Test forEachRemaining
         s3.forEachRemaining(action);
-        Assertions.assertEquals(0, s3.estimateSize());
-        s3.forEachRemaining(r -> failSpliteratorShouldBeEmpty());
+        Assertions.assertEquals(0, s3.estimateSize(), rng::toString);
+        s3.forEachRemaining(r -> failSpliteratorShouldBeEmpty(rng));
 
         // s4. Test tryAdvance and forEachRemaining when the action throws an exception
         final IllegalStateException ex = new IllegalStateException();
@@ -348,12 +349,12 @@ class SplittableProvidersParametricTest {
             throw ex;
         };
         final long currentSize = s4.estimateSize();
-        Assertions.assertTrue(currentSize > 1, "Spliterator requires more elements to test advance");
-        Assertions.assertSame(ex, Assertions.assertThrows(IllegalStateException.class, () -> s4.tryAdvance(badAction)));
-        Assertions.assertEquals(currentSize - 1, s4.estimateSize(), "Spliterator should be advanced even when action throws");
+        Assertions.assertTrue(currentSize > 1, () -> rng + ": Spliterator requires more elements to test advance");
+        Assertions.assertSame(ex, Assertions.assertThrows(IllegalStateException.class, () -> s4.tryAdvance(badAction)), rng::toString);
+        Assertions.assertEquals(currentSize - 1, s4.estimateSize(), () -> rng + ": Spliterator should be advanced even when action throws");
 
-        Assertions.assertSame(ex, Assertions.assertThrows(IllegalStateException.class, () -> s4.forEachRemaining(badAction)));
-        Assertions.assertEquals(0, s4.estimateSize(), "Spliterator should be finished even when action throws");
-        s4.forEachRemaining(r -> failSpliteratorShouldBeEmpty());
+        Assertions.assertSame(ex, Assertions.assertThrows(IllegalStateException.class, () -> s4.forEachRemaining(badAction)), rng::toString);
+        Assertions.assertEquals(0, s4.estimateSize(), () -> rng + ": Spliterator should be finished even when action throws");
+        s4.forEachRemaining(r -> failSpliteratorShouldBeEmpty(rng));
     }
 }

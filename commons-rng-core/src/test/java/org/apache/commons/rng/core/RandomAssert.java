@@ -224,7 +224,8 @@ public final class RandomAssert {
     public static void assertNextIntEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
         for (int i = 0; i < cycles; i++) {
             final int index = i;
-            Assertions.assertEquals(rng1.nextInt(), rng2.nextInt(), () -> "Value at position " + index);
+            Assertions.assertEquals(rng1.nextInt(), rng2.nextInt(),
+                () -> String.format("%s vs %s: Value at position %d", rng1, rng2, index));
         }
     }
 
@@ -239,7 +240,8 @@ public final class RandomAssert {
     public static void assertNextLongEquals(int cycles, UniformRandomProvider rng1, UniformRandomProvider rng2) {
         for (int i = 0; i < cycles; i++) {
             final int index = i;
-            Assertions.assertEquals(rng1.nextLong(), rng2.nextLong(), () -> "Value at position " + index);
+            Assertions.assertEquals(rng1.nextLong(), rng2.nextLong(),
+                () -> String.format("%s vs %s: Value at position %d", rng1, rng2, index));
         }
     }
 
@@ -257,7 +259,8 @@ public final class RandomAssert {
                 return;
             }
         }
-        Assertions.fail(() -> cycles + " cycles of nextb has same output");
+        Assertions.fail(
+            () -> String.format("%s vs %s: %d cycles of nextInt has same output", rng1, rng2, cycles));
     }
 
     /**
@@ -274,7 +277,8 @@ public final class RandomAssert {
                 return;
             }
         }
-        Assertions.fail(() -> cycles + " cycles of nextLong has same output");
+        Assertions.fail(
+            () -> String.format("%s vs %s: %d cycles of nextLong has same output", rng1, rng2, cycles));
     }
 
     /**
