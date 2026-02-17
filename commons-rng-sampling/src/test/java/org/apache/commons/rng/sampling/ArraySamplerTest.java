@@ -577,14 +577,24 @@ class ArraySamplerTest {
         };
 
         for (int i = 0; i < 100; i++) {
-            // Avoid an index bound of 0 or 1 by adding 2
-            final int n = 2 + rng.nextInt(ABOVE_BATCH_LIMIT);
-            final int[] bound1 = {n * (n - 1)};
+            // Create the bound.
+            // The random output of zero will only be rejected if
+            // unused bits < (2^32 % bound).
+            // Ensure this threshold is above zero
+            int n = 0;
+            int bound = 1;
+            while ((1L << 32) % bound == 0) {
+                // Avoid an index bound of 0 or 1
+                n = rng.nextInt(2, ABOVE_BATCH_LIMIT);
+                bound = n * (n - 1);
+            }
+            final int[] bound1 = {bound};
             final int[] i1 = ArraySampler.randomBounded2(n, n - 1, bound1, rng1);
-            final int[] bound2 = {n * (n - 1)};
+            final int[] bound2 = {bound};
             final int[] i2 = ArraySampler.randomBounded2(n, n - 1, bound2, rng2);
-            Assertions.assertArrayEquals(i1, i2, "indices");
-            Assertions.assertArrayEquals(bound1, bound2, "bounds");
+            final int nn = n;
+            Assertions.assertArrayEquals(i1, i2, () -> "indices: n=" + nn);
+            Assertions.assertArrayEquals(bound1, bound2, () -> "bounds: n=" + nn);
         }
     }
 
