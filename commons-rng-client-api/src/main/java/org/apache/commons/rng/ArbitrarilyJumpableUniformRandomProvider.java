@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * {@link ArbitrarilyJumpableUniformRandomProvider} and {@link #jump(double) jump} the
  * generator forward while passing each copy generator to a worker thread. The jump
  * {@code distance} should be sufficient to cover all expected output by each worker.
- * Since each copy generator is also a {@link ArbitrarilyJumpableUniformRandomProvider}
+ * Since each copy generator is also an {@link ArbitrarilyJumpableUniformRandomProvider}
  * with care it is possible to further distribute generators within the original jump
  * {@code distance} and use the entire state cycle in different ways.</p>
  *

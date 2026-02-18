@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.SplittableRandom;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
+import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.RandomAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -613,5 +615,43 @@ public class Philox4x64Test {
         final long[] value = LongJumpDistancesTest.toLongArray(sum);
         // Return result with the same counter size
         return Arrays.copyOf(value, counter.length);
+    }
+
+    @Test
+    void userGuideExample1() {
+        ArbitrarilyJumpableUniformRandomProvider jumpable = new Philox4x64(SEEDS[3]);
+
+        double distance = 42;
+        for (int i = 0; i < 5; i++) {
+            // Copy the state and then jump ahead
+            UniformRandomProvider copy = jumpable.jump(distance);
+
+            // Catch up the jump using the native 64-bit output
+            for (int j = 0; j < distance; j++) {
+                copy.nextLong();
+            }
+
+            // The copy matches the jumped generator
+            Assertions.assertEquals(copy.nextLong(), jumpable.nextLong());
+        }
+    }
+
+    @Test
+    void userGuideExample2() {
+        ArbitrarilyJumpableUniformRandomProvider jumpable = new Philox4x64(SEEDS[3]);
+
+        int logDistance = 123;
+        ArbitrarilyJumpableUniformRandomProvider copy = jumpable.jumpPowerOfTwo(logDistance);
+
+        // Catch up the jump using: 4 * 2^119 + 2^121 + 2^122
+        copy.jumpPowerOfTwo(logDistance - 4);
+        copy.jumpPowerOfTwo(logDistance - 4);
+        copy.jumpPowerOfTwo(logDistance - 2);
+        copy.jumpPowerOfTwo(logDistance - 4);
+        copy.jumpPowerOfTwo(logDistance - 1);
+        copy.jumpPowerOfTwo(logDistance - 4);
+
+        // The copy matches the jumped generator
+        Assertions.assertEquals(copy.nextLong(), jumpable.nextLong());
     }
 }
