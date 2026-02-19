@@ -19,9 +19,12 @@ package org.apache.commons.rng.examples.jmh.core;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.function.ToLongFunction;
+import org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider;
 import org.apache.commons.rng.JumpableUniformRandomProvider;
 import org.apache.commons.rng.LongJumpableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -50,6 +53,13 @@ public class JumpBenchmark {
      */
     @State(Scope.Benchmark)
     public abstract static class BaseJumpableSource {
+        /**
+         * Distance to skip before jumping.
+         * Used to advance the state of a generator before repeat jumps.
+         */
+        @Param({"0"})
+        private int skip;
+
         /** The generator of the next RNG copy from a jump. */
         private Supplier<UniformRandomProvider> gen;
 
@@ -68,6 +78,27 @@ public class JumpBenchmark {
         @Setup
         public void setup() {
             gen = createJumpFunction();
+        }
+
+        /**
+         * Creates the RNG.
+         *
+         * @param randomSourceName the random source name
+         * @return the RNG
+         */
+        UniformRandomProvider createRNG(String randomSourceName) {
+            final UniformRandomProvider rng = RandomSource.valueOf(randomSourceName).create();
+            if (skip > 0) {
+                // Skip the primary output of the generator.
+                // Assumes either 32-bit or 64-bit output.
+                final ToLongFunction<UniformRandomProvider> fun = rng instanceof IntProvider ?
+                    UniformRandomProvider::nextInt :
+                    UniformRandomProvider::nextLong;
+                for (int i = skip; --i >= 0;) {
+                    fun.applyAsLong(rng);
+                }
+            }
+            return rng;
         }
 
         /**
@@ -124,7 +155,7 @@ public class JumpBenchmark {
         /** {@inheritDoc} */
         @Override
         protected Supplier<UniformRandomProvider> createJumpFunction() {
-            final UniformRandomProvider rng = RandomSource.valueOf(randomSourceName).create();
+            final UniformRandomProvider rng = createRNG(randomSourceName);
             if (rng instanceof JumpableUniformRandomProvider) {
                 return ((JumpableUniformRandomProvider) rng)::jump;
             }
@@ -172,11 +203,52 @@ public class JumpBenchmark {
         /** {@inheritDoc} */
         @Override
         protected Supplier<UniformRandomProvider> createJumpFunction() {
-            final UniformRandomProvider rng = RandomSource.valueOf(randomSourceName).create();
+            final UniformRandomProvider rng = createRNG(randomSourceName);
             if (rng instanceof LongJumpableUniformRandomProvider) {
                 return ((LongJumpableUniformRandomProvider) rng)::longJump;
             }
             throw new IllegalStateException("Invalid long jump source: " + randomSourceName);
+        }
+    }
+
+    /**
+     * Exercise the {@link ArbitrarilyJumpableUniformRandomProvider#jump(double)} function,
+     * or the {@link ArbitrarilyJumpableUniformRandomProvider#jumpPowerOfTwo(int)} function.
+     *
+     * <p>The power-of-two jump function is called if the distance is an exact {@code int} value.
+     *
+     * <p>To jump a small arbitrary amount specify the distance with a fractional component,
+     * e.g. jump 123 using 123.5, otherwise a power-of-2 jump of 123 will be called.
+     */
+    public static class ArbitrarilyJumpableSource extends BaseJumpableSource {
+        /**
+         * Select RNG providers.
+         */
+        @Param({
+            "PHILOX_4X32",
+            "PHILOX_4X64"})
+        private String randomSourceName;
+
+        /** Distance to jump.
+         * Default: 2^99 + 2^49; 2^99 */
+        @Param({"6.338253001141153E29", "99"})
+        private double distance;
+
+        /** {@inheritDoc} */
+        @Override
+        protected Supplier<UniformRandomProvider> createJumpFunction() {
+            final UniformRandomProvider rng = createRNG(randomSourceName);
+            if (rng instanceof ArbitrarilyJumpableUniformRandomProvider) {
+                final ArbitrarilyJumpableUniformRandomProvider gen = (ArbitrarilyJumpableUniformRandomProvider) rng;
+                // Switch to a power-of-2 jump if an int
+                final int logDistance = (int) distance;
+                if ((double) logDistance == distance) {
+                    return () -> gen.jumpPowerOfTwo(logDistance);
+                }
+                final double jumpDistance = Math.floor(distance);
+                return () -> gen.jump(jumpDistance);
+            }
+            throw new IllegalStateException("Invalid arbitrary jump source: " + randomSourceName);
         }
     }
 
@@ -194,11 +266,22 @@ public class JumpBenchmark {
     /**
      * Long jump benchmark.
      *
-     * @param data Source of the long jump
+     * @param data Source of the jump
      * @return the copy
      */
     @Benchmark
     public UniformRandomProvider longJump(LongJumpableSource data) {
+        return data.jump();
+    }
+
+    /**
+     * Arbitrary jump benchmark.
+     *
+     * @param data Source of the jump
+     * @return the copy
+     */
+    @Benchmark
+    public UniformRandomProvider arbitraryJump(ArbitrarilyJumpableSource data) {
         return data.jump();
     }
 }
