@@ -80,8 +80,7 @@ class LXMBenchmarkTest {
     }
 
     @Test
-    // Note: JAVA_18 is not in the enum
-    @EnabledForJreRange(min = JRE.OTHER)
+    @EnabledForJreRange(min = JRE.JAVA_18)
     void testMathUnsignedMultiplyHigh() {
         try {
             assertUnsignedMultiply(UnsignedMultiplyHighSource::mathUnsignedMultiplyHigh, null);
@@ -99,6 +98,16 @@ class LXMBenchmarkTest {
     void testUnsignedMultiplyHighWithLow() {
         final long[] lo = {0};
         assertUnsignedMultiply((a, b) -> UnsignedMultiplyHighSource.unsignedMultiplyHigh(a, b, lo), lo);
+    }
+
+    @Test
+    void testMhMultiplyHigh() {
+        assertUnsignedMultiply(UnsignedMultiplyHighSource::mhMultiplyHigh, null);
+    }
+
+    @Test
+    void testMhUnsignedMultiplyHigh() {
+        assertUnsignedMultiply(UnsignedMultiplyHighSource::mhUnsignedMultiplyHigh, null);
     }
 
     private static void assertUnsignedMultiply(LongLongFunction fun, long[] lo) {

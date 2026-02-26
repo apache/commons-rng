@@ -80,6 +80,8 @@
     <pmd.skip>true</pmd.skip>
     <cpd.skip>true</cpd.skip>
     <spotbugs.skip>true</spotbugs.skip>
+    <!-- Disable to allow use of MethodHandle to higher JDK version methods. -->
+    <animal.sniffer.skip>true</animal.sniffer.skip>
 
     <!-- Skip tests. This avoids the lengthy test of the ziggurat samplers. Override using:
        mvn test -DskipTests=false
@@ -94,7 +96,6 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <commons.compiler.release>11</commons.compiler.release>
-    <animal.sniffer.skip>true</animal.sniffer.skip>
     -->
 
   </properties>

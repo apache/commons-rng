@@ -110,8 +110,9 @@ final class LXMSupport {
      * }</pre>
      *
      * <p>Note: The method {@code Math.multiplyHigh} was added in JDK 9
-     * and should be used as above when the source code targets Java 11
+     * and could be used as above when the source code targets Java 11
      * to exploit the intrinsic method.
+     * Benchmarks are available in the Commons RNG JMH module.
      *
      * <p>Note: The method {@code Math.unsignedMultiplyHigh} was added in JDK 18
      * and should be used when the source code target allows.
