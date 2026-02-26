@@ -46,13 +46,13 @@ import org.apache.commons.rng.core.util.NumberFactory;
  */
 public final class Philox4x64 extends LongProvider implements LongJumpableUniformRandomProvider,
         ArbitrarilyJumpableUniformRandomProvider {
-    /** Philox 32-bit mixing constant for counter 0. */
+    /** Philox 64-bit mixing constant for counter 0. */
     private static final long PHILOX_M0 = 0xD2E7470EE14C6C93L;
-    /** Philox 32-bit mixing constant for counter 1. */
+    /** Philox 64-bit mixing constant for counter 1. */
     private static final long PHILOX_M1 = 0xCA5A826395121157L;
-    /** Philox 32-bit constant for key 0. */
+    /** Philox 64-bit constant for key 0. */
     private static final long PHILOX_W0 = 0x9E3779B97F4A7C15L;
-    /** Philox 32-bit constant for key 1. */
+    /** Philox 64-bit constant for key 1. */
     private static final long PHILOX_W1 = 0xBB67AE8584CAA73BL;
     /** Internal buffer size. */
     private static final int PHILOX_BUFFER_SIZE = 4;
