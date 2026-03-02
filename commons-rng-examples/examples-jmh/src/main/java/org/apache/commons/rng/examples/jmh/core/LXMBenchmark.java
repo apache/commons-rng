@@ -99,6 +99,11 @@ public class LXMBenchmark {
          * java.lang.Math.unsignedMultiplyHigh if Java 18, otherwise
          * a default implementation. */
         private static final LongBinaryOperator MATH_UNSIGNED_MULTIPLY_HIGH;
+        /** Method handle to unsigned multiply using
+         * java.lang.Math.unsignedMultiplyHigh if Java 18,
+         * java.lang.Math.multiplyHigh if Java 9, otherwise
+         * a default implementation. */
+        private static final LongBinaryOperator DYNAMIC_MULTIPLY_HIGH;
 
         static {
             final MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -131,10 +136,12 @@ public class LXMBenchmark {
                     }
                 };
             } catch (NoSuchMethodException | IllegalAccessException ignored) {
-                op2 = UnsignedMultiplyHighSource::unsignedMultiplyHigh;
+                op2 = null;
             }
             // CHECKSTYLE: resume IllegalCatch
-            MATH_UNSIGNED_MULTIPLY_HIGH = op2;
+            MATH_UNSIGNED_MULTIPLY_HIGH = op2 == null ? UnsignedMultiplyHighSource::unsignedMultiplyHigh : op2;
+            // Bind to the highest available method
+            DYNAMIC_MULTIPLY_HIGH = op2 == null ? op1 : op2;
         }
 
         /**
@@ -148,7 +155,7 @@ public class LXMBenchmark {
             UNSIGNED_MULTIPLY_HIGH, "unsignedMultiplyHighWithML",
             "unsignedMultiplyHighML",
             "unsignedMultiplyHighPlusMultiplyLow", "unsignedMultiplyHighAndLow",
-            "mhMultiplyHigh", "mhUnsignedMultiplyHigh",
+            "mhMultiplyHigh", "mhUnsignedMultiplyHigh", "mhDynamicMultiplyHigh",
             })
         private String method;
 
@@ -251,6 +258,8 @@ public class LXMBenchmark {
                 gen = () -> mhMultiplyHigh(ga.getAsLong(), gb.getAsLong());
             } else if ("mhUnsignedMultiplyHigh".equals(method)) {
                 gen = () -> mhUnsignedMultiplyHigh(ga.getAsLong(), gb.getAsLong());
+            } else if ("mhDynamicMultiplyHigh".equals(method)) {
+                gen = () -> mhDynamicMultiplyHigh(ga.getAsLong(), gb.getAsLong());
             } else {
                 throw new IllegalStateException("Unknown method: " + method);
             }
@@ -447,6 +456,22 @@ public class LXMBenchmark {
          */
         static long mhUnsignedMultiplyHigh(long a, long b) {
             return MATH_UNSIGNED_MULTIPLY_HIGH.applyAsLong(a, b);
+        }
+
+        /**
+         * Compute the unsigned multiply of two values using in descending order:
+         * <ul>
+         * <li>Method handle to Math.unsignedMultiplyHigh (JDK 18);
+         * <li>Method handle to Math.multiplyHigh (JDK 9); or
+         * <li>Default software implementation.
+         * </ul>
+         *
+         * @param a First value
+         * @param b Second value
+         * @return the upper 64-bits of the 128-bit result
+         */
+        static long mhDynamicMultiplyHigh(long a, long b) {
+            return DYNAMIC_MULTIPLY_HIGH.applyAsLong(a, b);
         }
     }
 
