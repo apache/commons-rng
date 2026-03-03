@@ -239,9 +239,9 @@ public final class Philox4x64 extends LongProvider implements LongJumpableUnifor
      */
     private static void singleRound(long[] counter, long key0, long key1) {
         final long lo0 = PHILOX_M0 * counter[0];
-        final long hi0 = LXMSupport.unsignedMultiplyHigh(PHILOX_M0, counter[0]);
+        final long hi0 = PhiloxSupport.unsignedMultiplyHigh(PHILOX_M0, counter[0]);
         final long lo1 = PHILOX_M1 * counter[2];
-        final long hi1 = LXMSupport.unsignedMultiplyHigh(PHILOX_M1, counter[2]);
+        final long hi1 = PhiloxSupport.unsignedMultiplyHigh(PHILOX_M1, counter[2]);
 
         counter[0] = hi1 ^ counter[1] ^ key0;
         counter[1] = lo1;
