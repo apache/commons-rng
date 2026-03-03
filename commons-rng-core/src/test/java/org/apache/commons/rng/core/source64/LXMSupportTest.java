@@ -108,7 +108,7 @@ class LXMSupportTest {
         }
     }
 
-    private static void assertMultiplyHigh(long v1, long v2, long hi) {
+    static void assertMultiplyHigh(long v1, long v2, long hi) {
         final BigInteger bi1 = toUnsignedBigInteger(v1);
         final BigInteger bi2 = toUnsignedBigInteger(v2);
         final BigInteger expected = bi1.multiply(bi2);

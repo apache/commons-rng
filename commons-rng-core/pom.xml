@@ -55,6 +55,12 @@
     <!-- Change from commons-parent of 1.0 as some illegal state cases cannot be reached -->
     <commons.jacoco.instructionRatio>0.99</commons.jacoco.instructionRatio>
     <commons.jacoco.lineRatio>0.99</commons.jacoco.lineRatio>
+    <!-- Change from commons-parent of 1.0 as method handles to JDK Math cannot always be executed -->
+    <commons.jacoco.methodRatio>0.99</commons.jacoco.methodRatio>
+    <commons.jacoco.complexityRatio>0.99</commons.jacoco.complexityRatio>
+
+    <!-- Disable to allow use of MethodHandle to higher JDK version methods. -->
+    <animal.sniffer.skip>true</animal.sniffer.skip>
   </properties>
 
   <dependencies>
