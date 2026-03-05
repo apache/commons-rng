@@ -457,40 +457,49 @@ final class UniformRandomProviderSupport {
      * Base class for spliterators for streams of values. Contains the range current position and
      * end position. Splitting is expected to divide the range in half and create instances
      * that span the two ranges.
+     *
+     * @param <T> the type of elements returned by this {@link Spliterator}.
      */
-    private static class ProviderSpliterator {
+    private abstract static class AbstractProviderSpliterator<T> implements Spliterator<T> {
+
         /** The current position in the range. */
         protected long position;
+
         /** The upper limit of the range. */
         protected final long end;
 
         /**
-         * @param start Start position of the stream (inclusive).
+         * Constructs a new instance.
+         *
+         * @param position Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          */
-        ProviderSpliterator(long start, long end) {
-            position = start;
+        AbstractProviderSpliterator(long position, long end) {
+            this.position = position;
             this.end = end;
         }
 
-        // Methods required by all Spliterators
-
-        // See Spliterator.estimateSize()
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public long estimateSize() {
             return end - position;
         }
 
-        // See Spliterator.characteristics()
+        /**
+         * {@inheritDoc}
+         */
+        @Override
         public int characteristics() {
-            return Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.NONNULL | Spliterator.IMMUTABLE;
+            return SIZED | SUBSIZED | NONNULL | IMMUTABLE;
         }
     }
 
     /**
      * Spliterator for streams of SplittableUniformRandomProvider.
      */
-    static class ProviderSplitsSpliterator extends ProviderSpliterator
-            implements Spliterator<SplittableUniformRandomProvider> {
+    static class ProviderSplitsSpliterator extends AbstractProviderSpliterator<SplittableUniformRandomProvider> {
         /** Source of randomness used to initialise the new instances. */
         private final SplittableUniformRandomProvider source;
         /** Generator to split to create new instances. */
@@ -554,7 +563,7 @@ final class UniformRandomProviderSupport {
     /**
      * Spliterator for streams of int values that may be recursively split.
      */
-    static class ProviderIntsSpliterator extends ProviderSpliterator
+    static class ProviderIntsSpliterator extends AbstractProviderSpliterator<Integer>
             implements Spliterator.OfInt {
         /** Source of randomness. */
         private final SplittableUniformRandomProvider source;
@@ -619,7 +628,7 @@ final class UniformRandomProviderSupport {
     /**
      * Spliterator for streams of long values that may be recursively split.
      */
-    static class ProviderLongsSpliterator extends ProviderSpliterator
+    static class ProviderLongsSpliterator extends AbstractProviderSpliterator<Long>
             implements Spliterator.OfLong {
         /** Source of randomness. */
         private final SplittableUniformRandomProvider source;
@@ -684,7 +693,7 @@ final class UniformRandomProviderSupport {
     /**
      * Spliterator for streams of double values that may be recursively split.
      */
-    static class ProviderDoublesSpliterator extends ProviderSpliterator
+    static class ProviderDoublesSpliterator extends AbstractProviderSpliterator<Double>
             implements Spliterator.OfDouble {
         /** Source of randomness. */
         private final SplittableUniformRandomProvider source;
