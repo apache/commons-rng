@@ -966,7 +966,7 @@ double[] coordinate = sampler.sample();
 *-----------------------+---------:---------:---------:---------:---------:
 | PHILOX_4X32           | 1.08214 | 0.57003 | 0.40638 | 0.39130 | 0.33465 |
 *-----------------------+---------:---------:---------:---------:---------:
-| PHILOX_4X64           | 1.33244 | 0.56303 | 0.57400 | 0.64138 | 0.60899 |
+| PHILOX_4X64           | 1.45384 | 0.14840 | 0.13167 | 0.17748 | 0.15659 |
 *-----------------------+---------:---------:---------:---------:---------:
 
 
@@ -975,6 +975,8 @@ double[] coordinate = sampler.sample();
   The <<<RandomSource.JDK>>> generator uses thread-safe (synchronized) <<<int>>> generation which has a performance overhead (see the <<<int>>> generation results). Note that the output will be low quality and this generator should not be used. See the {{{a5._Quality}Quality}} section for details. Multi-threaded applications should use a generator for each thread.
 
   The speed of <<<boolean>>> generation is related to the base implementation that caches the 32-bit or 64-bit output from the generator. In these results the 32-bit generators have the better performance. These timings are relative and all implements are very fast. A RNG to compute boolean samples should be chosen based on the {{{a5._Quality}quality}} of the output.
+  
+  The <<<RandomSource.PHILOX_4X64>>> generator uses multiply high methods from <<<java.lang.Math>>> if available. The <<<multiplyHigh>>> (JDK 9+) and <<<unsignedMultiplyHigh>>> (JDK 18+) significantly increase performance if the 128-bit product of two 64-bit factors is supported by hardware instructions. These results are on a platform with supported hardware.
 
 
 * 4.2 Generating Gaussian samples
