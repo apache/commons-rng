@@ -19,7 +19,7 @@ package org.apache.commons.rng.simple.internal;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * The native seed type. Contains values for all native seed types and methods
+ * Enumerates native seed types. Contains values for all native seed types and methods
  * to convert supported seed types to the native seed type.
  *
  * <p>Valid native seed types are:</p>

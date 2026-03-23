@@ -135,7 +135,7 @@ public final class ProviderBuilder {
     }
 
     /**
-     * Identifiers of the generators.
+     * Enumerates identifiers of the generators.
      */
     public enum RandomSourceInternal {
         /** Source of randomness is {@link JDKRandom}. */

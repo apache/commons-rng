@@ -87,7 +87,7 @@ public final class CompositeSamplers {
     }
 
     /**
-     * The DiscreteProbabilitySampler class defines implementations that sample from a user-defined
+     * Enumerates implementations that sample from a user-defined
      * <a href="https://en.wikipedia.org/wiki/Probability_distribution#Discrete_probability_distribution">
      * discrete probability distribution</a>.
      *
