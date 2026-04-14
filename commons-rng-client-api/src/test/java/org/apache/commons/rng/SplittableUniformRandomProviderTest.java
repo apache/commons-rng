@@ -719,7 +719,7 @@ class SplittableUniformRandomProviderTest {
         final double[] expected = {start};
 
         // s2. Test advance
-        for (double newSize = s2.estimateSize(); newSize-- > 0;) {
+        for (long newSize = s2.estimateSize(); newSize-- > 0;) {
             Assertions.assertTrue(s2.tryAdvance((DoubleConsumer) i -> Assertions.assertEquals(expected[0]++, i)));
             Assertions.assertEquals(newSize, s2.estimateSize(), "s2 size estimate");
         }
