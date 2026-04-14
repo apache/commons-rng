@@ -31,7 +31,7 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
     /**
      * Constant \( g = \frac{607}{128} \) in the Lanczos approximation.
      */
-    public static final double LANCZOS_G = 607.0 / 128.0;
+    static final double LANCZOS_G = 607.0 / 128.0;
 
     /** Lanczos coefficients. */
     private static final double[] LANCZOS_COEFFICIENTS = {
@@ -82,7 +82,7 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
      * @param x Argument.
      * @return \( \ln \Gamma(x) \), or {@code NaN} if {@code x <= 0}.
      */
-    public static double logGamma(double x) {
+    static double logGamma(double x) {
         // Stripped-down version of the same method defined in "Commons Math":
         // Unused "if" branches (for when x < 8) have been removed here since
         // this method is only used (by class "InternalUtils") in order to

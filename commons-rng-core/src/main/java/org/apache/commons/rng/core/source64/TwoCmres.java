@@ -198,14 +198,14 @@ public class TwoCmres extends LongProvider {
         /**
          * @return the multiplier.
          */
-        public long getMultiply() {
+        long getMultiply() {
             return multiply;
         }
 
         /**
          * @return the cycle start.
          */
-        public int getStart() {
+        int getStart() {
             return start;
         }
 
