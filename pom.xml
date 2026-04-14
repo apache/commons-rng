@@ -65,11 +65,6 @@
     <!-- Workaround to avoid duplicating config files. -->
     <rng.parent.dir>${basedir}</rng.parent.dir>
 
-    <!-- Fix to avoid JXR 3.0.0 forking the lifecycle phase 'compile' during site report
-       jxr:aggregate. If compile is forked it fails when building the Java 9 modules that
-       depend on other packages. -->
-    <commons.jxr.version>2.5</commons.jxr.version>
-
     <!-- Change from commons-parent -->
     <commons.jacoco.haltOnFailure>true</commons.jacoco.haltOnFailure>
 
