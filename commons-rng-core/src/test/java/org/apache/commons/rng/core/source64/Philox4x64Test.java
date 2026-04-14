@@ -32,7 +32,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class Philox4x64Test {
+class Philox4x64Test {
     // Data from python 3.12.12 using randomgen v2.3.0, e.g.
     // from randomgen import Philox
     // import numpy as np

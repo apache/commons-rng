@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
  * See <a href="https://github.com/pmd/pmd/issues/6477">PMD issue 6477</a>.
  * </p>
  */
-public class AbstractWellIndexTableVisibilityTest {
+class AbstractWellIndexTableVisibilityTest {
 
     static class TestWell extends AbstractWell {
 
@@ -45,7 +45,7 @@ public class AbstractWellIndexTableVisibilityTest {
     }
 
     @Test
-    public void test() {
+    void test() {
         assertEquals(0, new TestWell(1, new int[1]).next());
     }
 }
