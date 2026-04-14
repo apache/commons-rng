@@ -327,6 +327,7 @@
             <exclude>**/site-content/**</exclude>
             <exclude>**/site-content.README</exclude>
             <exclude>src/conf/revapi/api-changes.json</exclude>
+            <exclude>**/*.patch</exclude>
           </inputExcludes>
         </configuration>
       </plugin>
@@ -381,6 +382,7 @@
             <exclude>**/site-content/**</exclude>
             <exclude>**/site-content.README</exclude>
             <exclude>src/conf/revapi/api-changes.json</exclude>
+            <exclude>**/*.patch</exclude>
           </inputExcludes>
         </configuration>
       </plugin>
