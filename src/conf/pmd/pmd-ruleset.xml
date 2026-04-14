@@ -240,6 +240,16 @@
         value="./ancestor-or-self::ClassDeclaration[@SimpleName='LargeMeanPoissonSamplerState']"/>
     </properties>
   </rule>
+  <rule ref="category/java/design.xml/PublicMemberInNonPublicType">
+    <properties>
+      <!-- AbstractWell.IndexTable is a protected class for use in derived classes of the
+        public outer class. InternalUtils.FactorialLog should be package-private but this
+        change is not allowed by japicmp (false positive). -->
+      <property name="violationSuppressXPath"
+        value="./ancestor-or-self::ClassDeclaration[@SimpleName='IndexTable'
+          or @SimpleName='FactorialLog']"/>
+    </properties>
+  </rule>
 
   <rule ref="category/java/documentation.xml/CommentRequired">
     <properties>

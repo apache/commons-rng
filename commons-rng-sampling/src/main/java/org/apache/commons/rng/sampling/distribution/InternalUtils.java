@@ -271,6 +271,10 @@ final class InternalUtils {
      * It allows to allocate a cache of precomputed values.
      * In case of cache miss, computation is performed by a call to
      * {@link InternalGamma#logGamma(double)}.
+     *
+     * <p>TODO: Remove public modifiers in next major release. This class is
+     * effectively package-private but changing triggers a false-positive
+     * binary compatibility failure using japicmp.
      */
     public static final class FactorialLog {
         /**
