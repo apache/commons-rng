@@ -319,24 +319,15 @@
           Below should agree with config in <reporting> section, so the site
           gets consistent output.
         -->
-          <excludes combine.children="append">
-            <!-- version 0.8 of apache-rat-plugin does not exclude properly
-                 some default development tools files (see RAT-126) -->
+          <inputExcludes>
             <exclude>.ekstazi/**</exclude>
-            <exclude>**/site-content/**</exclude>
-            <exclude>**/site-content.README</exclude>
-            <exclude>**/.classpath</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.checkstyle</exclude>
-            <exclude>**/target/**</exclude>
             <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
             <exclude>src/site/resources/txt/userguide/stress/**</exclude>
             <exclude>dist-archive/**</exclude>
-            <exclude>**/*.patch</exclude>
-            <exclude>**/pdf.*.txt</exclude>
+            <exclude>**/site-content/**</exclude>
+            <exclude>**/site-content.README</exclude>
             <exclude>src/conf/revapi/api-changes.json</exclude>
-          </excludes>
+          </inputExcludes>
         </configuration>
       </plugin>
 
@@ -382,23 +373,15 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <!--  Should agree with apache-rat-plugin config under <build> -->
-          <excludes combine.children="append">
-            <!-- version 0.8 of apache-rat-plugin does not exclude properly
-                 some default development tools files (see RAT-126) -->
+          <inputExcludes>
             <exclude>.ekstazi/**</exclude>
-            <exclude>**/site-content/**</exclude>
-            <exclude>**/site-content.README</exclude>
-            <exclude>**/.classpath</exclude>
-            <exclude>**/.project</exclude>
-            <exclude>**/.settings/**</exclude>
-            <exclude>**/.checkstyle</exclude>
-            <exclude>**/target/**</exclude>
             <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
             <exclude>src/site/resources/txt/userguide/stress/**</exclude>
             <exclude>dist-archive/**</exclude>
-            <exclude>**/*.patch</exclude>
-            <exclude>**/pdf.*.txt</exclude>
-          </excludes>
+            <exclude>**/site-content/**</exclude>
+            <exclude>**/site-content.README</exclude>
+            <exclude>src/conf/revapi/api-changes.json</exclude>
+          </inputExcludes>
         </configuration>
       </plugin>
       <plugin>
