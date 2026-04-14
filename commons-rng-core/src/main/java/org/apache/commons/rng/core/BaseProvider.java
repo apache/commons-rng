@@ -174,6 +174,10 @@ public abstract class BaseProvider
      *  </li>
      * </ol>
      *
+     * <p>Note: It is not recommended to use this method from a constructor
+     * as it can be overridden by subclasses possibly leading to unexpected behaviour.
+     * Future versions may remove this method, or change it to static.
+     *
      * @param state State. Must be allocated.
      * @param seed Seed. Cannot be null.
      */
@@ -185,7 +189,7 @@ public abstract class BaseProvider
 
         if (seedSize < stateSize) {
             for (int i = seedSize; i < stateSize; i++) {
-                state[i] = (int) scrambleWell(state[i - seed.length], i);
+                state[i] = (int) scrambleWell(state[i - seedSize], i);
             }
         }
     }
@@ -205,6 +209,10 @@ public abstract class BaseProvider
      *  </li>
      * </ol>
      *
+     * <p>Note: It is not recommended to use this method from a constructor
+     * as it can be overridden by subclasses possibly leading to unexpected behaviour.
+     * Future versions may remove this method, or change it to static.
+     *
      * @param state State. Must be allocated.
      * @param seed Seed. Cannot be null.
      */
@@ -216,7 +224,7 @@ public abstract class BaseProvider
 
         if (seedSize < stateSize) {
             for (int i = seedSize; i < stateSize; i++) {
-                state[i] = scrambleWell(state[i - seed.length], i);
+                state[i] = scrambleWell(state[i - seedSize], i);
             }
         }
     }

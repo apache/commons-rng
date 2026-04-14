@@ -72,13 +72,7 @@ public class PcgRxsMXs64 extends LongProvider {
      * is discarded by left shift and the increment is set to odd.</p>
      */
     public PcgRxsMXs64(long[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final long[] tmp = new long[SEED_SIZE];
-            fillState(tmp, seed);
-            setSeedInternal(tmp);
-        } else {
-            setSeedInternal(seed);
-        }
+        setSeedInternal(extendSeed(seed, SEED_SIZE));
     }
 
     /**

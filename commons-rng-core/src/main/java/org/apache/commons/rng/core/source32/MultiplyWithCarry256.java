@@ -91,8 +91,7 @@ public class MultiplyWithCarry256 extends IntProvider {
     private void setSeedInternal(int[] seed) {
         // Reset the whole state of this RNG (i.e. "state" and "index").
         // Filling procedure is not part of the reference code.
-        final int[] tmp = new int[SEED_SIZE];
-        fillState(tmp, seed);
+        final int[] tmp = extendSeed(seed, SEED_SIZE);
 
         // First element of the "seed" is the initial "carry".
         final int c = tmp[0];

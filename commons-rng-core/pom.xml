@@ -56,6 +56,7 @@
     <commons.jacoco.instructionRatio>0.99</commons.jacoco.instructionRatio>
     <commons.jacoco.lineRatio>0.99</commons.jacoco.lineRatio>
     <!-- Change from commons-parent of 1.0 as method handles to JDK Math cannot always be executed -->
+    <commons.jacoco.branchRatio>0.99</commons.jacoco.branchRatio>
     <commons.jacoco.methodRatio>0.99</commons.jacoco.methodRatio>
     <commons.jacoco.complexityRatio>0.99</commons.jacoco.complexityRatio>
 

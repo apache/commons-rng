@@ -81,8 +81,7 @@ public class KISSRandom extends IntProvider {
     private void setSeedInternal(int[] seed) {
         // Reset the whole state of this RNG (i.e. the 4 state variables).
         // Filling procedure is not part of the reference code.
-        final int[] tmp = new int[SEED_SIZE];
-        fillState(tmp, seed);
+        final int[] tmp = extendSeed(seed, SEED_SIZE);
 
         z = tmp[0];
         w = tmp[1];

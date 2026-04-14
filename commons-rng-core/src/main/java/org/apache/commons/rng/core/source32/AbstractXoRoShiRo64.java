@@ -46,13 +46,7 @@ abstract class AbstractXoRoShiRo64 extends IntProvider {
      * set. A seed containing all zeros will create a non-functional generator.
      */
     AbstractXoRoShiRo64(int[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final int[] state = new int[SEED_SIZE];
-            fillState(state, seed);
-            setState(state);
-        } else {
-            setState(seed);
-        }
+        setState(extendSeed(seed, SEED_SIZE));
     }
 
     /**

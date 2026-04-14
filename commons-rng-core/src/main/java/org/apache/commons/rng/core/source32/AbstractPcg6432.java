@@ -94,13 +94,7 @@ abstract class AbstractPcg6432 extends IntProvider {
      * is discarded by left shift and the increment is set to odd.</p>
      */
     AbstractPcg6432(long[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final long[] tmp = new long[SEED_SIZE];
-            fillState(tmp, seed);
-            setSeedInternal(tmp);
-        } else {
-            setSeedInternal(seed);
-        }
+        setSeedInternal(extendSeed(seed, SEED_SIZE));
     }
 
     /**

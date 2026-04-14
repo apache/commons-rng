@@ -73,7 +73,8 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
      * @since 1.3
      */
     protected XorShift1024Star(long[] seed, long multiplier) {
-        setSeedInternal(seed);
+        final long[] tmp = extendSeed(seed, SEED_SIZE);
+        System.arraycopy(tmp, 0, state, 0, SEED_SIZE);
         this.multiplier = multiplier;
     }
 
@@ -110,18 +111,6 @@ public class XorShift1024Star extends LongProvider implements JumpableUniformRan
         index = (int) tmp[SEED_SIZE];
 
         super.setStateInternal(c[1]);
-    }
-
-    /**
-     * Seeds the RNG.
-     *
-     * @param seed Seed.
-     */
-    private void setSeedInternal(long[] seed) {
-        // Reset the whole state of this RNG (i.e. "state" and "index").
-        // Filling procedure is not part of the reference code.
-        fillState(state, seed);
-        index = 0;
     }
 
     /** {@inheritDoc} */

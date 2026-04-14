@@ -49,13 +49,7 @@ public class DotyHumphreySmallFastCounting64 extends LongProvider {
      * be used; if smaller, the remaining elements will be automatically set.
      */
     public DotyHumphreySmallFastCounting64(long[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final long[] state = new long[SEED_SIZE];
-            fillState(state, seed);
-            setSeedInternal(state);
-        } else {
-            setSeedInternal(seed);
-        }
+        setSeedInternal(extendSeed(seed, SEED_SIZE));
     }
 
     /**

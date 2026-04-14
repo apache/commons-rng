@@ -49,13 +49,7 @@ public class DotyHumphreySmallFastCounting32 extends IntProvider {
      * be used; if smaller, the remaining elements will be automatically set.
      */
     public DotyHumphreySmallFastCounting32(int[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final int[] state = new int[SEED_SIZE];
-            fillState(state, seed);
-            setSeedInternal(state);
-        } else {
-            setSeedInternal(seed);
-        }
+        setSeedInternal(extendSeed(seed, SEED_SIZE));
     }
 
     /**

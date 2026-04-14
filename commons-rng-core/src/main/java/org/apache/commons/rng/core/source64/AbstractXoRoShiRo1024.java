@@ -62,7 +62,8 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
      * set. A seed containing all zeros will create a non-functional generator.
      */
     AbstractXoRoShiRo1024(long[] seed) {
-        setSeedInternal(seed);
+        final long[] tmp = extendSeed(seed, SEED_SIZE);
+        System.arraycopy(tmp, 0, state, 0, SEED_SIZE);
     }
 
     /**
@@ -96,18 +97,6 @@ abstract class AbstractXoRoShiRo1024 extends LongProvider implements LongJumpabl
         index = (int) tmp[SEED_SIZE];
 
         super.setStateInternal(c[1]);
-    }
-
-    /**
-     * Seeds the RNG.
-     *
-     * @param seed Seed.
-     */
-    private void setSeedInternal(long[] seed) {
-        // Reset the whole state of this RNG (i.e. "state" and "index").
-        // Filling procedure is not part of the reference code.
-        fillState(state, seed);
-        index = 0;
     }
 
     /** {@inheritDoc} */

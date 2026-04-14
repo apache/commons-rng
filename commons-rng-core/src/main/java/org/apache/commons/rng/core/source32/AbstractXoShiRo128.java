@@ -61,13 +61,7 @@ abstract class AbstractXoShiRo128 extends IntProvider implements LongJumpableUni
      * set. A seed containing all zeros will create a non-functional generator.
      */
     AbstractXoShiRo128(int[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final int[] state = new int[SEED_SIZE];
-            fillState(state, seed);
-            setState(state);
-        } else {
-            setState(seed);
-        }
+        setState(extendSeed(seed, SEED_SIZE));
     }
 
     /**

@@ -56,6 +56,11 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.7" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" issue="RNG-192">
+        Remove use of overriddable instance method for state initialisation during
+        RNG construction. This introduces a behaviour change for affected RNGs
+        initialized with a fixed seed that does not fill the entire generator state.
+      </action>
       <action dev="aherbert" type="update" issue="RNG-191">
         "Philox4x64": Use java.lang.invoke to dynamically call Math multiply high methods
         for increased performance.

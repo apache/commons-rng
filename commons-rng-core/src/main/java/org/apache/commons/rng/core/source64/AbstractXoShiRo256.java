@@ -61,13 +61,7 @@ abstract class AbstractXoShiRo256 extends LongProvider implements LongJumpableUn
      * set. A seed containing all zeros will create a non-functional generator.
      */
     AbstractXoShiRo256(long[] seed) {
-        if (seed.length < SEED_SIZE) {
-            final long[] state = new long[SEED_SIZE];
-            fillState(state, seed);
-            setState(state);
-        } else {
-            setState(seed);
-        }
+        setState(extendSeed(seed, SEED_SIZE));
     }
 
     /**
