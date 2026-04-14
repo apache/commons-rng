@@ -27,11 +27,7 @@ import org.apache.commons.rng.sampling.SharedStateSampler;
  */
 final class InternalUtils {
     /** All long-representable factorials, precomputed as the natural
-     * logarithm using Matlab R2023a VPA: log(vpa(x)).
-     *
-     * <p>Note: This table could be any length. Previously this stored
-     * the long value of n!, not log(n!). Using the previous length
-     * maintains behaviour. */
+     * logarithm using Matlab R2023a VPA: log(vpa(x)). */
     private static final double[] LOG_FACTORIALS = {
         0,
         0,
@@ -67,16 +63,6 @@ final class InternalUtils {
 
     /** Utility class. */
     private InternalUtils() {}
-
-    /**
-     * @param n Argument.
-     * @return {@code n!}
-     * @throws IndexOutOfBoundsException if the result is too large to be represented
-     * by a {@code long} (i.e. if {@code n > 20}), or {@code n} is negative.
-     */
-    static double logFactorial(int n)  {
-        return LOG_FACTORIALS[n];
-    }
 
     /**
      * Validate the probabilities sum to a finite positive number.
