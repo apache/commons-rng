@@ -61,13 +61,9 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
     private InternalGamma() {}
 
     /**
-     * Computes the function \( \ln \Gamma(x) \) for \( x \gt 0 \).
+     * Computes the function \( \ln \Gamma(x) \) for \( x \geq 8 \).
      *
-     * <p>
-     * For \( x \leq 8 \), the implementation is based on the double precision
-     * implementation in the <em>NSWC Library of Mathematics Subroutines</em>,
-     * {@code DGAMLN}. For \( x \geq 8 \), the implementation is based on
-     * </p>
+     * <p>The implementation is based on</p>
      *
      * <ul>
      * <li><a href="https://mathworld.wolfram.com/GammaFunction.html">Gamma
@@ -79,8 +75,10 @@ final class InternalGamma { // Class is package-private on purpose; do not make 
      *     approximation</a></li>
      * </ul>
      *
-     * @param x Argument.
-     * @return \( \ln \Gamma(x) \), or {@code NaN} if {@code x <= 0}.
+     * <p>Warning: This method is not accurate when x is less than 8.
+     *
+     * @param x Argument (must be above 8).
+     * @return \( \ln \Gamma(x) \)
      */
     static double logGamma(double x) {
         // Stripped-down version of the same method defined in "Commons Math":
