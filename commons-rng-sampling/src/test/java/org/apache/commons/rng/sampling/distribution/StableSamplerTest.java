@@ -1336,9 +1336,9 @@ class StableSamplerTest {
                beta * Math.log(PI_2 * w * Math.cos(phi) / betaPhi)) / PI_2;
     }
 
-    /*******************************/
-    /* Tests for the StableSampler */
-    /*******************************/
+    //-----------------------------
+    // Tests for the StableSampler
+    //-----------------------------
 
     /**
      * Test the general CMS sampler when the random generator outputs create
