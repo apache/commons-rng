@@ -185,7 +185,7 @@ public abstract class BaseProvider
 
         if (seedSize < stateSize) {
             for (int i = seedSize; i < stateSize; i++) {
-                state[i] = (int) (scrambleWell(state[i - seed.length], i) & 0xffffffffL);
+                state[i] = (int) scrambleWell(state[i - seed.length], i);
             }
         }
     }
