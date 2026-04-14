@@ -744,7 +744,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
      * @see GaussianSampler
      */
     public static final class NormalizedGaussian extends ZigguratSampler
-        implements NormalizedGaussianSampler, SharedStateContinuousSampler {
+        implements NormalizedGaussianSampler {
         // Ziggurat volumes:
         // Inside the layers              = 98.8281%  (253/256)
         // Fraction outside the layers:
