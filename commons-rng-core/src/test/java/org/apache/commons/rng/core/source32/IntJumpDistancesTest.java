@@ -60,7 +60,6 @@ class IntJumpDistancesTest {
         final int[] expected = toIntArray(x);
         // Result array is assumed to be correct length but at least 2
         int[] actual = new int[Math.max(2, 1 + Math.getExponent(x) / 32)];
-        //int[] actual = new int[Math.max(2, expected.length)];
         IntJumpDistances.writeUnsignedInteger(x, actual);
         // Trailing zeros should be unwritten
         if (actual.length > expected.length) {
