@@ -321,14 +321,14 @@
           gets consistent output.
         -->
           <inputExcludes>
-            <exclude>.ekstazi/**</exclude>
-            <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
-            <exclude>src/site/resources/txt/userguide/stress/**</exclude>
-            <exclude>dist-archive/**</exclude>
-            <exclude>**/site-content/**</exclude>
-            <exclude>**/site-content.README</exclude>
-            <exclude>src/conf/revapi/api-changes.json</exclude>
-            <exclude>**/*.patch</exclude>
+            <inputExclude>.ekstazi/**</inputExclude>
+            <inputExclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</inputExclude>
+            <inputExclude>src/site/resources/txt/userguide/stress/**</inputExclude>
+            <inputExclude>dist-archive/**</inputExclude>
+            <inputExclude>**/site-content/**</inputExclude>
+            <inputExclude>**/site-content.README</inputExclude>
+            <inputExclude>src/conf/revapi/api-changes.json</inputExclude>
+            <inputExclude>**/*.patch</inputExclude>
           </inputExcludes>
         </configuration>
       </plugin>
@@ -376,14 +376,14 @@
         <configuration>
           <!--  Should agree with apache-rat-plugin config under <build> -->
           <inputExcludes>
-            <exclude>.ekstazi/**</exclude>
-            <exclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</exclude>
-            <exclude>src/site/resources/txt/userguide/stress/**</exclude>
-            <exclude>dist-archive/**</exclude>
-            <exclude>**/site-content/**</exclude>
-            <exclude>**/site-content.README</exclude>
-            <exclude>src/conf/revapi/api-changes.json</exclude>
-            <exclude>**/*.patch</exclude>
+            <inputExclude>.ekstazi/**</inputExclude>
+            <inputExclude>src/site/resources/release-notes/RELEASE-NOTES-*.txt</inputExclude>
+            <inputExclude>src/site/resources/txt/userguide/stress/**</inputExclude>
+            <inputExclude>dist-archive/**</inputExclude>
+            <inputExclude>**/site-content/**</inputExclude>
+            <inputExclude>**/site-content.README</inputExclude>
+            <inputExclude>src/conf/revapi/api-changes.json</inputExclude>
+            <inputExclude>**/*.patch</inputExclude>
           </inputExcludes>
         </configuration>
       </plugin>
