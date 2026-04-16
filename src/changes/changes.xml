@@ -53,7 +53,7 @@ If the output is not quite correct, check for invisible trailing spaces!
   </properties>
   <body>
 
-    <release version="1.7" date="TBD" description="
+    <release version="1.7" date="2026-04-20" description="
 New features, updates and bug fixes (requires Java 8).
 ">
       <action dev="aherbert" type="update" issue="RNG-192">
@@ -68,6 +68,10 @@ New features, updates and bug fixes (requires Java 8).
       <action dev="aherbert" type="update" issue="RNG-190">
         "ContinuousUniformSampler": Add a special case for the open interval (0, 1)
         with increased performance.
+      </action>
+      <action dev="aherbert" type="add" issue="RNG-189">
+        "ArbitrarilyJumpableUniformRandomProvider": Add an interface to allow a generator to
+        jump an arbitrary distance in its output period.
       </action>
       <action dev="aherbert" due-to="Jherek Healy" type="add" issue="RNG-188">
         Add Philox4x32 and Philox4x64 random number generators.
