@@ -322,7 +322,8 @@ class ArraySamplerTest {
             }
         }
         final double p = new ChiSquareTest().chiSquareTest(counts);
-        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+        Assertions.assertFalse(p < 1e-3,
+            () -> String.format("p-value too small: %s. length=%d", p, length));
     }
 
     @ParameterizedTest
@@ -345,7 +346,8 @@ class ArraySamplerTest {
             }
         }
         final double p = new ChiSquareTest().chiSquareTest(counts);
-        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+        Assertions.assertFalse(p < 1e-3,
+            () -> String.format("p-value too small: %s. [%d, %d) length=%d", p, from, to, length));
     }
 
 
@@ -365,7 +367,8 @@ class ArraySamplerTest {
             }
         }
         final double p = new ChiSquareTest().chiSquareTest(counts);
-        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+        Assertions.assertFalse(p < 1e-3,
+            () -> String.format("p-value too small: %s. length=%d", p, length));
     }
 
     @ParameterizedTest
@@ -386,7 +389,8 @@ class ArraySamplerTest {
             }
         }
         final double p = new ChiSquareTest().chiSquareTest(counts);
-        Assertions.assertFalse(p < 1e-3, () -> "p-value too small: " + p);
+        Assertions.assertFalse(p < 1e-3,
+            () -> String.format("p-value too small: %s. [%d, %d) length=%d", p, from, to, length));
     }
 
     // Test other implementations. Include zero length arrays.
