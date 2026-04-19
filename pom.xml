@@ -287,8 +287,14 @@
           </dependency>
         </dependencies>
         <configuration>
+          <oldArtifacts>
+            <artifact>${project.groupId}:${project.artifactId}:${commons.bc.version}</artifact>
+          </oldArtifacts>
           <analysisConfiguration>
-            <revapi.differences id="intentional-api-changes">
+            <revapi.differences id="intentional-api-changes-1_5">
+              <ignore>true</ignore>
+            </revapi.differences>
+            <revapi.differences id="intentional-api-changes-1_7">
               <ignore>true</ignore>
             </revapi.differences>
           </analysisConfiguration>
@@ -637,6 +643,9 @@ This is avoided by creating an empty directory when svn is not available.
             <artifactId>revapi-maven-plugin</artifactId>
             <version>${rng.revapi.version}</version>
             <configuration>
+              <oldArtifacts>
+                <artifact>${project.groupId}:${project.artifactId}:${commons.bc.version}</artifact>
+              </oldArtifacts>
               <!-- For reporting do not ignore the "intentional-api-changes" so they are included -->
               <analysisConfigurationFiles>
                 <configurationFile>
@@ -644,6 +653,7 @@ This is avoided by creating an empty directory when svn is not available.
                   <roots>
                     <!-- Path(s) to configuration in the JSON config file -->
                     <root>1.5</root>
+                    <root>1.7</root>
                   </roots>
                 </configurationFile>
               </analysisConfigurationFiles>

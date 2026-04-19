@@ -2,7 +2,7 @@
   "1.5": [
     {
       "extension": "revapi.differences",
-      "id": "intentional-api-changes",
+      "id": "intentional-api-changes-1_5",
       "configuration": {
         "differences": [
           {
@@ -11,7 +11,6 @@
             "justification": "Abstract method added to enum; all implementations are within this class. This is an internal package with no compatibility enforcement."
           },
           {
-            "ignore": true,
             "code": "java.class.externalClassExposedInAPI",
             "new": "interface org.apache.commons.rng.SplittableUniformRandomProvider",
             "justification": "Split support was added to the client API and can be used by other modules."
@@ -23,11 +22,10 @@
   "1.7": [
     {
       "extension": "revapi.differences",
-      "id": "intentional-api-changes",
+      "id": "intentional-api-changes-1_7",
       "configuration": {
         "differences": [
           {
-            "ignore": true,
             "code": "java.class.externalClassExposedInAPI",
             "new": "interface org.apache.commons.rng.ArbitrarilyJumpableUniformRandomProvider",
             "justification": "Arbitrary jump support was added to the client API and can be used by other modules."
