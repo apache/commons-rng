@@ -16,7 +16,9 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.function.Supplier;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.core.source32.IntProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
@@ -400,5 +402,37 @@ class DiscreteUniformSamplerTest {
         final UniformRandomProvider rng = RandomAssert.seededRNG();
         final DiscreteUniformSampler sampler = new DiscreteUniformSampler(rng, lower, upper);
         Assertions.assertTrue(sampler.toString().toLowerCase(Locale.US).contains("uniform"));
+    }
+
+    /**
+     * Test the sampling of a provided alphabet. Provides an alternative to a formal
+     * StringSampler API as discussed in RNG-54.
+     */
+    @Test
+    void testRNG54() {
+        final UniformRandomProvider rng = RandomAssert.seededRNG();
+
+        final char[] alphabet = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        // Sample from an exclusive upper bound
+        final SharedStateDiscreteSampler s = DiscreteUniformSampler.of(rng, 0, alphabet.length - 1);
+
+        final int length = 10;
+        // Array can be reused as String::valueOf uses a copy
+        final char[] c = new char[length];
+
+        final Supplier<String> gen = () -> {
+            for (int i = 0; i < length; i++) {
+                c[i] = alphabet[s.sample()];
+            }
+            return String.valueOf(c);
+        };
+
+        // Random hex string
+        final String sample = gen.get();
+        Assertions.assertEquals(length, sample.length());
+        for (int i = 0; i < length; i++) {
+            // This works as the alphabet is sorted
+            Assertions.assertNotEquals(-1, Arrays.binarySearch(alphabet, sample.charAt(i)));
+        }
     }
 }
