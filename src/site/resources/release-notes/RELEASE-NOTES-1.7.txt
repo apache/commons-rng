@@ -7,7 +7,7 @@ The Apache Commons RNG project provides pure-Java implementation of pseudo-rando
 
 New features, updates and bug fixes (requires Java 8).
 
-Apache Commons RNG 1.6 contains the following library modules:
+Apache Commons RNG 1.7 contains the following library modules:
  commons-rng-client-api (requires Java 8)
  commons-rng-core (requires Java 8)
  commons-rng-simple (requires Java 8)
