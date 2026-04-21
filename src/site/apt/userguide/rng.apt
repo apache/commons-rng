@@ -975,7 +975,7 @@ double[] coordinate = sampler.sample();
   The <<<RandomSource.JDK>>> generator uses thread-safe (synchronized) <<<int>>> generation which has a performance overhead (see the <<<int>>> generation results). Note that the output will be low quality and this generator should not be used. See the {{{a5._Quality}Quality}} section for details. Multi-threaded applications should use a generator for each thread.
 
   The speed of <<<boolean>>> generation is related to the base implementation that caches the 32-bit or 64-bit output from the generator. In these results the 32-bit generators have the better performance. These timings are relative and all implements are very fast. A RNG to compute boolean samples should be chosen based on the {{{a5._Quality}quality}} of the output.
-  
+
   The <<<RandomSource.PHILOX_4X64>>> generator uses multiply high methods from <<<java.lang.Math>>> if available. The <<<multiplyHigh>>> (JDK 9+) and <<<unsignedMultiplyHigh>>> (JDK 18+) significantly increase performance if the 128-bit product of two 64-bit factors is supported by hardware instructions. These results are on a platform with supported hardware.
 
 
@@ -1102,13 +1102,15 @@ double[] coordinate = sampler.sample();
 *-----------------------+---------:---------:---------:---------:
 | PHILOX_4X32           | 1.08207 | 1.07704 | 0.38838 | 0.37289 |
 *-----------------------+---------:---------:---------:---------:
-| PHILOX_4X64           | 1.12164 | 1.37654 | 0.52689 | 0.51213 |
+| PHILOX_4X64           | 0.91379 | 0.91941 | 0.26007 | 0.24542 |
 *-----------------------+---------:---------:---------:---------:
 
 
   Notes:
 
   The reference <<<java.util.Random>>> nextGaussian() method uses synchronized method calls per sample. The <<<RandomSource.JDK>>> RNG will use synchronized method calls when generating numbers for the <<<BoxMullerNormalizedGaussianSampler>>> but the calls to obtain the samples are not synchronized, hence the observed difference. All the other RNGs are not synchronized.
+
+  The <<<RandomSource.PHILOX_4X64>>> generator uses multiply high methods from <<<java.lang.Math>>> if available. The <<<multiplyHigh>>> (JDK 9+) and <<<unsignedMultiplyHigh>>> (JDK 18+) significantly increase performance if the 128-bit product of two 64-bit factors is supported by hardware instructions. These results are on a platform with supported hardware.
 
 
 5. Quality
