@@ -35,6 +35,6 @@ Test-Cases: ${classes;CONCRETE;PUBLIC;NAMED;*Test*}
 	org.apache.commons.rng.simple;version='[1.8.0,1.8.1)',\
 	junit-jupiter-api;version='[5.14.3,6.0.0)',\
 	junit-jupiter-engine;version='[5.14.3,6.0.0)',\
-	junit-platform-commons;version='[1.14.3,6.0.0)',\
-	junit-platform-engine;version='[1.14.3,6.0.0)',\
-	junit-platform-launcher;version='[1.14.3,6.0.0)'
+	junit-platform-commons;version='[1.14.3,2.0.0)',\
+	junit-platform-engine;version='[1.14.3,2.0.0)',\
+	junit-platform-launcher;version='[1.14.3,2.0.0)'
