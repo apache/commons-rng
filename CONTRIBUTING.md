@@ -49,7 +49,7 @@ Getting Started
 ---------------
 
 + Make sure you have a [JIRA account](https://issues.apache.org/jira/).
-+ Make sure you have a [GitHub account](https://github.com/signup/free).
++ Make sure you have a [GitHub account](https://github.com/signup).
 + If you're planning to implement a new feature it makes sense to discuss your changes on the [dev list](https://commons.apache.org/mail-lists.html) first. This way you can make sure you're not wasting your time on something that isn't considered to be in Apache Commons RNG's scope.
 + Submit a ticket for your issue, assuming one does not already exist.
   + Clearly describe the issue including steps to reproduce when it is a bug.
@@ -94,8 +94,8 @@ Additional Resources
 + [Contributing patches](https://commons.apache.org/patches.html)
 + [Apache Commons RNG JIRA project page](https://issues.apache.org/jira/browse/RNG)
 + [Contributor License Agreement][cla]
-+ [General GitHub documentation](https://help.github.com/)
-+ [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
++ [General GitHub documentation](https://docs.github.com/)
++ [GitHub pull request documentation](https://docs.github.com/send-pull-requests/)
 + [Apache Commons Twitter Account](https://twitter.com/ApacheCommons)
 + #apachecommons IRC channel on freenode.org
 
