@@ -46,8 +46,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
      * @param normalized Generator of N(0,1) Gaussian distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
-     * @throws IllegalArgumentException if {@code standardDeviation <= 0} or is infinite;
-     * or {@code mean} is infinite
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0} or is not finite;
+     * or {@code mean} is not finite
      */
     public GaussianSampler(NormalizedGaussianSampler normalized,
                            double mean,

@@ -47,7 +47,8 @@ public class BoxMullerLogNormalSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.
-     * @throws IllegalArgumentException if {@code sigma <= 0}.
+     * @throws IllegalArgumentException if {@code sigma <= 0}, or if {@code mu}
+     * or {@code sigma} are not finite.
      */
     public BoxMullerLogNormalSampler(UniformRandomProvider rng,
                                      double mu,

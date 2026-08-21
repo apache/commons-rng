@@ -135,29 +135,12 @@ final class InternalUtils {
     }
 
     /**
-     * Checks the value {@code x >= 0}.
-     * Note: This method allows {@code x == -0.0}.
-     *
-     * @param x Value.
-     * @param name Name of the value.
-     * @return x
-     * @throws IllegalArgumentException if {@code x < 0}
-     */
-    static double requirePositive(double x, String name) {
-        // Logic inversion detects NaN
-        if (!(x >= 0)) {
-            throw new IllegalArgumentException(name + " is not positive: " + x);
-        }
-        return x;
-    }
-
-    /**
      * Checks the value {@code x > 0}.
      *
      * @param x Value.
      * @param name Name of the value.
      * @return x
-     * @throws IllegalArgumentException if {@code x <= 0}
+     * @throws IllegalArgumentException if {@code x <= 0} or is NaN
      */
     static double requireStrictlyPositive(double x, String name) {
         // Logic inversion detects NaN

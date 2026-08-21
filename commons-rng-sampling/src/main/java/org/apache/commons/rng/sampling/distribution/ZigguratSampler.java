@@ -724,10 +724,11 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
          * @param rng Generator of uniformly distributed random numbers.
          * @param mean Mean.
          * @return the sampler
-         * @throws IllegalArgumentException if the mean is not strictly positive ({@code mean <= 0})
+         * @throws IllegalArgumentException if the mean is not strictly positive
+         * and finite ({@code mean <= 0} or infinite)
          */
         public static Exponential of(UniformRandomProvider rng, double mean) {
-            return new ExponentialMean(rng, InternalUtils.requireStrictlyPositive(mean, "mean"));
+            return new ExponentialMean(rng, InternalUtils.requireStrictlyPositiveFinite(mean, "mean"));
         }
     }
 

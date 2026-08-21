@@ -37,13 +37,15 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @param gaussian N(0,1) generator.
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.
-     * @throws IllegalArgumentException if {@code sigma <= 0}.
+     * @throws IllegalArgumentException if {@code sigma <= 0}, or if {@code mu}
+     * or {@code sigma} are not finite.
      */
     public LogNormalSampler(NormalizedGaussianSampler gaussian,
                             double mu,
                             double sigma) {
         // Validation before java.lang.Object constructor exits prevents partially initialized object
-        this(mu, InternalUtils.requireStrictlyPositive(sigma, "sigma"), gaussian);
+        this(InternalUtils.requireFinite(mu, "mu"),
+             InternalUtils.requireStrictlyPositiveFinite(sigma, "sigma"), gaussian);
     }
 
     /**
@@ -111,7 +113,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code sigma <= 0}.
+     * @throws IllegalArgumentException if {@code sigma <= 0}, or if {@code mu}
+     * or {@code sigma} are not finite.
      * @see #withUniformRandomProvider(UniformRandomProvider)
      * @since 1.3
      */

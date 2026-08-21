@@ -309,7 +309,8 @@ public class ChengBetaSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Distribution first shape parameter.
      * @param beta Distribution second shape parameter.
-     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0},
+     * or if {@code alpha} or {@code beta} are not finite
      */
     public ChengBetaSampler(UniformRandomProvider rng,
                             double alpha,
@@ -354,14 +355,15 @@ public class ChengBetaSampler
      * @param alpha Distribution first shape parameter.
      * @param beta Distribution second shape parameter.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0}
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code beta <= 0},
+     * or if {@code alpha} or {@code beta} are not finite
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double alpha,
                                                   double beta) {
-        InternalUtils.requireStrictlyPositive(alpha, "alpha");
-        InternalUtils.requireStrictlyPositive(beta, "beta");
+        InternalUtils.requireStrictlyPositiveFinite(alpha, "alpha");
+        InternalUtils.requireStrictlyPositiveFinite(beta, "beta");
 
         // Choose the algorithm.
         final double a = Math.min(alpha, beta);

@@ -44,13 +44,14 @@ public class InverseTransformParetoSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.
-     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
+     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0},
+     * or if {@code scale} is not finite or {@code shape} is NaN
      */
     public InverseTransformParetoSampler(UniformRandomProvider rng,
                                          double scale,
                                          double shape) {
         // Validation before java.lang.Object constructor exits prevents partially initialized object
-        this(InternalUtils.requireStrictlyPositive(scale, "scale"),
+        this(InternalUtils.requireStrictlyPositiveFinite(scale, "scale"),
              InternalUtils.requireStrictlyPositive(shape, "shape"),
              rng);
     }
@@ -118,7 +119,8 @@ public class InverseTransformParetoSampler
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0}
+     * @throws IllegalArgumentException if {@code scale <= 0} or {@code shape <= 0},
+     * or if {@code scale} is not finite
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,

@@ -86,12 +86,14 @@ public final class LevySampler implements SharedStateContinuousSampler {
      * @param location Location of the Lévy distribution.
      * @param scale Scale of the Lévy distribution.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code scale <= 0}
+     * @throws IllegalArgumentException if {@code scale <= 0}, or if
+     * {@code location} or {@code scale} are not finite
      */
     public static LevySampler of(UniformRandomProvider rng,
                                  double location,
                                  double scale) {
-        InternalUtils.requireStrictlyPositive(scale, "scale");
+        InternalUtils.requireFinite(location, "location");
+        InternalUtils.requireStrictlyPositiveFinite(scale, "scale");
         return new LevySampler(rng, location, scale);
     }
 }

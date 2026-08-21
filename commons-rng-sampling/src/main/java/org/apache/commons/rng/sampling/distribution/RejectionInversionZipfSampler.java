@@ -271,7 +271,7 @@ public class RejectionInversionZipfSampler
      * @param numberOfElements Number of elements.
      * @param exponent Exponent.
      * @throws IllegalArgumentException if {@code numberOfElements <= 0}
-     * or {@code exponent < 0}.
+     * or {@code exponent < 0} or is non-finite.
      */
     public RejectionInversionZipfSampler(UniformRandomProvider rng,
                                          int numberOfElements,
@@ -333,7 +333,7 @@ public class RejectionInversionZipfSampler
      * @param exponent Exponent.
      * @return the sampler
      * @throws IllegalArgumentException if {@code numberOfElements <= 0} or
-     * {@code exponent < 0}.
+     * {@code exponent < 0} or is non-finite.
      * @since 1.3
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
@@ -342,7 +342,7 @@ public class RejectionInversionZipfSampler
         if (numberOfElements <= 0) {
             throw new IllegalArgumentException("number of elements is not strictly positive: " + numberOfElements);
         }
-        InternalUtils.requirePositive(exponent, "exponent");
+        InternalUtils.requirePositiveFinite(exponent, "exponent");
 
         // When the exponent is at the limit of 0 the distribution PMF reduces to 1 / n
         // and sampling can use a discrete uniform sampler.

@@ -73,14 +73,15 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
-         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0},
+         * or if {@code alpha} or {@code theta} are not finite
          */
         BaseGammaSampler(UniformRandomProvider rng,
                          double alpha,
                          double theta) {
             // Validation before java.lang.Object constructor exits prevents partially initialized object
-            this(InternalUtils.requireStrictlyPositive(alpha, "alpha"),
-                 InternalUtils.requireStrictlyPositive(theta, "theta"),
+            this(InternalUtils.requireStrictlyPositiveFinite(alpha, "alpha"),
+                 InternalUtils.requireStrictlyPositiveFinite(theta, "theta"),
                  rng);
         }
 
@@ -136,7 +137,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
-         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0},
+         * or if {@code alpha} or {@code theta} are not finite
          */
         AhrensDieterGammaSampler(UniformRandomProvider rng,
                                  double alpha,
@@ -221,7 +223,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
-         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+         * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0},
+         * or if {@code alpha} or {@code theta} are not finite
          */
         MarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                    double alpha,
@@ -282,7 +285,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param alpha Alpha parameter of the distribution (this is a shape parameter).
      * @param theta Theta parameter of the distribution (this is a scale parameter).
-     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0},
+     * or if {@code alpha} or {@code theta} are not finite
      */
     public AhrensDieterMarsagliaTsangGammaSampler(UniformRandomProvider rng,
                                                   double alpha,
@@ -321,7 +325,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
      * @param alpha Alpha parameter of the distribution (this is a shape parameter).
      * @param theta Theta parameter of the distribution (this is a scale parameter).
      * @return the sampler
-     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0}
+     * @throws IllegalArgumentException if {@code alpha <= 0} or {@code theta <= 0},
+     * or if {@code alpha} or {@code theta} are not finite
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,

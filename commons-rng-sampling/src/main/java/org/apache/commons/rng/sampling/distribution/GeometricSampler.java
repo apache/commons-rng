@@ -72,6 +72,32 @@ public final class GeometricSampler {
     }
 
     /**
+     * Sample from the geometric distribution when the probability of success is effectively zero.
+     */
+    private static final class GeometricP0Sampler
+        implements SharedStateDiscreteSampler {
+        /** The single instance. */
+        static final GeometricP0Sampler INSTANCE = new GeometricP0Sampler();
+
+        @Override
+        public int sample() {
+            // When probability of success is effectively 0 the sample is always the max value
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public String toString() {
+            return "Geometric(p~0) deviate";
+        }
+
+        @Override
+        public SharedStateDiscreteSampler withUniformRandomProvider(UniformRandomProvider rng) {
+            // No requirement for a new instance
+            return this;
+        }
+    }
+
+    /**
      * Sample from the geometric distribution by using a related exponential distribution.
      */
     private static final class GeometricExponentialSampler
@@ -83,22 +109,11 @@ public final class GeometricSampler {
 
         /**
          * @param rng Generator of uniformly distributed random numbers
-         * @param probabilityOfSuccess The probability of success (must be in the range
-         * {@code [0 < probabilityOfSuccess < 1]})
+         * @param exponentialMean The mean of the related exponential distribution (must be
+         * strictly positive finite)
          */
-        GeometricExponentialSampler(UniformRandomProvider rng, double probabilityOfSuccess) {
+        GeometricExponentialSampler(UniformRandomProvider rng, double exponentialMean) {
             this.rng = rng;
-            // Use a related exponential distribution:
-            // λ = −ln(1 − probabilityOfSuccess)
-            // exponential mean = 1 / λ
-            // --
-            // Note on validation:
-            // If probabilityOfSuccess == Math.nextDown(1.0) the exponential mean is >0 (valid).
-            // If probabilityOfSuccess == Double.MIN_VALUE the exponential mean is +Infinity
-            // and the sample will always be Integer.MAX_VALUE (the distribution is truncated). It
-            // is noted in the class Javadoc that the use of a small p leads to truncation so
-            // no checks are made for this case.
-            final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
             exponentialSampler = ZigguratSampler.Exponential.of(rng, exponentialMean);
         }
 
@@ -149,8 +164,24 @@ public final class GeometricSampler {
                 "Probability of success (p) must be in the range [0 < p <= 1]: " +
                     probabilityOfSuccess);
         }
-        return probabilityOfSuccess == 1 ?
-            GeometricP1Sampler.INSTANCE :
-            new GeometricExponentialSampler(rng, probabilityOfSuccess);
+        if (probabilityOfSuccess == 1) {
+            return GeometricP1Sampler.INSTANCE;
+        }
+        // Use a related exponential distribution:
+        // λ = −ln(1 − probabilityOfSuccess)
+        // exponential mean = 1 / λ
+        // --
+        // Note on validation:
+        // If probabilityOfSuccess == Math.nextDown(1.0) the exponential mean is >0 (valid).
+        // If probabilityOfSuccess == Double.MIN_VALUE the exponential mean is +Infinity
+        // and the sample will always be Integer.MAX_VALUE (the distribution is truncated). It
+        // is noted in the class Javadoc that the use of a small p leads to truncation.
+        // This special case requires a p=0 sampler as the infinite mean will raise an exception
+        // from the exponential sampler.
+        final double exponentialMean = 1.0 / (-Math.log1p(-probabilityOfSuccess));
+        if (Double.isInfinite(exponentialMean)) {
+            return GeometricP0Sampler.INSTANCE;
+        }
+        return new GeometricExponentialSampler(rng, exponentialMean);
     }
 }

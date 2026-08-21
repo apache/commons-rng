@@ -56,6 +56,11 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="fix" due-to="Security scan, Alex Herbert" issue="RNG-194">
+        Samplers to validate parameters are finite to avoid creating a sampler that
+        returns NaN, infinite or degenerate-constant samples forever; or enters an
+        infinite loop during sample generation.
+      </action>
 </release>
 
     <release version="1.7" date="2026-04-20" description="

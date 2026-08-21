@@ -77,12 +77,13 @@ public class AhrensDieterExponentialSampler
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of this distribution.
-     * @throws IllegalArgumentException if {@code mean <= 0}
+     * @throws IllegalArgumentException if {@code mean <= 0}, or if {@code mean}
+     * is not finite
      */
     public AhrensDieterExponentialSampler(UniformRandomProvider rng,
                                           double mean) {
         // Validation before java.lang.Object constructor exits prevents partially initialized object
-        this(InternalUtils.requireStrictlyPositive(mean, "mean"), rng);
+        this(InternalUtils.requireStrictlyPositiveFinite(mean, "mean"), rng);
     }
 
     /**
@@ -161,7 +162,8 @@ public class AhrensDieterExponentialSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the distribution.
      * @return the sampler
-     * @throws IllegalArgumentException if {@code mean <= 0}
+     * @throws IllegalArgumentException if {@code mean <= 0}, or if {@code mean}
+     * is not finite
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,

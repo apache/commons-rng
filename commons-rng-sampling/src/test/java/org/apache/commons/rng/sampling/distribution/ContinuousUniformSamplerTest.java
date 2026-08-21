@@ -114,6 +114,14 @@ class ContinuousUniformSamplerTest {
             {1.23, Math.nextUp(1.23)},
             // Different exponent
             {2.0, Math.nextDown(2.0)},
+            // Non-finite bounds. An infinite bound creates samples equal to the bound
+            // (or NaN) and the resampling to exclude the bounds cannot terminate.
+            {0.0, Double.POSITIVE_INFINITY},
+            {Double.NEGATIVE_INFINITY, 0.0},
+            {Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY},
+            {0.0, Double.NaN},
+            {Double.NaN, 0.0},
+            {Double.NaN, Double.NaN},
         }) {
             final double low = interval[0];
             final double high = interval[1];

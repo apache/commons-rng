@@ -71,6 +71,18 @@ class GeometricSamplerTest {
     }
 
     /**
+     * Test the edge case where the probability of success approaches 0 since it uses a different
+     * {@link Object#toString()} method to the normal case tested elsewhere.
+     */
+    @Test
+    void testProbabilityOfSuccessIsZeroSamplerToString() {
+        final UniformRandomProvider unusedRng = RandomAssert.seededRNG();
+        final SharedStateDiscreteSampler sampler = GeometricSampler.of(unusedRng, Double.MIN_VALUE);
+        Assertions.assertTrue(sampler.toString().contains("Geometric"),
+            "Missing 'Geometric' from toString");
+    }
+
+    /**
      * Test the edge case where the probability of success is nearly 0. This is a valid geometric
      * distribution but the sample is clipped to max integer value because the underlying
      * exponential has a mean of positive infinity (effectively the sample is from a truncated
@@ -127,6 +139,15 @@ class GeometricSamplerTest {
     @Test
     void testSharedStateSamplerWithProbabilityOfSuccessOne() {
         testSharedStateSampler(1.0);
+    }
+
+    /**
+     * Test the SharedStateSampler implementation with the edge case when the probability of
+     * success approaches {@code 0.0}.
+     */
+    @Test
+    void testSharedStateSamplerWithProbabilityOfSuccessEffectivelyZero() {
+        testSharedStateSampler(Double.MIN_VALUE);
     }
 
     /**

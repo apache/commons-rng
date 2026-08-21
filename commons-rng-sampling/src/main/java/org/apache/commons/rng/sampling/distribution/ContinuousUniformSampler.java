@@ -105,14 +105,15 @@ public class ContinuousUniformSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param lo Lower bound.
      * @param hi Higher bound.
+     * @throws IllegalArgumentException if {@code lo} or {@code hi} are not finite
      */
     public ContinuousUniformSampler(UniformRandomProvider rng,
                                     double lo,
                                     double hi) {
         super(null);
         this.rng = rng;
-        this.lo = lo;
-        this.hi = hi;
+        this.lo = InternalUtils.requireFinite(lo, "lower bound");
+        this.hi = InternalUtils.requireFinite(hi, "higher bound");
     }
 
     /** {@inheritDoc} */
@@ -163,6 +164,7 @@ public class ContinuousUniformSampler
      * @param lo Lower bound.
      * @param hi Higher bound.
      * @return the sampler
+     * @throws IllegalArgumentException if {@code lo} or {@code hi} are not finite
      * @since 1.3
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
@@ -187,13 +189,16 @@ public class ContinuousUniformSampler
      * @param excludeBounds Set to {@code true} to use the open interval
      * {@code (lower, upper)}.
      * @return the sampler
-     * @throws IllegalArgumentException If the open interval is invalid.
+     * @throws IllegalArgumentException If the interval bounds are not finite,
+     * or the open interval is invalid.
      * @since 1.4
      */
     public static SharedStateContinuousSampler of(UniformRandomProvider rng,
                                                   double lo,
                                                   double hi,
                                                   boolean excludeBounds) {
+        InternalUtils.requireFinite(lo, "lo");
+        InternalUtils.requireFinite(hi, "hi");
         if (excludeBounds) {
             if (!validateOpenInterval(lo, hi)) {
                 throw new IllegalArgumentException("Invalid open interval (" +

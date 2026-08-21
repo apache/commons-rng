@@ -53,12 +53,15 @@ public class BoxMullerGaussianSampler
      * @param rng Generator of uniformly distributed random numbers.
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
-     * @throws IllegalArgumentException if {@code standardDeviation <= 0}
+     * @throws IllegalArgumentException if {@code standardDeviation <= 0} or is not finite;
+     * or {@code mean} is not finite
      */
     public BoxMullerGaussianSampler(UniformRandomProvider rng,
                                     double mean,
                                     double standardDeviation) {
-        this(mean, InternalUtils.requireStrictlyPositiveFinite(standardDeviation, "standardDeviation"), rng);
+        this(InternalUtils.requireFinite(mean, "mean"),
+             InternalUtils.requireStrictlyPositiveFinite(standardDeviation, "standardDeviation"),
+             rng);
     }
 
     /**
