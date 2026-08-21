@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Random;
 
 import org.apache.commons.rng.RandomProviderState;
@@ -55,6 +58,19 @@ class JDKRandomTest {
                 throws IOException,
                        ClassNotFoundException {
             Assertions.fail("*** Malicious code ***. This should not be run during the test");
+        }
+    }
+
+    /**
+     * An InvocationHandler that is Serializable so a dynamic proxy instance
+     * can be written to an ObjectOutputStream.
+     */
+    static class SerializableInvocationHandler implements InvocationHandler, Serializable {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) {
+            return null;
         }
     }
 
@@ -124,5 +140,39 @@ class JDKRandomTest {
 
         final JDKRandom rng = new JDKRandom(13L);
         Assertions.assertThrows(IllegalStateException.class, () -> rng.restoreState(dummyState));
+    }
+
+    /**
+     * Test the deserialization code rejects a state containing a proxy class descriptor.
+     * The java.util.Random allowlist must hold on the proxy class-resolution path;
+     * no legitimate state stream contains a proxy class.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    @Test
+    void testRestoreWithProxyClass() throws IOException  {
+        // Serialize a dynamic proxy instance
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(Proxy.newProxyInstance(JDKRandomTest.class.getClassLoader(),
+                new Class<?>[] {Runnable.class}, new SerializableInvocationHandler()));
+        }
+
+        // Compose the size with the state.
+        // This is what is expected by the JDKRandom class.
+        final byte[] state = bos.toByteArray();
+        final int stateSize = state.length;
+        final byte[] sizeAndState = new byte[4 + stateSize];
+        System.arraycopy(NumberFactory.makeByteArray(stateSize), 0, sizeAndState, 0, 4);
+        System.arraycopy(state, 0, sizeAndState, 4, stateSize);
+
+        final RandomProviderDefaultState dummyState = new RandomProviderDefaultState(sizeAndState);
+
+        final JDKRandom rng = new JDKRandom(13L);
+        final IllegalStateException ex = Assertions.assertThrows(IllegalStateException.class,
+            () -> rng.restoreState(dummyState));
+        // The stream must be rejected on the proxy class-resolution path, not by a
+        // downstream failure to resolve a normal class.
+        Assertions.assertTrue(ex.getMessage().contains("proxy"), () -> ex.getMessage());
     }
 }

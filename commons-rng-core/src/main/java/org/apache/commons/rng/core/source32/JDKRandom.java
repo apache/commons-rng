@@ -78,6 +78,23 @@ public class JDKRandom extends IntProvider {
             }
             return super.resolveClass(osc);
         }
+
+        /**
+         * {@inheritDoc}
+         *
+         * <p>The only expected class is {@link java.util.Random} which is not a proxy
+         * class. The allowlist enforced by {@link #resolveClass(ObjectStreamClass)}
+         * must also hold on the proxy class-resolution path so this method
+         * unconditionally rejects the stream.
+         *
+         * @throws IllegalStateException Always: no legitimate stream contains a proxy
+         * class descriptor.
+         */
+        @Override
+        protected Class<?> resolveProxyClass(final String[] interfaces) throws IOException,
+            ClassNotFoundException {
+            throw new IllegalStateException("Stream contains a proxy class descriptor");
+        }
     }
 
     /**
