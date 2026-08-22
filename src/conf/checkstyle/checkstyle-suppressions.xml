@@ -44,4 +44,5 @@
   <!-- Suppress checks for the method-local inner classes -->
   <suppress checks="MissingJavadocType" files="[\\/]LXMBenchmark" />
   <suppress checks="MissingJavadocMethod" files="[\\/]LXMBenchmark" />
+  <suppress checks="SummaryJavadoc" files="[\\/]examples[\\/].*" />
 </suppressions>
