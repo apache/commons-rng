@@ -46,7 +46,7 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
     }
 
     /**
-     * Creates the sampler.
+     * Creates the sampler using the default {@code alpha} parameter.
      *
      * @param weights Weights.
      * @return the FLDR sampler
@@ -295,7 +295,9 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
     @ParameterizedTest
     @MethodSource
     void testSamplesWeights(double[] weights) {
-        final SharedStateDiscreteSampler sampler = createSampler(weights);
+        // Must use alpha=0 to include all weights
+        final UniformRandomProvider rng = RandomAssert.createRNG();
+        final SharedStateDiscreteSampler sampler = FastLoadedDiceRollerDiscreteSampler.of(rng, weights, 0);
         final int numberOfSamples = 10000;
         final long[] samples = new long[weights.length];
         sampler.samples(numberOfSamples).forEach(x -> samples[x]++);
@@ -441,6 +443,23 @@ class FastLoadedDiceRollerDiscreteSamplerTest {
 
         Assertions.assertArrayEquals(s1, s2, "alpha parameter should ignore the small weight");
         Assertions.assertFalse(Arrays.equals(s1, s3), "alpha+1 parameter should not ignore the small weight");
+    }
+
+    /**
+     * Test the weights factory method applies a default relative magnitude cutoff so
+     * that an extreme weight dynamic range does not amplify the construction cost of
+     * the discrete distribution generating tree.
+     */
+    @Test
+    void testDefaultAlphaBoundsWeightDynamicRange() {
+        final double[] w1 = {1, 0.5, 0.5, 0};
+        final double[] w2 = {1, 0.5, 0.5, Double.MIN_VALUE};
+        final UniformRandomProvider[] rngs = RandomAssert.createRNG(2);
+        final UniformRandomProvider rng1 = rngs[0];
+        final UniformRandomProvider rng2 = rngs[1];
+        RandomAssert.assertProduceSameSequence(
+            FastLoadedDiceRollerDiscreteSampler.of(rng1, w1),
+            FastLoadedDiceRollerDiscreteSampler.of(rng2, w2));
     }
 
     static Stream<long[]> testSharedStateSampler() {

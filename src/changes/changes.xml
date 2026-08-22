@@ -56,6 +56,13 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" due-to="Security scan, Alex Herbert" issue="RNG-196">
+        "FastLoadedDiceRollerDiscreteSampler": Introduce a defaut alpha to exclude
+        practically unobservable categories with a probability of less than 2^-53
+        relative to the most frequent category. This is a behavioural change. A full
+        discrete distribution generating (DDG) tree can be created using alpha=0
+        in the overloaded factory constructor.
+      </action>
       <action dev="aherbert" type="update" due-to="Security scan, Alex Herbert">
         "JDKRandom": Fail fast when restoring from a saved state if the
         serialized bytes contains a proxy class descriptor.

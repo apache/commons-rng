@@ -83,6 +83,16 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
     private static final int NO_LABEL = Integer.MAX_VALUE;
     /** Name of the sampler. */
     private static final String SAMPLER_NAME = "Fast Loaded Dice Roller";
+    /**
+     * Default relative magnitude cutoff (alpha) applied when creating a sampler from
+     * {@code double} weights. Any weight approximately 2<sup>53</sup> smaller than the
+     * largest weight is set to zero. This bounds the size of the discrete distribution
+     * generating (DDG) tree by a function of the number of categories rather than the
+     * dynamic range of the weights. Categories excluded by this cutoff have a sampling
+     * probability below 2<sup>-53</sup> (approximately 1e-16) relative to the most
+     * frequent category.
+     */
+    private static final int DEFAULT_ALPHA = 53;
 
     /**
      * Class to handle the edge case of observations in only one category.
@@ -299,9 +309,19 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
      * <p>Weights are converted to rational numbers {@code p / q} where {@code q} is a power of 2.
      * The numerators {@code p} are scaled to use a common denominator before summing.
      *
-     * <p>All weights are used to create the sampler. Weights with a small magnitude relative
-     * to the largest weight can be excluded using the constructor method with the
-     * relative magnitude parameter {@code alpha} (see {@link #of(UniformRandomProvider, double[], int)}).
+     * <p>Weights with a small magnitude relative to the largest weight are excluded using
+     * a default relative magnitude parameter {@code alpha} of 53: any weight
+     * approximately 2<sup>53</sup> smaller than the largest weight is set to zero.
+     * Categories excluded by this cutoff have a sampling probability below
+     * 2<sup>-53</sup> (approximately 1e-16) relative to the most frequent category. The
+     * cutoff bounds the construction cost of the sampler by the number of categories
+     * rather than the dynamic range of the weights. To create an <em>exact</em> sampler
+     * from the full dynamic range of the weights use the constructor method with a
+     * non-positive relative magnitude parameter {@code alpha} (see
+     * {@link #of(UniformRandomProvider, double[], int)}); note that the construction cost
+     * is then a function of the ratio of the largest to the smallest non-zero weight.
+     *
+     * <p>The default {@code alpha} of 53 was introduced in version 1.8.
      *
      * @param rng Generator of uniformly distributed random numbers.
      * @param weights Weights of the discrete distribution.
@@ -313,7 +333,7 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
      */
     public static FastLoadedDiceRollerDiscreteSampler of(UniformRandomProvider rng,
                                                          double[] weights) {
-        return of(rng, weights, 0);
+        return of(rng, weights, DEFAULT_ALPHA);
     }
 
     /**
@@ -355,7 +375,8 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
      * <p><b>Implementation Note</b>
      *
      * <p>This method creates a sampler with <em>exact</em> samples from the
-     * specified probability distribution. It is recommended to use this method:
+     * specified probability distribution when {@code alpha} does not exclude weights.
+     * It is recommended to use this method:
      * <ul>
      *  <li>if the weights are computed, for example from a probability mass function; or</li>
      *  <li>if the weights sum to an infinite value.</li>
