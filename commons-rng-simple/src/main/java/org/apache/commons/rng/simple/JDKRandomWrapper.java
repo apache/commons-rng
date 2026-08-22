@@ -23,6 +23,9 @@ import java.util.Random;
 /**
  * Wraps a {@link Random} instance to implement {@link UniformRandomProvider}. All methods from
  * the {@code Random} that match those in {@code UniformRandomProvider} are used directly.
+ * Methods not specified by {@link Random} default to the implementation provided by the
+ * {@link UniformRandomProvider} interface using {@link Random#nextLong()} as the source
+ * of randomness.
  *
  * <p>This class can be used to wrap an instance of
  * {@link java.security.SecureRandom SecureRandom}. The {@code SecureRandom} class provides
@@ -59,16 +62,6 @@ public final class JDKRandomWrapper implements UniformRandomProvider {
 
     /** {@inheritDoc} */
     @Override
-    public void nextBytes(byte[] bytes,
-                          int start,
-                          int len) {
-        final byte[] reduced = new byte[len];
-        rng.nextBytes(reduced);
-        System.arraycopy(reduced, 0, bytes, start, len);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public int nextInt() {
         return rng.nextInt();
     }
@@ -83,24 +76,6 @@ public final class JDKRandomWrapper implements UniformRandomProvider {
     @Override
     public long nextLong() {
         return rng.nextLong();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public long nextLong(long n) {
-        // Code copied from "o.a.c.rng.core.BaseProvider".
-        if (n <= 0) {
-            throw new IllegalArgumentException("Must be strictly positive: " + n);
-        }
-
-        long bits;
-        long val;
-        do {
-            bits = nextLong() >>> 1;
-            val  = bits % n;
-        } while (bits - val + (n - 1) < 0);
-
-        return val;
     }
 
     /** {@inheritDoc} */
