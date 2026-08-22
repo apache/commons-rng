@@ -63,6 +63,8 @@ public abstract class TSampler implements SharedStateContinuousSampler {
         private final DoubleUnaryOperator powm1;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param v Degrees of freedom.
          */
@@ -82,6 +84,8 @@ public abstract class TSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -148,6 +152,8 @@ public abstract class TSampler implements SharedStateContinuousSampler {
         private final NormalizedGaussianSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          */
         NormalTSampler(UniformRandomProvider rng) {
@@ -170,6 +176,8 @@ public abstract class TSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     TSampler(UniformRandomProvider rng) {

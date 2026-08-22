@@ -60,6 +60,8 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
@@ -78,6 +80,8 @@ public class PermutationSampler implements SharedStateObjectSampler<int[]> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random permutation.
      * @see #PermutationSampler(UniformRandomProvider,int,int)
      */

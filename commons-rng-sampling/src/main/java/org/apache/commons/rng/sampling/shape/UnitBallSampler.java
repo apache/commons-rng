@@ -59,6 +59,8 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         private final UniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitBallSampler1D(UniformRandomProvider rng) {
@@ -84,6 +86,8 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         private final UniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitBallSampler2D(UniformRandomProvider rng) {
@@ -120,6 +124,8 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         private final ContinuousSampler exp;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitBallSampler3D(UniformRandomProvider rng) {
@@ -163,6 +169,8 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
         private final ContinuousSampler exp;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param dimension Space dimension.
          */
@@ -207,6 +215,8 @@ public abstract class UnitBallSampler implements SharedStateObjectSampler<double
     public UnitBallSampler() {}
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random Cartesian coordinate within the unit n-ball.
      */
     @Override

@@ -102,6 +102,8 @@ public abstract class FastLoadedDiceRollerDiscreteSampler
         private final int sampleValue;
 
         /**
+         * Constructs a new instance.
+         *
          * @param sampleValue Sample value.
          */
         FixedValueDiscreteSampler(int sampleValue) {

@@ -47,6 +47,8 @@ public class ContinuousUniformSampler
      */
     private static final class OpenIntervalContinuousUniformSampler extends ContinuousUniformSampler {
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param lo Lower bound.
          * @param hi Higher bound.
@@ -80,6 +82,8 @@ public class ContinuousUniformSampler
      */
     private static final class OpenIntervalContinuousUniformSampler01 extends ContinuousUniformSampler {
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          */
         OpenIntervalContinuousUniformSampler01(UniformRandomProvider rng) {

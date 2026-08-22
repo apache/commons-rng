@@ -70,6 +70,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         protected final double theta;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
@@ -86,6 +88,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
          * @param rng Generator of uniformly distributed random numbers.
@@ -99,6 +103,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -134,6 +140,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         private final double bGSOptim;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
@@ -149,6 +157,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -220,6 +230,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         private final NormalizedGaussianSampler gaussian;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param alpha Alpha parameter of the distribution.
          * @param theta Theta parameter of the distribution.
@@ -236,6 +248,8 @@ public class AhrensDieterMarsagliaTsangGammaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */

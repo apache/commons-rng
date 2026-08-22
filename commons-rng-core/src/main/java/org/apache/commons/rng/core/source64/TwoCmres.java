@@ -134,6 +134,8 @@ public class TwoCmres extends LongProvider {
     }
 
     /**
+     * Set the seed.
+     *
      * @param seed Seed.
      */
     private void setSeedInternal(int seed) {
@@ -176,6 +178,8 @@ public class TwoCmres extends LongProvider {
         private final int rotate;
 
         /**
+         * Constructs a new instance.
+         *
          * @param multiply Multiplier.
          * @param rotate Positive number. Must be in {@code [0, 64]}.
          * @param start Cycle start.
@@ -196,6 +200,8 @@ public class TwoCmres extends LongProvider {
         }
 
         /**
+         * Gets the multiply.
+         *
          * @return the multiplier.
          */
         long getMultiply() {
@@ -203,6 +209,8 @@ public class TwoCmres extends LongProvider {
         }
 
         /**
+         * Gets the start.
+         *
          * @return the cycle start.
          */
         int getStart() {
@@ -210,6 +218,8 @@ public class TwoCmres extends LongProvider {
         }
 
         /**
+         * Transform the state.
+         *
          * @param state Current state.
          * @return the new state.
          */
@@ -252,6 +262,8 @@ public class TwoCmres extends LongProvider {
             }
 
             /**
+             * The number of subcycle generators.
+             *
              * @return the number of subcycle generators.
              */
             int numberOfSubcycleGenerators() {
@@ -259,6 +271,8 @@ public class TwoCmres extends LongProvider {
             }
 
             /**
+             * Gets the generator at the index.
+             *
              * @param index Index into the list of available generators.
              * @return the subcycle generator entry at index {@code index}.
              */

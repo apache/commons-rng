@@ -48,6 +48,8 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
         private final SharedStateContinuousSampler[] samplers;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param samplers Samplers for each category.
          */
@@ -89,6 +91,8 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
         private final SharedStateContinuousSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param k Number of categories.
          * @param sampler Sampler for the categories.
@@ -118,6 +122,8 @@ public abstract class DirichletSampler implements SharedStateObjectSampler<doubl
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     DirichletSampler(UniformRandomProvider rng) {

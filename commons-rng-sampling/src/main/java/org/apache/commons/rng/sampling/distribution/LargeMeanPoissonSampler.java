@@ -150,6 +150,8 @@ public class LargeMeanPoissonSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param mean Mean.
      * @param rng Generator of uniformly distributed random numbers.
      */
@@ -221,6 +223,8 @@ public class LargeMeanPoissonSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */
@@ -448,6 +452,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the lambda.
+         *
          * @return algorithm constant {@code lambda}
          */
         double getLambdaRaw() {
@@ -455,6 +461,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the log lambda.
+         *
          * @return algorithm constant {@code logLambda}
          */
         double getLogLambda() {
@@ -462,6 +470,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the log lambda factorial.
+         *
          * @return algorithm constant {@code logLambdaFactorial}
          */
         double getLogLambdaFactorial() {
@@ -469,6 +479,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the delta.
+         *
          * @return algorithm constant {@code delta}
          */
         double getDelta() {
@@ -476,6 +488,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the half delta.
+         *
          * @return algorithm constant {@code halfDelta}
          */
         double getHalfDelta() {
@@ -483,6 +497,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the sqrt lambda plus half delta.
+         *
          * @return algorithm constant {@code sqrtLambdaPlusHalfDelta}
          */
         double getSqrtLambdaPlusHalfDelta() {
@@ -490,6 +506,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the constant twolpd.
+         *
          * @return algorithm constant {@code twolpd}
          */
         double getTwolpd() {
@@ -497,6 +515,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the constant p1.
+         *
          * @return algorithm constant {@code p1}
          */
         double getP1() {
@@ -504,6 +524,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the constant p2.
+         *
          * @return algorithm constant {@code p2}
          */
         double getP2() {
@@ -511,6 +533,8 @@ public class LargeMeanPoissonSampler
         }
 
         /**
+         * Gets the constant c1.
+         *
          * @return algorithm constant {@code c1}
          */
         double getC1() {

@@ -35,6 +35,8 @@ public final class LevySampler implements SharedStateContinuousSampler {
     private final UniformRandomProvider rng;
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param location Location of the Lévy distribution.
      * @param scale Scale of the Lévy distribution.
@@ -49,6 +51,8 @@ public final class LevySampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */

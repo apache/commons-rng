@@ -97,6 +97,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         private final String distributionName;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param distributionName Distribution name.
          */
@@ -107,6 +109,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -153,6 +157,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         private final byte[] table5;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param distributionName Distribution name.
          * @param prob The probabilities.
@@ -209,6 +215,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -299,6 +307,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         private final short[] table5;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param distributionName Distribution name.
          * @param prob The probabilities.
@@ -355,6 +365,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -442,6 +454,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         private final int[] table5;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param distributionName Distribution name.
          * @param prob The probabilities.
@@ -497,6 +511,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -909,6 +925,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
             private final int result;
 
             /**
+             * Constructs a new instance.
+             *
              * @param result Result.
              */
             MarsagliaTsangWangFixedResultBinomialSampler(int result) {
@@ -949,6 +967,8 @@ public final class MarsagliaTsangWangDiscreteSampler {
             private final SharedStateDiscreteSampler sampler;
 
             /**
+             * Constructs a new instance.
+             *
              * @param trials Number of trials.
              * @param sampler Binomial distribution sampler.
              */

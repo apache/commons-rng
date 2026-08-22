@@ -538,6 +538,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             private final double mean;
 
             /**
+             * Constructs a new instance.
+             *
              * @param rng Generator of uniformly distributed random numbers.
              * @param mean Mean.
              */
@@ -558,6 +560,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          */
         Exponential(UniformRandomProvider rng) {
@@ -1036,6 +1040,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         private final SharedStateContinuousSampler exponential;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          */
         private NormalizedGaussian(UniformRandomProvider rng) {
@@ -1191,6 +1197,8 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     ZigguratSampler(UniformRandomProvider rng) {

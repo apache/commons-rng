@@ -223,6 +223,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final ContinuousSampler expSampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          */
         BaseStableSampler(UniformRandomProvider rng) {
@@ -307,6 +309,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double delta;
 
         /**
+         * Constructs a new instance.
+         *
          * @param sampler Normalized stable sampler.
          * @param gamma Scale parameter. Must be strictly positive.
          * @param delta Location parameter.
@@ -352,6 +356,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double mean;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param gamma Scale parameter. Must be strictly positive.
          * @param delta Location parameter.
@@ -367,6 +373,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -399,6 +407,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double delta;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param gamma Scale parameter. Must be strictly positive.
          * @param delta Location parameter.
@@ -410,6 +420,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -456,6 +468,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double delta;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param gamma Scale parameter. Must be strictly positive.
          * @param delta Location parameter.
@@ -468,6 +482,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -539,6 +555,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         protected final double upper;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param alpha Stability parameter. Must be in the interval {@code (0, 2]}.
          * @param beta Skewness parameter. Must be in the interval {@code [-1, 1]}.
@@ -591,6 +609,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -725,6 +745,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double tau;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param alpha Stability parameter. Must be in the interval {@code (0, 2]}.
          * @param beta Skewness parameter. Must be in the interval {@code [-1, 1]}.
@@ -737,6 +759,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -884,6 +908,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         private final double tau;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param beta Skewness parameter. Must be in the interval {@code [-1, 1]}.
          */
@@ -893,6 +919,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -962,6 +990,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         protected final double epsDiv1mEps;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param alpha Stability parameter. Must be in the interval {@code (0, 2]}.
          */
@@ -974,6 +1004,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -1041,6 +1073,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
      */
     static class Beta0CMSStableSampler extends Beta0WeronStableSampler {
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param alpha Stability parameter. Must be in the interval {@code (0, 2]}.
          */
@@ -1049,6 +1083,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Underlying source of randomness
          * @param source Source to copy.
          */
@@ -1259,6 +1295,8 @@ public abstract class StableSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     StableSampler(UniformRandomProvider rng) {

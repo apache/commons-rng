@@ -195,6 +195,8 @@ public final class RandomStreams {
         private final SeededObjectFactory<T> factory;
 
         /**
+         * Constructs a new instance.
+         *
          * @param start Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          * @param source Source of randomness used to initialise the new instances.

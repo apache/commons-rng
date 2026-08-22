@@ -135,6 +135,8 @@ public final class CompositeSamplers {
         private final double[] probabilities;
 
         /**
+         * Constructs a new instance.
+         *
          * @param sampler Sampler of the discrete distribution.
          * @param factory Factory to create a new discrete sampler.
          * @param probabilities Probabilities of the discrete distribution.
@@ -304,6 +306,8 @@ public final class CompositeSamplers {
             private final S sampler;
 
             /**
+             * Constructs a new instance.
+             *
              * @param weight the weight
              * @param sampler the sampler
              * @throws IllegalArgumentException if {@code weight} is negative, infinite or {@code NaN}.
@@ -352,6 +356,8 @@ public final class CompositeSamplers {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param specialisation Specialisation of the sampler.
          * @param compositeFactory Factory to create the final composite sampler.
          */
@@ -571,6 +577,8 @@ public final class CompositeSamplers {
         protected final List<S> samplers;
 
         /**
+         * Constructs a new instance.
+         *
          * @param discreteSampler Continuous sampler to choose the individual sampler to sample.
          * @param samplers Collection of samplers to be sampled from.
          */
@@ -627,6 +635,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<ObjectSampler<T>>
                 implements ObjectSampler<T> {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Discrete sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -684,6 +694,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<SharedStateObjectSampler<T>>
                 implements SharedStateObjectSampler<T> {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Discrete sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -728,6 +740,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<DiscreteSampler>
                 implements DiscreteSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Discrete sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -766,6 +780,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<SharedStateDiscreteSampler>
                 implements SharedStateDiscreteSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Discrete sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -810,6 +826,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<ContinuousSampler>
                 implements ContinuousSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Continuous sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -848,6 +866,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<SharedStateContinuousSampler>
                 implements SharedStateContinuousSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Continuous sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -892,6 +912,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<LongSampler>
                 implements LongSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Long sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */
@@ -930,6 +952,8 @@ public final class CompositeSamplers {
                 extends CompositeSampler<SharedStateLongSampler>
                 implements SharedStateLongSampler {
             /**
+             * Constructs a new instance.
+             *
              * @param discreteSampler Long sampler to choose the individual sampler to sample.
              * @param samplers Collection of samplers to be sampled from.
              */

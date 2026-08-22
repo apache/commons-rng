@@ -97,6 +97,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double cy;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -113,6 +115,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers
          * @param source Source to copy.
          */
@@ -163,6 +167,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double cz;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -182,6 +188,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers
          * @param source Source to copy.
          */
@@ -223,6 +231,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         private final double[] c;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -237,6 +247,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers
          * @param source Source to copy.
          */
@@ -264,6 +276,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Source of randomness.
      */
     TriangleSampler(UniformRandomProvider rng) {
@@ -271,6 +285,8 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random Cartesian coordinate within the triangle.
      */
     @Override

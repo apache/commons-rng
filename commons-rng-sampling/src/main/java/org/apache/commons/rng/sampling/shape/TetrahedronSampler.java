@@ -69,6 +69,8 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
     private final UniformRandomProvider rng;
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Source of randomness.
      * @param a The first vertex.
      * @param b The second vertex.
@@ -85,6 +87,8 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers
      * @param source Source to copy.
      */
@@ -98,6 +102,8 @@ public class TetrahedronSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random Cartesian point within the tetrahedron.
      */
     @Override

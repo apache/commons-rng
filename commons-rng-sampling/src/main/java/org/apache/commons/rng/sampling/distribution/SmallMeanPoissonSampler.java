@@ -82,6 +82,8 @@ public class SmallMeanPoissonSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */

@@ -52,6 +52,8 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param collection Collection to be sampled.
      */

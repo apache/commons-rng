@@ -66,6 +66,8 @@ public class DiscreteUniformSampler
         protected final UniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          */
         AbstractDiscreteUniformSampler(UniformRandomProvider rng) {
@@ -87,6 +89,8 @@ public class DiscreteUniformSampler
         private final int value;
 
         /**
+         * Constructs a new instance.
+         *
          * @param value The value.
          */
         FixedDiscreteUniformSampler(int value) {
@@ -126,6 +130,8 @@ public class DiscreteUniformSampler
         private final int shift;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
          * Must be a power of 2 greater than 2^0.
@@ -137,6 +143,8 @@ public class DiscreteUniformSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -183,6 +191,8 @@ public class DiscreteUniformSampler
         private final long threshold;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
          */
@@ -196,6 +206,8 @@ public class DiscreteUniformSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -251,6 +263,8 @@ public class DiscreteUniformSampler
         private final int upper;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param lower Lower bound (inclusive) of the distribution.
          * @param upper Upper bound (inclusive) of the distribution.
@@ -295,6 +309,8 @@ public class DiscreteUniformSampler
         private final SharedStateDiscreteSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param offset The offset for the sample.
          * @param sampler The discrete sampler.
          */

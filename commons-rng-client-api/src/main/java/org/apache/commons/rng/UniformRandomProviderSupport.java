@@ -506,6 +506,8 @@ final class UniformRandomProviderSupport {
         private final SplittableUniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param start Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          * @param source Source of randomness used to initialise the new instances.
@@ -571,6 +573,8 @@ final class UniformRandomProviderSupport {
         private final ToIntFunction<SplittableUniformRandomProvider> gen;
 
         /**
+         * Constructs a new instance.
+         *
          * @param start Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          * @param source Source of randomness.
@@ -636,6 +640,8 @@ final class UniformRandomProviderSupport {
         private final ToLongFunction<SplittableUniformRandomProvider> gen;
 
         /**
+         * Constructs a new instance.
+         *
          * @param start Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          * @param source Source of randomness.
@@ -701,6 +707,8 @@ final class UniformRandomProviderSupport {
         private final ToDoubleFunction<SplittableUniformRandomProvider> gen;
 
         /**
+         * Constructs a new instance.
+         *
          * @param start Start position of the stream (inclusive).
          * @param end Upper limit of the stream (exclusive).
          * @param source Source of randomness.

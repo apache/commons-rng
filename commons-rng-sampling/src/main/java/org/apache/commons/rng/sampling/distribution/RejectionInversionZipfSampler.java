@@ -61,6 +61,8 @@ public class RejectionInversionZipfSampler
         private final UniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param numberOfElements Number of elements (must be {@code > 0}).
          * @param exponent Exponent (must be {@code > 0}).
@@ -78,6 +80,8 @@ public class RejectionInversionZipfSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -291,7 +295,9 @@ public class RejectionInversionZipfSampler
     }
 
     /**
-     * Rejection inversion sampling method for a discrete, bounded Zipf
+     * {@inheritDoc}
+     *
+     * <p>Rejection inversion sampling method for a discrete, bounded Zipf
      * distribution that is based on the method described in
      * <blockquote>
      *   Wolfgang Hörmann and Gerhard Derflinger.

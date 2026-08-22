@@ -63,6 +63,8 @@ public final class GuideTableDiscreteSampler
     private final int[] guideTable;
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param cumulativeProbabilities The cumulative probability table ({@code f(x)}).
      * @param guideTable The inverse cumulative probability guide table.

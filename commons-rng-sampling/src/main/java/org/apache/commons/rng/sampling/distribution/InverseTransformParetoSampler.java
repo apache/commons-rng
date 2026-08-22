@@ -57,6 +57,8 @@ public class InverseTransformParetoSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param scale Scale of the distribution.
      * @param shape Shape of the distribution.
      * @param rng Generator of uniformly distributed random numbers.
@@ -78,6 +80,8 @@ public class InverseTransformParetoSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */

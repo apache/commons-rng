@@ -61,6 +61,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double by;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
@@ -74,6 +76,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -116,6 +120,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double bz;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
@@ -131,6 +137,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -167,6 +175,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         private final double[] b;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a Bound a.
          * @param b Bound b.
@@ -179,6 +189,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -205,6 +217,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Source of randomness.
      */
     BoxSampler(UniformRandomProvider rng) {
@@ -212,6 +226,8 @@ public abstract class BoxSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random Cartesian coordinate within the box.
      */
     @Override

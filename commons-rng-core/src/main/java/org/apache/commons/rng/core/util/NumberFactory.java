@@ -398,6 +398,8 @@ public final class NumberFactory {
     }
 
     /**
+     * Check the size.
+     *
      * @param expected Expected value.
      * @param actual Actual value.
      * @throws IllegalArgumentException if {@code expected != actual}.

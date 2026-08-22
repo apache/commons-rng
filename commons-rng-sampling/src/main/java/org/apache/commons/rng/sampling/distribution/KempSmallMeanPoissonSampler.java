@@ -60,6 +60,8 @@ public final class KempSmallMeanPoissonSampler
     private final double mean;
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param p0 Probability of the Poisson sample {@code p(x=0)}.
      * @param mean Mean.

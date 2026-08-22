@@ -693,6 +693,8 @@ public enum RandomSource {
     private final ProviderBuilder.RandomSourceInternal internalIdentifier;
 
     /**
+     * Constructs a new instance.
+     *
      * @param id Internal identifier.
      */
     RandomSource(ProviderBuilder.RandomSourceInternal id) {
@@ -700,6 +702,8 @@ public enum RandomSource {
     }
 
     /**
+     * Gets the internal identifier.
+     *
      * @return the internal identifier.
      */
     ProviderBuilder.RandomSourceInternal getInternalIdentifier() {

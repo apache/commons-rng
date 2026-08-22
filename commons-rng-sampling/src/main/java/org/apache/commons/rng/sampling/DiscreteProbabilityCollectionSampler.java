@@ -89,6 +89,8 @@ public class DiscreteProbabilityCollectionSampler<T> implements SharedStateObjec
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param items Collection to be sampled.
      * @param sampler Sampler for the probabilities.
      */

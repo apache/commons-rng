@@ -62,6 +62,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         private final UniformRandomProvider rng;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitSphereSampler1D(UniformRandomProvider rng) {
@@ -92,6 +94,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         private final NormalizedGaussianSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitSphereSampler2D(UniformRandomProvider rng) {
@@ -128,6 +132,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         private final NormalizedGaussianSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnitSphereSampler3D(UniformRandomProvider rng) {
@@ -166,6 +172,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
         private final NormalizedGaussianSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param dimension Space dimension.
          */
@@ -246,6 +254,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random normalized Cartesian vector.
      * @since 1.4
      */
@@ -255,6 +265,8 @@ public class UnitSphereSampler implements SharedStateObjectSampler<double[]> {
     }
 
     /**
+     * Create a sample.
+     *
      * @return a random normalized Cartesian vector.
      * @deprecated Use {@link #sample()}.
      */

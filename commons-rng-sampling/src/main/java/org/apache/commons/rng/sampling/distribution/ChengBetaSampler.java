@@ -77,6 +77,8 @@ public class ChengBetaSampler
         protected final double logAlpha;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param aIsAlphaShape true if {@code a} is the beta distribution alpha shape parameter.
          * @param a Distribution first shape parameter.
@@ -92,6 +94,8 @@ public class ChengBetaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -146,6 +150,8 @@ public class ChengBetaSampler
         private final double gamma;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param aIsAlphaShape true if {@code a} is the beta distribution alpha shape parameter.
          * @param a min(alpha, beta) shape parameter.
@@ -158,6 +164,8 @@ public class ChengBetaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -226,6 +234,8 @@ public class ChengBetaSampler
         private final double k2;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param aIsAlphaShape true if {@code a} is the beta distribution alpha shape parameter.
          * @param a max(alpha, beta) shape parameter.
@@ -244,6 +254,8 @@ public class ChengBetaSampler
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -319,6 +331,8 @@ public class ChengBetaSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param delegate Beta sampler.
      */
     private ChengBetaSampler(SharedStateContinuousSampler delegate) {

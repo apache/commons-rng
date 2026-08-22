@@ -59,6 +59,8 @@ public class JDKRandom extends IntProvider {
      */
     private static final class ValidatingObjectInputStream extends ObjectInputStream {
         /**
+         * Constructs a new instance.
+         *
          * @param in Input stream
          * @throws IOException Signals that an I/O exception has occurred.
          */

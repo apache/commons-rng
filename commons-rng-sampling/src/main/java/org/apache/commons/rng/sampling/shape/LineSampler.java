@@ -62,6 +62,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double bx;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -73,6 +75,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -108,6 +112,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double by;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -121,6 +127,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -163,6 +171,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double bz;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -178,6 +188,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -214,6 +226,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         private final double[] b;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param a The first vertex.
          * @param b The second vertex.
@@ -226,6 +240,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          * @param source Source to copy.
          */
@@ -252,6 +268,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Source of randomness.
      */
     LineSampler(UniformRandomProvider rng) {
@@ -259,6 +277,8 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @return a random Cartesian coordinate on the line.
      */
     @Override

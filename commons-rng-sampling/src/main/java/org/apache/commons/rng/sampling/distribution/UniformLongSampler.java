@@ -43,6 +43,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         private final long value;
 
         /**
+         * Constructs a new instance.
+         *
          * @param value The value.
          */
         FixedUniformLongSampler(long value) {
@@ -81,6 +83,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         private final int shift;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
          * Must be a power of 2 greater than 2^0.
@@ -92,6 +96,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -130,6 +136,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         private final long limit;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param range Maximum range of the sample (exclusive).
          */
@@ -152,6 +160,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param source Source to copy.
          */
@@ -195,6 +205,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         private final long upper;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers.
          * @param lower Lower bound (inclusive) of the distribution.
          * @param upper Upper bound (inclusive) of the distribution.
@@ -238,6 +250,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
         private final UniformLongSampler sampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param offset The offset for the sample.
          * @param sampler The discrete sampler.
          */
@@ -266,6 +280,8 @@ public abstract class UniformLongSampler implements SharedStateLongSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      */
     UniformLongSampler(UniformRandomProvider rng) {

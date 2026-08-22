@@ -78,6 +78,8 @@ public class PoissonSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param delegate Poisson sampler.
      */
     private PoissonSampler(SharedStateDiscreteSampler delegate) {

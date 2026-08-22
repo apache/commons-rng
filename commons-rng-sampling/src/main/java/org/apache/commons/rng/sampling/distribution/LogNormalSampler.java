@@ -49,6 +49,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param mu Mean of the natural logarithm of the distribution values.
      * @param sigma Standard deviation of the natural logarithm of the distribution values.
      * @param gaussian N(0,1) generator.
@@ -62,6 +64,8 @@ public class LogNormalSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param rng Generator of uniformly distributed random numbers.
      * @param source Source to copy.
      */

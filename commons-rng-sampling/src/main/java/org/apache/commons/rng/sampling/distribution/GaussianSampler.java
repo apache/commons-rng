@@ -59,6 +59,8 @@ public class GaussianSampler implements SharedStateContinuousSampler {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param mean Mean of the Gaussian distribution.
      * @param standardDeviation Standard deviation of the Gaussian distribution.
      * @param normalized Generator of N(0,1) Gaussian distributed random numbers.

@@ -108,6 +108,8 @@ public final class GeometricSampler {
         private final SharedStateContinuousSampler exponentialSampler;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers
          * @param exponentialMean The mean of the related exponential distribution (must be
          * strictly positive finite)
@@ -118,6 +120,8 @@ public final class GeometricSampler {
         }
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Generator of uniformly distributed random numbers
          * @param source Source to copy.
          */

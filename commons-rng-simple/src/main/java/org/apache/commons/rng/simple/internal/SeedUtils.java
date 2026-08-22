@@ -59,6 +59,8 @@ final class SeedUtils {
         private int counter;
 
         /**
+         * Constructs a new instance.
+         *
          * @param rng Source of randomness.
          */
         UnsignedByteProvider(UniformRandomProvider rng) {

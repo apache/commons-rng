@@ -91,6 +91,8 @@ public class PoissonSamplerCache {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
      * @param ignored Ignored value.
@@ -115,6 +117,8 @@ public class PoissonSamplerCache {
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param minN   The minimum N covered by the cache where {@code N = (int)Math.floor(mean)}.
      * @param maxN   The maximum N covered by the cache where {@code N = (int)Math.floor(mean)}.
      * @param states The precomputed states.

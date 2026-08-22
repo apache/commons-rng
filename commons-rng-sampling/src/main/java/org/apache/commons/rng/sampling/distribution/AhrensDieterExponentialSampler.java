@@ -87,6 +87,8 @@ public class AhrensDieterExponentialSampler
     }
 
     /**
+     * Constructs a new instance.
+     *
      * @param mean Mean.
      * @param rng Generator of uniformly distributed random numbers.
      */
