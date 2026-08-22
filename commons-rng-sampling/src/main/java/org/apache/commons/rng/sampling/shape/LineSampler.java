@@ -83,7 +83,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         @Override
-        public double[] createSample(double p1mu, double u) {
+        protected double[] createSample(double p1mu, double u) {
             return new double[] {p1mu * ax + u * bx};
         }
 
@@ -133,7 +133,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         @Override
-        public double[] createSample(double p1mu, double u) {
+        protected double[] createSample(double p1mu, double u) {
             return new double[] {p1mu * ax + u * bx,
                                  p1mu * ay + u * by};
         }
@@ -192,7 +192,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         @Override
-        public double[] createSample(double p1mu, double u) {
+        protected double[] createSample(double p1mu, double u) {
             return new double[] {p1mu * ax + u * bx,
                                  p1mu * ay + u * by,
                                  p1mu * az + u * bz};
@@ -237,7 +237,7 @@ public abstract class LineSampler implements SharedStateObjectSampler<double[]> 
         }
 
         @Override
-        public double[] createSample(double p1mu, double u) {
+        protected double[] createSample(double p1mu, double u) {
             final double[] x = new double[a.length];
             for (int i = 0; i < x.length; i++) {
                 x[i] = p1mu * a[i] + u * b[i];

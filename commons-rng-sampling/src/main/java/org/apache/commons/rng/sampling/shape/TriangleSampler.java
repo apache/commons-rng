@@ -127,7 +127,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         @Override
-        public double[] createSample(double p1msmt, double s, double t) {
+        protected double[] createSample(double p1msmt, double s, double t) {
             return new double[] {p1msmt * ax + s * bx + t * cx,
                                  p1msmt * ay + s * by + t * cy};
         }
@@ -199,7 +199,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         @Override
-        public double[] createSample(double p1msmt, double s, double t) {
+        protected double[] createSample(double p1msmt, double s, double t) {
             return new double[] {p1msmt * ax + s * bx + t * cx,
                                  p1msmt * ay + s * by + t * cy,
                                  p1msmt * az + s * bz + t * cz};
@@ -249,7 +249,7 @@ public abstract class TriangleSampler implements SharedStateObjectSampler<double
         }
 
         @Override
-        public double[] createSample(double p1msmt, double s, double t) {
+        protected double[] createSample(double p1msmt, double s, double t) {
             final double[] x = new double[a.length];
             for (int i = 0; i < x.length; i++) {
                 x[i] = p1msmt * a[i] + s * b[i] + t * c[i];
