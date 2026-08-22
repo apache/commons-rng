@@ -3527,7 +3527,6 @@ public class ZigguratSamplerPerformance {
          * when sampling tries again targets this function. This allows sub-classes
          * to override the sample method to generate a sample with a different mean using:
          * <pre>
-         * @Override
          * public double sample() {
          *     return super.sample() * mean;
          * }
@@ -4820,7 +4819,6 @@ public class ZigguratSamplerPerformance {
          * when sampling tries again targets this function. This allows sub-classes
          * to override the sample method to generate a sample with a different mean using:
          * <pre>
-         * @Override
          * public double sample() {
          *     return super.sample() * mean;
          * }
