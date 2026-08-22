@@ -316,7 +316,7 @@ final class Conversions {
             // i >> 1         = long index
             // i & 0x1        = int number in the long  [0, 1]
             // (i & 0x1) << 5 = little-endian long shift to the int {0, 32}
-            output[i] = (int)((input[i >> 1]) >>> ((i & 0x1) << 5));
+            output[i] = (int)(input[i >> 1] >>> ((i & 0x1) << 5));
         }
 
         return output;

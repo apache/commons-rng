@@ -61,7 +61,7 @@ class JDKRandomBridgeTest {
         // Retrieve from serialized stream.
         final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
         final ObjectInputStream ois = new ObjectInputStream(bis);
-        final Random serialRng = (Random) (ois.readObject());
+        final Random serialRng = (Random) ois.readObject();
 
         // Check that the serialized data recreated the original state.
         checkSameSequence(rng, serialRng);
