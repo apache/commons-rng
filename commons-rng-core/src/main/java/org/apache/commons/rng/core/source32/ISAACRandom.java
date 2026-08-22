@@ -21,16 +21,25 @@ import java.util.Arrays;
 import org.apache.commons.rng.core.util.NumberFactory;
 
 /**
- * A fast cryptographic pseudo-random number generator.
+ * ISAAC: a fast pseudo-random number generator.
  * <p>
  * ISAAC (Indirection, Shift, Accumulate, Add, and Count) generates 32-bit
  * random numbers.
- * ISAAC has been designed to be cryptographically secure and is inspired
- * by RC4.
+ * ISAAC was designed by its author as a cryptographic pseudo-random number
+ * generator inspired by RC4.
  * Cycles are guaranteed to be at least 2<sup>40</sup> values long, and they
  * are 2<sup>8295</sup> values long on average.
- * The results are uniformly distributed, unbiased, and unpredictable unless
- * you know the seed.
+ * The results are uniformly distributed and unbiased.
+ * <p>
+ * <strong>This implementation is not suitable for cryptographic or
+ * security purposes.</strong> This library targets statistical
+ * applications: the default seeding procedure is not a cryptographically
+ * strong source of entropy, and the full internal state of the generator
+ * can be saved and restored (see
+ * {@link org.apache.commons.rng.RestorableUniformRandomProvider}), so
+ * output must be assumed to be predictable. Use
+ * {@link java.security.SecureRandom} to generate keys, tokens, session
+ * identifiers or any other security-sensitive values.
  * <p>
  * This code is based (with minor changes and improvements) on the original
  * implementation of the algorithm by Bob Jenkins.

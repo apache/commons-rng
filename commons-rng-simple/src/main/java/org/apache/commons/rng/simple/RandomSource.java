@@ -249,6 +249,13 @@ public enum RandomSource {
      *  <li>Native seed type: {@code int[]}.</li>
      *  <li>Native seed size: 256.</li>
      * </ul>
+     *
+     * <p><strong>Note:</strong> Although the ISAAC algorithm was designed by its
+     * author as a cryptographic pseudo-random number generator, this
+     * implementation, its default seeding and its saveable state are intended
+     * for statistical applications only and are <em>not</em> suitable for
+     * cryptographic or security purposes. Use {@link java.security.SecureRandom}
+     * for security-sensitive values.</p>
      */
     ISAAC(ProviderBuilder.RandomSourceInternal.ISAAC),
     /**
