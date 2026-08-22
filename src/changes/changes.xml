@@ -62,7 +62,7 @@ New features, updates and bug fixes (requires Java 8).
         as the source of randomness.
       </action>
       <action dev="aherbert" type="update" due-to="Security scan, Alex Herbert">
-        "ISAACRandom": Document unsuitability for use in a cryptographic or security
+        "ISAACRandom": Document unsuitability for use in cryptographic or security
         purposes due to the use of a non-cryptographically strong source of entropy for
         seeding, and access to the internal state by save/restore functionality.
       </action>
