@@ -22,7 +22,6 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.StreamCorruptedException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
