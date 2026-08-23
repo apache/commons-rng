@@ -21,9 +21,17 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.StreamCorruptedException;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Stream;
+import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.EnumSource.Mode;
 
 /**
  * Tests for the {@link JDKRandomBridge} adaptor class.
@@ -45,13 +53,22 @@ class JDKRandomBridgeTest {
         checkSameSequence(rng1, rng2);
     }
 
-    @Test
-    void testSerialization()
+    /**
+     * Test serialization with all sources. This ensures the maximum state size limit
+     * is suitable for all implementations in the library.
+     *
+     * <p>Excludes TWO_CMRES_SELECT which is does not currently save the subcycle generator
+     * instance in the state. The save/restore functionality is meant to operate on the same
+     * instance of the generator where the subcycle generators are already known.
+     */
+    @ParameterizedTest
+    @EnumSource(value=RandomSource.class, mode=Mode.EXCLUDE, names={"TWO_CMRES_SELECT"})
+    void testSerialization(RandomSource source)
         throws IOException,
                ClassNotFoundException {
         // Initialize.
         final long seed = RandomSource.createLong();
-        final Random rng = new JDKRandomBridge(RandomSource.SPLIT_MIX_64, seed);
+        final Random rng = new JDKRandomBridge(source, seed);
 
         // Serialize.
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -70,6 +87,93 @@ class JDKRandomBridgeTest {
         rng.setSeed(seed);
         serialRng.setSeed(seed);
         checkSameSequence(rng, serialRng);
+    }
+
+    static Stream<RandomSource> testDeserializationWithBadStateSizeThrows() {
+      // Note: This test is not valid for generators where the state bytes are large
+      // and are written in multiple blocks, e.g. WELL_44497_A.
+      return Stream.of(RandomSource.SPLIT_MIX_64,
+                       RandomSource.XO_SHI_RO_128_PP,
+                       RandomSource.L128_X256_MIX);
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testDeserializationWithBadStateSizeThrows(RandomSource source) throws IOException {
+        final long seed = 46531265234L;
+        final Random rng = new JDKRandomBridge(source, seed);
+
+        // Serialize.
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(rng);
+        oos.close();
+        final byte[] data = bos.toByteArray();
+
+        // Locate the state size written by the custom writeObject. The custom class
+        // data is the last data in the stream:
+        //   [... block-data header] [int size] [state bytes] [TC_ENDBLOCKDATA]
+        // The expected state size is obtained from an identical generator.
+        // TC_ENDBLOCKDATA = 1 byte:
+        //   offset = data.length - 1 - size - 4
+        // Note: A large state may be written in multiple blocks so the test is not
+        // valid for generators with a large state. These will fail the sanity check.
+        final byte[] state = ((RandomProviderDefaultState)
+            source.create(seed).saveState()).getState();
+        final int size = state.length;
+        final int offset = data.length - 1 - size - 4;
+        Assertions.assertEquals(size, readInt(data, offset),
+            "Sanity check failed: unexpected state size location");
+
+        // Tamper the declared size: a huge value with no matching payload must be
+        // rejected before any allocation is attempted.
+        writeInt(data, offset, Integer.MAX_VALUE);
+        assertDeserializationThrows(data);
+
+        // Tamper the declared size: a negative value must be rejected.
+        writeInt(data, offset, -1);
+        assertDeserializationThrows(data);
+    }
+
+    /**
+     * Assert deserialization of the data throws a {@link StreamCorruptedException}.
+     *
+     * @param data Serialized data.
+     */
+    private static void assertDeserializationThrows(byte[] data) {
+        Assertions.assertThrows(StreamCorruptedException.class, () -> {
+            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))) {
+                ois.readObject();
+            }
+        });
+    }
+
+    /**
+     * Read a big-endian int from the data.
+     *
+     * @param data Data.
+     * @param offset Offset to read from.
+     * @return the int
+     */
+    private static int readInt(byte[] data, int offset) {
+        return ((data[offset] & 0xff) << 24) |
+               ((data[offset + 1] & 0xff) << 16) |
+               ((data[offset + 2] & 0xff) << 8) |
+                (data[offset + 3] & 0xff);
+    }
+
+    /**
+     * Write a big-endian int to the data.
+     *
+     * @param data Data.
+     * @param offset Offset to write to.
+     * @param value Value to write.
+     */
+    private static void writeInt(byte[] data, int offset, int value) {
+        data[offset] = (byte) (value >>> 24);
+        data[offset + 1] = (byte) (value >>> 16);
+        data[offset + 2] = (byte) (value >>> 8);
+        data[offset + 3] = (byte) value;
     }
 
     /**

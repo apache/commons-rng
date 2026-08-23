@@ -56,6 +56,11 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" due-to="Security scan, Alex Herbert" issue="RNG-199">
+        "JDKRandomBridge": Validate state size before byte allocation during
+        deserialization. Avoids negative array size and fails fast for an obviously
+        excessive size from a corrupted stream.
+      </action>
       <action dev="aherbert" type="update" due-to="Alex Herbert" issue="RNG-197">
         "JDKRandomWrapper": Methods not directly implemented by java.util.Random
         use the default implementation in UniformRandomProvider with Random.nextLong()

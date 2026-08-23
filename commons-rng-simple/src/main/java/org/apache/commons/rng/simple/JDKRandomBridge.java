@@ -19,6 +19,7 @@ package org.apache.commons.rng.simple;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
@@ -42,6 +43,13 @@ import org.apache.commons.rng.core.RandomProviderDefaultState;
 public final class JDKRandomBridge extends Random {
     /** Serializable version identifier. */
     private static final long serialVersionUID = 20161107L;
+    /**
+     * The maximum supported size of the generator state. This is well above the
+     * state size of any shipped generator. It bounds the allocation used to read
+     * the state so that a corrupted or malicious stream declaring a huge size
+     * fails fast instead of forcing an over-sized allocation.
+     */
+    private static final int MAX_STATE_SIZE = 0x10000;
     /** Source. */
     private final RandomSource source;
     /** Delegate. */
@@ -150,7 +158,13 @@ public final class JDKRandomBridge extends Random {
         // Avoid the use of input.readObject() to deserialize by manually reading the byte[].
         // Note: ObjectInputStream.readObject() will execute the readObject() method of the named
         // class in the stream which may contain potentially malicious code.
+        // Validate the size before allocation: a corrupted or malicious stream
+        // must not force an arbitrarily large allocation before readFully can
+        // detect truncation.
         final int size = input.readInt();
+        if (size < 0 || size > MAX_STATE_SIZE) {
+            throw new StreamCorruptedException("Invalid state size: " + size);
+        }
         final byte[] state = new byte[size];
         input.readFully(state);
         delegate.restoreState(new RandomProviderDefaultState(state));
