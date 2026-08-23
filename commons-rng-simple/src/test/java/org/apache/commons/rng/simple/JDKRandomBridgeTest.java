@@ -22,20 +22,36 @@ import java.io.ObjectInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.StreamCorruptedException;
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.apache.commons.rng.core.RandomProviderDefaultState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.EnumSource.Mode;
 
 /**
  * Tests for the {@link JDKRandomBridge} adaptor class.
  */
 class JDKRandomBridgeTest {
+    /**
+     * RandomSource instances not supported by JDKRandomBridge.
+     *
+     * <p>Excludes TWO_CMRES_SELECT which requires additional constructor arguments.
+     */
+    private static final EnumSet<RandomSource> UNSUPPORTED = EnumSet.of(RandomSource.TWO_CMRES_SELECT);
+
+    static Stream<RandomSource> unsupportedRandomSource() {
+        return UNSUPPORTED.stream();
+    }
+
+    static Stream<RandomSource> supportedRandomSource() {
+        final EnumSet<RandomSource> supported = EnumSet.allOf(RandomSource.class);
+        supported.removeAll(UNSUPPORTED);
+        return supported.stream();
+    }
+
     @Test
     void testJDKRandomEquivalence() {
         // Initialize.
@@ -52,15 +68,22 @@ class JDKRandomBridgeTest {
         checkSameSequence(rng1, rng2);
     }
 
+    @ParameterizedTest
+    @MethodSource(value = {"unsupportedRandomSource"})
+    void testUnsupportedRandomSource(RandomSource source) {
+        final byte[] seed = source.createSeed();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new JDKRandomBridge(source, seed));
+    }
+
     /**
      * Test serialization with all sources. This ensures the maximum state size limit
      * is suitable for all implementations in the library.
      *
-     * <p>Excludes TWO_CMRES_SELECT which requires additional constructor arguments and is
+     * <p>Excludes sources which require additional constructor arguments and are
      * not supported.
      */
     @ParameterizedTest
-    @EnumSource(value = RandomSource.class, mode = Mode.EXCLUDE, names = {"TWO_CMRES_SELECT"})
+    @MethodSource(value = {"supportedRandomSource"})
     void testSerialization(RandomSource source)
         throws IOException,
                ClassNotFoundException {
