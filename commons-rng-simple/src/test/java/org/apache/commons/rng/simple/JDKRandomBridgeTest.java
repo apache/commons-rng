@@ -61,7 +61,7 @@ class JDKRandomBridgeTest {
      * instance of the generator where the subcycle generators are already known.
      */
     @ParameterizedTest
-    @EnumSource(value=RandomSource.class, mode=Mode.EXCLUDE, names={"TWO_CMRES_SELECT"})
+    @EnumSource(value = RandomSource.class, mode = Mode.EXCLUDE, names = {"TWO_CMRES_SELECT"})
     void testSerialization(RandomSource source)
         throws IOException,
                ClassNotFoundException {
@@ -89,11 +89,11 @@ class JDKRandomBridgeTest {
     }
 
     static Stream<RandomSource> testDeserializationWithBadStateSizeThrows() {
-      // Note: This test is not valid for generators where the state bytes are large
-      // and are written in multiple blocks, e.g. WELL_44497_A.
-      return Stream.of(RandomSource.SPLIT_MIX_64,
-                       RandomSource.XO_SHI_RO_128_PP,
-                       RandomSource.L128_X256_MIX);
+        // Note: This test is not valid for generators where the state bytes are large
+        // and are written in multiple blocks, e.g. WELL_44497_A.
+        return Stream.of(RandomSource.SPLIT_MIX_64,
+                         RandomSource.XO_SHI_RO_128_PP,
+                         RandomSource.L128_X256_MIX);
     }
 
     @ParameterizedTest
