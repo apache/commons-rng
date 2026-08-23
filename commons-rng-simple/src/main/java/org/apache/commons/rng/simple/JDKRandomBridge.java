@@ -38,6 +38,10 @@ import org.apache.commons.rng.core.RandomProviderDefaultState;
  * In particular, there is no guarantee that the serialized form of this class
  * will be compatible across (even <em>minor</em>) releases of the library.</p>
  *
+ * <p>Note: This class does not support any {@link RandomSource} that requires
+ * constructor arguments in addition to the seed
+ * (see {@link RandomSource#create(Object, Object...)}).</p>
+ *
  * @since 1.0
  */
 public final class JDKRandomBridge extends Random {
@@ -64,6 +68,9 @@ public final class JDKRandomBridge extends Random {
      *
      * @param source Source of randomness.
      * @param seed Seed.  Can be {@code null}.
+     * @throws IllegalArgumentException if the {@code source} requires constructor
+     * arguments in addition to the {@code seed}.
+     * @see RandomSource#create(Object, Object...)
      */
     public JDKRandomBridge(RandomSource source,
                            Object seed) {

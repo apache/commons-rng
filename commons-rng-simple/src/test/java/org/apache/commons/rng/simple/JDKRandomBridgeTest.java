@@ -56,9 +56,8 @@ class JDKRandomBridgeTest {
      * Test serialization with all sources. This ensures the maximum state size limit
      * is suitable for all implementations in the library.
      *
-     * <p>Excludes TWO_CMRES_SELECT which is does not currently save the subcycle generator
-     * instance in the state. The save/restore functionality is meant to operate on the same
-     * instance of the generator where the subcycle generators are already known.
+     * <p>Excludes TWO_CMRES_SELECT which requires additional constructor arguments and is
+     * not supported.
      */
     @ParameterizedTest
     @EnumSource(value = RandomSource.class, mode = Mode.EXCLUDE, names = {"TWO_CMRES_SELECT"})

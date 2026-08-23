@@ -56,6 +56,11 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" due-to="Alex Herbert" issue="RNG-200">
+        "JDKRandomBridge": Document lack of support for RandomSource instances
+        that require constructor arguments in addition to the seed. This
+        currently excludes TWO_CMRES_SELECT from use in the bridge.
+      </action>
       <action dev="aherbert" type="update" due-to="Security scan, Alex Herbert" issue="RNG-199">
         "JDKRandomBridge": Validate state size before byte allocation during
         deserialization. Avoids negative array size and fails fast for an obviously
