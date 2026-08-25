@@ -46,7 +46,7 @@ import org.apache.commons.rng.sampling.distribution.InternalUtils.FactorialLog;
 public class LargeMeanPoissonSampler
     implements SharedStateDiscreteSampler {
     /** Upper bound to avoid truncation. */
-    private static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
+    static final double MAX_MEAN = 0.5 * Integer.MAX_VALUE;
     /** Class to compute {@code log(n!)}. This has no cached values. */
     private static final InternalUtils.FactorialLog NO_CACHE_FACTORIAL_LOG;
     /** Used when there is no requirement for a small mean Poisson sampler. */

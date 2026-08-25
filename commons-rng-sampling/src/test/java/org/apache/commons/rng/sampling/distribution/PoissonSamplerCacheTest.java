@@ -16,12 +16,15 @@
  */
 package org.apache.commons.rng.sampling.distribution;
 
+import java.util.stream.DoubleStream;
 import org.apache.commons.rng.RestorableUniformRandomProvider;
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.sampling.RandomAssert;
 import org.apache.commons.rng.simple.RandomSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * This test checks the {@link PoissonSamplerCache} functions exactly like the
@@ -38,6 +41,30 @@ class PoissonSamplerCacheTest {
     private final int maxRange = (int) Math.floor(PoissonSampler.PIVOT + 6);
     /** The mid-point of the range of the mean */
     private final int midRange = (minRange + maxRange) / 2;
+
+
+    /**
+     * Return a stream of supported values for the min mean.
+     * All the values should be handled as if the min mean was 0.
+     * This is an invalid mean for a PoissonSampler but valid to bound
+     * the cache construction.
+     *
+     * @return the stream
+     */
+    static DoubleStream supportedMinMean() {
+        return DoubleStream.of(Double.NEGATIVE_INFINITY, Double.NaN, -1, 0);
+    }
+
+    /**
+     * Return a stream of unsupported values for the max mean.
+     * These values are invalid to create a cache or a PoissonSampler.
+     *
+     * @return the stream
+     */
+    static DoubleStream unsupportedMaxMean() {
+        return DoubleStream.of(Double.POSITIVE_INFINITY, Double.NaN,
+            Math.nextUp(LargeMeanPoissonSampler.MAX_MEAN));
+    }
 
     /**
      * Test the cache reports the minimum mean that uses an algorithm that supports caching.
@@ -112,9 +139,9 @@ class PoissonSamplerCacheTest {
      * Test the cache can be created with a min range below 0.
      * In this case the range is truncated to 0.
      */
-    @Test
-    void testConstructorWhenMinBelow0() {
-        final double min = -1;
+    @ParameterizedTest
+    @MethodSource(value = {"supportedMinMean"})
+    void testConstructorWhenMinBelow0(double min) {
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache(min, max);
         Assertions.assertTrue(cache.isValidRange());
@@ -135,6 +162,18 @@ class PoissonSamplerCacheTest {
         Assertions.assertFalse(cache.isValidRange());
         Assertions.assertEquals(0, cache.getMinMean());
         Assertions.assertEquals(0, cache.getMaxMean());
+    }
+
+    /**
+     * Test the cache requires a range within the support of the
+     * PoissonSampler.
+     */
+    @ParameterizedTest
+    @MethodSource(value = {"unsupportedMaxMean"})
+    void testConstructorWhenMaxAbovePoissonSamplerSupport(double max) {
+        final double min = 0;
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> createPoissonSamplerCache(min, max));
     }
 
     /**
@@ -200,15 +239,42 @@ class PoissonSamplerCacheTest {
      * Test the cache can be created with a min range below 0.
      * In this case the range is truncated to 0.
      */
-    @Test
-    void testWithRangeConstructorWhenMinBelow0() {
-        final double min = -1;
+    @ParameterizedTest
+    @MethodSource(value = {"supportedMinMean"})
+    void testWithRangeConstructorWhenMinBelow0(double min) {
         final double max = PoissonSampler.PIVOT + 2;
         final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
         Assertions.assertTrue(cache.isValidRange());
         Assertions.assertEquals(PoissonSampler.PIVOT, cache.getMinMean());
         Assertions.assertEquals(Math.nextDown(Math.floor(max) + 1),
                                 cache.getMaxMean());
+    }
+
+    /**
+     * Test the cache can be created with a max range below 0.
+     * In this case the range is truncated to 0, i.e. no cache.
+     */
+    @Test
+    void testWithRangeConstructorWhenMaxBelow0() {
+        final double min = -10;
+        final double max = -1;
+        final PoissonSamplerCache cache = createPoissonSamplerCache().withRange(min, max);
+        Assertions.assertFalse(cache.isValidRange());
+        Assertions.assertEquals(0, cache.getMinMean());
+        Assertions.assertEquals(0, cache.getMaxMean());
+    }
+
+    /**
+     * Test the cache requires a range within the support of the
+     * PoissonSampler.
+     */
+    @ParameterizedTest
+    @MethodSource(value = {"unsupportedMaxMean"})
+    void testWithRangeConstructorWhenMaxAbovePoissonSamplerSupport(double max) {
+        final double min = 0;
+        final PoissonSamplerCache cache = createPoissonSamplerCache();
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> cache.withRange(min, max));
     }
 
     /**
@@ -247,24 +313,14 @@ class PoissonSamplerCacheTest {
     /**
      * Test createSharedStateSampler() with a bad mean.
      *
-     * <p>Note this test actually tests the SmallMeanPoissonSampler throws.
+     * <p>Note: The supported min mean values are valid for cache construction
+     * but invalid to create a sampler as they are all equivalent to zero.
      */
-    @Test
-    void testCreateSharedStateSamplerThrowsWithZeroMean() {
+    @ParameterizedTest
+    @MethodSource(value = {"supportedMinMean", "unsupportedMaxMean"})
+    void testCreateSharedStateSamplerThrowsWithBadMean(double mean) {
         final UniformRandomProvider rng = RandomAssert.seededRNG();
         final PoissonSamplerCache cache = createPoissonSamplerCache();
-        Assertions.assertThrows(IllegalArgumentException.class,
-            () -> cache.createSharedStateSampler(rng, 0));
-    }
-
-    /**
-     * Test createSharedStateSampler() with a mean that is too large.
-     */
-    @Test
-    void testCreateSharedStateSamplerThrowsWithNonIntegerMean() {
-        final UniformRandomProvider rng = RandomAssert.seededRNG();
-        final PoissonSamplerCache cache = createPoissonSamplerCache();
-        final double mean = Integer.MAX_VALUE + 1.0;
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> cache.createSharedStateSampler(rng, mean));
     }

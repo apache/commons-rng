@@ -56,6 +56,12 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="fix" due-to="Alex Herbert" issue="RNG-201">
+        "PoissonSamplerCache": Limit the maximum mean to the same support
+        as the LargeMeanPoissonSampler. Means above the limit, or NaN, will throw
+        when constructing the cache. Existing behaviour to throw when
+        constructing a sampler from the cache is unchanged.
+      </action>
       <action dev="aherbert" type="update" due-to="Alex Herbert" issue="RNG-200">
         "JDKRandomBridge": Document lack of support for RandomSource instances
         that require constructor arguments in addition to the seed. This

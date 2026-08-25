@@ -83,7 +83,8 @@ public class PoissonSamplerCache {
      *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
-     * @throws IllegalArgumentException if {@code maxMean < minMean}
+     * @throws IllegalArgumentException if {@code maxMean < minMean}; or
+     * {@code maxMean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
     public PoissonSamplerCache(double minMean,
                                double maxMean) {
@@ -108,10 +109,15 @@ public class PoissonSamplerCache {
             maxN = 0;
             values = null;
         } else {
+            // After validation:
+            // min <= max
+            // max in [-infinity, MAX_MEAN]   (No NaN)
+            // min in [PIVOT, max]            (No NaN)
+
             // Convert the mean into integers.
             // Note the minimum is clipped to the algorithm switch point.
             this.minN = (int) Math.floor(Math.max(minMean, PoissonSampler.PIVOT));
-            this.maxN = (int) Math.floor(Math.min(maxMean, Integer.MAX_VALUE));
+            this.maxN = (int) Math.floor(maxMean);
             values = new LargeMeanPoissonSamplerState[maxN - minN + 1];
         }
     }
@@ -133,7 +139,8 @@ public class PoissonSamplerCache {
     }
 
     /**
-     * Check the mean range.
+     * Check the mean range. This may update the {@code minMean} to be a valid
+     * lower bound for the support.
      *
      * <p>This method exists to raise an exception before invocation of the
      * private constructor; this mitigates Finalizer attacks
@@ -141,8 +148,9 @@ public class PoissonSamplerCache {
      *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
-     * @return the minimum mean
-     * @throws IllegalArgumentException if {@code maxMean < minMean}
+     * @return the minimum for the mean support
+     * @throws IllegalArgumentException if {@code maxMean < minMean}; or
+     * {@code maxMean > 0.5 *} {@link Integer#MAX_VALUE}.
      */
     private static double checkMeanRange(double minMean, double maxMean) {
         // Note:
@@ -157,7 +165,14 @@ public class PoissonSamplerCache {
             throw new IllegalArgumentException(
                     "Max mean: " + maxMean + " < " + minMean);
         }
-        return minMean;
+
+        // The maximum mean support must be the same as the support of
+        // the Poisson sampler. As stated above there is no lower bound on the mean.
+        InternalUtils.requireRangeClosed(Double.NEGATIVE_INFINITY,
+            LargeMeanPoissonSampler.MAX_MEAN, maxMean, "Max mean");
+
+        // Handle a NaN value for the min; negatives are allowed.
+        return Double.isNaN(minMean) ? PoissonSampler.PIVOT : minMean;
     }
 
     /**
@@ -170,7 +185,7 @@ public class PoissonSamplerCache {
      * @param mean Mean.
      * @return A Poisson sampler
      * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code mean >} {@link Integer#MAX_VALUE}.
+     * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      * @deprecated Use {@link #createSharedStateSampler(UniformRandomProvider, double)}.
      */
     @Deprecated
@@ -189,7 +204,7 @@ public class PoissonSamplerCache {
      * @param mean Mean.
      * @return A Poisson sampler
      * @throws IllegalArgumentException if {@code mean <= 0} or
-     * {@code mean >} {@link Integer#MAX_VALUE}.
+     * {@code mean > 0.5 *} {@link Integer#MAX_VALUE}.
      * @since 1.4
      */
     public SharedStateDiscreteSampler createSharedStateSampler(UniformRandomProvider rng,
@@ -347,7 +362,8 @@ public class PoissonSamplerCache {
      *
      * @param minMean The minimum mean covered by the cache.
      * @param maxMean The maximum mean covered by the cache.
-     * @throws IllegalArgumentException if {@code maxMean < minMean}
+     * @throws IllegalArgumentException if {@code maxMean < minMean}; or
+     * {@code maxMean > 0.5 *} {@link Integer#MAX_VALUE}.
      * @return the poisson sampler cache
      */
     public PoissonSamplerCache withRange(double minMean,
@@ -356,7 +372,7 @@ public class PoissonSamplerCache {
             // Nothing to reuse
             return new PoissonSamplerCache(minMean, maxMean);
         }
-        checkMeanRange(minMean, maxMean);
+        final double min = checkMeanRange(minMean, maxMean);
 
         // The cache can only be used for the LargeMeanPoissonSampler.
         if (maxMean < PoissonSampler.PIVOT) {
@@ -365,7 +381,7 @@ public class PoissonSamplerCache {
 
         // Convert the mean into integers.
         // Note the minimum is clipped to the algorithm switch point.
-        final int withMinN = (int) Math.floor(Math.max(minMean, PoissonSampler.PIVOT));
+        final int withMinN = (int) Math.floor(Math.max(min, PoissonSampler.PIVOT));
         final int withMaxN = (int) Math.floor(maxMean);
         final LargeMeanPoissonSamplerState[] states =
                 new LargeMeanPoissonSamplerState[withMaxN - withMinN + 1];
