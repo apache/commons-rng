@@ -65,14 +65,10 @@ class GuideTableDiscreteSamplerTest {
         assertConstructorThrows(new double[4], 1.0);
     }
 
-    @Test
-    void testConstructorThrowsWithZeroAlpha() {
-        assertConstructorThrows(new double[] {0.5, 0.5}, 0.0);
-    }
-
-    @Test
-    void testConstructorThrowsWithNegativeAlpha() {
-        assertConstructorThrows(new double[] {0.5, 0.5}, -1.0);
+    @ParameterizedTest
+    @ValueSource(doubles = {0.0, -1.0, Double.POSITIVE_INFINITY, Double.NaN})
+    void testConstructorThrowsWithBadAlpha(double alpha) {
+        assertConstructorThrows(new double[] {0.5, 0.5}, alpha);
     }
 
     /**

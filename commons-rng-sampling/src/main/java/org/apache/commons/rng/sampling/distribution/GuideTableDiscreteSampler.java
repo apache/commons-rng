@@ -143,7 +143,8 @@ public final class GuideTableDiscreteSampler
      * @return the sampler
      * @throws IllegalArgumentException if {@code probabilities} is null or empty, a
      * probability is negative, infinite or {@code NaN}, the sum of all
-     * probabilities is not strictly positive, or {@code alpha} is not strictly positive.
+     * probabilities is not strictly positive, or {@code alpha} is not strictly
+     * positive and finite.
      */
     public static SharedStateDiscreteSampler of(UniformRandomProvider rng,
                                                 double[] probabilities,
@@ -201,13 +202,13 @@ public final class GuideTableDiscreteSampler
      * @param probabilities The probabilities.
      * @param alpha The alpha factor used to set the guide table size.
      * @throws IllegalArgumentException if {@code probabilities} is null or empty, or
-     * {@code alpha} is not strictly positive.
+     * {@code alpha} is not strictly positive and finite.
      */
     private static void validateParameters(double[] probabilities, double alpha) {
         if (probabilities == null || probabilities.length == 0) {
             throw new IllegalArgumentException("Probabilities must not be empty.");
         }
-        InternalUtils.requireStrictlyPositive(alpha, "alpha");
+        InternalUtils.requireStrictlyPositiveFinite(alpha, "alpha");
     }
 
     /**

@@ -56,6 +56,9 @@ If the output is not quite correct, check for invisible trailing spaces!
     <release version="1.8" date="TBD" description="
 New features, updates and bug fixes (requires Java 8).
 ">
+      <action dev="aherbert" type="update" due-to="Alex Herbert">
+        "GuideTableDiscreteSampler": Validate alpha is finite.
+      </action>
       <action dev="aherbert" type="fix" due-to="Alex Herbert" issue="RNG-201">
         "PoissonSamplerCache": Limit the maximum mean to the same support
         as the LargeMeanPoissonSampler. Means above the limit, or NaN, will throw
