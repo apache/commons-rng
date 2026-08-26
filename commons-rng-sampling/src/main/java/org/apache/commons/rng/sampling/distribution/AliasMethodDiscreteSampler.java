@@ -62,6 +62,15 @@ import java.util.Arrays;
  * <p>Larger table sizes that are a power of 2 will benefit from fast algorithms for
  * {@link UniformRandomProvider#nextInt(int)} that exploit the power of 2.</p>
  *
+ * <p><strong>Alias table size</strong></p>
+ *
+ * <p>Warning: There is no limit on the padding parameter. This allows the alias table to
+ * be configured to the desired size. Performance gains may show diminishing returns as
+ * the padding increases. This is dependent on the underlying probabilities of the
+ * enumerated distribution; and whether the table size is a power of 2 less than 2<sup>11</sup>.
+ * Users are advised to limit padding to bound the memory allocation unless benchmarking of
+ * the use case shows noticeable performance gains with a larger alias table.</p>
+ *
  * @see <a href="https://en.wikipedia.org/wiki/Alias_method">Alias Method</a>
  * @see <a href="https://www.keithschwarz.com/darts-dice-coins/">Darts, Dice, and Coins:
  * Sampling from a Discrete Distribution by Keith Schwartz</a>

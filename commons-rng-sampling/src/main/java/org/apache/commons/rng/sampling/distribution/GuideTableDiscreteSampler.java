@@ -30,8 +30,17 @@ import org.apache.commons.rng.UniformRandomProvider;
  *  New York: Springer-Verlag. Chapter 3.2.4 "The method of guide tables" p. 96.
  * </blockquote>
  *
- * <p>The size of the guide table can be controlled using a parameter. A larger guide table
- * will improve performance at the cost of storage space.</p>
+ * <p><strong>Guide table size</strong></p>
+ *
+ * <p>The size of the guide table can be controlled using a scaling {@code alpha} parameter.
+ * A larger guide table will improve performance at the cost of storage space.</p>
+ *
+ * <p>Warning: There is no limit on the scaling parameter. This allows the guide table to
+ * be configured to the desired size. Performance gains may show diminishing returns as
+ * the scaling increases. This is dependent on the underlying probabilities of the
+ * enumerated distribution. Users are advised to limit scaling to bound the memory
+ * allocation unless benchmarking of the use case shows noticeable performance gains with
+ * a larger guide table.</p>
  *
  * <p>Sampling uses {@link UniformRandomProvider#nextDouble()}.</p>
  *
