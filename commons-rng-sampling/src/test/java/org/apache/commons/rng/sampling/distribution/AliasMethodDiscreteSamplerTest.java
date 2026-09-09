@@ -209,7 +209,7 @@ class AliasMethodDiscreteSamplerTest {
     /**
      * Check the distribution of samples match the expected probabilities.
      *
-     * @param expected the expected probabilities
+     * @param probabilities the expected probabilities
      */
     private static void checkSamples(double[] probabilities) {
         checkSamples(createSampler(probabilities), probabilities);
@@ -218,7 +218,7 @@ class AliasMethodDiscreteSamplerTest {
     /**
      * Check the distribution of samples match the expected probabilities.
      *
-     * @param expected the expected probabilities
+     * @param probabilities the expected probabilities
      */
     private static void checkSamples(SharedStateDiscreteSampler sampler, double[] probabilities) {
         final int numberOfSamples = 10000;
