@@ -702,7 +702,7 @@ class StableSamplerTest {
         // Note:
         // The point at which there *should* be no difference between the two is when
         // exp(x) - 1 == exp(x). This will occur at exp(x)=2^54, x = ln(2^54) = 37.43.
-        Assertions.assertEquals(((double) (1L << 54)) - 1, (double) (1L << 54));
+        Assertions.assertEquals((double) (1L << 54) - 1, (double) (1L << 54));
         // However since expm1 and exp are only within 1 ULP of the exact result differences
         // still occur above this threshold.
         // 2^6 = 64; 2^-4 = 0.0625

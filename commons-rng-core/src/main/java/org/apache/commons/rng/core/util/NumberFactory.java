@@ -99,8 +99,8 @@ public final class NumberFactory {
                                     int w) {
         // Require the least significant 53-bits from a long.
         // Join the most significant 26 from v with 27 from w.
-        final long high = ((long) (v >>> 6)) << 27;  // 26-bits remain
-        final int low = w >>> 5;                     // 27-bits remain
+        final long high = (long) (v >>> 6) << 27;  // 26-bits remain
+        final int low = w >>> 5;                   // 27-bits remain
         return (high | low) * DOUBLE_MULTIPLIER;
     }
 
@@ -124,7 +124,7 @@ public final class NumberFactory {
      */
     public static long makeLong(int v,
                                 int w) {
-        return (((long) v) << 32) | (w & 0xffffffffL);
+        return (long) v << 32 | (w & 0xffffffffL);
     }
 
     /**

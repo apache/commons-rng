@@ -334,13 +334,15 @@ public final class Philox4x32 extends IntProvider implements LongJumpableUniform
     /**
      * Gets the buffer position increment from the jump distance.
      *
-     * @param distance Jump distance.
+     * @param distance Jump distance (must be positive).
      * @return the buffer position increment
      */
     private static int getBufferPositionIncrement(double distance) {
         return distance < TWO_POW_54 ?
-            // 2 least significant digits from the integer representation
-            (int)((long) distance) & 0x3 :
+            // 2 least significant digits from the integer representation.
+            // The cast is to long to obtain a 53-bit integer, then to int for the
+            // return type which is masked at 2 bits.
+            (int) (long) distance & 0x3 :
             0;
     }
 

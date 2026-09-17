@@ -213,7 +213,7 @@ public class AliasMethodDiscreteSampler
 
             // Create a uniform random deviate as a long.
             // This replicates functionality from the o.a.c.rng.core.utils.NumberFactory.makeLong
-            final long longBits = (((long) rng.nextInt()) << 32) | (bits & 0xffffffffL);
+            final long longBits = (long) rng.nextInt() << 32 | (bits & 0xffffffffL);
 
             // Choose between the two. Use a 53-bit long for the probability.
             return (longBits >>> 11) < probability[j] ? j : alias[j];

@@ -101,7 +101,7 @@ class NumberFactoryTest {
         final int vL = NumberFactory.extractLo(v);
         final int vH = NumberFactory.extractHi(v);
 
-        final long actual = (((long) vH) << 32) | (vL & 0xffffffffL);
+        final long actual = (long) vH << 32 | (vL & 0xffffffffL);
         Assertions.assertEquals(v, actual);
     }
 

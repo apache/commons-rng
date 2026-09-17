@@ -582,7 +582,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
 
             final long x = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
-            final int i = ((int) x) & MASK_INT8;
+            final int i = (int) x & MASK_INT8;
 
             if (i < I_MAX) {
                 // Early exit.
@@ -626,7 +626,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             for (;;) {
                 // Duplicate of the sample() method
                 final long x = nextLong();
-                final int i = ((int) x) & 0xff;
+                final int i = (int) x & 0xff;
 
                 if (i < I_MAX) {
                     // Early exit.
@@ -652,7 +652,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         private int selectRegion() {
             final long x = nextLong();
             // j in [0, 256)
-            final int j = ((int) x) & MASK_INT8;
+            final int j = (int) x & MASK_INT8;
             // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] & MASK_INT8 : j;
         }
@@ -1062,7 +1062,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
             // (which defaults to 35 bytes). This compiles to 33 bytes.
             final long xx = nextLong();
             // Float multiplication squashes these last 8 bits, so they can be used to sample i
-            final int i = ((int) xx) & MASK_INT8;
+            final int i = (int) xx & MASK_INT8;
 
             if (i < I_MAX) {
                 // Early exit.
@@ -1174,7 +1174,7 @@ public abstract class ZigguratSampler implements SharedStateContinuousSampler {
         private int selectRegion() {
             final long x = nextLong();
             // j in [0, 256)
-            final int j = ((int) x) & MASK_INT8;
+            final int j = (int) x & MASK_INT8;
             // map to j in [0, N] with N the number of layers of the ziggurat
             return x >= IPMF[j] ? MAP[j] & MASK_INT8 : j;
         }

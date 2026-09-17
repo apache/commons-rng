@@ -107,7 +107,7 @@ public class ZigguratNormalizedGaussianSampler
     @Override
     public double sample() {
         final long j = rng.nextLong();
-        final int i = ((int) j) & LAST;
+        final int i = (int) j & LAST;
         if (Math.abs(j) < K[i]) {
             // This branch is called about 0.985086 times per sample.
             return j * W[i];
