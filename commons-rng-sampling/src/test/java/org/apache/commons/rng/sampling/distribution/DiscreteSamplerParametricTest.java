@@ -28,6 +28,13 @@ import org.junit.jupiter.params.provider.MethodSource;
  * Tests for random deviates generators.
  */
 class DiscreteSamplerParametricTest {
+
+    /** Method to test two integer values. */
+    @FunctionalInterface
+    interface IntIntBiPredicate {
+        boolean test(int a, int b);
+    }
+
     private static Iterable<DiscreteSamplerTestData> getSamplerTestData() {
         return DiscreteSamplersList.list();
     }
@@ -40,7 +47,8 @@ class DiscreteSamplerParametricTest {
         check(sampleSize,
               data.getSampler(),
               data.getPoints(),
-              data.getProbabilities());
+              data.getProbabilities(),
+              data.isRange());
     }
 
     /**
@@ -53,11 +61,13 @@ class DiscreteSamplerParametricTest {
      * @param sampleSize Number of random values to generate.
      * @param points Outcomes.
      * @param expected Expected counts of the given outcomes.
+     * @param range True if the probabilities are for a range.
      */
     private static void check(long sampleSize,
                               DiscreteSampler sampler,
                               int[] points,
-                              double[] expected) {
+                              double[] expected,
+                              boolean range) {
         final ChiSquareTest chiSquareTest = new ChiSquareTest();
         final int numTests = 50;
 
@@ -66,6 +76,13 @@ class DiscreteSamplerParametricTest {
 
         final int numBins = points.length;
         final long[] observed = new long[numBins];
+
+        // Support testing a probability mass function PMF(x)
+        // or a range p(x_i < X < x_i+1). If points are sorted
+        // we only require comparing using <= points[i].
+        final IntIntBiPredicate test = range ?
+            (x, y) -> x <= y :
+            (x, y) -> x == y;
 
         // For storing chi2 larger than the critical value.
         final List<Double> failedStat = new ArrayList<>();
@@ -76,7 +93,7 @@ class DiscreteSamplerParametricTest {
                     final int value = sampler.sample();
 
                     for (int k = 0; k < numBins; k++) {
-                        if (value == points[k]) {
+                        if (test.test(value, points[k])) {
                             ++observed[k];
                             continue SAMPLE;
                         }

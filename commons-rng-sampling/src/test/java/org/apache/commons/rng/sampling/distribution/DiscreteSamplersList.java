@@ -122,7 +122,7 @@ public final class DiscreteSamplersList {
                 MathArrays.sequence(5, 1, 1),
                 RejectionInversionZipfSampler.of(RandomAssert.createRNG(), numElementsZipf, exponentCloseToOneZipf));
             // Zipf (exponent = 0).
-            add(LIST, MathArrays.sequence(5, 1, 1), new double[] {0.2, 0.2, 0.2, 0.2, 0.2},
+            add(LIST, MathArrays.sequence(5, 1, 1), new double[] {0.2, 0.2, 0.2, 0.2, 0.2}, false,
                 RejectionInversionZipfSampler.of(RandomAssert.createRNG(), numElementsZipf, 0.0));
 
             // Poisson ("inverse method").
@@ -180,16 +180,66 @@ public final class DiscreteSamplersList {
             final int[] discretePoints = {0, 1, 2, 3, 4};
             final double[] discreteProbabilities = {0.1, 0.2, 0.3, 0.4, 0.5};
             final long[] discreteFrequencies = {1, 2, 3, 4, 5};
-            add(LIST, discretePoints, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities, false,
                 MarsagliaTsangWangDiscreteSampler.Enumerated.of(RandomAssert.createRNG(), discreteProbabilities));
-            add(LIST, discretePoints, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities, false,
                 GuideTableDiscreteSampler.of(RandomAssert.createRNG(), discreteProbabilities));
-            add(LIST, discretePoints, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities, false,
                 AliasMethodDiscreteSampler.of(RandomAssert.createRNG(), discreteProbabilities));
-            add(LIST, discretePoints, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities, false,
                 FastLoadedDiceRollerDiscreteSampler.of(RandomAssert.createRNG(), discreteFrequencies));
-            add(LIST, discretePoints, discreteProbabilities,
+            add(LIST, discretePoints, discreteProbabilities, false,
                 FastLoadedDiceRollerDiscreteSampler.of(RandomAssert.createRNG(), discreteProbabilities));
+
+            // Zeta distribution: x in [1, infinity].
+            // Range points generated with scipy.stats (1.18.1) zipf(s).
+            // from scipy.stats import zipf
+            // import numpy as np; np.set_printoptions(precision=17)
+            // x = np.unique(zipf(s).ppf([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])).astype(int)
+            // p = np.append(zipf(s).cdf(x), [1])
+            // Convert cumulative to range probabilities:
+            // p[1:] -= p[:-1]
+
+            // s = 1.15
+            add(LIST,
+                new int[] {1, 3, 6, 17, 58, 256, 1742, 26005, 2641987, Integer.MAX_VALUE},
+                new double[] {
+                    0.13784177793759045, 0.10108148525222727, 0.06720522534524914,
+                    0.09570277096807939, 0.09903685404346751, 0.09925485973116599,
+                    0.09988225352737812, 0.09999485138279085, 0.09999992334440055,
+                    0.09999999846765073},
+                true,
+                ZetaSampler.of(RandomAssert.createRNG(), 1.15));
+            // s = 1.35. Skewed to 1
+            add(LIST,
+                new int[] {1, 2, 4, 8, 18, 58, 417, Integer.MAX_VALUE},
+                new double[] {
+                    0.28908106624157415, 0.11340420378808813, 0.11008788688054949,
+                    0.09700240404611993, 0.09297268629333943, 0.09863885643999604,
+                    0.09887693680911303, 0.0999359595012198},
+                true,
+                ZetaSampler.of(RandomAssert.createRNG(), 1.35));
+            // s = 2.35. Very skewed to 1
+            add(LIST,
+                new int[] {1, 2, 3, Integer.MAX_VALUE},
+                new double[] {
+                    0.7107946035897981, 0.13941953571184507, 0.0537661789726942,
+                    0.09601968172566266},
+                true,
+                ZetaSampler.of(RandomAssert.createRNG(), 2.35));
+            // s = 1.02. Skewed to infinity. Tests sampler with truncation of the distribution.
+            // scipy zipf is too slow to explore small s as it sums the pmf for the cdf.
+            // Computed using CDF=(zeta(s, x+1) - zeta(s)) / zeta(s) using the
+            // the zeta function from mpmath (1.14.1) with x=[2**3, 2**7, 2**11, 2**15, 2**20, 2**25]
+            // and 50 digits of precision.
+            add(LIST,
+                new int[] {8, 128, 2048, 32768, 1048576, 33554432, Integer.MAX_VALUE},
+                new double[] {0.05287102382096685, 0.0500627338177098, 0.04832778811226474,
+                    0.04577927420430394, 0.05377155271772868, 0.05017084772170899,
+                    // Most of the density is above 2^31
+                    0.699016779605317},
+                true,
+                ZetaSampler.of(RandomAssert.createRNG(), 1.02));
         } catch (Exception e) {
             // CHECKSTYLE: stop Regexp
             System.err.println("Unexpected exception while creating the list of samplers: " + e);
@@ -228,7 +278,8 @@ public final class DiscreteSamplersList {
                 });
         list.add(new DiscreteSamplerTestData(inverseMethodSampler,
                                              points,
-                                             getProbabilities(dist, points)));
+                                             getProbabilities(dist, points),
+                                             false));
     }
 
     /**
@@ -243,7 +294,8 @@ public final class DiscreteSamplersList {
                             final DiscreteSampler sampler) {
         list.add(new DiscreteSamplerTestData(sampler,
                                              points,
-                                             getProbabilities(dist, points)));
+                                             getProbabilities(dist, points),
+                                             false));
     }
 
     /**
@@ -255,10 +307,12 @@ public final class DiscreteSamplersList {
     private static void add(List<DiscreteSamplerTestData> list,
                             int[] points,
                             final double[] probabilities,
+                            boolean range,
                             final DiscreteSampler sampler) {
         list.add(new DiscreteSamplerTestData(sampler,
                                              points,
-                                             probabilities));
+                                             probabilities,
+                                             range));
     }
 
     /**
