@@ -17,10 +17,8 @@
 package org.apache.commons.rng.sampling.distribution;
 
 /**
- * <h3>
- *  Adapted and stripped down copy of class
- *  {@code "org.apache.commons.math4.special.Gamma"}.
- * </h3>
+ * Adapted and stripped down copy of class
+ * {@code "org.apache.commons.math4.special.Gamma"}.
  *
  * <p>
  * This is a utility class that provides computation methods related to the

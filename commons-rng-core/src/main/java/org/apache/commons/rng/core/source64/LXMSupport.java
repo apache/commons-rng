@@ -182,7 +182,7 @@ final class LXMSupport {
      * Add the two values as if unsigned 64-bit longs to produce the high 64-bits
      * of the 128-bit unsigned result.
      *
-     * <h2>Warning</h2>
+     * <p><strong>Warning</strong>
      *
      * <p>This method is computing a carry bit for a 128-bit linear congruential
      * generator (LCG). The method is <em>not</em> applicable to all arguments.
