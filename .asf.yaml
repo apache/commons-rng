@@ -16,6 +16,8 @@
 github:
   description: "Apache Commons RNG (Pseudo-random number generators)"
   homepage: https://commons.apache.org/rng
+  autolink_jira:
+    - RNG
   labels:
     - java
     - rng
