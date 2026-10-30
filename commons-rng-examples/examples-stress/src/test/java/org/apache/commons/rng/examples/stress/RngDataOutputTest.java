@@ -135,19 +135,11 @@ class RngDataOutputTest {
     }
 
     private static void writeInt(DataOutputStream sink, UniformRandomProvider rng) {
-        try {
-            sink.writeInt(rng.nextInt());
-        } catch (IOException e) {
-            Assertions.fail();
-        }
+        Assertions.assertDoesNotThrow(() -> sink.writeInt(rng.nextInt()));
     }
 
     private static void writeLong(DataOutputStream sink, UniformRandomProvider rng) {
-        try {
-            sink.writeLong(rng.nextLong());
-        } catch (IOException e) {
-            Assertions.fail();
-        }
+        Assertions.assertDoesNotThrow(() -> sink.writeLong(rng.nextLong()));
     }
 
     /**
