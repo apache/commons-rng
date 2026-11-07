@@ -60,7 +60,7 @@ public final class JDKRandomBridge extends Random {
     private transient RestorableUniformRandomProvider delegate;
     /** Workaround JDK's "Random" bug: https://bugs.openjdk.java.net/browse/JDK-8154225. */
     private transient boolean isInitialized;
-    /** An object to use for synchonized access to the delegate. */
+    /** An object to use for synchronized access to the delegate. */
     private transient ReentrantLock instanceLock = new ReentrantLock();
 
     /**
