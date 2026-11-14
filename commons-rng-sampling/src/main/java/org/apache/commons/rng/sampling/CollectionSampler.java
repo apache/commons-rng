@@ -19,6 +19,7 @@ package org.apache.commons.rng.sampling;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.ArrayList;
 
 import org.apache.commons.rng.UniformRandomProvider;
@@ -48,7 +49,7 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      */
     public CollectionSampler(UniformRandomProvider rng,
                              Collection<T> collection) {
-        this(rng, toList(collection));
+        this(Objects.requireNonNull(rng, "rng"), toList(collection));
     }
 
     /**
@@ -82,7 +83,7 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      */
     @Override
     public CollectionSampler<T> withUniformRandomProvider(UniformRandomProvider rng) {
-        return new CollectionSampler<>(rng, this.items);
+        return new CollectionSampler<>(Objects.requireNonNull(rng, "rng"), this.items);
     }
 
     /**
@@ -98,6 +99,7 @@ public class CollectionSampler<T> implements SharedStateObjectSampler<T> {
      * @throws IllegalArgumentException if {@code collection} is empty.
      */
     private static <T> List<T> toList(Collection<T> collection) {
+        Objects.requireNonNull(collection, "collection");
         if (collection.isEmpty()) {
             throw new IllegalArgumentException("Empty collection");
         }

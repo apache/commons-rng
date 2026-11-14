@@ -54,6 +54,10 @@ class CollectionSamplerTest {
         final List<String> empty = Collections.emptyList();
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> new CollectionSampler<>(rng, empty));
+        Assertions.assertThrows(NullPointerException.class,
+            () -> new CollectionSampler<>(null, Collections.singletonList("A")));
+        Assertions.assertThrows(NullPointerException.class,
+            () -> new CollectionSampler<>(rng, null));
     }
 
     /**
